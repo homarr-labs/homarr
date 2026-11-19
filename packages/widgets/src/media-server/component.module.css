@@ -15,10 +15,6 @@
   min-height: 0;
 }
 
-.tableViewport :global(.mantine-ScrollArea-viewport) {
-  overscroll-behavior: contain;
-}
-
 .tableViewport :global(table) {
   min-width: 100%;
 }
@@ -74,6 +70,21 @@
     outline: 2px solid var(--mantine-primary-color-filled);
     outline-offset: -2px;
   }
+}
+
+.tableViewport :global(tr).detailedRow > :global(td) {
+  border-bottom: 0;
+}
+
+.tableViewport :global(tr).statsRow > :global(td) {
+  padding-top: 0;
+  padding-bottom: 10px;
+}
+
+.statsPanel {
+  padding: 6px 10px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-default-hover);
 }
 
 .detailsTarget {

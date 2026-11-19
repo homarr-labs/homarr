@@ -3,8 +3,8 @@ import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { fetch } from "undici/index.js";
 
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 import { executeCustomWidgetRequest } from "@homarr/custom-widgets/server";
-import { createPinnedAgent } from "../../../../packages/custom-widgets/src/server/network-policy";
 
 let origin: string;
 let cancellationStarted: () => void;
@@ -41,7 +41,6 @@ test("Bun executes Custom Widget GET through the installed dispatcher", async ()
   const result = await executeCustomWidgetRequest({
     baseUrl: origin,
     method: "GET",
-    networkScope: "loopback",
     kind: "query",
   });
   expect(result).toMatchObject({ status: 200, data: { method: "GET", body: "" } });
@@ -52,7 +51,6 @@ test("Bun executes Custom Widget actions with their body", async () => {
     baseUrl: origin,
     method: "POST",
     body: '{"enabled":true}',
-    networkScope: "loopback",
     kind: "action",
   });
   expect(result).toMatchObject({ status: 200, data: { method: "POST", body: '{"enabled":true}' } });
@@ -63,19 +61,30 @@ test("Bun cancels an active Custom Widget upstream request", async () => {
   const pending = executeCustomWidgetRequest({
     baseUrl: `${origin}/cancel`,
     method: "GET",
-    networkScope: "loopback",
     kind: "query",
     signal: controller.signal,
   });
   await cancellationReady;
   controller.abort();
-  await expect(pending).rejects.toMatchObject({ code: "BAD_GATEWAY" });
+  await expect(pending).rejects.toBe(controller.signal.reason);
 });
 
-test("Bun honors validated DNS pinning for dispatcher requests and fetch", async () => {
+test("Bun honors explicit DNS pinning for dispatcher requests and fetch", async () => {
   const target = new URL(origin);
   target.hostname = "homarr-dispatcher-test.invalid";
-  const agent = createPinnedAgent([{ address: "127.0.0.1", family: 4 }], 1000);
+  // Core guarded requests still pin their checked DNS answers; Custom Widgets
+  // deliberately use normal DNS resolution after upstream removed network scopes.
+  const agent = new UndiciHttpAgent({
+    connect: {
+      lookup: (_hostname, options, callback) => {
+        if (options.all) callback(null, [{ address: "127.0.0.1", family: 4 }]);
+        else callback(null, "127.0.0.1", 4);
+      },
+    },
+    httpProxy: "",
+    httpsProxy: "",
+    noProxy: "*",
+  });
   try {
     const direct = await agent.request({ origin: target.origin, path: "/", method: "GET" });
     expect(await direct.body.json()).toMatchObject({ host: target.host });
@@ -86,8 +95,7 @@ test("Bun honors validated DNS pinning for dispatcher requests and fetch", async
   }
 });
 
-test("Bun retains the Custom Widget loopback scope boundary", async () => {
-  await expect(
-    executeCustomWidgetRequest({ baseUrl: origin, method: "GET", networkScope: "public", kind: "query" }),
-  ).rejects.toMatchObject({ code: "FORBIDDEN" });
+test("Bun allows Custom Widget loopback requests without a network scope", async () => {
+  const result = await executeCustomWidgetRequest({ baseUrl: origin, method: "GET", kind: "query" });
+  expect(result).toMatchObject({ status: 200, data: { method: "GET", host: new URL(origin).host } });
 });

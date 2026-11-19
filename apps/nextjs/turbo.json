@@ -20,17 +20,6 @@
     "build:compiled": {
       "inputs": [
         "$TURBO_DEFAULT$",
-        "!**/*.test.ts",
-        "!**/*.test.tsx",
-        "!**/*.spec.ts",
-        "!**/*.spec.tsx",
-        "!**/__tests__/**",
-        "!**/*.md",
-        "!**/*.mdx",
-        "!**/README*",
-        "!**/CHANGELOG*",
-        "!**/LICENSE*",
-        "!**/*.stories.{ts,tsx}",
         "$TURBO_ROOT$/package.json",
         "$TURBO_ROOT$/static-data/**",
         ".env*",
@@ -38,13 +27,29 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "!.next/standalone/**", "next-env.d.ts"],
       "dependsOn": ["^build"],
-      "env": ["TURBO_PLATFORM", "HOMARR_FRONTEND_MODE", "HOMARR_PLATFORM_PATH"],
+      "env": [
+        "SKIP_ENV_VALIDATION",
+        "TURBO_PLATFORM",
+        "NEXT_DEPLOYMENT_ID",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY",
+        "HOMARR_FRONTEND_MODE",
+        "HOMARR_PLATFORM_PATH"
+      ],
       "passThroughEnv": ["NEXT_TELEMETRY_DISABLED"]
     },
     "build:dependencies": {
       "dependsOn": ["build:compiled"],
       "env": ["TURBO_PLATFORM", "HOMARR_FRONTEND_MODE", "HOMARR_PLATFORM_PATH"],
-      "inputs": ["package.json", "scripts/**"],
+      "inputs": [
+        "package.json",
+        "scripts/cache-standalone.mjs",
+        "scripts/standalone-artifact.mjs",
+        {
+          "mode": "dependencyOutputs",
+          "from": ["build:compiled"],
+          "globs": [".next/standalone-dependencies.json"]
+        }
+      ],
       "outputs": [".output/dependencies/**"]
     }
   }

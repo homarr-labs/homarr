@@ -1,1 +1,1 @@
-export { CodeEditor } from "~/components/custom-widgets/code-editor";
+export { CodeEditor } from "@homarr/forms-collection/custom-widgets";

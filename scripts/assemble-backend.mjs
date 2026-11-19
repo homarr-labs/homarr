@@ -236,6 +236,11 @@ for (const name of externals) {
   }
 }
 
+// The classic image's separately bundled Node CLI and migrations externalize
+// better-sqlite3. Preserve its package-relative N-API prebuild loader and binaries
+// in the same NODE_PATH closure; the Bun worker only uses bun:sqlite.
+if (!worker) copyPackage("better-sqlite3", repository, output);
+
 // Redis is loaded with createRequire only when selected, which esbuild cannot
 // discover. Keep the client closure for classic backends and optional worker Redis.
 copyPackage("ioredis", repository, output);

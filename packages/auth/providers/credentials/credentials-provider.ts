@@ -1,5 +1,6 @@
 import type Credentials from "@auth/core/providers/credentials";
 
+import { resolveRequestIdentity } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { ldapSignInSchema, userSignInSchema } from "@homarr/validation/user";
 
@@ -14,10 +15,11 @@ export const createCredentialsConfiguration = (db: Database) =>
     type: "credentials",
     name: "Credentials",
     // eslint-disable-next-line no-restricted-syntax
-    async authorize(credentials) {
+    async authorize(credentials, request) {
       const data = await userSignInSchema.parseAsync(credentials);
+      const ipAddress = resolveRequestIdentity(request.headers).address ?? "unknown";
 
-      return await authorizeWithBasicCredentialsAsync(db, data);
+      return await authorizeWithBasicCredentialsAsync(db, data, ipAddress);
     },
   }) satisfies CredentialsConfiguration;
 
@@ -27,8 +29,9 @@ export const createLdapConfiguration = (db: Database) =>
     type: "credentials",
     name: "Ldap",
     // eslint-disable-next-line no-restricted-syntax
-    async authorize(credentials) {
+    async authorize(credentials, request) {
       const data = await ldapSignInSchema.parseAsync(credentials);
-      return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
+      const ipAddress = resolveRequestIdentity(request.headers).address ?? "unknown";
+      return await authorizeWithLdapCredentialsAsync(db, data, ipAddress).catch(() => null);
     },
   }) satisfies CredentialsConfiguration;

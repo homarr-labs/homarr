@@ -124,3 +124,7 @@ The backend-app Dockerfile now defaults to the isolated worker. Current build, i
 ### Small worker and classic compatibility — 23 October 2026
 
 Evidence and deployment boundaries: `../remote/worker-compatibility-20261023.md`. Worker-only pruning plus retained optional Redis produces a 119.79 MiB image (2.49% below the measured 122.85 MiB baseline); no new RAM claim. Fresh actual-image checks cover encrypted board access/restart and classic onboarding, local login, native/legacy HTTP/WebSocket, CLI and persisted edits. Fixed CJS Redis initialization/module resolution and a shared frontend utilities identity bug that overwrote unsaved board edits. Independent reviews passed; task-only QA authority/data were removed. Images remain local; demos, original checkpoint and production were preserved.
+
+### Upstream update — 19 November 2026
+
+Merged latest `origin/dev` Homarr 2.13.1 (`b440fdd57`, 313 upstream commits) into the existing worker feature branch. Preserved native oRPC/Hono/Bun workers and classic operation; ported new upstream features, database histories and authorization changes. Corrected frontend backend-import regressions and current SQLite packaging, scoped new widget publication, and patched Next to 16.4.6. Validation and deployment boundaries: [update-20261119.md](./update-20261119.md). Existing demos and user data were preserved; no current image-size or RAM claim is inferred from October measurements.

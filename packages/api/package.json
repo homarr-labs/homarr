@@ -32,7 +32,10 @@
     "./federation-media": "./src/federation/media.ts",
     "./published-item-reads": "./src/published-item-reads.ts",
     "./websocket-runtime": "./src/websocket-runtime.ts",
-    "./native-client": "./src/native-client.ts"
+    "./native-client": "./src/native-client.ts",
+    "./board-widget-prefetch": "./src/board-widget-prefetch.ts",
+    "./widget-query-inputs": "./src/widget-query-inputs.ts",
+    "./published-smart-home": "./src/published-smart-home.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -71,6 +74,9 @@
     "@orpc/server": "catalog:",
     "@orpc/trpc": "catalog:",
     "@orpc/zod": "catalog:",
+    "@tanstack/query-async-storage-persister": "catalog:",
+    "@tanstack/query-core": "catalog:",
+    "@tanstack/query-persist-client-core": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",

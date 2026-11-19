@@ -1,8 +1,10 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
-import { ActionIcon, Alert, Avatar, Badge, Box, Button, Group, Menu, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Alert, Badge, Box, Button, Group, Menu, Stack, Text, Tooltip } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconCategoryPlus,
@@ -99,7 +101,7 @@ const createColumns = (
   },
   {
     accessorKey: "state",
-    header: tDocker("field.state.label"),
+    header: tCommon("field.state"),
     size: 120,
     Cell({ cell }) {
       return <ContainerStateBadge state={cell.row.original.state} />;
@@ -349,7 +351,12 @@ const ContainerRowMenu = ({ container, endpoint }: { container: DockerContainer;
   return (
     <Menu withinPortal position="bottom-end" shadow="sm">
       <Menu.Target>
-        <ActionIcon variant="subtle" color="gray" aria-label={t("title")} onClick={(e) => e.stopPropagation()}>
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          aria-label={tCommon("field.actions")}
+          onClick={(e) => e.stopPropagation()}
+        >
           <IconDots size="1rem" />
         </ActionIcon>
       </Menu.Target>

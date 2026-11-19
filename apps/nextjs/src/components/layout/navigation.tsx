@@ -10,10 +10,11 @@ import { CommonNavLink } from "./navigation-link";
 interface MainNavigationProps {
   headerSection?: JSX.Element;
   footerSection?: JSX.Element;
+  afterLinks?: JSX.Element;
   links: NavigationLink[];
 }
 
-export const MainNavigation = ({ headerSection, footerSection, links }: MainNavigationProps) => {
+export const MainNavigation = ({ headerSection, footerSection, afterLinks, links }: MainNavigationProps) => {
   return (
     <AppShellNavbar p="md">
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
@@ -56,6 +57,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
           }
           return <CommonNavLink key={index} {...clientLink} icon={Icon} />;
         })}
+        {afterLinks}
       </AppShellSection>
       {footerSection && <AppShellSection>{footerSection}</AppShellSection>}
     </AppShellNavbar>
@@ -72,11 +74,15 @@ interface CommonNavigationLinkProps {
 
 interface NavigationLinkHref extends CommonNavigationLinkProps {
   href: string;
+  prefetch?: boolean;
   external?: boolean;
   exact?: boolean;
 }
+interface NavigationLinkChangelog extends CommonNavigationLinkProps {
+  action: "changelog";
+}
 interface NavigationLinkWithItems extends CommonNavigationLinkProps {
-  items: NavigationLinkHref[];
+  items: (NavigationLinkHref | NavigationLinkChangelog)[];
 }
 
 export type NavigationLink = NavigationLinkHref | NavigationLinkWithItems;

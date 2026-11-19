@@ -9,6 +9,7 @@ export * from "./docker";
 export * from "./kubernetes";
 export * from "./auth";
 export * from "./user";
+export * from "./theme";
 export * from "./group";
 export * from "./docs";
 export * from "./cookie";

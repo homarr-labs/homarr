@@ -3,14 +3,16 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import type { Database, InferSelectModel } from "@homarr/db";
 import { asc, eq, inArray, like } from "@homarr/db";
 import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
-import { getIconForName } from "@homarr/icons";
+import { fetchWebsiteMetadataAsync, getIconForName, getIconForWebsiteAsync } from "@homarr/icons";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
+import { iconsDetectFaviconSchema } from "@homarr/validation/icons";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../procedure";
@@ -220,6 +222,23 @@ export const appRouter = createApiRouter({
 
       // TODO: breaking change necessary for removing appId property
       return { appId: id, ...insertValues };
+    }),
+  // A mutation, so the website url travels in the request body and stays out of access logs.
+  detectMetadata: permissionRequiredProcedure
+    .requiresPermission("app-create")
+    .input(iconsDetectFaviconSchema)
+    .output(z.object({ name: z.string(), iconUrl: z.string() }))
+    .mutation(async ({ context, input }) => {
+      const metadata = env.NO_EXTERNAL_CONNECTION
+        ? { title: null, iconUrl: null }
+        : await fetchWebsiteMetadataAsync(input.href);
+      const name = (metadata.title ?? new URL(input.href).hostname).slice(0, 64);
+      return {
+        name,
+        // A curated icon is served by Homarr's icon repositories, so it loads even where the site's own favicon is blocked
+        iconUrl:
+          (await getIconForWebsiteAsync(context.db, input.href, metadata.title)) ?? metadata.iconUrl ?? defaultIcon,
+      };
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")

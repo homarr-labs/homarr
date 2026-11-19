@@ -69,15 +69,12 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
           secrets: true,
           origin: { with: { connection: true } },
           groupPermissions: {
-            where: inArray(
-              integrationGroupPermissions.groupId,
-              groups.map(({ groupId }) => groupId),
-            ),
+            where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
           },
           userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
           items: {
             with: {
-              item: true,
+              item: { columns: { boardId: true } },
             },
           },
         },
@@ -117,7 +114,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
           federationTargets: [{ id: integration.id, name: integration.name, kind: integration.kind, origin }],
           integration: {
             ...rest,
-            externalUrl: rest.app?.href ?? null,
+            externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
             kind: narrowedKind,
             decryptedSecrets: secrets.map((secret) => ({
               ...secret,
@@ -177,16 +174,13 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
             secrets: true,
             items: {
               with: {
-                item: true,
+                item: { columns: { boardId: true } },
               },
             },
             origin: { with: { connection: true } },
             userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
             groupPermissions: {
-              where: inArray(
-                integrationGroupPermissions.groupId,
-                groups.map(({ groupId }) => groupId),
-              ),
+              where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
             },
           },
         });
@@ -234,7 +228,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
               if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
               return {
                 ...rest,
-                externalUrl: rest.app?.href ?? null,
+                externalUrl: rest.externalUrl ?? rest.app?.href ?? null,
                 kind: narrowedKind,
                 decryptedSecrets: secrets.map((secret) => ({
                   ...secret,

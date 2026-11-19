@@ -10,6 +10,7 @@ import { IconCheck, IconChevronDown, IconLink, IconRobot, IconX } from "@tabler/
 import { useRouter } from "next/navigation";
 
 import { isRecord } from "@homarr/common";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
@@ -247,13 +248,20 @@ export const ToolPart = ({
   if (failed) statusLabel = t("failed");
   if (denied) statusLabel = t("denied");
   if (awaitingApproval) statusLabel = t("approvalRequired");
+  const respond = async (response: Parameters<typeof respondToApproval>[0]) => {
+    try {
+      await respondToApproval(response);
+    } catch (error) {
+      setApprovalResponse(null);
+      showErrorNotification({ title: t("responseError.title"), message: t("approvalError") });
+      throw error;
+    }
+  };
   const autoApprovalInProgress = useAssistantAutomaticAction({
     toolCallId,
     ready: awaitingApproval,
     completed: !awaitingApproval,
-    confirm: () => {
-      respondToApproval({ approved: true, reason: "Approved automatically by the user." });
-    },
+    confirm: () => respond({ approved: true, reason: "Approved automatically by the user." }),
   });
 
   return (
@@ -319,7 +327,7 @@ export const ToolPart = ({
                 disabled={approvalResponse !== null}
                 onClick={() => {
                   setApprovalResponse("approve");
-                  respondToApproval({ approved: true });
+                  void respond({ approved: true }).catch(() => undefined);
                 }}
               >
                 {t("approveAndRun")}
@@ -333,7 +341,7 @@ export const ToolPart = ({
                 disabled={approvalResponse !== null}
                 onClick={() => {
                   setApprovalResponse("deny");
-                  respondToApproval({ approved: false });
+                  void respond({ approved: false }).catch(() => undefined);
                 }}
               >
                 {t("deny")}

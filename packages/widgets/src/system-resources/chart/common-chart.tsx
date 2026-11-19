@@ -53,7 +53,7 @@ export const CommonChart = ({
   const cardStyle: CSSProperties = { overflow: "hidden" };
   const chartRootStyle: CSSProperties = {
     padding: 5,
-    borderRadius: theme.radius[board.itemRadius],
+    borderRadius: theme.radius[board.itemRadius ?? "default"],
   };
   if (advanced) {
     backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
@@ -94,7 +94,7 @@ export const CommonChart = ({
         style={cardStyle}
         p={0}
         bg={backgroundColor}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         onPointerMove={handlePointerMove}
       >
         {data.length > 1 && height > 40 && !hovered && (

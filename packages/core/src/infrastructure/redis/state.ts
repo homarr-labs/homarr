@@ -30,6 +30,7 @@ export abstract class StateClient extends EventEmitter {
   abstract ltrim(key: string, start: number, stop: number): Promise<string>;
   abstract lrem(key: string, count: number, value: string): Promise<number>;
   abstract hvals(key: string): Promise<string[]>;
+  abstract hmget(key: string, ...fields: string[]): Promise<(string | null)[]>;
   abstract publish(channel: string, message: string): Promise<number>;
   abstract subscribeChannel(channel: string, callback: StateMessageCallback): StateSubscription;
   abstract multi(): StateTransaction;
@@ -44,6 +45,15 @@ export abstract class StateClient extends EventEmitter {
     deleteKey?: string,
   ): Promise<string>;
   abstract compareAndSwapRevisionAsync(key: string, revision: number, value: string, ttlMs: number): Promise<boolean>;
+  /** Compare the serialized hash field, refresh the hash TTL and publish only after a successful write. */
+  abstract compareAndSwapHashAsync(
+    key: string,
+    field: string,
+    expectedValue: string,
+    value: string,
+    ttlMs: number,
+    channel: string,
+  ): Promise<boolean>;
   abstract incrementRateAsync(key: string, windowMs: number): Promise<{ count: number; retryAfterMs: number }>;
   abstract acquireConcurrencyAsync(key: string, owner: string, limit: number, ttlMs: number): Promise<boolean>;
   abstract releaseConcurrencyAsync(key: string, owner: string): Promise<void>;

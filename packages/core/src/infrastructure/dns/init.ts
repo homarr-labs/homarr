@@ -15,8 +15,6 @@ declare global {
 const logger = createLogger({ module: "dns" });
 
 if (dnsEnv.ENABLE_DNS_CACHING) {
-  // Opt-in only: cached addresses can outlive Docker service endpoints, and
-  // DNS-first resolution does not preserve /etc/hosts precedence.
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   global.homarr ??= {};
   global.homarr.dnsCacheManager ??= new DnsCacheManager({

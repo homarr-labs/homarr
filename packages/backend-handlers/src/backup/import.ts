@@ -20,6 +20,7 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import { applyCustomMigrationsAsync } from "@homarr/db/migrations/custom";
 import { schema } from "@homarr/db/schema";
+import { mediaUploadMaxSize } from "@homarr/validation/media";
 
 import { findMigrationsFolder } from "./shared";
 
@@ -291,7 +292,14 @@ export async function POST(req: Request) {
 
     const sqlite = openSqliteDatabase(tempPath, { casing: DB_CASING, schema });
     tempDb = sqlite.connection;
-    sqlite.migrate({ migrationsFolder });
+    const { foreign_keys: foreignKeys } = tempDb.prepare("PRAGMA foreign_keys").get() as { foreign_keys: number };
+    // Table rebuilds must not cascade-delete data; this pragma has no effect inside a transaction.
+    tempDb.exec("PRAGMA foreign_keys = OFF");
+    try {
+      sqlite.migrate({ migrationsFolder });
+    } finally {
+      tempDb.exec(`PRAGMA foreign_keys = ${foreignKeys}`);
+    }
     await applyCustomMigrationsAsync(sqlite.db);
 
     const metadataEntry = zip.getEntry("metadata.json");
@@ -315,6 +323,13 @@ export async function POST(req: Request) {
 
     if (importedKey) {
       reEncryptSecrets(tempDb, importedKey);
+    }
+
+    const oversizedMedia = tempDb
+      .prepare('SELECT 1 FROM "media" WHERE length("content") > ? OR "size" > ? LIMIT 1')
+      .get(mediaUploadMaxSize.bytes, mediaUploadMaxSize.bytes);
+    if (oversizedMedia) {
+      return Response.json({ error: "Backup contains media exceeding the 32 MiB limit" }, { status: 413 });
     }
 
     const homeBoardName = getHomeBoardName(tempDb);

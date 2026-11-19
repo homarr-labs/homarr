@@ -85,7 +85,8 @@ export const getSafeAppHref = (value: unknown): string | undefined => {
     if (url.username !== "" || url.password !== "") return undefined;
     return url.toString();
   } catch {
-    return /^(?:[#?]|\/(?![\\/])|\.{1,2}\/)/.test(href) ? href : undefined;
+    if (/^(?:[#?]|\/(?![\\/])|\.{1,2}\/)/.test(href)) return href;
+    return undefined;
   }
 };
 

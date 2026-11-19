@@ -6,7 +6,7 @@ import type { InferInsertModel } from "@homarr/db";
 import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { mapMediaToIcon } from "@homarr/icons";
-import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG } from "@homarr/icons/local";
+import { createLocalImageUrl, createLocalMediaUrl, LOCAL_ICON_REPOSITORY_SLUG } from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { mediaUploadSchema } from "@homarr/validation/media";
 
@@ -81,11 +81,15 @@ export const mediaRouter = createApiRouter({
         where: eq(iconRepositories.slug, LOCAL_ICON_REPOSITORY_SLUG),
       });
 
-      const ids = files.map((file) => file.id);
-      if (!localIconRepository) return ids;
+      const uploaded = insertMedias.map((media) => ({
+        id: media.id,
+        url: createLocalMediaUrl(media.id),
+      }));
+      const images = insertMedias.filter((media) => media.contentType.startsWith("image/"));
+      if (!localIconRepository || images.length === 0) return uploaded;
 
       await context.db.insert(icons).values(
-        insertMedias.map((media) => {
+        images.map((media) => {
           const icon = mapMediaToIcon(media);
 
           return {
@@ -98,7 +102,7 @@ export const mediaRouter = createApiRouter({
         }),
       );
 
-      return ids;
+      return uploaded;
     }),
   deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ context, input }) => {
     const dbMedia = await context.db.query.medias.findFirst({

@@ -22,7 +22,7 @@ const skillSourceDirectory = path.resolve(import.meta.dirname, "../../../../.age
 describe("authoring resources", () => {
   it("returns the complete portable skill and keeps every bundled source file in sync", () => {
     const skill = getCustomWidgetSkill();
-    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.10.8" });
+    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.10.9" });
     expect(skill.skillsShUrl).toContain("skills.sh/homarr-labs/homarr");
     expect(skill.sourceUrl).toContain("/tree/HEAD/.agents/skills/homarr-custom-widget");
     expect(skill.installCommand).toContain("--skill homarr-custom-widget");
@@ -88,7 +88,7 @@ describe("authoring resources", () => {
     });
     expect(stack?.props.some(({ source }) => source === "global")).toBe(false);
     expect(Buffer.byteLength(JSON.stringify(stack), "utf8")).toBeLessThan(20_000);
-    expect(getCustomWidgetComponent("Icon")?.knownValues?.name.length).toBeGreaterThan(100);
+    expect(getCustomWidgetComponent("Icon")?.iconNaming?.availableCount).toBeGreaterThan(100);
 
     const largestComponentPayload = Math.max(
       ...catalog.components.map(({ name }) =>

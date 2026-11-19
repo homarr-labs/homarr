@@ -1,14 +1,13 @@
 "use client";
 
-import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
+import { Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
 
 import { AssistantConfiguration } from "~/app/[locale]/manage/assistant/_components/assistant-configuration";
-import { HeroBannerContent } from "~/app/[locale]/manage/_components/hero-banner-content";
+import { ManagementHero } from "~/app/[locale]/manage/_components/home/management-hero";
+import { StatisticTiles } from "~/app/[locale]/manage/_components/home/statistic-tiles";
 import { SettingsForm } from "~/app/[locale]/manage/settings/_components/settings-form";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -48,7 +47,7 @@ export function WorkerAssistantRoute() {
 
 export function WorkerManagementHome() {
   const query = clientApi.home.getStats.useQuery();
-  const { serverSettings } = useWorkerBootstrap();
+  const { serverSettings, session } = useWorkerBootstrap();
   const t = useI18n("management.page.home");
   const entities = useI18n("common.entity");
   const statisticEntities = {
@@ -66,39 +65,18 @@ export function WorkerManagementHome() {
       {(statistics) => (
         <>
           <DynamicBreadcrumb />
-          <HeroBannerContent
-            appName={serverSettings.branding.appName}
-            logoImageUrl={serverSettings.branding.logoImageUrl}
-          />
-          <Space h="md" />
-          <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
-            {statistics.map((statistic) => {
-              const title = entities(statisticEntities[statistic.titleKey]);
-              return (
-                <Card
-                  component={Link}
-                  href={statistic.path}
-                  key={statistic.path}
-                  aria-label={`${statistic.count} ${title}`}
-                >
-                  <Group justify="space-between" wrap="nowrap">
-                    <Group wrap="nowrap">
-                      <Text size="xl" fw={700}>
-                        {statistic.count}
-                      </Text>
-                      <Stack gap={0}>
-                        <Text c="dimmed" size="xs">
-                          {t(`statisticLabel.${statistic.subtitleKey}`)}
-                        </Text>
-                        <Text fw={600}>{title}</Text>
-                      </Stack>
-                    </Group>
-                    <IconArrowRight size={16} stroke={1.5} color="var(--mantine-color-dimmed)" aria-hidden="true" />
-                  </Group>
-                </Card>
-              );
-            })}
-          </SimpleGrid>
+          <Stack gap="md">
+            <ManagementHero appName={serverSettings.branding.appName} userName={session.user.name ?? null} />
+            <StatisticTiles
+              statistics={statistics.map((statistic) => ({
+                key: statistic.titleKey,
+                count: statistic.count,
+                path: statistic.path,
+                title: entities(statisticEntities[statistic.titleKey]),
+                category: t(`statisticLabel.${statistic.subtitleKey}`),
+              }))}
+            />
+          </Stack>
         </>
       )}
     </WorkerQuery>

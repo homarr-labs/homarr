@@ -285,6 +285,7 @@ async function setupUrlRestrictionAsync(dbUrls: string[]) {
   await db.insert(boards).values({
     id: boardId,
     name: "test",
+    isPublic: true,
   });
   if (dbUrls.length >= 1) {
     await db.insert(items).values(
@@ -309,7 +310,7 @@ async function setupUrlRestrictionAsync(dbUrls: string[]) {
   }
 
   return {
-    callback: (urls: string[]) => restrictUrlsAsync(db, urls),
+    callback: (urls: string[]) => restrictUrlsAsync({ db, session: null }, urls),
     db,
   };
 }

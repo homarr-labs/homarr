@@ -11,6 +11,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 export interface EmbeddedAppEditFormHandle {
+  isDirty: () => boolean;
   submitIfDirty: () => Promise<boolean>;
 }
 
@@ -47,6 +48,7 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
   useImperativeHandle(
     handleRef,
     () => ({
+      isDirty: () => appFormRef.current?.isDirty() ?? false,
       submitIfDirty: async () => {
         if (!appFormRef.current) return true;
         if (!appFormRef.current.isDirty()) {

@@ -14,7 +14,7 @@ import {
   dashboardSupportingQueryPolicies,
   isRpcForbiddenError,
   isWidgetDataQueryKey,
-  queryCacheDefaultGcTimeMs,
+  getQueryCacheGcTime,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
 } from "@homarr/api/query-cache";
@@ -83,7 +83,7 @@ const ScopedRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ 
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
-          gcTime: queryCacheDefaultGcTimeMs,
+          gcTime: getQueryCacheGcTime(),
           retry: createQueryRetry(process.env.NODE_ENV === "development" ? 1 : 3),
         },
         mutations: {
@@ -135,7 +135,7 @@ const ScopedRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ 
 
   useEffect(() => () => queryClient.clear(), [queryClient]);
 
-  const trpcClient = useMemo(
+  const rpcClient = useMemo(
     () =>
       clientApi.createClient({
         link: new RPCLink({
@@ -149,7 +149,7 @@ const ScopedRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ 
   );
 
   return (
-    <clientApi.Provider client={trpcClient} queryClient={queryClient}>
+    <clientApi.Provider client={rpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration
           transformer={superjson}

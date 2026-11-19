@@ -3,6 +3,8 @@ import {
   publishedAlbumSelection,
   publishedMediaPage,
 } from "@homarr/api/published-item-reads";
+import { createPublishedSmartHomeRead } from "@homarr/api/published-smart-home";
+import { resolveDownloadsQueryInput } from "@homarr/api/widget-query-inputs";
 import type { ORPCClient } from "@homarr/api/orpc";
 
 export interface BoardWidgetSource {
@@ -15,7 +17,7 @@ export interface BoardWidgetSource {
 export interface BoardWidgetContext {
   caller: ORPCClient | (() => ORPCClient | Promise<ORPCClient>);
   signal?: AbortSignal;
-  mediaPath?: (imageProxyPath: string) => string | Promise<string>;
+  mediaPath?: (imageProxyPath: string, kind?: "image" | "glb" | "stl") => string | Promise<string>;
 }
 export type WidgetDisplayValue =
   | null
@@ -143,13 +145,26 @@ export async function getBoardWidgetData(
   const requestOptions = { signal: context.signal };
   const ready = async (data: unknown): Promise<BoardWidgetData> => {
     let nodes = 8_000;
-    const bindMedia = async (entry: unknown, depth = 0): Promise<unknown> => {
+    let reviewedMesh: Record<string, unknown> | undefined;
+    let reviewedMeshKind: "glb" | "stl" | undefined;
+    if (kind === "thingport-featuredModel" && isRecord(data) && isRecord(data.mesh)) {
+      if (data.mesh.format === "glb" || data.mesh.format === "stl") {
+        reviewedMesh = data.mesh;
+        reviewedMeshKind = data.mesh.format;
+      }
+    }
+    const bindMedia = async (
+      entry: unknown,
+      depth = 0,
+      mediaKind: "image" | "glb" | "stl" = "image",
+    ): Promise<unknown> => {
       if (--nodes < 0 || depth > 12) return null;
       if (typeof entry === "string" && /^\/api\/image-proxy\/[A-Za-z0-9_-]{1,256}$/.test(entry)) {
         if (!context.mediaPath) return null;
         let path: string;
         try {
-          path = await context.mediaPath(entry);
+          if (mediaKind === "image") path = await context.mediaPath(entry);
+          else path = await context.mediaPath(entry, mediaKind);
         } catch {
           return null;
         }
@@ -166,7 +181,9 @@ export async function getBoardWidgetData(
         const result: Record<string, unknown> = {};
         for (const [key, child] of Object.entries(entry).slice(0, 100)) {
           if (privateField.test(key) || ["__proto__", "constructor", "prototype"].includes(key)) continue;
-          result[key] = await bindMedia(child, depth + 1);
+          let childKind: "image" | "glb" | "stl" = "image";
+          if (entry === reviewedMesh && key === "url" && reviewedMeshKind) childKind = reviewedMeshKind;
+          result[key] = await bindMedia(child, depth + 1, childKind);
         }
         return result;
       }
@@ -411,6 +428,22 @@ export async function getBoardWidgetData(
       case "dnsHoleSummary":
       case "dnsHoleControls":
         return ready(await api.widget.dnsHole.summary(many, requestOptions));
+      case "smartHome-controls": {
+        if (!integrationId) return notConfigured("A saved integration is required.");
+        let read = createPublishedSmartHomeRead(integrationId, options);
+        if (!read) return notConfigured("Select saved entities or rooms.");
+        if (read.selection.areaIds.length > 0 && read.selection.domains.includes("sensor")) {
+          const catalog = read.projectCatalog(await api.widget.smartHome.catalog(one, requestOptions));
+          const domains = catalog.entities
+            .filter((entity) => read?.selection.areaIds.includes(String((entity as Record<string, unknown>).areaId)))
+            .map((entity) => String((entity as Record<string, unknown>).domain));
+          read = createPublishedSmartHomeRead(integrationId, options, domains);
+          if (!read) return notConfigured("Select a smaller set of entities or rooms.");
+        }
+        const snapshot = await api.widget.smartHome.snapshot({ ...one, ...read.selection }, requestOptions);
+        const entities = snapshot.entities.filter(read.matchesEntity);
+        return ready({ ...snapshot, entities, areas: read.projectAreas(snapshot.areas, entities), readOnly: true });
+      }
       case "smartHome-entityState": {
         const entityId = text(options, "entityId");
         if (!entityId) return notConfigured("A saved entity is required.");
@@ -419,12 +452,7 @@ export async function getBoardWidgetData(
       case "downloads":
         return ready(
           await api.widget.downloads.getJobsAndStatuses(
-            {
-              ...many,
-              limitPerIntegration: number(options, "limitPerIntegration", 50, 1, 100),
-              includeArchivedHistory: flag(options, "includeArchivedHistory"),
-              historyWindowDays: number(options, "historyWindowDays", 7, 1, 365),
-            },
+            resolveDownloadsQueryInput(integrationIds, options),
             requestOptions,
           ),
         );
@@ -497,6 +525,45 @@ export async function getBoardWidgetData(
         return ready(await api.widget.notifications.getNotifications(many, requestOptions));
       case "coolify":
         return ready(await api.widget.coolify.getInstancesInfo(many, requestOptions));
+      case "thingport-libraryStats":
+        return ready(await api.widget.thingport.getLibraryStats(one, requestOptions));
+      case "thingport-models":
+        return ready(
+          await api.widget.thingport.getModels(
+            {
+              ...one,
+              list: pick(options.defaultTab, ["recentlyAdded", "topViewed", "topPrinted"], "recentlyAdded"),
+              limit: number(options, "itemCount", 10, 1, 50),
+            },
+            requestOptions,
+          ),
+        );
+      case "thingport-featuredModel":
+        return ready(
+          await api.widget.thingport.getFeaturedModel(
+            {
+              ...one,
+              date: new Date().toISOString().slice(0, 10),
+            },
+            requestOptions,
+          ),
+        );
+      case "thingport-activityHeatmap": {
+        const now = new Date();
+        const to = now.toISOString().slice(0, 10);
+        const start = new Date(Date.UTC(now.getUTCFullYear() - 1, now.getUTCMonth(), now.getUTCDate() + 1));
+        return ready(
+          await api.widget.thingport.getActivity(
+            {
+              ...one,
+              from: start.toISOString().slice(0, 10),
+              to,
+              timeZone: "UTC",
+            },
+            requestOptions,
+          ),
+        );
+      }
       case "paperlessNgx":
         return ready(await api.widget.paperlessNgx.getStats(one, requestOptions));
       case "patchmon":
@@ -510,7 +577,12 @@ export async function getBoardWidgetData(
       case "speedtestTracker":
         return ready(await api.widget.speedtestTracker.getDashboard(many, requestOptions));
       case "uptimeKuma":
-        return ready(await api.widget.uptimeKuma.getDashboard(many, requestOptions));
+        return ready(
+          await api.widget.uptimeKuma.getStatusPages(
+            { ...many, statusPageSlug: text(options, "statusPageSlug") },
+            requestOptions,
+          ),
+        );
       case "audioStats":
         return ready(await api.widget.audioStats.getStats(one, requestOptions));
       case "vpn":
@@ -657,89 +729,104 @@ export async function getBoardWidgetData(
           ),
         );
       }
-      case "wazuhAgents":
-        return ready(await api.widget.wazuh.getAgents(one, requestOptions));
-      case "wazuhAlerts":
-        return ready(
-          await api.widget.wazuh.getAlerts(
-            {
-              ...one,
-              minLevel: number(options, "minLevel", 7, 0, 16),
-              limit: number(options, "limit", 20, 1, 100),
-              hours: number(options, "hours", 24, 1, 720),
-            },
-            requestOptions,
-          ),
-        );
-      case "wazuhSummary":
-        return ready(
-          await api.widget.wazuh.getSummary(
-            { ...one, range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h") },
-            requestOptions,
-          ),
-        );
-      case "wazuhTimeline":
-        return ready(
-          await api.widget.wazuh.getTimeline(
-            {
-              ...one,
-              range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
-              interval: pick(
-                options.interval,
-                ["auto", "1m", "5m", "15m", "30m", "1h", "3h", "6h", "12h", "1d"],
-                "auto",
+      case "wazuh": {
+        const views = ["overview", "alerts", "timeline", "top", "agents", "vulnerabilities", "fim", "authFailures"];
+        let visible = views.filter((view) => strings(options.visibleViews).includes(view));
+        if (visible.length === 0) visible = views;
+        const view = pick(options.view, visible, visible[0] ?? "overview");
+        const range = pick(options.range, ["1h", "24h", "7d", "30d"], "24h");
+        const hours = { "1h": 1, "24h": 24, "7d": 168, "30d": 720 }[range];
+        switch (view) {
+          case "agents":
+            return ready(await api.widget.wazuh.getAgents(one, requestOptions));
+          case "alerts":
+            return ready(
+              await api.widget.wazuh.getAlerts(
+                {
+                  ...one,
+                  minLevel: number(options, "alertsMinLevel", 7, 0, 16),
+                  limit: number(options, "alertsLimit", 25, 1, 100),
+                  hours,
+                },
+                requestOptions,
               ),
-              minLevel: number(options, "minLevel", 0, 0, 16),
-            },
-            requestOptions,
-          ),
-        );
-      case "wazuhTopList":
-        return ready(
-          await api.widget.wazuh.getTopList(
-            {
-              ...one,
-              range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
-              kind: pick(options.kind, ["rules", "agents", "sourceIps", "mitreTactics", "mitreTechniques"], "rules"),
-              limit: number(options, "limit", 8, 1, 50),
-              minLevel: number(options, "minLevel", 0, 0, 16),
-            },
-            requestOptions,
-          ),
-        );
-      case "wazuhVulnerabilities":
-        return ready(
-          await api.widget.wazuh.getVulnerabilities(
-            {
-              ...one,
-              cveLimit: number(options, "cveLimit", 8, 1, 50),
-              agentLimit: number(options, "agentLimit", 5, 1, 50),
-              cveOrder: pick(options.cveOrder, ["score", "agents"], "score"),
-              minSeverity: pick(options.minSeverity, ["all", "medium", "high", "critical"], "all"),
-            },
-            requestOptions,
-          ),
-        );
-      case "wazuhFim":
-        return ready(
-          await api.widget.wazuh.getFim(
-            {
-              ...one,
-              range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
-              event: pick(options.event, ["all", "added", "modified", "deleted"], "all"),
-              limit: number(options, "limit", 20, 1, 100),
-              includeRegistry: flag(options, "includeRegistry", true),
-            },
-            requestOptions,
-          ),
-        );
-      case "wazuhAuthFailures":
-        return ready(
-          await api.widget.wazuh.getAuthFailures(
-            { ...one, hours: number(options, "hours", 24, 1, 168), limit: number(options, "limit", 6, 1, 25) },
-            requestOptions,
-          ),
-        );
+            );
+          case "overview":
+            return ready(
+              await api.widget.wazuh.getSummary(
+                { ...one, range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h") },
+                requestOptions,
+              ),
+            );
+          case "timeline":
+            return ready(
+              await api.widget.wazuh.getTimeline(
+                {
+                  ...one,
+                  range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
+                  interval: pick(
+                    options.interval,
+                    ["auto", "1m", "5m", "15m", "30m", "1h", "3h", "6h", "12h", "1d"],
+                    "auto",
+                  ),
+                  minLevel: number(options, "minLevel", 0, 0, 16),
+                },
+                requestOptions,
+              ),
+            );
+          case "top":
+            return ready(
+              await api.widget.wazuh.getTopList(
+                {
+                  ...one,
+                  range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
+                  kind: pick(
+                    options.topKind,
+                    ["rules", "agents", "sourceIps", "mitreTactics", "mitreTechniques"],
+                    "rules",
+                  ),
+                  limit: number(options, "topLimit", 8, 1, 50),
+                  minLevel: number(options, "minLevel", 0, 0, 16),
+                },
+                requestOptions,
+              ),
+            );
+          case "vulnerabilities":
+            return ready(
+              await api.widget.wazuh.getVulnerabilities(
+                {
+                  ...one,
+                  cveLimit: number(options, "cveLimit", 8, 1, 50),
+                  agentLimit: number(options, "agentLimit", 5, 1, 50),
+                  cveOrder: pick(options.cveOrder, ["score", "agents"], "score"),
+                  minSeverity: pick(options.minSeverity, ["all", "medium", "high", "critical"], "all"),
+                },
+                requestOptions,
+              ),
+            );
+          case "fim":
+            return ready(
+              await api.widget.wazuh.getFim(
+                {
+                  ...one,
+                  range: pick(options.range, ["1h", "24h", "7d", "30d"], "24h"),
+                  event: pick(options.fimEvent, ["all", "added", "modified", "deleted"], "all"),
+                  limit: number(options, "fimLimit", 20, 1, 100),
+                  includeRegistry: flag(options, "includeRegistry", true),
+                },
+                requestOptions,
+              ),
+            );
+          case "authFailures":
+            return ready(
+              await api.widget.wazuh.getAuthFailures(
+                { ...one, hours, limit: number(options, "authLimit", 6, 1, 25) },
+                requestOptions,
+              ),
+            );
+        }
+        return unsupported("The saved Wazuh view is unavailable.");
+      }
       default:
         return unsupported("No reviewed read-only display projection exists for this widget kind.");
     }

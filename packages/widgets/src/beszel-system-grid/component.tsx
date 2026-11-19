@@ -168,7 +168,7 @@ interface SystemCardProps {
   tCommon: ReturnType<typeof useI18n<"common">>;
   size: SizeConfig;
   maxMetrics: number;
-  itemRadius: MantineSize;
+  itemRadius: MantineSize | "default";
   integrationName: string;
   isAdvanced: boolean;
   onClick?: () => void;
@@ -182,6 +182,7 @@ type BeszelMetricRenderer = {
     size: SizeConfig,
     tCommon: SystemCardProps["tCommon"],
     formatByteRate: (bytes: number) => string,
+    fahrenheit: boolean,
   ) => React.ReactNode;
   visible: (system: BeszelSystemRow, options: SystemCardProps["options"], advanced: boolean) => boolean;
 };
@@ -282,12 +283,19 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showTemp",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (
+      s: BeszelSystemRow,
+      t: SystemCardProps["t"],
+      sz: SizeConfig,
+      _tCommon: SystemCardProps["tCommon"],
+      _formatByteRate: (bytes: number) => string,
+      fahrenheit: boolean,
+    ) => (
       <MetricRow
         key="temp"
         icon={<Thermometer style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.temp")}
-        value={formatTemp(s.temp, false)}
+        value={formatTemp(s.temp, fahrenheit)}
         size={sz}
       />
     ),
@@ -415,12 +423,12 @@ const SystemCard = ({
             label={t("metric.memoryTotal")}
             value={system.memoryTotal > 0 ? formatBytes(system.memoryTotal) : "—"}
           />
-          <SystemMetadata label={t("metric.source")} value={integrationName} />
+          <SystemMetadata label={tCommon("field.source")} value={integrationName} />
         </SimpleGrid>
       )}
 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
-        {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate))}
+        {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate, options.fahrenheit))}
       </Stack>
       {hiddenMetricCount > 0 && (
         <Text size="xs" c="dimmed" ta="right">
@@ -526,7 +534,7 @@ export default function BeszelSystemGridWidget({
               tCommon={tCommon}
               size={size}
               maxMetrics={maxMetrics}
-              itemRadius={board.itemRadius}
+              itemRadius={board.itemRadius ?? "default"}
               integrationName={integrationName}
               isAdvanced={isAdvanced}
               onClick={handleClick}

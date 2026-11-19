@@ -10,11 +10,15 @@ import { useSession } from "@homarr/auth/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { UploadMedia } from "@homarr/forms-collection";
+import { createLocalMediaUrl } from "@homarr/icons/local-media-url";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
 import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
+import { supportedMediaUploadFormats } from "@homarr/validation/media";
+
+import { useIsVideo } from "~/components/layout/background";
 
 import type { FormValues } from "./_settings-form";
 
@@ -33,8 +37,11 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
     includeFromAllUsers: true,
     search: debouncedSearch ?? "",
   });
-  const images = medias.data?.items.filter((media) => media.contentType.startsWith("image/")) ?? [];
-  const imageMap = new Map(images.map((image) => [`/api/user-medias/${image.id}`, image]));
+  const backgrounds =
+    medias.data?.items.filter(
+      (media) => media.contentType.startsWith("image/") || media.contentType.startsWith("video/"),
+    ) ?? [];
+  const backgroundMap = new Map(backgrounds.map((media) => [createLocalMediaUrl(media.id), media]));
 
   const backgroundImageAttachmentData = useBackgroundOptionData(
     "backgroundImageAttachment",
@@ -69,7 +76,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
             label={tBoard("field.backgroundImageUrl.label")}
             placeholder={`${tBoard("field.backgroundImageUrl.placeholder")}...`}
             renderOption={({ option }) => {
-              const current = imageMap.get(option.value);
+              const current = backgroundMap.get(option.value);
               if (!current) return null;
 
               return (
@@ -87,21 +94,22 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
             data={[
               {
                 group: tBoard("field.backgroundImageUrl.group.your"),
-                items: images
+                items: backgrounds
                   .filter((media) => media.creatorId === session?.user.id)
-                  .map((media) => `/api/user-medias/${media.id}`),
+                  .map((media) => createLocalMediaUrl(media.id)),
               },
               {
                 group: tBoard("field.backgroundImageUrl.group.other"),
-                items: images
+                items: backgrounds
                   .filter((media) => media.creatorId !== session?.user.id)
-                  .map((media) => `/api/user-medias/${media.id}`),
+                  .map((media) => createLocalMediaUrl(media.id)),
               },
             ]}
             {...form.getInputProps("backgroundImageUrl")}
           />
           {session?.user.permissions.includes("media-upload") && (
             <UploadMedia
+              accept={supportedMediaUploadFormats}
               onSuccess={(uploadedMedias) => {
                 const first = uploadedMedias.at(0);
                 if (!first) return;
@@ -151,13 +159,20 @@ interface ImagePreviewProps {
 }
 
 const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
-  const resolvedSource = useWorkerResourceUrl(src);
+  const isVideo = useIsVideo(src);
+  const resolvedSource = useWorkerResourceUrl(src, { kind: isVideo ? "video" : "image" });
   if (!["/", "http://", "https://"].some((prefix) => src.startsWith(prefix))) {
     return <IconPhotoOff size={w} />;
   }
 
+  if (isVideo) {
+    return (
+      <video src={resolvedSource} muted preload="metadata" style={{ width: w, height: h, objectFit: "contain" }} />
+    );
+  }
+
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={resolvedSource} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
+  return <img src={resolvedSource} alt="Background preview" style={{ width: w, height: h, objectFit: "contain" }} />;
 };
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";

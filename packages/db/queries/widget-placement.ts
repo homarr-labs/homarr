@@ -145,7 +145,7 @@ export const placeAllWidgetsAsync = async (
       contexts,
       "app",
       [],
-      superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true }),
+      superjson.stringify({ appId: app.id, openIn: "newTab", showTitle: true }),
       { width: 1, height: 1 },
     );
   }

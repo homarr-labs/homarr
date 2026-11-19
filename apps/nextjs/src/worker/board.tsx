@@ -12,10 +12,10 @@ import { Link } from "@homarr/ui";
 
 import { BoardProviders } from "~/app/[locale]/boards/_providers";
 import type { Board } from "~/app/[locale]/boards/_types";
+import { WidgetResourcePreload } from "~/app/[locale]/boards/(content)/_widget-resource-preload";
 import { ClientBoard } from "~/app/[locale]/boards/(content)/_client";
 import { CustomCss } from "~/app/[locale]/boards/(content)/_custom-css";
 import { BoardContentEditAction, BoardContentSettingsAction } from "~/app/[locale]/boards/(content)/_header-actions";
-import { BoardReadyProvider } from "~/app/[locale]/boards/(content)/_ready-context";
 import { BoardMantineProvider } from "~/app/[locale]/boards/(content)/_theme";
 import { ClientShell } from "~/components/layout/shell";
 
@@ -74,23 +74,22 @@ function ConnectedBoard({ board }: { board: Board }) {
       initialViewportWidth={viewportWidth}
       canModify={hasChangeAccess}
     >
-      <BoardReadyProvider>
-        <BoardMantineProvider defaultColorScheme="auto">
-          <ModalProvider>
-            <CustomCss />
-            <WorkerMetadata board={board} />
-            <ClientShell hasNavigation={false}>
-              <WorkerHeader
-                boardEditAction={<BoardContentEditAction demoReadOnly={false} />}
-                boardSettingsAction={<BoardContentSettingsAction demoReadOnly={false} />}
-              />
-              <AppShellMain data-advanced-focus-background>
-                <ClientBoard />
-              </AppShellMain>
-            </ClientShell>
-          </ModalProvider>
-        </BoardMantineProvider>
-      </BoardReadyProvider>
+      <BoardMantineProvider defaultColorScheme="auto">
+        <ModalProvider>
+          <CustomCss />
+          <WorkerMetadata board={board} />
+          <ClientShell hasNavigation={false}>
+            <WorkerHeader
+              boardEditAction={<BoardContentEditAction demoReadOnly={false} />}
+              boardSettingsAction={<BoardContentSettingsAction demoReadOnly={false} />}
+            />
+            <AppShellMain data-advanced-focus-background>
+              <WidgetResourcePreload />
+              <ClientBoard />
+            </AppShellMain>
+          </ClientShell>
+        </ModalProvider>
+      </BoardMantineProvider>
     </BoardProviders>
   );
 }

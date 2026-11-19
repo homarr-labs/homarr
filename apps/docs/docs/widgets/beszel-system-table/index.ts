@@ -18,6 +18,12 @@ export const beszelSystemTableWidget: WidgetDefinition = {
         defaultValue: "All Systems",
       },
       {
+        name: "Temperature in Fahrenheit",
+        description: "Display temperatures in Fahrenheit instead of Celsius",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Sort by",
         description: "Default column to sort the table by",
         values: {

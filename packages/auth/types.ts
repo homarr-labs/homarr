@@ -6,6 +6,10 @@ export type { Session } from "@auth/core/types";
 
 declare module "@auth/core/types" {
   interface Session {
+    apiKey?: {
+      readOnly: boolean;
+      oauthClientId: string | null;
+    };
     user: {
       id: string;
       permissions: GroupPermissionKey[];

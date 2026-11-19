@@ -12,7 +12,7 @@ import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createApiRouter, publicProcedure } from "../../procedure";
-import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { isActionAllowedAsync, throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "rssFeed" });
 
@@ -32,9 +32,10 @@ const feedsInput = z.object({
   maximumAmountPosts: z.number(),
   descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
+const readFeedsProcedure = publicProcedure.meta({ readOnly: false }).input(feedsInput);
 
 export const rssFeedRouter = createApiRouter({
-  getFeeds: publicProcedure.input(feedsInput).query(async ({ context, input }) => {
+  getFeeds: readFeedsProcedure.query(async ({ context, input }) => {
     if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
     let publishedUrls: string[] | undefined;
@@ -53,7 +54,7 @@ export const rssFeedRouter = createApiRouter({
       publishedUrls ??
       ((await canAccessAllFeedsAsync(context.db, context.session))
         ? input.urls
-        : await restrictUrlsAsync(context.db, input.urls));
+        : await restrictUrlsAsync(context, input.urls));
 
     const settled = await Promise.allSettled(
       urls.map(async (url) => {
@@ -149,13 +150,31 @@ export async function canAccessAllFeedsAsync(db: Database, session: Session | nu
   return false;
 }
 
-export async function restrictUrlsAsync(db: Database, urls: string[]) {
-  const rssFeedItems = await db.query.items.findMany({
+export async function restrictUrlsAsync(context: { db: Database; session: Session | null }, urls: string[]) {
+  const requestedUrls = new Set(urls);
+  const rssFeedItems = await context.db.query.items.findMany({
+    columns: { boardId: true, options: true },
     where: eq(items.kind, "rssFeed"),
   });
 
-  const configuredUrls = new Set(
-    rssFeedItems.flatMap((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls),
+  const urlsByBoard = new Map<string, Set<string>>();
+  for (const item of rssFeedItems) {
+    const matchingUrls = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls.filter(
+      (url) => requestedUrls.has(url),
+    );
+    if (matchingUrls.length === 0) continue;
+
+    const boardUrls = urlsByBoard.get(item.boardId) ?? new Set<string>();
+    for (const url of matchingUrls) boardUrls.add(url);
+    urlsByBoard.set(item.boardId, boardUrls);
+  }
+
+  const allowedUrls = new Set<string>();
+  await Promise.all(
+    [...urlsByBoard].map(async ([boardId, boardUrls]) => {
+      if (!(await isActionAllowedAsync(context, eq(boards.id, boardId), "view"))) return;
+      for (const url of boardUrls) allowedUrls.add(url);
+    }),
   );
-  return urls.filter((url) => configuredUrls.has(url));
+  return urls.filter((url) => allowedUrls.has(url));
 }

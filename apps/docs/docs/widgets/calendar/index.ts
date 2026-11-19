@@ -9,6 +9,18 @@ export const calendarWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "View",
+        description: "Layout used to display events.",
+        values: "Compact month, Month, Week, Day, Agenda",
+        defaultValue: "Compact month",
+      },
+      {
+        name: "Hide header",
+        description: "Hide the date navigation. Widgets that are too short always hide it.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Radarr release type",
         description: "Select what type of release date to see.",
         values: "List of: 'In cinemas', 'Digital release', 'Physical release'",

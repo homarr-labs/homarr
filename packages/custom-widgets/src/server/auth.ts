@@ -1,4 +1,8 @@
 import { getCustomWidgetRequiredSecretKinds } from "../core/secret-requirements";
+import { customWidgetAuthenticationHeadersSchema } from "../core/request-schema";
+import type { CustomWidgetAuthenticationHeader } from "../core/request-schema";
+import { getCustomWidgetHeaderSecretKind } from "../core/schema-types";
+import { isCustomWidgetHeaderSecretValue } from "../core/request-header-policy";
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 import { CustomWidgetDomainError } from "./errors";
 import { assertCustomWidgetPathScope, resolveSameOriginTarget } from "./network-policy";
@@ -29,6 +33,26 @@ export function buildSecretMap(secrets: Array<{ kind: string; value: string }>):
 }
 
 export function getCustomWidgetAuthConfigurationError(auth: CustomWidgetHttpRequest["auth"]): string | null {
+  if (auth?.type === "headers") {
+    if (Object.keys(auth.headers ?? {}).length > 0 || Object.keys(auth.query ?? {}).length > 0 || auth.body) {
+      return "Custom widget authentication headers must use their declared credential slots";
+    }
+    const declarations = customWidgetAuthenticationHeadersSchema.safeParse(auth.headerSlots);
+    if (!declarations.success) return "Custom widget authentication header declarations are invalid";
+    const required = new Set<string>(declarations.data.map(({ slot }) => getCustomWidgetHeaderSecretKind(slot)));
+    const supplied = new Set<string>();
+    for (const secret of auth.secrets) {
+      if (!required.has(secret.kind) || supplied.has(secret.kind)) {
+        return "Custom widget credentials do not match the declared authentication headers";
+      }
+      if (!isCustomWidgetHeaderSecretValue(secret.value)) return "Custom widget authentication header value is invalid";
+      supplied.add(secret.kind);
+    }
+    if ([...required].some((kind) => !auth.secrets.some((secret) => secret.kind === kind && secret.value.trim()))) {
+      return "Custom widget source credentials are missing; complete secure source configuration before running requests";
+    }
+    return null;
+  }
   if (
     !auth ||
     (auth.type !== "basic" && auth.type !== "bearer" && auth.type !== "apiKeyHeader" && auth.type !== "apiKeyQuery")
@@ -52,9 +76,18 @@ export function applyAuth(
   authType: string,
   secrets: Array<{ kind: string; value: string }>,
   headerName?: string | null,
+  headerSlots?: CustomWidgetAuthenticationHeader[],
 ): void {
-  assertAuthCredentials({ type: authType, secrets });
+  assertAuthCredentials({ type: authType, secrets, headerSlots });
   const secretMap = buildSecretMap(secrets);
+
+  if (authType === "headers") {
+    for (const { name, slot } of headerSlots ?? []) {
+      const value = secretMap[getCustomWidgetHeaderSecretKind(slot)];
+      if (value !== undefined) headers.set(name, value);
+    }
+    return;
+  }
 
   if (authType === "basic" && secretMap.username && secretMap.password) {
     const credentials = Buffer.from(`${secretMap.username}:${secretMap.password}`).toString("base64");

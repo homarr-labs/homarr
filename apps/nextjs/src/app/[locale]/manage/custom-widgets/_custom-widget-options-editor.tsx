@@ -31,6 +31,7 @@ export function CustomWidgetOptionsEditor({
   onRename(currentName: string, nextName: string): void;
 }) {
   const t = useI18n("customWidget.workbench.builder");
+  const tCommon = useI18n("common");
   const parsed = parseJson(form.values.options);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const requests = parseJson(form.values.requests);
@@ -92,7 +93,7 @@ export function CustomWidgetOptionsEditor({
                 />
               </Group>
               <TextInput
-                label={t("description")}
+                label={tCommon("field.description")}
                 value={typeof option.description === "string" ? option.description : ""}
                 onChange={(event) =>
                   update(index, id, { ...option, description: event.currentTarget.value || undefined })

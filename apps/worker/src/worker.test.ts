@@ -610,7 +610,8 @@ describe("real worker and blind relay security", () => {
     bytes[bytes.length - 1] = 7;
     const files = new FormData();
     files.append("files", new File([bytes], "native-worker-upload.png", { type: "image/png" }));
-    const ids = await rpc(owner).media.uploadMedia({ files: files.getAll("files") });
+    const uploaded = await rpc(owner).media.uploadMedia({ files: files.getAll("files") });
+    const ids = uploaded.map(({ id }) => id);
     expect(ids).toHaveLength(1);
     const stored = await dbModule.db.query.medias.findFirst({ where: dbModule.eq(schema.medias.id, guard(ids[0])) });
     expect(stored?.size).toBe(bytes.length);

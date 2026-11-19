@@ -127,7 +127,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
   return (
     <Card
       className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? undefined}
       p="xs"
     >
       <Image
@@ -140,6 +140,9 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
         top={0}
         left={0}
         alt=""
+        loading="lazy"
+        decoding="async"
+        fetchPriority="low"
       />
       <Group
         className="mediaRequests-list-item-contents"
@@ -158,6 +161,9 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
               w="auto"
               radius="md"
               alt=""
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
               style={{ flexShrink: 0 }}
             />
           )}

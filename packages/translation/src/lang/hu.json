@@ -65,7 +65,6 @@
         "themeAuto": "Rendszer",
         "themeLight": "Világos",
         "themeDark": "Sötét",
-        "serverOriginHelp": "A Homarr ezt a címet használja az észlelt szolgáltatás-URL-ek előzetes kitöltéséhez. Minden szolgáltatás külön is szerkeszthető.",
         "serverDescription": "Ez egy parancsikon, nem korlátozás. Minden észlelt szolgáltatás továbbra is szerkeszthető.",
         "serverOrigin": "Domain, IP-cím vagy fordított proxy elérési útja",
         "serverOriginDescription": "Példák: home.lan, 192.168.1.10 vagy https://home.example.com/services. Az alábbiakban válassza ki, hogyan legyen hozzáfűzve az egyes szolgáltatásokhoz.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Csatlakoztassa, amitől hasznos lesz a tábla",
         "description": "Válasszon ki egyszerre több szolgáltatást. A Docker-címkék elsőbbséget élveznek, a lemezkép-egyezés kitölti a hiányokat, és minden URL, valamint hitelesítő adat ellenőrizhető marad.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Észlelt integrációpéldányok ({count})",
         "detectedIntegrationLabel": "{name} importálása, észlelt típus: {kind}",
         "detectedAppLabel": "Észlelt {name} alkalmazás importálása",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Konfigurációra vár",
         "tested": "A kapcsolat tesztelve",
         "testFailed": "Kapcsolat tesztelése sikertelen",
-        "incompleteConfirmation": "A befejezetlen integrációk ki lesznek hagyva. Folytatja nélkülük?"
+        "incompleteConfirmation": "A befejezetlen integrációk ki lesznek hagyva. Folytatja nélkülük?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Alakítsa ki a táblát, mielőtt létrehoznánk",
@@ -142,13 +144,7 @@
         "secondaryColor": "Másodlagos szín",
         "resetColors": "Színek alaphelyzetbe állítása",
         "radius": "Widgetek sarokkerekítése",
-        "radiusOptions": {
-          "xs": "Szoros",
-          "sm": "Finom",
-          "md": "Kiegyensúlyozott",
-          "lg": "Lekerekített",
-          "xl": "Lágy"
-        },
+        "radiusOptions": {},
         "columns": "Tábla oszlopai",
         "columnsDescription": "Az oszlopok határozzák meg az elemek méretezéséhez és elhelyezéséhez használt vízszintes rácsot. A legtöbb felhasználónak 12 elegendő.",
         "columnCount": "{count, plural, one {# oszlop} other {# oszlop}}",
@@ -192,7 +188,6 @@
           "loginRequired": "A beállítás után jelentkezzen be rendszergazdaként API-kulcs létrehozásához.",
           "configuration": "Klienskonfiguráció",
           "copy": "Konfiguráció másolása",
-          "copied": "Másolva",
           "advanced": "MCP-eszközök, jogosultságok és beállítás részleteinek megnyitása"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "",
           "description": ""
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "",
@@ -799,9 +801,12 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Leírás"
+      "url": {
+        "helpLabel": "Példák URL-formátumokra",
+        "examples": "Példák támogatott hivatkozásokra",
+        "requiresHandler": "Az egyéni protokollokhoz társított alkalmazás szükséges az eszközön."
       },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Más URL használata a ping-hez",
@@ -853,7 +858,6 @@
       "source": "API-forrás: {name}",
       "baseUrl": "Szerver URL-címe",
       "networkScope": "Hálózati hozzáférés",
-      "save": "API-konfiguráció mentése",
       "expires": "Ez az egyszeri kérés ekkor jár le: {time}."
     },
     "page": {
@@ -884,13 +888,11 @@
       "pasteImportHint": "Illesszen be egy teljes egyéni widget-JSON-t a Ctrl+V vagy a Command+V billentyűkombinációval",
       "delete": "Egyéni widget törlése",
       "deleteConfirm": "Biztosan törölni szeretnéd \"{name}\" widgetet? Ez a művelet nem vonható vissza.",
-      "export": "Exportálás",
       "duplicate": "Duplikálás",
       "aiPrompt": "Tervezés MI-vel",
       "copyAiPrompt": "AI-utasítás másolása",
       "enable": "Engedélyezés",
       "disable": "Letiltás",
-      "menu": "Műveletek",
       "downloadSkill": "Egyéni widget képességeinek megtekintése",
       "publishWorkshop": "Közzététel a Workshopban",
       "migrate": "Egyéni widget migrálása",
@@ -904,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Widgetforrások konfigurálása",
       "description": "Tekintse át, hová csatlakozik ez a widget, és adja hozzá vagy cserélje le a titkosított hitelesítő adatait.",
-      "credentialsRequired": "A kérések sikertelenek lesznek, amíg hozzá nem adja a szükséges hitelesítő adatokat.",
-      "save": "Konfiguráció mentése"
+      "credentialsRequired": "A kérések sikertelenek lesznek, amíg hozzá nem adja a szükséges hitelesítő adatokat."
     },
-    "field": {
-      "description": "Leírás"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Valami hiba történt"
@@ -919,7 +918,6 @@
         "format": "Formázás",
         "insertStarter": "Kezdőelem beszúrása",
         "redo": "Újra végrehajtás",
-        "copied": "Másolva",
         "schema": "Séma"
       },
       "reference": {
@@ -1000,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "{count, number}. kérés",
         "requestId": "Kérésazonosító",
-        "type": "Letöltőkliens típusa",
         "method": "Metódus",
         "source": "API-forrás",
         "run": "Futtatás",
@@ -1008,7 +1005,7 @@
         "runManual": "A SubFetchből",
         "permission": "Jogosultság",
         "path": "Útvonal",
-        "pathDescription": "A widgetbeállításokhoz használd az „{option:name}”, a meghívási értékekhez pedig a „{param:name}” formátumot.",
+        "pathDescription": "A widgetbeállításokhoz használd az „'{option:name}'”, a meghívási értékekhez pedig a „'{param:name}'” formátumot.",
         "requestDetails": "Lekérdezés, törzs és viselkedés",
         "queryValues": "Lekérdezési értékek",
         "queryKey": "Lekérdezési kulcs",
@@ -1037,7 +1034,6 @@
         "optionName": "Beállítás neve",
         "label": "Címke",
         "control": "Vezérlő",
-        "description": "Leírás",
         "default": "Alapértelmezett",
         "optionDetails": "Korlátozások és dinamikus választási lehetőségek",
         "minimum": "Alsó határ",
@@ -1074,7 +1070,6 @@
         "credentialRemovedDescription": "A tárolt érték törölve.",
         "primary": "Elsődleges API",
         "id": "Forrásazonosító",
-        "name": "Folyamat neve",
         "baseUrl": "Alap URL",
         "baseUrlError": {
           "invalid": "Adjon meg teljes URL-címet.",
@@ -1091,7 +1086,6 @@
         "remove": "Forrás és kéréseinek eltávolítása",
         "advanced": "Speciális",
         "add": "Újabb API-forrás hozzáadása",
-        "sourceType": "Integráció",
         "manualSource": "HTTP API",
         "existingIntegration": "Meglévő integráció",
         "integrationType": "Integráció típusa",
@@ -1225,7 +1219,6 @@
       "migrationTitle": "Az áttelepített v2-helyettesítő áttekintése",
       "migrationDescription": "Tekintsd át és erősítsd meg ezt a létrehozott v2-definíciót. A megerősítés atomikusan lecseréli a megőrzött v1-rekordot, miközben a meglévő táblán lévő elhelyezések ugyanahhoz a widgetazonosítóhoz kapcsolva maradnak.",
       "fileLabel": "Egyéni widget JSON-fájljának kiválasztása",
-      "name": "Folyamat neve",
       "origin": "Alapértelmezett eredet",
       "authentication": "Hitelesítés",
       "networkScope": "Hálózati hatókör",
@@ -1245,8 +1238,6 @@
         "title": "Ez a widget módosíthatja a távoli adatokat",
         "description": "Importálás után tekints át minden megnevezett műveletet, örökölt hitelesítő adatot és megsemmisítő műveletet megerősítő beállítást. A titkok nem szerepelnek a fájlban."
       },
-      "cancel": "Importálás megszakítása",
-      "confirm": "Widget importálása",
       "confirmMigration": "A v2-helyettesítő megerősítése"
     },
     "secret": {
@@ -1254,6 +1245,20 @@
       "username": "Felhasználónév",
       "password": "Jelszó",
       "savedPlaceholder": "••••••• (mentve, üresen hagyva megtartja)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1310,7 +1315,6 @@
     "closeScreenshotViewer": "Képernyőképnézegető bezárása",
     "technicalDetails": "Technikai részletek",
     "sourceCode": "Műhelybejegyzés",
-    "export": "Exportálás",
     "report": "Jelentés",
     "reportTitle": "Beküldés jelentése",
     "reportReason": "Indok",
@@ -1341,8 +1345,6 @@
       "viewSubmission": "Beküldés megtekintése és kezelése",
       "done": "Kész",
       "signInHint": "Jelentkezz be a Műhely-identitásod alatt történő közzétételhez.",
-      "titleField": "Cím",
-      "descriptionField": "Leírás",
       "screenshots": "Képernyőképek",
       "screenshotsDescription": "Legfeljebb öt PNG-, JPEG- vagy WebP-kép",
       "screenshotsPlaceholder": "Képernyőképek kiválasztása",
@@ -1405,11 +1407,7 @@
               "label": "Meglévő alkalmazás kiválasztása"
             },
             "new": {
-              "title": "Új",
-              "url": {
-                "label": "Alkalmazás url",
-                "description": "Az Url, amelyre az alkalmazás a műszerfalról történő eléréskor irányít"
-              }
+              "title": "Új"
             }
           }
         }
@@ -1461,8 +1459,9 @@
         "label": "Meglévő alkalmazás összekapcsolása",
         "description": "Csatlakoztasd ezt az integrációt egy már használható alkalmazáshoz."
       },
-      "appHref": {
-        "placeholder": "Egyéni alkalmazás URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API-kulcs beszerzése"
@@ -1530,6 +1529,27 @@
           "title": "Ismeretlen hiba",
           "description": "Ismeretlen hiba történt. További információért nyisd meg alább a részleteket."
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Elemzési hiba",
           "description": "A válasz nem értelmezhető. Ellenőrizd, hogy az URL a szolgáltatás alap-URL-jére mutat-e."
@@ -1559,6 +1579,7 @@
             "untrusted": "A tanúsítvány nem megbízható.",
             "hostnameMismatch": "A tanúsítványban szereplő hosztnév nem egyezik meg az URL-lel."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Nincsenek megfelelő engedélyek",
@@ -1607,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Megbízható tanúsítvány",
                 "message": "A tanúsítványt felvettük a megbízható tanúsítványok listájára"
               },
               "error": {
-                "title": "Tanúsítvány hitelesítése sikertelen",
                 "message": "Nem sikerült hozzáadni a tanúsítványt a megbízható tanúsítványok listájához"
               }
             }
@@ -1730,6 +1749,11 @@
         "title": "Titok visszaállítása",
         "message": "Biztosan alaphelyzetbe szeretnéd állítani ezt a titkos értéket?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Nincsenek titkok",
         "text": "Ehhez az integrációhoz nincs szükség titkokra"
@@ -1811,9 +1835,9 @@
           "label": "Indexer-jelszó",
           "newLabel": "Új indexer-jelszó"
         },
-        "wazuhDashboardUrl": {
-          "label": "Irányítópult URL-je (nem kötelező)",
-          "newLabel": "Új irányítópult-URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1832,9 +1856,7 @@
     "search": "Média keresése",
     "field": {
       "preview": "Előnézet",
-      "size": "Méret",
-      "creator": "Létrehozó",
-      "actions": "Vezérlők"
+      "creator": "Létrehozó"
     },
     "action": {
       "upload": {
@@ -1904,6 +1926,7 @@
       "tryAgain": "Próbáld újra",
       "loading": "Töltés",
       "show": "Mutat",
+      "showAll": "",
       "hide": "Elrejt",
       "undo": "Visszavonás",
       "editNamed": "{name} szerkesztése",
@@ -1911,8 +1934,11 @@
       "clearSearch": "Keresés törlése",
       "copy": "Másolás",
       "copied": "Másolva",
-      "refresh": "Frissítés"
+      "refresh": "Frissítés",
+      "export": "Exportálás",
+      "advanced": ""
     },
+    "hidden": "Rejtett",
     "pagination": {
       "pageOf": "{page}/{totalPages}. oldal"
     },
@@ -1922,6 +1948,8 @@
     "here": "itt",
     "serviceUrlTemplate": {
       "serverTitle": "Szokásos szervercím",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Szolgáltatáscím mintája",
       "hostPort": "Azonos gazdagép, eltérő portok",
       "subdomain": "Szolgáltatásonként egy aldomain",
@@ -1935,6 +1963,7 @@
       "clear": "Kép törlése",
       "uploadImage": "Kép feltöltése",
       "results": "Képkeresés eredményei",
+      "websiteIcon": "",
       "localImages": "Saját képek",
       "svgIcons": "SVG ikonok",
       "otherImages": "Egyéb képek",
@@ -2002,6 +2031,15 @@
         "modifier": "Módosító"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Jegyzet",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Veszélyzóna",
     "noResults": "Nincs eredmény",
     "unsavedChanges": "Nem mentett módosításai vannak!",
@@ -2054,7 +2092,18 @@
     "total": "Összesen",
     "filesystemUsage": "{count, plural, one {Használat megjelenítése ehhez: # fájlrendszer} other {Használat megjelenítése ehhez: # fájlrendszer}}",
     "field": {
-      "name": "Folyamat neve"
+      "name": "Folyamat neve",
+      "state": "Állapot",
+      "size": "Méret",
+      "actions": "Műveletek",
+      "source": "Forrás",
+      "title": "Cím",
+      "description": "Leírás",
+      "created": "Létrehozva",
+      "namespace": "Névtér",
+      "status": "Állapot",
+      "architecture": "Architektúra",
+      "type": "Típus"
     },
     "label": {
       "new": "Új"
@@ -2072,6 +2121,167 @@
       "searchEngines": "Keresőmotorok",
       "tasks": "Feladatok",
       "users": "Felhasználók"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Kiegyensúlyozott",
+        "lg": "Lekerekített",
+        "xs": "Szoros",
+        "sm": "Finom",
+        "xl": "Lágy"
+      }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Elrendezés",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Keresés",
+        "sampleValue": "Alkalmazás megtalálása",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Nem",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Háttér",
+          "surfaceText": "",
+          "surfaceBorder": "Határszín",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Fájl mérete",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Vezérlők megjelenítése"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2091,6 +2301,10 @@
       "scrollable": {
         "label": "Görgethető",
         "description": "A tároló maradjon a beállított méretű, és a tartalma görgethető legyen ahelyett, hogy a tartalomhoz igazodva növekedne."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2109,18 +2323,33 @@
         "collapse": "Összecsukás"
       },
       "option": {
-        "title": {
-          "label": "Cím"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egyéni css-osztályok"
         },
         "borderColor": {
           "label": "Határszín"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Rejtett"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Eltávolítod ezt a tárolót? A tartalma a környező területre kerül."
+      },
+      "editBar": {
+        "edit": "Szerkesztés"
       }
     }
   },
@@ -2135,8 +2364,7 @@
       "label": {
         "settings": "Beállítások",
         "settingsFor": "Beállítások ehhez: {name}",
-        "options": "Beállítások",
-        "actions": "Műveletek"
+        "options": "Beállítások"
       },
       "status": {
         "success": "OK",
@@ -2170,6 +2398,18 @@
       },
       "customWidget": "Egyéni widget",
       "standalone": "Önálló",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Előbb csatlakoztass egy szolgáltatást",
         "noPermission": "Ehhez a widgethez kompatibilis szolgáltatáskapcsolat szükséges. Kérj meg egy rendszergazdát egy kapcsolat létrehozására, majd próbáld újra."
@@ -2189,7 +2429,6 @@
     "selection": {
       "summary": "{count, plural, one {# kiválasztott elem} other {# kiválasztott elem}}",
       "selected": "{count, plural, one {# kiválasztva} other {# kiválasztva}}",
-      "copy": "Másolás",
       "copied": "{count, plural, one {# elem a vágólapra másolva} other {# elem a vágólapra másolva}}",
       "copyError": "A kiválasztott elemeket nem sikerült másolni. Lehet, hogy a böngésződ nem engedélyezi a vágólap elérését.",
       "paste": "Beillesztés",
@@ -2201,16 +2440,18 @@
       "removed": "{count, plural, one {# elem eltávolítva} other {# elem eltávolítva}}",
       "move": "Áthelyezés",
       "moveTo": "Kiválasztott elemek áthelyezése",
-      "delete": "Törlés",
       "clear": "Kijelölés törlése",
       "clearShortcut": "Kijelölés törlése (Escape)",
       "saveErrorTitle": "Nem sikerült frissíteni az elemeket",
       "saveErrorMessage": "A módosításokat nem sikerült menteni. A tábla frissítve lett.",
       "moveUnavailableTitle": "Nem sikerült áthelyezni a kiválasztott elemeket",
-      "moveUnavailableMessage": "A célterületen nincs elég hely a teljes kijelölés számára."
+      "moveUnavailableMessage": "A célterületen nincs elég hely a teljes kijelölés számára.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Elem áthelyezése / átméretezése",
+      "sizeOverlap": "",
       "entryLabel": "{name}, {column}. oszlop, {row}. sor",
       "target": {
         "numbered": "{name}, {index}. cél",
@@ -2277,9 +2518,7 @@
           "label": "Integrációk",
           "removeLabel": "{name} integráció eltávolítása"
         },
-        "title": {
-          "label": "Cím"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egyedi css osztályok"
         },
@@ -2295,6 +2534,36 @@
       "open": "Speciális nézet megnyitása",
       "close": "Speciális nézet bezárása",
       "label": "{widget} speciális nézete"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgetek",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2308,6 +2577,15 @@
       "option": {
         "appId": {
           "label": "Alkalmazás"
+        },
+        "openIn": {
+          "label": "Alkalmazás megnyitása",
+          "description": "Válassza ki, hol nyíljon meg az alkalmazás. A böngésző beállításai felülbírálhatják a külön ablakban való megnyitást.",
+          "option": {
+            "currentTab": "Az aktuális lapon",
+            "newTab": "Új lapon",
+            "newWindow": "Új ablakban"
+          }
         },
         "showTitle": {
           "label": "Alkalmazás nevének megjelenítése"
@@ -2329,7 +2607,29 @@
             "tooltip": "Eszköztippként",
             "hidden": "Rejtett"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2408,6 +2708,10 @@
         "hideHostname": {
           "label": "A gazdagépnevek elrejtése"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Szegély mutatása"
         },
@@ -2430,6 +2734,9 @@
         }
       },
       "empty": "Adjon hozzá egy URL-t vagy alkalmazást a widget beállításaiban",
+      "copyUrl": "URL másolása",
+      "copied": "",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Új kategória",
@@ -3083,6 +3390,141 @@
         "toggleFailed": "Nem sikerült frissíteni az egységet"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Cím",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Nagy"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Időjárás",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Hozzáadás",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Nem található",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "nem elérhető"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Automatizálás végrehajtása",
       "description": "Indítson el egy automatizált folyamatot egyetlen kattintással",
@@ -3221,6 +3663,13 @@
         },
         "showUnmonitored": {
           "label": "Nem ellenőrzött megjelenítés"
+        },
+        "viewMode": {
+          "label": "Megtekintés"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3678,22 @@
         "eventCount": "{count, plural, one {# esemény} other {# esemény}}",
         "loading": "Naptáresemények betöltése...",
         "noEvents": "Ebben a hónapban nincsenek események"
+      },
+      "view": {
+        "compact": "",
+        "month": "hónap",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "today": "Ma",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -3460,7 +3925,6 @@
         },
         "table": {
           "header": {
-            "name": "Név",
             "node": "Gép"
           }
         }
@@ -3490,8 +3954,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Név",
-            "state": "Állapot",
             "cpuUsage": "CPU használat",
             "memoryUsage": "Memória használat"
           }
@@ -3509,6 +3971,34 @@
     },
     "coolify": {
       "description": "A Coolify-példány áttekintése a szerverekkel és alkalmazásokkal",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Fut",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Kiszolgálók megjelenítése"
@@ -3540,7 +4030,13 @@
       },
       "source": {
         "url": "Forrás: {url}",
-        "unavailable": "{source}: nem érhető el"
+        "unavailable": "{source}: nem érhető el",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Példányok"
@@ -3557,6 +4053,7 @@
         "exited": "Kilépett",
         "starting": "Indítás",
         "restarting": "Újraindítás",
+        "unhealthy": "Hibás",
         "unknown": "Ismeretlen",
         "online": "Elérhető",
         "offline": "Nem elérhető",
@@ -3893,6 +4390,10 @@
         "showLocation": {
           "label": "Hely megjelenítése",
           "description": "Annak megjelenítése, hogy az adatfolyam a LAN-on vagy a WAN-on van-e"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -3902,9 +4403,7 @@
       "items": {
         "currentlyPlaying": "Jelenleg lejátszás alatt",
         "user": "Felhasználó",
-        "name": "Név",
         "id": "Azonosító",
-        "status": "Állapot",
         "directPlay": "Közvetlen lejátszás",
         "directStream": "Közvetlen adatfolyam",
         "transcodeVideo": "Videó átkódolása",
@@ -3913,11 +4412,32 @@
         "paused": "Szüneteltetve",
         "remaining": "{minutes} perc van hátra",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Eszköz",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Közvetlen",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "progress": "Letöltési folyamat",
+          "endsAt": "",
+          "episode": "Epizód",
+          "album": "Album",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statisztikák a rajongóknak",
           "video": {
             "title": "Videó",
-            "resolution": "Felbontás"
+            "resolution": "Felbontás",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audió",
@@ -3938,6 +4458,109 @@
         "playing": "{count} lejátszás alatt",
         "transcoding": "{count} átkódolás alatt"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "A hét első napja",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Teljesen föltöltött",
+        "download": "Összes letöltés",
+        "slicer": "",
+        "delete": "Törölve"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Alapértelmezett fül"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "A Paperless-ngx dokumentumarchívum áttekintése",
@@ -4279,38 +4902,29 @@
           "columnTitle": "Vezérlők"
         },
         "added": {
-          "columnTitle": "Hozzáadva",
-          "detailsTitle": "Hozzáadás dátuma"
+          "columnTitle": "Hozzáadva"
         },
         "category": {
-          "columnTitle": "Extrák",
-          "detailsTitle": "Kategóriák (vagy további információk)"
+          "columnTitle": "Extrák"
         },
         "downSpeed": {
-          "columnTitle": "Le",
-          "detailsTitle": "Letöltési sebesség"
+          "columnTitle": "Le"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Aktuális index az ügyfélnél"
         },
         "id": {
-          "columnTitle": "Azonosító",
-          "detailsTitle": "Elem azonosítója"
+          "columnTitle": "Azonosító"
         },
-        "integration": {
-          "columnTitle": "Integráció"
-        },
-        "name": {
-          "columnTitle": "Folyamat neve"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Folyamat",
           "detailsTitle": "Letöltési folyamat"
         },
         "ratio": {
-          "columnTitle": "Arány",
-          "detailsTitle": "Torrent-arány (letöltött/feltöltött)"
+          "columnTitle": "Arány"
         },
         "received": {
           "columnTitle": "Összes le",
@@ -4320,26 +4934,16 @@
           "columnTitle": "Teljesen fönn",
           "detailsTitle": "Teljesen föltöltött"
         },
-        "size": {
-          "columnTitle": "Fájl mérete",
-          "detailsTitle": "A kijelölt elemek/fájlok teljes mérete"
-        },
-        "state": {
-          "columnTitle": "Állapot",
-          "detailsTitle": "A feladat állapota"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Befejezési idő",
-          "detailsTitle": "A befejezésig hátralévő idő",
-          "eta": "Becsült hátralévő idő"
+          "columnTitle": "Befejezési idő"
         },
         "type": {
-          "columnTitle": "Típus",
           "detailsTitle": "Letöltőkliens típusa"
         },
         "upSpeed": {
-          "columnTitle": "Fel",
-          "detailsTitle": "Feltöltési sebesség"
+          "columnTitle": "Fel"
         }
       },
       "states": {
@@ -4379,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Név másolása",
         "copyId": "Azonosító másolása",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Szűrők törlése"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Letöltések szűrése"
@@ -4528,9 +5143,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Méret"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Üres",
@@ -4611,27 +5224,59 @@
       "name": "Kiadások",
       "description": "Megjeleníti az adott tárolók aktuális verzióinak listáját a megadott verzió-kifejezés alapján.",
       "option": {
+        "layout": {
+          "label": "Elrendezés",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Rejtett"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Új kiadás a",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni az új kiadásokat.",
+          "option": {
+            "never": "",
+            "1d": "1 nap",
+            "3d": "3 nap",
+            "1w": "1 hét",
+            "2w": "",
+            "1M": "1 hónap",
+            "3M": "3 hónap"
+          }
         },
         "staleReleaseWithin": {
           "label": "Elavult kiadás",
-          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni a régi kiadásokat."
+          "description": "Használati példa: 1w (1 hét), 10M (10 hónap). Elfogadott mértékegységek: h (óra), d (nap), w (hét), M (hónap), y (év). Hagyd üresen, ha nem szeretnéd kiemelni a régi kiadásokat.",
+          "option": {
+            "never": "",
+            "1M": "1 hónap",
+            "3M": "3 hónap",
+            "6M": "6 hónap",
+            "1y": "1 év",
+            "2y": "2 év"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Csak a kiemelt elemeket mutasd",
-          "description": "Csak az új vagy lejárt kiadásokat mutassa. A fentiek szerint."
-        },
-        "showDetails": {
-          "label": "Részletek megjelenítése"
-        },
-        "showOnlyIcon": {
-          "label": "Csak ikonok megjelenítése"
-        },
-        "topReleases": {
-          "label": "Legnépszerűbb kiadások",
-          "description": "A megjelenítendő legújabb kiadások maximális száma. A nulla érték korlátlan számot jelent."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Csomagtárolók",
@@ -4660,10 +5305,13 @@
           },
           "identifier": {
             "label": "Azonosító",
+            "containerPlaceholder": "",
             "placeholder": "Név vagy tulajdonos/név"
           },
-          "name": {
-            "label": "Név"
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Verziószűrő",
@@ -4705,36 +5353,110 @@
           }
         }
       },
-      "not-found": "Nem található",
-      "pre-release": "Előzetes verzió",
-      "archived": "Archivált",
-      "forked": "Forkolt",
+      "summary": {
+        "newReleases": "",
+        "newShort": "új",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Új",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Új",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Nincs kiválasztva szolgáltató",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Megjelölés megtekintettként",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Csillagok",
       "forksCount": "Forkok",
-      "issuesCount": "Nyitott hibajegyek",
-      "markViewed": "Megjelölés megtekintettként",
-      "openProjectPage": "Projekt oldal megnyitása",
-      "openReleasePage": "Kiadási oldal megnyitása",
-      "releaseDescription": "Kiadás leírása",
-      "projectDescription": "Projekt leírása",
+      "openIssues": "",
+      "created": "Létrehozva",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "",
       "updateAvailable": "",
       "unknownStatus": "Ismeretlen",
-      "created": "Létrehozva",
       "error": {
-        "label": "Hiba",
-        "messages": {
-          "invalidIdentifier": "Érvénytelen azonosító",
-          "noMatchingVersion": "Nem található megfelelő verzió",
-          "noReleasesFound": "Nem találhatók kiadások",
-          "noProviderSelected": "Nincs kiválasztva szolgáltató",
-          "noProviderResponse": "Nincs válasz a szolgáltatótól",
-          "unexpected": "Váratlan szolgáltatói hiba"
-        }
-      },
-      "expandDetails": "{name} részleteinek megjelenítése",
-      "collapseDetails": "{name} részleteinek elrejtése"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4891,7 +5613,6 @@
       "download": "Letöltés",
       "upload": "Feltöltés",
       "ping": "Válaszidő",
-      "status": "Állapot",
       "avgDownload": "Átlag Letöltés",
       "avgUpload": "Átlag Feltöltés",
       "avgPing": "Átlag válaszidő",
@@ -4907,45 +5628,116 @@
     "uptimeKuma": {
       "description": "Az Uptime Kuma állapotoldal üzemidő-statisztikáinak figyelése",
       "option": {
-        "showAverageUptime": {
-          "label": "Átlagos üzemidő megjelenítése",
-          "description": "A 24 órás egyesített átlagos üzemidő százalékos megjelenítése"
+        "statusPageSlug": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Üzemidő gyűrű megjelenítése",
-          "description": "Folyamatjelző gyűrű megjelenítése az átlagos üzemidő érték mellett"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Összes monitor megjelenítése",
-          "description": "A konfigurált monitorok teljes számának megjelenítése"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Működő monitorok számának megjelenítése",
-          "description": "A jelenleg működő monitorok számának megjelenítése"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Nem működő monitorok számának megjelenítése",
-          "description": "A jelenleg nem működő monitorok számának megjelenítése"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Szünetelő monitorok számának megjelenítése",
-          "description": "A jelenleg szünetelő monitorok számának megjelenítése"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Folyamat neve",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Átlagos üzemidő (24h)",
-      "stats": {
-        "totalMonitors": "Összes monitor",
-        "upCount": "Működik",
-        "downCount": "Nem működik",
-        "pausedCount": "Szünetel"
-      },
-      "error": {
-        "internalServerError": "Az üzemidőadatok letöltése nem sikerült"
       },
       "status": {
         "up": "Teljesen fönn",
         "down": "Letöltési sebesség",
-        "paused": "Szüneteltetve"
+        "pending": "Függőben",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Névtelen"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Az üzemidőadatok letöltése nem sikerült"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Válaszidő",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Csoport",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5050,6 +5842,23 @@
       "name": "Rendszer erőforrások",
       "description": "A rendszer CPU-, memória-, lemez- és egyéb hardverhasználata",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Százalék (pl: 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Diagram árnyékolás engedélyezése"
         },
@@ -5057,6 +5866,7 @@
           "label": "Látható diagramok",
           "description": "Válaszd ki a megjelenítendő diagramokat.",
           "option": {
+            "cpuCores": "",
             "memory": "Memória",
             "network": "Hálózat"
           }
@@ -5128,7 +5938,6 @@
         "actionsDisabledEditMode": "A műveletek le vannak tiltva, amíg a tábla szerkesztési módban van.",
         "widgetItemUnavailable": "Ez a widgetelem nem érhető el.",
         "toggle": "Be- és kikapcsolás",
-        "copied": "Másolva",
         "confirmDelete": "Erősítsd meg ezt a végleges műveletet."
       },
       "option": {
@@ -5169,6 +5978,9 @@
       "name": "Beszel Rendszerek (Táblázat)",
       "description": "Az összes Beszel által figyelt rendszer táblázatos nézete rendezhető oszlopokkal és állapotjelzőkkel",
       "option": {
+        "fahrenheit": {
+          "label": "Hőmérséklet Fahrenheitben"
+        },
         "sortBy": {
           "label": "Rendezés alapja"
         },
@@ -5183,7 +5995,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Rendszerek (Rács)",
-      "description": "A Beszel által figyelt rendszerek kártyás rács nézete valós idejű metrikákkal"
+      "description": "A Beszel által figyelt rendszerek kártyás rács nézete valós idejű metrikákkal",
+      "option": {
+        "fahrenheit": {
+          "label": "Hőmérséklet Fahrenheitben"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Riasztások",
@@ -5397,7 +6214,6 @@
       },
       "metric": {
         "system": "Rendszer",
-        "source": "Integráció",
         "hostname": "Gazdagépnév",
         "cpuModel": "CPU-modell",
         "cores": "Mag",
@@ -5552,6 +6368,8 @@
       "allHidden": "Ebben a nézetben minden metrika rejtve van. A visszaállításukhoz használd a Nézet testreszabása lehetőséget."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh-szerver API",
         "indexer": "Wazuh-indexelő",
@@ -5571,6 +6389,14 @@
         "certificate": {
           "title": "{target} tanúsítványa nem megbízható",
           "description": "A Wazuh alapértelmezés szerint önaláírt tanúsítványt használ. Futtasd a „Kapcsolat tesztelése” műveletet az integráción, és bízz meg a tanúsítványban, vagy add hozzá a hitelesítésszolgáltatót a Beállítások → Tanúsítványok alatt."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Nem lehet elérni: {target}",
@@ -5595,7 +6421,9 @@
         "unknown": {
           "title": "Nem sikerült adatokat betölteni innen: {target}",
           "description": "A részletekért ellenőrizd a Homarr naplóit."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 óra",
@@ -5603,268 +6431,234 @@
         "7d": "7 nap",
         "30d": "30 nap"
       },
-      "levelTooltip": "{level}. szabályszint ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh-ügynökök",
-      "description": "Rendezhető Wazuh-ügynöklista állapottal, operációs rendszerrel, verzióval és utolsó életjelzéssel",
+      "levelTooltip": "{level}. szabályszint ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "új",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Nyilvános",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "Szétkapcsolt",
+          "neverConnected": "",
+          "pending": "Függőben"
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "Szétkapcsolt",
+          "never_connected": "",
+          "pending": "Függőben",
+          "unknown": "Ismeretlen"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "Állapot",
+          "name": "Folyamat neve",
+          "ip": "",
+          "os": "",
+          "version": "Verzió",
+          "lastKeepAlive": "",
+          "groups": "Csoportok"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Hozzáadás dátuma",
+          "modified": "",
+          "deleted": "Törölve",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Ügynökök megjelenítése"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Rendezés szempontja"
-        },
-        "showVersion": {
-          "label": "Wazuh-verzió oszlopának megjelenítése"
-        },
-        "showGroups": {
-          "label": "Csoportok oszlopának megjelenítése"
-        }
-      },
-      "title": "Ügynökök",
-      "total": "{count} ügynök",
-      "status": {
-        "active": "Aktív",
-        "disconnected": "Szétkapcsolt",
-        "neverConnected": "Soha nem csatlakozott",
-        "pending": "Függőben"
-      },
-      "statusLabel": {
-        "active": "Aktív",
-        "disconnected": "Szétkapcsolt",
-        "never_connected": "Soha nem csatlakozott",
-        "pending": "Függőben",
-        "unknown": "Ismeretlen"
-      },
-      "live": "Élő",
-      "snapshot": "{age} régi pillanatkép",
-      "snapshotHint": "A Wazuh-műszerfal {time} időpontban készült ügynökpillanatképéből (wazuh-monitoring) olvasva. Élő adatokhoz adj meg szerver-API-hitelesítő adatokat.",
-      "staleSnapshot": "A {time} időpontban készült ügynökpillanatkép elavult. Ellenőrizd, hogy fut-e a Wazuh-műszerfal figyelési feladata, vagy adj meg szerver-API-hitelesítő adatokat.",
-      "noDisconnected": "Minden ügynök csatlakoztatva van",
-      "empty": "Egyetlen ügynök sem felel meg ennek a szűrőnek",
-      "column": {
-        "status": "Állapot",
-        "name": "Folyamat neve",
-        "ip": "IP-cím",
-        "os": "Operációs rendszer",
-        "version": "Verzió",
-        "lastKeepAlive": "Életjelzés",
-        "groups": "Csoportok"
-      },
-      "outdated": "Régebbi, mint a legújabb ügynökverzió ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh-riasztások hírcsatornája",
-      "description": "Legutóbbi Wazuh-riasztások szinttel, MITRE ATT&CK-technikákkal, ügynökkel és forrás-IP-címmel",
-      "option": {
-        "minLevel": {
-          "label": "Minimális szabályszint",
-          "description": "Wazuh-szintek: 0–6 alacsony, 7–11 közepes, 12–14 magas, 15+ kritikus"
-        },
-        "hours": {
-          "label": "Időablak (óra)"
-        },
-        "limit": {
-          "label": "Riasztások száma"
-        },
-        "showMitre": {
-          "label": "MITRE ATT&CK-technikák megjelenítése"
-        },
-        "showAgent": {
-          "label": "Ügynök megjelenítése"
-        },
-        "showSourceIp": {
-          "label": "Riasztások · {level}+ szint · {hours} óra"
-        },
-        "showRuleId": {
-          "label": "Szabályazonosító megjelenítése"
-        }
-      },
-      "title": "Riasztások · {level}+ szint · {hours} óra",
-      "empty": "Ezen a szinten nincsenek riasztások. Minden rendben.",
-      "rule": "{id}. szabály",
-      "openInDashboard": "Riasztás megnyitása a Wazuh-műszerfalon"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh-riasztások súlyossága",
-      "description": "Riasztások súlyosság szerinti bontása az előző időszakhoz viszonyított trenddel",
-      "option": {
         "range": {
-          "label": "Időtartomány"
+          "label": ""
         },
         "showTrend": {
-          "label": "Trend megjelenítése az előző időszakhoz képest"
+          "label": ""
         },
         "showFooter": {
-          "label": "Lábléc megjelenítése"
-        }
-      },
-      "title": "Riasztások súlyossága · {range}",
-      "alerts": "riasztás",
-      "none": "Nincsenek riasztások",
-      "trend": {
-        "new": "új",
-        "tooltip": "Előző időszak: {previous}"
-      },
-      "previous": "Előző {range}: {count}",
-      "maxLevel": "Legmagasabb szint: {level}",
-      "health": "Indexelő állapota: {status}",
-      "manager": "Kezelő: {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh-riasztások idővonala",
-      "description": "Wazuh-riasztások időbeli halmozott diagramja súlyosság szerint",
-      "option": {
-        "range": {
-          "label": "Időtartomány"
+          "label": ""
         },
         "interval": {
-          "label": "Időköz"
+          "label": ""
         },
         "chartType": {
           "label": "Diagramtípus"
         },
         "yScale": {
-          "label": "Y tengely skálája",
-          "description": "A négyzetgyök-skála láthatóvá teszi a magas és kritikus riasztásokat a több ezer alacsony mellett"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimális szabályszint"
+          "label": ""
         },
         "showLegend": {
-          "label": "Jelmagyarázat megjelenítése összesítésekkel"
-        }
-      },
-      "title": "Riasztások idővonala · {range}",
-      "total": "{count} riasztás",
-      "interval": "{interval} időnként"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh toplistája",
-      "description": "Top szabályok, ügynökök, forrás-IP-k vagy MITRE ATT&CK-taktikák és -technikák a riasztások száma szerint",
-      "option": {
-        "kind": {
-          "label": "Rangsorolás"
+          "label": ""
         },
-        "range": {
-          "label": "Időtartomány"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Bejegyzések száma"
-        },
-        "minLevel": {
-          "label": "Minimális szabályszint"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Sávok megjelenítése"
-        }
-      },
-      "title": {
-        "rules": "Top szabályok · {range}",
-        "agents": "Top ügynökök · {range}",
-        "sourceIps": "Top forrás-IP-k · {range}",
-        "mitreTactics": "MITRE-taktikák · {range}",
-        "mitreTechniques": "MITRE-technikák · {range}"
-      },
-      "empty": {
-        "rules": "Ebben az időszakban nincsenek riasztások",
-        "agents": "Ebben az időszakban nincsenek riasztások",
-        "sourceIps": "Ebben az időszakban nincsenek forrás-IP-vel rendelkező riasztások",
-        "mitreTactics": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások",
-        "mitreTechniques": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások"
-      },
-      "totalTooltip": "{count} egyező riasztás",
-      "private": "LAN",
-      "public": "Nyilvános",
-      "agents": "{count} ügynökön észlelve",
-      "others": "{count} további riasztás más bejegyzésekben"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh-biztonsági rések",
-      "description": "Biztonsági rések száma, legfontosabb CVE-k és leginkább sérülékeny ügynökök",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "CVE-k rangsorolása szempont szerint"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE-k súlyossága"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE-k száma"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Ügynökök száma"
+          "label": ""
         },
         "showAgents": {
-          "label": "Leginkább sérülékeny ügynökök megjelenítése"
-        }
-      },
-      "title": "Biztonsági rések",
-      "topCves": "Legfontosabb CVE-k",
-      "score": "Pontszám",
-      "agentsShort": "Ügynökök",
-      "topAgents": "Leginkább sérülékeny ügynökök",
-      "criticalHigh": "Kritikus / magas",
-      "totalTooltip": "{count} találat {agents} ügynökön",
-      "affected": "{count} ügynök",
-      "empty": "Nem találhatók biztonsági rések",
-      "distribution": "Súlyossági eloszlás. A pontszám nélküli {unscored} találat nem jelenik meg.",
-      "worst": "Legrosszabb: {id} ({score}) {agents} ügynökön"
-    },
-    "wazuhFim": {
-      "name": "Wazuh-fájlintegritás",
-      "description": "Legutóbbi fájlintegritás-figyelési (syscheck) események",
-      "option": {
-        "range": {
-          "label": "Időtartomány"
+          "label": ""
         },
-        "event": {
+        "fimEvent": {
           "label": "Események"
         },
-        "limit": {
-          "label": "Események száma"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Windows rendszerleíró adatbázis-eseményeinek felvétele"
-        }
-      },
-      "title": "Fájlintegritás · {range}",
-      "event": {
-        "added": "Hozzáadás dátuma",
-        "modified": "Módosítva",
-        "deleted": "Törölve",
-        "unknown": "Módosult"
-      },
-      "empty": "Ebben az időszakban nincsenek fájlintegritási események",
-      "user": "{user} által",
-      "registry": "Rendszerleíró adatbázis"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh-hitelesítési hibák",
-      "description": "Sikertelen bejelentkezések és brute force riasztások ügynökönként, óránkénti grafikonokkal",
-      "option": {
-        "hours": {
-          "label": "Időablak (óra)"
+          "label": ""
         },
-        "limit": {
-          "label": "Ügynökök száma"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Top forrás-IP-k megjelenítése"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Hitelesítési hibák · {hours} óra",
-      "seriesTooltip": "Minden ügynök az elmúlt {hours} órában",
-      "peak": "Csúcs: {count}/csoport",
-      "empty": "Ebben az időszakban nincsenek sikertelen bejelentkezések",
-      "failed": "Sikertelen bejelentkezések",
-      "failedHint": "Egyedi hitelesítési hibák (sshd, PAM, Windows-bejelentkezés, érvénytelen felhasználók)",
-      "bruteForce": "Brute force támadás",
-      "bruteForceHint": "Összefüggő brute force szabályok (rövid időn belüli többszörös hibák, MITRE T1110)",
-      "sourceIps": "Forrás-IP-k",
-      "ipTooltip": "{ip}: {count} sikertelen kísérlet",
-      "bruteForceCount": "{count} brute force kísérlet"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6677,18 @@
       "addWidget": "Widget hozzáadása",
       "addApp": "Alkalmazás hozzáadása",
       "connectService": "Szolgáltatás csatlakoztatása"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Tedd hasznossá ezt a táblát",
@@ -5988,6 +6794,26 @@
           "createAndUse": "Létrehozás és használat"
         }
       }
+    },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Nyitólap",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
     },
     "landmark": {
       "canvas": "Műszerfal vászna",
@@ -6097,13 +6923,7 @@
       "itemRadius": {
         "label": "Elem lekerekítése",
         "description": "Megváltoztatja a tábla elemeinek kerekítését",
-        "option": {
-          "xs": "Nagyon kicsi",
-          "sm": "Kicsi",
-          "md": "Közepes",
-          "lg": "Nagy",
-          "xl": "Nagyon nagy"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Nyilvános",
@@ -6261,6 +7081,11 @@
           "description": "A szerver adminisztrátora még nem állított be kezdőlap táblát.",
           "link": "Nyilvános táblák megtekintése",
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6332,10 +7157,12 @@
             "documentation": "Dokumentáció",
             "submitIssue": "Hiba bejelentése",
             "discord": "Discord-szerverünk",
-            "sourceCode": "Forráskód"
+            "sourceCode": "Forráskód",
+            "changelog": ""
           }
         },
         "about": "Névjegy",
+        "updateAvailable": "",
         "assistant": "Asszisztens"
       }
     },
@@ -6347,9 +7174,23 @@
           "authentication": "Hitelesítés",
           "authorization": "Jogosultságkezelés"
         },
-        "heroBanner": {
-          "title": "Üdvözöljük újra a",
-          "subtitle": "{app} Tábla"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6394,7 +7235,9 @@
         },
         "noResults": {
           "title": "Még nincsenek táblák",
-          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el."
+          "description": "Hozzon létre egy táblát, hogy alkalmazásait és widgetjeit egy helyen rendezhesse el.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6447,6 +7290,11 @@
                 "logoDisplay": {
                   "logo": "Csak logó",
                   "logoAndText": "Logó + szöveg"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6454,6 +7302,7 @@
                 "search": "Keresés",
                 "home": "Főoldal",
                 "boardSwitcher": "Táblák",
+                "boardTabs": "",
                 "assistant": "Asszisztens",
                 "docker": "Docker",
                 "boardEdit": "Tábla szerkesztése",
@@ -6685,6 +7534,10 @@
             "title": "Megjelenés",
             "defaultColorScheme": {
               "label": "Alapértelmezett színséma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -6729,15 +7582,13 @@
             "signInOverlay": {
               "label": "Háttérfedvény"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Sarokstílus",
-              "options": {
-                "xs": "Szoros",
-                "sm": "Finom",
-                "md": "Kiegyensúlyozott",
-                "lg": "Lekerekített",
-                "xl": "Lágy"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Globális egyéni CSS",
@@ -6759,7 +7610,6 @@
               "greetingDefault": "Alapértelmezett üdvözlés",
               "boardColorLocked": "A tábla színe zárolva",
               "boardColorFlexible": "A táblák színei engedélyezve",
-              "appName": "Folyamat neve",
               "logo": "Logó",
               "greeting": "Üdvözlés",
               "on": "Be",
@@ -6894,6 +7744,7 @@
             "model": {
               "title": "Modell",
               "description": "Válasszon egy felderített modellt, vagy adja meg egy végpont pontos modellazonosítóját.",
+              "save": "",
               "placeholder": "Modellazonosító",
               "refresh": "Modellek frissítése",
               "chooseModel": "Válassza ki az új beszélgetésekhez használt modellt.",
@@ -6986,9 +7837,7 @@
             "lastExecution": {
               "label": "Utolsó végrehajtás"
             },
-            "actions": {
-              "label": "Műveletek"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Keresés {count} feladat között..."
@@ -7040,6 +7889,12 @@
             "apiKey": {
               "label": "Hitelesítés",
               "title": "API kulcsok",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API token létrehozása",
                 "confirmDeletion": ""
@@ -7052,9 +7907,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Létrehozta",
-                  "source": "Integráció",
-                  "actions": "Műveletek"
+                  "createdBy": "Létrehozta"
                 }
               },
               "provenance": {
@@ -7267,7 +8120,8 @@
               "openSpotlightApps": "Alkalmazáskeresés megnyitása",
               "openSpotlightAssistant": "Asszisztens mód megnyitása",
               "openSpotlightPreferences": "Beállítási mód megnyitása",
-              "openAssistant": "Asszisztens megnyitása"
+              "openAssistant": "Asszisztens megnyitása",
+              "switchBoardTab": ""
             },
             "note": "Tipp: A Mod a Ctrl billentyűt és a macOS-en a ⌘ billentyűt jelenti"
           }
@@ -7347,7 +8201,6 @@
     },
     "field": {
       "state": {
-        "label": "Állapot",
         "option": {
           "created": "Létrehozva",
           "running": "Fut",
@@ -7374,7 +8227,6 @@
       }
     },
     "action": {
-      "title": "Műveletek",
       "logs": {
         "label": "Naplók megtekintése",
         "page": {
@@ -7612,27 +8464,13 @@
       "internalServerError": "A Kubernetes adatok lekérése nem sikerült"
     },
     "field": {
-      "name": {
-        "label": "Folyamat neve"
-      },
-      "namespace": {
-        "label": "Névtér"
-      },
-      "creationTimestamp": {
-        "label": "Létrehozva"
-      },
-      "state": {
-        "label": "A feladat állapota"
-      },
-      "status": {
-        "label": "Állapot"
-      },
-      "type": {
-        "label": "Letöltőkliens típusa"
-      },
-      "architecture": {
-        "label": "Architektúra"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7659,10 +8497,7 @@
         "label": "Engedély"
       }
     },
-    "action": {
-      "saveUser": "Felhasználói engedély mentése",
-      "saveGroup": "Csoportengedély mentése"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7773,8 +8608,7 @@
       "resultsAriaLabel": "{mode} találatai",
       "footer": {
         "navigate": "Navigálás",
-        "open": "Megnyitás",
-        "close": "Bezárás"
+        "open": "Megnyitás"
       }
     },
     "error": {
@@ -8204,9 +9038,7 @@
         "urlTemplate": {
           "label": "URL keresősablon"
         },
-        "description": {
-          "label": "Leírás"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8275,8 +9107,7 @@
             "table": {
               "header": {
                 "season": "Évszak",
-                "episodes": "Epizódok",
-                "status": "Állapot"
+                "episodes": "Epizódok"
               },
               "status": {
                 "requested": "Kérve"
@@ -8461,6 +9292,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Önhosztolt irányítópult az *arr-csomaghoz és az egész otthoni laborhoz. Több mint 50 szolgáltatással, valós idejű widgetekkel és konfigurációs fájlok nélkül.",
     "dashboardTitle": "{appName} irányítópult"
@@ -8489,6 +9326,14 @@
     "conversationActions": "Beszélgetési műveletek",
     "searchConversations": "Beszélgetések keresése",
     "noMatchingConversations": "Nincs egyező beszélgetés",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "További válaszműveletek",
     "renameConversation": {
       "action": "Átnevezés",
@@ -8538,6 +9383,7 @@
       "imageInput": "Képbemenetet fogad",
       "thinking": "Gondolkodási mód",
       "reasoning": {
+        "default": "",
         "auto": "Automatikus",
         "none": "Ki",
         "minimal": "Minimális",
@@ -8608,6 +9454,9 @@
     },
     "mentions": {
       "menu": "Homarr-környezet hozzáadása",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontextus",
       "app": "Alkalmazások",
       "integration": "Integrációk",
@@ -8622,6 +9471,8 @@
     },
     "commands": {
       "menu": "Asszisztensparancsok",
+      "hint": "",
+      "empty": "",
       "health": "Szolgáltatásállapot-ellenőrzés előkészítése",
       "explore": "A Homarr-példány áttekintésének előkészítése",
       "media": "Médiakeresés előkészítése",
@@ -8772,7 +9623,6 @@
       "cssDescription": "A teljes stíluslap szerkesztése. A meglévő szabályok megmaradnak, hacsak itt el nem távolítja őket.",
       "cssCharacters": "{count} / 16384 karakter",
       "copyCss": "CSS másolása",
-      "copied": "Másolva",
       "restoreCss": "Jelenlegi CSS visszaállítása",
       "remoteCssTitle": "Ez a CSS távoli erőforrást tölt be",
       "remoteCssDescription": "Az importált stíluslapok és távoli URL-ek egy másik szerverhez csatlakoznak a tábla betöltésekor. Tekintse át őket a folytatás előtt."
@@ -8804,6 +9654,7 @@
     "approvalDescription": "Tekintse át ezt a módosítást a futtatás előtt.",
     "approveAndRun": "Jóváhagyás és futtatás",
     "deny": "Elutasítás",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatikus jóváhagyások",
       "composerLabel": "Jóváhagyás helyettem",

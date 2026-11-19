@@ -1,8 +1,9 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
 import type { BoxProps } from "@mantine/core";
 import {
-  Avatar,
   AvatarGroup,
   Badge,
   Box,
@@ -223,7 +224,7 @@ const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProp
         aria-label={`${label}: ${value}`}
         className="summary-card"
         p={padding}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         bg={backgroundColor}
         style={{
           flex: 1,

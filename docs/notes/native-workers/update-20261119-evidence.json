@@ -1,0 +1,275 @@
+{
+  "date": "2026-11-19",
+  "upstreamCommit": "b440fdd574c9daa229f5cf64f7b2532770799664",
+  "previousFeatureHead": "6ba400ba6761b38e5ab899c7867e802a3c455495",
+  "homarrVersion": "2.13.1",
+  "nextVersion": "16.4.6",
+  "checks": {
+    "databaseUpgrades": {
+      "date": "2026-11-19",
+      "status": "passed",
+      "caseCount": 12,
+      "historicalWorkerCommit": "6ba400ba6",
+      "historicalClassicCommit": "b440fdd574c9daa229f5cf64f7b2532770799664",
+      "representativePreservedEntities": [
+        "user",
+        "board with explicit appearance and creator",
+        "integration",
+        "layout referencing board",
+        "item referencing board",
+        "API key",
+        "worker federation connection",
+        "worker integration origin"
+      ],
+      "postgresContainer": {
+        "image": "postgres:latest",
+        "memoryMiB": 384,
+        "cpus": 1,
+        "pidsLimit": 128,
+        "tmpfsDataMiB": 256,
+        "bind": "loopback only",
+        "removed": true
+      },
+      "runs": [
+        {
+          "date": "2026-11-19",
+          "runtimes": {
+            "bun": "1.4.4",
+            "node": "26.3.0"
+          },
+          "scope": "Disposable databases only; actual Drizzle migrators; no seed/custom migration execution",
+          "cases": [
+            {
+              "dialect": "sqlite",
+              "scenario": "fresh",
+              "status": "passed",
+              "appliedMigrationRows": 57,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": false,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "sqlite",
+              "scenario": "worker",
+              "status": "passed",
+              "appliedMigrationRows": 57,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": true,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "sqlite",
+              "scenario": "classic",
+              "status": "passed",
+              "appliedMigrationRows": 56,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "fresh",
+              "status": "passed",
+              "appliedMigrationRows": 26,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": false,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "worker",
+              "status": "passed",
+              "appliedMigrationRows": 26,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": true,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "classic",
+              "status": "passed",
+              "appliedMigrationRows": 25,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            }
+          ],
+          "cleanup": {
+            "temporaryFiles": true,
+            "postgresDatabases": true,
+            "postgresContainer": true
+          },
+          "runtimeMode": "bun"
+        },
+        {
+          "date": "2026-11-19",
+          "runtimes": {
+            "node": "26.13.0"
+          },
+          "scope": "Disposable databases only; actual Drizzle migrators; no seed/custom migration execution",
+          "cases": [
+            {
+              "dialect": "sqlite",
+              "scenario": "fresh",
+              "status": "passed",
+              "appliedMigrationRows": 57,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": false,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "sqlite",
+              "scenario": "worker",
+              "status": "passed",
+              "appliedMigrationRows": 57,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": true,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "sqlite",
+              "scenario": "classic",
+              "status": "passed",
+              "appliedMigrationRows": 56,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "foreignKeysValid": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "fresh",
+              "status": "passed",
+              "appliedMigrationRows": 26,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": false,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "worker",
+              "status": "passed",
+              "appliedMigrationRows": 26,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": true,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            },
+            {
+              "dialect": "postgresql",
+              "scenario": "classic",
+              "status": "passed",
+              "appliedMigrationRows": 25,
+              "latestMigrationTimestamp": 1794300000000,
+              "representativeRowsPreserved": true,
+              "workerFederationDataPreserved": false,
+              "currentColumnsPresent": true,
+              "allConstraintsValidated": true,
+              "secondRunNoOp": true
+            }
+          ],
+          "cleanup": {
+            "temporaryFiles": true,
+            "postgresDatabases": true,
+            "postgresContainer": true
+          },
+          "runtimeMode": "node"
+        }
+      ],
+      "limitations": [
+        "SQL/journal upgrades validated through actual Drizzle migrators; seed and custom data migrations were excluded.",
+        "Direct driver migration validation does not invoke bundled migrate.cjs entrypoints."
+      ]
+    },
+    "packagedClassic": {
+      "runtime": "v24.22.3",
+      "nodeCjsMigrationFromOutsideCheckout": true,
+      "nodeCjsCliHelpFromOutsideCheckout": true,
+      "nodePathUsesAssembledRuntimeClosure": true,
+      "temporaryDatabaseRemoved": true
+    },
+    "packagedWorker": {
+      "runtime": "1.4.4",
+      "assembledWorkerOutsideCheckout": true,
+      "sqliteMigrationsAndSeed": true,
+      "bunCliHelp": true,
+      "workerHealthReady": true,
+      "unauthenticatedRpcReturns404": true,
+      "gracefulShutdown": true,
+      "reactNextAndNodeSqliteExcluded": true,
+      "temporaryDataRemoved": true
+    },
+    "publicationAndLocalState": {
+      "savedDownloadsFiltersEnforced": true,
+      "sharedDownloadsProjectionMatchesSavedFilters": true,
+      "memoryHashCasAtomicPublicationAndExpiry": true
+    },
+    "newWidgetPublication": {
+      "smartHomeSavedSelectionAndSubscription": true,
+      "smartHomeCatalogAndLiveProjectionScoped": true,
+      "smartHomeHistoryBoundAndRevisionInvalidation": true,
+      "smartHomeMutationDenied": true,
+      "wazuhSavedViewsAndFiltersEnforced": true,
+      "wazuhProjectionUsesSavedView": true
+    },
+    "thingportMedia": {
+      "glbMeshKindPreserved": true,
+      "stlMeshKindPreserved": true,
+      "thumbnailsRemainImageScoped": true
+    },
+    "frontend": {
+      "nextVersion": "16.4.6",
+      "nodeVersion": "24.22.3",
+      "compiledProductionBuild": true,
+      "dependencyPackaging": true,
+      "standaloneAssembly": true,
+      "typecheck": true,
+      "isolatedStandaloneHealthStatus": 200,
+      "isolatedWorkersPageStatus": 200,
+      "localDatabaseCreated": false,
+      "testBackendConfigured": false,
+      "serverStopped": true
+    },
+    "selectedExistingTests": {
+      "nativeApiMcp": 24,
+      "adaptedRouters": 46,
+      "workerViewerProtocol": 65,
+      "migrations": 15,
+      "localState": 19,
+      "sharedBeszelHelper": 7,
+      "bunHttpRuntime": 5,
+      "total": 181
+    }
+  }
+}

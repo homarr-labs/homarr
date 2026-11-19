@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { randomUUID } from "node:crypto";
 
 import AdmZip from "adm-zip";
 
@@ -24,7 +25,7 @@ export async function GET(req: Request) {
     return Response.json({ error: "Database file not found" }, { status: 500 });
   }
 
-  const tempPath = path.join(path.dirname(dbPath), "db.backup.sqlite");
+  const tempPath = path.join(path.dirname(dbPath), `db.backup.${randomUUID()}.sqlite`);
   let sourceDb: SqliteConnection | null = null;
 
   try {
@@ -46,12 +47,12 @@ export async function GET(req: Request) {
     zip.addFile("db.sqlite", dbBuffer);
     zip.addFile("metadata.json", Buffer.from(JSON.stringify(metadata, null, 2)));
 
-    const zipBuffer = zip.toBuffer();
+    const zipBuffer = (await zip.toBufferPromise()) as Buffer<ArrayBuffer>;
 
     const date = new Date().toISOString().split("T")[0];
     const filename = `homarr-backup-${date}.zip`;
 
-    return new Response(new Uint8Array(zipBuffer), {
+    return new Response(new Uint8Array(zipBuffer.buffer, zipBuffer.byteOffset, zipBuffer.byteLength), {
       status: 200,
       headers: {
         "Content-Type": "application/zip",

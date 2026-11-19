@@ -161,7 +161,7 @@ export default function CountdownWidget({
 
   return (
     <Stack className={styles.root} h="100%" gap="md" p="md">
-      <Paper withBorder p="lg" radius="md">
+      <Paper p="lg" radius="md">
         <Stack gap="md">
           <Group gap="xs" wrap="nowrap">
             {heroStatus && <Badge variant="outline">{heroStatus}</Badge>}
@@ -295,7 +295,7 @@ const EventSection = ({
       <Text fw={700}>{title}</Text>
       <SimpleGrid cols={columns} spacing="xs">
         {states.map((state) => (
-          <Paper className={styles.eventCard} key={state.event.id} withBorder p="sm">
+          <Paper className={styles.eventCard} key={state.event.id} p="sm">
             <Stack gap={4} h="100%">
               <Group justify="space-between" wrap="nowrap">
                 <Text fw={600} truncate>
@@ -334,7 +334,7 @@ const AlertControls = ({
   const t = useI18n("widget.countdown.alert");
   if (!persistent) return null;
   return (
-    <Paper withBorder p="sm" radius="md">
+    <Paper p="sm" radius="md">
       <Switch
         checked={preferences.notifications && notificationPermission === "granted"}
         disabled={disabled || notificationPermission === "unsupported" || notificationPermission === "denied"}

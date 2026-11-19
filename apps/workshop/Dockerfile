@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:1.25
+# syntax=docker/dockerfile:1.29@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183
 
-ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
+ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.40.6@sha256:9a0be68a80ca1348ba8d15f217b3f983be4c094b3c571a09b3ebdeb357259338
 
-FROM golang:1.25.7-alpine AS pocketbase-builder
+FROM golang:1.27.4-alpine@sha256:0a5f7fe796599ff487605987432e7619ae45beeb2fba4c2ce0b907879932aebf AS pocketbase-builder
 WORKDIR /src
 COPY apps/workshop/go.mod apps/workshop/go.sum ./
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download
@@ -13,9 +13,9 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.2-alpine AS bun-tool
+FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS bun-tool
 
-FROM node:24.18.0-alpine AS dependencies
+FROM node:24.22.3-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
 RUN apk add --no-cache libstdc++ python3 make g++
@@ -68,11 +68,12 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
     --mount=type=cache,id=workshop-next-build-${TARGETPLATFORM},target=/app/apps/docs/.next/cache,sharing=locked \
     --mount=type=cache,id=workshop-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.22.3" \
     CI=true SKIP_ENV_VALIDATION=true bun run turbo run build --filter=@homarr/docs
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090
+RUN apk upgrade --no-cache
 COPY --from=pocketbase-builder /out/pocketbase /usr/local/bin/pocketbase
 RUN addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint

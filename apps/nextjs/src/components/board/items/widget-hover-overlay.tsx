@@ -1,7 +1,9 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
 import { Suspense, use } from "react";
-import { Avatar, Text, Tooltip } from "@mantine/core";
+import { Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useEditMode } from "@homarr/boards/edit-mode";

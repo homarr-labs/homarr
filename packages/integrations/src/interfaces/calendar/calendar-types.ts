@@ -33,6 +33,7 @@ export interface CalendarEvent {
   description: string | null;
   startDate: Date;
   endDate: Date | null;
+  isAllDay?: boolean;
   image: CalendarImage | null;
   location: string | null;
   metadata?: CalendarMetadata;

@@ -1,24 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Center,
-  PasswordInput,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Alert, Button, Card, Center, PasswordInput, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
-import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
-import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+import {
+  isCustomWidgetSourceUrlPlaceholder,
+  isCustomWidgetHeaderSecretKind,
+  getCustomWidgetSecretRequirements,
+} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets";
 
 import { useI18n } from "@homarr/translation/client";
 import { useResourceFetch } from "@homarr/worker-client/resources";
@@ -26,7 +18,7 @@ import { useResourceFetch } from "@homarr/worker-client/resources";
 interface RequestDetails {
   widgetName: string;
   sourceName: string;
-  kinds: Array<"apiKey" | "username" | "password">;
+  kinds: CustomWidgetSecretKind[];
   expiresAt: number;
   status: "pending" | "applying" | "completed";
   source: CustomWidgetSource;
@@ -35,12 +27,12 @@ interface RequestDetails {
 export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const resourceFetch = useResourceFetch();
   const t = useI18n("customWidget.secretEntry");
+  const tCommon = useI18n("common");
   const tSecret = useI18n("customWidget.secret");
   const [details, setDetails] = useState<RequestDetails | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
   const [integrationId, setIntegrationId] = useState<string>();
   const [baseUrl, setBaseUrl] = useState("");
-  const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -56,7 +48,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         setDetails(body);
         const sourceBaseUrl = body.source.baseUrl ?? "";
         setBaseUrl(isCustomWidgetSourceUrlPlaceholder(sourceBaseUrl) ? "" : sourceBaseUrl);
-        setNetworkScope(body.source.networkScope ?? "public");
         setIntegrationId(body.source.integrationId);
       })
       .catch((cause: unknown) => {
@@ -72,7 +63,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
     setSaving(true);
     setError(null);
     try {
-      let configuration: unknown = { baseUrl, networkScope, secrets: values };
+      let configuration: unknown = { baseUrl, secrets: values };
       if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
       const response = await resourceFetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
@@ -92,7 +83,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
 
   return (
     <Center mih="100dvh" p="md">
-      <Card withBorder shadow="md" radius="lg" p="xl" w="100%" maw={480}>
+      <Card shadow="md" radius="lg" p="xl" w="100%" maw={480}>
         <Stack gap="lg">
           <ThemeIcon size={48} radius="xl" variant="light">
             <IconLock size={24} />
@@ -113,7 +104,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
           {details?.status === "applying" && <Alert color="blue">{t("applying")}</Alert>}
           {details?.status === "pending" && (
             <Stack gap="md">
-              <Card withBorder bg="var(--mantine-color-default-hover)">
+              <Card bg="var(--mantine-color-default-hover)">
                 <Text fw={600}>{details.widgetName}</Text>
                 <Text size="sm" c="dimmed">
                   {t("source", { name: details.sourceName })}
@@ -136,21 +127,20 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                     onChange={(event) => setBaseUrl(event.currentTarget.value)}
                     required
                   />
-                  <Select
-                    label={t("networkScope")}
-                    data={["public", "private", "loopback"]}
-                    value={networkScope}
-                    allowDeselect={false}
-                    onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
-                  />
                 </>
               )}
               {details.kinds.map((kind) => {
                 const Input = kind === "username" ? TextInput : PasswordInput;
+                let label: string;
+                if (isCustomWidgetHeaderSecretKind(kind)) {
+                  label =
+                    getCustomWidgetSecretRequirements({ default: details.source }).find((field) => field.kind === kind)
+                      ?.destination ?? kind.slice(7);
+                } else label = tSecret(kind);
                 return (
                   <Input
                     key={kind}
-                    label={tSecret(kind)}
+                    label={label}
                     leftSection={<IconKey size={16} />}
                     value={values[kind] ?? ""}
                     onChange={(event) => {
@@ -172,7 +162,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                 }
                 onClick={() => void submit()}
               >
-                {t("save")}
+                {tCommon("action.save")}
               </Button>
               <Text size="xs" c="dimmed">
                 {t("expires", { time: new Date(details.expiresAt).toLocaleTimeString() })}

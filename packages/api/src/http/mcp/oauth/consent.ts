@@ -129,6 +129,11 @@ export async function getMcpConsentResponse(request: Request) {
     "credential.breadth",
     "credential.lifetime",
     "requestExpires",
+    "mode.label",
+    "mode.readOnly",
+    "mode.readOnlyDescription",
+    "mode.readWrite",
+    "mode.readWriteDescription",
     "decisionHint",
     "deny",
     "allow",
@@ -179,6 +184,13 @@ export async function getMcpConsentResponse(request: Request) {
     <form method="post" action="/api/mcp/oauth/authorize" aria-describedby="decision-hint">
       <input type="hidden" name="pending" value="${escapeHtml(consent.pendingId)}">
       <input type="hidden" name="consentToken" value="${escapeHtml(consent.consentToken)}">
+      <label for="access-mode">${t("mode.label")}</label>
+      <select id="access-mode" name="accessMode" aria-describedby="access-mode-description">
+        <option value="readOnly" selected>${t("mode.readOnly")}</option>
+        ${consent.requestedScope === "mcp:tools" ? `<option value="readWrite">${t("mode.readWrite")}</option>` : ""}
+      </select>
+      <p id="access-mode-description">${t("mode.readOnlyDescription")}</p>
+      ${consent.requestedScope === "mcp:tools" ? `<p>${t("mode.readWriteDescription")}</p>` : ""}
       <p id="decision-hint">${t("decisionHint")}</p>
       <button type="submit" name="decision" value="deny">${t("deny")}</button>
       <button type="submit" name="decision" value="approve">${t("allow")}</button>

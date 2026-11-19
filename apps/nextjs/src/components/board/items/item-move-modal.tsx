@@ -1,26 +1,29 @@
 import { useCallback, useMemo } from "react";
-import { Grid, NumberInput, Select, Stack } from "@mantine/core";
+import { Grid, Input, NumberInput, Select, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { getRootSectionLane } from "@homarr/definitions";
+import { getBoardTabForSection } from "@homarr/boards/tabs";
+import { getBoardTabSections, getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
-import { getLayoutRowCount } from "../layout";
+import { doGridPlacementsOverlap, getLayoutRowCount } from "../layout";
 import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
 import type { RegisteredGridEditor } from "../sections/grid/grid-editor-registry";
 import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry";
 import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
+import { getCrossTabMoveSnapshots, getEntryMinimumSize, isSameOrDescendant } from "./actions/move-entry-across-tabs";
 
 export type MovableEntry = Pick<
   SectionItem | ContainerSectionItem,
   "id" | "type" | "width" | "height" | "xOffset" | "yOffset"
->;
+> &
+  Pick<SectionGridPlacement, "minW" | "minH">;
 
 export interface OpenItemMoveModalInput {
   entry: MovableEntry;
@@ -31,7 +34,7 @@ interface InnerProps extends OpenItemMoveModalInput {
   board: Board;
   currentLayoutId: string;
   commitSectionGrids: (snapshots: readonly CommitSectionGridInput[]) => void;
-  registeredGridEditors: ReadonlyMap<string, Pick<RegisteredGridEditor, "placementMaxRowCount">>;
+  registeredGridEditors: ReadonlyMap<string, RegisteredGridEditor>;
 }
 
 interface MoveTarget {
@@ -125,9 +128,31 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         w: width,
         h: height,
       };
-      const targetPlacements = getSectionGridPlacements(board, currentLayoutId, target.id).filter(
-        (placement) => placement.id !== entry.id,
+      const targetPlacements = (
+        registeredGridEditors.get(target.id)?.transactionPlacements ??
+        getSectionGridPlacements(board, currentLayoutId, target.id)
+      ).filter((placement) => placement.id !== entry.id);
+      const isResizeOnly =
+        target.id === sourceSectionId &&
+        values.xOffset === entry.xOffset &&
+        values.yOffset === entry.yOffset &&
+        (values.width !== entry.width || values.height !== entry.height);
+      const overlappingContainers = targetPlacements.filter(
+        (placement) => placement.type === "section" && doGridPlacementsOverlap(nextPlacement, placement),
       );
+      if (isResizeOnly && overlappingContainers.length > 0) {
+        const widthCausesOverlap = overlappingContainers.some(
+          (placement) => placement.x >= entry.xOffset + entry.width || placement.x + placement.w <= entry.xOffset,
+        );
+        const heightCausesOverlap = overlappingContainers.some(
+          (placement) => placement.y >= entry.yOffset + entry.height || placement.y + placement.h <= entry.yOffset,
+        );
+        if (widthCausesOverlap) form.setFieldError("width", tMoveResize("sizeOverlap"));
+        if (heightCausesOverlap) form.setFieldError("height", tMoveResize("sizeOverlap"));
+        if (!widthCausesOverlap && !heightCausesOverlap) form.setFieldError("size", tMoveResize("sizeOverlap"));
+        return;
+      }
+
       const resolvedTarget = resolvePinnedGridCollisions(
         [...targetPlacements, nextPlacement],
         nextPlacement,
@@ -145,14 +170,27 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               {
                 layoutId: currentLayoutId,
                 sectionId: sourceSectionId,
-                placements: getSectionGridPlacements(board, currentLayoutId, sourceSectionId).filter(
-                  (placement) => placement.id !== entry.id,
-                ),
+                placements: (
+                  registeredGridEditors.get(sourceSectionId)?.transactionPlacements ??
+                  getSectionGridPlacements(board, currentLayoutId, sourceSectionId)
+                ).filter((placement) => placement.id !== entry.id),
               },
               { layoutId: currentLayoutId, sectionId: target.id, placements: resolvedTarget },
             ];
 
-      commitSectionGrids(snapshots);
+      const crossTabSnapshots = getCrossTabMoveSnapshots({
+        board,
+        currentLayoutId,
+        entry,
+        sourceSectionId,
+        targetSectionId: target.id,
+      });
+      if (!crossTabSnapshots) {
+        form.setFieldError("sectionId", tMoveResize("keyboard.boundary"));
+        return;
+      }
+
+      commitSectionGrids([...snapshots, ...crossTabSnapshots]);
       actions.closeModal();
       focusMovedEntry(entry.id, target.id);
     },
@@ -164,6 +202,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       entry,
       form,
       minimumSize,
+      registeredGridEditors,
       sourceSectionId,
       targetById,
       tMoveResize,
@@ -222,6 +261,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
             />
           </Grid.Col>
         </Grid>
+        {form.errors.size && <Input.Error role="alert">{form.errors.size}</Input.Error>}
         <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>
     </form>
@@ -242,8 +282,12 @@ export const useOpenItemMoveModal = () => {
 
   return useCallback(
     (input: OpenItemMoveModalInput) => {
+      const placement = registeredGridEditors
+        .get(input.sourceSectionId)
+        ?.transactionPlacements.find((candidate) => candidate.id === input.entry.id);
       openModal({
         ...input,
+        entry: { ...input.entry, minW: placement?.minW, minH: placement?.minH },
         board,
         currentLayoutId,
         commitSectionGrids,
@@ -259,11 +303,18 @@ export const getMoveTargets = (
   layoutId: string,
   entry: MovableEntry,
   labels: MoveTargetLabels,
-  registeredGridEditors?: ReadonlyMap<string, { placementMaxRowCount: number | null }>,
+  registeredGridEditors?: ReadonlyMap<string, RegisteredGridEditor>,
 ): MoveTarget[] => {
   const minimum = getEntryMinimumSize(board, layoutId, entry);
 
   const candidates = board.sections.flatMap((section): MoveTargetCandidate[] => {
+    if (
+      getBoardTabSections(board.sections).length > 1 &&
+      registeredGridEditors &&
+      !registeredGridEditors.has(section.id) &&
+      !getBoardTabForSection(board, layoutId, section.id)
+    )
+      return [];
     if (section.kind === "empty") {
       const columnCount = getSectionColumnCount(board, layoutId, section.id);
       const lane = getRootSectionLane(section.xOffset);
@@ -284,10 +335,11 @@ export const getMoveTargets = (
 
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) return [];
+    const maxRowCount = registeredGridEditors?.get(section.id)?.placementMaxRowCount ?? layout.height;
     if (
       (entry.type === "section" && isSameOrDescendant(board, layoutId, section.id, entry.id)) ||
       minimum.width > layout.width ||
-      minimum.height > layout.height
+      minimum.height > maxRowCount
     ) {
       return [];
     }
@@ -297,7 +349,7 @@ export const getMoveTargets = (
         id: section.id,
         name: section.options.title || labels.container,
         columnCount: layout.width,
-        maxRowCount: layout.height,
+        maxRowCount,
       },
     ];
   });
@@ -326,28 +378,6 @@ const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string
     return section.layouts.find((candidate) => candidate.layoutId === layoutId)?.height ?? null;
   }
   return null;
-};
-
-const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
-  if (entry.type === "item") return { width: 1, height: 1 };
-  const children = getSectionGridPlacements(board, layoutId, entry.id);
-  return {
-    width: Math.max(1, ...children.map((child) => child.x + child.w)),
-    height: Math.max(1, ...children.map((child) => child.y + child.h)),
-  };
-};
-
-const isSameOrDescendant = (board: Board, layoutId: string, candidateId: string, ancestorId: string) => {
-  let current: string | undefined = candidateId;
-  const visited = new Set<string>();
-  while (current && !visited.has(current)) {
-    if (current === ancestorId) return true;
-    visited.add(current);
-    const section = board.sections.find((candidate) => candidate.id === current && candidate.kind === "container");
-    if (!section || section.kind !== "container") return false;
-    current = section.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId;
-  }
-  return false;
 };
 
 const focusMovedEntry = (entryId: string, sectionId: string) => {

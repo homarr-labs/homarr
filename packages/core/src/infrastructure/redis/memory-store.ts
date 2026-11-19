@@ -214,6 +214,24 @@ export class MemoryStateStore {
     return [...((this.read(key, "hash")?.value as Map<string, string> | undefined)?.values() ?? [])];
   }
 
+  hmget(key: string, ...fields: string[]) {
+    const values = this.read(key, "hash")?.value as Map<string, string> | undefined;
+    return fields.map((field) => values?.get(field) ?? null);
+  }
+
+  compareAndSwapHash(key: string, field: string, expectedValue: string, value: string, ttlMs: number, channel: string) {
+    const entry = this.read(key, "hash");
+    const fields = new Map((entry?.value as Map<string, string> | undefined) ?? []);
+    if ((fields.get(field) ?? "") !== expectedValue) return false;
+    const expiresAt = this.now() + positive(ttlMs);
+    // Reject before mutating the hash if the publication exceeds its shared budget.
+    if (stringBytes(value) > this.maxBytes / 4) throw new Error("State message exceeds local state limit");
+    fields.set(field, value);
+    this.write(key, fields, "hash", expiresAt);
+    this.publish(channel, value);
+    return true;
+  }
+
   releaseOwned(key: string, token: string) {
     if (this.get(key) === token) this.remove(key);
   }

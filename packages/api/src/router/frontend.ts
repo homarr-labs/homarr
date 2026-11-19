@@ -154,7 +154,8 @@ export const frontendRouter = createApiRouter({
     const canReadSetupContext =
       canConfigurePrivileged ||
       (!firstUser && (await isOnboardingClaimValidAsync(context.db, context.onboardingClaimToken)));
-    const availableBoards: { id: string; name: string; primaryColor: string; secondaryColor: string }[] = [];
+    const availableBoards: { id: string; name: string; primaryColor: string | null; secondaryColor: string | null }[] =
+      [];
     let homeBoardId: string | null | undefined;
     let workshopApiUrl = "";
     let workshopWebUrl = "";

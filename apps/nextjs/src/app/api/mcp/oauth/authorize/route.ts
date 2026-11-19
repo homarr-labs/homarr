@@ -1,1 +1,1 @@
-export { GET, POST } from "@homarr/api/http/mcp/oauth/authorize/route";
+export { forwardBackendRequestAsync as GET, forwardBackendRequestAsync as POST } from "~/server/backend-proxy";

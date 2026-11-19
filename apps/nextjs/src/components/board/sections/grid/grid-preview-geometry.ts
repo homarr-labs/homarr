@@ -13,6 +13,8 @@ interface SyncGridPreviewGeometryInput {
   activeId: string | null;
   mode: "drag" | "resize" | null;
   previous: GridPreviewDomState;
+  displayedPlacements?: readonly GridPlacement[];
+  displayedPreviewPlacements?: readonly GridPlacement[] | null;
 }
 
 export const createGridPreviewDomState = (): GridPreviewDomState => ({
@@ -27,8 +29,12 @@ export const syncGridPreviewGeometry = ({
   activeId,
   mode,
   previous,
+  displayedPlacements = placements,
+  displayedPreviewPlacements = previewPlacements,
 }: SyncGridPreviewGeometryInput): GridPreviewDomState => {
   const controlledById = new Map(placements.map((placement) => [placement.id, placement]));
+  const displayedById = new Map(displayedPlacements.map((placement) => [placement.id, placement]));
+  const previewById = new Map(displayedPreviewPlacements?.map((placement) => [placement.id, placement]));
   const changedIds = new Set<string>();
 
   if (previewPlacements && mode) {
@@ -36,9 +42,11 @@ export const syncGridPreviewGeometry = ({
       const controlled = controlledById.get(preview.id);
       const element = elements.get(preview.id);
       if (!controlled || !element || (mode === "drag" && preview.id === activeId)) continue;
-      if (arePlacementsEqual(controlled, preview)) continue;
+      const displayedControlled = displayedById.get(preview.id) ?? controlled;
+      const displayedPreview = previewById.get(preview.id) ?? preview;
+      if (arePlacementsEqual(displayedControlled, displayedPreview)) continue;
 
-      applyPreviewGeometry(element, controlled, preview);
+      applyPreviewGeometry(element, displayedControlled, displayedPreview, preview);
       changedIds.add(preview.id);
     }
   }
@@ -72,7 +80,12 @@ export const clearGridPreviewGeometry = (
   if (state.activeId) elements.get(state.activeId)?.removeAttribute("data-dnd-active");
 };
 
-const applyPreviewGeometry = (element: HTMLElement, controlled: GridPlacement, preview: GridPlacement) => {
+const applyPreviewGeometry = (
+  element: HTMLElement,
+  controlled: GridPlacement,
+  preview: GridPlacement,
+  logicalPreview: GridPlacement,
+) => {
   element.style.setProperty("--board-grid-preview-x", `${(preview.x - controlled.x) * LOGICAL_GRID_PITCH}px`);
   element.style.setProperty(
     "--board-grid-preview-y",
@@ -84,7 +97,7 @@ const applyPreviewGeometry = (element: HTMLElement, controlled: GridPlacement, p
     `calc(${getLogicalGridSize(preview.h)}px * var(--board-grid-row-scale, 1))`,
   );
   element.setAttribute("data-grid-preview", "true");
-  setPlacementAttributes(element, preview);
+  setPlacementAttributes(element, logicalPreview);
 };
 
 const clearPreviewGeometry = (element: HTMLElement, controlled: GridPlacement) => {

@@ -80,8 +80,8 @@ export const AdvancedFocusManualSurface = ({
         ref={contentRef}
         id={id}
         data-advanced-focus-surface
-        className={`${classes.manualSurface} ${phase === "closing" ? classes.surfaceClosing : ""}`}
-        style={geometryStyle}
+        classNames={{ content: classes.manualSurface }}
+        styles={{ content: geometryStyle }}
       >
         <Modal.Title>
           <VisuallyHidden>{label}</VisuallyHidden>

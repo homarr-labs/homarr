@@ -1,24 +1,31 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Tooltip } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { hasUnsavedBoardDrafts } from "@homarr/boards/draft-changes";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { getAddInPlaceState } from "~/components/board/in-place-editor/store";
+import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
+import type { Board } from "../_types";
+import { registerBoardDirtyLeaveGuard } from "./board-dirty-leave-guard";
 import type * as EditActionsModule from "./_edit-actions";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
@@ -62,9 +69,11 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
 
   return (
     <TourTarget id="board-settings">
-      <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
-        <IconSettings stroke={1.5} />
-      </HeaderButton>
+      <Tooltip label={t("action.settings")} events={{ hover: true, focus: true, touch: false }}>
+        <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
+          <IconSettings stroke={1.5} />
+        </HeaderButton>
+      </Tooltip>
     </TourTarget>
   );
 };
@@ -74,6 +83,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
+  const { updateBoard } = useUpdateBoard();
   const utils = clientApi.useUtils();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -89,6 +99,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const latestBoardRef = useRef(board);
 
   latestBoardRef.current = board;
+  useLayoutEffect(() => {
+    if (isEditMode) updateBoard(normalizeBoardLayoutBounds);
+  }, [isEditMode, updateBoard]);
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onMutate(boardToSave) {
       boardToSave.items.forEach(({ id }) => notifications.hide(`board-item-created:${id}`));
@@ -104,10 +118,12 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       close();
       if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
     },
-    onError() {
+    onError(error) {
+      let message = t("notification.error.message");
+      if (error.data?.isBoardLayoutBoundsError) message = error.message;
       showErrorNotification({
         title: tCommon("notification.update.error"),
-        message: t("notification.error.message"),
+        message,
       });
     },
   });
@@ -183,98 +199,108 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [board.name, close, openConfirmModal, router, tBoardSetting, tCommon, utils.board.getBoardByName]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
-  usePreventLeaveWithDirty(isEditMode);
+  usePreventLeaveWithUnsavedChanges(isEditMode, board);
 
   if (returnToLayoutSettings) {
     return (
       <>
-        <HeaderButton
-          onClick={() => saveBoard(board)}
-          loading={isPending}
-          aria-label={tBoardSetting("section.layout.edit.save")}
+        <Tooltip label={tBoardSetting("section.layout.edit.save")} events={{ hover: true, focus: true, touch: false }}>
+          <HeaderButton
+            onClick={() => saveBoard(board)}
+            loading={isPending}
+            aria-label={tBoardSetting("section.layout.edit.save")}
+          >
+            <IconDeviceFloppy stroke={1.5} />
+          </HeaderButton>
+        </Tooltip>
+        <Tooltip
+          label={tBoardSetting("section.layout.edit.cancel.action")}
+          events={{ hover: true, focus: true, touch: false }}
         >
-          <IconDeviceFloppy stroke={1.5} />
-        </HeaderButton>
-        <HeaderButton
-          onClick={cancelLayoutEdit}
-          disabled={isPending}
-          aria-label={tBoardSetting("section.layout.edit.cancel.action")}
-        >
-          <IconX stroke={1.5} />
-        </HeaderButton>
+          <HeaderButton
+            onClick={cancelLayoutEdit}
+            disabled={isPending}
+            aria-label={tBoardSetting("section.layout.edit.cancel.action")}
+          >
+            <IconX stroke={1.5} />
+          </HeaderButton>
+        </Tooltip>
       </>
     );
   }
 
+  const editLabel = isEditMode ? (demoReadOnly ? t("exit") : t("save")) : t("enter");
+
   return (
     <TourTarget id="board-edit-mode">
-      <HeaderButton
-        onClick={() => void toggle()}
-        onFocus={prewarmEditor}
-        onPointerEnter={prewarmEditor}
-        loading={isPending || isEnteringEditMode}
-        data-testid="board-edit-mode-toggle"
-        data-board-editor-preload-state={editorLoadState}
-        aria-busy={isPending || isEnteringEditMode}
-        aria-label={isEditMode ? (demoReadOnly ? t("exit") : t("save")) : t("enter")}
-        aria-pressed={isEditMode}
-      >
-        {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
-      </HeaderButton>
+      <Tooltip label={editLabel} events={{ hover: true, focus: true, touch: false }}>
+        <HeaderButton
+          onClick={() => void toggle()}
+          onFocus={prewarmEditor}
+          onPointerEnter={prewarmEditor}
+          loading={isPending || isEnteringEditMode}
+          data-testid="board-edit-mode-toggle"
+          data-board-editor-preload-state={editorLoadState}
+          aria-busy={isPending || isEnteringEditMode}
+          aria-label={editLabel}
+          aria-pressed={isEditMode}
+        >
+          {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
+        </HeaderButton>
+      </Tooltip>
     </TourTarget>
   );
 };
 
-const anchorSelector = "a[href]:not([target='_blank'])";
-const usePreventLeaveWithDirty = (isDirty: boolean) => {
+const usePreventLeaveWithUnsavedChanges = (isEditMode: boolean, board: Board) => {
+  const contentSnapshot = useMemo(
+    () => JSON.stringify({ items: board.items, sections: board.sections }),
+    [board.items, board.sections],
+  );
+  const [editSession, setEditSession] = useState({
+    boardId: board.id,
+    isEditMode,
+    initialContent: contentSnapshot,
+  });
+
+  // Capture only at session boundaries so cancelling a staged dialog cannot
+  // clear changes made earlier in the same edit session.
+  if (editSession.boardId !== board.id || editSession.isEditMode !== isEditMode) {
+    setEditSession({ boardId: board.id, isEditMode, initialContent: contentSnapshot });
+  }
+
+  const utils = clientApi.useUtils();
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isDirty) return;
+  useLayoutEffect(() => {
+    if (!isEditMode) return;
 
-    const handleClick = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>(anchorSelector) : null;
-      if (!target) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      openConfirmModal({
-        title: tBoard("action.edit.confirmLeave.title"),
-        children: tBoard("action.edit.confirmLeave.message"),
-        onConfirm() {
-          router.push(target.href);
-        },
-        confirmProps: {
-          children: tCommon("action.discard"),
-        },
-      });
-    };
-
-    const handlePopState = (event: Event) => {
-      window.history.pushState(null, document.title, window.location.href);
-      event.preventDefault();
-    };
-
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (process.env.NODE_ENV === "development") return;
-
-      event.preventDefault();
-      event.returnValue = true;
-    };
-
-    document.addEventListener("click", handleClick, true);
-    window.addEventListener("popstate", handlePopState);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      document.removeEventListener("click", handleClick, true);
-      window.removeEventListener("popstate", handlePopState);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [isDirty, openConfirmModal, router, tBoard, tCommon]);
+    return registerBoardDirtyLeaveGuard({
+      guardBeforeUnload: process.env.NODE_ENV !== "development",
+      isDirty() {
+        const currentBoard = utils.board.getBoardByName.getData({ name: board.name }) ?? board;
+        const session = getAddInPlaceState().session;
+        if (hasUnsavedBoardDrafts(board.id)) return true;
+        if (session?.dirty && currentBoard.sections.some((section) => section.id === session.sectionId)) return true;
+        return (
+          JSON.stringify({ items: currentBoard.items, sections: currentBoard.sections }) !== editSession.initialContent
+        );
+      },
+      confirmLeave(href) {
+        openConfirmModal({
+          title: tBoard("action.edit.confirmLeave.title"),
+          children: tBoard("action.edit.confirmLeave.message"),
+          onConfirm() {
+            router.push(href);
+          },
+          confirmProps: {
+            children: tCommon("action.discard"),
+          },
+        });
+      },
+    });
+  }, [isEditMode, board, editSession.initialContent, utils, openConfirmModal, router, tBoard, tCommon]);
 };

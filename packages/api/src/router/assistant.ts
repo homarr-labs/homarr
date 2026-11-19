@@ -748,18 +748,35 @@ export const assistantRouter = createApiRouter({
     .input(
       z.object({
         enabled: z.boolean(),
-        modelId: z.string().trim().min(1).max(256),
+        modelId: z.string().trim().min(1).max(256).optional(),
         webSearchEnabled: z.boolean().default(false),
       }),
     )
     .mutation(async ({ context, input }) => {
+      if (!input.enabled && !input.modelId) {
+        await context.db
+          .update(assistantConfigurations)
+          .set({ enabled: false, updatedAt: new Date() })
+          .where(eq(assistantConfigurations.id, configurationId));
+        return;
+      }
       const configuration = await getConfigurationAsync(context.db);
       if (!configuration) {
         throw new ApiError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
       }
+      if (!input.modelId && !configuration.modelId) {
+        throw new ApiError({ code: "BAD_REQUEST", message: "Choose a model before enabling the Assistant." });
+      }
       const requiresApiKey = assistantProviderRequiresApiKey(configuration.provider);
       if (input.enabled && requiresApiKey && !configuration.encryptedApiKey) {
         throw new ApiError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
+      }
+      if (!input.modelId) {
+        await context.db
+          .update(assistantConfigurations)
+          .set({ enabled: input.enabled, updatedAt: new Date() })
+          .where(eq(assistantConfigurations.id, configurationId));
+        return;
       }
       if (input.webSearchEnabled && !assistantProviderCanUseOpenRouterServerTools(configuration.provider)) {
         throw new ApiError({

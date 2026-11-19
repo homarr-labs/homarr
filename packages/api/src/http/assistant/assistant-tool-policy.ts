@@ -32,7 +32,7 @@ ${Object.values(CUSTOM_WIDGET_SKILL_REFERENCES).join("\n\n")}
 
 ${CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE}
 
-Function-call spread arguments are unsupported: use values.reduce((maximum, value) => Math.max(maximum, value), 0), not Math.max(...values). Use only the supplied iconNames (for example server, database, bell, cloud, circle-check), never React names such as IconServer.
+Function-call spread arguments are unsupported: use values.reduce((maximum, value) => Math.max(maximum, value), 0), not Math.max(...values). Use installed Tabler kebab-case icon names (for example server, database, bell, cloud, circle-check), never React names such as IconServer. The supplied iconNames are examples; filled icons end in -filled.
 Start the template directly with its root JSX element or fragment, without wrapping parentheses or Markdown fences; characters outside JSX render as literal text.
 Design for a roughly 320px-wide compact tile. Keep essential dates, readings and action labels visible: shorten their format or use rows instead of truncating them with lineClamp. Screen-width breakpoints do not measure a dashboard tile's width.
 

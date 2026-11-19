@@ -114,7 +114,10 @@ export const searchEngineRouter = createApiRouter({
       },
     });
 
-    if (serverDefault) return serverDefault;
+    if (serverDefault) {
+      if (!context.session?.user && serverDefault.type !== "generic") return null;
+      return serverDefault;
+    }
 
     // Remove the default search engine ID from settings if it does not longer exist
     try {

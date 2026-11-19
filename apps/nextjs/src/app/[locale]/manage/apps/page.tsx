@@ -1,21 +1,22 @@
+
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { Fragment } from "react";
 import { notFound, redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Text } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getSafeAppHref } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n } from "@homarr/translation/server";
-import { Link, SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, NoResults } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { NoResults } from "~/components/no-results";
+
 import { getAppsSectionAccess } from "../_access";
 import { AppDeleteButton } from "./_app-delete-button";
 
@@ -136,7 +137,6 @@ interface AppItemProps {
 
 const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
   const descriptionLines = app.description?.split("\n");
-  const safeHref = getSafeAppHref(app.href);
 
   return (
     <ManageCollectionItem
@@ -159,9 +159,9 @@ const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
         ) : undefined
       }
       metadata={
-        safeHref ? (
+        app.href ? (
           <Anchor
-            href={safeHref}
+            href={app.href}
             target="_blank"
             rel="noreferrer"
             lineClamp={1}

@@ -68,6 +68,11 @@ Changing settings requires full access to that integration; IDs do not grant acc
 Global integration permissions apply to every integration. Resource access can instead be granted to specific users
 or groups. Lists are filtered on the server and only include connections the current user can manage.
 
+Viewing a board also grants read access to every integration placed on it, regardless of integration permissions.
+The access covers the data of every widget that supports the integration, not only the widget on the board, and
+public boards extend it to anonymous visitors. Give integrations on shared or public boards credentials that can read
+only what their viewers may see.
+
 ## Connection problems
 
 If a connection test fails:

@@ -13,9 +13,9 @@ import { useI18n } from "@homarr/translation/client";
 
 import { BoardSettingsForm } from "~/app/[locale]/boards/[name]/settings/_settings-form";
 import { BoardCard } from "~/app/[locale]/manage/boards/_components/board-card";
-import { CreateBoardButton } from "~/app/[locale]/manage/boards/_components/create-board-button";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+import { BoardsPageContent } from "~/app/[locale]/manage/boards/_components/boards-page-content";
+import { TourTarget } from "~/components/layout/header/tour-target";
+import { NoResults } from "@homarr/ui";
 
 import { WorkerQuery, WorkerQueryStatus } from "./query-state";
 
@@ -23,40 +23,47 @@ export function WorkerBoardsRoute() {
   const query = clientApi.board.getManageOverview.useQuery();
   const { data: session } = useSession();
   const t = useI18n("management.page.board");
+  const canCreateBoards = session?.user.permissions.includes("board-create") ?? false;
+  let emptyTitle = t("noResults.title");
+  let emptyDescription = t("noResults.description");
+  if (!canCreateBoards) {
+    emptyTitle = t("noResults.noAccessTitle");
+    emptyDescription = t("noResults.noAccessDescription");
+  }
   return (
     <WorkerQuery query={query}>
       {(boards) => (
-        <ManagePageLayout title={t("title")}>
-          {session?.user.permissions.includes("board-create") && <CreateBoardButton />}
+        <BoardsPageContent title={t("title")} canCreateBoards={canCreateBoards}>
           {boards.length === 0 && (
-            <NoResults
-              icon={IconLayoutDashboard}
-              title={t("noResults.title")}
-              description={t("noResults.description")}
-            />
+            <NoResults icon={IconLayoutDashboard} title={emptyTitle} description={emptyDescription} />
           )}
-          <Grid>
-            {boards.map((board) => (
-              <GridCol span={{ base: 12, md: 6 }} key={board.id}>
-                <BoardCard
-                  board={board}
-                  isMenuVisible={constructBoardPermissions(board, session).hasChangeAccess}
-                  labels={{
-                    visibility: t(`visibility.${board.isPublic ? "public" : "private"}`),
-                    preview: t("preview.label", { name: board.name, count: String(board.preview?.items.length ?? 0) }),
-                    unknownCreator: t("preview.unknownCreator"),
-                    home: t("action.setHomeBoard.badge.label"),
-                    homeTooltip: t("action.setHomeBoard.badge.tooltip"),
-                    mobileHome: t("action.setMobileHomeBoard.badge.label"),
-                    mobileHomeTooltip: t("action.setMobileHomeBoard.badge.tooltip"),
-                    open: t("action.open.label"),
-                    settings: t("action.settings.label"),
-                  }}
-                />
-              </GridCol>
-            ))}
-          </Grid>
-        </ManagePageLayout>
+          <TourTarget id="manage-boards-list">
+            <Grid>
+              {boards.map((board) => (
+                <GridCol span={{ base: 12, md: 6 }} key={board.id}>
+                  <BoardCard
+                    board={board}
+                    isMenuVisible={constructBoardPermissions(board, session).hasChangeAccess}
+                    labels={{
+                      visibility: t(`visibility.${board.isPublic ? "public" : "private"}`),
+                      preview: t("preview.label", {
+                        name: board.name,
+                        count: String(board.preview?.items.length ?? 0),
+                      }),
+                      unknownCreator: t("preview.unknownCreator"),
+                      home: t("action.setHomeBoard.badge.label"),
+                      homeTooltip: t("action.setHomeBoard.badge.tooltip"),
+                      mobileHome: t("action.setMobileHomeBoard.badge.label"),
+                      mobileHomeTooltip: t("action.setMobileHomeBoard.badge.tooltip"),
+                      open: t("action.open.label"),
+                      settings: t("action.settings.label"),
+                    }}
+                  />
+                </GridCol>
+              ))}
+            </Grid>
+          </TourTarget>
+        </BoardsPageContent>
       )}
     </WorkerQuery>
   );

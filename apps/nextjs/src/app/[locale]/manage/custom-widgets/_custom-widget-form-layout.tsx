@@ -47,7 +47,7 @@ export function EditorSection({
   children: ReactNode;
 }) {
   return (
-    <Card id={id} component="section" withBorder p="lg" className={classes.editorSection}>
+    <Card id={id} component="section" p="lg" className={classes.editorSection}>
       <Stack gap="md">
         <Group gap="sm">
           <ThemeIcon variant="light" size="lg">

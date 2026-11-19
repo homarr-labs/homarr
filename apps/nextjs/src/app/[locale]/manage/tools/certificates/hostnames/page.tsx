@@ -1,4 +1,3 @@
-import { X509Certificate } from "node:crypto";
 import { notFound } from "next/navigation";
 import {
   Button,
@@ -16,12 +15,12 @@ import {
 import { IconCertificateOff } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
-import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
+import { api } from "@homarr/api/server";
 import { getI18n } from "@homarr/translation/server";
-import { Link } from "@homarr/ui";
+import { Link, NoResults } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { NoResults } from "~/components/no-results";
+
 import { RemoveHostnameActionIcon } from "./_components/remove-hostname";
 
 export default async function TrustedHostnamesPage() {
@@ -32,20 +31,7 @@ export default async function TrustedHostnamesPage() {
 
   const t = await getI18n("certificate");
 
-  const trustedHostnames = await getTrustedCertificateHostnamesAsync().then((hostnames) => {
-    return hostnames.map((hostname) => {
-      let subject: string | null;
-      try {
-        subject = new X509Certificate(hostname.certificate).subject;
-      } catch {
-        subject = null;
-      }
-      return {
-        ...hostname,
-        subject,
-      };
-    });
-  });
+  const trustedHostnames = await api.frontend.trustedCertificateHostnames.query();
 
   return (
     <>

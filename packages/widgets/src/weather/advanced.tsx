@@ -66,7 +66,7 @@ const HourlyChartTooltip = ({ active, payload }: HourlyChartTooltipProps) => {
   if (!active || !datum) return null;
 
   return (
-    <Paper p="xs" radius="sm" shadow="md" withBorder>
+    <Paper p="xs" radius="sm" shadow="md">
       <Text size="sm" fw={600} mb={4}>
         {datum.tooltipLabel}
       </Text>

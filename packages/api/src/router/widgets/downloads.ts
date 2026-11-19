@@ -6,7 +6,7 @@ import { downloadClientItemSchema } from "@homarr/integrations/downloads";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
-import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
@@ -46,19 +46,48 @@ const runDownloadMutationsAsync = async (mutations: Promise<void>[], integration
   if (failure) throw failure.reason;
 };
 
+// Accept exactly one torrent hash, never a client's "all" or hash-list syntax.
+const categoryItemIdSchema = z.string().regex(/^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$/);
+
 export const downloadsRouter = createApiRouter({
   getJobsAndStatuses: publicProcedure
     .meta({
       mcp: {
         enabled: true,
         description:
-          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7. Archived history is scanned in pages of 100, up to 100 pages.",
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For qBittorrent, Transmission and Deluge, optional selection applies completed/category filters and supported sorting before the display limit. qBittorrent scans at most 100 pages of at most 100 torrents; Transmission and Deluge select from their full RPC responses. Unsupported sort fields and other providers still sort the returned window locally. For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7. Archived history is scanned in pages of 100, up to 100 pages.",
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "downloads"))
     .input(
       z.object({
         limitPerIntegration: z.number().default(50),
+        selection: z
+          .object({
+            sort: z.enum([
+              "name",
+              "progress",
+              "size",
+              "downSpeed",
+              "upSpeed",
+              "time",
+              "added",
+              "ratio",
+              "received",
+              "sent",
+              "index",
+              "type",
+              "state",
+              "category",
+              "integration",
+            ]),
+            descending: z.boolean(),
+            categoryFilter: z.array(z.string().max(1000)).max(100),
+            filterIsWhitelist: z.boolean(),
+            showCompletedTorrent: z.boolean(),
+            activeTorrentThreshold: z.number().min(0),
+          })
+          .optional(),
         includeArchivedHistory: z.boolean().default(false),
         historyWindowDays: z.number().int().min(1).default(7),
       }),
@@ -69,6 +98,7 @@ export const downloadsRouter = createApiRouter({
         async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, {
             limit: input.limitPerIntegration,
+            selection: input.selection,
             includeArchivedHistory: input.includeArchivedHistory,
             historyWindowDays: input.historyWindowDays,
           });
@@ -150,6 +180,37 @@ export const downloadsRouter = createApiRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
         context.integrations.map(({ id }) => id),
+      );
+    }),
+  getCategories: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge", "transmission"))
+    .query(async ({ context }) => {
+      const integration = await createIntegrationAsync(context.integration);
+      return await integration.getCategoriesAsync();
+    }),
+  setCategory: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "qBittorrent", "deluge"))
+    .input(
+      z.object({
+        itemId: categoryItemIdSchema,
+        category: z.string().max(1000),
+      }),
+    )
+    .mutation(async ({ context, input }) => {
+      const integration = await createIntegrationAsync(context.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemCategoryAsync(input.itemId, input.category)],
+        [context.integration.id],
+      );
+    }),
+  setLabels: protectedProcedure
+    .concat(createOneIntegrationMiddleware("interact", "transmission"))
+    .input(z.object({ itemId: categoryItemIdSchema, labels: z.array(z.string().min(1).max(1000)).max(100) }))
+    .mutation(async ({ context, input }) => {
+      const integration = await createIntegrationAsync(context.integration);
+      await runDownloadMutationsAsync(
+        [integration.setItemLabelsAsync(input.itemId, [...new Set(input.labels)])],
+        [context.integration.id],
       );
     }),
   deleteItem: protectedProcedure

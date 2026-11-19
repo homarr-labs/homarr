@@ -12,6 +12,7 @@ import { notificationsWidget } from ".";
 import { ntfyIntegration } from "@site/docs/integrations/ntfy";
 import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
 import { gotifyIntegration } from "@site/docs/integrations/gotify";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
 
 <WidgetHeader widget={notificationsWidget} categories={["Notifications", "Messaging"]} />
 
@@ -21,7 +22,12 @@ available service icons.
 ### Supported Integrations
 
 <WidgetIntegrations
-  items={[{ integration: ntfyIntegration }, { integration: nextcloudIntegration }, { integration: gotifyIntegration }]}
+  items={[
+    { integration: ntfyIntegration },
+    { integration: nextcloudIntegration },
+    { integration: gotifyIntegration },
+    { integration: wazuhIntegration },
+  ]}
 />
 
 ### Adding the widget

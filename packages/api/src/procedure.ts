@@ -23,8 +23,11 @@ import { resolveRequestIdentity, userAgent } from "@homarr/common/server";
 import type { DeviceType, RequestIdentity } from "@homarr/common/server";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import { env } from "./env";
+import { isReadOnlyProcedure } from "./credential-access";
+import type { CredentialAccessMeta } from "./credential-access";
 import { getOnboardingClaimTokenFromCookieHeader, isClaimOnlyOnboardingAccessAllowedAsync } from "./onboarding-claim";
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 import type { McpMeta } from "./mcp-tools";
@@ -72,6 +75,9 @@ export const createApiContext = (opts: { headers: Headers; session: Session | nu
 export class ApiError extends ORPCError<ORPCErrorCode, unknown> {
   constructor(options: { code: ORPCErrorCode; message?: string; cause?: unknown; data?: unknown }) {
     let data = options.data;
+    if (data === undefined && options.cause instanceof BoardLayoutBoundsError) {
+      data = { zodError: null, error: null, isBoardLayoutBoundsError: true };
+    }
     if (data === undefined && options.cause instanceof ZodError) {
       data = { zodError: options.cause.flatten(), error: null };
     }
@@ -83,7 +89,7 @@ export class ApiError extends ORPCError<ORPCErrorCode, unknown> {
 }
 
 export type ApiOperation = "query" | "mutation" | "subscription";
-export interface ApiMeta extends McpMeta {
+export interface ApiMeta extends McpMeta, CredentialAccessMeta {
   integration?: { action: "query" | "interact" | "full"; cardinality: "one" | "many" };
   operationType?: ApiOperation;
   openapi?: {
@@ -280,8 +286,14 @@ export const isDemoMode = env.DEMO_MODE;
 export const isDemoReadOnly = env.DEMO_MODE && env.DEMO_READ_ONLY;
 // This middleware precedes input parsing, so field errors also reach native clients.
 // Output validation errors retain oRPC's private server-error payload.
-const formattedProcedure = os.$context<ApiContext>().use(async ({ next }) => {
+const formattedProcedure = os.$context<ApiContext>().use(async ({ context, procedure, next }) => {
   try {
+    const metadata = procedure["~orpc"].meta;
+    const readOnly =
+      typeof metadata.operationType === "string" && isReadOnlyProcedure(metadata.operationType, metadata);
+    if (context.session?.apiKey?.readOnly && !readOnly) {
+      throw new ApiError({ code: "FORBIDDEN", message: "This credential only permits read-only operations" });
+    }
     return await next();
   } catch (error) {
     if (error instanceof ORPCError && error.code === "BAD_REQUEST" && error.cause instanceof ValidationError) {

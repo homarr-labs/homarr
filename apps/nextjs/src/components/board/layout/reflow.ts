@@ -77,8 +77,8 @@ export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
   const displayPlacements = normalized.map((placement) => {
     if (!collapsedItemIds.has(placement.id)) return placement;
     const height = collapsedRowCountById?.get(placement.id) ?? collapsedRowCount;
-    if (!Number.isFinite(height) || height <= 0) {
-      throw new RangeError("collapsedRowCount must be positive and finite");
+    if (!Number.isFinite(height) || height < 0) {
+      throw new RangeError("collapsed row counts must be zero or positive and finite");
     }
     return { ...placement, h: height };
   });
@@ -156,12 +156,14 @@ const getCollapsedVerticalShift = (
     .filter(
       (collapsed) =>
         collapsed.id !== candidate.id &&
-        collapsed.y + collapsed.h <= candidate.y &&
+        collapsed.y < candidate.y &&
         doGridPlacementsOverlapHorizontally(candidate, collapsed),
     )
     .map((collapsed) => ({
       start: collapsed.y + getRequiredPlacement(displayById, collapsed.id).h,
-      end: collapsed.y + collapsed.h,
+      // A container can outgrow its saved footprint and overlap this neighbour.
+      // Only remove the collapsed space above the neighbour's saved row.
+      end: Math.min(collapsed.y + collapsed.h, candidate.y),
     }))
     .toSorted((first, second) => first.start - second.start || first.end - second.end);
 

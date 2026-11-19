@@ -49,6 +49,9 @@ export const MaskedOrNormalImage = ({
       src={imageUrl}
       alt={alt}
       fit={fit}
+      loading="lazy"
+      decoding="async"
+      fetchPriority="low"
       style={{ ...style }}
     />
   );

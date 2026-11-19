@@ -92,6 +92,7 @@ export const customJsxComponentHover = hoverTooltip((view, position) => {
 function activeOpeningComponent(source: string, position: number): string | undefined {
   const match = source.slice(0, position).match(/<([A-Z][A-Za-z0-9.]*)\b[^<>]*$/u);
   const name = match?.[1];
+  if (name === "Icon") return "TablerIcon";
   return name && customJsxCatalogComponentByName.get(name)?.safety !== "denied" ? name : undefined;
 }
 

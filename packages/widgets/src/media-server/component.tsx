@@ -2,7 +2,7 @@
 
 import { ResourceAvatar as Avatar } from "@homarr/ui";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   Badge,
   Divider,
@@ -32,7 +32,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { formatBitRate, objectEntries } from "@homarr/common";
+import { formatBitRate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
@@ -180,8 +180,17 @@ export default function MediaServerWidget({
   });
   const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
+  const isRefreshFailing = currentStreamsQuery.isError;
+  const integrationResults = useMemo(
+    () =>
+      isRefreshFailing
+        ? currentStreams.map((stream) => ({ ...stream, error: stream.error ?? "REFRESH_FAILED" }))
+        : currentStreams,
+    [currentStreams, isRefreshFailing],
+  );
 
   const t = useI18n("widget.mediaServer");
+  const tCommon = useI18n("common");
   const tSearch = useI18n("search");
   const isAdvanced = displayMode === "advanced";
   const showLocation = isAdvanced || options.showLocation;
@@ -210,6 +219,12 @@ export default function MediaServerWidget({
     () => filterAndSortSessions(flatSessions, isAdvanced ? search : "", isAdvanced ? sort : null),
     [flatSessions, isAdvanced, search, sort],
   );
+
+  const playingSessionCount = flatSessions.filter((session) => session.currentlyPlaying !== null).length;
+  const showSessionStats =
+    options.detailedSessionLimit > 0 && playingSessionCount > 0 && playingSessionCount <= options.detailedSessionLimit;
+  const statsColumnCount = getSessionStatsColumnCount(width);
+  const tableColumnCount = 1 + Number(columnVisibility.user) + Number(columnVisibility.status);
 
   const toggleSort = (column: SortColumn) =>
     setSort((current) =>
@@ -240,7 +255,7 @@ export default function MediaServerWidget({
     }
   }
   const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
-  const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
+  const hasFailedIntegrations = integrationResults.some(({ error }) => Boolean(error));
 
   return (
     <Stack className={classes.root} gap={0} h="100%" display="flex">
@@ -262,22 +277,29 @@ export default function MediaServerWidget({
               aria-label={tSearch("placeholder")}
               leftSection={<IconSearch size="var(--mantine-font-size-xs)" aria-hidden />}
             />
-            <IntegrationErrorIndicator results={currentStreams} />
+            <IntegrationErrorIndicator results={integrationResults} />
           </Group>
         </Group>
       )}
       {!isAdvanced && hasFailedIntegrations && (
         <Group px="xs" justify="flex-end">
-          <IntegrationErrorIndicator results={currentStreams} />
+          <IntegrationErrorIndicator results={integrationResults} />
         </Group>
       )}
       <ScrollArea
         className={classes.tableViewport}
         data-media-server-streams
+        data-fit-content-viewport
         scrollbars="xy"
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
-        <Table stickyHeader highlightOnHover={!isEditMode} layout="fixed" className="media-server-widget-table">
+        <Table
+          stickyHeader
+          highlightOnHover={!isEditMode}
+          layout="fixed"
+          className="media-server-widget-table"
+          data-fit-content-natural
+        >
           <Table.Thead>
             <Table.Tr>
               {columnVisibility.user && (
@@ -300,7 +322,7 @@ export default function MediaServerWidget({
               {columnVisibility.status && (
                 <StreamTableHeader
                   column="status"
-                  label={t("items.status")}
+                  label={tCommon("field.status")}
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
@@ -323,91 +345,103 @@ export default function MediaServerWidget({
                 currentlyPlaying?.metadata?.transcoding.resolution ?? currentlyPlaying?.metadata?.video.resolution;
               const resolutionLabel = resolution ? getResolutionLabel(resolution.width, resolution.height) : null;
               const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
+              const hasStatsRow = showSessionStats && currentlyPlaying !== null;
+              const rowClassName = [isEditMode ? null : classes.sessionRow, hasStatsRow ? classes.detailedRow : null]
+                .filter(Boolean)
+                .join(" ");
 
               return (
-                <Table.Tr
-                  key={rowId}
-                  className={isEditMode ? undefined : classes.sessionRow}
-                  tabIndex={isEditMode ? -1 : 0}
-                  aria-label={session.sessionName}
-                  aria-haspopup={isEditMode ? undefined : "dialog"}
-                  aria-expanded={isEditMode ? undefined : selectedRowId === rowId}
-                  onClick={isEditMode ? undefined : toggleDetails}
-                  onKeyDown={
-                    isEditMode
-                      ? undefined
-                      : (event) => {
-                          if (event.currentTarget !== event.target) return;
-                          if (event.key !== "Enter" && event.key !== " ") return;
-                          event.preventDefault();
-                          toggleDetails();
-                        }
-                  }
-                >
-                  {columnVisibility.user && (
+                <Fragment key={rowId}>
+                  <Table.Tr
+                    className={rowClassName || undefined}
+                    tabIndex={isEditMode ? -1 : 0}
+                    aria-label={session.sessionName}
+                    aria-haspopup={isEditMode ? undefined : "dialog"}
+                    aria-expanded={isEditMode ? undefined : selectedRowId === rowId}
+                    onClick={isEditMode ? undefined : toggleDetails}
+                    onKeyDown={
+                      isEditMode
+                        ? undefined
+                        : (event) => {
+                            if (event.currentTarget !== event.target) return;
+                            if (event.key !== "Enter" && event.key !== " ") return;
+                            event.preventDefault();
+                            toggleDetails();
+                          }
+                    }
+                  >
+                    {columnVisibility.user && (
+                      <Table.Td>
+                        <Group gap="xs" wrap="nowrap" w="100%">
+                          <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
+                          <Stack gap={2} className={classes.cellContent}>
+                            <Text size="xs" truncate>
+                              {session.user?.username ?? t("items.unknownUser")}
+                            </Text>
+                            <Text size="xs" c="dimmed" truncate>
+                              {session.sessionName}
+                            </Text>
+                          </Stack>
+                        </Group>
+                      </Table.Td>
+                    )}
                     <Table.Td>
-                      <Group gap="xs" wrap="nowrap" w="100%">
-                        <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
-                        <Stack gap={2} className={classes.cellContent}>
-                          <Text size="xs" truncate>
-                            {session.user?.username ?? t("items.unknownUser")}
-                          </Text>
-                          <Text size="xs" c="dimmed" truncate>
-                            {session.sessionName}
-                          </Text>
-                        </Stack>
-                      </Group>
+                      <SessionDetailsPopover
+                        item={session}
+                        opened={selectedRowId === rowId}
+                        onChange={(opened) => setSelectedRowId(opened ? rowId : null)}
+                      >
+                        <CurrentlyPlaying item={session} />
+                      </SessionDetailsPopover>
                     </Table.Td>
-                  )}
-                  <Table.Td>
-                    <SessionDetailsPopover
-                      item={session}
-                      opened={selectedRowId === rowId}
-                      onChange={(opened) => setSelectedRowId(opened ? rowId : null)}
-                    >
-                      <CurrentlyPlaying item={session} />
-                    </SessionDetailsPopover>
-                  </Table.Td>
-                  {columnVisibility.status && (
-                    <Table.Td>
-                      {currentlyPlaying && (
-                        <Stack gap={4} align="flex-start" w="100%" className={classes.cellContent}>
-                          <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
-                            <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                              {t(`items.${status}` as never)}
-                            </Badge>
-                            {location && (
-                              <Group gap={4} align="center" wrap="nowrap">
-                                {location === "lan" ? (
-                                  <IconWifi size="var(--mantine-font-size-xs)" />
-                                ) : (
-                                  <IconWorld size="var(--mantine-font-size-xs)" />
-                                )}
-                                <Text size="xs" c="dimmed" tt="uppercase">
-                                  {location}
-                                </Text>
-                              </Group>
-                            )}
-                          </Group>
-                          {(resolutionLabel ?? bitrateLabel) && (
+                    {columnVisibility.status && (
+                      <Table.Td>
+                        {currentlyPlaying && (
+                          <Stack gap={4} align="flex-start" w="100%" className={classes.cellContent}>
                             <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
-                              {resolutionLabel && (
-                                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                                  {resolutionLabel}
-                                </Text>
-                              )}
-                              {bitrateLabel && (
-                                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                                  {bitrateLabel}
-                                </Text>
+                              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                                {t(`items.${status}` as never)}
+                              </Badge>
+                              {location && (
+                                <Group gap={4} align="center" wrap="nowrap">
+                                  {location === "lan" ? (
+                                    <IconWifi size="var(--mantine-font-size-xs)" />
+                                  ) : (
+                                    <IconWorld size="var(--mantine-font-size-xs)" />
+                                  )}
+                                  <Text size="xs" c="dimmed" tt="uppercase">
+                                    {location}
+                                  </Text>
+                                </Group>
                               )}
                             </Group>
-                          )}
-                        </Stack>
-                      )}
-                    </Table.Td>
+                            {(resolutionLabel ?? bitrateLabel) && (
+                              <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                                {resolutionLabel && (
+                                  <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                    {resolutionLabel}
+                                  </Text>
+                                )}
+                                {bitrateLabel && (
+                                  <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                    {bitrateLabel}
+                                  </Text>
+                                )}
+                              </Group>
+                            )}
+                          </Stack>
+                        )}
+                      </Table.Td>
+                    )}
+                  </Table.Tr>
+                  {hasStatsRow && (
+                    <Table.Tr className={classes.statsRow} data-media-server-stats-row>
+                      <Table.Td colSpan={tableColumnCount}>
+                        <SessionStats item={session} columnCount={statsColumnCount} />
+                      </Table.Td>
+                    </Table.Tr>
                   )}
-                </Table.Tr>
+                </Fragment>
               );
             })}
           </Table.Tbody>
@@ -566,11 +600,12 @@ export function SessionDetailsPopover({
       opened={opened}
       onChange={onChange}
       position="bottom-start"
-      width="min(26.25rem, calc(100vw - 1.5rem))"
+      width="min(26rem, calc(100vw - 1.5rem))"
       shadow="md"
       withArrow
       withinPortal
       returnFocus
+      middlewares={{ flip: true, shift: { padding: 8 } }}
     >
       <Popover.Target>
         <UnstyledButton
@@ -584,106 +619,323 @@ export function SessionDetailsPopover({
           {children}
         </UnstyledButton>
       </Popover.Target>
-      <Popover.Dropdown>
+      <Popover.Dropdown p="sm" style={{ maxHeight: "calc(100vh - 1.5rem)", overflowY: "auto" }}>
         <SessionDetails item={item} />
       </Popover.Dropdown>
     </Popover>
   );
 }
 
-function SessionDetails({ item }: { item: StreamSession }) {
-  const t = useI18n("widget.mediaServer.items");
-  const Icon = item.currentlyPlaying ? mediaTypeIconMap[item.currentlyPlaying.type] : null;
+export const formatPlaybackTime = (ms: number | null | undefined): string | null => {
+  if (ms === null || ms === undefined || !Number.isFinite(ms) || ms < 0) return null;
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+  if (hours > 0) return `${hours}:${String(minutes).padStart(2, "0")}:${seconds}`;
+  return `${minutes}:${seconds}`;
+};
 
-  const metadata = item.currentlyPlaying?.metadata ? constructMetadata(item.currentlyPlaying.metadata) : null;
+export const formatChannelLayout = (channelCount: number | null | undefined): string | null => {
+  if (!channelCount || channelCount <= 0) return null;
+  if (channelCount === 6) return "5.1";
+  if (channelCount === 8) return "7.1";
+  return `${channelCount}.0`;
+};
+
+export const formatFrameRate = (frameRate: number | null | undefined): string | null => {
+  if (!frameRate || !Number.isFinite(frameRate) || frameRate <= 0) return null;
+  return `${Number(frameRate.toFixed(3))} fps`;
+};
+
+export const formatCodec = (codec: string | null | undefined): string | null => (codec ? codec.toUpperCase() : null);
+
+const formatResolution = (resolution: { width: number; height: number } | null | undefined): string | null => {
+  if (!resolution) return null;
+  return `${resolution.width}×${resolution.height} (${getResolutionLabel(resolution.width, resolution.height)})`;
+};
+
+interface DetailEntry {
+  key: string;
+  label: string;
+  value: ReactNode;
+  fullWidth: boolean;
+}
+
+const createEntry = (
+  key: string,
+  label: string,
+  value: ReactNode | null | undefined,
+  fullWidth = false,
+): DetailEntry | null =>
+  value === null || value === undefined || value === "" ? null : { key, label, value, fullWidth };
+
+const DetailGrid = ({ entries, cols = 3 }: { entries: (DetailEntry | null)[]; cols?: number }) => {
+  const visible = entries.filter((entry): entry is DetailEntry => entry !== null);
+  if (visible.length === 0) return null;
 
   return (
-    <Stack gap="sm" style={{ minWidth: 0 }}>
-      {Icon && item.currentlyPlaying && (
-        <Group gap="sm" align="flex-start" wrap="nowrap">
-          <Icon size={22} style={{ flexShrink: 0 }} />
-          <Stack gap={2} style={{ minWidth: 0 }}>
-            <Text fw={600} lineClamp={2}>
-              {item.currentlyPlaying.name}
-            </Text>
-            {item.currentlyPlaying.episodeName && (
-              <Text size="xs" c="dimmed" lineClamp={2}>
-                {[item.currentlyPlaying.episodeName, item.currentlyPlaying.seasonName].filter(Boolean).join(" · ")}
-              </Text>
-            )}
-          </Stack>
-        </Group>
-      )}
-      <NormalizedLine
-        itemKey={t("user")}
-        value={
-          <Group gap="xs" align="center" wrap="nowrap">
-            <Avatar size="xs" src={item.user?.profilePictureUrl} />
-            <Text size="sm" truncate>
-              {item.user?.username ?? t("unknownUser")}
-            </Text>
-          </Group>
-        }
-      />
-      <NormalizedLine
-        itemKey={t("name")}
-        value={
-          <Text size="sm" truncate>
-            {item.sessionName}
+    <SimpleGrid cols={cols} spacing="xs" verticalSpacing={6}>
+      {visible.map((entry) => (
+        <Stack key={entry.key} gap={0} style={{ minWidth: 0, gridColumn: entry.fullWidth ? "1 / -1" : undefined }}>
+          <Text fz={11} c="dimmed" truncate>
+            {entry.label}
           </Text>
-        }
-      />
-      <NormalizedLine
-        itemKey={t("id")}
-        value={
-          <Text size="xs" ff="monospace" truncate>
-            {item.sessionId}
+          <Text component="div" size="xs" fw={500} truncate>
+            {entry.value}
           </Text>
-        }
-      />
-
-      {metadata ? (
-        <Stack gap="xs">
-          <Divider label={t("metadata.title")} labelPosition="left" />
-          <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm" verticalSpacing="xs">
-            {objectEntries(metadata).map(([key, entries]) => (
-              <Stack key={key} gap={4} style={{ minWidth: 0 }}>
-                <Text fw={600} size="xs">
-                  {t(`metadata.${key}.title`)}
-                </Text>
-                {Object.entries(entries)
-                  .filter(([_, entryValue]) => Boolean(entryValue))
-                  .map(([innerKey, entryValue]) => (
-                    <Group justify="space-between" gap="xs" key={innerKey} wrap="nowrap">
-                      <Text size="xs" c="dimmed">
-                        {t(`metadata.${key}.${innerKey}` as never)}
-                      </Text>
-                      <Text size="xs" ta="right" truncate>
-                        {entryValue}
-                      </Text>
-                    </Group>
-                  ))}
-              </Stack>
-            ))}
-          </SimpleGrid>
         </Stack>
-      ) : null}
-    </Stack>
+      ))}
+    </SimpleGrid>
+  );
+};
+
+const STATS_COLUMN_MIN_WIDTH = 150;
+
+export const getSessionStatsColumnCount = (width: number) =>
+  Math.min(5, Math.max(2, Math.floor(width / STATS_COLUMN_MIN_WIDTH)));
+
+const formatClockTime = (date: Date) => date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
+function useSessionDetailValues(item: StreamSession) {
+  const t = useI18n("widget.mediaServer.items");
+  const playing = item.currentlyPlaying;
+  const metadata = playing?.metadata ?? null;
+  const transcoding = metadata?.transcoding;
+  const status = playing ? getPlaybackStatus(transcoding) : null;
+  const playbackState = playing?.playback?.state ?? null;
+  let playbackStateLabel: string | null = null;
+  if (playbackState === "paused") {
+    playbackStateLabel = t("paused");
+  } else if (playbackState) {
+    playbackStateLabel = t(`state.${playbackState}`);
+  }
+  const positionMs = playing?.playback?.positionMs ?? null;
+  const durationMs = playing?.playback?.durationMs ?? null;
+  const progress =
+    positionMs !== null && durationMs !== null && durationMs > 0
+      ? Math.min(100, (positionMs / durationMs) * 100)
+      : null;
+  const position = formatPlaybackTime(positionMs);
+  const duration = formatPlaybackTime(durationMs);
+  const remainingMinutes =
+    positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+  const seasonEpisode = playing ? getSeasonEpisodeParams(playing.seasonNumber, playing.episodeNumber) : null;
+  let subtitle = "";
+  if (playing) {
+    const parts = seasonEpisode
+      ? [t("seasonEpisode", seasonEpisode), playing.episodeName]
+      : [playing.episodeName, playing.seasonName, playing.albumName];
+    subtitle = parts.filter(Boolean).join(" · ");
+  }
+
+  let videoHandling: string | null = null;
+  let audioHandling: string | null = null;
+  if (transcoding) {
+    const videoTarget = [formatCodec(transcoding.target.videoCodec), formatResolution(transcoding.resolution)]
+      .filter(Boolean)
+      .join(" · ");
+    videoHandling = transcoding.isVideoDirect
+      ? t("details.direct")
+      : t("details.transcode", { target: videoTarget || t("details.unknown") });
+    audioHandling = transcoding.isAudioDirect
+      ? t("details.direct")
+      : t("details.transcode", { target: formatCodec(transcoding.target.audioCodec) ?? t("details.unknown") });
+  }
+
+  let container: string | null = null;
+  if (transcoding?.container) {
+    const containerName = transcoding.container.toUpperCase();
+    container = transcoding.containerChanged
+      ? t("details.containerChanged", { container: containerName })
+      : containerName;
+  }
+  const location = playing?.location?.toUpperCase() ?? null;
+  const audioFormat = metadata
+    ? [formatCodec(metadata.audio.codec), formatChannelLayout(metadata.audio.channelCount)].filter(Boolean).join(" ")
+    : "";
+
+  return {
+    t,
+    playing,
+    metadata,
+    status,
+    playbackState,
+    playbackStateLabel,
+    progress,
+    position,
+    duration,
+    remainingMinutes,
+    subtitle,
+    videoHandling,
+    audioHandling,
+    container,
+    location,
+    audioFormat,
+  };
+}
+
+function SessionStats({ item, columnCount }: { item: StreamSession; columnCount: number }) {
+  const {
+    t,
+    playing,
+    metadata,
+    playbackState,
+    position,
+    duration,
+    remainingMinutes,
+    videoHandling,
+    audioHandling,
+    container,
+    audioFormat,
+  } = useSessionDetailValues(item);
+  if (!playing) return null;
+
+  const endsAt =
+    playbackState !== "paused" && remainingMinutes !== null
+      ? formatClockTime(new Date(Date.now() + remainingMinutes * 60_000))
+      : null;
+  const audio = [audioFormat, audioHandling].filter(Boolean).join(" · ");
+
+  return (
+    <div className={classes.statsPanel}>
+      <DetailGrid
+        cols={columnCount}
+        entries={[
+          createEntry("episode", t("details.episode"), playing.episodeName),
+          createEntry("album", t("details.album"), playing.albumName),
+          createEntry(
+            "progress",
+            t("details.progress"),
+            position && duration ? t("details.position", { position, duration }) : null,
+          ),
+          createEntry("endsAt", t("details.endsAt"), endsAt && <span suppressHydrationWarning>{endsAt}</span>),
+          createEntry(
+            "resolution",
+            t("metadata.video.resolution"),
+            metadata ? formatResolution(metadata.video.resolution) : null,
+          ),
+          createEntry(
+            "frameRate",
+            t("metadata.video.frameRate"),
+            metadata ? formatFrameRate(metadata.video.frameRate) : null,
+          ),
+          createEntry("video", t("metadata.video.title"), videoHandling),
+          createEntry("audio", t("metadata.audio.title"), audio),
+          createEntry("container", t("metadata.transcoding.container"), container),
+          createEntry("bitrate", t("details.bitrate"), metadata ? formatBitrate(metadata.bitrateKbps) : null),
+        ]}
+      />
+    </div>
   );
 }
 
-const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: ReactNode }) => {
+function SessionDetails({ item }: { item: StreamSession }) {
+  const {
+    t,
+    playing,
+    metadata,
+    status,
+    playbackState,
+    playbackStateLabel,
+    progress,
+    position,
+    duration,
+    remainingMinutes,
+    subtitle,
+    videoHandling,
+    audioHandling,
+    container,
+    location,
+    audioFormat,
+  } = useSessionDetailValues(item);
+  const Icon = playing ? mediaTypeIconMap[playing.type] : null;
+
   return (
-    <Group w="100%" gap="md" align="flex-start" justify="space-between" wrap="nowrap">
-      <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
-        {itemKey}:
-      </Text>
-      <Stack gap={0} align="flex-end" style={{ minWidth: 0 }}>
-        {value}
-      </Stack>
-    </Group>
+    <Stack gap={8} style={{ minWidth: 0 }}>
+      {Icon && playing && (
+        <Stack gap={6} style={{ minWidth: 0 }}>
+          <Group gap="xs" align="flex-start" wrap="nowrap">
+            <Icon size={20} style={{ flexShrink: 0, marginTop: 2 }} />
+            <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>
+              <Text fw={600} size="sm" lineClamp={1}>
+                {playing.name}
+              </Text>
+              {subtitle && (
+                <Text fz={11} c="dimmed" lineClamp={1}>
+                  {subtitle}
+                </Text>
+              )}
+            </Stack>
+            {status && (
+              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]} style={{ flexShrink: 0 }}>
+                {t(status)}
+              </Badge>
+            )}
+          </Group>
+          {progress !== null && (
+            <Stack gap={2}>
+              <Progress value={progress} size={4} color={playbackState === "paused" ? "yellow" : undefined} />
+              <Group justify="space-between" gap="xs" wrap="nowrap">
+                <Text fz={11} c="dimmed">
+                  {position && duration ? t("details.position", { position, duration }) : null}
+                </Text>
+                <Text fz={11} c="dimmed">
+                  {[
+                    playbackStateLabel,
+                    remainingMinutes !== null ? t("remaining", { minutes: remainingMinutes.toString() }) : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </Text>
+              </Group>
+            </Stack>
+          )}
+        </Stack>
+      )}
+      <Divider />
+      <DetailGrid
+        entries={[
+          createEntry(
+            "user",
+            t("user"),
+            <Group gap={6} align="center" wrap="nowrap">
+              <Avatar size={16} src={item.user?.profilePictureUrl} />
+              <Text size="xs" fw={500} truncate>
+                {item.user?.username ?? t("unknownUser")}
+              </Text>
+            </Group>,
+          ),
+          createEntry("device", t("details.device"), item.sessionName),
+          createEntry("location", t("details.location"), location),
+          createEntry(
+            "resolution",
+            t("metadata.video.resolution"),
+            metadata ? formatResolution(metadata.video.resolution) : null,
+          ),
+          createEntry(
+            "frameRate",
+            t("metadata.video.frameRate"),
+            metadata ? formatFrameRate(metadata.video.frameRate) : null,
+          ),
+          createEntry("bitrate", t("details.bitrate"), metadata ? formatBitrate(metadata.bitrateKbps) : null),
+          createEntry("video", t("metadata.video.title"), videoHandling),
+          createEntry("audio", t("metadata.audio.title"), audioFormat),
+          createEntry("audioHandling", t("details.audioHandling"), audioHandling),
+          createEntry("container", t("metadata.transcoding.container"), container),
+          createEntry(
+            "id",
+            t("details.sessionId"),
+            <Text component="span" fz={11} ff="monospace" truncate>
+              {item.sessionId}
+            </Text>,
+            true,
+          ),
+        ]}
+      />
+    </Stack>
   );
-};
+}
 
 const mediaTypeIconMap = {
   movie: IconMovie,
@@ -691,23 +943,3 @@ const mediaTypeIconMap = {
   video: IconVideo,
   audio: IconHeadphones,
 } satisfies Record<Exclude<StreamSession["currentlyPlaying"], null>["type"], TablerIcon>;
-
-const constructMetadata = (metadata: Exclude<Exclude<StreamSession["currentlyPlaying"], null>["metadata"], null>) => ({
-  video: {
-    resolution: metadata.video.resolution
-      ? `${metadata.video.resolution.width}x${metadata.video.resolution.height}`
-      : null,
-    frameRate: metadata.video.frameRate,
-  },
-  audio: {
-    channelCount: metadata.audio.channelCount,
-    codec: metadata.audio.codec,
-  },
-  transcoding: {
-    container: metadata.transcoding.container,
-    resolution: metadata.transcoding.resolution
-      ? `${metadata.transcoding.resolution.width}x${metadata.transcoding.resolution.height}`
-      : null,
-    target: `${metadata.transcoding.target.videoCodec} ${metadata.transcoding.target.audioCodec}`.trim(),
-  },
-});

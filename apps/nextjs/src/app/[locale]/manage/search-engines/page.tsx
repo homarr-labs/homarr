@@ -1,5 +1,7 @@
+
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Badge, Text } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Badge, Text } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -9,11 +11,11 @@ import { auth } from "@homarr/auth/next";
 import { getSafeApplicationUrl } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n } from "@homarr/translation/server";
-import { Link, SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, NoResults } from "@homarr/ui";
 
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { NoResults } from "~/components/no-results";
+
 import { SearchEngineDeleteButton } from "./_search-engine-delete-button";
 
 const searchParamsSchema = z.object({

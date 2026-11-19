@@ -155,7 +155,10 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
               throw new WorkerAccessError("FORBIDDEN", "Encrypted native reads require POST");
           } else {
             const { hasNativeViewerResourceAccess } = await import("./native-viewer");
-            if (request.method !== "GET" || !(await hasNativeViewerResourceAccess(state, principal, path)))
+            if (
+              (request.method !== "GET" && request.method !== "HEAD") ||
+              !(await hasNativeViewerResourceAccess(state, principal, path))
+            )
               throw new WorkerAccessError("FORBIDDEN", "This resource is outside the published dashboard");
           }
         } else if (principal.role !== "user" && (principal.role !== "service" || !path.startsWith("/rpc/")))

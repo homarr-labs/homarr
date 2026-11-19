@@ -31,7 +31,7 @@ import { IncludeFromAllUsersSwitch } from "~/app/[locale]/manage/medias/_actions
 import { UploadMediaButton } from "~/app/[locale]/manage/medias/_actions/upload-media";
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+import { NoResults } from "@homarr/ui";
 import { useWorkerBootstrap } from "~/worker/context";
 
 import { workerPagination } from "./collections";
@@ -80,10 +80,10 @@ export function WorkerMediaRoute({ searchParams }: { searchParams: URLSearchPara
                       <VisuallyHidden>{t("field.preview")}</VisuallyHidden>
                     </TableTh>
                     <TableTh>{common("field.name")}</TableTh>
-                    <TableTh>{t("field.size")}</TableTh>
+                    <TableTh>{common("field.size")}</TableTh>
                     <TableTh>{t("field.creator")}</TableTh>
                     <TableTh>
-                      <VisuallyHidden>{t("field.actions")}</VisuallyHidden>
+                      <VisuallyHidden>{common("field.actions")}</VisuallyHidden>
                     </TableTh>
                   </TableTr>
                 </TableThead>

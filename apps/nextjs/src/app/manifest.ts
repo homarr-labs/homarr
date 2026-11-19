@@ -5,6 +5,8 @@ import { defaultServerSettings } from "@homarr/server-settings";
 
 import { isWorkerFrontend } from "~/worker/mode";
 
+import { getBrandingAppearance } from "~/theme/branding";
+
 export const dynamic = "force-dynamic";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
@@ -56,7 +58,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     start_url: "/",
     display: "standalone",
     background_color: "#fff",
-    theme_color: branding.primaryColor,
+    theme_color: getBrandingAppearance(branding).primaryColor,
     icons,
   };
 }

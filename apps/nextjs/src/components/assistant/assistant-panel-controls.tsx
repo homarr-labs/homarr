@@ -1,18 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ThreadPrimitive } from "@assistant-ui/react";
+import type { AssistantState } from "@assistant-ui/react";
+import { AuiIf, ThreadPrimitive, useAuiState } from "@assistant-ui/react";
 import { ActionIcon, Box, Button, Popover, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import {
-  IconActivityHeartbeat,
-  IconApps,
-  IconPalette,
-  IconRefresh,
-  IconRobot,
-  IconSearch,
-  IconShield,
-  IconShieldCheck,
-} from "@tabler/icons-react";
+import { IconRefresh, IconRobot, IconShield, IconShieldCheck } from "@tabler/icons-react";
 
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -20,6 +12,10 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval } from "./assistant-auto-approval";
 import type { AssistantConversationControls } from "./assistant-conversation-controls";
+import { useAssistantPrompts } from "./assistant-prompts";
+import { useAssistantHistoryState } from "./assistant-history-state";
+
+const threadIsEmpty = (state: AssistantState) => state.thread.isEmpty && !state.thread.isLoading;
 
 const compactSuggestionVars = () => ({
   root: {
@@ -133,65 +129,45 @@ export const ViewRefreshAction = ({
   );
 };
 
+const PromptSuggestions = ({ compact }: { compact: boolean }) => {
+  const prompts = useAssistantPrompts();
+  return (
+    <Box className={classes.suggestions}>
+      {prompts.map(({ id, label, prompt, description, Icon }) => (
+        <ThreadPrimitive.Suggestion key={id} prompt={prompt} send={false} clearComposer={false} asChild>
+          <Button
+            variant="default"
+            size="sm"
+            className={compact ? classes.compactSuggestion : classes.suggestion}
+            vars={compact ? compactSuggestionVars : undefined}
+            leftSection={<Icon size="1em" />}
+            title={description}
+          >
+            {label}
+          </Button>
+        </ThreadPrimitive.Suggestion>
+      ))}
+    </Box>
+  );
+};
+
 export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
   const t = useI18n("assistant");
+  const conversationId = useAuiState((state) => state.threadListItem.id);
+  const { failedThreadIds } = useAssistantHistoryState();
+  if (failedThreadIds.has(conversationId)) return null;
   if (compact) {
     return (
-      <ThreadPrimitive.Empty>
+      <AuiIf condition={threadIsEmpty}>
         <Box className={classes.empty} data-compact>
-          <Box className={classes.suggestions}>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send clearComposer asChild>
-              <Button
-                variant="default"
-                size="sm"
-                className={classes.compactSuggestion}
-                vars={compactSuggestionVars}
-                leftSection={<IconActivityHeartbeat size="1em" />}
-              >
-                {t("suggestions.health.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send clearComposer asChild>
-              <Button
-                variant="default"
-                size="sm"
-                className={classes.compactSuggestion}
-                vars={compactSuggestionVars}
-                leftSection={<IconApps size="1em" />}
-              >
-                {t("suggestions.explore.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send clearComposer asChild>
-              <Button
-                variant="default"
-                size="sm"
-                className={classes.compactSuggestion}
-                vars={compactSuggestionVars}
-                leftSection={<IconSearch size="1em" />}
-              >
-                {t("suggestions.media.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send clearComposer asChild>
-              <Button
-                variant="default"
-                size="sm"
-                className={classes.compactSuggestion}
-                vars={compactSuggestionVars}
-                leftSection={<IconPalette size="1em" />}
-              >
-                {t("suggestions.style.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-          </Box>
+          <PromptSuggestions compact />
         </Box>
-      </ThreadPrimitive.Empty>
+      </AuiIf>
     );
   }
 
   return (
-    <ThreadPrimitive.Empty>
+    <AuiIf condition={threadIsEmpty}>
       <Box className={classes.empty}>
         <Stack align="center" gap="lg" maw={560} w="100%">
           <Stack align="center" gap="xs" maw={430} ta="center">
@@ -205,34 +181,12 @@ export const EmptyThread = ({ compact = false }: { compact?: boolean }) => {
               {t("emptyDescription")}
             </Text>
           </Stack>
-          <Box className={classes.suggestions}>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send={false} clearComposer asChild>
-              <Button
-                variant="default"
-                className={classes.suggestion}
-                leftSection={<IconActivityHeartbeat size={18} />}
-              >
-                {t("suggestions.health.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send={false} clearComposer asChild>
-              <Button variant="default" className={classes.suggestion} leftSection={<IconApps size={18} />}>
-                {t("suggestions.explore.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send={false} clearComposer asChild>
-              <Button variant="default" className={classes.suggestion} leftSection={<IconSearch size={18} />}>
-                {t("suggestions.media.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send={false} clearComposer asChild>
-              <Button variant="default" className={classes.suggestion} leftSection={<IconPalette size={18} />}>
-                {t("suggestions.style.label")}
-              </Button>
-            </ThreadPrimitive.Suggestion>
-          </Box>
+          <PromptSuggestions compact={false} />
+          <Text size="xs" c="dimmed">
+            {t("commands.hint")}
+          </Text>
         </Stack>
       </Box>
-    </ThreadPrimitive.Empty>
+    </AuiIf>
   );
 };

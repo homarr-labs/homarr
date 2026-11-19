@@ -8,7 +8,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
 import type { FormValues } from "./_settings-form";
 

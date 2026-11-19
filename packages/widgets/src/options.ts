@@ -59,6 +59,7 @@ interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonIn
   options: TOptions;
   searchable?: boolean;
   withPlaceholder?: boolean;
+  allowDeselect?: boolean;
 }
 
 interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
@@ -200,6 +201,7 @@ const optionsFactory = {
     searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
     withPlaceholder: input.withPlaceholder ?? false,
+    allowDeselect: input.allowDeselect ?? true,
   }),
   number: (input: NumberInput) => ({
     type: "number" as const,

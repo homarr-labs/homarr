@@ -8,25 +8,6 @@ export const coolifyHealthcheckSchema = z.object({
 
 export type CoolifyHealthcheck = z.infer<typeof coolifyHealthcheckSchema>;
 
-// Application log schema
-export const coolifyApplicationLogSchema = z.object({
-  logs: z.string(),
-});
-
-export type CoolifyApplicationLog = z.infer<typeof coolifyApplicationLogSchema>;
-
-// Environment variable schema
-export const coolifyEnvironmentVariableSchema = z.object({
-  id: z.number().nullish(),
-  key: z.string(),
-  value: z.string(),
-  is_build_time: z.boolean().nullish(),
-  is_preview: z.boolean().nullish(),
-  application_id: z.number().nullish(),
-});
-
-export type CoolifyEnvironmentVariable = z.infer<typeof coolifyEnvironmentVariableSchema>;
-
 // Application schema (only fields used in the widget)
 export const coolifyApplicationSchema = z.object({
   id: z.number().nullish(),
@@ -48,6 +29,7 @@ export const coolifyProjectSchema = z.object({
   id: z.number().nullish(),
   uuid: z.string(),
   name: z.string(),
+  description: z.string().nullish(),
 });
 
 export type CoolifyProject = z.infer<typeof coolifyProjectSchema>;
@@ -95,6 +77,7 @@ export const coolifyServerSchema = z.object({
   id: z.number().nullish(),
   uuid: z.string(),
   name: z.string(),
+  description: z.string().nullish(),
   ip: z.string().nullish(),
   is_reachable: z.boolean().nullish(),
   is_usable: z.boolean().nullish(),
@@ -148,6 +131,7 @@ export interface CoolifyServiceWithContext extends CoolifyService {
 // Aggregated information for the Coolify instance
 export interface CoolifyInstanceInfo {
   version: string;
+  projects: CoolifyProjectWithEnvironments[] | null;
   applications: CoolifyApplicationWithContext[];
   services: CoolifyServiceWithContext[];
   servers: CoolifyServer[];

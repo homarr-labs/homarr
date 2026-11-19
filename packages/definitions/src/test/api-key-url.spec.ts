@@ -42,6 +42,7 @@ describe("getIntegrationApiKeyUrl", () => {
     ["tracearr", "http://tracearr.local:7040", "http://tracearr.local:7040/settings"],
     ["speedtestTracker", "http://speedtest.local", "http://speedtest.local/admin/api-tokens"],
     ["uptimeKuma", "http://uptime.local:3001", "http://uptime.local:3001/settings/api-keys"],
+    ["wud", "http://wud.local:3000", "http://wud.local:3000/profile"],
   ] as const)("builds a verified credential URL for %s", (kind, baseUrl, expected) => {
     expect(getIntegrationApiKeyUrl(baseUrl, kind)).toBe(expected);
   });

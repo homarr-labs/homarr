@@ -19,28 +19,36 @@ import {
   useAuiState,
   useRemoteThreadListRuntime,
   WebSpeechSynthesisAdapter,
+  AuiProvider,
+  AuiConfig,
 } from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
 import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
-import { useHotkeys } from "@mantine/hooks";
+import { useCallbackRef } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
 import { clientApi, useScopedFetchApi } from "@homarr/api/client";
 import type { fetchApi as defaultFetchApi } from "@homarr/api/client";
 import { useResourceFetch } from "@homarr/worker-client/resources";
 import { createId } from "@homarr/common";
-import { assistantHomarrProviderTokenHeader, hotkeys } from "@homarr/definitions";
+import { assistantHomarrProviderTokenHeader } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { closeSpotlight } from "@homarr/spotlight/store";
 import { useI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
+import type { WidgetComponentProps } from "@homarr/widgets";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
+import type { AssistantContextValue } from "./assistant-context";
+import type { AssistantWidgetRender } from "./assistant-launcher";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { getAssistantProviderQuotaRefreshDelay, isAssistantProviderUnavailable } from "./assistant-provider-quota";
-import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
+import {
+  AssistantAutoApprovalContext,
+  AssistantAutoApprovalProvider,
+  useAssistantAutoApproval,
+} from "./assistant-auto-approval";
 import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
@@ -69,6 +77,7 @@ import {
 import { initialAssistantNotificationState, updateAssistantNotificationState } from "./assistant-notifications";
 import { AssistantViewRefreshProvider, useAssistantViewRefresh } from "./assistant-view-refresh";
 import { AssistantBoardWidget } from "./assistant-widget";
+import { AssistantHistoryContext, AssistantHistoryProvider, useAssistantHistoryState } from "./assistant-history-state";
 
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
@@ -81,9 +90,16 @@ const assistantDocumentAttachmentTypes = [
   "text/xml",
 ];
 
-const fileToDataUrlAsync = (file: File) =>
+const fileToDataUrlAsync = (file: File, signal?: AbortSignal) =>
   new Promise<string>((resolve, reject) => {
+    signal?.throwIfAborted();
     const reader = new FileReader();
+    const abort = () => {
+      reader.abort();
+      reject(signal?.reason as Error);
+    };
+    signal?.addEventListener("abort", abort, { once: true });
+    reader.addEventListener("loadend", () => signal?.removeEventListener("abort", abort), { once: true });
     reader.addEventListener("load", () => resolve(String(reader.result)), { once: true });
     reader.addEventListener("error", () => reject(new Error("The attachment could not be read.")), { once: true });
     reader.readAsDataURL(file);
@@ -118,7 +134,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
         status: { type: "requires-action", reason: "composer-send" },
       };
     },
-    async send(attachment) {
+    async send(attachment, options) {
       return {
         ...attachment,
         status: { type: "complete" },
@@ -127,7 +143,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
             type: "file",
             filename: attachment.name,
             mimeType: attachment.contentType ?? "application/octet-stream",
-            data: await fileToDataUrlAsync(attachment.file),
+            data: await fileToDataUrlAsync(attachment.file, options?.signal),
           },
         ],
       };
@@ -136,15 +152,17 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
   };
 };
 
-const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
+const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ active: boolean }>) => {
   const t = useI18n("assistant");
   const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
     staleTime: 10 * 60_000,
+    enabled: active,
   });
   const [modelId, setModelIdState] = useState<string | null>(null);
   const [reasoning, setReasoningState] = useState<AssistantReasoningMode>("auto");
   const workshopClient = useMemo(createWorkshopClient, []);
   const [providerUser, setProviderUser] = useState(workshopClient.currentUser);
+  const [providerAuthReady, setProviderAuthReady] = useState(false);
   const [quota, setQuota] = useState<Awaited<ReturnType<typeof workshopClient.getAssistantUsage>> | null>(null);
   const [quotaLoading, setQuotaLoading] = useState(false);
   const [quotaError, setQuotaError] = useState<string | null>(null);
@@ -191,12 +209,13 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
           }),
     };
   }, []);
-  const getRequestHeaders = useCallback((): Record<string, string> => {
+  const getRequestHeaders = useCallbackRef((): Record<string, string> => {
     if (data?.provider !== "homarr") return {};
     const token = workshopClient.authToken;
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
-  }, [data?.provider, workshopClient]);
-  const refreshQuota = useCallback(async () => {
+  });
+  const refreshQuota = useCallbackRef(async () => {
+    if (!active) return;
     quotaRequestRef.current?.abort();
     if (data?.provider !== "homarr" || !workshopClient.authToken) {
       quotaRequestRef.current = null;
@@ -222,7 +241,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
         setQuotaLoading(false);
       }
     }
-  }, [data?.provider, t, workshopClient]);
+  });
   const signInToProvider = useCallback(async () => {
     setQuotaLoading(true);
     setQuotaError(null);
@@ -253,19 +272,33 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   }, [data]);
 
   useEffect(() => {
+    if (!active) {
+      setProviderAuthReady(false);
+      return;
+    }
     if (data?.provider !== "homarr") {
       setProviderUser(null);
       setQuota(null);
       setQuotaError(null);
       return;
     }
+    let disposed = false;
     const unsubscribe = workshopClient.subscribeToAuth(setProviderUser);
     void workshopClient
       .refreshAuth()
-      .then(setProviderUser)
-      .catch(() => undefined);
-    return unsubscribe;
-  }, [data?.provider, workshopClient]);
+      .then((user) => {
+        if (disposed) return;
+        setProviderUser(user);
+        setProviderAuthReady(true);
+      })
+      .catch(() => {
+        if (!disposed) setProviderAuthReady(true);
+      });
+    return () => {
+      disposed = true;
+      unsubscribe();
+    };
+  }, [active, data?.provider, workshopClient]);
 
   useEffect(
     () => () => {
@@ -275,15 +308,22 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
-    if (data?.provider !== "homarr" || !providerUser) return;
+    if (!active || !providerAuthReady || data?.provider !== "homarr" || !providerUser) return;
     void refreshQuota();
-  }, [data?.provider, providerUser, refreshQuota]);
+  }, [active, data?.provider, providerAuthReady, providerUser, refreshQuota]);
 
   useEffect(() => {
-    if (data?.provider !== "homarr" || !providerUser || !quota) return;
+    if (!active || data?.provider !== "homarr" || !providerUser || !quota) return;
     const timeout = window.setTimeout(() => void refreshQuota(), getAssistantProviderQuotaRefreshDelay(quota.resetsAt));
     return () => window.clearTimeout(timeout);
-  }, [data?.provider, providerUser, quota, refreshQuota]);
+  }, [active, data?.provider, providerUser, quota, refreshQuota]);
+
+  useEffect(() => {
+    if (active) return;
+    quotaRequestRef.current?.abort();
+    quotaRequestRef.current = null;
+    setQuotaLoading(false);
+  }, [active]);
 
   const value = useMemo(
     () => ({
@@ -292,7 +332,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       modelId,
       models,
       reasoning,
-      isLoading,
+      isLoading: isLoading || (active && data?.provider === "homarr" && !providerAuthReady),
       providerUser,
       quota,
       quotaLoading,
@@ -310,6 +350,8 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       getRequestBody,
       getRequestHeaders,
       isLoading,
+      active,
+      providerAuthReady,
       modelId,
       models,
       providerUser,
@@ -381,8 +423,30 @@ const createThreadAdapter = (fetchApi: typeof defaultFetchApi): RemoteThreadList
   },
 });
 
+interface AssistantHistoryThread {
+  getState: () => { remoteId: string | undefined };
+  initialize: () => Promise<{ remoteId: string }>;
+}
+
+type AssistantHistoryFailure = "load" | "save";
+
+const reportHistoryFailure = async <T,>(
+  failure: AssistantHistoryFailure,
+  onFailure: (failure: AssistantHistoryFailure) => void,
+  operation: () => Promise<T>,
+) => {
+  try {
+    return await operation();
+  } catch (error) {
+    onFailure(failure);
+    throw error;
+  }
+};
+
 const createHistoryAdapter = (
-  threadId: string | undefined,
+  getThread: () => AssistantHistoryThread,
+  onFailure: (failure: AssistantHistoryFailure) => void,
+  onLoaded: () => void,
   fetchApi: typeof defaultFetchApi,
 ): ThreadHistoryAdapter => ({
   async load() {
@@ -400,12 +464,15 @@ const createHistoryAdapter = (
       throw new Error(`Unsupported assistant message format: ${formatAdapter.format}`);
     }
     const storageFormat = formatAdapter.format;
+    const erasedFormatAdapter = formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>;
+    const getExistingThreadId = () => getThread().getState().remoteId;
     return {
       async load() {
+        const threadId = getExistingThreadId();
         if (!threadId) return { messages: [] };
-        const { messages } = await fetchApi.assistant.getThread.query({ threadId });
-        return {
-          messages: messages
+        return reportHistoryFailure("load", onFailure, async () => {
+          const { messages } = await fetchApi.assistant.getThread.query({ threadId });
+          const decodedMessages = messages
             .filter((message) => message.format === formatAdapter.format)
             .map(
               (message) =>
@@ -415,44 +482,51 @@ const createHistoryAdapter = (
                   format: message.format,
                   content: message.content as TStorageFormat,
                 }) as { parentId: string | null; message: TMessage },
-            ),
-        };
+            );
+          onLoaded();
+          return { messages: decodedMessages };
+        });
       },
       async append(item) {
-        if (!threadId) return;
-        await fetchApi.assistant.appendMessage.mutate({
-          threadId,
-          id: (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).getId(item.message),
-          parentId: item.parentId,
-          format: storageFormat,
-          content: (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).encode(
-            item as { parentId: string | null; message: unknown },
-          ),
+        await reportHistoryFailure("save", onFailure, async () => {
+          // The first user message is persisted when its run starts, before the new thread has a
+          // remote id. Initializing here creates the thread instead of dropping that message.
+          const { remoteId: threadId } = await getThread().initialize();
+          await fetchApi.assistant.appendMessage.mutate({
+            threadId,
+            id: erasedFormatAdapter.getId(item.message),
+            parentId: item.parentId,
+            format: storageFormat,
+            content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+          });
         });
       },
       async update(item, localMessageId) {
+        const threadId = getExistingThreadId();
         if (!threadId) return;
-        const erasedFormatAdapter = formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>;
         const id = erasedFormatAdapter.getId(item.message);
-        await fetchApi.assistant.appendMessage.mutate({
-          threadId,
-          id,
-          parentId: item.parentId,
-          format: storageFormat,
-          content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+        await reportHistoryFailure("save", onFailure, async () => {
+          await fetchApi.assistant.appendMessage.mutate({
+            threadId,
+            id,
+            parentId: item.parentId,
+            format: storageFormat,
+            content: erasedFormatAdapter.encode(item as { parentId: string | null; message: unknown }),
+          });
+          if (localMessageId !== id) {
+            await fetchApi.assistant.deleteMessages.mutate({ threadId, ids: [localMessageId] });
+          }
         });
-        if (localMessageId !== id) {
-          await fetchApi.assistant.deleteMessages.mutate({ threadId, ids: [localMessageId] });
-        }
       },
       async delete(items) {
+        const threadId = getExistingThreadId();
         if (!threadId || items.length === 0) return;
-        await fetchApi.assistant.deleteMessages.mutate({
-          threadId,
-          ids: items.map((item) =>
-            (formatAdapter as MessageFormatAdapter<unknown, TStorageFormat>).getId(item.message),
-          ),
-        });
+        await reportHistoryFailure("save", onFailure, () =>
+          fetchApi.assistant.deleteMessages.mutate({
+            threadId,
+            ids: items.map((item) => erasedFormatAdapter.getId(item.message)),
+          }),
+        );
       },
     };
   },
@@ -463,6 +537,7 @@ const AssistantThreadRuntime = () => {
   const aui = useAui();
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const { failedThreadIds, setLoadFailed } = useAssistantHistoryState();
   const preferences = useAssistantPreferences();
   const { getRequestBody, getRequestHeaders, refreshQuota } = preferences;
   const fetchApi = useScopedFetchApi();
@@ -480,7 +555,22 @@ const AssistantThreadRuntime = () => {
       }),
     [getRequestBody, getRequestHeaders, resourceFetch],
   );
-  const history = useMemo(() => createHistoryAdapter(threadId, fetchApi), [threadId, fetchApi]);
+  const history = useMemo(
+    () =>
+      createHistoryAdapter(
+        () => aui.threadListItem(),
+        (failure) => {
+          if (failure === "load") setLoadFailed(localThreadId, true);
+          showErrorNotification({
+            title: t("historyError.title"),
+            message: t(`historyError.${failure}Messages`),
+          });
+        },
+        () => setLoadFailed(localThreadId, false),
+        fetchApi,
+      ),
+    [aui, localThreadId, setLoadFailed, t, fetchApi],
+  );
   const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
   const attachments = useMemo(
     () =>
@@ -530,6 +620,7 @@ const AssistantThreadRuntime = () => {
   // thread list and history adapters and shares this chat instance with its custom transport.
   const runtime = useAISDKRuntime(chat, {
     ...assistantAiSdkRuntimeOptions,
+    isSendDisabled: failedThreadIds.has(localThreadId),
     adapters: {
       history,
       attachments,
@@ -687,13 +778,34 @@ const getNotificationKey = (message: ThreadMessage | undefined) => {
   return `${message.id}:${message.status.type}:${"reason" in message.status ? message.status.reason : ""}`;
 };
 
-const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
+interface EnabledAssistantRootProps {
+  active: boolean;
+  opened: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onStateChange: (value: AssistantContextValue) => void;
+  onWidgetRender: (render: AssistantWidgetRender) => void;
+  onRequestPrompt: (prompt: string) => boolean;
+  pendingPrompt: string | null;
+  onPromptHandled: () => void;
+}
+
+const EnabledAssistantProvider = ({
+  active,
+  opened,
+  onOpen,
+  onClose,
+  onStateChange,
+  onWidgetRender,
+  onRequestPrompt,
+  pendingPrompt,
+  onPromptHandled,
+}: EnabledAssistantRootProps) => {
   const t = useI18n("assistant");
-  const [opened, setOpened] = useState(false);
   const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [visibleWidgetIds, setVisibleWidgetIds] = useState<Set<string>>(() => new Set());
-  const [queuedPrompt, setQueuedPrompt] = useState<string | null>(null);
+  const [queuedPrompt, setQueuedPrompt] = useState<{ conversationId: string; text: string } | null>(null);
   const aui = useAui();
   const preferences = useAssistantPreferences();
   const { isRefreshing, refreshCurrentView } = useAssistantViewRefresh();
@@ -702,6 +814,8 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const conversationId = useAuiState((state) => state.threadListItem.id);
   const isRunning = useAuiState((state) => state.thread.isRunning);
   const isLoading = useAuiState((state) => state.thread.isLoading);
+  const { failedThreadIds } = useAssistantHistoryState();
+  const historyLoadFailed = failedThreadIds.has(conversationId);
   const latestAssistantMessage = getLatestMessage(messages, "assistant");
   const latestUserMessage = getLatestMessage(messages, "user");
   const latestAssistantText = getMessageText(latestAssistantMessage);
@@ -742,9 +856,9 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const open = useCallback(() => {
     markRead();
     setActivityDismissed(false);
-    setOpened(true);
-  }, [markRead]);
-  const close = useCallback(() => setOpened(false), []);
+    onOpen();
+  }, [markRead, onOpen]);
+  const close = onClose;
   const setWidgetVisible = useCallback((widgetId: string, visible: boolean) => {
     if (visible) markReadRef.current();
     setVisibleWidgetIds((current) => {
@@ -769,6 +883,11 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     (prompt: string) => {
       const text = prompt.trim();
       if (text.length === 0) return false;
+      if (historyLoadFailed) {
+        showErrorNotification({ title: t("historyError.title"), message: t("historyError.loadMessages") });
+        return false;
+      }
+      if (!active) return onRequestPrompt(text);
       if (providerUnavailable) {
         showWarningNotification({
           title: t("providerQuota.title"),
@@ -787,12 +906,24 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       }
       setActivityDismissed(false);
       if (isLoading) {
-        setQueuedPrompt(text);
+        setQueuedPrompt({ conversationId, text });
         return true;
       }
       return sendPromptThroughRuntime(aui, text);
     },
-    [assistantIsRunning, aui, isLoading, latestStatus?.type, preferences.providerUser, providerUnavailable, t],
+    [
+      active,
+      onRequestPrompt,
+      assistantIsRunning,
+      aui,
+      conversationId,
+      historyLoadFailed,
+      isLoading,
+      latestStatus?.type,
+      preferences.providerUser,
+      providerUnavailable,
+      t,
+    ],
   );
   const selectModel = useCallback(
     (modelId: string) => {
@@ -805,19 +936,30 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
+    if (pendingPrompt === null || isLoading || preferences.isLoading) return;
+    if (!sendPrompt(pendingPrompt)) open();
+    onPromptHandled();
+  }, [isLoading, onPromptHandled, open, pendingPrompt, preferences.isLoading, sendPrompt]);
+
+  useEffect(() => {
     if (assistantIsRunning) setActivityDismissed(false);
   }, [assistantIsRunning]);
 
   useEffect(() => {
-    if (isLoading || isRunning || queuedPrompt === null) return;
+    if (queuedPrompt === null) return;
+    if (queuedPrompt.conversationId !== conversationId) {
+      setQueuedPrompt(null);
+      return;
+    }
+    if (isLoading || isRunning || historyLoadFailed) return;
     if (providerUnavailable) {
       setQueuedPrompt(null);
       return;
     }
-    const prompt = queuedPrompt;
+    const prompt = queuedPrompt.text;
     setQueuedPrompt(null);
     sendPromptThroughRuntime(aui, prompt);
-  }, [aui, isLoading, isRunning, providerUnavailable, queuedPrompt]);
+  }, [aui, conversationId, historyLoadFailed, isLoading, isRunning, providerUnavailable, queuedPrompt]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -856,10 +998,11 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     });
   }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
 
-  useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
-
+  // Spotlight can retain its previous item while a registration transition is pending.
+  const sendSpotlightPrompt = useCallbackRef(sendPrompt);
   const spotlightItem = useMemo(() => {
-    const canSend = !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
+    const canSend =
+      !historyLoadFailed && !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
     return {
       id: "homarr-assistant",
       name: t("spotlight"),
@@ -874,13 +1017,13 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       placement: "fallback" as const,
       interaction: (query: string) =>
         createAssistantPromptInteraction({
-          sendPrompt,
+          sendPrompt: sendSpotlightPrompt,
           onPromptAccepted: closeSpotlight,
           prompt: query,
           canSend,
         }),
     };
-  }, [assistantIsRunning, latestStatus?.type, providerUnavailable, sendPrompt, t]);
+  }, [assistantIsRunning, historyLoadFailed, latestStatus?.type, providerUnavailable, sendSpotlightPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const activeWidgetId = visibleWidgetIds.values().next().value ?? null;
@@ -919,11 +1062,13 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     ],
   );
 
+  useEffect(() => onStateChange(value), [onStateChange, value]);
+
   return (
     <AssistantAutoApprovalProvider conversationId={conversationId}>
       <AssistantContext.Provider value={value}>
         <AssistantComposerRuntimeProvider>
-          <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
+          <AssistantWidgetScope onRender={onWidgetRender} />
           <AssistantComposerSurfaceBoundary surfaceId="assistant-panel">
             <AssistantPanel
               opened={opened}
@@ -939,7 +1084,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
               unreadCount={unreadCount}
               latestAssistantText={latestAssistantText}
               latestAssistantPartType={latestAssistantPartType}
-              latestUserText={queuedPrompt ?? latestUserText}
+              latestUserText={queuedPrompt?.text ?? latestUserText}
               latestStatus={latestStatus}
               pendingAction={pendingAction}
               modelId={preferences.modelId}
@@ -959,15 +1104,60 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
 };
 
 /**
- * The enabled half of the assistant. Only rendered (and only downloaded) when the instance has the
- * assistant configured and the visitor is signed in - see `assistant-gate`.
+ * Keep the runtime separate from dashboard children so activating it does not
+ * remount the board. Board widgets reuse its scopes inside their existing tree.
  */
-export const EnabledAssistantRoot = ({ children }: PropsWithChildren) => (
-  <AssistantPreferencesProvider>
+export const EnabledAssistantRoot = (props: EnabledAssistantRootProps) => (
+  <AssistantPreferencesProvider active={props.active}>
     <AssistantViewRefreshProvider>
-      <AssistantRuntime>
-        <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
-      </AssistantRuntime>
+      <AssistantHistoryProvider>
+        <AssistantRuntime>
+          <EnabledAssistantProvider {...props} />
+        </AssistantRuntime>
+      </AssistantHistoryProvider>
     </AssistantViewRefreshProvider>
   </AssistantPreferencesProvider>
 );
+
+interface AssistantWidgetScopeValue {
+  aui: ReturnType<typeof useAui>;
+  preferences: ReturnType<typeof useAssistantPreferences>;
+  approval: ReturnType<typeof useAssistantAutoApproval>;
+  history: ReturnType<typeof useAssistantHistoryState>;
+}
+
+const ScopedAssistantBoardWidget = ({
+  scope,
+  widget,
+}: {
+  scope: AssistantWidgetScopeValue;
+  widget: WidgetComponentProps<"assistant">;
+}) => {
+  const config = useMemo(() => AuiConfig({}), []);
+  return (
+    <AuiProvider extends={scope.aui} config={config}>
+      <AssistantPreferencesContext.Provider value={scope.preferences}>
+        <AssistantAutoApprovalContext.Provider value={scope.approval}>
+          <AssistantHistoryContext.Provider value={scope.history}>
+            <AssistantBoardWidget {...widget} />
+          </AssistantHistoryContext.Provider>
+        </AssistantAutoApprovalContext.Provider>
+      </AssistantPreferencesContext.Provider>
+    </AuiProvider>
+  );
+};
+
+const AssistantWidgetScope = ({ onRender }: { onRender: (render: AssistantWidgetRender) => void }) => {
+  const aui = useAui();
+  const preferences = useAssistantPreferences();
+  const approval = useAssistantAutoApproval();
+  const history = useAssistantHistoryState();
+  const render = useCallback(
+    (widget: WidgetComponentProps<"assistant">) => (
+      <ScopedAssistantBoardWidget scope={{ aui, preferences, approval, history }} widget={widget} />
+    ),
+    [approval, aui, preferences, history],
+  );
+  useEffect(() => onRender(render), [onRender, render]);
+  return null;
+};

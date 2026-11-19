@@ -6,6 +6,8 @@ export const appRouter = createApiRouter({
   federation: createLazyRouter(() => import("./router/federation").then((mod) => mod.federationRouter)),
   frontend: createLazyRouter(() => import("./router/frontend").then((mod) => mod.frontendRouter)),
   assistant: createLazyRouter(() => import("./router/assistant").then((mod) => mod.assistantRouter)),
+  theme: createLazyRouter(() => import("./router/theme").then((mod) => mod.themeRouter)),
+  userItemState: createLazyRouter(() => import("./router/user-item-state").then((mod) => mod.userItemStateRouter)),
   user: createLazyRouter(() => import("./router/user").then((mod) => mod.userRouter)),
   group: createLazyRouter(() => import("./router/group").then((mod) => mod.groupRouter)),
   invite: createLazyRouter(() => import("./router/invite").then((mod) => mod.inviteRouter)),

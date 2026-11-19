@@ -12,7 +12,14 @@ const migrateAsync = async () => {
   const connection = openSqliteDatabase(dbEnv.URL, config);
   const db = connection.db;
 
-  connection.migrate({ migrationsFolder });
+  // SQLite cannot disable foreign keys inside Drizzle's migration transaction.
+  // Board table rebuilds must not cascade-delete their layouts and widgets.
+  connection.connection.exec("PRAGMA foreign_keys = OFF");
+  try {
+    connection.migrate({ migrationsFolder });
+  } finally {
+    connection.connection.exec("PRAGMA foreign_keys = ON");
+  }
 
   await seedDataAsync(db);
   await applyCustomMigrationsAsync(db);

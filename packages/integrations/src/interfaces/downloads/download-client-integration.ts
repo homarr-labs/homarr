@@ -1,9 +1,21 @@
 import type { DownloadClientJobsAndStatus } from "./download-client-data";
 import type { DownloadClientItem } from "./download-client-items";
 
+export interface DownloadClientSelection {
+  sort: string;
+  descending: boolean;
+  categoryFilter: string[];
+  filterIsWhitelist: boolean;
+  showCompletedTorrent: boolean;
+  activeTorrentThreshold: number;
+}
+
 export interface IDownloadClientIntegration {
   /** Get download client's status and list of all of it's items */
-  getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus>;
+  getClientJobsAndStatusAsync(input: {
+    limit: number;
+    selection?: DownloadClientSelection;
+  }): Promise<DownloadClientJobsAndStatus>;
   /** Pauses the client or all of it's items */
   pauseQueueAsync(): Promise<void>;
   /** Pause a single item using it's ID */

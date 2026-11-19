@@ -28,6 +28,7 @@ export const rpcRoutes = new Hono()
   .all("/rpc/*", async (context) => {
     const request = context.req.raw;
     const auth = await createBackendContextAsync(request);
+    if (auth.invalidApiKey) return context.json({ message: "Invalid API key" }, 401);
     if (!isRpcOriginAllowed(request, auth.authenticatedWithApiKey)) {
       return context.json({ message: "This origin is not allowed to make authenticated RPC requests." }, 403);
     }
@@ -49,6 +50,7 @@ export const rpcRoutes = new Hono()
     const request = new Request(context.req.raw, { headers });
     // Keep REST authentication explicit. Ambient session cookies never grant REST access.
     const auth = await createBackendContextAsync(request, { apiKeyOnly: true });
+    if (auth.invalidApiKey) return context.json({ message: "Invalid API key" }, 401);
     const result = await restHandler.handle(request, { context: auth.context });
     if (!result.matched) return context.notFound();
     return context.newResponse(result.response.body, result.response);

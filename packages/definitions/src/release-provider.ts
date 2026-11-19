@@ -57,15 +57,12 @@ const releaseProviderRegistryPrefixes: Partial<Record<ReleaseProviderKind, strin
   quay: "quay.io/",
 };
 
-const removeContainerImageVersion = (identifier: string) => {
-  const digestIndex = identifier.indexOf("@");
-  const withoutDigest = digestIndex === -1 ? identifier : identifier.slice(0, digestIndex);
-  const tagIndex = withoutDigest.indexOf(":", withoutDigest.lastIndexOf("/") + 1);
+export const supportsReleaseProviderTracks = (provider: ReleaseProviderKind) =>
+  provider === "dockerHub" || provider === "gitHubContainerRegistry" || provider === "quay";
 
-  return tagIndex === -1 ? withoutDigest : withoutDigest.slice(0, tagIndex);
-};
+export const isVersionLikeTag = (tag: string) => /^v?\d{1,4}$/.test(tag) || /\d\.\d/.test(tag);
 
-export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind, identifier: string) => {
+export const splitReleaseProviderReference = (provider: ReleaseProviderKind, identifier: string) => {
   const trimmedIdentifier = identifier.trim();
   const registryPrefix = releaseProviderRegistryPrefixes[provider];
   const withoutRegistry =
@@ -73,6 +70,49 @@ export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind
       ? trimmedIdentifier.slice(registryPrefix.length)
       : trimmedIdentifier;
 
-  // ponytail: only strip container image versions/digests for providers that use them
-  return registryPrefix ? removeContainerImageVersion(withoutRegistry) : withoutRegistry;
+  if (!registryPrefix) return { identifier: withoutRegistry, tag: undefined };
+  const withoutDigest = withoutRegistry.split("@")[0] ?? withoutRegistry;
+  const tagIndex = withoutDigest.indexOf(":", withoutDigest.lastIndexOf("/") + 1);
+  if (tagIndex === -1) return { identifier: withoutDigest, tag: undefined };
+  return { identifier: withoutDigest.slice(0, tagIndex), tag: withoutDigest.slice(tagIndex + 1) || undefined };
+};
+
+export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind, identifier: string) =>
+  splitReleaseProviderReference(provider, identifier).identifier;
+
+const containerImageToProviderKind: Record<string, ReleaseProviderKind> = {
+  "ghcr.io": "gitHubContainerRegistry",
+  "docker.io": "dockerHub",
+  "lscr.io": "linuxServerIO",
+  "quay.io": "quay",
+};
+
+export const getReleaseSourceFromDockerImage = (image: string) => {
+  const digestIndex = image.indexOf("@");
+  let withoutDigest = image;
+  if (digestIndex !== -1) withoutDigest = image.slice(0, digestIndex);
+
+  const tagIndex = withoutDigest.indexOf(":", withoutDigest.lastIndexOf("/") + 1);
+  let reference = withoutDigest;
+  let version: string | undefined;
+  if (tagIndex !== -1) {
+    reference = withoutDigest.slice(0, tagIndex);
+    version = withoutDigest.slice(tagIndex + 1);
+  }
+
+  const [maybeSource, maybeIdentifier] = reference.split(/\/(.*)/);
+  const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
+  const source = hasSource ? maybeSource : "docker.io";
+  let identifier = reference;
+  if (hasSource && maybeIdentifier) identifier = maybeIdentifier;
+
+  if (!identifier) return undefined;
+
+  const provider = containerImageToProviderKind[source] ?? "dockerHub";
+  if (provider === "linuxServerIO" && version && version !== "latest" && !isVersionLikeTag(version)) return undefined;
+  identifier = normalizeReleaseProviderIdentifier(provider, identifier);
+  if (supportsReleaseProviderTracks(provider) && version && version !== "latest" && !isVersionLikeTag(version)) {
+    identifier = `${identifier}:${version}`;
+  }
+  return { provider, identifier, version };
 };

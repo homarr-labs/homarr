@@ -29,6 +29,14 @@ if not ok or type(parsed) ~= 'table' or tonumber(parsed.revision) ~= tonumber(AR
 redis.call('SET', KEYS[1], ARGV[2], 'PX', ARGV[3])
 return 1
 `;
+const COMPARE_HASH = `
+local previous = redis.call('HGET', KEYS[1], ARGV[1]) or ''
+if previous ~= ARGV[2] then return 0 end
+redis.call('HSET', KEYS[1], ARGV[1], ARGV[3])
+redis.call('PEXPIRE', KEYS[1], ARGV[4])
+redis.call('PUBLISH', KEYS[2], ARGV[3])
+return 1
+`;
 const RATE = `
 local count = redis.call('INCR', KEYS[1])
 if count == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[1]) end
@@ -110,6 +118,9 @@ export class RedisStateClient extends StateClient {
   hvals(key: string) {
     return this.redis.hvals(key);
   }
+  hmget(key: string, ...fields: string[]) {
+    return this.redis.hmget(key, ...fields);
+  }
   publish(channel: string, message: string) {
     return this.redis.publish(channel, message);
   }
@@ -167,6 +178,16 @@ export class RedisStateClient extends StateClient {
   }
   async compareAndSwapRevisionAsync(key: string, revision: number, value: string, ttlMs: number) {
     return Number(await this.redis.eval(COMPARE_REVISION, 1, key, revision, value, ttlMs)) === 1;
+  }
+  async compareAndSwapHashAsync(
+    key: string,
+    field: string,
+    expectedValue: string,
+    value: string,
+    ttlMs: number,
+    channel: string,
+  ) {
+    return Number(await this.redis.eval(COMPARE_HASH, 2, key, channel, field, expectedValue, value, ttlMs)) === 1;
   }
   async incrementRateAsync(key: string, windowMs: number) {
     const [count, retryAfterMs] = (await this.redis.eval(RATE, 1, key, windowMs)) as [number, number];

@@ -2,6 +2,7 @@
 
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { MantineSpacing } from "@mantine/core";
 import {
   Accordion,
   ActionIcon,
@@ -12,7 +13,6 @@ import {
   Button,
   Checkbox,
   Code,
-  ColorSwatch,
   CopyButton,
   Fieldset,
   Group,
@@ -25,7 +25,6 @@ import {
   Slider,
   Stack,
   Switch,
-  Tabs,
   Text,
   TextInput,
   ThemeIcon,
@@ -41,14 +40,12 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconBrandDocker,
-  IconBorderRadius,
   IconCheck,
   IconCode,
   IconCopy,
   IconDatabase,
   IconDeviceMobile,
   IconExternalLink,
-  IconInfoCircle,
   IconKey,
   IconLanguage,
   IconLayoutColumns,
@@ -72,6 +69,7 @@ import type {
   ColorScheme,
   IntegrationKind,
   IntegrationSecretKind,
+  ThemeId,
   UrlTemplateMode,
   WidgetKind,
 } from "@homarr/definitions";
@@ -86,21 +84,15 @@ import {
   getIntegrationName,
   getWidgetKindsForIntegration,
   generalWidgets,
+  isThemeId,
+  themeNames,
 } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import type { CornerStyle } from "@homarr/ui";
-import {
-  BoardColorInput,
-  ColorSchemeCombobox,
-  CornerStylePicker,
-  cornerStyleValues,
-  IntegrationAvatar,
-  LanguageCombobox,
-  Link,
-} from "@homarr/ui";
+import { ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
+import { ThemeSelect } from "@homarr/ui/theme-select";
 
 import type { OnboardingStudioProps } from "./types";
 import { getBoardValidationErrors } from "./board-validation";
@@ -154,8 +146,6 @@ const sectionDefinitions = [
   { id: "review", icon: IconCheck },
 ] as const;
 
-const initialPrimaryColor = "#fa5252";
-const initialSecondaryColor = "#fd7e14";
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
 
@@ -166,24 +156,30 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const sounds = useOnboardingSounds();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
-  const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
+  const [incompleteConnectionConfirmationOpened, setIncompleteConnectionConfirmationOpened] = useState(false);
+  const [sectionAfterSkipping, setSectionAfterSkipping] = useState<StudioSection>("board");
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
+  const [themeId, setThemeId] = useState<ThemeId>("default");
   const [serverOrigin, setServerOrigin] = useState(environment.serverOrigin);
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
+  const [serverAddressEdited, setServerAddressEdited] = useState(false);
+  const [serverAddressConfirmed, setServerAddressConfirmed] = useState(false);
+  const serverAddressValid =
+    normalizeServiceUrl(serverOrigin) !== null &&
+    normalizeServiceUrl(buildIntegrationUrl("sonarr", serverOrigin, urlMode)) !== null;
+  const serverAddressReviewed = serverAddressValid && (serverAddressEdited || serverAddressConfirmed);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
   const [selectedIntegrationSourceIds, setSelectedIntegrationSourceIds] = useState<string[]>([]);
   const [drafts, setDrafts] = useState<IntegrationDraft[]>([]);
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
   const [appUrlOverrides, setAppUrlOverrides] = useState<Record<string, string>>({});
-  const [appErrorSourceId, setAppErrorSourceId] = useState<string | null>(null);
+  const hasSelectedServices =
+    selectedKinds.length > 0 || selectedIntegrationSourceIds.length > 0 || selectedAppIds.length > 0;
   const initialBoard =
     environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
   const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
-  const [primaryColor, setPrimaryColor] = useState(initialPrimaryColor);
-  const [secondaryColor, setSecondaryColor] = useState(initialSecondaryColor);
-  const [itemRadius, setItemRadius] = useState<CornerStyle>("lg");
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
@@ -191,7 +187,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
-  const [appError, setAppError] = useState<string | null>(null);
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const sectionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const initialSection = useRef(true);
@@ -219,23 +214,22 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const discoveredAppUrls = useMemo(
     () =>
       Object.fromEntries(
-        discoveredApps.map((app) => [
-          app.sourceId,
-          resolveDiscoveredAppUrl(
-            appUrlOverrides[app.sourceId],
-            app.suggestedUrl,
-            serverOrigin
-              ? buildAppUrl(
-                  app.detectedType ?? app.containerName,
-                  serverOrigin,
-                  urlMode,
-                  app.publishedPort ?? undefined,
-                )
-              : null,
-          ),
-        ]),
+        discoveredApps.map((app) => {
+          let port = app.publishedPort ?? undefined;
+          const labelUrl = normalizeServiceUrl(app.suggestedUrl ?? "");
+          const labelPort = labelUrl && new URL(labelUrl).port;
+          if (port === undefined && labelPort) port = Number(labelPort);
+          let generatedUrl = app.suggestedUrl;
+          if (serverOrigin && (urlMode !== "hostPort" || port !== undefined || !labelUrl)) {
+            generatedUrl = buildAppUrl(app.detectedType ?? app.containerName, serverOrigin, urlMode, port);
+          }
+          return [
+            app.sourceId,
+            resolveDiscoveredAppUrl(appUrlOverrides[app.sourceId], app.suggestedUrl, generatedUrl, serverAddressEdited),
+          ];
+        }),
       ),
-    [appUrlOverrides, discoveredApps, serverOrigin, urlMode],
+    [appUrlOverrides, discoveredApps, serverOrigin, urlMode, serverAddressEdited],
   );
   const detectedKinds = useMemo(
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
@@ -334,8 +328,18 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const selectSection = (section: StudioSection) => {
+    if (section === "board" || section === "extend" || section === "review") {
+      if (hasSelectedServices && !serverAddressReviewed) {
+        section = "connect";
+      } else if (hasIncompleteConnections) {
+        setSectionAfterSkipping(section);
+        setIncompleteConnectionConfirmationOpened(true);
+        section = "connect";
+      }
+    }
     if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
+    return section;
   };
 
   const handleSectionKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -354,8 +358,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     const nextSection = sectionDefinitions[nextIndex];
     if (!nextSection) return;
     focusSectionHeading.current = false;
-    selectSection(nextSection.id);
-    sectionButtonRefs.current[nextIndex]?.focus();
+    const selectedSection = selectSection(nextSection.id);
+    if (selectedSection === activeSection) focusSectionHeading.current = true;
+    const selectedIndex = sectionDefinitions.findIndex((section) => section.id === selectedSection);
+    sectionButtonRefs.current[selectedIndex]?.focus();
   };
 
   const updateDraft = (id: string, patch: Partial<IntegrationDraft>) => {
@@ -375,9 +381,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
 
   const applySetupAsync = async () => {
     if (isApplying) return;
+    if ((hasSelectedServices && !serverAddressReviewed) || hasIncompleteConnections) {
+      selectSection("review");
+      return;
+    }
     setIsApplying(true);
-    setAppError(null);
-    setAppErrorSourceId(null);
     setApplyProgress(5);
     setBoardValidationAttempted(true);
     try {
@@ -391,14 +399,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       const draftsToApply = drafts.filter(isIntegrationDraftComplete);
       const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
-      const appWithoutAddress = appsToCreate.find((app) => (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0);
-      if (appWithoutAddress) {
-        const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
-        setAppError(message);
-        setAppErrorSourceId(appWithoutAddress.sourceId);
-        setActiveSection("connect");
-        throw new Error(message);
-      }
 
       setApplyMessage(t("review.progress.applying"));
       setApplyProgress(20);
@@ -408,14 +408,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
         server: {
           defaultLocale: selectedLocale,
           defaultColorScheme: colorScheme as ColorScheme,
+          themeId,
           analyticsEnabled,
         },
         board: {
           id: selectedBoardId ?? undefined,
           name: boardName,
-          primaryColor,
-          secondaryColor,
-          itemRadius,
           layoutPreset: getLayoutPresetForColumnCount(columnCount),
           columnCount,
           leftSidebar,
@@ -504,9 +502,24 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     environment,
     assistantConfiguration,
     serverOrigin,
-    setServerOrigin,
+    setServerOrigin: (value) => {
+      if (value === serverOrigin) return;
+      setServerOrigin(value);
+      setServerAddressEdited(true);
+    },
     urlMode,
-    setUrlMode,
+    setUrlMode: (value) => {
+      if (value === urlMode) return;
+      setUrlMode(value);
+      setServerAddressEdited(true);
+    },
+    hasSelectedServices,
+    serverAddressValid,
+    serverAddressReviewed,
+    confirmServerAddress: () => {
+      sounds.click();
+      setServerAddressConfirmed(true);
+    },
     analyticsEnabled,
     setAnalyticsEnabled: (value) => {
       sounds.toggle(value);
@@ -541,10 +554,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     discoveredAppUrls,
     setDiscoveredAppUrl: (sourceId, url) => {
       setAppUrlOverrides((current) => ({ ...current, [sourceId]: url }));
-      if (appErrorSourceId === sourceId) {
-        setAppErrorSourceId(null);
-        setAppError(null);
-      }
     },
     selectedAppIds,
     setSelectedAppIds: (value) => {
@@ -559,12 +568,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       sounds.click();
       setSelectedBoardId(value);
     },
-    primaryColor,
-    setPrimaryColor,
-    secondaryColor,
-    setSecondaryColor,
-    itemRadius,
-    setItemRadius,
+    themeId,
+    setThemeId: (value) => {
+      sounds.click();
+      setThemeId(value);
+    },
     columnCount,
     setColumnCount,
     leftSidebar,
@@ -579,52 +587,38 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     },
     applyProgress,
     applyMessage,
-    appError,
-    appErrorSourceId,
   };
-  const hasIncompleteIntegrations = drafts.some((draft) => !isIntegrationDraftComplete(draft));
-  const selectedAppWithoutAddress = discoveredApps.find(
-    (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
-  );
-  const continueDisabled = isApplying || (activeSection === "essentials" && serverOrigin.trim().length === 0);
+  const hasIncompleteConnections =
+    drafts.some((draft) => !isIntegrationDraftComplete(draft)) ||
+    discoveredApps.some(
+      (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
+    );
+  const skipIncompleteConnections = () => {
+    const completeDrafts = drafts.filter(isIntegrationDraftComplete);
+    const completeDraftIds = new Set(completeDrafts.map((draft) => draft.id));
+    setDrafts(completeDrafts);
+    setSelectedIntegrationSourceIds((current) => current.filter((id) => completeDraftIds.has(id)));
+    setSelectedKinds((current) => current.filter((kind) => completeDraftIds.has(`manual:${kind}`)));
+    setSelectedAppIds((current) => current.filter((id) => (discoveredAppUrls[id] ?? "").trim().length > 0));
+    setIncompleteConnectionConfirmationOpened(false);
+    sounds.swoosh();
+    setActiveSection(sectionAfterSkipping);
+  };
+  const continueDisabled = isApplying || (activeSection === "connect" && hasSelectedServices && !serverAddressReviewed);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
       void applySetupAsync();
-    } else if (activeSection === "connect") {
-      if (selectedAppWithoutAddress) {
-        setAppError(t("connect.appAddressRequired", { name: selectedAppWithoutAddress.containerName }));
-        setAppErrorSourceId(selectedAppWithoutAddress.sourceId);
-        return;
-      }
-      setAppError(null);
-      setAppErrorSourceId(null);
-      if (hasIncompleteIntegrations) {
-        setIncompleteIntegrationConfirmationOpened(true);
-      } else {
-        move(1);
-      }
     } else {
       move(1);
     }
   };
   return (
-    <main
-      className={classes.page}
-      style={
-        {
-          "--studio-glow-color": primaryColor,
-          "--studio-secondary-glow-color": secondaryColor,
-        } as CSSProperties
-      }
-    >
+    <main className={classes.page}>
       <OnboardingBackdrop />
       <div className={classes.shell}>
         <Group className={classes.topbar} justify="center" mb="lg">
-          <OnboardingWordmark
-            primaryColor={primaryColor}
-            secondaryColor={secondaryColor.toLowerCase() === initialSecondaryColor ? undefined : secondaryColor}
-          />
+          <OnboardingWordmark />
         </Group>
 
         <Paper className={classes.studio} radius="lg">
@@ -634,7 +628,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                 active={activeIndex}
                 bulletSize={32}
                 lineWidth={2}
-                color={primaryColor}
                 className={classes.timeline}
                 classNames={{ itemBullet: classes.timelineBullet }}
               >
@@ -698,10 +691,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                   </Button>
                 ) : (
                   <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
-                    {activeSection === "connect" && hasIncompleteIntegrations ? (
+                    {activeSection === "connect" && hasIncompleteConnections ? (
                       <Popover
-                        opened={incompleteIntegrationConfirmationOpened}
-                        onDismiss={() => setIncompleteIntegrationConfirmationOpened(false)}
+                        opened={incompleteConnectionConfirmationOpened}
+                        onDismiss={() => setIncompleteConnectionConfirmationOpened(false)}
                         transitionProps={{ duration: 0 }}
                         position="top-end"
                         width={320}
@@ -715,8 +708,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                             disabled={continueDisabled}
                             rightSection={<IconArrowRight size={16} />}
                             aria-haspopup="dialog"
-                            aria-expanded={incompleteIntegrationConfirmationOpened}
-                            onClick={() => setIncompleteIntegrationConfirmationOpened((opened) => !opened)}
+                            aria-expanded={incompleteConnectionConfirmationOpened}
+                            onClick={continueOnboarding}
                           >
                             {tCommon("continue")}
                           </Button>
@@ -728,18 +721,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                               <Button
                                 size="xs"
                                 variant="default"
-                                onClick={() => setIncompleteIntegrationConfirmationOpened(false)}
+                                onClick={() => setIncompleteConnectionConfirmationOpened(false)}
                               >
                                 {tCommon("cancel")}
                               </Button>
-                              <Button
-                                size="xs"
-                                onClick={() => {
-                                  setIncompleteIntegrationConfirmationOpened(false);
-                                  move(1);
-                                }}
-                              >
-                                {tCommon("confirm")}
+                              <Button size="xs" disabled={continueDisabled} onClick={skipIncompleteConnections}>
+                                {t("connect.skipIncomplete")}
                               </Button>
                             </Group>
                           </Stack>
@@ -774,6 +761,10 @@ interface StudioSectionProps {
   setServerOrigin: (value: string) => void;
   urlMode: UrlTemplateMode;
   setUrlMode: (value: UrlTemplateMode) => void;
+  hasSelectedServices: boolean;
+  serverAddressValid: boolean;
+  serverAddressReviewed: boolean;
+  confirmServerAddress: () => void;
   analyticsEnabled: boolean;
   setAnalyticsEnabled: (value: boolean) => void;
   selectedLocale: SupportedLanguage;
@@ -802,12 +793,8 @@ interface StudioSectionProps {
   selectedBoardId: string | null;
   boardValidationAttempted: boolean;
   setSelectedBoardId: (value: string | null) => void;
-  primaryColor: string;
-  setPrimaryColor: (value: string) => void;
-  secondaryColor: string;
-  setSecondaryColor: (value: string) => void;
-  itemRadius: CornerStyle;
-  setItemRadius: (value: CornerStyle) => void;
+  themeId: ThemeId;
+  setThemeId: (value: ThemeId) => void;
   columnCount: number;
   setColumnCount: (value: number) => void;
   leftSidebar: boolean;
@@ -816,8 +803,6 @@ interface StudioSectionProps {
   setRightSidebar: (value: boolean) => void;
   applyProgress: number;
   applyMessage: string;
-  appError: string | null;
-  appErrorSourceId: string | null;
 }
 
 const StudioSectionContent = ({ section, ...props }: StudioSectionProps & { section: StudioSection }) => {
@@ -841,12 +826,14 @@ const SectionHeading = ({
   title,
   description,
   headingRef,
+  mb = "xl",
 }: {
   title: string;
   description: string;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
+  mb?: MantineSpacing;
 }) => (
-  <Stack gap={4} mb="xl">
+  <Stack gap={4} mb={mb}>
     <Title id="studio-section-title" ref={headingRef} order={2} tabIndex={-1}>
       {title}
     </Title>
@@ -858,8 +845,6 @@ const SectionHeading = ({
 
 const Essentials = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.essentials");
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => setIsHydrated(true), []);
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -878,22 +863,12 @@ const Essentials = (props: StudioSectionProps) => {
         />
       </SimpleGrid>
 
-      <Stack gap="sm">
-        <Alert variant="light" icon={<IconInfoCircle size={18} />} my="xs">
-          {t("serverOriginHelp")}
-        </Alert>
-        <ServiceUrlTemplate
-          serverOrigin={props.serverOrigin}
-          onServerOriginChange={props.setServerOrigin}
-          mode={props.urlMode}
-          onModeChange={props.setUrlMode}
-          readOnly={!isHydrated}
-          required
-        />
-        {props.serverOrigin ? (
-          <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
-        ) : null}
-      </Stack>
+      <ThemeSelect
+        value={props.themeId}
+        onChange={(value) => {
+          if (isThemeId(value)) props.setThemeId(value);
+        }}
+      />
 
       <Switch
         checked={props.analyticsEnabled}
@@ -902,6 +877,49 @@ const Essentials = (props: StudioSectionProps) => {
         description={t("analyticsDescription")}
       />
     </Stack>
+  );
+};
+
+const ServerAddressReview = (props: StudioSectionProps) => {
+  const t = useI18n("init.studio.connect");
+  return (
+    <Paper
+      data-review-required={!props.serverAddressReviewed || undefined}
+      withBorder
+      p="md"
+      radius="md"
+      bd={props.serverAddressReviewed ? undefined : "1px solid var(--mantine-color-red-6)"}
+      shadow={props.serverAddressReviewed ? undefined : "md"}
+    >
+      <Stack gap="xs">
+        <ServiceUrlTemplate
+          serverOrigin={props.serverOrigin}
+          onServerOriginChange={props.setServerOrigin}
+          mode={props.urlMode}
+          onModeChange={props.setUrlMode}
+          required
+          addressAction={
+            !props.serverAddressReviewed && (
+              <Button
+                variant="default"
+                size="sm"
+                h={44}
+                leftSection={<IconCheck size={16} />}
+                disabled={!props.serverAddressValid}
+                onClick={props.confirmServerAddress}
+              >
+                {t("confirmServerAddress")}
+              </Button>
+            )
+          }
+        />
+        {props.serverAddressReviewed && (
+          <Text component="output" size="sm" c="dimmed">
+            {t("serverAddressReviewed")}
+          </Text>
+        )}
+      </Stack>
+    </Paper>
   );
 };
 
@@ -1080,7 +1098,8 @@ const Connections = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.connect");
   return (
     <Stack gap="xl">
-      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} mb={0} />
+      {props.hasSelectedServices && <ServerAddressReview {...props} />}
       {props.discoveredIntegrations.length > 0 ? (
         <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
           <Checkbox.Group value={props.selectedIntegrationSourceIds} onChange={props.setSelectedIntegrationSourceIds}>
@@ -1153,7 +1172,6 @@ const Connections = (props: StudioSectionProps) => {
                       label={t("url")}
                       value={props.discoveredAppUrls[app.sourceId] ?? ""}
                       onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
-                      error={props.appErrorSourceId === app.sourceId ? props.appError : undefined}
                       placeholder="service.local:8080"
                       required
                     />
@@ -1163,12 +1181,6 @@ const Connections = (props: StudioSectionProps) => {
             })}
           </SimpleGrid>
         </Fieldset>
-      ) : null}
-
-      {props.appError ? (
-        <Alert color="red" role="alert">
-          {props.appError}
-        </Alert>
       ) : null}
 
       <Fieldset legend={t("otherIntegrations")}>
@@ -1387,7 +1399,6 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.board");
-  const sounds = useOnboardingSounds();
   const validationErrors = getBoardValidationErrors({
     attempted: props.boardValidationAttempted,
     hasExistingBoards: props.environment.availableBoards.length > 0,
@@ -1396,9 +1407,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
   });
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
-  const colorsCustomized =
-    props.primaryColor.toLowerCase() !== initialPrimaryColor ||
-    props.secondaryColor.toLowerCase() !== initialSecondaryColor;
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -1430,47 +1438,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
             withAsterisk
             error={validationErrors.name ? t("nameRequired") : undefined}
           />
-          <Stack gap="xs">
-            <SimpleGrid cols={2}>
-              <BoardColorInput
-                label={t("primaryColor")}
-                value={props.primaryColor}
-                onChange={props.setPrimaryColor}
-                defaultColor={initialPrimaryColor}
-              />
-              <BoardColorInput
-                label={t("secondaryColor")}
-                value={props.secondaryColor}
-                onChange={props.setSecondaryColor}
-                defaultColor={initialSecondaryColor}
-              />
-            </SimpleGrid>
-            {colorsCustomized ? (
-              <Button
-                variant="subtle"
-                size="compact-sm"
-                leftSection={<IconRefresh size={14} />}
-                onClick={() => {
-                  sounds.pop();
-                  props.setPrimaryColor(initialPrimaryColor);
-                  props.setSecondaryColor(initialSecondaryColor);
-                }}
-                w="fit-content"
-              >
-                {t("resetColors")}
-              </Button>
-            ) : null}
-          </Stack>
-          <CornerStylePicker
-            label={t("radius")}
-            value={props.itemRadius}
-            labels={
-              Object.fromEntries(
-                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}`)]),
-              ) as Record<CornerStyle, string>
-            }
-            onChange={props.setItemRadius}
-          />
         </Stack>
 
         <Stack gap="lg">
@@ -1501,7 +1468,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
           </Stack>
           <BoardPreview
             ariaLabel={t("previewLabel")}
-            itemRadius={props.itemRadius}
             baseColumnCount={props.columnCount}
             leftSidebar={props.leftSidebar}
             rightSidebar={props.rightSidebar}
@@ -1528,7 +1494,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
 
 const BoardPreview = ({
   ariaLabel,
-  itemRadius,
   baseColumnCount,
   leftSidebar,
   rightSidebar,
@@ -1536,7 +1501,6 @@ const BoardPreview = ({
   appCount,
 }: {
   ariaLabel: string;
-  itemRadius: CornerStyle;
   baseColumnCount: number;
   leftSidebar: boolean;
   rightSidebar: boolean;
@@ -1577,7 +1541,7 @@ const BoardPreview = ({
               style={{
                 gridColumn: `span ${Math.min(columnCount, item.width)}`,
                 gridRow: `span ${Math.min(3, item.height)}`,
-                borderRadius: `var(--mantine-radius-${itemRadius})`,
+                borderRadius: "var(--mantine-radius-default)",
               }}
             />
           ))}
@@ -1591,32 +1555,31 @@ const BoardPreview = ({
 const Extensions = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.extend");
   return (
-    <Stack gap={0}>
+    <Stack gap="md">
       <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
         {t("title")}
       </Title>
-      <Tabs defaultValue="workshop">
-        <Tabs.List grow aria-label={t("tabsLabel")}>
-          <Tabs.Tab value="workshop" leftSection={<IconSparkles size={16} />}>
-            {t("workshop")}
-          </Tabs.Tab>
-          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
-            {t("assistant")}
-          </Tabs.Tab>
-          <Tabs.Tab value="mcp" leftSection={<IconCode size={16} />}>
-            MCP
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="workshop" pt="xs">
-          <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
-        </Tabs.Panel>
-        <Tabs.Panel value="assistant" pt="xs">
-          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
-        </Tabs.Panel>
-        <Tabs.Panel value="mcp" pt="xs">
-          <McpSetup environment={props.environment} />
-        </Tabs.Panel>
-      </Tabs>
+      <Stack gap="sm">
+        <Group gap="xs">
+          <IconRobot size={20} aria-hidden />
+          <Title order={3}>{t("assistant")}</Title>
+        </Group>
+        <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
+      </Stack>
+      <Accordion variant="separated" order={3}>
+        <Accordion.Item value="workshop">
+          <Accordion.Control icon={<IconSparkles size={18} />}>{t("workshop")}</Accordion.Control>
+          <Accordion.Panel>
+            <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="mcp">
+          <Accordion.Control icon={<IconCode size={18} />}>MCP</Accordion.Control>
+          <Accordion.Panel>
+            <McpSetup environment={props.environment} />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Stack>
   );
 };
@@ -1711,6 +1674,7 @@ const WorkshopFeature = ({ title, description }: { title: string; description: s
 
 const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
   const t = useI18n("init.studio.extend.mcpSetup");
+  const tCommon = useI18n("common");
   const [apiKey, setApiKey] = useState<string | null>(null);
   const sounds = useOnboardingSounds();
   const createKey = clientApi.apiKeys.create.useMutation({
@@ -1774,7 +1738,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
               loading={createKey.isPending}
               onClick={() => {
                 sounds.click();
-                createKey.mutate();
+                createKey.mutate({ readOnly: true });
               }}
             >
               {t("createKey")}
@@ -1801,7 +1765,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
                 }}
                 leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
               >
-                {copied ? t("copied") : t("copy")}
+                {copied ? tCommon("action.copied") : t("copy")}
               </Button>
             )}
           </CopyButton>
@@ -1817,6 +1781,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
 
 const Review = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.review");
+  const tTheme = useI18n("common.customTheme");
   const themeLabel = {
     auto: t("themeAuto"),
     light: t("themeLight"),
@@ -1852,23 +1817,7 @@ const Review = (props: StudioSectionProps) => {
     },
     { icon: IconLanguage, label: t("language"), value: props.selectedLocale },
     { icon: IconSunMoon, label: t("theme"), value: themeLabel },
-    {
-      icon: IconPalette,
-      label: t("colors"),
-      value: (
-        <Group gap="xs" wrap="nowrap">
-          <ColorSwatch color={props.primaryColor} size={18} />
-          <Text size="sm" fw={650} ff="monospace">
-            {props.primaryColor}
-          </Text>
-          <ColorSwatch color={props.secondaryColor} size={18} />
-          <Text size="sm" fw={650} ff="monospace">
-            {props.secondaryColor}
-          </Text>
-        </Group>
-      ),
-    },
-    { icon: IconBorderRadius, label: t("radius"), value: props.itemRadius.toUpperCase() },
+    { icon: IconPalette, label: tTheme("label"), value: themeNames[props.themeId] },
   ];
   return (
     <Stack gap="lg">
@@ -1900,7 +1849,7 @@ const Review = (props: StudioSectionProps) => {
         {t("automaticDescription")}
       </Alert>
       {props.applyProgress > 0 ? (
-        <Paper withBorder radius="lg" p="md">
+        <Paper radius="lg" p="md">
           <Stack gap="xs">
             <Group justify="space-between">
               <Text size="sm" fw={650}>

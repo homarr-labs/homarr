@@ -9,6 +9,7 @@ export type ApiClientError = ORPCError<
   {
     zodError?: { fieldErrors: Record<string, string[] | undefined>; formErrors: string[] } | null;
     error?: unknown;
+    isBoardLayoutBoundsError?: boolean;
     [key: string]: unknown;
   }
 >;

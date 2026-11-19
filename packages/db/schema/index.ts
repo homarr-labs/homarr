@@ -44,6 +44,7 @@ export const {
   serverSettings,
   sessions,
   users,
+  userItemStates,
   verificationTokens,
   sectionCollapseStates,
   layouts,

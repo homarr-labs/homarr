@@ -43,6 +43,9 @@ export class MemoryStateClient extends StateClient {
   async hvals(key: string) {
     return this.store.hvals(key);
   }
+  async hmget(key: string, ...fields: string[]) {
+    return this.store.hmget(key, ...fields);
+  }
   async publish(channel: string, message: string) {
     return this.store.publish(channel, message);
   }
@@ -66,6 +69,16 @@ export class MemoryStateClient extends StateClient {
   }
   async compareAndSwapRevisionAsync(key: string, revision: number, value: string, ttlMs: number) {
     return this.store.compareAndSwapRevision(key, revision, value, ttlMs);
+  }
+  async compareAndSwapHashAsync(
+    key: string,
+    field: string,
+    expectedValue: string,
+    value: string,
+    ttlMs: number,
+    channel: string,
+  ) {
+    return this.store.compareAndSwapHash(key, field, expectedValue, value, ttlMs, channel);
   }
   async incrementRateAsync(key: string, windowMs: number) {
     return this.store.incrementRate(key, windowMs);

@@ -1,6 +1,8 @@
 "use client";
 
-import { Avatar, Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
+import { Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { getIconUrl } from "@homarr/definitions";

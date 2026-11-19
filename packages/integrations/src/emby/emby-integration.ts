@@ -80,7 +80,7 @@ const itemSchema = z.object({
     .transform((date) => new Date(date)),
   Genres: z.array(z.string()),
   CommunityRating: z.number().optional(),
-  RunTimeTicks: z.number(),
+  RunTimeTicks: z.number().nullish(),
   Type: z.string(), // for example "Movie"
 });
 

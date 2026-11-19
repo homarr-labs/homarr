@@ -154,7 +154,10 @@ export async function readFederatedSourceMedia(
   const result = await new ImageProxy().forwardImageAsync(payload.assetId, signal);
   await access.authorizeProcedure(authorization);
   if (payload.expiresAt <= Date.now()) throw denied();
-  if ("error" in result) throw new ApiError({ code: "BAD_GATEWAY", message: "Source image is unavailable" });
+  // Federation capabilities authorize integration-bound bytes, never an external redirect.
+  // Persistent favicon redirects have no integration binding and cannot become source capabilities.
+  if ("error" in result || "redirectUrl" in result)
+    throw new ApiError({ code: "BAD_GATEWAY", message: "Source image is unavailable" });
   if (result.image.byteLength > MAX_SOURCE_MEDIA_BYTES)
     throw new ApiError({ code: "PAYLOAD_TOO_LARGE", message: "Source image exceeds the 8 MiB limit" });
   const contentType = result.contentType?.split(";", 1)[0]?.trim().toLowerCase() ?? "";

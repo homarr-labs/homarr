@@ -5,6 +5,8 @@ import {
   publishedAlbumSelection,
   publishedMediaPage,
 } from "@homarr/api/published-item-reads";
+import { createPublishedSmartHomeRead } from "@homarr/api/published-smart-home";
+import { resolveDownloadsQueryInput } from "@homarr/api/widget-query-inputs";
 import { defaultClockWeatherLocation, defaultWeatherLocation } from "@homarr/definitions";
 import type { AccessPrincipal } from "@homarr/worker-access";
 import { WorkerAccessError } from "@homarr/worker-access";
@@ -57,7 +59,8 @@ const equal = (left: unknown, right: unknown): boolean => {
 const subset = (values: readonly string[], allowed: readonly string[]) =>
   values.every((value) => allowed.includes(value));
 const credentialQuery = /(?:token|key|secret|password|auth|signature|credential|session|code)/i;
-const disclosedResource = /^\/api\/(?:user-medias\/[A-Za-z0-9_-]{1,256}|federation\/media\/[A-Za-z0-9_.-]{1,8192})$/;
+const disclosedResource =
+  /^\/api\/(?:user-medias\/[A-Za-z0-9_-]{1,256}(?:\.(?:mp4|webm))?|federation\/media\/[A-Za-z0-9_.-]{1,8192})$/;
 
 function publishedUrl(value: string): string {
   if (!/^https?:\/\//i.test(value)) return value;
@@ -96,6 +99,15 @@ function redactPublishedUrls(value: unknown, depth = 0): unknown {
 
 /** A read manifest, deliberately independent of frontend code or integration SDK method names. */
 const integrationReads: Record<string, readonly string[]> = {
+  "widget.smartHome.snapshot": ["smartHome-controls"],
+  "widget.smartHome.subscribeEntities": ["smartHome-controls"],
+  "widget.smartHome.catalog": ["smartHome-controls"],
+  "widget.smartHome.history": ["smartHome-controls"],
+  "widget.smartHome.forecast": ["smartHome-controls"],
+  "widget.thingport.getLibraryStats": ["thingport-libraryStats"],
+  "widget.thingport.getModels": ["thingport-models"],
+  "widget.thingport.getFeaturedModel": ["thingport-featuredModel"],
+  "widget.thingport.getActivity": ["thingport-activityHeatmap"],
   "widget.anchorNotes.getNote": ["anchorNote"],
   "widget.dnsHole.summary": ["dnsHoleSummary", "dnsHoleControls"],
   "widget.smartHome.entityDetails": ["smartHome-entityState"],
@@ -117,7 +129,7 @@ const integrationReads: Record<string, readonly string[]> = {
   "widget.archiveTeamWarrior.getStatus": ["archiveTeamWarrior"],
   "widget.tracearr.getDashboard": ["tracearr"],
   "widget.speedtestTracker.getDashboard": ["speedtestTracker"],
-  "widget.uptimeKuma.getDashboard": ["uptimeKuma"],
+  "widget.uptimeKuma.getStatusPages": ["uptimeKuma"],
   "widget.audioStats.getStats": ["audioStats"],
   "widget.vpn.getSummaries": ["vpn"],
   "widget.ups.getSummaries": ["ups"],
@@ -147,25 +159,21 @@ const integrationReads: Record<string, readonly string[]> = {
   "widget.umami.getMultiEventTimeSeries": ["umami"],
   "widget.umami.getTopPages": ["umami"],
   "widget.umami.getTopReferrers": ["umami"],
-  "widget.wazuh.getAgents": ["wazuhAgents"],
-  "widget.wazuh.getAlerts": ["wazuhAlerts"],
-  "widget.wazuh.getSummary": ["wazuhSummary"],
-  "widget.wazuh.getTimeline": ["wazuhTimeline"],
-  "widget.wazuh.getTopList": ["wazuhTopList"],
-  "widget.wazuh.getVulnerabilities": ["wazuhVulnerabilities"],
-  "widget.wazuh.getFim": ["wazuhFim"],
-  "widget.wazuh.getAuthFailures": ["wazuhAuthFailures"],
+  "widget.wazuh.getAgents": ["wazuh"],
+  "widget.wazuh.getAlerts": ["wazuh"],
+  "widget.wazuh.getSummary": ["wazuh"],
+  "widget.wazuh.getTimeline": ["wazuh"],
+  "widget.wazuh.getTopList": ["wazuh"],
+  "widget.wazuh.getVulnerabilities": ["wazuh"],
+  "widget.wazuh.getFim": ["wazuh"],
+  "widget.wazuh.getAuthFailures": ["wazuh"],
   "widget.releases.getServiceVersions": ["releases"],
 };
 
 const optionFields: Record<string, Record<string, { option?: string; fallback?: unknown }>> = {
+  "widget.thingport.getModels": { limit: { option: "itemCount", fallback: 10 } },
   "widget.anchorNotes.getNote": { noteId: {} },
   "widget.smartHome.entityDetails": { entityId: {} },
-  "widget.downloads.getJobsAndStatuses": {
-    limitPerIntegration: { fallback: 50 },
-    includeArchivedHistory: { fallback: false },
-    historyWindowDays: { fallback: 7 },
-  },
   "widget.mediaServer.getCurrentStreams": { showOnlyPlaying: { fallback: true } },
   "widget.mediaRequests.getLatestRequests": {
     statuses: { option: "statusFilter", fallback: ["pending", "approved", "declined", "failed", "completed"] },
@@ -194,31 +202,15 @@ const optionFields: Record<string, Record<string, { option?: string; fallback?: 
     timeFrame: { fallback: "24h" },
     limit: { option: "topCount", fallback: 5 },
   },
-  "widget.wazuh.getAlerts": { minLevel: { fallback: 7 }, limit: { fallback: 20 }, hours: { fallback: 24 } },
-  "widget.wazuh.getSummary": { range: { fallback: "24h" } },
-  "widget.wazuh.getTimeline": { range: { fallback: "24h" }, interval: { fallback: "auto" }, minLevel: { fallback: 0 } },
-  "widget.wazuh.getTopList": {
-    range: { fallback: "24h" },
-    kind: { fallback: "rules" },
-    limit: { fallback: 8 },
-    minLevel: { fallback: 0 },
-  },
-  "widget.wazuh.getVulnerabilities": {
-    cveLimit: { fallback: 8 },
-    agentLimit: { fallback: 5 },
-    cveOrder: { fallback: "score" },
-    minSeverity: { fallback: "all" },
-  },
-  "widget.wazuh.getFim": {
-    range: { fallback: "24h" },
-    event: { fallback: "all" },
-    limit: { fallback: 20 },
-    includeRegistry: { fallback: true },
-  },
-  "widget.wazuh.getAuthFailures": { hours: { fallback: 24 }, limit: { fallback: 6 } },
 };
 
+interface SmartHomeDisclosure {
+  catalogDomains: string[];
+  entities: Map<string, { domain: string; areaId: unknown; stateClass: unknown; features: number }>;
+  expiresAt: number;
+}
 interface Disclosure {
+  smartHome?: Map<string, SmartHomeDisclosure>;
   selectedSystems: Map<string, { integrationId: string; systemId: string }>;
   resources: Map<string, { boardId: string; expiresAt: number }>;
 }
@@ -249,6 +241,118 @@ function matchesIntegrationItem(item: ViewerItem, call: NativeViewerCall, disclo
   const requested = strings(input.integrationIds);
   if (typeof input.integrationId === "string") requested.push(input.integrationId);
   if (!requested.length || !subset(requested, item.integrationIds)) return false;
+  if (item.kind === "smartHome-controls" && call.path.startsWith("widget.smartHome.")) {
+    if (requested.length !== 1 || input.integrationId !== item.integrationIds[0]) return false;
+    const proof = disclosure.smartHome?.get(itemRevision(item));
+    const read = createPublishedSmartHomeRead(requested[0] as string, item.options, proof?.catalogDomains);
+    if (!read) return false;
+    if (call.path === "widget.smartHome.catalog") return true;
+    if (call.path === "widget.smartHome.snapshot" || call.path === "widget.smartHome.subscribeEntities") {
+      return Object.entries(read.selection).every(([key, expected]) => equal(strings(input[key]).toSorted(), expected));
+    }
+    if (!proof || proof.expiresAt <= Date.now()) return false;
+    if (call.path === "widget.smartHome.history") {
+      const ids = strings(input.entityIds);
+      return (
+        ids.length > 0 &&
+        ids.length <= 20 &&
+        (input.hours ?? 24) === 24 &&
+        [32, 48].includes(Number(input.samples ?? 48)) &&
+        ids.every((id) => {
+          const entity = proof.entities.get(id);
+          return entity?.domain === "sensor" && entity.stateClass === "measurement";
+        })
+      );
+    }
+    if (call.path === "widget.smartHome.forecast" && typeof input.entityId === "string") {
+      const entity = proof.entities.get(input.entityId);
+      if (entity?.domain !== "weather") return false;
+      if ((entity.features & 1) !== 0) return (input.type ?? "daily") === "daily";
+      return (entity.features & 2) !== 0 && input.type === "hourly";
+    }
+    return false;
+  }
+  if (call.path.startsWith("widget.wazuh.")) {
+    if (requested.length !== 1 || input.integrationId !== item.integrationIds[0]) return false;
+    const range = item.options.range ?? "24h";
+    const rangeHours: Record<string, number> = { "1h": 1, "24h": 24, "7d": 168, "30d": 720 };
+    const hours = rangeHours[String(range)];
+    if (hours === undefined) return false;
+    const reads: Record<string, { view: string; fields: Record<string, unknown> }> = {
+      getAgents: { view: "agents", fields: {} },
+      getSummary: { view: "overview", fields: { range } },
+      getAlerts: {
+        view: "alerts",
+        fields: {
+          minLevel: item.options.alertsMinLevel ?? 7,
+          limit: item.options.alertsLimit ?? 25,
+          hours,
+        },
+      },
+      getTimeline: {
+        view: "timeline",
+        fields: {
+          range,
+          interval: item.options.interval ?? "auto",
+          minLevel: item.options.minLevel ?? 0,
+        },
+      },
+      getTopList: {
+        view: "top",
+        fields: {
+          range,
+          kind: item.options.topKind ?? "rules",
+          limit: item.options.topLimit ?? 8,
+          minLevel: item.options.minLevel ?? 0,
+        },
+      },
+      getVulnerabilities: {
+        view: "vulnerabilities",
+        fields: {
+          cveLimit: item.options.cveLimit ?? 8,
+          agentLimit: item.options.agentLimit ?? 5,
+          cveOrder: item.options.cveOrder ?? "score",
+          minSeverity: item.options.minSeverity ?? "all",
+        },
+      },
+      getFim: {
+        view: "fim",
+        fields: {
+          range,
+          event: item.options.fimEvent ?? "all",
+          limit: item.options.fimLimit ?? 20,
+          includeRegistry: item.options.includeRegistry ?? true,
+        },
+      },
+      getAuthFailures: { view: "authFailures", fields: { hours, limit: item.options.authLimit ?? 6 } },
+    };
+    const read = reads[call.path.slice("widget.wazuh.".length)];
+    if (!read) return false;
+    const views = Object.values(reads).map((entry) => entry.view);
+    const visible = strings(item.options.visibleViews).filter((view) => views.includes(view));
+    if (visible.length > 0 && !visible.includes(read.view)) return false;
+    return Object.entries(read.fields).every(([key, expected]) => equal(input[key], expected));
+  }
+  if (call.path === "widget.downloads.getJobsAndStatuses") {
+    const expected = resolveDownloadsQueryInput(requested, item.options);
+    const actual = {
+      integrationIds: requested,
+      limitPerIntegration: input.limitPerIntegration ?? 50,
+      selection: input.selection,
+      includeArchivedHistory: input.includeArchivedHistory ?? false,
+      historyWindowDays: input.historyWindowDays ?? 7,
+    };
+    if (!equal(actual, expected)) return false;
+  }
+  if (call.path === "widget.uptimeKuma.getStatusPages") {
+    // Missing/blank selects the integration default; otherwise use only this widget's saved page.
+    const saved = item.options.statusPageSlug;
+    const selected = input.statusPageSlug;
+    if (selected !== undefined && typeof selected !== "string") return false;
+    const normalizedSaved = typeof saved === "string" ? saved.trim().toLowerCase() : "";
+    const normalizedSelected = typeof selected === "string" ? selected.trim().toLowerCase() : "";
+    if (normalizedSelected !== normalizedSaved) return false;
+  }
   for (const [key, constraint] of Object.entries(optionFields[call.path] ?? {})) {
     let expected = item.options[constraint.option ?? key] ?? constraint.fallback;
     if (key === "statuses" && Array.isArray(expected) && expected.length === 0) expected = constraint.fallback;
@@ -300,6 +404,10 @@ export function createNativeViewerPolicy(
 ) {
   const items = boards.flatMap((board) => board.items);
   const revisions = new Set(items.map(itemRevision));
+  disclosure.smartHome ??= new Map();
+  for (const revision of disclosure.smartHome.keys()) {
+    if (!revisions.has(revision)) disclosure.smartHome.delete(revision);
+  }
   for (const revision of disclosure.selectedSystems.keys()) {
     if (!revisions.has(revision)) disclosure.selectedSystems.delete(revision);
   }
@@ -312,7 +420,12 @@ export function createNativeViewerPolicy(
     const input = record(call.input);
     // This cache refresh performs only integration reads; it cannot execute upstream mutations.
     if (call.kind === "mutation" && call.path !== "widget.stats.refresh") forbidden();
-    if (call.kind === "subscription" && call.path !== "widget.beszel.subscribeSystemStats") forbidden();
+    if (
+      call.kind === "subscription" &&
+      call.path !== "widget.beszel.subscribeSystemStats" &&
+      call.path !== "widget.smartHome.subscribeEntities"
+    )
+      forbidden();
     if (call.path === "board.getAllBoards" || call.path === "board.getHomeBoard") return;
     if (call.path === "board.getBoardByName") {
       const name = input.name;
@@ -469,6 +582,96 @@ export function projectNativeViewerValue(
   value: unknown,
 ): unknown {
   const input = record(call.input);
+  if (call.path.startsWith("widget.smartHome.") && integrationReads[call.path]?.includes("smartHome-controls")) {
+    const candidates = policy.items.filter(
+      (item) =>
+        item.kind === "smartHome-controls" &&
+        matchesIntegrationItem(item, { ...call, kind: "query" }, policy.disclosure),
+    );
+    if (candidates.length === 0) forbidden();
+    const smartHome = (policy.disclosure.smartHome ??= new Map());
+    const catalogEntities = new Map<string, unknown>();
+    const catalogAreas = new Map<string, unknown>();
+    const catalogFloors = new Map<string, unknown>();
+    const visibleEntities = new Map<string, unknown>();
+    const visibleAreas = new Map<string, unknown>();
+    const removed = new Set<string>();
+    for (const item of candidates) {
+      const revision = itemRevision(item);
+      let proof = smartHome.get(revision);
+      if (!proof) {
+        proof = { catalogDomains: [], entities: new Map(), expiresAt: 0 };
+        smartHome.set(revision, proof);
+      }
+      const read = createPublishedSmartHomeRead(String(input.integrationId), item.options, proof.catalogDomains);
+      if (!read) continue;
+      if (call.path === "widget.smartHome.catalog") {
+        const projected = read.projectCatalog(value);
+        proof.catalogDomains = [
+          ...new Set(
+            projected.entities
+              .filter((entity) => read.selection.areaIds.includes(String(record(entity).areaId)))
+              .map((entity) => String(record(entity).domain)),
+          ),
+        ];
+        for (const entity of projected.entities) catalogEntities.set(String(record(entity).id), entity);
+        for (const area of projected.areas) catalogAreas.set(String(record(area).id), area);
+        for (const floor of projected.floors) catalogFloors.set(String(record(floor).id), floor);
+        continue;
+      }
+      if (call.path !== "widget.smartHome.snapshot" && call.path !== "widget.smartHome.subscribeEntities") continue;
+      const snapshot = record(value);
+      let entities: unknown[] = [];
+      if (call.path === "widget.smartHome.snapshot") {
+        if (Array.isArray(snapshot.entities)) entities = snapshot.entities;
+        proof.entities.clear();
+      } else {
+        if (Array.isArray(snapshot.changed)) entities = snapshot.changed;
+        for (const entity of entities) {
+          if (!read.matchesEntity(entity)) {
+            const id = String(record(entity).id);
+            if (proof.entities.delete(id)) removed.add(id);
+          }
+        }
+        for (const id of strings(snapshot.removed)) {
+          if (proof.entities.delete(id)) removed.add(id);
+        }
+      }
+      const selected = entities.filter(read.matchesEntity).slice(0, 400);
+      for (const entity of selected) {
+        const entry = record(entity);
+        const id = String(entry.id);
+        visibleEntities.set(id, entity);
+        if (proof.entities.size < 400 || proof.entities.has(id))
+          proof.entities.set(id, {
+            domain: String(entry.domain),
+            areaId: entry.areaId,
+            stateClass: entry.stateClass,
+            features: Number(record(entry.attributes).supportedFeatures ?? 0),
+          });
+      }
+      const disclosed = [...proof.entities].map(([id, entity]) => ({ id, areaId: entity.areaId }));
+      for (const area of read.projectAreas(snapshot.areas, [...selected, ...disclosed]))
+        visibleAreas.set(String(record(area).id), area);
+      proof.expiresAt = Date.now() + 300_000;
+    }
+    if (call.path === "widget.smartHome.catalog")
+      return {
+        entities: [...catalogEntities.values()],
+        areas: [...catalogAreas.values()],
+        floors: [...catalogFloors.values()],
+      };
+    if (call.path === "widget.smartHome.snapshot")
+      return { ...record(value), entities: [...visibleEntities.values()], areas: [...visibleAreas.values()] };
+    if (call.path === "widget.smartHome.subscribeEntities") {
+      const patch: Record<string, unknown> = { changed: [...visibleEntities.values()], removed: [...removed] };
+      if (record(value).areas !== undefined) patch.areas = [...visibleAreas.values()];
+      return patch;
+    }
+    if (call.path === "widget.smartHome.history" && Array.isArray(value))
+      return value.filter((entry) => strings(input.entityIds).includes(String(record(entry).entityId)));
+    return value;
+  }
   if (call.path === "board.getAllBoards" && Array.isArray(value))
     return redactPublishedUrls(value.filter((board) => policy.boards.some(({ id }) => id === record(board).id)));
   if (
@@ -659,14 +862,19 @@ export async function projectNativeViewerResult(
   if (boardId) {
     const signed = new Map<string, Promise<string>>();
     let budget = 20_000;
-    const visit = async (value: unknown, currentBoardId: string, depth = 0): Promise<unknown> => {
+    const visit = async (
+      value: unknown,
+      currentBoardId: string,
+      depth = 0,
+      mediaKind: "image" | "glb" | "stl" = "image",
+    ): Promise<unknown> => {
       if (--budget < 0 || depth > 20) return value;
       if (typeof value === "string" && /^\/api\/image-proxy\/[A-Za-z0-9_-]{1,256}$/.test(value)) {
-        const key = `${currentBoardId}:${value}`;
+        const key = `${currentBoardId}:${mediaKind}:${value}`;
         let path = signed.get(key);
         if (!path) {
           path = import("./media").then(({ createBoardMediaPath }) =>
-            createBoardMediaPath(state, principal, currentBoardId, value),
+            createBoardMediaPath(state, principal, currentBoardId, value, mediaKind),
           );
           signed.set(key, path);
         }
@@ -682,8 +890,14 @@ export async function projectNativeViewerResult(
       if (value && typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype) {
         const board = boards.find(({ id }) => id === record(value).id);
         const projected: Record<string, unknown> = {};
-        for (const [key, entry] of Object.entries(value))
-          projected[key] = await visit(entry, board?.id ?? currentBoardId, depth + 1);
+        for (const [key, entry] of Object.entries(value)) {
+          let childKind = mediaKind;
+          if (call.path === "widget.thingport.getFeaturedModel" && key === "mesh") {
+            const format = record(entry).format;
+            if (format === "glb" || format === "stl") childKind = format;
+          }
+          projected[key] = await visit(entry, board?.id ?? currentBoardId, depth + 1, childKind);
+        }
         return projected;
       }
       return value;

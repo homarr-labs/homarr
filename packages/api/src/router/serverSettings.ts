@@ -167,6 +167,9 @@ export const serverSettingsRouter = createApiRouter({
           ...parsedInput,
           authBranding,
         });
+        if (value.themeId === "custom" && !value.customTheme) {
+          throw new ApiError({ code: "BAD_REQUEST", message: "Save a custom theme before selecting it" });
+        }
         await updateServerSettingByKeyAsync(context.db, "branding", value);
         return;
       }

@@ -7,6 +7,7 @@ import { notifications } from "@mantine/notifications";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useActiveBoardTabId } from "@homarr/boards/tabs";
 import { usePersistBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/common";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
@@ -16,6 +17,9 @@ import { useI18n } from "@homarr/translation/client";
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
 import { createItemCallback } from "~/components/board/items/actions/create-item";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
+import { getCrossTabMoveSnapshots } from "~/components/board/items/actions/move-entry-across-tabs";
+import { commitSectionGridsCallback } from "~/components/board/sections/grid/use-grid-layout-actions";
+import { moveItemsToTabCallback } from "~/components/board/tabs/tab-actions";
 import { playPopSound, playTrashSound } from "../audio/board-sounds";
 import {
   isBoardItemClipboardText,
@@ -32,15 +36,26 @@ interface BoardSelectionContextValue {
   pasteItems: () => Promise<void>;
   removeSelectedItems: () => void;
   moveSelectedItemsToSection: (sectionId: string, maxRowCount?: number | null) => void;
+  moveSelectedItemsToTab: (tabId: string) => void;
 }
 
 const BoardSelectionContext = createContext<BoardSelectionContextValue | null>(null);
+
+const isEditableTarget = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest("input, textarea, select, [contenteditable='true'], [role='textbox'], [role='dialog']") !== null;
+
+const hasTextSelection = () => {
+  const selection = window.getSelection();
+  return selection !== null && !selection.isCollapsed && selection.toString().trim().length > 0;
+};
 
 export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(new Set());
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const activeTabId = useActiveBoardTabId();
   const { updateAndPersistBoard } = usePersistBoard(board);
   const tCommon = useI18n("common");
   const tSelection = useI18n("item.selection");
@@ -58,12 +73,12 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     [tSelection, updateAndPersistBoard],
   );
 
-  // Clear selection if leaving edit mode
   useEffect(() => {
-    if (!isEditMode) {
-      setSelectedItemIds(new Set());
-    }
-  }, [isEditMode]);
+    setSelectedItemIds((previous) => {
+      if (previous.size === 0) return previous;
+      return new Set();
+    });
+  }, [isEditMode, activeTabId, currentLayoutId]);
 
   // Clear selection on Escape key
   useEffect(() => {
@@ -133,7 +148,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
           payload.items.forEach((item, index) => {
             const id = pastedIds[index];
             if (!id) throw new Error("Missing pasted item ID");
-            next = createItemCallback({ ...item, id })(next);
+            next = createItemCallback({ ...item, id, targetSectionId: activeTabId })(next);
           });
         } catch {
           return previous;
@@ -155,7 +170,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         message: tSelection("pasted", { count: pastedIds.length }),
       });
     },
-    [persistBoard, tCommon, tSelection],
+    [activeTabId, persistBoard, tCommon, tSelection],
   );
 
   const pasteItems = useCallback(async () => {
@@ -170,12 +185,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     if (!isEditMode) return;
 
     const handlePaste = (event: ClipboardEvent) => {
-      const target = event.target;
-      if (
-        target instanceof Element &&
-        target.closest("input, textarea, select, [contenteditable='true'], [role='textbox']")
-      )
-        return;
+      if (isEditableTarget(event.target)) return;
 
       const value = event.clipboardData?.getData("text/plain") ?? "";
       if (!isBoardItemClipboardText(value)) return;
@@ -316,8 +326,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         }
 
         if (movedLayouts.size !== idsToMove.size) return previous;
-        didMoveAll = true;
-        return {
+        let next = {
           ...previous,
           items: previous.items.map((item) => {
             const movedLayout = movedLayouts.get(item.id);
@@ -328,6 +337,22 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
             };
           }),
         };
+        for (const item of previous.items) {
+          if (!idsToMove.has(item.id)) continue;
+          const sourceLayout = item.layouts.find((layout) => layout.layoutId === currentLayoutId);
+          if (!sourceLayout) return previous;
+          const snapshots = getCrossTabMoveSnapshots({
+            board: next,
+            currentLayoutId,
+            entry: { ...sourceLayout, id: item.id, type: "item" },
+            sourceSectionId: sourceLayout.sectionId,
+            targetSectionId,
+          });
+          if (!snapshots) return previous;
+          next = commitSectionGridsCallback(snapshots)(next);
+        }
+        didMoveAll = true;
+        return next;
       });
 
       if (didMoveAll) {
@@ -342,6 +367,70 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     [clearSelection, currentLayoutId, persistBoard, selectedItemIds, tSelection],
   );
 
+  const moveSelectedItemsToTab = useCallback(
+    (tabId: string) => {
+      if (selectedItemIds.size === 0) return;
+
+      const itemIds = new Set(selectedItemIds);
+      let didMoveAll = false;
+      persistBoard((previous) => {
+        const next = moveItemsToTabCallback({ itemIds, tabId })(previous);
+        didMoveAll = next !== previous;
+        return next;
+      });
+
+      if (!didMoveAll) {
+        showErrorNotification({
+          title: tSelection("moveUnavailableTitle"),
+          message: tSelection("moveUnavailableMessage"),
+        });
+        return;
+      }
+
+      clearSelection();
+      showSuccessNotification({
+        title: tCommon("success"),
+        message: tSelection("movedToTab", { count: itemIds.size }),
+      });
+    },
+    [clearSelection, persistBoard, selectedItemIds, tCommon, tSelection],
+  );
+
+  useEffect(() => {
+    if (!isEditMode || selectedItemIds.size === 0) return;
+
+    const handleClipboard = (event: ClipboardEvent) => {
+      if (!event.clipboardData || isEditableTarget(event.target) || hasTextSelection()) return;
+
+      const selectedItems = board.items.filter((item) => selectedItemIds.has(item.id));
+      let value: string;
+      try {
+        value = serializeBoardItemsForClipboard(selectedItems, currentLayoutId);
+      } catch {
+        return;
+      }
+
+      event.clipboardData.setData("text/plain", value);
+      event.preventDefault();
+      if (event.type === "cut") {
+        removeSelectedItems();
+        return;
+      }
+
+      showSuccessNotification({
+        title: tCommon("success"),
+        message: tSelection("copied", { count: selectedItems.length }),
+      });
+    };
+
+    window.addEventListener("copy", handleClipboard);
+    window.addEventListener("cut", handleClipboard);
+    return () => {
+      window.removeEventListener("copy", handleClipboard);
+      window.removeEventListener("cut", handleClipboard);
+    };
+  }, [board.items, currentLayoutId, isEditMode, removeSelectedItems, selectedItemIds, tCommon, tSelection]);
+
   const value = useMemo(
     () => ({
       selectedItemIds,
@@ -352,12 +441,14 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       pasteItems,
       removeSelectedItems,
       moveSelectedItemsToSection,
+      moveSelectedItemsToTab,
     }),
     [
       clearSelection,
       copySelectedItems,
       isSelected,
       moveSelectedItemsToSection,
+      moveSelectedItemsToTab,
       pasteItems,
       removeSelectedItems,
       selectedItemIds,

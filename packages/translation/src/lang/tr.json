@@ -65,7 +65,6 @@
         "themeAuto": "Sistem",
         "themeLight": "Aydınlık",
         "themeDark": "Koyu",
-        "serverOriginHelp": "Homarr, algılanan hizmet URL'lerini önceden doldurmak için bu adresi kullanır. Her hizmeti yine de ayrı ayrı düzenleyebilirsiniz.",
         "serverDescription": "Bu bir kısayoldur, kısıtlama değildir. Algılanan her hizmet düzenlenebilir.",
         "serverOrigin": "Etki alanı, IP veya ters proxy yolu",
         "serverOriginDescription": "Örnekler: home.lan, 192.168.1.10 veya https://home.example.com/services. Aşağıda her hizmetin nasıl ekleneceğini seçin.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Panoyu kullanışlı kılanları bağlayın",
         "description": "Birden fazla hizmeti aynı anda seçin. Docker etiketleri önceliklidir, görüntü eşleştirme eksikleri tamamlar ve her URL ile kimlik bilgisi incelenebilir durumda kalır.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Algılanan entegrasyon örnekleri ({count})",
         "detectedIntegrationLabel": "{name} içe aktarılıyor; {kind} olarak algılandı",
         "detectedAppLabel": "Algılanan {name} uygulamasını içe aktar",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Yapılandırma gerekiyor",
         "tested": "Bağlantı test edildi",
         "testFailed": "Bağlantı testi başarısız oldu",
-        "incompleteConfirmation": "Tamamlanmamış entegrasyonlar atlanacak. Bunlar olmadan devam edilsin mi?"
+        "incompleteConfirmation": "Tamamlanmamış entegrasyonlar atlanacak. Bunlar olmadan devam edilsin mi?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Oluşturmadan önce panoyu şekillendirin",
@@ -142,13 +144,7 @@
         "secondaryColor": "İkincil renk",
         "resetColors": "Renkleri sıfırla",
         "radius": "Widget köşe yarıçapı",
-        "radiusOptions": {
-          "xs": "Sıkı",
-          "sm": "Hafif",
-          "md": "Dengeli",
-          "lg": "Yuvarlak",
-          "xl": "Yumuşak"
-        },
+        "radiusOptions": {},
         "columns": "Pano sütunları",
         "columnsDescription": "Sütunlar, öğeleri boyutlandırmak ve konumlandırmak için kullanılan yatay ızgarayı tanımlar. Çoğu kişi için 12 sütun yeterlidir.",
         "columnCount": "{count, plural, one {# sütun} other {# sütun}}",
@@ -192,7 +188,6 @@
           "loginRequired": "API anahtarı oluşturmak için kurulumdan sonra yönetici olarak oturum açın.",
           "configuration": "İstemci yapılandırması",
           "copy": "Yapılandırmayı kopyala",
-          "copied": "Kopyalandı",
           "advanced": "MCP araçlarını, izinleri ve kurulum ayrıntılarını aç"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "",
           "description": ""
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "",
@@ -799,9 +801,12 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Tanım"
+      "url": {
+        "helpLabel": "URL biçimi örnekleri",
+        "examples": "Desteklenen bağlantı örnekleri",
+        "requiresHandler": "Özel protokoller, cihazınızda ilişkilendirilmiş bir uygulama gerektirir."
       },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Ping için farklı URL kullan",
@@ -853,7 +858,6 @@
       "source": "API kaynağı: {name}",
       "baseUrl": "Sunucu URL'si",
       "networkScope": "Ağ erişimi",
-      "save": "API yapılandırmasını kaydet",
       "expires": "Bu tek seferlik isteğin süresi {time} tarihinde doluyor."
     },
     "page": {
@@ -884,13 +888,11 @@
       "pasteImportHint": "Ctrl+V veya Command+V ile tam bir özel widget JSON'u yapıştırın",
       "delete": "Özel Widget'ı Sil",
       "deleteConfirm": "“{name}” adlı widget'ı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-      "export": "Dışa aktar",
       "duplicate": "Çoğalt",
       "aiPrompt": "Yapay zekâ ile tasarla",
       "copyAiPrompt": "Yapay zekâ istemini kopyala",
       "enable": "Etkinleştir",
       "disable": "Devre dışı bırak",
-      "menu": "Eylemler",
       "downloadSkill": "Özel Widget Yeteneğini Görüntüle",
       "publishWorkshop": "Workshop'a yayımla",
       "migrate": "Özel Widget'ı geçir",
@@ -904,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Widget kaynaklarını yapılandır",
       "description": "Bu widget'ın nereye bağlandığını inceleyin ve şifrelenmiş kimlik bilgilerini ekleyin veya değiştirin.",
-      "credentialsRequired": "Gerekli kimlik bilgileri eklenene kadar istekler başarısız olur.",
-      "save": "Yapılandırmayı kaydet"
+      "credentialsRequired": "Gerekli kimlik bilgileri eklenene kadar istekler başarısız olur."
     },
-    "field": {
-      "description": "Açıklama"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Bir şeyler yanlış gitti"
@@ -919,7 +918,6 @@
         "format": "Biçim",
         "insertStarter": "Başlangıç şablonu ekle",
         "redo": "Yinele",
-        "copied": "Kopyalandı",
         "schema": "Şema"
       },
       "reference": {
@@ -1000,7 +998,6 @@
         "manifestFilename": "widget.json",
         "request": "İstek {count, number}",
         "requestId": "İstek kimliği",
-        "type": "Tip",
         "method": "Yöntem",
         "source": "API kaynağı",
         "run": "Çalıştır",
@@ -1037,7 +1034,6 @@
         "optionName": "Seçenek adı",
         "label": "Etiket",
         "control": "Denetim",
-        "description": "Açıklama",
         "default": "Varsayılan",
         "optionDetails": "Kısıtlamalar ve dinamik seçenekler",
         "minimum": "En düşük",
@@ -1074,7 +1070,6 @@
         "credentialRemovedDescription": "Kayıtlı değer silindi.",
         "primary": "Birincil API",
         "id": "Kaynak kimliği",
-        "name": "Ad",
         "baseUrl": "Temel URL",
         "baseUrlError": {
           "invalid": "Tam bir URL girin.",
@@ -1091,7 +1086,6 @@
         "remove": "Kaynağı ve isteklerini kaldır",
         "advanced": "Gelişmiş",
         "add": "Başka bir API kaynağı ekle",
-        "sourceType": "Entegrasyon",
         "manualSource": "HTTP API'si",
         "existingIntegration": "Mevcut entegrasyon",
         "integrationType": "Entegrasyon türü",
@@ -1225,7 +1219,6 @@
       "migrationTitle": "Geçirilmiş v2 değişimini incele",
       "migrationDescription": "Oluşturulan bu v2 tanımını inceleyip onaylayın. Onaylama, korunan v1 kaydını atomik olarak değiştirir ve mevcut pano yerleşimlerini aynı widget kimliğine bağlı tutar.",
       "fileLabel": "Bir özel widget JSON dosyası seçin",
-      "name": "İş adı",
       "origin": "Temel kaynak",
       "authentication": "Kimlik Doğrulama",
       "networkScope": "Ağ kapsamı",
@@ -1245,8 +1238,6 @@
         "title": "Bu widget uzak verileri değiştirebilir",
         "description": "İçe aktardıktan sonra tüm adlandırılmış eylemleri, devralınan kimlik bilgilerini ve yıkıcı onayları inceleyin. Gizli bilgiler dosyaya dahil edilmez."
       },
-      "cancel": "İçe aktarmayı iptal et",
-      "confirm": "Widget'ı içe aktar",
       "confirmMigration": "V2 değişimini onayla"
     },
     "secret": {
@@ -1254,6 +1245,20 @@
       "username": "Kullanıcı adı",
       "password": "Parola",
       "savedPlaceholder": "••••••• (kaydedildi, korumak için boş bırakın)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1310,7 +1315,6 @@
     "closeScreenshotViewer": "Ekran görüntüsü görüntüleyicisini kapat",
     "technicalDetails": "Teknik ayrıntılar",
     "sourceCode": "Workshop gönderisi",
-    "export": "Dışa aktar",
     "report": "Bildir",
     "reportTitle": "Gönderiyi bildir",
     "reportReason": "Neden",
@@ -1341,8 +1345,6 @@
       "viewSubmission": "Gönderiyi görüntüle ve yönet",
       "done": "Tamam",
       "signInHint": "Workshop kimliğinizle yayımlamak için oturum açın.",
-      "titleField": "Başlık",
-      "descriptionField": "Açıklama",
       "screenshots": "Ekran görüntüleri",
       "screenshotsDescription": "En fazla beş PNG, JPEG veya WebP görseli",
       "screenshotsPlaceholder": "Ekran görüntülerini seç",
@@ -1405,11 +1407,7 @@
               "label": "Mevcut uygulamayı seçin"
             },
             "new": {
-              "title": "Yeni",
-              "url": {
-                "label": "Uygulama url  si",
-                "description": "Kontrol panelinden erişildiğinde uygulamanın açılacağı URL"
-              }
+              "title": "Yeni"
             }
           }
         }
@@ -1461,8 +1459,9 @@
         "label": "Mevcut bir uygulamayı bağla",
         "description": "Bu entegrasyonu zaten kullanabileceğiniz bir uygulamaya bağlayın."
       },
-      "appHref": {
-        "placeholder": "Özel Uygulama URL'si"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "API anahtarı al"
@@ -1530,6 +1529,27 @@
           "title": "Bilinmeyen hata",
           "description": "Bilinmeyen bir hata oluştu, daha fazla ayrıntı görmek için aşağıdaki nedeni açın"
         },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
+        },
         "parse": {
           "title": "Ayrıştırma hatası",
           "description": "Yanıt ayrıştırılamadı. Lütfen URL'nin hizmetin temel URL’sine yönlendirildiğinden emin olun."
@@ -1559,6 +1579,7 @@
             "untrusted": "Sertifika güvenilir değil.",
             "hostnameMismatch": "Sertifika ana makine adı URL ile eşleşmiyor."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "İzinler yetersiz",
@@ -1607,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Güvenilen sertifika",
                 "message": "Sertifika güvenilen sertifika listesine eklendi"
               },
               "error": {
-                "title": "Sertifikaya güvenilemedi",
                 "message": "Sertifika güvenilen sertifika listesine eklenemedi"
               }
             }
@@ -1730,6 +1749,11 @@
         "title": "Gizli anahtarı sıfırla",
         "message": "Gizli anahtarı sıfırlamak istediğinizden emin misiniz?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Gizli Anahtar Yok",
         "text": "Bu entegrasyon için gizli anahtar gerekmiyor"
@@ -1811,9 +1835,9 @@
           "label": "İndeksleyici parolası",
           "newLabel": "Yeni indeksleyici parolası"
         },
-        "wazuhDashboardUrl": {
-          "label": "Kontrol paneli URL'si (isteğe bağlı)",
-          "newLabel": "Yeni kontrol paneli URL'si"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1832,9 +1856,7 @@
     "search": "Bir medya bul",
     "field": {
       "preview": "Önizleme",
-      "size": "Boyut",
-      "creator": "Oluşturan",
-      "actions": "Kontroller"
+      "creator": "Oluşturan"
     },
     "action": {
       "upload": {
@@ -1904,6 +1926,7 @@
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor",
       "show": "Göster",
+      "showAll": "",
       "hide": "Gizle",
       "undo": "Geri al",
       "editNamed": "{name} öğesini düzenle",
@@ -1911,8 +1934,11 @@
       "clearSearch": "Aramayı temizle",
       "copy": "Kopyala",
       "copied": "Kopyalandı",
-      "refresh": "Yenile"
+      "refresh": "Yenile",
+      "export": "Dışa aktar",
+      "advanced": ""
     },
+    "hidden": "Gizli",
     "pagination": {
       "pageOf": "{totalPages} sayfanın {page}. sayfası"
     },
@@ -1922,6 +1948,8 @@
     "here": "buraya",
     "serviceUrlTemplate": {
       "serverTitle": "Normal sunucu adresi",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Hizmet adresi kalıbı",
       "hostPort": "Aynı ana bilgisayar, farklı bağlantı noktaları",
       "subdomain": "Her hizmet için bir alt alan adı",
@@ -1935,6 +1963,7 @@
       "clear": "Görseli temizle",
       "uploadImage": "Görsel yükle",
       "results": "Görsel arama sonuçları",
+      "websiteIcon": "",
       "localImages": "Görselleriniz",
       "svgIcons": "SVG simgeleri",
       "otherImages": "Diğer görseller",
@@ -2002,6 +2031,15 @@
         "modifier": "Değiştirici"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Not",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
     "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
@@ -2054,7 +2092,18 @@
     "total": "Toplam",
     "filesystemUsage": "{count, plural, one {# dosya sisteminin kullanımını göster} other {# dosya sisteminin kullanımını göster}}",
     "field": {
-      "name": "İş adı"
+      "name": "İş adı",
+      "state": "Durum",
+      "size": "Boyut",
+      "actions": "Eylemler",
+      "source": "Kaynak",
+      "title": "Başlık",
+      "description": "Tanım",
+      "created": "Oluşturuldu",
+      "namespace": "İsim Alanı",
+      "status": "Durum",
+      "architecture": "Mimari",
+      "type": "Tür"
     },
     "label": {
       "new": "Yeni"
@@ -2072,6 +2121,167 @@
       "searchEngines": "Arama motorları",
       "tasks": "Görevler",
       "users": "Kullanıcılar"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Dengeli",
+        "lg": "Yuvarlatılmış",
+        "xs": "Sıkı",
+        "sm": "Hafif",
+        "xl": "Yumuşak"
+      }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Düzen",
+        "typography": "",
+        "colors": "Renkler",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopyalandı",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Panel",
+        "sampleBadge": "Önizleme",
+        "sampleText": "",
+        "sampleInput": "Arama",
+        "sampleValue": "Uygulama Bulun",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Yok",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "Önizleme",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "Kesme Noktası",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Arkaplan",
+          "surfaceText": "",
+          "surfaceBorder": "Kenarlık rengi",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Kenarlık göster",
+          "componentPadding": "",
+          "componentSize": "Dosya Boyutu",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Kontrolleri göster"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2091,6 +2301,10 @@
       "scrollable": {
         "label": "Kaydırılabilir",
         "description": "Bu konteyneri ayarlanan boyutunda tutun ve sığacak şekilde büyütmek yerine içeriğini kaydırın."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2109,18 +2323,33 @@
         "collapse": "Daralt"
       },
       "option": {
-        "title": {
-          "label": "Başlık"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Özel CSS sınıfları"
         },
         "borderColor": {
           "label": "Kenarlık rengi"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Gizli"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Bu konteyner kaldırılsın mı? İçeriği çevresindeki alana taşınacak."
+      },
+      "editBar": {
+        "edit": "Düzenle"
       }
     }
   },
@@ -2135,8 +2364,7 @@
       "label": {
         "settings": "Ayarlar",
         "settingsFor": "{name} için ayarlar",
-        "options": "Seçenekler",
-        "actions": "Eylemler"
+        "options": "Seçenekler"
       },
       "status": {
         "success": "Tamam",
@@ -2170,6 +2398,18 @@
       },
       "customWidget": "Özel widget",
       "standalone": "Bağımsız",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Önce bir hizmet bağlayın",
         "noPermission": "Bu widget'ın uyumlu bir hizmet bağlantısına ihtiyacı var. Bir yöneticiden bağlantı kurmasını isteyin ve ardından tekrar deneyin."
@@ -2189,7 +2429,6 @@
     "selection": {
       "summary": "{count, plural, one {# öğe seçildi} other {# öğe seçildi}}",
       "selected": "{count, plural, one {# seçildi} other {# seçildi}}",
-      "copy": "Kopyala",
       "copied": "{count, plural, one {# öğe panoya kopyalandı} other {# öğe panoya kopyalandı}}",
       "copyError": "Seçilen öğeler kopyalanamadı. Tarayıcınız pano erişimine izin vermiyor olabilir.",
       "paste": "Yapıştır",
@@ -2201,16 +2440,18 @@
       "removed": "{count, plural, one {# öğe kaldırıldı} other {# öğe kaldırıldı}}",
       "move": "Taşı",
       "moveTo": "Seçilen öğeleri taşı",
-      "delete": "Sil",
       "clear": "Seçimi temizle",
       "clearShortcut": "Seçimi temizle (Escape)",
       "saveErrorTitle": "Öğeler güncellenemiyor",
       "saveErrorMessage": "Değişiklikler kaydedilemedi. Panel yenilendi.",
       "moveUnavailableTitle": "Seçilen öğeler taşınamıyor",
-      "moveUnavailableMessage": "Hedefte seçimin tamamı için yeterli alan yok."
+      "moveUnavailableMessage": "Hedefte seçimin tamamı için yeterli alan yok.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Öğeyi Taşı / Yeniden Boyutlandır",
+      "sizeOverlap": "",
       "entryLabel": "{name}, sütun {column}, satır {row}",
       "target": {
         "numbered": "{name}, hedef {index}",
@@ -2277,9 +2518,7 @@
           "label": "Entegrasyonlar",
           "removeLabel": "{name} entegrasyonunu kaldır"
         },
-        "title": {
-          "label": "Başlık"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Özel CSS Alanı"
         },
@@ -2295,6 +2534,36 @@
       "open": "Gelişmiş görünümü aç",
       "close": "Gelişmiş görünümü kapat",
       "label": "{widget} gelişmiş görünümü"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widget'lar",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2308,6 +2577,15 @@
       "option": {
         "appId": {
           "label": "Uygulama seç"
+        },
+        "openIn": {
+          "label": "Uygulamayı şurada aç",
+          "description": "Bu uygulamanın nerede açılacağını seçin. Tarayıcı ayarlarınız ayrı bir pencerede açılmasını değiştirebilir.",
+          "option": {
+            "currentTab": "Geçerli sekme",
+            "newTab": "Yeni sekme",
+            "newWindow": "Yeni pencere"
+          }
         },
         "showTitle": {
           "label": "Uygulama adını göster"
@@ -2329,7 +2607,29 @@
             "tooltip": "Araç ipucu olarak",
             "hidden": "Gizli"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2408,6 +2708,10 @@
         "hideHostname": {
           "label": "Ana bilgisayar adlarını gizle"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Kenarlık göster"
         },
@@ -2430,6 +2734,9 @@
         }
       },
       "empty": "Widget ayarlarından bir URL veya uygulama ekleyin",
+      "copyUrl": "URL'yi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "",
       "groups": {
         "label": "",
         "placeholder": "Yeni Kategori",
@@ -3083,6 +3390,141 @@
         "toggleFailed": "Varlık güncellenemedi"
       }
     },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Başlık",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Büyük"
+          }
+        },
+        "palette": {
+          "label": "Renkler",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Hava Durumu",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Varlık",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Ekle",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Varlık",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Bulunamadı",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": "çevrimdışı"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
+      }
+    },
     "smartHome-executeAutomation": {
       "name": "Otomasyon Yürüt",
       "description": "Tek tıklamayla otomasyonu tetikleyin",
@@ -3221,6 +3663,13 @@
         },
         "showUnmonitored": {
           "label": "Takip edilmeyenleri göster"
+        },
+        "viewMode": {
+          "label": "Görünüm"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3678,22 @@
         "eventCount": "{count, plural, one {# etkinlik} other {# etkinlik}}",
         "loading": "Takvim etkinlikleri yükleniyor...",
         "noEvents": "Bu ayda etkinlik yok"
+      },
+      "view": {
+        "compact": "",
+        "month": "Ay",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "today": "Bugün",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -3460,7 +3925,6 @@
         },
         "table": {
           "header": {
-            "name": "İsim",
             "node": "Düğüm"
           }
         }
@@ -3490,8 +3954,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Ad",
-            "state": "Durum",
             "cpuUsage": "CPU kullanımı",
             "memoryUsage": "Bellek kullanımı"
           }
@@ -3509,6 +3971,34 @@
     },
     "coolify": {
       "description": "Sunucular ve uygulamalarla birlikte Coolify örneğinizin genel görünümü",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "",
+        "ready": "Hazır",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Çalışıyor",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Sunucuları göster"
@@ -3540,7 +4030,13 @@
       },
       "source": {
         "url": "Kaynak: {url}",
-        "unavailable": "{source}: kullanılamıyor"
+        "unavailable": "{source}: kullanılamıyor",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "",
+        "service": ""
       },
       "instances": {
         "title": "Örnekler"
@@ -3557,6 +4053,7 @@
         "exited": "Durduruldu",
         "starting": "Başlatılıyor",
         "restarting": "Yeniden Başlatılıyor",
+        "unhealthy": "Sağlıksız",
         "unknown": "Bilinmeyen",
         "online": "Çevrimiçi",
         "offline": "Çevrimdışı",
@@ -3893,6 +4390,10 @@
         "showLocation": {
           "label": "Konumu göster",
           "description": "Yayının LAN'da mı yoksa WAN'da mı olduğunu gösterir"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -3902,9 +4403,7 @@
       "items": {
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
-        "name": "İsim",
         "id": "Kimlik",
-        "status": "Durum",
         "directPlay": "Doğrudan oynatma",
         "directStream": "Doğrudan yayın",
         "transcodeVideo": "Video kodu dönüştürülüyor",
@@ -3913,11 +4412,32 @@
         "paused": "Duraklatıldı",
         "remaining": "{minutes} dk kaldı",
         "seasonEpisode": "S{season} B{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Cihaz",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Doğrudan",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "progress": "İndirme İlerlemesi",
+          "endsAt": "",
+          "episode": "Bölüm",
+          "album": "Albüm",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Meraklısı için istatistikler",
           "video": {
             "title": "Video",
-            "resolution": "Çözünürlük"
+            "resolution": "Çözünürlük",
+            "frameRate": ""
           },
           "audio": {
             "title": "Ses",
@@ -3938,6 +4458,109 @@
         "playing": "{count} oynatılıyor",
         "transcoding": "{count} kod dönüştürülüyor"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Haftanın ilk günü",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Toplam Yüklenen",
+        "download": "Toplam indirilen",
+        "slicer": "",
+        "delete": "Silinen"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Varsayılan sekme"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Paperless-ngx belge arşivinizin genel görünümü",
@@ -4279,38 +4902,29 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Eklenme",
-          "detailsTitle": "Eklenme Tarihi"
+          "columnTitle": "Eklenme"
         },
         "category": {
-          "columnTitle": "Ekstralar",
-          "detailsTitle": "Kategoriler (Veya ek bilgiler)"
+          "columnTitle": "Ekstralar"
         },
         "downSpeed": {
-          "columnTitle": "İndirme",
-          "detailsTitle": "İndirme Hızı"
+          "columnTitle": "İndirme"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
-          "columnTitle": "İd",
-          "detailsTitle": "Öğe Kimliği"
+          "columnTitle": "İd"
         },
-        "integration": {
-          "columnTitle": "Entegrasyon"
-        },
-        "name": {
-          "columnTitle": "İş adı"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "İlerleme",
           "detailsTitle": "İndirme İlerlemesi"
         },
         "ratio": {
-          "columnTitle": "Oran",
-          "detailsTitle": "Torrent oranı (alınan/gönderilen)"
+          "columnTitle": "Oran"
         },
         "received": {
           "columnTitle": "Toplam İndirme",
@@ -4320,26 +4934,16 @@
           "columnTitle": "Toplam gönderilen",
           "detailsTitle": "Toplam Yüklenen"
         },
-        "size": {
-          "columnTitle": "Dosya Boyutu",
-          "detailsTitle": "Seçilen dosyaların toplam boyutu"
-        },
-        "state": {
-          "columnTitle": "Durum",
-          "detailsTitle": "İş Durumu"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Bitiş zamanı",
-          "detailsTitle": "Tamamlanmasından bu yana geçen süre",
-          "eta": "Tahmini Kalan Süre"
+          "columnTitle": "Bitiş zamanı"
         },
         "type": {
-          "columnTitle": "Tür",
           "detailsTitle": "İndirme İstemcisi türü"
         },
         "upSpeed": {
-          "columnTitle": "Yükleme",
-          "detailsTitle": "Gönderme Hızı"
+          "columnTitle": "Yükleme"
         }
       },
       "states": {
@@ -4379,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Adı kopyala",
         "copyId": "Kimliği kopyala",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Filtreleri temizle"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "İndirmeleri filtrele"
@@ -4528,9 +5143,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Boyut"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Boş",
@@ -4611,27 +5224,59 @@
       "name": "Sürümler",
       "description": "Verilen sürüm düzenli ifadesiyle, belirtilen depoların mevcut sürümlerinin bir listesini gösterir.",
       "option": {
+        "layout": {
+          "label": "Düzen",
+          "description": "",
+          "option": {
+            "comfortable": "",
+            "compact": ""
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Gizli"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Yeni Sürüm Süresi (içinde)",
-          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın."
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın.",
+          "option": {
+            "never": "",
+            "1d": "1 gün",
+            "3d": "3 gün",
+            "1w": "1 hafta",
+            "2w": "",
+            "1M": "1 ay",
+            "3M": "3 ay"
+          }
         },
         "staleReleaseWithin": {
           "label": "Eski Sürüm Süresi (içinde)",
-          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın."
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın.",
+          "option": {
+            "never": "",
+            "1M": "1 ay",
+            "3M": "3 ay",
+            "6M": "6 ay",
+            "1y": "1 yıl",
+            "2y": "2 yıl"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Yalnızca Vurgulananları Göster",
-          "description": "Yalnızca yeni veya eski sürümleri göster. Yukarıdaki açıklamaya göre."
-        },
-        "showDetails": {
-          "label": "Ayrıntıları Göster"
-        },
-        "showOnlyIcon": {
-          "label": "Yalnızca İkon Göster"
-        },
-        "topReleases": {
-          "label": "En İyi Sürümler",
-          "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Depolar",
@@ -4660,10 +5305,13 @@
           },
           "identifier": {
             "label": "Tanımlayıcı",
+            "containerPlaceholder": "",
             "placeholder": "Ad veya Sahip/Ad"
           },
-          "name": {
-            "label": "İsim"
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Sürüm Filtresi",
@@ -4705,36 +5353,110 @@
           }
         }
       },
-      "not-found": "Bulunamadı",
-      "pre-release": "Ön Sürüm",
-      "archived": "Arşivlenmiş",
-      "forked": "Çatallanmış",
+      "summary": {
+        "newReleases": "",
+        "newShort": "yeni",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Yeni",
+          "description": ""
+        },
+        "attention": {
+          "label": "",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Güncel",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "güncel",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Yeni",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arşivlenmiş",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Geçersiz tanımlayıcı",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Sağlayıcı seçilmedi",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Görüntülenmiş olarak işaretle",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopyalandı",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
-      "issuesCount": "Sorunları Aç",
-      "markViewed": "Görüntülenmiş olarak işaretle",
-      "openProjectPage": "Proje Sayfasını Aç",
-      "openReleasePage": "Sürüm Sayfasını Aç",
-      "releaseDescription": "Sürüm Açıklaması",
-      "projectDescription": "Proje Açıklaması",
+      "openIssues": "",
+      "created": "Oluşturuldu",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "",
       "upToDate": "Güncel",
       "updateAvailable": "",
       "unknownStatus": "Bilinmeyen",
-      "created": "Oluşturuldu",
       "error": {
-        "label": "Hata",
-        "messages": {
-          "invalidIdentifier": "Geçersiz tanımlayıcı",
-          "noMatchingVersion": "Eşleşen sürüm bulunamadı",
-          "noReleasesFound": "Hiçbir sürüm bulunamadı",
-          "noProviderSelected": "Sağlayıcı seçilmedi",
-          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı",
-          "unexpected": "Beklenmeyen sağlayıcı hatası"
-        }
-      },
-      "expandDetails": "{name} için ayrıntıları göster",
-      "collapseDetails": "{name} için ayrıntıları gizle"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4891,7 +5613,6 @@
       "download": "İndirme",
       "upload": "Yükleme",
       "ping": "Ping",
-      "status": "Durum",
       "avgDownload": "Ort. İndirme",
       "avgUpload": "Ort. Yükleme",
       "avgPing": "Ort. Ping",
@@ -4907,45 +5628,116 @@
     "uptimeKuma": {
       "description": "Uptime Kuma durum sayfanızdaki çalışma süresi istatistiklerini izleyin",
       "option": {
-        "showAverageUptime": {
-          "label": "Ortalama çalışma süresini göster",
-          "description": "Birleşik 24 saatlik ortalama çalışma süresi yüzdesini gösterir"
+        "statusPageSlug": {
+          "label": "Durum sayfası kısa adı",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Çalışma süresi halkasını göster",
-          "description": "Ortalama çalışma süresi değerinin yanında bir ilerleme halkası gösterir"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Toplam izleyici sayısını göster",
-          "description": "Yapılandırılmış toplam izleyici sayısını gösterir"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Çalışanların sayısını göster",
-          "description": "Şu anda kaç izleyicinin çalıştığını gösterir"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Çalışmayanların sayısını göster",
-          "description": "Şu anda kaç izleyicinin çalışmadığını gösterir"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Duraklatılanların sayısını göster",
-          "description": "Şu anda kaç izleyicinin duraklatıldığını gösterir"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "İş adı",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Ortalama çalışma süresi (24 sa.)",
-      "stats": {
-        "totalMonitors": "Toplam izleyici",
-        "upCount": "Çalışıyor",
-        "downCount": "Çalışmıyor",
-        "pausedCount": "Duraklatıldı"
-      },
-      "error": {
-        "internalServerError": "Çalışma süresi verileri alınamadı"
       },
       "status": {
         "up": "Toplam gönderilen",
         "down": "Toplam İndirme",
-        "paused": "Duraklatıldı"
+        "pending": "Bekleyen",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "{count} bekleyen",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Başlıksız"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Çalışma süresi verileri alınamadı"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Grup",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5050,6 +5842,23 @@
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Yüzde (ör. %76)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Grafik gölgelendirmesini etkinleştir"
         },
@@ -5057,6 +5866,7 @@
           "label": "Görünür grafikler",
           "description": "Görünür olmasını istediğiniz grafikleri seçin.",
           "option": {
+            "cpuCores": "",
             "memory": "Bellek",
             "network": "Ağ"
           }
@@ -5128,7 +5938,6 @@
         "actionsDisabledEditMode": "Pano düzenleme modundayken eylemler devre dışıdır.",
         "widgetItemUnavailable": "Bu widget öğesi kullanılamıyor.",
         "toggle": "Aç/kapat",
-        "copied": "Kopyalandı",
         "confirmDelete": "Bu yıkıcı eylemi onaylayın."
       },
       "option": {
@@ -5169,6 +5978,9 @@
       "name": "Beszel Sistemleri (Tablo)",
       "description": "Sıralanabilir sütunlar ve durum göstergeleri ile tüm Beszel tarafından izlenen sistemlerin tablo görünümü",
       "option": {
+        "fahrenheit": {
+          "label": "Fahrenheit cinsinden sıcaklık"
+        },
         "sortBy": {
           "label": "Sıralama ölçütü"
         },
@@ -5183,7 +5995,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel Sistemleri (Izgara)",
-      "description": "Gerçek zamanlı metrikler ile tüm Beszel tarafından izlenen sistemlerin kart ızgara görünümü"
+      "description": "Gerçek zamanlı metrikler ile tüm Beszel tarafından izlenen sistemlerin kart ızgara görünümü",
+      "option": {
+        "fahrenheit": {
+          "label": "Fahrenheit cinsinden sıcaklık"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel Uyarıları",
@@ -5397,7 +6214,6 @@
       },
       "metric": {
         "system": "Sistem",
-        "source": "Entegrasyon",
         "hostname": "Sunucu",
         "cpuModel": "CPU modeli",
         "cores": "Çekirdekler",
@@ -5552,6 +6368,8 @@
       "allHidden": "Bu görünümde tüm metrikler gizli. Geri yüklemek için Bu görünümü özelleştir seçeneğini kullanın."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh sunucu API'si",
         "indexer": "Wazuh dizinleyicisi",
@@ -5571,6 +6389,14 @@
         "certificate": {
           "title": "{target} sertifikasına güvenilmiyor",
           "description": "Wazuh varsayılan olarak kendinden imzalı bir sertifika kullanır. Entegrasyonda \"Bağlantıyı test et\" seçeneğini çalıştırıp sertifikaya güvenin veya CA'nızı Ayarlar → Sertifikalar bölümüne ekleyin."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "{target} öğesine erişilemiyor",
@@ -5595,7 +6421,9 @@
         "unknown": {
           "title": "{target} kaynağından veriler yüklenemedi",
           "description": "Ayrıntılar için Homarr günlüklerini kontrol edin."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 sa",
@@ -5603,268 +6431,234 @@
         "7d": "7 gün",
         "30d": "30 gün"
       },
-      "levelTooltip": "Kural düzeyi {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh ajanları",
-      "description": "Durum, işletim sistemi, sürüm ve son canlılık bilgisine sahip sıralanabilir Wazuh ajanları listesi",
+      "levelTooltip": "Kural düzeyi {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "yeni",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Herkese açık",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "Aktif",
+          "disconnected": "Bağlantısı kesildi",
+          "neverConnected": "",
+          "pending": "Bekleyen"
+        },
+        "statusLabel": {
+          "active": "Aktif",
+          "disconnected": "Bağlantısı kesildi",
+          "never_connected": "",
+          "pending": "Bekleyen",
+          "unknown": "Bilinmeyen"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "Durum",
+          "name": "İş adı",
+          "ip": "",
+          "os": "İşletim Sistemi",
+          "version": "Sürüm",
+          "lastKeepAlive": "",
+          "groups": "Gruplar"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "Eklenme Tarihi",
+          "modified": "",
+          "deleted": "Silinen",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Ajanları göster"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sıralama ölçütü"
-        },
-        "showVersion": {
-          "label": "Wazuh sürümü sütununu göster"
-        },
-        "showGroups": {
-          "label": "Gruplar sütununu göster"
-        }
-      },
-      "title": "Ajanlar",
-      "total": "{count} ajan",
-      "status": {
-        "active": "Aktif",
-        "disconnected": "Bağlantısı kesildi",
-        "neverConnected": "Hiç bağlanmadı",
-        "pending": "Bekleyen"
-      },
-      "statusLabel": {
-        "active": "Aktif",
-        "disconnected": "Bağlantısı kesildi",
-        "never_connected": "Hiç bağlanmadı",
-        "pending": "Bekleyen",
-        "unknown": "Bilinmeyen"
-      },
-      "live": "Canlı",
-      "snapshot": "{age} eski anlık görüntü",
-      "snapshotHint": "Wazuh panosunun {time} tarihinde alınan ajan anlık görüntüsünden (wazuh-monitoring) okunur. Canlı veriler için sunucu API kimlik bilgilerini ekleyin.",
-      "staleSnapshot": "{time} tarihli ajan anlık görüntüsü güncel değil. Wazuh panosu izleme işinin çalıştığını kontrol edin veya sunucu API kimlik bilgilerini ekleyin.",
-      "noDisconnected": "Tüm ajanlar bağlı",
-      "empty": "Bu filtreyle eşleşen ajan yok",
-      "column": {
-        "status": "Durum",
-        "name": "İş adı",
-        "ip": "IP",
-        "os": "İşletim Sistemi",
-        "version": "Sürüm",
-        "lastKeepAlive": "Canlılık",
-        "groups": "Gruplar"
-      },
-      "outdated": "En yeni ajan sürümünden daha eski ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh uyarı akışı",
-      "description": "Düzey, MITRE ATT&CK teknikleri, ajan ve kaynak IP ile son Wazuh uyarıları",
-      "option": {
-        "minLevel": {
-          "label": "Minimum kural düzeyi",
-          "description": "Wazuh düzeyleri: 0-6 düşük, 7-11 orta, 12-14 yüksek, 15+ kritik"
-        },
-        "hours": {
-          "label": "Zaman aralığı (saat)"
-        },
-        "limit": {
-          "label": "Uyarı sayısı"
-        },
-        "showMitre": {
-          "label": "MITRE ATT&CK tekniklerini göster"
-        },
-        "showAgent": {
-          "label": "Ajanı göster"
-        },
-        "showSourceIp": {
-          "label": "Kaynak IP'yi göster"
-        },
-        "showRuleId": {
-          "label": "Kural kimliğini göster"
-        }
-      },
-      "title": "Uyarılar · düzey {level}+ · {hours} sa",
-      "empty": "Bu düzeyde uyarı yok. Her şey sakin.",
-      "rule": "Kural {id}",
-      "openInDashboard": "Bu uyarıyı Wazuh panosunda aç"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh uyarı önem derecesi",
-      "description": "Önceki döneme göre eğilim içeren uyarı önem derecesi dökümü",
-      "option": {
         "range": {
-          "label": "Zaman aralığı"
+          "label": ""
         },
         "showTrend": {
-          "label": "Önceki döneme göre eğilimi göster"
+          "label": ""
         },
         "showFooter": {
-          "label": "Alt bilgiyi göster"
-        }
-      },
-      "title": "Uyarı önem derecesi · {range}",
-      "alerts": "uyarılar",
-      "none": "Uyarı yok",
-      "trend": {
-        "new": "yeni",
-        "tooltip": "Önceki dönem: {previous}"
-      },
-      "previous": "Önceki {range}: {count}",
-      "maxLevel": "Maks. düzey {level}",
-      "health": "Dizinleyici sağlığı: {status}",
-      "manager": "Yönetici {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh uyarıları zaman çizelgesi",
-      "description": "Önem derecesine göre zaman içindeki Wazuh uyarılarının yığılmış grafiği",
-      "option": {
-        "range": {
-          "label": "Zaman aralığı"
+          "label": ""
         },
         "interval": {
-          "label": "Aralık"
+          "label": ""
         },
         "chartType": {
           "label": "Grafik türü"
         },
         "yScale": {
-          "label": "Y ekseni ölçeği",
-          "description": "Karekök ölçeği, binlerce düşük düzeyli uyarının yanında yüksek ve kritik uyarıların görünür kalmasını sağlar"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimum kural düzeyi"
+          "label": ""
         },
         "showLegend": {
-          "label": "Toplamlarla birlikte göstergeyi göster"
-        }
-      },
-      "title": "Uyarı zaman çizelgesi · {range}",
-      "total": "{count} uyarı",
-      "interval": "{interval} başına"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh en iyi listesi",
-      "description": "Uyarı sayısına göre en popüler kurallar, ajanlar, kaynak IP'leri veya MITRE ATT&CK taktikleri ve teknikleri",
-      "option": {
-        "kind": {
-          "label": "Sıralama"
+          "label": ""
         },
-        "range": {
-          "label": "Zaman Aralığı"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Girdi sayısı"
-        },
-        "minLevel": {
-          "label": "Minimum kural düzeyi"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Çubukları göster"
-        }
-      },
-      "title": {
-        "rules": "En üst kurallar · {range}",
-        "agents": "En üst ajanlar · {range}",
-        "sourceIps": "En üst kaynak IP'leri · {range}",
-        "mitreTactics": "MITRE taktikleri · {range}",
-        "mitreTechniques": "MITRE teknikleri · {range}"
-      },
-      "empty": {
-        "rules": "Bu dönemde uyarı yok",
-        "agents": "Bu dönemde uyarı yok",
-        "sourceIps": "Bu dönemde kaynak IP'si olan uyarı yok",
-        "mitreTactics": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok",
-        "mitreTechniques": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok"
-      },
-      "totalTooltip": "{count} eşleşen uyarı",
-      "private": "Yerel ağ",
-      "public": "Herkese açık",
-      "agents": "{count} ajan üzerinde görüldü",
-      "others": "Diğer girdilerde {count} uyarı daha var"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh güvenlik açıkları",
-      "description": "Güvenlik açığı sayıları, en üst CVE'ler ve en savunmasız ajanlar",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": "Sıralama ölçütü"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "CVE'leri şuna göre sırala"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE önem derecesi"
+          "label": ""
         },
         "cveLimit": {
-          "label": "CVE sayısı"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Ajan sayısı"
+          "label": ""
         },
         "showAgents": {
-          "label": "En savunmasız ajanları göster"
-        }
-      },
-      "title": "Güvenlik açıkları",
-      "topCves": "En üst CVE'ler",
-      "score": "Puan",
-      "agentsShort": "Ajanlar",
-      "topAgents": "En savunmasız ajanlar",
-      "criticalHigh": "Kritik / Yüksek",
-      "totalTooltip": "{agents} ajan üzerinde {count} bulgu",
-      "affected": "{count} ajan",
-      "empty": "Güvenlik açığı algılanmadı",
-      "distribution": "Önem derecesi dağılımı. Puanı olmayan {unscored} bulgu gösterilmez.",
-      "worst": "En kötü: {agents} ajan üzerinde {id} ({score})"
-    },
-    "wazuhFim": {
-      "name": "Wazuh dosya bütünlüğü",
-      "description": "Son dosya bütünlüğü izleme (syscheck) olayları",
-      "option": {
-        "range": {
-          "label": "Zaman Aralığı"
+          "label": ""
         },
-        "event": {
+        "fimEvent": {
           "label": "Etkinlikler"
         },
-        "limit": {
-          "label": "Olay sayısı"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Windows kayıt defteri olaylarını dahil et"
-        }
-      },
-      "title": "Dosya bütünlüğü · {range}",
-      "event": {
-        "added": "Eklenme Tarihi",
-        "modified": "Değiştirildi",
-        "deleted": "Silinen",
-        "unknown": "Değişti"
-      },
-      "empty": "Bu dönemde dosya bütünlüğü olayı yok",
-      "user": "{user} tarafından",
-      "registry": "Kayıt defteri"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh kimlik doğrulama başarısızlıkları",
-      "description": "Ajan başına başarısız oturum açmalar ve saatlik mini grafiklerle kaba kuvvet uyarıları",
-      "option": {
-        "hours": {
-          "label": "Zaman aralığı (saat)"
+          "label": ""
         },
-        "limit": {
-          "label": "Ajan sayısı"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "En üst kaynak IP'lerini göster"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Kimlik doğrulama başarısızlıkları · {hours}s",
-      "seriesTooltip": "Son {hours} saat içinde tüm ajanlar",
-      "peak": "Tepe {count}/paket",
-      "empty": "Bu dönemde başarısız oturum açma yok",
-      "failed": "Başarısız oturum açmalar",
-      "failedHint": "Tekil kimlik doğrulama başarısızlıkları (sshd, PAM, Windows oturumu, geçersiz kullanıcılar)",
-      "bruteForce": "Kaba kuvvet",
-      "bruteForceHint": "İlişkilendirilmiş kaba kuvvet kuralları (kısa sürede birden çok başarısızlık, MITRE T1110)",
-      "sourceIps": "Kaynak IP'leri",
-      "ipTooltip": "{ip}: {count} başarısızlık",
-      "bruteForceCount": "{count} kaba kuvvet olayı"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6677,18 @@
       "addWidget": "Widget ekle",
       "addApp": "Uygulama ekle",
       "connectService": "Hizmet bağla"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Bu panoyu kullanışlı hale getirin",
@@ -5988,6 +6794,26 @@
           "createAndUse": "Oluştur ve kullan"
         }
       }
+    },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Ana Sayfa",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
     },
     "landmark": {
       "canvas": "Pano çalışma alanı",
@@ -6097,13 +6923,7 @@
       "itemRadius": {
         "label": "Öğe yarıçapı",
         "description": "Panelinizdeki yuvaların yuvarlaklığını değiştirir",
-        "option": {
-          "xs": "Çok küçük",
-          "sm": "Küçük",
-          "md": "Orta",
-          "lg": "Büyük",
-          "xl": "Çok büyük"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Herkese açık",
@@ -6261,6 +7081,11 @@
           "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6332,10 +7157,12 @@
             "documentation": "Dokümantasyon",
             "submitIssue": "Bir Hata Gönder",
             "discord": "Discord Topluluğu",
-            "sourceCode": "Kaynak Kodu"
+            "sourceCode": "Kaynak Kodu",
+            "changelog": ""
           }
         },
         "about": "Hakkında",
+        "updateAvailable": "",
         "assistant": "Asistan"
       }
     },
@@ -6347,9 +7174,23 @@
           "authentication": "Kimlik doğrulama",
           "authorization": "Yetkilendirme"
         },
-        "heroBanner": {
-          "title": "Tekrar hoş geldiniz",
-          "subtitle": "{app} Panosu"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6394,7 +7235,9 @@
         },
         "noResults": {
           "title": "Henüz panel yok",
-          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun."
+          "description": "Uygulamalarınızı ve widget'larınızı tek bir yerde düzenlemek için bir pano oluşturun.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6447,6 +7290,11 @@
                 "logoDisplay": {
                   "logo": "Yalnızca logo",
                   "logoAndText": "Logo + metin"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6454,6 +7302,7 @@
                 "search": "Arama",
                 "home": "Ana Panel",
                 "boardSwitcher": "Paneller",
+                "boardTabs": "",
                 "assistant": "Asistan",
                 "docker": "Docker",
                 "boardEdit": "Panoyu düzenle",
@@ -6685,6 +7534,10 @@
             "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -6729,15 +7582,13 @@
             "signInOverlay": {
               "label": "Arka plan kaplaması"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Köşe stili",
-              "options": {
-                "xs": "Sıkı",
-                "sm": "Hafif",
-                "md": "Dengeli",
-                "lg": "Yuvarlatılmış",
-                "xl": "Yumuşak"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Genel özel CSS",
@@ -6759,7 +7610,6 @@
               "greetingDefault": "Varsayılan karşılama",
               "boardColorLocked": "Pano rengi kilitli",
               "boardColorFlexible": "Pano renklerine izin veriliyor",
-              "appName": "İş adı",
               "logo": "Amblem",
               "greeting": "Karşılama",
               "on": "Açık",
@@ -6894,6 +7744,7 @@
             "model": {
               "title": "Model adı",
               "description": "Keşfedilen bir model seçin veya tam bir uç nokta model kimliği girin.",
+              "save": "",
               "placeholder": "Model kimliği",
               "refresh": "Modelleri yenile",
               "chooseModel": "Yeni konuşmalar için kullanılacak modeli seçin.",
@@ -6986,9 +7837,7 @@
             "lastExecution": {
               "label": "Son Çalıştırma"
             },
-            "actions": {
-              "label": "Eylemler"
-            }
+            "actions": {}
           },
           "table": {
             "search": "{count} görevi ara..."
@@ -7040,6 +7889,12 @@
             "apiKey": {
               "label": "Kimlik doğrulama",
               "title": "API Anahtarları",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "API anahtarı oluştur",
                 "confirmDeletion": ""
@@ -7052,9 +7907,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Tarafından oluşturuldu",
-                  "source": "Entegrasyon",
-                  "actions": "Eylemler"
+                  "createdBy": "Tarafından oluşturuldu"
                 }
               },
               "provenance": {
@@ -7267,7 +8120,8 @@
               "openSpotlightApps": "Uygulama aramasını aç",
               "openSpotlightAssistant": "Asistan modunu aç",
               "openSpotlightPreferences": "Tercihler modunu aç",
-              "openAssistant": "Asistanı aç"
+              "openAssistant": "Asistanı aç",
+              "switchBoardTab": ""
             },
             "note": "İpucu: Mod, macOS'ta hem Ctrl tuşunu hem de ⌘ tuşunu ifade eder"
           }
@@ -7347,7 +8201,6 @@
     },
     "field": {
       "state": {
-        "label": "Durum",
         "option": {
           "created": "Oluşturuldu",
           "running": "Çalışıyor",
@@ -7374,7 +8227,6 @@
       }
     },
     "action": {
-      "title": "Eylemler",
       "logs": {
         "label": "Günlükleri görüntüle",
         "page": {
@@ -7612,27 +8464,13 @@
       "internalServerError": "Kubernetes verileri alınamadı"
     },
     "field": {
-      "name": {
-        "label": "İş adı"
-      },
-      "namespace": {
-        "label": "İsim Alanı"
-      },
-      "creationTimestamp": {
-        "label": "Oluşturuldu"
-      },
-      "state": {
-        "label": "İş Durumu"
-      },
-      "status": {
-        "label": "Durum"
-      },
-      "type": {
-        "label": "İndirme İstemcisi türü"
-      },
-      "architecture": {
-        "label": "Mimari"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7659,10 +8497,7 @@
         "label": "İzin"
       }
     },
-    "action": {
-      "saveUser": "Kullanıcı iznini kaydet",
-      "saveGroup": "Grup iznini kaydet"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7773,8 +8608,7 @@
       "resultsAriaLabel": "{mode} sonuçları",
       "footer": {
         "navigate": "Gezin",
-        "open": "Aç",
-        "close": "Kapat"
+        "open": "Aç"
       }
     },
     "error": {
@@ -8204,9 +9038,7 @@
         "urlTemplate": {
           "label": "URL arama şablonu"
         },
-        "description": {
-          "label": "Tanım"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8275,8 +9107,7 @@
             "table": {
               "header": {
                 "season": "Sezon",
-                "episodes": "Bölüm",
-                "status": "Durum"
+                "episodes": "Bölüm"
               },
               "status": {
                 "requested": "Talep edildi"
@@ -8461,6 +9292,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "*arr yığını ve tüm homelab ortamınız için kendi barındırdığınız pano. 50'den fazla hizmet, gerçek zamanlı widget'lar ve yapılandırma dosyası yok.",
     "dashboardTitle": "{appName} Panosu"
@@ -8489,6 +9326,14 @@
     "conversationActions": "Konuşma eylemleri",
     "searchConversations": "Konuşmalarda ara",
     "noMatchingConversations": "Eşleşen konuşma yok",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Daha fazla yanıt eylemi",
     "renameConversation": {
       "action": "Yeniden adlandır",
@@ -8538,6 +9383,7 @@
       "imageInput": "Görüntü girdisini kabul eder",
       "thinking": "Düşünme modu",
       "reasoning": {
+        "default": "",
         "auto": "Otomatik",
         "none": "Kapalı",
         "minimal": "Minimum",
@@ -8608,6 +9454,9 @@
     },
     "mentions": {
       "menu": "Homarr bağlamı ekle",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Bağlam",
       "app": "Uygulamalar",
       "integration": "Entegrasyonlar",
@@ -8622,6 +9471,8 @@
     },
     "commands": {
       "menu": "Asistan komutları",
+      "hint": "",
+      "empty": "",
       "health": "Hizmet durumu denetimi hazırla",
       "explore": "Bu Homarr örneğine genel bakış hazırla",
       "media": "Medya araması hazırla",
@@ -8772,7 +9623,6 @@
       "cssDescription": "Tam stil sayfasını düzenleyin. Buradan kaldırılmadığı sürece mevcut kurallar korunur.",
       "cssCharacters": "{count} / 16384 karakter",
       "copyCss": "CSS'yi kopyala",
-      "copied": "Kopyalandı",
       "restoreCss": "Mevcut CSS'yi geri yükle",
       "remoteCssTitle": "Bu CSS uzak bir kaynak yüklüyor",
       "remoteCssDescription": "İçe aktarılan stil sayfaları ve uzak URL'ler, pano yüklendiğinde başka bir sunucuyla iletişim kurar. Devam etmeden önce bunları inceleyin."
@@ -8804,6 +9654,7 @@
     "approvalDescription": "Çalıştırmadan önce bu değişikliği inceleyin.",
     "approveAndRun": "Onayla ve çalıştır",
     "deny": "Reddet",
+    "approvalError": "",
     "autoApproval": {
       "label": "Otomatik onaylar",
       "composerLabel": "Benim için onayla",

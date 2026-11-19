@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
-import { Container, Group, Stack, Title } from "@mantine/core";
+import { Group, Title } from "@mantine/core";
 import { z } from "zod/v4";
 
+import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { env } from "~/env";
 import { IntegrationNewFormWrapper } from "./_integration-new-form-wrapper";
 import { IntegrationNewSelectGrid } from "./_integration-new-select-grid";
@@ -32,34 +33,34 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
   if (!result.success) {
     const t = await getI18n("integration");
     return (
-      <>
-        <DynamicBreadcrumb />
-        <Container>
-          <Stack>
-            <Title>{t("action.create")}</Title>
-            <IntegrationNewSelectGrid enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
-          </Stack>
-        </Container>
-      </>
+      <ManagePageLayout title={t("action.create")} container="default" breadcrumbPlacement="outside">
+        <IntegrationNewSelectGrid enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
+      </ManagePageLayout>
     );
   }
 
   const tCreate = await getI18n("integration.page.create");
 
   const currentKind = result.data;
+  const selectableApps = await api.app.selectable.query();
 
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Container>
-        <Stack>
-          <Group align="center">
-            <IntegrationAvatar kind={currentKind} size="md" />
-            <Title>{tCreate("title", { name: getIntegrationName(currentKind) })}</Title>
-          </Group>
-          <IntegrationNewFormWrapper kind={currentKind} initialUrl={searchParams.url} initialName={searchParams.name} />
-        </Stack>
-      </Container>
-    </>
+    <ManagePageLayout
+      title={
+        <Group align="center">
+          <IntegrationAvatar kind={currentKind} size="md" />
+          <Title>{tCreate("title", { name: getIntegrationName(currentKind) })}</Title>
+        </Group>
+      }
+      container="default"
+      breadcrumbPlacement="outside"
+    >
+      <IntegrationNewFormWrapper
+        kind={currentKind}
+        initialUrl={searchParams.url}
+        initialName={searchParams.name}
+        selectableApps={selectableApps}
+      />
+    </ManagePageLayout>
   );
 }

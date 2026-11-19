@@ -78,7 +78,7 @@ const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => 
     <PasswordInput
       {...props}
       label={props.label ?? tIntegration(`secrets.kind.${kind}.label` as never)}
-      description={tIntegration("secrets.secureNotice")}
+      description={tIntegration(kind === "totpSecret" ? "secrets.totpNotice" : "secrets.secureNotice")}
       w="100%"
       leftSection={<Icon size={20} stroke={1.5} />}
     />

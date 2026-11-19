@@ -1,10 +1,10 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
 import { ResourceImage as Image } from "@homarr/ui";
-import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 import { Fragment, useMemo } from "react";
 import {
-  Avatar,
   Badge,
   Box,
   Divider,
@@ -114,7 +114,6 @@ const createReleaseDateFormatter = (locale: string) => {
 };
 
 const Item = ({ item, options, isAdvanced, formatDate }: ItemProps) => {
-  const backdropUrl = useWorkerResourceUrl(item.imageUrls.backdrop);
   const t = useI18n("widget.mediaReleases");
   const length = formatLength(item.length, item.type, t);
   const showPoster = isAdvanced || options.layout === "poster";
@@ -154,19 +153,20 @@ const Item = ({ item, options, isAdvanced, formatDate }: ItemProps) => {
             : undefined
         }
       >
-        {!isAdvanced && options.layout === "backdrop" && (
-          <Box
+        {!isAdvanced && options.layout === "backdrop" && item.imageUrls.backdrop && (
+          <Image
+            src={item.imageUrls.backdrop}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             w="100%"
             h="100%"
             pos="absolute"
             top={0}
             left={0}
             style={{
-              backgroundImage: backdropUrl ? `url(${backdropUrl})` : undefined,
               borderRadius: 8,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               opacity: 0.2,
             }}
           />

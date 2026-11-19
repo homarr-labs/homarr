@@ -7,16 +7,19 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 // The below import statement initializes dns-caching
 import "@homarr/core/infrastructure/dns/init";
 
-interface HttpAgentOptions extends EnvHttpProxyAgent.Options {
+export interface HttpAgentOptions extends EnvHttpProxyAgent.Options {
   logger?: ILogger;
+  logOriginOnly?: boolean;
 }
 
 export class UndiciHttpAgent extends EnvHttpProxyAgent {
   private logger: ILogger;
+  private logOriginOnly: boolean;
 
   constructor(props?: HttpAgentOptions) {
     super(props);
     this.logger = props?.logger ?? createLogger({ module: "httpAgent" });
+    this.logOriginOnly = props?.logOriginOnly ?? false;
   }
 
   dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandler): boolean {
@@ -25,13 +28,14 @@ export class UndiciHttpAgent extends EnvHttpProxyAgent {
   }
 
   private logRequestDispatch(options: Dispatcher.DispatchOptions) {
-    const path = this.redactPathParams(options.path);
-    let url = new URL(`${options.origin as string}${path}`);
-    url = this.redactSearchParams(url);
+    let loggedUrl = new URL(String(options.origin)).origin;
+    if (!this.logOriginOnly) {
+      const path = this.redactPathParams(options.path);
+      const url = this.redactSearchParams(new URL(`${loggedUrl}${path}`));
+      loggedUrl = url.toString().replaceAll("=&", "&");
+    }
 
-    this.logger.debug(
-      `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers ?? {}).length} headers)`,
-    );
+    this.logger.debug(`Dispatching request ${loggedUrl} (${Object.keys(options.headers ?? {}).length} headers)`);
   }
 
   /**

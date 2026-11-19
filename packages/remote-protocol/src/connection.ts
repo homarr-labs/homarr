@@ -516,11 +516,12 @@ export function createWorkerConnection(options: {
       if (response.body && incoming.method !== "HEAD" && ![204, 205, 304].includes(response.status)) {
         incoming.reader = response.body.getReader();
         while (true) {
-          await credit(incoming);
+          // Look ahead by one source chunk so EOF never needs a consumer credit.
+          // Each data frame still waits for credit; unread streams remain bounded.
           const next = await incoming.reader.read();
           if (next.done) break;
           for (let chunkOffset = 0; chunkOffset < next.value.length; chunkOffset += CHUNK_BYTES) {
-            if (chunkOffset > 0) await credit(incoming);
+            await credit(incoming);
             await send({
               type: "response-chunk",
               id,

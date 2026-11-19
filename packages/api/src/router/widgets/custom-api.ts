@@ -1,4 +1,4 @@
-import { getCustomWidgetIntegrationCacheVersion, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
+import { createCustomWidgetSourceResolver } from "../custom-widget/source-resolver";
 import { ApiError } from "../../procedure";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -37,6 +37,7 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
+const upstreamProcedure = publicProcedure.meta({ readOnly: false });
 interface CustomWidgetItemOptions {
   definitionId: string;
   configuration: Record<string, unknown>;
@@ -107,7 +108,29 @@ async function resolvePlacedDefinitionAsync(context: RouterContext, itemId: stri
       message: `Custom widget configuration needs repair: ${issues[0]?.path} ${issues[0]?.message}`,
     });
   }
-  return { item, stored, definition, itemOptions, configuration };
+  const cacheVersion = getCustomWidgetCacheVersion(stored);
+  const sourceResolver = createCustomWidgetSourceResolver(context);
+  const publishedSourceResolvers = new Map<string, ReturnType<typeof createCustomWidgetSourceResolver>>();
+  const permissions = new Map<BoardPermission, Promise<void>>([["view", Promise.resolve()]]);
+  const authorizeRequest = (permission: BoardPermission) => {
+    let authorized = permissions.get(permission);
+    if (!authorized) {
+      authorized = throwIfActionForbiddenAsync(context, eq(boards.id, item.boardId), permission);
+      permissions.set(permission, authorized);
+    }
+    return authorized;
+  };
+  return {
+    item,
+    stored,
+    definition,
+    itemOptions,
+    configuration,
+    cacheVersion,
+    sourceResolver,
+    publishedSourceResolvers,
+    authorizeRequest,
+  };
 }
 
 const findRequest = (resolved: ResolvedDefinition, requestId: string, kind: "query" | "action") => {
@@ -131,6 +154,7 @@ const withRequestLimit = async <T>(
   category: RequestLimitInput["category"],
   callback: () => Promise<T>,
   load?: RequestLimitInput["load"],
+  phase?: RequestLimitInput["phase"],
 ) => {
   const release = await acquireCustomWidgetRequestLimit({
     category,
@@ -139,6 +163,7 @@ const withRequestLimit = async <T>(
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
     load,
+    phase,
   });
   try {
     return await callback();
@@ -148,7 +173,7 @@ const withRequestLimit = async <T>(
 };
 
 const getCacheKey = (resolved: ResolvedDefinition, request: IdentifiedRequest, params: Record<string, unknown>) =>
-  `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${request.id}:${hashRuntimeParams(params)}`;
+  `custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:${request.id}:${hashRuntimeParams(params)}`;
 
 const executeRequest = async (
   context: RouterContext,
@@ -158,11 +183,7 @@ const executeRequest = async (
   signal?: AbortSignal,
   load?: RequestLimitInput["load"],
 ) => {
-  await throwIfActionForbiddenAsync(
-    context,
-    eq(boards.id, resolved.item.boardId),
-    request.permission as BoardPermission,
-  );
+  await resolved.authorizeRequest(request.permission);
   const source = findSource(resolved, request.source);
   // A worker share publishes this exact stored read, not arbitrary integration access.
   // Input may select declared request parameters, but cannot choose the source or method.
@@ -179,12 +200,28 @@ const executeRequest = async (
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   let category: RequestLimitInput["category"] = "query";
   if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
+  let phase: RequestLimitInput["phase"];
+  let beforeRequest: (() => Promise<void>) | undefined;
+  if (request.kind === "query") {
+    phase = "concurrency";
+    beforeRequest = () => withRequestLimit(context, resolved, "query", async () => undefined, load, "rate");
+  }
   return withRequestLimit(
     context,
     resolved,
     category,
     async () => {
-      const connection = await resolveCustomWidgetSource(sourceContext, source, request, () =>
+      let sourceResolver = resolved.sourceResolver;
+      if (sourceContext.publishedIntegrationRead) {
+        const integrationId = sourceContext.publishedIntegrationRead.integrationId;
+        let publishedResolver = resolved.publishedSourceResolvers.get(integrationId);
+        if (!publishedResolver) {
+          publishedResolver = createCustomWidgetSourceResolver(sourceContext);
+          resolved.publishedSourceResolvers.set(integrationId, publishedResolver);
+        }
+        sourceResolver = publishedResolver;
+      }
+      const connection = await sourceResolver.resolveSource(source, request, () =>
         resolved.stored.secrets
           .filter((secret) => secret.sourceId === source.id)
           .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
@@ -202,10 +239,12 @@ const executeRequest = async (
         cacheKey:
           request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
         cacheTtlSeconds: request.cacheSeconds,
+        beforeRequest,
       });
       return { ...response, sourceCacheVersion: connection.cacheVersion };
     },
     load,
+    phase,
   );
 };
 
@@ -214,9 +253,7 @@ export const customApiRouter = createApiRouter({
     const resolved = await resolvePlacedDefinitionAsync(context, input.itemId);
     try {
       await withRequestLimit(context, resolved, "refresh", async () => {
-        invalidateCustomWidgetResponseCache([
-          `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
-        ]);
+        invalidateCustomWidgetResponseCache([`custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:`]);
       });
     } catch (error) {
       if (error instanceof ApiError && error.code === "TOO_MANY_REQUESTS") {
@@ -230,7 +267,7 @@ export const customApiRouter = createApiRouter({
     }
   }),
 
-  getData: publicProcedure.input(itemInputSchema).query(async ({ context, input, signal }) => {
+  getData: upstreamProcedure.input(itemInputSchema).query(async ({ context, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(context, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
@@ -294,7 +331,7 @@ export const customApiRouter = createApiRouter({
         if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
         try {
           const version = await withRequestLimit(context, resolved, "metadata", () =>
-            getCustomWidgetIntegrationCacheVersion(context, source),
+            resolved.sourceResolver.getIntegrationCacheVersion(source),
           );
           return [sourceId, version] as const;
         } catch {
@@ -311,7 +348,7 @@ export const customApiRouter = createApiRouter({
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
+      queryCacheKey: `${resolved.cacheVersion}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,
@@ -350,7 +387,7 @@ export const customApiRouter = createApiRouter({
     };
   }),
 
-  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ context, input, signal }) => {
+  queryRequest: upstreamProcedure.input(namedRequestInputSchema).query(async ({ context, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(context, input.itemId);
     const request = findRequest(resolved, input.requestId, "query");
     if (request.trigger !== "manual") {
@@ -379,8 +416,8 @@ export const customApiRouter = createApiRouter({
       if (response.ok && request.invalidates?.length) {
         invalidateCustomWidgetResponseCache(
           request.invalidates.flatMap((requestId) => [
-            `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
-            `custom-widget:options:${resolved.stored.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
+            `custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:${requestId}:`,
+            `custom-widget:options:${resolved.stored.id}:${resolved.cacheVersion}:${requestId}:`,
           ]),
         );
       }

@@ -46,12 +46,9 @@ export class LlamacppIntegration extends Integration {
   }
 
   public async getStatsAsync(): Promise<LlamacppStats> {
-    const [healthResponse, modelsResponse, metricsResponse, slotsResponse] = await Promise.all([
+    const [healthResponse, modelsResponse] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/health"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
       fetchWithTrustedCertificatesAsync(this.url("/v1/models"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
-      fetchWithTrustedCertificatesAsync(this.url("/metrics"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }),
-      // /slots is not present on every build; a missing endpoint degrades to no context usage.
-      fetchWithTrustedCertificatesAsync(this.url("/slots"), { timeout: LLMACPP_REQUEST_TIMEOUT_MS }).catch(() => null),
     ]);
 
     if (!healthResponse.ok) {
@@ -61,14 +58,28 @@ export class LlamacppIntegration extends Integration {
       throw new ResponseError(modelsResponse);
     }
 
+    const [health, models] = await Promise.all([
+      parseLlamacppHealthAsync(healthResponse),
+      parseLlamacppModelsAsync(modelsResponse),
+    ]);
+    const firstModelId = models.data[0]?.id;
+
+    const [metricsResponse, slotsResponse] = await Promise.all([
+      fetchWithTrustedCertificatesAsync(this.url("/metrics", { model: firstModelId }), {
+        timeout: LLMACPP_REQUEST_TIMEOUT_MS,
+      }),
+      // /slots is not present on every build; a missing endpoint degrades to no context usage.
+      fetchWithTrustedCertificatesAsync(this.url("/slots", { model: firstModelId }), {
+        timeout: LLMACPP_REQUEST_TIMEOUT_MS,
+      }).catch(() => null),
+    ]);
+
     // /metrics only exists when llama-server was started with --metrics; a non-OK
     // response (typically 501 Not Implemented) degrades to no rate counters instead
     // of dropping the health and model data that the other endpoints still provide.
     const metricsAvailable = metricsResponse.ok;
 
-    const [health, models, metrics, slots] = await Promise.all([
-      parseLlamacppHealthAsync(healthResponse),
-      parseLlamacppModelsAsync(modelsResponse),
+    const [metrics, slots] = await Promise.all([
       metricsAvailable ? parseLlamacppMetricsAsync(metricsResponse) : Promise.resolve([]),
       slotsResponse?.ok ? parseLlamacppSlotsAsync(slotsResponse) : Promise.resolve(null),
     ]);

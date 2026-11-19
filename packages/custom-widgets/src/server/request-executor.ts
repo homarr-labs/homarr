@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { STATUS_CODES } from "node:http";
-import { Headers, Response } from "undici/index.js";
+import { Headers } from "undici/index.js";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type {
@@ -14,21 +14,14 @@ import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
   assertCustomWidgetPathScope,
-  createPinnedAgent,
-  resolveAndValidateHost,
+  createRequestAgent,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
-import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
+import { abortable, closeDispatcher } from "./request-dispatcher-lifecycle";
+import { decodeResponseBody, parseBufferedResponseBody, redactResponseSecrets } from "./response";
 
-export {
-  assertSafeStaticHeaders,
-  classifyAddress,
-  resolveAndValidateHost,
-  resolveSameOriginTarget,
-  validateCustomWidgetUrl,
-} from "./network-policy";
+export { assertSafeStaticHeaders, resolveSameOriginTarget, validateCustomWidgetUrl } from "./network-policy";
 export {
   assertJsonBudget,
   MAX_RESPONSE_BODY_BYTES,
@@ -40,13 +33,15 @@ export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
+const MAX_TIMER_DELAY_MS = 2_147_483_647;
 export const MAX_REQUEST_DURATION_MS = 45_000;
 const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
 const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
-let cacheEpoch = 0;
+let cacheExpiryTimer: ReturnType<typeof setTimeout> | undefined;
+let cacheExpiryDeadline: number | undefined;
 
 type RequestHopResult =
   | { kind: "response"; response: CustomWidgetHttpResponse }
@@ -59,8 +54,11 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     Math.min(input.timeoutMs ?? MAX_REQUEST_DURATION_MS, MAX_REQUEST_DURATION_MS),
   );
   const signal = AbortSignal.any([controller.signal, ...(input.signal ? [input.signal] : [])]);
+  let preparingRequest = true;
   try {
     signal.throwIfAborted();
+    if (input.beforeRequest) await abortable(input.beforeRequest(), signal);
+    preparingRequest = false;
     assertRequest(input);
     const executeDelegatedRequest = input.executeDelegatedRequest;
     if (executeDelegatedRequest) {
@@ -91,7 +89,8 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
         reason: "timeout",
       });
     }
-    if (error instanceof CustomWidgetDomainError) throw error;
+    if (signal.aborted) throw signal.reason;
+    if (preparingRequest || error instanceof CustomWidgetDomainError) throw error;
     input.logError?.({
       origin: URL.canParse(input.baseUrl) ? new URL(input.baseUrl).origin : "invalid",
       method: input.method,
@@ -131,11 +130,7 @@ async function performRequestWithinDeadline(
         code: "PAYLOAD_TOO_LARGE",
         message: "Request body exceeds the 10 KiB limit",
       });
-    const dispatcher = createPinnedAgent(
-      await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
-      REQUEST_TIMEOUT_MS,
-      input.tls,
-    );
+    const dispatcher = createRequestAgent(REQUEST_TIMEOUT_MS, input.tls);
     const headers = buildHeaders(input, currentUrl, requestBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -158,17 +153,16 @@ async function performRequestWithinDeadline(
           responseHeaders.delete("content-encoding");
           responseHeaders.delete("content-length");
         }
-        const response = new Response(body.byteLength > 0 ? body : null, {
+        if (responseData.statusCode < 200 || responseData.statusCode > 599)
+          throw new RangeError("Upstream response status is outside the supported range");
+        if (body.byteLength > 0 && [204, 205, 304].includes(responseData.statusCode))
+          throw new TypeError("Upstream response status does not allow a body");
+        let data: unknown = null;
+        if (currentMethod !== "HEAD") data = parseBufferedResponseBody(body, responseHeaders, input.textFallback);
+        const parsed = {
+          ok: responseData.statusCode >= 200 && responseData.statusCode < 300,
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
-          headers: responseHeaders,
-        });
-        let data: unknown = null;
-        if (currentMethod !== "HEAD") data = await parseResponseBody(response, input.textFallback);
-        const parsed = {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
           data,
         };
         parsed.data = redactResponseSecrets(parsed.data, input.redactSecrets ?? []);
@@ -276,7 +270,7 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
   if (body === undefined) headers.delete("Content-Type");
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
-    applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
+    applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName, input.auth.headerSlots);
     for (const [name, value] of Object.entries(input.auth.headers ?? {})) headers.set(name, value);
     for (const [name, value] of Object.entries(input.auth.query ?? {})) url.searchParams.set(name, value);
   }
@@ -291,16 +285,21 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   if (!key) return performRequest(input);
   const cached = cache.get(key);
   if (cached && cached.expiresAt > Date.now()) return cached.response;
-  if (cached) cache.delete(key);
+  if (cached) {
+    cache.delete(key);
+    clearCacheExpiryTimerIfEmpty();
+  }
   const pending = inFlight.get(key);
   if (pending) return pending;
-  const requestEpoch = cacheEpoch;
+  const cacheTtlSeconds = input.cacheTtlSeconds ?? 30;
   let request: Promise<CustomWidgetHttpResponse>;
   request = performRequest(input)
     .then((response) => {
-      if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
+      if (response.ok && cacheTtlSeconds > 0 && inFlight.get(key) === request) {
         pruneCache();
-        cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
+        const expiresAt = Date.now() + cacheTtlSeconds * 1000;
+        cache.set(key, { expiresAt, response });
+        scheduleCacheExpiry(expiresAt);
       }
       return response;
     })
@@ -313,16 +312,51 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
 
 export function invalidateCustomWidgetResponseCache(prefixes: readonly string[]): void {
   if (prefixes.length === 0) return;
-  cacheEpoch += 1;
   for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
   for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
+  clearCacheExpiryTimerIfEmpty();
 }
 
 function pruneCache(): void {
-  for (const [key, entry] of cache) if (entry.expiresAt <= Date.now()) cache.delete(key);
+  pruneExpiredCache();
   while (cache.size >= MAX_RESPONSE_CACHE_ENTRIES) {
     const key = cache.keys().next().value as string | undefined;
     if (!key) return;
     cache.delete(key);
   }
+}
+
+function pruneExpiredCache(): void {
+  const now = Date.now();
+  for (const [key, entry] of cache) if (entry.expiresAt <= now) cache.delete(key);
+}
+
+function scheduleCacheExpiry(expiresAt: number): void {
+  if (cacheExpiryTimer && cacheExpiryDeadline !== undefined && expiresAt >= cacheExpiryDeadline) return;
+  if (cacheExpiryTimer) clearTimeout(cacheExpiryTimer);
+  cacheExpiryDeadline = expiresAt;
+  cacheExpiryTimer = setTimeout(
+    () => {
+      cacheExpiryTimer = undefined;
+      cacheExpiryDeadline = undefined;
+      pruneExpiredCache();
+      scheduleNextCacheExpiry();
+    },
+    Math.min(Math.max(0, expiresAt - Date.now()), MAX_TIMER_DELAY_MS),
+  );
+  cacheExpiryTimer.unref();
+}
+
+function scheduleNextCacheExpiry(): void {
+  let earliestExpiry = Number.POSITIVE_INFINITY;
+  for (const entry of cache.values()) if (entry.expiresAt < earliestExpiry) earliestExpiry = entry.expiresAt;
+  if (Number.isFinite(earliestExpiry)) scheduleCacheExpiry(earliestExpiry);
+  else clearCacheExpiryTimerIfEmpty();
+}
+
+function clearCacheExpiryTimerIfEmpty(): void {
+  if (cache.size > 0 || !cacheExpiryTimer) return;
+  clearTimeout(cacheExpiryTimer);
+  cacheExpiryTimer = undefined;
+  cacheExpiryDeadline = undefined;
 }

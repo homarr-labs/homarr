@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { Alert, Box, Button, Card, Group, SimpleGrid, Stack, Table, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
@@ -14,7 +16,7 @@ import { ApiPageTabs } from "~/app/[locale]/manage/tools/api/components/api-page
 import { ScalarApiReferenceFrame } from "~/app/[locale]/manage/tools/api/components/scalar-api-reference-frame";
 import { BackupExportCard } from "~/app/[locale]/manage/tools/backup/_components/backup-export-card";
 import { BackupImportCard } from "~/app/[locale]/manage/tools/backup/_components/backup-import-card";
-import { AddCertificateSection } from "~/app/[locale]/manage/tools/certificates/_components/add-certificate";
+import { CertificatesPageContent } from "~/app/[locale]/manage/tools/certificates/_components/add-certificate";
 import { RemoveCertificate } from "~/app/[locale]/manage/tools/certificates/_components/remove-certificate";
 import { RemoveHostnameActionIcon } from "~/app/[locale]/manage/tools/certificates/hostnames/_components/remove-hostname";
 import { DockerReconciliation } from "~/app/[locale]/manage/tools/docker/docker-reconciliation";
@@ -23,10 +25,8 @@ import { ClientSideDockerLogsTerminal } from "~/app/[locale]/manage/tools/docker
 import { ClusterDashboard } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard";
 import { ConfigmapsTable } from "~/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table";
 import { IngressesTable } from "~/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table";
-import {
-  KubernetesContextSelector,
-  useSelectedKubernetesContextId,
-} from "~/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector";
+import { KubernetesContextSelector } from "~/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector";
+import { kubernetesContextCookieName } from "~/app/[locale]/manage/tools/kubernetes/kubernetes-context.constants";
 import { NamespacesTable } from "~/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table";
 import { NodesTable } from "~/app/[locale]/manage/tools/kubernetes/nodes/nodes-table";
 import { PodsTable } from "~/app/[locale]/manage/tools/kubernetes/pods/pods-table";
@@ -39,7 +39,7 @@ import { LogLevelSelection } from "~/app/[locale]/manage/tools/logs/level-select
 import { LogContextProvider } from "~/app/[locale]/manage/tools/logs/log-context";
 import { TasksTable } from "~/app/[locale]/manage/tools/tasks/_components/tasks-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { NoResults } from "~/components/no-results";
+import { NoResults } from "@homarr/ui";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { useWorkerBootstrap, useWorkerWorkspace } from "~/worker/context";
 
@@ -209,19 +209,39 @@ function WorkerApiPage() {
 }
 
 function WorkerKubernetesPage({ resource }: { resource?: string }) {
-  let content = <ClusterDashboard />;
-  if (resource) content = <WorkerKubernetesResource resource={resource} />;
+  const searchParams = useSearchParams();
+  const contexts = clientApi.kubernetes.contexts.getContexts.useQuery();
+  const [storedContextId] = useState(() => {
+    const cookie = document.cookie.split("; ").find((entry) => entry.startsWith(`${kubernetesContextCookieName}=`));
+    if (!cookie) return null;
+    try {
+      return decodeURIComponent(cookie.slice(kubernetesContextCookieName.length + 1));
+    } catch {
+      return null;
+    }
+  });
+  const requestedContextId = searchParams.get("context");
+  const data = contexts.data;
+  const contextId =
+    data?.contexts.find((entry) => entry.contextId === requestedContextId)?.contextId ??
+    data?.contexts.find((entry) => entry.contextId === storedContextId)?.contextId ??
+    data?.contexts.find((entry) => entry.contextId === data.defaultContextId)?.contextId ??
+    data?.contexts[0]?.contextId;
+  let content = <WorkerQueryStatus queries={[contexts]} />;
+  if (contextId) {
+    content = <ClusterDashboard contextId={contextId} initialCluster={null} initialResourceCounts={null} />;
+    if (resource) content = <WorkerKubernetesResource resource={resource} contextId={contextId} />;
+  }
   return (
     <Stack>
-      <KubernetesContextSelector />
+      <KubernetesContextSelector initialContexts={data} initialContextId={storedContextId} />
       <DynamicBreadcrumb />
       {content}
     </Stack>
   );
 }
 
-function WorkerKubernetesResource({ resource }: { resource: string }) {
-  const contextId = useSelectedKubernetesContextId();
+function WorkerKubernetesResource({ resource, contextId }: { resource: string; contextId: string }) {
   const t = useI18n("kubernetes.cluster.resources");
   const contexts = clientApi.kubernetes.contexts.getContexts.useQuery();
   const context = contexts.data?.contexts.find((item) => item.contextId === contextId);
@@ -356,17 +376,7 @@ function WorkerCertificatesPage() {
   return (
     <>
       <DynamicBreadcrumb />
-      <Stack>
-        <Group justify="space-between">
-          <Stack gap={4}>
-            <Title>{t("page.list.title")}</Title>
-            <Text>{t("page.list.description")}</Text>
-          </Stack>
-          <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
-            {t("page.list.toHostnames")}
-          </Button>
-        </Group>
-        <AddCertificateSection />
+      <CertificatesPageContent>
         <WorkerQuery query={certificates}>
           {(data) => (
             <>
@@ -428,7 +438,7 @@ function WorkerCertificatesPage() {
             </>
           )}
         </WorkerQuery>
-      </Stack>
+      </CertificatesPageContent>
     </>
   );
 }

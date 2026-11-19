@@ -22,7 +22,14 @@ export const HeaderLogo = ({ display, logo, logoWithTitle, label }: HeaderLogoPr
   if (display === "logoAndText") content = logoWithTitle;
 
   return (
-    <UnstyledButton component={Link} href={href} className={classes.root} data-display={display} aria-label={label}>
+    <UnstyledButton
+      component={Link}
+      href={href}
+      prefetch={false}
+      className={classes.root}
+      data-display={display}
+      aria-label={label}
+    >
       {content}
     </UnstyledButton>
   );

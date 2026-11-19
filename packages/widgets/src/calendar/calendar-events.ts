@@ -4,6 +4,17 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 
 export const toCalendarDateKey = (date: Date) => dayjs(date).format("YYYY-MM-DD");
 
+const toLocalMidnight = (date: Date) => new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+export const toLocalAllDayEvent = <TEvent extends CalendarEvent>(event: TEvent): TEvent => {
+  if (!event.isAllDay) return event;
+  return {
+    ...event,
+    startDate: toLocalMidnight(event.startDate),
+    endDate: event.endDate && toLocalMidnight(event.endDate),
+  };
+};
+
 export const moveCalendarMonth = (month: Date, amount: number): Date =>
   dayjs(month).startOf("month").add(amount, "month").toDate();
 

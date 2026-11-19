@@ -2,8 +2,7 @@
 
 import { ResourceAvatar as Avatar } from "./resource-avatar";
 import type { AvatarProps } from "@mantine/core";
-
-import { enc, MD5 } from "crypto-js";
+import MD5 from "crypto-js/md5";
 
 import { useSettings } from "@homarr/settings";
 
@@ -28,7 +27,7 @@ export const UserAvatar = ({ user, size }: UserAvatarProps) => {
   }
 
   if (user.email && enableGravatar) {
-    const emailHash = MD5(user.email.trim().toLowerCase()).toString(enc.Hex);
+    const emailHash = MD5(user.email.trim().toLowerCase()).toString();
     return <Avatar src={`https://seccdn.libravatar.org/avatar/${emailHash}?d=blank`} alt={user.name} size={size} />;
   }
 

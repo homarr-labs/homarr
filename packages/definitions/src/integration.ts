@@ -28,7 +28,7 @@ export const integrationSecretKindObject = {
   wazuhIndexerUrl: { isPublic: true, multiline: false },
   wazuhIndexerUsername: { isPublic: true, multiline: false },
   wazuhIndexerPassword: { isPublic: false, multiline: false },
-  wazuhDashboardUrl: { isPublic: true, multiline: false },
+  totpSecret: { isPublic: false, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
@@ -176,7 +176,7 @@ export const integrationDefs = {
   homebox: {
     httpAuth: { type: "adapter" },
     name: "Homebox",
-    secretKinds: [["username", "password"]],
+    secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
     category: ["miscellaneous"],
     documentationSlug: "homebox",
@@ -251,6 +251,17 @@ export const integrationDefs = {
     category: ["miscellaneous"],
     documentationSlug: "plantit",
     defaultPort: 8080,
+  },
+
+  yuvomi: {
+    httpAuth: { type: "bearer" },
+    name: "Yuvomi",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yuvomi.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "yuvomi",
+    defaultPort: 3000,
+    apiKeySettingsPath: "/settings/admin/api",
   },
 
   netdata: {
@@ -468,6 +479,16 @@ export const integrationDefs = {
     apiKeySettingsPath: "/settings/general",
     features: { onboarding: { featuredOrder: 0 } },
   },
+  sportarr: {
+    httpAuth: { type: "adapter" },
+    name: "Sportarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sportarr.svg",
+    category: ["calendar", "mediaOrganizer"],
+    documentationSlug: "sportarr",
+    defaultPort: 1867,
+    apiKeySettingsPath: "/settings/general",
+  },
   radarr: {
     httpAuth: { type: "adapter" },
     name: "Radarr",
@@ -637,6 +658,7 @@ export const integrationDefs = {
     httpAuth: { type: "adapter" },
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
+    optionalSecretKinds: ["totpSecret"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
     category: ["healthMonitoring"],
     documentationSlug: "open-media-vault",
@@ -820,6 +842,17 @@ export const integrationDefs = {
     defaultPort: 8000,
     features: { docker: { aliases: ["paperless-ngx", "paperless"] } },
   },
+  thingport: {
+    httpAuth: { type: "bearer" },
+    name: "Thingport",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/thingport.svg",
+    category: ["miscellaneous", "search"],
+    documentationSlug: "thingport",
+    defaultPort: 80,
+    apiKeySettingsPath: "/profile",
+    features: { docker: { aliases: ["thingport", "thingport-frontend"] } },
+  },
   patchmon: {
     httpAuth: { type: "basic", usernameKind: "patchmonApiKey", passwordKind: "patchmonApiSecret" },
     name: "PatchMon",
@@ -984,10 +1017,8 @@ export const integrationDefs = {
       ["username", "password", "wazuhIndexerUrl", "wazuhIndexerUsername", "wazuhIndexerPassword"],
       ["wazuhIndexerUsername", "wazuhIndexerPassword"],
     ],
-    // Used for deep links from the widgets into the Wazuh dashboard.
-    optionalSecretKinds: ["wazuhDashboardUrl"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
-    category: ["security"],
+    category: ["security", "notifications"],
     documentationSlug: "wazuh",
     defaultPort: 55000,
     features: { docker: { aliases: ["wazuh", "wazuh-manager", "wazuh.manager"] } },
@@ -996,16 +1027,18 @@ export const integrationDefs = {
     httpAuth: {
       type: "modes",
       modes: [
-        { when: [], auth: { type: "none" } },
+        { when: ["personalAccessToken"], auth: { type: "bearer", secretKind: "personalAccessToken" } },
         { when: ["username", "password"], auth: { type: "basic" } },
+        { when: [], auth: { type: "none" } },
       ],
     },
     name: "What's Up Docker",
-    secretKinds: [[], ["username", "password"]],
+    secretKinds: [["personalAccessToken"], ["username", "password"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
     category: ["healthMonitoring"],
     documentationSlug: "whats-up-docker",
     defaultPort: 3000,
+    apiKeySettingsPath: "/profile",
   },
   llamacpp: {
     httpAuth: { type: "none" },

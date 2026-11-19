@@ -5,6 +5,8 @@ import { Procedure, walkProcedureContractsSync } from "@orpc/server";
 import type { AnyRouter, AnyProcedure } from "@orpc/server";
 import { z } from "zod/v4";
 
+import { isReadOnlyProcedure } from "./credential-access";
+
 export interface McpMeta {
   mcp?: {
     enabled: boolean;
@@ -115,6 +117,11 @@ export function extractMcpToolsFromProcedures(router: AnyRouter): McpToolCatalog
       const inputSchema = z.toJSONSchema(input, {
         io: "input",
         override: ({ zodSchema, jsonSchema }) => {
+          if (zodSchema["_zod"].def.type === "literal" && jsonSchema.const === "") {
+            delete jsonSchema.const;
+            jsonSchema.type = "string";
+            jsonSchema.maxLength = 0;
+          }
           if (zodSchema["_zod"].def.type !== "string") return;
           if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
             // trim/case normalization runs before these checks in oRPC. They cannot constrain raw JSON.
@@ -140,7 +147,7 @@ export function extractMcpToolsFromProcedures(router: AnyRouter): McpToolCatalog
         description: metadata.description ?? "",
         type: operationType,
         annotations: {
-          readOnlyHint: operationType === "query",
+          readOnlyHint: isReadOnlyProcedure(operationType, definition.meta),
           destructiveHint: operationType === "mutation" && metadata.effect !== "additive",
         },
         pathInRouter: path.split("."),

@@ -50,7 +50,7 @@ export const BackupExportCard = () => {
   };
 
   return (
-    <Card withBorder>
+    <Card>
       <Stack gap="sm">
         <Group gap="sm">
           <IconDatabaseExport size={24} />

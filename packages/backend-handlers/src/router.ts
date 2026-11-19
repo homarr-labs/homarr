@@ -19,7 +19,7 @@ import { GET as getHealthLive } from "@homarr/backend-handlers/health/live";
 import { GET as getHealthReady } from "@homarr/backend-handlers/health/ready";
 import { GET as getImageProxy } from "@homarr/backend-handlers/image-proxy";
 import { POST as claimOnboarding } from "@homarr/backend-handlers/onboarding-claim";
-import { GET as getUserMedia } from "@homarr/backend-handlers/user-medias";
+import { GET as getUserMedia, HEAD as headUserMedia } from "@homarr/backend-handlers/user-medias";
 
 export const resourcesRoutes = new Hono()
   .get("/api/about/contributors/crowdin", () => getCrowdinContributors())
@@ -45,6 +45,9 @@ export const resourcesRoutes = new Hono()
     getImageProxy(context.req.raw, { params: Promise.resolve({ id: context.req.param("id") }) }),
   )
   .post("/api/onboarding/claim", (context) => claimOnboarding(context.req.raw))
+  .on("HEAD", "/api/user-medias/:id", (context) =>
+    headUserMedia(context.req.raw, { params: Promise.resolve({ id: context.req.param("id") }) }),
+  )
   .get("/api/user-medias/:id", (context) =>
     getUserMedia(context.req.raw, { params: Promise.resolve({ id: context.req.param("id") }) }),
   );

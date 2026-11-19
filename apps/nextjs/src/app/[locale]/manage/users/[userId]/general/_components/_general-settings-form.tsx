@@ -256,7 +256,7 @@ export const UserGeneralSettingsForm = ({
           <form onSubmit={form.onSubmit(handleSubmitAsync)}>
             <Stack gap="lg">
               <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" verticalSpacing="lg">
-                <Card withBorder bg="transparent">
+                <Card bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tUser("name")}</Title>
@@ -281,7 +281,7 @@ export const UserGeneralSettingsForm = ({
                   </Stack>
                 </Card>
 
-                <Card withBorder bg="transparent">
+                <Card bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tGeneral("item.board.title")}</Title>
@@ -306,7 +306,7 @@ export const UserGeneralSettingsForm = ({
                   </Stack>
                 </Card>
 
-                <Card withBorder bg="transparent">
+                <Card bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tGeneral("item.search")}</Title>
@@ -330,7 +330,7 @@ export const UserGeneralSettingsForm = ({
                   </Stack>
                 </Card>
 
-                <Card withBorder bg="transparent">
+                <Card bg="transparent">
                   <Stack gap="md">
                     <Stack gap={2}>
                       <Title order={3}>{tGeneral("item.language")}</Title>
@@ -384,7 +384,7 @@ export const UserGeneralSettingsForm = ({
 
               <div style={{ position: "sticky", bottom: 20 }}>
                 {form.isDirty() && (
-                  <Card withBorder>
+                  <Card>
                     <Group justify="space-between" wrap="wrap">
                       <Text fw={500}>{tCommon("unsavedChanges")}</Text>
                       <Group>

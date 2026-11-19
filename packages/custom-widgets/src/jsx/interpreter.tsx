@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 
 import { callCollectionMethod } from "./collection-methods";
+import type { InterpreterMethodContext } from "./interpreter-method-context";
 import { staticPropertyName } from "./analyzer-ast";
 import type { JsxEmitterContext } from "./emitter-context";
 import { createInterpreterCallback, runInterpreterCallback } from "./interpreter-callbacks";
@@ -31,6 +32,7 @@ export interface SafeJsxRenderResult {
 
 class Interpreter {
   private readonly budget: Budget;
+  private readonly context: JsxEmitterContext & InterpreterMethodContext;
   private readonly warnings = new Set<string>();
 
   public constructor(
@@ -39,6 +41,15 @@ class Interpreter {
     private readonly limits: EvaluationBudgets,
   ) {
     this.budget = new Budget(limits);
+    this.context = {
+      components: this.components,
+      budget: this.budget,
+      warnings: this.warnings,
+      evaluate: (node, currentEnvironment, depth) => this.evaluate(node, currentEnvironment, depth),
+      createCallback: (node, currentEnvironment) => this.createCallback(node, currentEnvironment),
+      renderCallback: (callback, args, depth) => this.runCallback(callback, args, depth) as ReactNode,
+      runCallback: (callback, args, depth) => this.runCallback(callback, args, depth),
+    };
   }
 
   public render(root: AstNode): SafeJsxRenderResult {
@@ -115,22 +126,11 @@ class Interpreter {
   }
 
   private evaluateJsxFragment(node: AstNode, environment: Environment, depth: number): ReactNode {
-    return emitJsxFragment(node, environment, depth, this.emitterContext());
+    return emitJsxFragment(node, environment, depth, this.context);
   }
 
   private evaluateJsxElement(node: AstNode, environment: Environment, depth: number): ReactNode {
-    return emitJsxElement(node, environment, depth, this.emitterContext());
-  }
-
-  private emitterContext(): JsxEmitterContext {
-    return {
-      components: this.components,
-      budget: this.budget,
-      warnings: this.warnings,
-      evaluate: (node, environment, depth) => this.evaluate(node, environment, depth),
-      createCallback: (node, environment) => this.createCallback(node, environment),
-      renderCallback: (callback, args, depth) => this.runCallback(callback, args, depth) as ReactNode,
-    };
+    return emitJsxElement(node, environment, depth, this.context);
   }
 
   private evaluateArray(node: AstNode, environment: Environment, depth: number): unknown[] {
@@ -315,10 +315,7 @@ class Interpreter {
     args: unknown[],
     depth: number,
   ): { handled: boolean; value?: unknown } {
-    return callCollectionMethod(receiver, method, args, depth, {
-      budget: this.budget,
-      runCallback: (callback, callbackArgs, callbackDepth) => this.runCallback(callback, callbackArgs, callbackDepth),
-    });
+    return callCollectionMethod(receiver, method, args, depth, this.context);
   }
 
   private accountHostResult(value: unknown): unknown {
@@ -332,10 +329,7 @@ class Interpreter {
   }
 
   private runCallback(callback: InterpreterCallback, args: unknown[], depth: number): unknown {
-    return runInterpreterCallback(callback, args, depth, {
-      budget: this.budget,
-      evaluate: (node, environment, callbackDepth) => this.evaluate(node, environment, callbackDepth),
-    });
+    return runInterpreterCallback(callback, args, depth, this.context);
   }
 
   private evaluateTemplateLiteral(node: AstNode, environment: Environment, depth: number): string {
@@ -353,11 +347,19 @@ class Interpreter {
   }
 }
 
-export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
-  const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
-  for (const [name, value] of Object.entries(limits)) {
-    if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
-  }
-  const root = parseCustomJsxTemplate(template);
-  return new Interpreter(components, new Environment(bindings), limits).render(root);
+export function createSafeJsxRenderer(template: string) {
+  let root: AstNode | undefined;
+  return ({ components, bindings, budgets }: Omit<RenderSafeJsxOptions, "template">): SafeJsxRenderResult => {
+    const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
+    for (const [name, value] of Object.entries(limits)) {
+      if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
+    }
+    // Only syntax is reused. Bindings, warnings, callbacks, and budgets belong to each evaluation.
+    root ??= parseCustomJsxTemplate(template);
+    return new Interpreter(components, new Environment(bindings), limits).render(root);
+  };
+}
+
+export function renderSafeJsx({ template, ...options }: RenderSafeJsxOptions): SafeJsxRenderResult {
+  return createSafeJsxRenderer(template)(options);
 }

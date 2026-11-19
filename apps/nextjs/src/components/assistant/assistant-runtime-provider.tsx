@@ -3,7 +3,7 @@
 import type { ClipboardEvent, PropsWithChildren } from "react";
 import { createContext, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef } from "react";
 import type { AssistantRuntime, AttachmentAdapter, ThreadListRuntime, Toolkit } from "@assistant-ui/react";
-import { AssistantRuntimeProvider, INTERNAL, Tools, useAui, useAuiEvent } from "@assistant-ui/react";
+import { AssistantRuntimeProvider, AuiConfig, INTERNAL, Tools, useAui, useAuiEvent } from "@assistant-ui/react";
 
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -18,9 +18,9 @@ export const AssistantRuntimeProviderWithTools = ({
   runtime,
   toolkit,
 }: AssistantRuntimeProviderWithToolsProps) => {
-  const toolsAui = useAui({ tools: Tools({ toolkit }) });
+  const config = AuiConfig({ tools: Tools({ toolkit }) });
   return (
-    <AssistantRuntimeProvider aui={toolsAui} runtime={runtime}>
+    <AssistantRuntimeProvider runtime={runtime} config={config}>
       {children}
     </AssistantRuntimeProvider>
   );
@@ -138,9 +138,9 @@ const createSurfaceAttachmentAdapter = (threadCore: ThreadCore): AttachmentAdapt
         pendingAttachmentIds.delete(attachment.id);
       }
     },
-    async send(attachment) {
+    async send(attachment, options) {
       try {
-        return await getAdapter().send(attachment);
+        return await getAdapter().send(attachment, options);
       } finally {
         pendingAttachmentIds.delete(attachment.id);
       }
@@ -346,6 +346,7 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     getArchivedItemByIndex: (index) => sharedThreads.getArchivedItemByIndex(index),
     switchToThread: (threadId, options) => sharedThreads.switchToThread(threadId, options),
     switchToNewThread: () => sharedThreads.switchToNewThread(),
+    unstable_subscribeThreadEvents: (callback) => sharedThreads.unstable_subscribeThreadEvents(callback),
     getLoadThreadsPromise: () => sharedThreads.getLoadThreadsPromise(),
     reload: () => sharedThreads.reload(),
     reloadMainThread: () => sharedThreads.reloadMainThread(),

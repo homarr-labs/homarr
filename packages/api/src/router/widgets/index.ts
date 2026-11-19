@@ -12,6 +12,7 @@ export const widgetRouter = createApiRouter({
   coolify: createLazyRouter(() => import("./coolify").then((mod) => mod.coolifyRouter)),
   immich: createLazyRouter(() => import("./immich").then((mod) => mod.immichRouter)),
   paperlessNgx: createLazyRouter(() => import("./paperless-ngx").then((mod) => mod.paperlessNgxRouter)),
+  thingport: createLazyRouter(() => import("./thingport").then((mod) => mod.thingportRouter)),
   patchmon: createLazyRouter(() => import("./patchmon").then((mod) => mod.patchmonRouter)),
   bazarr: createLazyRouter(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
   notebook: createLazyRouter(() => import("./notebook").then((mod) => mod.notebookRouter)),

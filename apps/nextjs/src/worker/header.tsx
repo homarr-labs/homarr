@@ -77,6 +77,7 @@ export function WorkerHeader({
       canSwitchBoards={canManage}
       canAccessManagement={canManage}
       hasNavigation={hasNavigation}
+      withBoardTabs={Boolean(board)}
       boardEditAction={boardEditAction}
       boardSettingsAction={boardSettingsAction}
     />

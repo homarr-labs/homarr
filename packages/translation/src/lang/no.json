@@ -65,9 +65,8 @@
         "themeAuto": "System",
         "themeLight": "Lys",
         "themeDark": "Mørk",
-        "serverOriginHelp": "Homarr bruker denne adressen for å forhåndsutfylle oppdagede tjeneste-adresser. Du kan fremdeles redigere hver tjeneste individuelt.",
         "serverDescription": "Dette er en snarvei, ikke en restriksjon. Alle oppdagede tjenester er fortsatt redigerbare.",
-        "serverOrigin": "Domain, IP, or reverse-proxy path",
+        "serverOrigin": "",
         "serverOriginDescription": "Eksempler: home.lan, 192.168.1.10, eller https://home.example.com/services. Velg hvordan hver tjeneste er lagt til nedenfor.",
         "analytics": "Del anonym produktanalyse",
         "analyticsDescription": "Hjelper Homarr forbedrer funksjonen. Ingen tjeneste innloggingsinformasjon eller dashbord innhold er sendt."
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Tilknytt hva som gjør tavlen nyttig",
         "description": "Velg flere tjenester samtidig. Legeetikettene prioriterer bilde, bilder som matcher filer og alle URL-er og legitimasjonsopphold kan gjennomgås.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Oppdagede integrasjonsinstanser ({count})",
         "detectedIntegrationLabel": "Importer {name}, oppdaget som {kind}",
         "detectedAppLabel": "Importer oppdagede apper {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Trenger konfigurasjon",
         "tested": "Tilkobling testet",
         "testFailed": "Tilkoblingstesten mislyktes",
-        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?"
+        "incompleteConfirmation": "Uferdige integrasjoner vil bli hoppet over. Fortsette uten dem?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Rist brettet før det er bygget",
@@ -142,17 +144,11 @@
         "secondaryColor": "Sekundærfarge",
         "resetColors": "Tilbakestill farger",
         "radius": "Miniprogram hjørneradius",
-        "radiusOptions": {
-          "xs": "Tatt",
-          "sm": "Lilla",
-          "md": "Balansert",
-          "lg": "Avrundet",
-          "xl": "Myk"
-        },
+        "radiusOptions": {},
         "columns": "Kolonner på tavle",
         "columnsDescription": "Kolonner definerer horisontalt rutenett som brukes til å angi størrelse og posisjon punkt 12 for de fleste.",
         "columnCount": "{count, plural, one {# kolonne} other {# kolonner}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Høyre sidestolpe",
         "previewLabel": "Live forhåndsvisning av første tavlevisning"
       },
@@ -171,7 +167,7 @@
           "description": "Bla gjennom brukerdefinerte Widgets, inspiser deres etterspurte funksjoner, installer dem og publiser ditt eget arbeid uten å kopiere kode mellom serverene.",
           "available": "Tilgjengelig",
           "checking": "Sjekker…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Oppdag",
           "discoverDescription": "Finn moduler laget for ekte arbeidsflyter. (Automatic Translation)",
           "installTitle": "Gjennomgå og installere",
@@ -181,7 +177,7 @@
           "browse": "Bla gjennom Verksted"
         },
         "mcpSetup": {
-          "title": "Homarr MCP",
+          "title": "",
           "description": "Koble Claude, Codex, eller en annen MCP-klient til Homarrets skrevne verktøy. API-nøkler holder eksplisitt tilgang og tilbakekallbart.",
           "endpoint": "Streambart HTTP-endepunkt",
           "keyTitle": "Kopier denne nøkkelen nå",
@@ -192,7 +188,6 @@
           "loginRequired": "Logg på som administrator etter oppsett for å lage et API-nøkkel.",
           "configuration": "Klientkonfigurasjon",
           "copy": "Kopier konfigurasjon",
-          "copied": "Kopiert",
           "advanced": "Åpne MCP-verktøy, tillatelser, og oppsettsdetaljer"
         }
       },
@@ -203,7 +198,7 @@
         "columns": "Kolonner på tavle",
         "columnsValue": "{count, plural, one {# kolonne} other {# kolonner}}",
         "sidebars": "Sidefelt",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Responsivt oppsett",
         "layoutsValue": "Mobil + Base",
         "integrations": "Integrasjoner",
@@ -216,7 +211,7 @@
         "themeLight": "Lys",
         "themeDark": "Mørk",
         "colors": "Farger for tavle",
-        "radius": "Widget radius",
+        "radius": "",
         "automaticTitle": "Hva Homarr skal opprette",
         "automaticDescription": "Kompatible moduler, ikoner, applinker, integrasjonsrelasjoner og responsiv plassering kommer fra delt Homarr katalog. Du kan redigere hvert resultat senere.",
         "dockerWarningTitle": "Noen Docker-etiketter endret under oppsett",
@@ -284,6 +279,13 @@
         "admin": {
           "title": "Full administrator tilgang",
           "description": "Kan administrere Homarr og tilkoblede tjenester, inkludert destruktive handlinger."
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "Medisinsk omfang og levetid",
@@ -635,7 +637,7 @@
           "use": "Bruk",
           "interact": "Interagere",
           "modify": "Endre",
-          "full": "Full"
+          "full": ""
         },
         "capabilityIncluded": "Allerede inkludert i \"{level}\""
       }
@@ -799,9 +801,12 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Beskrivelse"
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på støttede lenker",
+        "requiresHandler": "Egendefinerte protokoller krever en tilknyttet app på enheten din."
       },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Bruk annen URL for ping",
@@ -853,7 +858,6 @@
       "source": "API-kilde: {name}",
       "baseUrl": "URL til server",
       "networkScope": "Nettverk tilgang",
-      "save": "Lagre API-konfigurasjon",
       "expires": "Denne engangsforespørselen utløper ved {time}."
     },
     "page": {
@@ -884,13 +888,11 @@
       "pasteImportHint": "Lim inn en fullstendig egendefinert widget JSON med Ctrl+V eller Kommand+V",
       "delete": "Slett tilpasset widget",
       "deleteConfirm": "Er du sikker på at du vil slette \"{name}\"? Handlingen kan ikke angres.",
-      "export": "Eksporter",
-      "duplicate": "Duplicate",
+      "duplicate": "",
       "aiPrompt": "Design med AI",
       "copyAiPrompt": "Kopier AI ledetekst",
       "enable": "Aktiver",
       "disable": "Deaktiver",
-      "menu": "Handlinger",
       "downloadSkill": "Vis tilpasset Widget ferdighet",
       "publishWorkshop": "Publiser til Verksted",
       "migrate": "Migrere tilpasset widget",
@@ -904,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Konfigurer widget kilder",
       "description": "Gjennomgå hvor denne widgeten kobler til, eller erstatt dens krypterte legitimasjon.",
-      "credentialsRequired": "Forespørsler vil ikke besto før den nødvendige legitimasjonen er lagt til.",
-      "save": "Lagre konfigurasjon"
+      "credentialsRequired": "Forespørsler vil ikke besto før den nødvendige legitimasjonen er lagt til."
     },
-    "field": {
-      "description": "Beskrivelse"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Noe gikk galt"
@@ -917,9 +916,8 @@
       "action": {
         "components": "Komponenter",
         "format": "Formatér",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Gjenta",
-        "copied": "Kopiert",
         "schema": "Skjema"
       },
       "reference": {
@@ -935,14 +933,14 @@
         "errors": "{count, number} feil",
         "warnings": "{count, number} advarsler",
         "ready": "Ingen feil funnet",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} karakterer",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Mal diagnostikk",
         "line": "Linje {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "Inndata \"{value}\" deles av kontroller med inkompatible verdityper.",
         "runtimeBindingTypeConflict": "Inndata \"{value}\" er bundet som både {firstType} og {secondType}.",
         "dynamicRequestId": "En literal forespørsel-ID er nødvendig. Dynamiske forespørsler er ikke akseptert.",
@@ -966,7 +964,7 @@
         "sources": "API kilder",
         "requests": "Forespørsler",
         "options": "Alternativer",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Forhåndsvisning"
       },
       "status": {
@@ -997,10 +995,9 @@
       "builder": {
         "advancedManifest": "Avansert rå manifest",
         "advancedJson": "Avansert manifest JSON",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "Forespørsel {count, number}",
         "requestId": "Forespørsel ID",
-        "type": "Nedlastings-klient type",
         "method": "Metode",
         "source": "API kilde",
         "run": "Kjør",
@@ -1014,7 +1011,7 @@
         "queryKey": "Spørre nøkkel",
         "queryKeyInvalid": "Bruk en unik ID som starter med en bokstav og kun inneholder bokstaver, tall, - eller _.",
         "valueSource": "Verdi kilde",
-        "literal": "Literal",
+        "literal": "",
         "widgetOption": "Alternativer for widget",
         "invocationParameter": "Besøks parametre",
         "option": "Alternativ",
@@ -1037,10 +1034,9 @@
         "optionName": "Alternativ navn",
         "label": "Etikett",
         "control": "Styring",
-        "description": "Beskrivelse",
         "default": "Standard",
         "optionDetails": "Betingelser og dynamiske valg",
-        "minimum": "Minimum",
+        "minimum": "",
         "maximum": "Maksimum",
         "step": "Trinn",
         "choiceLabel": "Valg etikett",
@@ -1068,13 +1064,12 @@
       },
       "sources": {
         "title": "API kilder og legitimasjon",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "API-kilde IDer må være unike.",
         "credentialRemoved": "Legitimasjon fjernet",
         "credentialRemovedDescription": "Den lagrede verdien ble slettet.",
         "primary": "Primær API",
         "id": "Kilde ID",
-        "name": "Jobb navn",
         "baseUrl": "Standard URL",
         "baseUrlError": {
           "invalid": "Angi en fullstendig URL.",
@@ -1091,8 +1086,7 @@
         "remove": "Fjern kilde og dens forespørsler",
         "advanced": "Avansert",
         "add": "Legg til en API-kilde",
-        "sourceType": "Integrasjon",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Eksisterende integrering",
         "integrationType": "Integrasjon type",
         "selectIntegration": "Konfigurert integrasjon",
@@ -1163,10 +1157,10 @@
         "runAction": "Kjør handlingen",
         "deleteConfirmation": "Denne forhåndsvisningshandlingen endrer eksterne data gjennom det konfigurerte API-et.",
         "simulated": "Operasjon simulert",
-        "httpStatus": "HTTP {status, number}",
+        "httpStatus": "",
         "tab": {
           "widget": "Moduler",
-          "data": "Data",
+          "data": "",
           "options": "Alternativer",
           "state": "Jobb status",
           "actions": "Kontroller",
@@ -1190,7 +1184,7 @@
         "permission": {
           "view": "Visning",
           "modify": "Endre",
-          "full": "Full"
+          "full": ""
         }
       }
     },
@@ -1225,7 +1219,6 @@
       "migrationTitle": "Overført v2-erstatning ved migrering",
       "migrationDescription": "Gjennomgå og bekreft dette genererte v2 definisjonen. Bekrefter atomisk erstatter den bevarte v1-posten mens du beholder eksisterende veggplasseringer koblet til samme widget-ID.",
       "fileLabel": "Velg en egendefinert widget-JSON-fil",
-      "name": "Jobb navn",
       "origin": "Basis opprinnelse",
       "authentication": "Autentisering",
       "networkScope": "Nettverk omfang",
@@ -1245,8 +1238,6 @@
         "title": "Denne widgeten kan endre eksterne data",
         "description": "Gjennomgå alle navngitte handlinger, arvet legitimasjon og destruktiv bekreftelse etter import. Hemmeligheter blir ikke inkludert i filen."
       },
-      "cancel": "Avbryt import",
-      "confirm": "Importer widget",
       "confirmMigration": "Bekreft v2 erstatning"
     },
     "secret": {
@@ -1254,6 +1245,20 @@
       "username": "Brukernavn",
       "password": "Passord",
       "savedPlaceholder": "•••••• (lagret, la være tom for å beholde)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Oppdatering tilgjengelig",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1283,7 +1288,7 @@
     "outdated": "Utdatert",
     "outdatedWarning": "Forfatteren markerte dette som utdatert. Gjennomgå det nøye før du importerer.",
     "score": "Poeng: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Nedstemme",
     "voteError": "Stemmen kunne ikke lagres.",
     "signIn": "Logg på med GitHub",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Gjennomgang før installering",
     "installError": "Denne widgeten kan ikke installeres",
     "installErrorDescription": "Workshop-innsending er ikke en gyldig egendefinert JSX v2 widget.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Importer CSS fra Workshop",
     "importCssConfirm": "Erstatte gjeldende CSS med \"{title}\"? Ingenting er lagret inntil du lagrer styrets innstillinger.",
     "screenshotAlt": "{title} skjermbilde {count, number}",
@@ -1310,7 +1315,6 @@
     "closeScreenshotViewer": "Lukk skjermbilde",
     "technicalDetails": "Tekniske detaljer",
     "sourceCode": "Verksted oppføring",
-    "export": "Eksporter",
     "report": "Rapporter",
     "reportTitle": "Rapporter innsending",
     "reportReason": "Grunn",
@@ -1341,8 +1345,6 @@
       "viewSubmission": "Vis og behandle innsending",
       "done": "Ferdig",
       "signInHint": "Logg inn for å publisere under Workshop-identiteten din.",
-      "titleField": "Tittel",
-      "descriptionField": "Beskrivelse",
       "screenshots": "Skjermbilder",
       "screenshotsDescription": "Opptil fem PNG, JPEG eller WebP-bilder",
       "screenshotsPlaceholder": "Velg skjermbilder",
@@ -1405,11 +1407,7 @@
               "label": "Velg eksisterende app"
             },
             "new": {
-              "title": "Ny",
-              "url": {
-                "label": "App url",
-                "description": "URL-en appen åpnes med når den aksesseres fra dashbordet"
-              }
+              "title": "Ny"
             }
           }
         }
@@ -1461,11 +1459,12 @@
         "label": "Koble til en eksisterende app",
         "description": "Koble denne integrasjonen til en app som du allerede kan bruke."
       },
-      "appHref": {
-        "placeholder": "Egendefinert app-URL"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
-        "label": "Get API key"
+        "label": ""
       }
     },
     "action": {
@@ -1481,15 +1480,15 @@
       "loadError": "Kan ikke laste inn integrasjoner. Prøv igjen før du oppretter en ny tilkobling."
     },
     "category": {
-      "dnsHole": "DNS",
+      "dnsHole": "",
       "mediaService": "Medier",
       "calendar": "Kalender",
       "mediaSearch": "Søk",
       "mediaRelease": "Utgivelser",
       "mediaRequest": "Forespørsler",
       "downloadClient": "Nedlastinger",
-      "usenet": "Usenet",
-      "torrent": "Torrent",
+      "usenet": "",
+      "torrent": "",
       "miscellaneous": "Diverse",
       "smartHomeServer": "Smart hjem",
       "indexerManager": "Indekser",
@@ -1507,10 +1506,10 @@
       "mediaMonitoring": "Overvåking",
       "speedtest": "Hastighet test",
       "analytics": "Analyser",
-      "vpn": "VPN",
+      "vpn": "",
       "mediaLibrary": "Mediabibliotek media",
       "uptimeMonitoring": "Oppetid overvåking",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Systemovervåking",
       "security": "Sikkerhet",
       "serviceVersion": "Versjon"
@@ -1529,6 +1528,27 @@
         "unknown": {
           "title": "Ukjent feil",
           "description": "En ukjent feil oppstod, åpne årsaken nedenfor for å se flere detaljer"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Parse-feil",
@@ -1559,6 +1579,7 @@
             "untrusted": "Sertifikatet er ikke betrodd.",
             "hostnameMismatch": "Vertsnavnet i sertifikatet samsvarer ikke med URL-en."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Ikke nok tillatelser",
@@ -1607,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Sertifikat betrodd",
                 "message": "Sertifikatet ble lagt til i listen over betrodde sertifikater"
               },
               "error": {
-                "title": "Kunne ikke stole på sertifikatet",
                 "message": "Kunne ikke legge til sertifikatet i listen over betrodde sertifikater"
               }
             }
@@ -1730,6 +1749,11 @@
         "title": "Tilbakestill hemmelighet",
         "message": "Er du sikker på at du vil tilbakestille denne hemmeligheten?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Ingen hemmeligheter",
         "text": "Ingen hemmeligheter kreves for denne integrasjonen"
@@ -1811,9 +1835,9 @@
           "label": "Indekserer passord",
           "newLabel": "Nytt indekserer-passord"
         },
-        "wazuhDashboardUrl": {
-          "label": "Dashboard URL (valgfritt)",
-          "newLabel": "Ny URL-adresse for dashbordet"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1823,8 +1847,8 @@
       "full": "Full integrasjons-tilgang"
     },
     "llamacpp": {
-      "name": "llama.cpp",
-      "description": "Monitor a local llama.cpp llama-server: health, model and generation metrics"
+      "name": "",
+      "description": ""
     }
   },
   "media": {
@@ -1832,9 +1856,7 @@
     "search": "Finn et medie",
     "field": {
       "preview": "Forhåndsvisning",
-      "size": "Størrelse",
-      "creator": "Skaper",
-      "actions": "Kontroller"
+      "creator": "Skaper"
     },
     "action": {
       "upload": {
@@ -1904,6 +1926,7 @@
       "tryAgain": "Prøv igjen",
       "loading": "Laster",
       "show": "Vis",
+      "showAll": "",
       "hide": "Skjul",
       "undo": "Angre",
       "editNamed": "Rediger {name}",
@@ -1911,8 +1934,11 @@
       "clearSearch": "Tøm søk",
       "copy": "Kopier",
       "copied": "Kopiert",
-      "refresh": "Oppdater"
+      "refresh": "Oppdater",
+      "export": "Eksporter",
+      "advanced": "Avansert"
     },
+    "hidden": "Skjult",
     "pagination": {
       "pageOf": "Side {page} av {totalPages}"
     },
@@ -1922,6 +1948,8 @@
     "here": "her",
     "serviceUrlTemplate": {
       "serverTitle": "Vanlig serveradresse",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Service adresse mønster",
       "hostPort": "Samme vert, forskjellige porter",
       "subdomain": "Ett deldomene per tjeneste",
@@ -1935,6 +1963,7 @@
       "clear": "Fjern bilde",
       "uploadImage": "Last opp bilde",
       "results": "Søkeresultater for bilde",
+      "websiteIcon": "",
       "localImages": "Dine bilder",
       "svgIcons": "SVG ikoner",
       "otherImages": "Andre bilder",
@@ -1999,7 +2028,16 @@
         "updateAvailable": "{countUpdates} oppdateringer tilgjengelig: {tag}",
         "assistant": "Assistent",
         "assistantThinking": "Tenker",
-        "modifier": "Mod"
+        "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Notat",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
       }
     },
     "dangerZone": "Faresonen",
@@ -2054,7 +2092,18 @@
     "total": "Totalt",
     "filesystemUsage": "{count, plural, one {Vis bruk for # filsystem} other {Vis bruk for # filsystemer}}",
     "field": {
-      "name": "Jobb navn"
+      "name": "Jobb navn",
+      "state": "Status",
+      "size": "Størrelse",
+      "actions": "Handlinger",
+      "source": "Kilde",
+      "title": "Tittel",
+      "description": "Beskrivelse",
+      "created": "Opprettet",
+      "namespace": "Navnerom",
+      "status": "Status",
+      "architecture": "Arkitektur",
+      "type": "Nedlastings-klient type"
     },
     "label": {
       "new": "Ny"
@@ -2072,6 +2121,167 @@
       "searchEngines": "Søkemotorer",
       "tasks": "Oppgaver",
       "users": "Brukere"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Balansert",
+        "lg": "Avrundet",
+        "xs": "Tatt",
+        "sm": "Lilla",
+        "xl": "Myk"
+      }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Egendefinert",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Oppsett",
+        "typography": "",
+        "colors": "Farger",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Avstand",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær aksent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopiert",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Kontrollpanel",
+        "sampleBadge": "Forhåndsvisning",
+        "sampleText": "",
+        "sampleInput": "Søk",
+        "sampleValue": "Finn en app",
+        "sampleButton": "Åpne"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Avstand",
+          "radius": "",
+          "compact": "Kompakt",
+          "normal": "Vanlig",
+          "roomy": "",
+          "preset": "",
+          "none": "Ingen",
+          "rounded": "",
+          "full": "",
+          "custom": "Egendefinert",
+          "advanced": ""
+        },
+        "previewSurface": "Forhåndsvisning",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponenter",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Avstand",
+          "radius": "",
+          "breakpoint": "Stoppunkt",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær aksent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Bakgrunn",
+          "surfaceText": "",
+          "surfaceBorder": "Grensefarge",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Vis kantlinje",
+          "componentPadding": "",
+          "componentSize": "Filstørrelse",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Vis kontroller"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2091,6 +2301,10 @@
       "scrollable": {
         "label": "Rullbar",
         "description": "Behold denne beholderen i settets størrelse, og bland innholdet sitt i stedet for å vokse for å passe det."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2109,18 +2323,33 @@
         "collapse": "Skjul"
       },
       "option": {
-        "title": {
-          "label": "Tittel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
         },
         "borderColor": {
           "label": "Grensefarge"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Skjult"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Fjern denne beholderen? Innholdet flytter seg inn i området rundt."
+      },
+      "editBar": {
+        "edit": "Rediger"
       }
     }
   },
@@ -2135,8 +2364,7 @@
       "label": {
         "settings": "Innstillinger",
         "settingsFor": "Innstillinger for {name}",
-        "options": "Alternativer",
-        "actions": "Handlinger"
+        "options": "Alternativer"
       },
       "status": {
         "success": "Ok",
@@ -2170,6 +2398,18 @@
       },
       "customWidget": "Egendefinert widget",
       "standalone": "Frittstående",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Verksted widgets",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Koble til en tjeneste først",
         "noPermission": "Denne widgeten trenger en kompatibel tjenestetilkobling. Be en administrator om å koble til, og prøv på nytt."
@@ -2189,7 +2429,6 @@
     "selection": {
       "summary": "{count, plural, one {# valgt element} other {# valgte elementer}}",
       "selected": "{count, plural, one {# valgt} other {# valgt}}",
-      "copy": "Kopier",
       "copied": "{count, plural, one {# element kopiert til utklippstavlen} other {# elementer kopiert til utklippstavlen}}",
       "copyError": "Det valgte elementet kunne ikke kopieres. Nettleseren tillater kanskje ikke tilgang til utklippstavlen.",
       "paste": "Lim",
@@ -2201,16 +2440,18 @@
       "removed": "{count, plural, one {# element fjernet} other {# elementer fjernet}}",
       "move": "Flytt",
       "moveTo": "Flytt valgte elementer",
-      "delete": "Slett",
       "clear": "Tøm valg",
       "clearShortcut": "Nullstill valg (landskap)",
       "saveErrorTitle": "Kan ikke oppdatere elementer",
       "saveErrorMessage": "Endringene kunne ikke lagres. Tavlen ble oppdatert.",
       "moveUnavailableTitle": "Kan ikke flytte valgte elementer",
-      "moveUnavailableMessage": "Målet har ikke nok plass til hele utvalget."
+      "moveUnavailableMessage": "Målet har ikke nok plass til hele utvalget.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Flytt / endre størrelse på element",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolonne {column}, rad {row}",
       "target": {
         "numbered": "{name}, destinasjon {index}",
@@ -2277,9 +2518,7 @@
           "label": "Integrasjoner",
           "removeLabel": "Fjern {name} integrasjon"
         },
-        "title": {
-          "label": "Tittel"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
         },
@@ -2295,6 +2534,36 @@
       "open": "Åpne avansert visning",
       "close": "Lukk avansert visning",
       "label": "{widget} avansert visning"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Moduler",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "flytt",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2308,6 +2577,15 @@
       "option": {
         "appId": {
           "label": "Velg app"
+        },
+        "openIn": {
+          "label": "Åpne app i",
+          "description": "Velg hvor denne appen skal åpnes. Nettleserinnstillingene dine kan overstyre åpning i et eget vindu.",
+          "option": {
+            "currentTab": "Gjeldende fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nytt vindu"
+          }
         },
         "showTitle": {
           "label": "Vis app navn"
@@ -2329,7 +2607,29 @@
             "tooltip": "Som verktøytips",
             "hidden": "Skjult"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2408,6 +2708,10 @@
         "hideHostname": {
           "label": "Skjul vertsnavn"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Vis kantlinje"
         },
@@ -2430,6 +2734,9 @@
         }
       },
       "empty": "Legg til en URL eller app i widget-innstillingene",
+      "copyUrl": "Kopier URL",
+      "copied": "Kopiert",
+      "copyFailed": "",
       "groups": {
         "label": "Kategorier",
         "placeholder": "Ny kategori",
@@ -2437,7 +2744,7 @@
         "remove": "Fjern {name} kategori",
         "rename": "Kategorinavn for {name}",
         "assign": "Kategori for {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2449,7 +2756,7 @@
         }
       },
       "noProjectSelected": "Ingen prosjekter valgt",
-      "runnerStatus": "Runner: {status}",
+      "runnerStatus": "",
       "projectId": "Prosjekt: {id}",
       "sessionReceived": "Sesjon mottatt: {value}",
       "sessionSent": "Økten sendt: {value}",
@@ -2575,7 +2882,7 @@
           "description": "Vis et lite animert værikon og temperatur i hjørnet av kortet"
         },
         "isWeatherFormatFahrenheit": {
-          "label": "Use Fahrenheit"
+          "label": ""
         },
         "animateWeatherIcon": {
           "label": "Animert værikon",
@@ -2617,25 +2924,25 @@
         "unsupportedPrimaryTitle": "Primærtidssone er utilgjengelig",
         "unsupportedPrimary": "{timeZone} støttes ikke i denne nettleseren. Viser UTC som en tydelig merket reserveløsning.",
         "unsupportedTimeZone": "Ustøttet tidssone: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Avansert verden klokke",
         "cities": "Verdensklokke",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "24-timers tidsavbrudd stilling for {city}",
         "dayProgress": "{percent}% forløpt · {hours}t {minutes}m gjenstår",
         "phaseLegend": "Tidspunkt legende",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Natt",
@@ -2653,10 +2960,10 @@
           "label": "Plassering av luftkvalitet"
         },
         "aqiStandard": {
-          "label": "AQI standard",
+          "label": "",
           "options": {
             "auto": "Automatisk for nasjonale innstillinger",
-            "european": "European AQI",
+            "european": "",
             "us": "Amerikansk AQI"
           }
         },
@@ -2694,28 +3001,28 @@
           "unknown": "Ingen lesing"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Høyeste pollen",
       "unit": {
         "concentration": "{value} μg/m3",
         "pollen": "{value} korner/m3"
       },
       "pollutant": {
-        "pm2_5": "PM2.5",
-        "pm10": "PM10",
+        "pm2_5": "",
+        "pm10": "",
         "ozone": "Ozon",
         "nitrogenDioxide": "Nitrogendioksid",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Karbonmonoksid"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Bjørk",
         "grass": "Gress",
         "mugwort": "Feil",
         "olive": "Olivengrønn",
-        "ragweed": "Ragweed"
+        "ragweed": ""
       },
       "compact": {
         "sixHourTrend": "AQI trend for de neste seks timene"
@@ -2726,9 +3033,9 @@
         "pollutants": "Konsentrasjoner av forurensende stoffer",
         "pollen": "Polens konsentrasjoner",
         "sevenDayForecast": "7-dagers maksimal værmelding",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "Ingen værinformasjon tilgjengelig"
       }
     },
@@ -2779,7 +3086,7 @@
       "invalid": {
         "title": "Noen hendelser kan ikke vises",
         "description": "{count, plural, one {En hendelse har en ugyldig dato eller ustøttet tidssone.} other {# hendelser har en ugyldig dato eller ustøttet tidssone.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Nettleser varsler",
@@ -2788,14 +3095,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Kjører en enkel tidtaker eller en konfigurerbar Pomodoro rekkefølge.",
       "option": {
         "mode": {
           "label": "Modus",
           "options": {
             "timer": "Tidtaker",
-            "pomodoro": "Pomodoro"
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2829,10 +3136,10 @@
       "action": {
         "start": "Start",
         "pause": "pause",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} klar"
       },
       "progress": "Tidtaker pågår: {progress}%",
@@ -2840,11 +3147,11 @@
         "completedFocus": "{count, plural, =0 {Ingen fokusøkter fullførte} one {# fullført økt} other {# gjennomførte økter}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} fullført."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Fokus {session}",
         "settings": "Permanente innstillinger",
         "settingsHint": "Bruk menyen 'widget kontekst' for å redigere disse tavlen(e) innstillingene.",
@@ -3066,7 +3373,7 @@
       "state": {
         "on": "På",
         "off": "Av",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Ukjent"
       },
       "advanced": {
@@ -3081,6 +3388,141 @@
       "error": {
         "loadFailed": "Kan ikke laste inn enhet",
         "toggleFailed": "Kan ikke oppdatere enhet"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Tittel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisk",
+            "compact": "Kompakt",
+            "large": "Stor"
+          }
+        },
+        "palette": {
+          "label": "Farger",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Folk",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Vær",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Enhet",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Legg til",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Enhet",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Ikke funnet",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "på",
+          "off": "av",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3118,7 +3560,7 @@
         "currentPrice": "Nåværende pris",
         "previousClose": "Forrige lukking",
         "changePercentage": "Endring (%)",
-        "minimum": "Minimum",
+        "minimum": "",
         "maximum": "Maksimum"
       },
       "option": {
@@ -3221,6 +3663,13 @@
         },
         "showUnmonitored": {
           "label": "Vis ikke monitorert"
+        },
+        "viewMode": {
+          "label": "Visning"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3678,22 @@
         "eventCount": "{count, plural, one {# hendelsen} other {# hendelser}}",
         "loading": "Laster kalenderhendelser...",
         "noEvents": "Ingen hendelser i denne måneden"
+      },
+      "view": {
+        "compact": "Kompakt måned",
+        "month": "måned",
+        "week": "Uke",
+        "day": "Dag",
+        "agenda": "Dagsorden"
+      },
+      "controls": {
+        "today": "I dag",
+        "previous": "Forrige periode",
+        "next": "Neste periode",
+        "noEvents": "Ingen hendelser i denne perioden",
+        "more": "{count} mer",
+        "timeSlot": "Tidslengde",
+        "weekday": "Ukedag"
       }
     },
     "weather": {
@@ -3308,11 +3773,11 @@
         "currentHumidity": "Nåværende fuktighet",
         "wind": "Vind / spalter ({unit})",
         "currentWind": "Gjeldende vind / spalter",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Max vind / justeringer: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Neste time nedbør",
         "precipitationChance": "Mulighet for nedbør",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Nedskrifter: {probability}% · {amount} mm",
         "todayUv": "Dagens maks UV-indeks",
         "uvIndex": "Maks UV-indeks: {value}",
@@ -3325,7 +3790,7 @@
           "humidity": "Gjennomsnittlig fuktighet",
           "wind": "Maks. vind / spalter",
           "uv": "Maks UV indeks",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Soloppgang / solnedgang",
         "noForecast": "Ingen værinformasjon tilgjengelig"
@@ -3382,7 +3847,7 @@
           "label": "Standard fane"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Så klynge systemet",
           "clusterFirst": "Klynge så systemet"
         },
@@ -3460,7 +3925,6 @@
         },
         "table": {
           "header": {
-            "name": "Navn",
             "node": "Node"
           }
         }
@@ -3490,8 +3954,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Navn",
-            "state": "Tilstand",
             "cpuUsage": "CPU-bruk",
             "memoryUsage": "Minnebruk"
           }
@@ -3509,6 +3971,34 @@
     },
     "coolify": {
       "description": "Oversikt over din Coolify-instans med servere og apper",
+      "summary": {
+        "needsAttention": "{count} bør håndteres",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Trenger oppmerksomhet",
+        "ready": "Klar",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "Kjører",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Vis servere"
@@ -3540,7 +4030,13 @@
       },
       "source": {
         "url": "Kilde: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Applikasjon",
+        "service": "Tjeneste"
       },
       "instances": {
         "title": "Instanser"
@@ -3557,6 +4053,7 @@
         "exited": "Avsluttet",
         "starting": "Starter",
         "restarting": "Starter på nytt",
+        "unhealthy": "Usunn",
         "unknown": "Ukjent",
         "online": "Online",
         "offline": "Offline",
@@ -3567,14 +4064,14 @@
       }
     },
     "vpn": {
-      "name": "VPN",
+      "name": "",
       "description": "Oversikt over VPN-tilkoblingene dine",
       "serviceUnavailable": "VPN utilgjengelig",
       "status": {
         "running": "Kjører",
         "notRunning": "Kjører ikke",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3601,7 +4098,7 @@
       "field": {
         "runtime": "Kjøretid",
         "load": "Last",
-        "input": "Input",
+        "input": "",
         "output": "Utgang",
         "batteryVoltage": "Batteri spenning",
         "power": "Makt",
@@ -3893,6 +4390,10 @@
         "showLocation": {
           "label": "Vis posisjon",
           "description": "Vis om strømmen er på din LAN eller WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -3902,9 +4403,7 @@
       "items": {
         "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
-        "name": "Navn",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Direkte avspilling",
         "directStream": "Direkte strøm",
         "transcodeVideo": "Konverterer video",
@@ -3912,12 +4411,33 @@
         "transcoding": "Transkoding",
         "paused": "Pauset",
         "remaining": "{minutes} min igjen",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Enhet",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "Direkte",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "progress": "Nedlastings fremdrift",
+          "endsAt": "",
+          "episode": "",
+          "album": "Album ID",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Statistikk for nerder",
           "video": {
             "title": "Video",
-            "resolution": "Oppløsning"
+            "resolution": "Oppløsning",
+            "frameRate": ""
           },
           "audio": {
             "title": "Lyd",
@@ -3938,6 +4458,109 @@
         "playing": "{count} spiller",
         "transcoding": "{count} transkoding"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Kategorier",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Ukens første dag",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Totalt opplastet",
+        "download": "Totalt nedlastet",
+        "slicer": "",
+        "delete": "Slettet"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Standard fane"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Oversikt over Paperless-ngx-dokumentarkivet",
@@ -3995,8 +4618,8 @@
       "totalOutdatedPackages": "Utdaterte pakker",
       "totalRepos": "Depoter",
       "osDistribution": "OS distribusjon",
-      "compliance": "Patch Compliance",
-      "complianceRatio": "{upToDate} / {total}",
+      "compliance": "",
+      "complianceRatio": "",
       "lastUpdated": "Oppdatert {time}",
       "option": {
         "showTotalHosts": {
@@ -4124,7 +4747,7 @@
           "description": "Velg hvordan operativsystemdistribusjonen skal vises",
           "option": {
             "bars": "Horisontale streker",
-            "donut": "Donut chart"
+            "donut": ""
           }
         },
         "threshold": {
@@ -4223,7 +4846,7 @@
       "actions": {
         "previousPhoto": "Forrige bilde",
         "nextPhoto": "Neste bilde",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Fortsett bildeserie",
         "toggleSlideshow": "Pause eller fortsett lysbildefremvisning",
         "photo": "Bilde {number}"
@@ -4279,38 +4902,29 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Lagt til",
-          "detailsTitle": "Dato lagt til"
+          "columnTitle": "Lagt til"
         },
         "category": {
-          "columnTitle": "Ekstra",
-          "detailsTitle": "Kategorier (eller ekstra informasjon)"
+          "columnTitle": "Ekstra"
         },
         "downSpeed": {
-          "columnTitle": "Ned",
-          "detailsTitle": "Nedlastings- hastighet"
+          "columnTitle": "Ned"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Item ID"
+          "columnTitle": "Id"
         },
-        "integration": {
-          "columnTitle": "Integrasjon"
-        },
-        "name": {
-          "columnTitle": "Jobb navn"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Fremgang",
           "detailsTitle": "Nedlastings fremdrift"
         },
         "ratio": {
-          "columnTitle": "Forhold",
-          "detailsTitle": "Torrent-ratio (mottatt/sendt)"
+          "columnTitle": "Forhold"
         },
         "received": {
           "columnTitle": "Totalt ned",
@@ -4320,26 +4934,16 @@
           "columnTitle": "Totalt opp",
           "detailsTitle": "Totalt opplastet"
         },
-        "size": {
-          "columnTitle": "Filstørrelse",
-          "detailsTitle": "Total størrelse for utvalg/filer"
-        },
-        "state": {
-          "columnTitle": "Status",
-          "detailsTitle": "Jobb status"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Fullfør tid",
-          "detailsTitle": "Tid siden/til fullførelse",
-          "eta": "ETA"
+          "columnTitle": "Fullfør tid"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Nedlastings-klient type"
         },
         "upSpeed": {
-          "columnTitle": "Opp",
-          "detailsTitle": "Opplastnings hastighet"
+          "columnTitle": "Opp"
         }
       },
       "states": {
@@ -4379,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopier navn",
         "copyId": "Kopier ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Nullstill filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrer nedlastinger"
@@ -4528,9 +5143,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Størrelse"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Tøm",
@@ -4562,7 +5175,7 @@
       },
       "type": {
         "movie": "Film",
-        "episode": "Episode",
+        "episode": "",
         "book": "Bok"
       },
       "empty": {
@@ -4611,27 +5224,59 @@
       "name": "Utgivelser",
       "description": "Viser en liste over gjeldende versjoner for angitte repositorier med gitt versjonsregex.",
       "option": {
+        "layout": {
+          "label": "Oppsett",
+          "description": "",
+          "option": {
+            "comfortable": "Komfortabel",
+            "compact": "Kompakt"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Skjult"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Ny utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser.",
+          "option": {
+            "never": "",
+            "1d": "1 dag",
+            "3d": "3 dager",
+            "1w": "1 uke",
+            "2w": "",
+            "1M": "1 måned",
+            "3M": "3 måneder"
+          }
         },
         "staleReleaseWithin": {
           "label": "Utdatert utgivelse innen",
-          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser."
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser.",
+          "option": {
+            "never": "",
+            "1M": "1 måned",
+            "3M": "3 måneder",
+            "6M": "6 måneder",
+            "1y": "1 år",
+            "2y": "2 år"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Vis bare uthevede",
-          "description": "Vis bare nye eller utdaterte utgivelser. Som beskrevet ovenfor."
-        },
-        "showDetails": {
-          "label": "Vis detaljer"
-        },
-        "showOnlyIcon": {
-          "label": "Vis bare ikon"
-        },
-        "topReleases": {
-          "label": "Topp utgivelser",
-          "description": "Maks antall nyeste utgivelser som vises. Null betyr ingen grense."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositorier",
@@ -4660,10 +5305,13 @@
           },
           "identifier": {
             "label": "Identifikator",
+            "containerPlaceholder": "",
             "placeholder": "Navn eller Eier/Navn"
           },
-          "name": {
-            "label": "Navn"
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Versjonsfilter",
@@ -4705,36 +5353,110 @@
           }
         }
       },
-      "not-found": "Ikke funnet",
-      "pre-release": "Forhåndsutgivelse",
-      "archived": "Arkivert",
-      "forked": "Forgrenet",
+      "summary": {
+        "newReleases": "",
+        "newShort": "ny",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "utdatert",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Ny",
+          "description": ""
+        },
+        "attention": {
+          "label": "Trenger oppmerksomhet",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Opp til dato",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "opp til dato",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Ny",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Arkivert",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Ugyldig identifikator",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "Ingen leverandør valgt",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Merk som sett",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Kopiert",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Stjerner",
       "forksCount": "Forgreninger",
-      "issuesCount": "Åpne saker",
-      "markViewed": "Merk som sett",
-      "openProjectPage": "Åpne prosjektside",
-      "openReleasePage": "Åpne releaseside",
-      "releaseDescription": "Utgivelsesbeskrivelse",
-      "projectDescription": "Prosjektbeskrivelse",
+      "openIssues": "",
+      "created": "Opprettet",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Kjører versjoner",
       "upToDate": "Opp til dato",
       "updateAvailable": "Oppdatering tilgjengelig",
       "unknownStatus": "Ukjent",
-      "created": "Opprettet",
       "error": {
-        "label": "Feil",
-        "messages": {
-          "invalidIdentifier": "Ugyldig identifikator",
-          "noMatchingVersion": "Ingen samsvarende versjon funnet",
-          "noReleasesFound": "Ingen utgivelser funnet",
-          "noProviderSelected": "Ingen leverandør valgt",
-          "noProviderResponse": "Ingen respons fra leverandør",
-          "unexpected": "Uventet leverandørfeil"
-        }
-      },
-      "expandDetails": "Vis detaljer for {name}",
-      "collapseDetails": "Skjul detaljer for {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4750,12 +5472,12 @@
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# tilkoblet} other {# tilkoblet}}",
-          "label": "VPN"
+          "label": ""
         },
-        "wan": "WAN",
+        "wan": "",
         "web": "Nett",
         "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Ukjent innholdsvalg for nettverkskontroller-sammendragswidget: "
@@ -4835,7 +5557,7 @@
         "noInterfaces": "Ingen data om nettverksgrensesnitt ennå"
       },
       "versionUnknown": "Ukjent versjon",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
         "normal": "Vanlig",
         "warning": "Advarsel",
@@ -4855,8 +5577,8 @@
           "option": {
             "auto": "Automatisk",
             "plain": "Ren tekst",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4891,7 +5613,6 @@
       "download": "Nedlasting",
       "upload": "Opplastning",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Snitt nedlasting",
       "avgUpload": "Snitt opplasting",
       "avgPing": "Snitt ping",
@@ -4907,45 +5628,116 @@
     "uptimeKuma": {
       "description": "Overvåke oppetid statistikk fra statussiden i Kuma",
       "option": {
-        "showAverageUptime": {
-          "label": "Vis gjennomsnittlig oppetid",
-          "description": "Vis gjennomsnittlig 24 timers kombinert oppetid prosent"
+        "statusPageSlug": {
+          "label": "Statusside slug",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Vis oppetid ring",
-          "description": "Vis en fremdriftsring ved siden av gjennomsnittet oppetid verdi"
+        "summaryOnly": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Vis totale skjermer",
-          "description": "Vise totalt antall konfigurerte skjermer"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Vis opp teller",
-          "description": "Vis hvor mange skjermer som er oppe"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Vis nedtelling",
-          "description": "Vis hvor mange skjermer som er nede for øyeblikket"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showPausedCount": {
-          "label": "Vis sperret antall",
-          "description": "Vis hvor mange skjermer som er satt på pause"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
+        },
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Jobb navn",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Gjennomsnittlig opptid (24t)",
-      "stats": {
-        "totalMonitors": "Totalt antall skjermer",
-        "upCount": "Opp",
-        "downCount": "Ned",
-        "pausedCount": "Pauset"
-      },
-      "error": {
-        "internalServerError": "Kunne ikke hente oppetid data"
       },
       "status": {
         "up": "Opplastnings hastighet",
         "down": "Nedlastings- hastighet",
-        "paused": "Pauset"
+        "pending": "Venter",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "Avventer på {count}",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Uten navn"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Ping",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Gruppe",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -4955,7 +5747,7 @@
           "label": "Vis TCP"
         },
         "showUdp": {
-          "label": "Show UDP"
+          "label": ""
         },
         "showEntryPoints": {
           "label": "Vis enhetspunkter"
@@ -5050,6 +5842,23 @@
       "name": "Systemressurser",
       "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Prosentandel (f.eks. 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Aktiver skyggelegging i diagram"
         },
@@ -5057,6 +5866,7 @@
           "label": "Synlige diagrammer",
           "description": "Velg diagrammene du vil vise.",
           "option": {
+            "cpuCores": "",
             "memory": "Minne",
             "network": "Nettverk"
           }
@@ -5076,7 +5886,7 @@
         "network": "NETT",
         "up": "OPP",
         "down": "NED",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5128,7 +5938,6 @@
         "actionsDisabledEditMode": "Handlinger er deaktivert mens tavlen er i redigeringsmodus.",
         "widgetItemUnavailable": "Denne widgeten er ikke tilgjengelig.",
         "toggle": "Veksle",
-        "copied": "Kopiert",
         "confirmDelete": "Bekreft denne destruktive handlingen."
       },
       "option": {
@@ -5169,6 +5978,9 @@
       "name": "Beszel systemer (tabell)",
       "description": "Tabellvisning for alle Beszel-overvåkede systemer med sorterbare kolonner og statusindikatorer",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        },
         "sortBy": {
           "label": "Sorter etter"
         },
@@ -5182,11 +5994,16 @@
       }
     },
     "beszelSystemGrid": {
-      "name": "Beszel Systems (Grid)",
-      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall"
+      "name": "",
+      "description": "Korttabellvisning for alle Beszel-overvåkede systemer med sanntidsmåltall",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatur i Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
-      "name": "Beszel Alerts",
+      "name": "",
       "description": "Vis Beszel varslingskonfigurasjoner og historikk",
       "option": {
         "showHistory": {
@@ -5209,7 +6026,7 @@
       }
     },
     "beszelSystemStats": {
-      "name": "Beszel System Stats",
+      "name": "",
       "description": "Tidsserier for CPU, minne, disk, nettverk og Docker container måltall",
       "option": {
         "systemId": {
@@ -5328,7 +6145,7 @@
         "twelveHours": "12 t",
         "oneDay": "24t",
         "oneWeek": "1u",
-        "thirtyDays": "30d"
+        "thirtyDays": ""
       }
     },
     "assistant": {
@@ -5359,7 +6176,7 @@
       },
       "options": {
         "statusFilter": {
-          "label": "Status filter"
+          "label": ""
         },
         "showCpu": {
           "label": "Vis CPU"
@@ -5397,25 +6214,24 @@
       },
       "metric": {
         "system": "System",
-        "source": "Integrasjon",
         "hostname": "Vertsnavn",
         "cpuModel": "CPU modell",
         "cores": "Kjerner",
         "memoryTotal": "Minne totalt",
         "memory": "Minne",
-        "disk": "Disk",
+        "disk": "",
         "loadAvg": "Last snitt",
         "net": "Netto",
         "temp": "Temp",
         "battery": "Flaggermus",
         "uptime": "Oppetid",
-        "agent": "Agent"
+        "agent": ""
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Vis helse, lastet modell og generasjons fart på din lokale lama.cpp server.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Usunn ({status})"
       },
@@ -5443,10 +6259,10 @@
         "unreachable": "lama-server er ikke tilgjengelig"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5505,7 +6321,7 @@
       "moveDown": "Flytt ned",
       "remove": "Fjern måltall",
       "loading": "Laster inn…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Oppdatering feilet - vise lagrede data",
       "stale": "Lagrede data - oppdater for å oppdatere",
       "table": {
@@ -5552,10 +6368,12 @@
       "allHidden": "Alle måltall er skjult i denne visningen. Bruk Tilpass denne visningen for å gjenopprette dem."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
-        "api": "Wazuh server API",
+        "api": "",
         "indexer": "Vasuh indekser",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Lav",
@@ -5570,7 +6388,15 @@
         },
         "certificate": {
           "title": "{target} sertifikatet er ikke klarert",
-          "description": "Wazuh bruker et selvsignert sertifikat som standard. Kjør \"Testtilkobling\" på integrasjonen og stoler på sertifikatet, eller legg til CA i Innstillinger → Sertifikater."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Kan ikke nå {target}",
@@ -5595,101 +6421,148 @@
         "unknown": {
           "title": "Kunne ikke laste data fra {target}",
           "description": "Sjekk Homarr loggene for detaljer."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1t",
         "24h": "24t",
-        "7d": "7d",
-        "30d": "30d"
+        "7d": "",
+        "30d": ""
       },
-      "levelTooltip": "Regelnivå {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Vasukiske midler",
-      "description": "Sorterbar liste over Wazuh agenter med status, OS, versjon og siste holdbarhet",
+      "levelTooltip": "Regelnivå {level} ({severity})",
+      "summary": {
+        "title": "Alvorlighetsgrad av alarm · {range}",
+        "alerts": "varsler",
+        "none": "Ingen varsler",
+        "trend": {
+          "new": "ny",
+          "tooltip": "Forrige periode: {previous}"
+        },
+        "previous": "Forrige {range}: {count}",
+        "maxLevel": "Maks nivå {level}",
+        "health": "Indekserer health: {status}",
+        "manager": "Behandler {version}"
+      },
+      "alerts": {
+        "title": "Varsler · Nivå {level}+ · {hours}h",
+        "empty": "Ingen varsler på dette nivået. Alle rolige.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Åpne dette varselet i Wazuh dashbordet"
+      },
+      "timeline": {
+        "title": "Varsler tidslinje · {range}",
+        "total": "{count} varsler",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "Toppregler · {range}",
+          "agents": "Flest agenter · {range}",
+          "sourceIps": "Topp kilde IPs · {range}",
+          "mitreTactics": "MITRE taktikk · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "Ingen varsler i denne perioden",
+          "agents": "Ingen varsler i denne perioden",
+          "sourceIps": "Ingen varsler med kilde-IP i denne perioden",
+          "mitreTactics": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden",
+          "mitreTechniques": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden"
+        },
+        "totalTooltip": "{count} matchende varsler",
+        "private": "",
+        "public": "Offentlig",
+        "agents": "Sett på {count} agenter",
+        "others": "{count} ytterligere varsler i andre enheter"
+      },
+      "agents": {
+        "title": "Agenter",
+        "total": "{count} agenter",
+        "status": {
+          "active": "Aktiv",
+          "disconnected": "Frakoblet",
+          "neverConnected": "Aldri tilkoblet",
+          "pending": "Venter"
+        },
+        "statusLabel": {
+          "active": "Aktiv",
+          "disconnected": "Frakoblet",
+          "never_connected": "Aldri tilkoblet",
+          "pending": "Venter",
+          "unknown": "Ukjent"
+        },
+        "live": "Direkte",
+        "snapshot": "",
+        "snapshotHint": "Les fra Wazuh dashbord sitt bilde (wazuh-monitoring) tatt på {time}. Legg til API-opplysninger for live data.",
+        "staleSnapshot": "Agenten snapshot fra {time} er utdatert. Sjekk at Wazuh dashboard overvåkingsjobben er i gang, eller legg til server API legitimasjon.",
+        "noDisconnected": "Alle agenter er tilkoblet",
+        "empty": "Ingen agenter samsvarer med dette filteret",
+        "column": {
+          "status": "Status",
+          "name": "Jobb navn",
+          "ip": "",
+          "os": "OS",
+          "version": "Versjon",
+          "lastKeepAlive": "",
+          "groups": "Grupper"
+        },
+        "outdated": "Eldre enn nyeste agent versjon ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Sårbarhet",
+        "topCves": "Øverste gjenstand",
+        "score": "Poeng",
+        "agentsShort": "Agenter",
+        "topAgents": "Mest sårbare agenter",
+        "criticalHigh": "Mal / Høy",
+        "totalTooltip": "{count} funn på {agents} agenter",
+        "affected": "{count} agenter",
+        "empty": "Ingen sårbarheter påvist",
+        "distribution": "Alvorlighetsfordeling. {unscored} funn uten en skår er ikke vist.",
+        "worst": "Vert: {id} ({score}) på {agents} agenter"
+      },
+      "fim": {
+        "title": "Filintegritet · {range}",
+        "event": {
+          "added": "Dato lagt til",
+          "modified": "Endret",
+          "deleted": "Slettet",
+          "unknown": "Endret"
+        },
+        "empty": "Ingen filintegritetshendelser i denne perioden",
+        "user": "av {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Autentiseringsfeil · {hours}t",
+        "seriesTooltip": "Alle agenter i løpet av den siste {hours}t",
+        "peak": "Topp {count}/bucket",
+        "empty": "Ingen mislykkede innlogginger i denne perioden",
+        "failed": "Mislykkede innlogginger",
+        "failedHint": "Enkelt-godkjenningsfeil ((sshd, PAM, Windows logon, ugyldige brukere)",
+        "bruteForce": "Brute kraft",
+        "bruteForceHint": "Korrigerte brute-kraftregler (flere feil i løpet av kort tid, MITRE T1110)",
+        "sourceIps": "Kilde IP-adresser",
+        "ipTooltip": "{ip}: {count} feil",
+        "bruteForceCount": "{count} renser kraft"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agenter",
+        "vulnerabilities": "Sårbarhet",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Vis agenter"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sorter etter"
-        },
-        "showVersion": {
-          "label": "Vis kolonne for Wazuh versjon"
-        },
-        "showGroups": {
-          "label": "Vis gruppe-kolonne"
-        }
-      },
-      "title": "Agenter",
-      "total": "{count} agenter",
-      "status": {
-        "active": "Aktiv",
-        "disconnected": "Frakoblet",
-        "neverConnected": "Aldri tilkoblet",
-        "pending": "Venter"
-      },
-      "statusLabel": {
-        "active": "Aktiv",
-        "disconnected": "Frakoblet",
-        "never_connected": "Aldri tilkoblet",
-        "pending": "Venter",
-        "unknown": "Ukjent"
-      },
-      "live": "Direkte",
-      "snapshot": "Øyeblikksbilde fra {age} siden",
-      "snapshotHint": "Les fra Wazuh dashbord sitt bilde (wazuh-monitoring) tatt på {time}. Legg til API-opplysninger for live data.",
-      "staleSnapshot": "Agenten snapshot fra {time} er utdatert. Sjekk at Wazuh dashboard overvåkingsjobben er i gang, eller legg til server API legitimasjon.",
-      "noDisconnected": "Alle agenter er tilkoblet",
-      "empty": "Ingen agenter samsvarer med dette filteret",
-      "column": {
-        "status": "Status",
-        "name": "Jobb navn",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versjon",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Grupper"
-      },
-      "outdated": "Eldre enn nyeste agent versjon ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh varsler feed",
-      "description": "Siste Wazuh varsler med nivået, MITRE ATT&CK teknikker, agent og kilde IP",
-      "option": {
-        "minLevel": {
-          "label": "Minste regelnivå",
-          "description": "Wazuh-nivåer: 0-6 lav, 7-11 medium, 12-14 høy, 15 + kritisk"
-        },
-        "hours": {
-          "label": "Tidsvindu (timer)"
-        },
-        "limit": {
-          "label": "Antall varsler"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Vis agent"
-        },
-        "showSourceIp": {
-          "label": "Vis kilde IP"
-        },
-        "showRuleId": {
-          "label": "Vis regel ID"
-        }
-      },
-      "title": "Varsler · Nivå {level}+ · {hours}h",
-      "empty": "Ingen varsler på dette nivået. Alle rolige.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Åpne dette varselet i Wazuh dashbordet"
-    },
-    "wazuhSummary": {
-      "name": "Wazukh varslings alvorlighetsgrad",
-      "description": "Gjør alvorlighetsgraden oppmerksom med en trend mot forrige periode",
-      "option": {
         "range": {
           "label": "Tidsintervall"
         },
@@ -5698,26 +6571,6 @@
         },
         "showFooter": {
           "label": "Vis bunntekst"
-        }
-      },
-      "title": "Alvorlighetsgrad av alarm · {range}",
-      "alerts": "varsler",
-      "none": "Ingen varsler",
-      "trend": {
-        "new": "ny",
-        "tooltip": "Forrige periode: {previous}"
-      },
-      "previous": "Forrige {range}: {count}",
-      "maxLevel": "Maks nivå {level}",
-      "health": "Indekserer health: {status}",
-      "manager": "Behandler {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Stablet diagram over Hviterusslåtte varsler over tid av alvorlighetsgrad",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
         "interval": {
           "label": "Intervall"
@@ -5730,60 +6583,32 @@
           "description": "Kvadratisk rot holder høye og kritiske varsler synlig neste tusen av lave"
         },
         "minLevel": {
-          "label": "Minste regelnivå"
+          "label": ""
         },
         "showLegend": {
           "label": "Vis forklaring med totaler"
-        }
-      },
-      "title": "Varsler tidslinje · {range}",
-      "total": "{count} varsler",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Hvete toppliste",
-      "description": "Topp regler, agenter, kilde-IP-adresser eller MITRE ATT&CK taktikk og teknikker ved å varsle",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rangering"
         },
-        "range": {
-          "label": "Tidsintervall"
-        },
-        "limit": {
-          "label": "Antall oppføringer"
-        },
-        "minLevel": {
-          "label": "Minste regelnivå"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Vis streker"
-        }
-      },
-      "title": {
-        "rules": "Toppregler · {range}",
-        "agents": "Flest agenter · {range}",
-        "sourceIps": "Topp kilde IPs · {range}",
-        "mitreTactics": "MITRE taktikk · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Ingen varsler i denne perioden",
-        "agents": "Ingen varsler i denne perioden",
-        "sourceIps": "Ingen varsler med kilde-IP i denne perioden",
-        "mitreTactics": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden",
-        "mitreTechniques": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden"
-      },
-      "totalTooltip": "{count} matchende varsler",
-      "private": "LAN",
-      "public": "Offentlig",
-      "agents": "Sett på {count} agenter",
-      "others": "{count} ytterligere varsler i andre enheter"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Vasuske sårbarheter",
-      "description": "Teller for sårbarhet, øverste kVEer og mest sårbare stoffer",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Vis agenter"
+        },
+        "agentSortBy": {
+          "label": "Sorter etter"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Ranger kven av"
         },
@@ -5798,73 +6623,42 @@
         },
         "showAgents": {
           "label": "Vis mest sårbare agenter"
-        }
-      },
-      "title": "Sårbarhet",
-      "topCves": "Øverste gjenstand",
-      "score": "Poeng",
-      "agentsShort": "Agenter",
-      "topAgents": "Mest sårbare agenter",
-      "criticalHigh": "Mal / Høy",
-      "totalTooltip": "{count} funn på {agents} agenter",
-      "affected": "{count} agenter",
-      "empty": "Ingen sårbarheter påvist",
-      "distribution": "Alvorlighetsfordeling. {unscored} funn uten en skår er ikke vist.",
-      "worst": "Vert: {id} ({score}) på {agents} agenter"
-    },
-    "wazuhFim": {
-      "name": "Wazuh fil integritet",
-      "description": "Nylig gjennomgått filintegritetsovervåking (syscheck) hendelser",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
-        "event": {
+        "fimEvent": {
           "label": "Hendelser"
         },
-        "limit": {
-          "label": "Antall hendelser"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Inkluder Windows-registerhendelser"
-        }
-      },
-      "title": "Filintegritet · {range}",
-      "event": {
-        "added": "Dato lagt til",
-        "modified": "Endret",
-        "deleted": "Slettet",
-        "unknown": "Endret"
-      },
-      "empty": "Ingen filintegritetshendelser i denne perioden",
-      "user": "av {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh godkjenningsfeil",
-      "description": "Mislyktes å logge inn og brute-force varsler per agent med timelister",
-      "option": {
-        "hours": {
-          "label": "Tidsvindu (timer)"
         },
-        "limit": {
-          "label": "Antall agenter"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Vis topp kilde IP-er"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Wazuh-nivåer: 0-6 lav, 7-11 medium, 12-14 høy, 15 + kritisk"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Vis agent"
+        },
+        "showSourceIp": {
+          "label": "Vis kilde IP"
+        },
+        "showRuleId": {
+          "label": "Vis regel ID"
         }
-      },
-      "title": "Autentiseringsfeil · {hours}t",
-      "seriesTooltip": "Alle agenter i løpet av den siste {hours}t",
-      "peak": "Topp {count}/bucket",
-      "empty": "Ingen mislykkede innlogginger i denne perioden",
-      "failed": "Mislykkede innlogginger",
-      "failedHint": "Enkelt-godkjenningsfeil ((sshd, PAM, Windows logon, ugyldige brukere)",
-      "bruteForce": "Brute kraft",
-      "bruteForceHint": "Korrigerte brute-kraftregler (flere feil i løpet av kort tid, MITRE T1110)",
-      "sourceIps": "Kilde IP-adresser",
-      "ipTooltip": "{ip}: {count} feil",
-      "bruteForceCount": "{count} renser kraft"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6677,18 @@
       "addWidget": "Legg til modul",
       "addApp": "Legg til app",
       "connectService": "Koble til tjeneste"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Gjør tavlen nyttig",
@@ -5921,7 +6727,7 @@
         "preview": "Forhåndsvisning av {name} med {count} elementer",
         "currentHidden": "Nåværende tavle: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Åpne",
           "instructions": "Skriv for å filtrere tavler. Bruk piltastene til å flytte gjennom resultater og Enter for å åpne en tavle."
         },
@@ -5988,6 +6794,26 @@
           "createAndUse": "Opprett og bruk"
         }
       }
+    },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Hjem",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
     },
     "landmark": {
       "canvas": "Dashbord lerret",
@@ -6097,13 +6923,7 @@
       "itemRadius": {
         "label": "Objekt radius",
         "description": "Endrer flisenes rundhet på tavlen",
-        "option": {
-          "xs": "Veldig liten",
-          "sm": "Liten",
-          "md": "Medium",
-          "lg": "Stor",
-          "xl": "Veldig stor"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Offentlig",
@@ -6144,12 +6964,12 @@
             "columns": "kolonner",
             "empty": "Dette oppsettet er tomt",
             "dynamicSection": "Dynamisk seksjon",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Tilbakestill fra Base",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Dette erstatter hver lagrede posisjon og størrelse i dette oppsettet med et nytt oppsett generert fra basen. Dette kan ikke angres."
             }
           },
@@ -6261,6 +7081,11 @@
           "description": "Serveradministratoren har ikke angitt en hjemtavle enda.",
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6278,9 +7103,9 @@
         "label": "Faste sidefelt",
         "description": "Reserver opptil tre dashbord-kolonner på begge sider. Det resterende lerretet svarer automatisk.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Hold dette området synlig mens dashbordet ruller.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Høyre sidestolpe",
@@ -6306,7 +7131,7 @@
     "error": {
       "title": "Denne siden kunne ikke lastes",
       "text": "En uventet feil oppsto under lasting av denne siden. Navigasjonen din er fortsatt tilgjengelig — prøv å laste inn på nytt, eller bruk en annen seksjon fra sidepanelet.",
-      "digest": "Error reference: {digest}"
+      "digest": ""
     },
     "navbar": {
       "items": {
@@ -6332,10 +7157,12 @@
             "documentation": "Dokumentasjon",
             "submitIssue": "Send inn en sak",
             "discord": "Discord",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Info",
+        "updateAvailable": "Oppdatering tilgjengelig",
         "assistant": "Assistent"
       }
     },
@@ -6347,9 +7174,23 @@
           "authentication": "Autentisering",
           "authorization": "Autorisasjon"
         },
-        "heroBanner": {
-          "title": "Velkommen tilbake til din",
-          "subtitle": "{app} tavle"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6394,7 +7235,9 @@
         },
         "noResults": {
           "title": "Ingen tavler ennå",
-          "description": "Opprett en tavle for å ordne apper og widgets på et sted."
+          "description": "Opprett en tavle for å ordne apper og widgets på et sted.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6447,13 +7290,19 @@
                 "logoDisplay": {
                   "logo": "Bare logoen",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "Bred",
+                  "compact": "Kompakt",
+                  "indicator": ""
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Søk",
                 "home": "Hjem tavle",
                 "boardSwitcher": "Tavler",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Rediger tavle",
@@ -6506,7 +7355,7 @@
                 "description": "Tilbakestille onboarding-turene for å se dem igjen ved neste besøk til ledelsen eller dashbord.",
                 "reset": "Tilbakestill onboarding turene",
                 "resetSuccess": {
-                  "title": "Tours reset",
+                  "title": "",
                   "message": "Onboarding turene vil vises igjen ved neste besøk"
                 },
                 "status": {
@@ -6685,6 +7534,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standard fargetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -6692,7 +7545,7 @@
             "groups": {
               "identity": "Identitet",
               "appearance": "Utseende",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Autentisering"
             },
             "identity": {
@@ -6706,7 +7559,7 @@
             },
             "logo": {
               "label": "Applikasjons logo",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Nettleserikon (favicon)",
@@ -6724,20 +7577,18 @@
             },
             "signInBackground": {
               "label": "Autentisering bakgrunn",
-              "placeholder": "https://example.com/background.jpg"
+              "placeholder": ""
             },
             "signInOverlay": {
               "label": "Bakgrunnsoverlegg"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Stil på hjørne",
-              "options": {
-                "xs": "Tatt",
-                "sm": "Lilla",
-                "md": "Balansert",
-                "lg": "Avrundet",
-                "xl": "Myk"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Global egendefinert CSS",
@@ -6752,15 +7603,14 @@
             "summary": {
               "title": "Nåværende branding",
               "cornerStyle": "Stil på hjørne",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Egendefinert bakgrunn · {overlay}% overlegg",
               "backgroundDefault": "Standard bakgrunn",
               "greetingConfigured": "Tilpasset hilsen",
               "greetingDefault": "Standard hilsen",
               "boardColorLocked": "Brettfarge låst",
               "boardColorFlexible": "Styrefarger tillatt",
-              "appName": "Jobb navn",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Hilsen",
               "on": "På",
               "off": "Av"
@@ -6894,6 +7744,7 @@
             "model": {
               "title": "Modell",
               "description": "Velg en oppdaget modell eller angi en eksakt endepunkt-modell-ID.",
+              "save": "",
               "placeholder": "Modell ID",
               "refresh": "Oppdater modeller",
               "chooseModel": "Velg modellen som brukes til nye samtaler.",
@@ -6986,9 +7837,7 @@
             "lastExecution": {
               "label": "Siste kjøring"
             },
-            "actions": {
-              "label": "Handlinger"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Søk i {count} oppgaver..."
@@ -7040,6 +7889,12 @@
             "apiKey": {
               "label": "Autentisering",
               "title": "API nøkler",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Opprett API token",
                 "confirmDeletion": "Bekreft sletting"
@@ -7052,13 +7907,11 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Opprettet av",
-                  "source": "Integrasjon",
-                  "actions": "Handlinger"
+                  "createdBy": "Opprettet av"
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Manuell eller eldre API-nøkkel",
                 "unnamedClient": "Klientnavn er ikke registrert",
                 "clientNameHint": "Klientnavnene er egenrapporterte og blir ikke verifisert.",
@@ -7094,7 +7947,7 @@
               }
             },
             "mcp": {
-              "label": "AI / MCP",
+              "label": "",
               "title": "AI Integrasjon",
               "subtitle": "Modell Kontekstprotokoll (MCP) Server",
               "description": "Koble AI assistenter til Homarr forekomsten og kontroller hele hjemmelappen med naturlig språk. Søk og forespørsel om medier ved OSS, administrer Docker containere, slå av Pi-hole, sjekk server-helse, kontrollere Home Assistant devices, og mer — alt fra din AI assistant.",
@@ -7125,7 +7978,7 @@
                   "worksWith": "Virker med: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
                   "addToConfig": "Legg til i din MCP klientkonfigurasjonsfil:",
                   "cursor": "{name}: {file} i ditt prosjekt eller globale innstillinger",
-                  "claudeDesktop": "{name}: {file}",
+                  "claudeDesktop": "",
                   "claudeCode": "{name}: {file} eller bruk {command}",
                   "vsCodeCopilot": "{name}: {file} i arbeidsområde-innstillinger",
                   "replaceHint": "Erstatt plassholderen med API-nøkkelen du mottok når du skaper den."
@@ -7267,7 +8120,8 @@
               "openSpotlightApps": "Åpne appsøk",
               "openSpotlightAssistant": "Åpne assistent modus",
               "openSpotlightPreferences": "Åpne preferanse-modus",
-              "openAssistant": "Åpne Assistent"
+              "openAssistant": "Åpne Assistent",
+              "switchBoardTab": ""
             },
             "note": "Tips: Mod refererer til både Ctrl-tasten og ⌘ på macOS"
           }
@@ -7342,12 +8196,11 @@
       "search": "Søk {count} containere",
       "selected": "{selectCount} av {totalCount} containere valgt",
       "footer": "Totalt {count} containere",
-      "totalCpu": "Total CPU: {cpu}%",
-      "totalMemory": "Total Mem: {memory}"
+      "totalCpu": "",
+      "totalMemory": ""
     },
     "field": {
       "state": {
-        "label": "Status",
         "option": {
           "created": "Opprettet",
           "running": "Kjører",
@@ -7374,7 +8227,6 @@
       }
     },
     "action": {
-      "title": "Handlinger",
       "logs": {
         "label": "Vis logg",
         "page": {
@@ -7487,8 +8339,8 @@
       },
       "status": {
         "available": "Tilgjengelig",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "Denne teksten Kubernetes kan ikke nås. Velg en annen kontekst, eller verifiser dens legitimasjon og endepunkt.",
       "metricsUnavailable": "Denne sammenhengen kan nås, men måltall Server er ikke tilgjengelig. Inventar forblir tilgjengelig uten live CPU og minnebruk."
@@ -7520,7 +8372,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Kubernetes versjon"
         }
@@ -7612,27 +8464,13 @@
       "internalServerError": "Kan ikke hente data fra Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Jobb navn"
-      },
-      "namespace": {
-        "label": "Navnerom"
-      },
-      "creationTimestamp": {
-        "label": "Opprettet"
-      },
-      "state": {
-        "label": "Jobb status"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Nedlastings-klient type"
-      },
-      "architecture": {
-        "label": "Arkitektur"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7659,10 +8497,7 @@
         "label": "Rettighet"
       }
     },
-    "action": {
-      "saveUser": "Lagre brukertilgang",
-      "saveGroup": "Lagre gruppetilgang"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7772,9 +8607,8 @@
       "modeAriaLabel": "{mode} modus",
       "resultsAriaLabel": "{mode} resultater",
       "footer": {
-        "navigate": "Navigate",
-        "open": "Åpne",
-        "close": "Lukk"
+        "navigate": "",
+        "open": "Åpne"
       }
     },
     "error": {
@@ -8204,9 +9038,7 @@
         "urlTemplate": {
           "label": "URL søkemal"
         },
-        "description": {
-          "label": "Beskrivelse"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8275,8 +9107,7 @@
             "table": {
               "header": {
                 "season": "Sesong",
-                "episodes": "Episoder",
-                "status": "Status"
+                "episodes": "Episoder"
               },
               "status": {
                 "requested": "Forespurt"
@@ -8461,6 +9292,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Et selvbetjent dashbord for *arr stack og hele hjemmelaget. Integrerer med mer enn 50 tjenester, sanntid widgets, ingen konfigurasjonsfiler.",
     "dashboardTitle": "{appName} Dashbord"
@@ -8489,6 +9326,14 @@
     "conversationActions": "Samtale handlinger",
     "searchConversations": "Søk i samtaler",
     "noMatchingConversations": "Ingen matchende samtaler",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Flere responshandlinger",
     "renameConversation": {
       "action": "Omdøp",
@@ -8538,6 +9383,7 @@
       "imageInput": "Godtar bildeinndata",
       "thinking": "Tenker modus",
       "reasoning": {
+        "default": "Standard",
         "auto": "Auto",
         "none": "Av",
         "minimal": "Minimalt",
@@ -8608,6 +9454,9 @@
     },
     "mentions": {
       "menu": "Legg til Homarr kontekst",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Kontekst",
       "app": "Apper",
       "integration": "Integrasjoner",
@@ -8622,6 +9471,8 @@
     },
     "commands": {
       "menu": "Assistent kommandoer",
+      "hint": "",
+      "empty": "",
       "health": "Klargjør en tjeneste-helse sjekk",
       "explore": "Forbered en oversikt over denne Homarr forekomsten",
       "media": "Forbered et mediesøk",
@@ -8635,7 +9486,7 @@
       "used": "Siste trinn",
       "remaining": "Gjenstår",
       "capacity": "Kapasitet",
-      "input": "Input",
+      "input": "",
       "output": "Utgang",
       "cached": "Bufret inndata",
       "cacheWrite": "Skriv mellomlager",
@@ -8671,7 +9522,7 @@
       "step": "Trinn {number}",
       "generation": "Generering"
     },
-    "toolInput": "Input",
+    "toolInput": "",
     "toolOutput": "Utgang",
     "toolActivity": {
       "iconSearch": "Leter etter “{query}” ikoner",
@@ -8764,16 +9615,15 @@
       "automaticContinue": "Aksept foreslåtte styreendring automatisk",
       "resetAll": "Tilbakestill alle endringer",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Utseende",
         "background": "Bakgrunn",
         "general": "Generelt"
       },
       "cssDescription": "Rediger det komplette stilarket. Eksisterende regler beholdes med mindre de er fjernet her.",
       "cssCharacters": "{count} av 16384 tegn",
-      "copyCss": "Copy CSS",
-      "copied": "Kopiert",
-      "restoreCss": "Restore current CSS",
+      "copyCss": "",
+      "restoreCss": "",
       "remoteCssTitle": "Denne CSS laster en ekstern ressurs",
       "remoteCssDescription": "Importerte stilark og eksterne nettadresser kontakter en annen server når tavlen lastes inn. Gjennomgå dem før du fortsetter."
     },
@@ -8797,13 +9647,14 @@
       "errorDescription": "Modellen har ikke lagt til en komplett widget konfigurasjon. Ingen widget ble lagt til."
     },
     "approvalRequired": "Godkjenning kreves",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Avvist",
     "failed": "Feilet",
     "working": "Arbeider",
     "approvalDescription": "Gjennomgå denne endringen før den kjører.",
     "approveAndRun": "Godkjenn og kjør",
     "deny": "Avslå",
+    "approvalError": "",
     "autoApproval": {
       "label": "Automatiske godkjenninger",
       "composerLabel": "Godkjenn for meg",

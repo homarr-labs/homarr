@@ -57,6 +57,7 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql"
 export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
+  readOnly: boolean().notNull().default(false),
   oauthClientId: text(),
   oauthClientName: text(),
   oauthRedirectUri: text(),
@@ -214,6 +215,7 @@ export const integrations = pgTable(
     id: varchar({ length: 64 }).notNull().primaryKey(),
     name: text().notNull(),
     url: text().notNull(),
+    externalUrl: text(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
@@ -333,12 +335,12 @@ export const boards = pgTable("board", {
     .notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
-  primaryColor: text().default("#fa5252").notNull(),
-  secondaryColor: text().default("#fd7e14").notNull(),
+  primaryColor: text(),
+  secondaryColor: text(),
   opacity: integer().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
-  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  itemRadius: text().$type<MantineSize>(),
   disableStatus: boolean().default(false).notNull(),
 });
 
@@ -479,6 +481,23 @@ export const items = pgTable("item", {
   options: text().default(emptySuperJSON).notNull(),
   advancedOptions: text().default(emptySuperJSON).notNull(),
 });
+
+export const userItemStates = pgTable(
+  "user_item_state",
+  {
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    key: text().notNull(),
+    value: text().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.userId, table.itemId, table.key] }),
+  }),
+);
 
 export const apps = pgTable("app", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
@@ -674,6 +693,7 @@ export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   requests: text().notNull(),
   options: text().notNull(),
   template: text().notNull(),
+  workshop: text(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),

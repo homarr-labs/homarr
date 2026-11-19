@@ -12,7 +12,9 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./access": "./src/access/index.ts",
+    "./custom-widgets": "./src/custom-widgets/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -24,6 +26,7 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
@@ -31,6 +34,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@tabler/icons-react": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },

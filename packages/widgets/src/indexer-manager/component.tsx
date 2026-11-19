@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   ActionIcon,
   Anchor,
@@ -61,8 +61,21 @@ export default function IndexerManagerWidget({
   const {
     mutate: testAll,
     isPending,
-    error: testAllError,
+    error: testAllRequestError,
+    data: testAllResults,
+    reset: resetTestAll,
   } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
+    onSuccess: (results) => {
+      for (const result of results) {
+        if (!result.error) continue;
+        let message = t("error.testAll");
+        if (result.error !== "INTEGRATION_REQUEST_FAILED") message = result.error;
+        showErrorNotification({
+          title: `${tCommon("error")}: ${result.integrationName} (${result.integrationId})`,
+          message,
+        });
+      }
+    },
     onError: () =>
       showErrorNotification({
         title: tCommon("error"),
@@ -70,6 +83,11 @@ export default function IndexerManagerWidget({
       }),
     onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
   });
+  const integrationSelectionKey = JSON.stringify(integrationIds.toSorted());
+  useEffect(() => {
+    resetTestAll();
+  }, [integrationSelectionKey, resetTestAll]);
+  const testAllError = testAllRequestError || testAllResults?.some((result) => result.error);
   const interactIntegrationIds = new Set(useIntegrationsWithInteractAccess().map(({ id }) => id));
   const canInteract = integrationIds.length > 0 && integrationIds.every((id) => interactIntegrationIds.has(id));
   const board = useRequiredBoard();
@@ -148,7 +166,7 @@ export default function IndexerManagerWidget({
                 actionTargetClasses.root,
               )}
               size="sm"
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               variant="light"
               color={testAllError ? "red" : undefined}
               loading={isPending}
@@ -168,7 +186,7 @@ export default function IndexerManagerWidget({
         className={combineClasses("indexer-manager-list-container", classes.card, isAdvanced && classes.advancedCard)}
         w="100%"
         p="xs"
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         flex={1}
       >
         {isInitialPending ? (
@@ -252,7 +270,7 @@ export default function IndexerManagerWidget({
           className="indexer-manager-test-button"
           w="100%"
           size="xs"
-          radius={board.itemRadius}
+          radius={board.itemRadius ?? undefined}
           variant="light"
           color={testAllError ? "red" : undefined}
           leftSection={<IconTestPipe style={iconSizes.md} />}

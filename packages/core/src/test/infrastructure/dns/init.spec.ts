@@ -26,8 +26,8 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-test.each([undefined, "false"])(
-  "preserves native address-family filtering with DNS caching set to '%s'",
+test.each(["false"])(
+  "preserves native address-family filtering with DNS caching explicitly set to '%s'",
   async (value) => {
     vi.stubEnv("ENABLE_DNS_CACHING", value);
     await import("@homarr/core/infrastructure/dns/init");
@@ -47,8 +47,8 @@ test.each([undefined, "false"])(
   },
 );
 
-test("still enables DNS caching when explicitly requested", async () => {
-  vi.stubEnv("ENABLE_DNS_CACHING", "true");
+test.each([undefined, "true"])("enables DNS caching with the setting '%s'", async (value) => {
+  vi.stubEnv("ENABLE_DNS_CACHING", value);
   await import("@homarr/core/infrastructure/dns/init");
   expect(dns.lookup).not.toBe(nativeLookup);
   expect(dns.promises.lookup).not.toBe(nativePromiseLookup);

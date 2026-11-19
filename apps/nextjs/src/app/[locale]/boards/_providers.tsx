@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { boardTabSearchParam, BoardTabsProvider } from "@homarr/boards/tabs";
 
 import type { Board } from "./_types";
 
@@ -29,13 +30,15 @@ export const BoardProviders = ({
   const layoutOverrideId = isLayoutEditRequest ? requestedLayoutId : null;
 
   return (
-    <BoardProvider
-      initialBoard={initialBoard}
-      initialLayoutId={initialLayoutId}
-      initialViewportWidth={initialViewportWidth}
-      layoutOverrideId={layoutOverrideId}
-    >
-      <EditModeProvider initialOpen={isLayoutEditRequest}>{children}</EditModeProvider>
-    </BoardProvider>
+    <EditModeProvider initialOpen={isLayoutEditRequest}>
+      <BoardProvider
+        initialBoard={initialBoard}
+        initialLayoutId={initialLayoutId}
+        initialViewportWidth={initialViewportWidth}
+        layoutOverrideId={layoutOverrideId}
+      >
+        <BoardTabsProvider initialTabKey={searchParams.get(boardTabSearchParam)}>{children}</BoardTabsProvider>
+      </BoardProvider>
+    </EditModeProvider>
   );
 };

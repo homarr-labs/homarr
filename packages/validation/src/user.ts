@@ -25,6 +25,7 @@ export {
   headerPreferencesSchema,
   headerPreferencesVersion,
   headerSearchDisplayValues,
+  headerTabsDisplayValues,
   headerZoneIds,
   isRequiredHeaderItem,
   parseHeaderPreferences,
@@ -40,6 +41,7 @@ export type {
   HeaderPreferenceItemId,
   HeaderPreferences,
   HeaderSearchDisplay,
+  HeaderTabsDisplay,
   HeaderZoneId,
   HeaderZones,
 } from "./header-preferences";

@@ -1,26 +1,22 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { useMergedRef } from "@mantine/hooks";
 
 import { calculateBoardUiScale } from "@homarr/boards/scale";
 
 import classes from "./scaled-board-canvas.module.css";
+import { calculateBoardCanvasScale, fitBoardCanvas } from "./board-canvas-fitting";
+import { useDeferredElementSize } from "@homarr/ui/hooks";
 
 export { calculateBoardUiScale } from "@homarr/boards/scale";
+export { calculateBoardCanvasScale } from "./board-canvas-fitting";
 
 const BoardCanvasScaleContext = createContext(1);
 
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
-
-export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: number) => {
-  if (!Number.isFinite(availableWidth) || !Number.isFinite(logicalWidth)) return 1;
-  if (availableWidth <= 0 || logicalWidth <= 0) return 1;
-
-  return availableWidth / logicalWidth;
-};
 
 interface ScaledBoardCanvasProps {
   logicalWidth: number;
@@ -41,9 +37,17 @@ export const ScaledBoardCanvas = ({
   label,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
-  const { ref: viewportRef, width: availableWidth } = useElementSize<HTMLDivElement>();
-  const { ref: canvasRef, height: logicalHeight } = useElementSize<HTMLDivElement>();
+  const { ref: viewportRef, width: availableWidth } = useDeferredElementSize<HTMLDivElement>();
+  const { ref: canvasRef, height: logicalHeight } = useDeferredElementSize<HTMLDivElement>();
+  const fittingViewportRef = useRef<HTMLDivElement>(null);
+  const mergedViewportRef = useMergedRef(viewportRef, fittingViewportRef);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  useLayoutEffect(() => {
+    const viewport = fittingViewportRef.current;
+    if (!viewport) return;
+    return fitBoardCanvas(viewport);
+  }, [logicalWidth, initialAvailableWidth, initialLogicalHeight]);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -63,21 +67,28 @@ export const ScaledBoardCanvas = ({
   return (
     <Box
       component="section"
-      ref={viewportRef}
+      ref={mergedViewportRef}
       className={classes.viewport}
       data-testid="board-canvas"
       data-board-hydrated={isHydrated ? "true" : "false"}
       data-canvas-scale={scale}
+      data-canvas-measured-width={availableWidth}
       data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
       data-canvas-initial-height={initialLogicalHeight}
       data-canvas-initial-width={initialAvailableWidth}
       aria-label={label}
     >
-      <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
+      <Box
+        className={classes.sizer}
+        style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}
+        suppressHydrationWarning
+      >
         <Box
           ref={canvasRef}
           data-board-canvas-content
+          data-logical-width={logicalWidth}
           className={classes.canvas}
+          suppressHydrationWarning
           style={{
             "--board-canvas-inverse-scale": inverseScale,
             "--board-canvas-ui-scale": uiScale,

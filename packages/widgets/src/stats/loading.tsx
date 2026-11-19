@@ -1,10 +1,12 @@
 import { Avatar, Box } from "@mantine/core";
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./loading.module.css";
 
 export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string; source?: string; size?: number }) {
+  const resolvedIconUrl = useWorkerResourceUrl(iconUrl);
   const t = useI18n("widget.stats");
   let label = t("loading");
   if (source) label = `${source}: ${label}`;
@@ -14,7 +16,7 @@ export function StatsLoading({ iconUrl, source, size = 20 }: { iconUrl?: string;
       <Avatar
         component="span"
         classNames={{ image: classes.image }}
-        src={iconUrl}
+        src={resolvedIconUrl}
         size="64%"
         radius={0}
         variant="transparent"

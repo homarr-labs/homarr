@@ -69,9 +69,9 @@ export async function readBoard(state: WorkerState, principal: AccessPrincipal, 
       {
         caller: getCaller,
         signal,
-        mediaPath: async (path) => {
+        mediaPath: async (path, kind) => {
           const { createBoardMediaPath } = await import("./media");
-          return createBoardMediaPath(state, principal, board.id, path);
+          return createBoardMediaPath(state, principal, board.id, path, kind);
         },
       },
     );

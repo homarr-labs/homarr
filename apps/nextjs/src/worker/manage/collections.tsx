@@ -40,7 +40,7 @@ import { SearchEngineEditForm } from "~/app/[locale]/manage/search-engines/edit/
 import { SearchEngineNewForm } from "~/app/[locale]/manage/search-engines/new/_search-engine-new-form";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { NoResults } from "~/components/no-results";
+import { NoResults } from "@homarr/ui";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { useWorkerConnections, useWorkerWorkspace } from "~/worker/context";
 
@@ -220,6 +220,7 @@ export function WorkerIntegrationsRoute({ segments, searchParams }: WorkerRouteP
 function WorkerIntegrationNew({ searchParams }: { searchParams: URLSearchParams }) {
   const t = useI18n("integration");
   const kind = integrationKinds.find((candidate) => candidate === searchParams.get("kind"));
+  const selectableApps = clientApi.app.selectable.useQuery(undefined, { enabled: Boolean(kind) });
   return (
     <>
       <DynamicBreadcrumb />
@@ -232,11 +233,13 @@ function WorkerIntegrationNew({ searchParams }: { searchParams: URLSearchParams 
             </Group>
           )}
           {!kind && <Title>{t("action.create")}</Title>}
-          {kind && (
+          {kind && !selectableApps.data && <WorkerQueryStatus queries={[selectableApps]} />}
+          {kind && selectableApps.data && (
             <IntegrationNewFormWrapper
               kind={kind}
               initialUrl={searchParams.get("url") ?? undefined}
               initialName={searchParams.get("name") ?? undefined}
+              selectableApps={selectableApps.data}
             />
           )}
           {!kind && <IntegrationNewSelectGrid enableMockIntegration={false} />}
@@ -456,6 +459,7 @@ export function WorkerSearchEnginesRoute({ segments, searchParams }: WorkerRoute
 }
 
 function WorkerSearchEngineNew() {
+  const integrations = clientApi.integration.allThatSupportSearch.useQuery();
   const t = useI18n("search.engine.page.create");
   return (
     <>
@@ -463,7 +467,8 @@ function WorkerSearchEngineNew() {
       <Container>
         <Stack>
           <Title>{t("title")}</Title>
-          <SearchEngineNewForm />
+          {integrations.data && <SearchEngineNewForm integrations={integrations.data} />}
+          {!integrations.data && <WorkerQueryStatus queries={[integrations]} />}
         </Stack>
       </Container>
     </>
@@ -471,6 +476,7 @@ function WorkerSearchEngineNew() {
 }
 
 function WorkerSearchEngineEdit({ id }: { id: string }) {
+  const integrations = clientApi.integration.allThatSupportSearch.useQuery();
   const query = clientApi.searchEngine.byId.useQuery({ id });
   const t = useI18n("search.engine.page.edit");
   return (
@@ -481,7 +487,10 @@ function WorkerSearchEngineEdit({ id }: { id: string }) {
           <Container>
             <Stack>
               <Title>{t("title")}</Title>
-              <SearchEngineEditForm searchEngine={searchEngine} />
+              {integrations.data && (
+                <SearchEngineEditForm searchEngine={searchEngine} integrations={integrations.data} />
+              )}
+              {!integrations.data && <WorkerQueryStatus queries={[integrations]} />}
             </Stack>
           </Container>
         </>

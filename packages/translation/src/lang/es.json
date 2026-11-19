@@ -65,7 +65,6 @@
         "themeAuto": "Sistema",
         "themeLight": "Claro",
         "themeDark": "Oscuro",
-        "serverOriginHelp": "Homarr utiliza esta dirección para prellenar las URL del servicio detectado. Todavía puede editar todos los servicios individualmente.",
         "serverDescription": "Esto es un atajo, no una restricción. Todos los servicios detectados permanecen editables.",
         "serverOrigin": "Dominio, IP o ruta del proxy reverso",
         "serverOriginDescription": "Ejemplos: home.lan, 192.168.1.10, o https://home.example.com/services. Elija cómo se añade cada servicio a continuación.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Conecta lo que hace que el tablero sea útil",
         "description": "Seleccione varios servicios a la vez. Las etiquetas Docker tienen prioridad, los espacios de coincidencia de imágenes y todas las URL y credenciales permanecen revisables.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Instancias de integración detectadas ({count})",
         "detectedIntegrationLabel": "Importar {name}detectado como {kind}",
         "detectedAppLabel": "Importar aplicación detectada {name}",
@@ -111,7 +112,7 @@
         "appAddressRequired": "Añadir una dirección para {name}o eliminarla de la selección.",
         "empty": "No hay integraciones seleccionadas. Homarr todavía creará un cuadro de inicio útil con widgets generales.",
         "dockerSource": "Docker",
-        "manualSource": "Manual",
+        "manualSource": "",
         "url": "URL del servicio",
         "noCredentials": "Sin credenciales",
         "noCredentialsDescription": "Esta integración no necesita credenciales.",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Necesita configuración",
         "tested": "Conexión probada",
         "testFailed": "Prueba de conexión fallida",
-        "incompleteConfirmation": "Se omitirán las integraciones sin finalizar. ¿Continuar sin ellas?"
+        "incompleteConfirmation": "Se omitirán las integraciones sin finalizar. ¿Continuar sin ellas?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Forma el tablero antes de que se construya",
@@ -142,17 +144,11 @@
         "secondaryColor": "Color secundario",
         "resetColors": "Restablecer colores",
         "radius": "Radio de esquina del widget",
-        "radiusOptions": {
-          "xs": "Estrecho",
-          "sm": "Sutil",
-          "md": "Equilibrado",
-          "lg": "Redondeado",
-          "xl": "Suave"
-        },
+        "radiusOptions": {},
         "columns": "Columnas del foro",
         "columnsDescription": "Las columnas definen la cuadrícula horizontal usada para el tamaño y la posición de los elementos. 12 son suficientes para la mayoría de las personas.",
         "columnCount": "{count, plural, one {# columna} other {# columnas}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "",
         "rightSidebar": "Barra lateral derecha",
         "previewLabel": "Vista previa en vivo de la disposición del primer tablero"
       },
@@ -171,7 +167,7 @@
           "description": "Navegar por la comunidad Widgets personalizados, inspeccionar las capacidades solicitadas, instalarlas y publicar tu propio trabajo sin copiar código entre servidores.",
           "available": "Disponible",
           "checking": "Comprobando…",
-          "unavailable": "Unavailable",
+          "unavailable": "",
           "discoverTitle": "Descubre",
           "discoverDescription": "Encuentra widgets creados para flujos de trabajo autosuficientes.",
           "installTitle": "Revisar e instalar",
@@ -192,7 +188,6 @@
           "loginRequired": "Inicia sesión como administrador después de la configuración para crear una clave API.",
           "configuration": "Configuración del cliente",
           "copy": "Copiar configuración",
-          "copied": "Copiado",
           "advanced": "Abrir herramientas MCP, permisos y detalles de configuración"
         }
       },
@@ -203,7 +198,7 @@
         "columns": "Columnas del foro",
         "columnsValue": "{count, plural, one {# columna} other {# columnas}}",
         "sidebars": "Barra lateral",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "",
         "layouts": "Diseños interactivo",
         "layoutsValue": "Móvil + Base",
         "integrations": "Integraciones",
@@ -285,6 +280,13 @@
           "title": "Acceso total al administrador",
           "description": "Puede administrar Homarr y servicios conectados, incluyendo acciones destructivas."
         },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
+        },
         "credential": {
           "title": "Movimiento de credenciales y tiempo de vida",
           "breadth": "Funciona con la API HTTP y MCP de Homarr, incluyendo fuera de este cliente.",
@@ -364,7 +366,7 @@
         "description": "Elija cómo Homarr muestra tamaños de bytes y tasas de bytes. Las tasas de bits siempre usan unidades decimales.",
         "options": {
           "binary": "Binario",
-          "decimal": "Decimal"
+          "decimal": ""
         }
       },
       "enableRightClickOnWidgets": {
@@ -618,7 +620,7 @@
           "label": "Preajustes",
           "viewer": "Visor",
           "viewerDescription": "Sólo lectura: ver tableros y medios, usar aplicaciones e integraciones que ya existen.",
-          "editor": "Editor",
+          "editor": "",
           "editorDescription": "Gestión diaria: crear y editar tableros, aplicaciones, integraciones y motores de búsqueda.",
           "admin": "Administrador",
           "adminDescription": "Acceso sin restricciones a cada característica y configuración, incluida la gestión de usuarios.",
@@ -799,9 +801,12 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Descripción"
+      "url": {
+        "helpLabel": "Ejemplos de formatos de URL",
+        "examples": "Ejemplos de enlaces admitidos",
+        "requiresHandler": "Los protocolos personalizados requieren una aplicación asociada en tu dispositivo."
       },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Usar URL diferente para ping",
@@ -853,7 +858,6 @@
       "source": "Fuente de la API: {name}",
       "baseUrl": "URL del servidor",
       "networkScope": "Acceso a la red",
-      "save": "Guardar configuración API",
       "expires": "Esta solicitud única expira en {time}."
     },
     "page": {
@@ -884,13 +888,11 @@
       "pasteImportHint": "Pegar un JSON de widget personalizado con Ctrl+V o Comando+V",
       "delete": "Eliminar widget personalizado",
       "deleteConfirm": "¿Está seguro de que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
-      "export": "Exportar",
       "duplicate": "Duplicar",
       "aiPrompt": "Diseño con IA",
       "copyAiPrompt": "Copiar prompt de IA",
       "enable": "Activar",
       "disable": "Desactivar",
-      "menu": "Acciones",
       "downloadSkill": "Ver habilidad de Widget personalizado",
       "publishWorkshop": "Publicar en el taller",
       "migrate": "Migrar widget personalizado",
@@ -904,12 +906,9 @@
     "sourceSetupDialog": {
       "title": "Configurar fuentes de widget",
       "description": "Revisar donde este widget se conecta y añade o reemplaza sus credenciales cifradas.",
-      "credentialsRequired": "Las solicitudes fallarán hasta que se añadan las credenciales requeridas.",
-      "save": "Guardar configuración"
+      "credentialsRequired": "Las solicitudes fallarán hasta que se añadan las credenciales requeridas."
     },
-    "field": {
-      "description": "Descripción"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Algo salió mal"
@@ -917,9 +916,8 @@
       "action": {
         "components": "Componentes",
         "format": "Formatear",
-        "insertStarter": "Insert starter",
+        "insertStarter": "",
         "redo": "Rehacer",
-        "copied": "Copiado",
         "schema": "Esquema"
       },
       "reference": {
@@ -935,14 +933,14 @@
         "errors": "{count, number} errores",
         "warnings": "{count, number} advertencias",
         "ready": "No se encontraron peticiones",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "",
         "characters": "{count, number} caracteres",
-        "charactersWithLimit": "{count, number} / {limit, number}"
+        "charactersWithLimit": ""
       },
       "diagnostics": {
         "title": "Diagnóstico de plantillas",
         "line": "¡Línea {line, number}",
-        "ast": "{value}",
+        "ast": "",
         "bindingTypeConflict": "La entrada \"{value}\" es compartida por controles con tipos de valor incompatibles.",
         "runtimeBindingTypeConflict": "La entrada \"{value}\" está enlazada como {firstType} y {secondType}.",
         "dynamicRequestId": "Se requiere una solicitud literal. No se aceptan identificadores de solicitud dinámica.",
@@ -966,7 +964,7 @@
         "sources": "Fuentes de API",
         "requests": "Solicitudes",
         "options": "Opciones",
-        "jsx": "JSX",
+        "jsx": "",
         "preview": "Vista previa"
       },
       "status": {
@@ -997,10 +995,9 @@
       "builder": {
         "advancedManifest": "manifest bruto avanzado",
         "advancedJson": "JSON de manifiesto avanzado",
-        "manifestFilename": "widget.json",
+        "manifestFilename": "",
         "request": "¡Solicitud {count, number}",
         "requestId": "ID de Solicitud",
-        "type": "Tipo",
         "method": "Método",
         "source": "Fuente de API",
         "run": "Ejecutar",
@@ -1014,7 +1011,7 @@
         "queryKey": "Clave de consulta",
         "queryKeyInvalid": "Utilice un ID único que comience con una letra y contenga sólo letras, números, - o _.",
         "valueSource": "Fuente de valor",
-        "literal": "Literal",
+        "literal": "",
         "widgetOption": "Opción Widget",
         "invocationParameter": "Parámetro de Invocación",
         "option": "Opción",
@@ -1036,8 +1033,7 @@
         "addRequest": "Añadir solicitud",
         "optionName": "Nombre de opción",
         "label": "Nombre",
-        "control": "Control",
-        "description": "Descripción",
+        "control": "",
         "default": "Por defecto",
         "optionDetails": "Restricciones y opciones dinámicas",
         "minimum": "Mínimo",
@@ -1068,13 +1064,12 @@
       },
       "sources": {
         "title": "Fuentes y credenciales de API",
-        "newName": "API {count, number}",
+        "newName": "",
         "duplicateSourceId": "Los ID de origen de la API deben ser únicos.",
         "credentialRemoved": "Credencial eliminado",
         "credentialRemovedDescription": "El valor almacenado fue eliminado.",
         "primary": "API primaria",
         "id": "ID fuente",
-        "name": "Nombre de la tarea",
         "baseUrl": "URL base",
         "baseUrlError": {
           "invalid": "Introduzca una URL completa.",
@@ -1091,8 +1086,7 @@
         "remove": "Eliminar fuente y sus peticiones",
         "advanced": "Avanzado",
         "add": "Añadir otra fuente API",
-        "sourceType": "Integración",
-        "manualSource": "HTTP API",
+        "manualSource": "",
         "existingIntegration": "Integración existente",
         "integrationType": "Tipo de integración",
         "selectIntegration": "Integración configurada",
@@ -1165,7 +1159,7 @@
         "simulated": "Acción simulada",
         "httpStatus": "¡HTTP {status, number}",
         "tab": {
-          "widget": "Widget",
+          "widget": "",
           "data": "Datos",
           "options": "Opciones",
           "state": "Estado de la tarea",
@@ -1225,7 +1219,6 @@
       "migrationTitle": "Revisar el reemplazo migrado v2",
       "migrationDescription": "Revisar y confirmar esta definición v2 generada. Confirmando atómicamente reemplaza el registro preservado v1 mientras mantiene las ubicaciones existentes en los foros enlazadas al mismo widget ID.",
       "fileLabel": "Elija un archivo JSON de widget personalizado",
-      "name": "Nombre de la tarea",
       "origin": "Origen base",
       "authentication": "Autenticación",
       "networkScope": "Ámbito de red",
@@ -1245,8 +1238,6 @@
         "title": "Este widget puede cambiar los datos remotos",
         "description": "Revise todas las acciones nombradas, credenciales heredadas y confirmación destructiva después de la importación. Los secretos no están incluidos en el archivo."
       },
-      "cancel": "Cancelar importación",
-      "confirm": "Importar widget",
       "confirmMigration": "Confirmar reemplazo v2"
     },
     "secret": {
@@ -1254,6 +1245,20 @@
       "username": "Nombre de usario",
       "password": "Contraseña",
       "savedPlaceholder": "••••••• (guardado, dejar vacío para mantener)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Actualización disponible",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1283,7 +1288,7 @@
     "outdated": "Antiguo",
     "outdatedWarning": "El autor marcó este envío como obsoleto. Revísalo cuidadosamente antes de importar.",
     "score": "Puntuación: {count, number}",
-    "upvote": "Upvote",
+    "upvote": "",
     "downvote": "Bajar voto",
     "voteError": "No se ha podido guardar la votación.",
     "signIn": "Iniciar sesión con GitHub",
@@ -1296,7 +1301,7 @@
     "installReviewTitle": "Revisar antes de instalar",
     "installError": "Este widget no se puede instalar",
     "installErrorDescription": "El envío del taller no es un widget JSX v2 válido personalizado.",
-    "useCss": "Import CSS",
+    "useCss": "",
     "importCss": "Importar CSS del taller",
     "importCssConfirm": "Reemplazar el CSS personalizado actual con \"{title}\"? Nada se guarda hasta que guarde la configuración del foro.",
     "screenshotAlt": "{title}, captura de pantalla {count, number}",
@@ -1310,7 +1315,6 @@
     "closeScreenshotViewer": "Cerrar visor de captura de pantalla",
     "technicalDetails": "Detalles técnicos",
     "sourceCode": "Entrada del taller",
-    "export": "Exportar",
     "report": "Reporte",
     "reportTitle": "Envío del informe",
     "reportReason": "Razón",
@@ -1324,8 +1328,8 @@
     "reportCategory": {
       "outdated": "Anulado o dejado de funcionar",
       "malicious": "Malicioso",
-      "spam": "Spam",
-      "copyright": "Copyright",
+      "spam": "",
+      "copyright": "",
       "inappropriate": "Inapropiado",
       "other": "Otros"
     },
@@ -1341,8 +1345,6 @@
       "viewSubmission": "Ver y administrar el envío",
       "done": "Hecho",
       "signInHint": "Inicia sesión para publicar bajo tu identidad del taller.",
-      "titleField": "Título",
-      "descriptionField": "Descripción",
       "screenshots": "Capturas de pantalla",
       "screenshotsDescription": "Hasta cinco imágenes PNG, JPEG o WebP",
       "screenshotsPlaceholder": "Elegir capturas",
@@ -1405,11 +1407,7 @@
               "label": "Seleccionar aplicación existente"
             },
             "new": {
-              "title": "Nueva",
-              "url": {
-                "label": "URL de aplicación",
-                "description": "La URL que abrirá la aplicación cuando se acceda desde el tablero"
-              }
+              "title": "Nueva"
             }
           }
         }
@@ -1461,8 +1459,9 @@
         "label": "Vincular una aplicación existente",
         "description": "Conecte esta integración a una aplicación que ya puede usar."
       },
-      "appHref": {
-        "placeholder": "URL personalizada de aplicación"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Obtener Clave de API"
@@ -1510,7 +1509,7 @@
       "vpn": "VPN",
       "mediaLibrary": "Biblioteca multimedia",
       "uptimeMonitoring": "Monitoreo de disponibilidad",
-      "beszel": "Beszel",
+      "beszel": "",
       "systemMonitoring": "Monitoreo del Sistema",
       "security": "Seguridad",
       "serviceVersion": "Versión"
@@ -1529,6 +1528,27 @@
         "unknown": {
           "title": "Error desconocido",
           "description": "Se ha producido un error desconocido, abre la causa a continuación para ver más detalles"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Error de análisis",
@@ -1559,6 +1579,7 @@
             "untrusted": "El certificado no es de confianza.",
             "hostnameMismatch": "El nombre de host del certificado no coincide con la URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "No hay suficientes permisos.",
@@ -1607,11 +1628,9 @@
             },
             "notification": {
               "success": {
-                "title": "Certificado de confianza",
                 "message": "Certificado añadido a la lista de certificados de confianza"
               },
               "error": {
-                "title": "Error al confiar en el certificado",
                 "message": "No se pudo agregar el certificado a la lista de certificados de confianza"
               }
             }
@@ -1730,6 +1749,11 @@
         "title": "Restablecer credencial",
         "message": "¿Estás seguro de que deseas restablecer esta credencial?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Sin credenciales",
         "text": "No se requieren credenciales para esta integración"
@@ -1811,9 +1835,9 @@
           "label": "Contraseña del indexador",
           "newLabel": "Nueva contraseña del indexador"
         },
-        "wazuhDashboardUrl": {
-          "label": "Tablero URL (opcional)",
-          "newLabel": "Nuevo dashboard URL"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1823,7 +1847,7 @@
       "full": "Acceso completo a la integración"
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Monitorear un servidor llama-server local llama.cpp: métricas de salud, modelo y generación"
     }
   },
@@ -1832,9 +1856,7 @@
     "search": "Buscar una imagen",
     "field": {
       "preview": "Vista previa",
-      "size": "Tamaño",
-      "creator": "Creador",
-      "actions": "Controles"
+      "creator": "Creador"
     },
     "action": {
       "upload": {
@@ -1904,6 +1926,7 @@
       "tryAgain": "Intentar de nuevo",
       "loading": "Cargando",
       "show": "Mostrar",
+      "showAll": "",
       "hide": "Ocultar",
       "undo": "Deshacer",
       "editNamed": "Editar {name}",
@@ -1911,8 +1934,11 @@
       "clearSearch": "Limpiar búsqueda",
       "copy": "Copiar",
       "copied": "Copiado",
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "export": "Exportar",
+      "advanced": "Avanzado"
     },
+    "hidden": "Oculto",
     "pagination": {
       "pageOf": "Página {page} de {totalPages}"
     },
@@ -1922,6 +1948,8 @@
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Dirección del servidor habitual",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Patrón de dirección de servicio",
       "hostPort": "Mismo host, diferentes puertos",
       "subdomain": "Un subdominio por servicio",
@@ -1935,6 +1963,7 @@
       "clear": "Borrar imagen",
       "uploadImage": "Subir imagen",
       "results": "Resultados de búsqueda de imágenes",
+      "websiteIcon": "",
       "localImages": "Tus imágenes",
       "svgIcons": "Iconos SVG",
       "otherImages": "Otras imágenes",
@@ -1999,7 +2028,16 @@
         "updateAvailable": "{countUpdates} actualizaciones disponibles: {tag}",
         "assistant": "Asistente",
         "assistantThinking": "Pensando",
-        "modifier": "Mod"
+        "modifier": ""
+      }
+    },
+    "markdown": {
+      "alert": {
+        "note": "Nota",
+        "tip": "",
+        "important": "",
+        "warning": "Advertencia",
+        "caution": ""
       }
     },
     "dangerZone": "Zona de riesgo",
@@ -2054,7 +2092,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Mostrar uso para # filesystem} other {Mostrar uso para # filesystems}}",
     "field": {
-      "name": "Nombre de la tarea"
+      "name": "Nombre de la tarea",
+      "state": "Estado",
+      "size": "Tamaño",
+      "actions": "Acciones",
+      "source": "Fuente",
+      "title": "Título",
+      "description": "Descripción",
+      "created": "Creado",
+      "namespace": "Espacio de nombre",
+      "status": "Estado",
+      "architecture": "Arquitectura",
+      "type": "Tipo"
     },
     "label": {
       "new": "Nueva"
@@ -2072,6 +2121,167 @@
       "searchEngines": "Motores de búsqueda",
       "tasks": "Tareas",
       "users": "Users"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Equilibrado",
+        "lg": "Redondeado",
+        "xs": "Estrecho",
+        "sm": "Sutil",
+        "xl": "Suave"
+      }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Personalizado",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Diseño",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Espaciado",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Acento secundario"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Copiado",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Vista previa",
+        "sampleText": "",
+        "sampleInput": "Búsqueda",
+        "sampleValue": "Buscar una aplicación",
+        "sampleButton": "Abrir"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Espaciado",
+          "radius": "",
+          "compact": "Compacto",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "Ninguno",
+          "rounded": "",
+          "full": "Lleno",
+          "custom": "Personalizado",
+          "advanced": ""
+        },
+        "previewSurface": "Vista previa",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Componentes",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Móvil",
+        "includeCustomCss": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Espaciado",
+          "radius": "",
+          "breakpoint": "Punto de ruptura",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Acento secundario",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Fondo",
+          "surfaceText": "",
+          "surfaceBorder": "Color del borde",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Mostrar borde",
+          "componentPadding": "",
+          "componentSize": "Tamaño del archivo",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Mostrar controles"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2091,6 +2301,10 @@
       "scrollable": {
         "label": "Desplazable",
         "description": "Mantenga este contenedor en su tamaño establecido y despliegue su contenido en lugar de crecer para ajustarse a ellos."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2109,18 +2323,33 @@
         "collapse": "Colapso"
       },
       "option": {
-        "title": {
-          "label": "Título"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Clases CSS personalizadas"
         },
         "borderColor": {
           "label": "Color del borde"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Oculto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "¿Eliminar este contenedor? Su contenido se moverá a la zona circundante."
+      },
+      "editBar": {
+        "edit": "Editar"
       }
     }
   },
@@ -2135,8 +2364,7 @@
       "label": {
         "settings": "Ajustes",
         "settingsFor": "Configuración de {name}",
-        "options": "Opciones",
-        "actions": "Acciones"
+        "options": "Opciones"
       },
       "status": {
         "success": "Ok",
@@ -2170,6 +2398,18 @@
       },
       "customWidget": "Widget personalizado",
       "standalone": "Independiente",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widgets del taller",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Conectar un servicio primero",
         "noPermission": "Este widget necesita una conexión de servicio compatible. Pídele a un administrador que conecte uno, y vuelva a intentarlo."
@@ -2189,7 +2429,6 @@
     "selection": {
       "summary": "{count, plural, one {# elemento seleccionado} other {# elementos seleccionados}}",
       "selected": "{count, plural, one {# seleccionado} other {# seleccionado}}",
-      "copy": "Copiar",
       "copied": "{count, plural, one {# elemento copiado al portapapeles} other {# elementos copiados al portapapeles}}",
       "copyError": "Los elementos seleccionados no pudieron ser copiados. Su navegador puede no permitir el acceso al portapapeles.",
       "paste": "Pegar",
@@ -2201,16 +2440,18 @@
       "removed": "{count, plural, one {# elemento eliminado} other {# elementos eliminados}}",
       "move": "Mover",
       "moveTo": "Mover elementos seleccionados",
-      "delete": "Eliminar",
       "clear": "Borrar selección",
       "clearShortcut": "Borrar selección (Escape)",
       "saveErrorTitle": "No se pueden actualizar los artículos",
       "saveErrorMessage": "No se han podido guardar los cambios. El tablero ha sido actualizado.",
       "moveUnavailableTitle": "No se puede mover los elementos seleccionados",
-      "moveUnavailableMessage": "El destino no tiene suficiente espacio para toda la selección."
+      "moveUnavailableMessage": "El destino no tiene suficiente espacio para toda la selección.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Mover / Redimensionar elemento",
+      "sizeOverlap": "",
       "entryLabel": "{name}, columna {column}, fila {row}",
       "target": {
         "numbered": "{name}, destino {index}",
@@ -2277,9 +2518,7 @@
           "label": "Integraciones",
           "removeLabel": "Eliminar integración con {name}"
         },
-        "title": {
-          "label": "Título"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Clases CSS personalizadas"
         },
@@ -2295,6 +2534,36 @@
       "open": "Abrir vista avanzada",
       "close": "Cerrar vista avanzada",
       "label": "{widget} vista avanzada"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "mover",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2308,6 +2577,15 @@
       "option": {
         "appId": {
           "label": "Elegir aplicación"
+        },
+        "openIn": {
+          "label": "Abrir la aplicación en",
+          "description": "Elige dónde se abre esta aplicación. La configuración del navegador puede modificar la apertura en una ventana independiente.",
+          "option": {
+            "currentTab": "La pestaña actual",
+            "newTab": "Una pestaña nueva",
+            "newWindow": "Una ventana nueva"
+          }
         },
         "showTitle": {
           "label": "Mostrar el nombre de la aplicación"
@@ -2329,7 +2607,29 @@
             "tooltip": "Como consejo",
             "hidden": "Oculto"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2408,6 +2708,10 @@
         "hideHostname": {
           "label": "Ocultar nombres de host"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Mostrar borde"
         },
@@ -2430,6 +2734,9 @@
         }
       },
       "empty": "Añadir una URL o aplicación en la configuración del widget",
+      "copyUrl": "Copiar URL",
+      "copied": "Copiado",
+      "copyFailed": "",
       "groups": {
         "label": "Categorías",
         "placeholder": "Nueva Categoría",
@@ -2437,7 +2744,7 @@
         "remove": "Eliminar categoría {name}",
         "rename": "Nombre de la categoría para {name}",
         "assign": "Categoría para {name}",
-        "ungrouped": "Ungrouped"
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -2617,25 +2924,25 @@
         "unsupportedPrimaryTitle": "Zona horaria principal no está disponible",
         "unsupportedPrimary": "El {timeZone} no es compatible con este navegador. Mostrando UTC como un respaldo claramente marcado.",
         "unsupportedTimeZone": "Zona horaria no soportada: {timeZone}",
-        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "accessibleTime": "",
         "advancedLabel": "Reloj avanzado del mundo",
         "cities": "Reloj del mundo",
-        "cityCount": "{count} timezones",
+        "cityCount": "",
         "timeBarLabel": "Posición de 24 horas del día para {city}",
         "dayProgress": "{percent}% transcurrido · {hours}h {minutes}m restantes",
         "phaseLegend": "Leyenda del día",
         "tick": {
-          "midnight": "00",
-          "morning": "06",
-          "noon": "12",
-          "evening": "18",
-          "end": "24"
+          "midnight": "",
+          "morning": "",
+          "noon": "",
+          "evening": "",
+          "end": ""
         },
         "phaseRange": {
-          "night": "00–05 · 21–24",
-          "dawn": "05–08",
-          "day": "08–18",
-          "dusk": "18–21"
+          "night": "",
+          "dawn": "",
+          "day": "",
+          "dusk": ""
         },
         "phase": {
           "night": "Noche",
@@ -2656,7 +2963,7 @@
           "label": "AQI estándar",
           "options": {
             "auto": "Automático para el local",
-            "european": "European AQI",
+            "european": "",
             "us": "AQI US"
           }
         },
@@ -2694,26 +3001,26 @@
           "unknown": "Sin lectura"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
-      "aqiLabel": "AQI",
+      "dominantPollutant": "",
+      "aqiLabel": "",
       "strongestPollen": "Polen más alto",
       "unit": {
         "concentration": "{value} μg/m3",
         "pollen": "{value} granos/m3"
       },
       "pollutant": {
-        "pm2_5": "PM2.5",
-        "pm10": "PM10",
+        "pm2_5": "",
+        "pm10": "",
         "ozone": "Ozono",
         "nitrogenDioxide": "dióxido de nitrógeno",
-        "sulphurDioxide": "Sulphur dioxide",
+        "sulphurDioxide": "",
         "carbonMonoxide": "Monóxido de carbono"
       },
       "pollen": {
-        "alder": "Alder",
+        "alder": "",
         "birch": "Abedul",
         "grass": "Hierba",
-        "mugwort": "Mugwort",
+        "mugwort": "",
         "olive": "Oliva",
         "ragweed": "Algodón"
       },
@@ -2726,9 +3033,9 @@
         "pollutants": "Concentraciones de contaminantes",
         "pollen": "Conconcentraciones de polen",
         "sevenDayForecast": "Previsión máxima de 7 días",
-        "aqiValue": "AQI {value}",
-        "uvValue": "UV {value}",
-        "uvShort": "UV {value}",
+        "aqiValue": "",
+        "uvValue": "",
+        "uvShort": "",
         "noForecast": "No hay datos de previsión disponibles"
       }
     },
@@ -2779,7 +3086,7 @@
       "invalid": {
         "title": "Algunos eventos no se pueden mostrar",
         "description": "{count, plural, one {Un evento tiene una fecha no válida o una zona horaria no soportada.} other {# eventos tienen una fecha válida o una zona horaria no soportada.}}",
-        "value": "Unavailable"
+        "value": ""
       },
       "alert": {
         "notifications": "Notificaciones del navegador",
@@ -2788,14 +3095,14 @@
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
+      "name": "",
       "description": "Ejecuta un cronómetro simple o una secuencia Pomodoro configurable.",
       "option": {
         "mode": {
           "label": "Modo",
           "options": {
             "timer": "Temporizador",
-            "pomodoro": "Pomodoro"
+            "pomodoro": ""
           }
         },
         "timerMinutes": {
@@ -2829,10 +3136,10 @@
       "action": {
         "start": "Iniciar",
         "pause": "Pausa",
-        "reset": "Reset"
+        "reset": ""
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "",
         "phaseReady": "{phase} listo"
       },
       "progress": "Progreso del temporizador: {progress}%",
@@ -2840,11 +3147,11 @@
         "completedFocus": "{count, plural, =0 {No hay sesiones de enfoque completadas} one {# sesión de enfoque completada} other {# sesiones de enfoque completadas}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "",
         "completed": "{phase} completado."
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
+        "sequence": "",
         "focusSession": "Enfocar {session}",
         "settings": "Ajustes permanentes",
         "settingsHint": "Utilice el menú contextual del widget para editar estos ajustes del foro.",
@@ -2997,7 +3304,7 @@
       "createdAt": "Creado {date}",
       "permission": {
         "owner": "Propietario",
-        "editor": "Editor",
+        "editor": "",
         "viewer": "Visor"
       },
       "status": {
@@ -3066,7 +3373,7 @@
       "state": {
         "on": "En",
         "off": "Apagado",
-        "unavailable": "Unavailable",
+        "unavailable": "",
         "unknown": "Desconocido"
       },
       "advanced": {
@@ -3081,6 +3388,141 @@
       "error": {
         "loadFailed": "No se puede cargar la entidad",
         "toggleFailed": "No se puede actualizar la entidad"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Título",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automático",
+            "compact": "Compacto",
+            "large": "Grande"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Personas",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Tiempo",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Añadir",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "No encontrado",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "en",
+          "off": "apagado",
+          "sensors": "",
+          "offline": "desconectado"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3221,6 +3663,13 @@
         },
         "showUnmonitored": {
           "label": "Mostrar sin monitorear"
+        },
+        "viewMode": {
+          "label": "Ver"
+        },
+        "hideHeader": {
+          "label": "",
+          "description": ""
         }
       },
       "advanced": {
@@ -3229,6 +3678,22 @@
         "eventCount": "{count, plural, one {# evento} other {# eventos}}",
         "loading": "Cargando eventos del calendario...",
         "noEvents": "No hay eventos en este mes"
+      },
+      "view": {
+        "compact": "Mes compacto",
+        "month": "Mes",
+        "week": "Semana",
+        "day": "Día",
+        "agenda": "Orden del día"
+      },
+      "controls": {
+        "today": "Hoy",
+        "previous": "Periodo anterior",
+        "next": "Siguiente período",
+        "noEvents": "No hay eventos en este período",
+        "more": "",
+        "timeSlot": "Intervalo de tiempo",
+        "weekday": "Día semanal"
       }
     },
     "weather": {
@@ -3308,11 +3773,11 @@
         "currentHumidity": "Humedad actual",
         "wind": "Viento / ráfagas ({unit})",
         "currentWind": "Viento actual / ráfagas",
-        "windValue": "{speed} / {gusts} {unit}",
+        "windValue": "",
         "windDetail": "Viento máximo / ráfagas: {speed} / {gusts} {unit}",
         "nextHourPrecipitation": "Precipitación la próxima hora",
         "precipitationChance": "Oportunidad de precisión",
-        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationValue": "",
         "precipitationDetail": "Precipitación: {probability}% · {amount} mm",
         "todayUv": "Índice UV máximo de hoy",
         "uvIndex": "Índice máximo de UV: {value}",
@@ -3325,7 +3790,7 @@
           "humidity": "Humedad media",
           "wind": "Viento máximo / ráfagas",
           "uv": "Índice UV máximo",
-          "daylight": "Daylight"
+          "daylight": ""
         },
         "sun": "Abrimiento / puesta de sol",
         "noForecast": "No hay datos de previsión disponibles"
@@ -3382,7 +3847,7 @@
           "label": "Seleccionar pestaña predeterminada"
         },
         "tabOrder": {
-          "label": "Tab order",
+          "label": "",
           "systemFirst": "Sistema y luego Clúster",
           "clusterFirst": "Clúster y sistema"
         },
@@ -3460,7 +3925,6 @@
         },
         "table": {
           "header": {
-            "name": "Nombre",
             "node": "Nodo"
           }
         }
@@ -3490,8 +3954,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nombre",
-            "state": "Estado",
             "cpuUsage": "Uso de CPU",
             "memoryUsage": "Uso de memoria"
           }
@@ -3509,6 +3971,34 @@
     },
     "coolify": {
       "description": "Resumen de su instancia de Coolify con servidores y aplicaciones",
+      "summary": {
+        "needsAttention": "{count} necesita atención",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Necesita atención",
+        "ready": "Listo",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "",
+        "running": "En ejecución",
+        "resourceCount": "",
+        "environmentCount": ""
+      },
       "option": {
         "showServers": {
           "label": "Mostrar servidores"
@@ -3540,7 +4030,13 @@
       },
       "source": {
         "url": "Fuente: {url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "",
+        "unavailableCount": ""
+      },
+      "kind": {
+        "server": "",
+        "application": "Aplicación",
+        "service": "Servicio"
       },
       "instances": {
         "title": "Instancias"
@@ -3557,12 +4053,13 @@
         "exited": "Finalizado",
         "starting": "Iniciando",
         "restarting": "Reiniciando",
+        "unhealthy": "Mal estado",
         "unknown": "Desconocido",
         "online": "En línea",
         "offline": "Desconectado",
         "reachable": "Alcanzable",
         "unreachable": "Inalcanzable",
-        "usable": "Usable",
+        "usable": "",
         "unusable": "Inutilizable"
       }
     },
@@ -3573,8 +4070,8 @@
       "status": {
         "running": "En ejecución",
         "notRunning": "No ejecutándose",
-        "unavailable": "Unavailable",
-        "vpn": "VPN: {status}"
+        "unavailable": "",
+        "vpn": ""
       }
     },
     "ups": {
@@ -3608,7 +4105,7 @@
         "temperature": "Temperatura",
         "manufacturer": "Fabricante",
         "model": "Modelo",
-        "serial": "Serial"
+        "serial": ""
       },
       "error": {
         "internalServerError": "Error al obtener los datos del SAI"
@@ -3893,6 +4390,10 @@
         "showLocation": {
           "label": "Mostrar ubicación",
           "description": "Mostrar si la retransmisión está en su LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -3902,9 +4403,7 @@
       "items": {
         "currentlyPlaying": "Reproducción en curso",
         "user": "Usuario",
-        "name": "Nombre",
         "id": "ID",
-        "status": "Estado",
         "directPlay": "Reproducción directa",
         "directStream": "Retransmisión directa",
         "transcodeVideo": "Transcodificando video",
@@ -3913,11 +4412,32 @@
         "paused": "En pausa",
         "remaining": "{minutes} min restantes",
         "seasonEpisode": "T{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Dispositivo",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "progress": "Progreso de Descarga",
+          "endsAt": "",
+          "episode": "Episodio",
+          "album": "ID de álbum",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Estadísticas",
           "video": {
             "title": "Vídeo",
-            "resolution": "Resolución"
+            "resolution": "Resolución",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audio",
@@ -3938,6 +4458,109 @@
         "playing": "{count} en reproducción",
         "transcoding": "Transcodificación {count}"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "Categorías",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "Primer día de la semana",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "Total subido",
+        "download": "Total descargado",
+        "slicer": "",
+        "delete": "Eliminado"
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Seleccionar pestaña predeterminada"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Resumen de su archivo de documentos Paperless-ngx",
@@ -4223,7 +4846,7 @@
       "actions": {
         "previousPhoto": "Foto anterior",
         "nextPhoto": "Siguiente foto",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "",
         "resumeSlideshow": "Reanudar presentación",
         "toggleSlideshow": "Pausar o reanudar presentación",
         "photo": "Foto {number}"
@@ -4279,38 +4902,29 @@
           "columnTitle": "Controles"
         },
         "added": {
-          "columnTitle": "Añadido",
-          "detailsTitle": "Fecha Agregada"
+          "columnTitle": "Añadido"
         },
         "category": {
-          "columnTitle": "Extras",
-          "detailsTitle": "Categorías (O información adicional)"
+          "columnTitle": "Extras"
         },
         "downSpeed": {
-          "columnTitle": "Descarga",
-          "detailsTitle": "Velocidad de Descarga"
+          "columnTitle": "Descarga"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Índice actual dentro del cliente"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
+          "columnTitle": "ID"
         },
-        "integration": {
-          "columnTitle": "Integración"
-        },
-        "name": {
-          "columnTitle": "Nombre de la tarea"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Progreso",
           "detailsTitle": "Progreso de Descarga"
         },
         "ratio": {
-          "columnTitle": "Relación",
-          "detailsTitle": "Relación de Torrent (recibido/enviado)"
+          "columnTitle": "Relación"
         },
         "received": {
           "columnTitle": "Descarga total",
@@ -4320,26 +4934,16 @@
           "columnTitle": "Subida total",
           "detailsTitle": "Total subido"
         },
-        "size": {
-          "columnTitle": "Tamaño del archivo",
-          "detailsTitle": "Tamaño total de la selección/archivos"
-        },
-        "state": {
-          "columnTitle": "Estado",
-          "detailsTitle": "Estado de la tarea"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Hora de finalización",
-          "detailsTitle": "Tiempo desde/hasta la finalización",
-          "eta": "Tiempo estimado"
+          "columnTitle": "Hora de finalización"
         },
         "type": {
-          "columnTitle": "Tipo",
           "detailsTitle": "Tipo de cliente de descarga"
         },
         "upSpeed": {
-          "columnTitle": "Subida",
-          "detailsTitle": "Velocidad de Subida"
+          "columnTitle": "Subida"
         }
       },
       "states": {
@@ -4379,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Copiar nombre",
         "copyId": "Copiar ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Limpiar filtros"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrar descargas"
@@ -4528,9 +5143,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Tamaño"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Vacío",
@@ -4611,27 +5224,59 @@
       "name": "Lanzamientos",
       "description": "Muestra una lista de la versión actual de los repositorios dados con la expresión regular de la versión dada.",
       "option": {
+        "layout": {
+          "label": "Diseño",
+          "description": "",
+          "option": {
+            "comfortable": "Confortable",
+            "compact": "Compacto"
+          }
+        },
+        "summary": {
+          "label": "",
+          "description": "",
+          "option": {
+            "detailed": "",
+            "count": "",
+            "hidden": "Oculto"
+          }
+        },
+        "groupReleases": {
+          "label": "",
+          "description": ""
+        },
+        "sections": {
+          "label": "",
+          "description": ""
+        },
         "newReleaseWithin": {
           "label": "Nuevo lanzamiento dentro de",
-          "description": "Ejemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidad aceptados h (horas), d (días), w (semanas), M (meses), y (años). Dejar vacío para no resaltar nuevos lanzamientos."
+          "description": "Ejemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidad aceptados h (horas), d (días), w (semanas), M (meses), y (años). Dejar vacío para no resaltar nuevos lanzamientos.",
+          "option": {
+            "never": "",
+            "1d": "1 días",
+            "3d": "3 días",
+            "1w": "1 semana",
+            "2w": "",
+            "1M": "1 mes",
+            "3M": "3 meses"
+          }
         },
         "staleReleaseWithin": {
           "label": "Lanzamiento obsoleto dentro de",
-          "description": "Ejemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidad aceptados h (horas), d (días), w (semanas), M (meses), y (años). Dejar vacío para no resaltar lanzamientos obsoletos."
+          "description": "Ejemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidad aceptados h (horas), d (días), w (semanas), M (meses), y (años). Dejar vacío para no resaltar lanzamientos obsoletos.",
+          "option": {
+            "never": "",
+            "1M": "1 mes",
+            "3M": "3 meses",
+            "6M": "6 meses",
+            "1y": "1 año",
+            "2y": "2 años"
+          }
         },
-        "showOnlyHighlighted": {
-          "label": "Mostrar solo destacados",
-          "description": "Mostrar sólo lanzamientos nuevos u obsoletos. Como en el caso anterior."
-        },
-        "showDetails": {
-          "label": "Mostrar detalles"
-        },
-        "showOnlyIcon": {
-          "label": "Mostrar solo icono"
-        },
-        "topReleases": {
-          "label": "Mejores lanzamientos",
-          "description": "El número máximo de últimos lanzamientos a mostrar. Cero significa sin límite."
+        "showChangelogPreview": {
+          "label": "",
+          "description": ""
         },
         "repositories": {
           "label": "Repositorios",
@@ -4660,10 +5305,13 @@
           },
           "identifier": {
             "label": "Identificador",
+            "containerPlaceholder": "",
             "placeholder": "Nombre o Propietario/Nombre"
           },
-          "name": {
-            "label": "Nombre"
+          "name": {},
+          "excludePrereleases": {
+            "label": "",
+            "description": ""
           },
           "versionFilter": {
             "label": "Filtro de Versión",
@@ -4705,36 +5353,110 @@
           }
         }
       },
-      "not-found": "No Encontrado",
-      "pre-release": "Pre-Lanzamiento",
-      "archived": "Archivado",
-      "forked": "Bifurcado",
+      "summary": {
+        "newReleases": "",
+        "newShort": "nueva",
+        "tracked": "",
+        "caughtUp": "",
+        "outdated": "",
+        "outdatedShort": "antiguo",
+        "failing": "",
+        "failingShort": "",
+        "latest": "",
+        "issues": ""
+      },
+      "section": {
+        "new": {
+          "label": "Nueva",
+          "description": ""
+        },
+        "attention": {
+          "label": "Necesita atención",
+          "description": ""
+        },
+        "upToDate": {
+          "label": "Actualizado",
+          "description": ""
+        },
+        "quiet": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "status": {
+        "new": "",
+        "outdated": "",
+        "error": "",
+        "upToDate": "actualizado",
+        "quiet": ""
+      },
+      "tag": {
+        "new": "Nueva",
+        "preRelease": "",
+        "resolvedFrom": "",
+        "quiet": "",
+        "archived": "Archivado",
+        "fork": ""
+      },
+      "issue": {
+        "affected": "",
+        "rateLimited": {
+          "title": "",
+          "hint": ""
+        },
+        "notFound": {
+          "title": "",
+          "hint": ""
+        },
+        "noMatchingVersion": {
+          "title": "",
+          "hint": ""
+        },
+        "noReleasesFound": {
+          "title": "",
+          "hint": ""
+        },
+        "invalidIdentifier": {
+          "title": "Identificador no válido",
+          "hint": ""
+        },
+        "noProviderSelected": {
+          "title": "No se ha seleccionado ningún proveedor",
+          "hint": ""
+        },
+        "noProviderResponse": {
+          "title": "",
+          "hint": ""
+        },
+        "unexpected": {
+          "title": "",
+          "hint": ""
+        }
+      },
+      "markViewed": "Marcar como leido",
+      "markAllViewed": "",
+      "markEntryViewed": "",
+      "viewed": "",
+      "copyVersion": "",
+      "copied": "Copiado",
+      "published": "",
+      "whatChanged": "",
+      "noNotes": "",
+      "changes": "",
       "starsCount": "Estrellas",
       "forksCount": "Bifurcaciones",
-      "issuesCount": "Incidencias Abiertas",
-      "markViewed": "Marcar como leido",
-      "openProjectPage": "Abrir Página de Proyecto",
-      "openReleasePage": "Abrir Página de Publicación",
-      "releaseDescription": "Descripción de Publicación",
-      "projectDescription": "Descripción del Proyecto",
+      "openIssues": "",
+      "created": "Creado",
+      "releasePage": "",
+      "projectPage": "",
       "runningVersions": "Versiones en ejecución",
       "upToDate": "Actualizado",
       "updateAvailable": "Actualización disponible",
       "unknownStatus": "Desconocido",
-      "created": "Creado",
       "error": {
-        "label": "Error",
-        "messages": {
-          "invalidIdentifier": "Identificador no válido",
-          "noMatchingVersion": "No se encontró una versión correspondiente",
-          "noReleasesFound": "No se encontraron publicaciones",
-          "noProviderSelected": "",
-          "noProviderResponse": "No hay respuesta del proveedor",
-          "unexpected": ""
-        }
-      },
-      "expandDetails": "Mostrar detalles de {name}",
-      "collapseDetails": "Ocultar detalles de {name}"
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -4752,10 +5474,10 @@
           "countConnected": "{count, plural, one {# conectada} other {# conectada}}",
           "label": "VPN"
         },
-        "wan": "WAN",
-        "web": "Web",
+        "wan": "",
+        "web": "",
         "wifi": "Wi-Fi",
-        "lan": "LAN"
+        "lan": ""
       },
       "error": {
         "unknownContentOption": "Opción de contenido desconocida para el widget de resumen del controlador de red: "
@@ -4835,9 +5557,9 @@
         "noInterfaces": "Aún no hay datos de interfaz de red"
       },
       "versionUnknown": "Versión desconocida",
-      "metricAccessible": "{metric}: {value}%, {status}",
+      "metricAccessible": "",
       "status": {
-        "normal": "Normal",
+        "normal": "",
         "warning": "Advertencia",
         "critical": "Crítico"
       }
@@ -4855,8 +5577,8 @@
           "option": {
             "auto": "Automático",
             "plain": "Texto simple",
-            "markdown": "Markdown",
-            "html": "HTML"
+            "markdown": "",
+            "html": ""
           }
         }
       },
@@ -4891,7 +5613,6 @@
       "download": "Descarga",
       "upload": "Subida",
       "ping": "Latencia",
-      "status": "Estado",
       "avgDownload": "Descarga promedio",
       "avgUpload": "Subida promedio",
       "avgPing": "Latencia promedio",
@@ -4907,45 +5628,116 @@
     "uptimeKuma": {
       "description": "",
       "option": {
-        "showAverageUptime": {
+        "statusPageSlug": {
+          "label": "Slug de página de estado",
+          "description": ""
+        },
+        "summaryOnly": {
           "label": "",
           "description": ""
         },
-        "showUptimeRing": {
+        "showSummary": {
           "label": "",
           "description": ""
         },
-        "showTotalMonitors": {
+        "showIncidents": {
           "label": "",
           "description": ""
         },
-        "showUpCount": {
+        "groupByStatusPageGroup": {
           "label": "",
           "description": ""
         },
-        "showDownCount": {
+        "showOnlyProblems": {
           "label": "",
           "description": ""
         },
-        "showPausedCount": {
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Nombre de la tarea",
+            "uptime": ""
+          }
+        },
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
           "label": "",
           "description": ""
         }
       },
-      "averageUptime": "",
-      "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
-      },
-      "error": {
-        "internalServerError": ""
-      },
       "status": {
         "up": "Subida total",
         "down": "Velocidad de Descarga",
-        "paused": "En pausa"
+        "pending": "Pendiente",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Sin título"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": ""
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "Latencia",
+        "dns": "DNS",
+        "docker": "",
+        "push": "",
+        "group": "Grupo",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5050,6 +5842,23 @@
       "name": "Recursos del sistema",
       "description": "CPU, Memoria, Disco y otro uso de hardware de su sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Porcentaje (e.g., 76 %)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Activar sombreado de gráfico"
         },
@@ -5057,6 +5866,7 @@
           "label": "Gráficos visibles",
           "description": "Selecciona los gráficos que quieres que sean visibles.",
           "option": {
+            "cpuCores": "",
             "memory": "Memoria",
             "network": "Red"
           }
@@ -5076,7 +5886,7 @@
         "network": "RED",
         "up": "ENCENDIDO",
         "down": "APAGADO",
-        "memoryTooltip": "{used} / {available} ({percent}%)"
+        "memoryTooltip": ""
       }
     },
     "systemDisks": {
@@ -5106,7 +5916,7 @@
       },
       "status": {
         "unhealthy": "Poco sano",
-        "smart": "SMART",
+        "smart": "",
         "free": "{percentage}% libre"
       }
     },
@@ -5128,7 +5938,6 @@
         "actionsDisabledEditMode": "Las acciones están desactivadas mientras el tablero está en modo edición.",
         "widgetItemUnavailable": "Este elemento del widget no está disponible.",
         "toggle": "Cambiar",
-        "copied": "Copiado",
         "confirmDelete": "Confirme esta acción destructiva."
       },
       "option": {
@@ -5169,6 +5978,9 @@
       "name": "",
       "description": "",
       "option": {
+        "fahrenheit": {
+          "label": "Temperatura en Fahrenheit"
+        },
         "sortBy": {
           "label": ""
         },
@@ -5183,7 +5995,12 @@
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": ""
+      "description": "",
+      "option": {
+        "fahrenheit": {
+          "label": "Temperatura en Fahrenheit"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "",
@@ -5325,10 +6142,10 @@
       "period": {
         "live": "Vivo",
         "oneHour": "1 h",
-        "twelveHours": "12h",
-        "oneDay": "24h",
+        "twelveHours": "",
+        "oneDay": "",
         "oneWeek": "1 s",
-        "thirtyDays": "30d"
+        "thirtyDays": ""
       }
     },
     "assistant": {
@@ -5397,7 +6214,6 @@
       },
       "metric": {
         "system": "Sistema",
-        "source": "Integración",
         "hostname": "Nombre de host",
         "cpuModel": "Modelo de CPU",
         "cores": "Núcleos",
@@ -5413,9 +6229,9 @@
       }
     },
     "llamacpp": {
-      "name": "llama.cpp",
+      "name": "",
       "description": "Muestra la salud, el modelo cargado y la velocidad de generación de tu servidor llama.cpp local.",
-      "title": "llama.cpp",
+      "title": "",
       "status": {
         "unhealthy": "Poco saludable ({status})"
       },
@@ -5443,10 +6259,10 @@
         "unreachable": "llama-servidor no accesible"
       },
       "unit": {
-        "speed": "{value} t/s",
-        "parameters": "{value}B",
-        "none": "—",
-        "speedShort": "t/s"
+        "speed": "",
+        "parameters": "",
+        "none": "",
+        "speedShort": ""
       },
       "option": {
         "showTitle": {
@@ -5505,7 +6321,7 @@
       "moveDown": "Mover hacia abajo",
       "remove": "Eliminar métrica",
       "loading": "Cargando…",
-      "unavailable": "Unavailable",
+      "unavailable": "",
       "refreshFailed": "Error al actualizar, mostrando datos guardados",
       "stale": "Datos guardados — actualizar para actualizar",
       "table": {
@@ -5552,10 +6368,12 @@
       "allHidden": "Todas las métricas están ocultas en esta vista. Utilice Personalizar esta vista para restaurarlas."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "API del servidor Wazuh",
         "indexer": "Índice Wazuh",
-        "wazuh": "Wazuh"
+        "wazuh": ""
       },
       "severity": {
         "low": "Baja",
@@ -5570,7 +6388,15 @@
         },
         "certificate": {
           "title": "El certificado {target} no es de confianza",
-          "description": "Wazuh utiliza un certificado autofirmado de forma predeterminada. Ejecute \"Probar conexión\" en la integración y confíe en el certificado, o añada su CA en Configuración → Certificados."
+          "description": ""
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "No se puede llegar a {target}",
@@ -5595,101 +6421,148 @@
         "unknown": {
           "title": "No se pudo cargar los datos de {target}",
           "description": "Revisa los registros de Homarr para más detalles."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1 h",
-        "24h": "24h",
-        "7d": "7d",
-        "30d": "30d"
+        "24h": "",
+        "7d": "",
+        "30d": ""
       },
-      "levelTooltip": "Nivel de regla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agentes Wazuh",
-      "description": "Lista ordenable de agentes de Wazuh con estado, sistema operativo, versión y último keepalive",
+      "levelTooltip": "Nivel de regla {level} ({severity})",
+      "summary": {
+        "title": "Gravedad de alerta · {range}",
+        "alerts": "alertas",
+        "none": "Sin alertas",
+        "trend": {
+          "new": "nueva",
+          "tooltip": "Período anterior: {previous}"
+        },
+        "previous": "{range}anterior : {count}",
+        "maxLevel": "Nivel máximo {level}",
+        "health": "Salud del indexador: {status}",
+        "manager": "Gestor {version}"
+      },
+      "alerts": {
+        "title": "Alertas · nivel {level}+ · {hours}h",
+        "empty": "No hay alertas a este nivel. Todo en silencio.",
+        "rule": "Regla {id}",
+        "openInDashboard": "Abrir esta alerta en el panel de control de Wazuh"
+      },
+      "timeline": {
+        "title": "Alertas timeline · {range}",
+        "total": "Alertas {count}",
+        "interval": "por {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "Mejores reglas · {range}",
+          "agents": "Top agentes · {range}",
+          "sourceIps": "Ids principales de origen · {range}",
+          "mitreTactics": "Tácticas MITRE · {range}",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "No hay alertas en este período",
+          "agents": "No hay alertas en este período",
+          "sourceIps": "No hay alertas con IP fuente en este período",
+          "mitreTactics": "No hay alertas asignadas a MITRE ATT&CK en este período",
+          "mitreTechniques": "No hay alertas asignadas a MITRE ATT&CK en este período"
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "Pública",
+        "agents": "Visto en agentes {count}",
+        "others": "{count} alertas más en otras entradas"
+      },
+      "agents": {
+        "title": "Agentes",
+        "total": "{count} agentes",
+        "status": {
+          "active": "Activo",
+          "disconnected": "Desconectado",
+          "neverConnected": "Nunca conectado",
+          "pending": "Pendiente"
+        },
+        "statusLabel": {
+          "active": "Activo",
+          "disconnected": "Desconectado",
+          "never_connected": "Nunca conectado",
+          "pending": "Pendiente",
+          "unknown": "Desconocido"
+        },
+        "live": "Vivo",
+        "snapshot": "",
+        "snapshotHint": "Lea desde el panel de control de Wazuh snapshot (monitoreo de wazuh) tomado en {time}. Añada credenciales API del servidor para datos en vivo.",
+        "staleSnapshot": "La instantánea del agente de {time} está desactualizada. Compruebe que el trabajo de monitoreo del panel de control de Wazuh se esté ejecutando, o añada credenciales de API del servidor.",
+        "noDisconnected": "Todos los agentes están conectados",
+        "empty": "Ningún agente coincide con este filtro",
+        "column": {
+          "status": "Estado",
+          "name": "Nombre de la tarea",
+          "ip": "",
+          "os": "Sistema Operativo",
+          "version": "Versión",
+          "lastKeepAlive": "Mantener",
+          "groups": "Grupos"
+        },
+        "outdated": "Anterior a la versión más reciente del agente ({version})"
+      },
+      "vulnerabilities": {
+        "title": "Vulnerabilidades",
+        "topCves": "",
+        "score": "Puntaje",
+        "agentsShort": "Agentes",
+        "topAgents": "Agentes más vulnerables",
+        "criticalHigh": "Crítico / alto",
+        "totalTooltip": "{count} hallazgos sobre agentes de {agents}",
+        "affected": "{count} agentes",
+        "empty": "No hay vulnerabilidades detectadas",
+        "distribution": "Distribución de la gravedad. No se muestran los hallazgos de {unscored} sin puntuación.",
+        "worst": "Peor: {id} ({score}) en agentes {agents}"
+      },
+      "fim": {
+        "title": "Integridad del archivo · {range}",
+        "event": {
+          "added": "Fecha Agregada",
+          "modified": "Modificado",
+          "deleted": "Eliminado",
+          "unknown": "Cambiado"
+        },
+        "empty": "No hay eventos de integridad del archivo en este período",
+        "user": "por {user}",
+        "registry": "Registro"
+      },
+      "authFailures": {
+        "title": "Fallos de autenticación · {hours}h",
+        "seriesTooltip": "Todos los agentes de los últimos {hours}h",
+        "peak": "Pico {count}/cubo",
+        "empty": "No hay entradas fallidas en este período",
+        "failed": "Inicio de sesión fallido",
+        "failedHint": "Fallos de autenticación única (sshd, PAM, inicio de sesión de Windows, usuarios no válidos)",
+        "bruteForce": "Fuerza bruta",
+        "bruteForceHint": "Reglas correlacionadas de fuerza bruta (múltiples fallos en un corto período, MITRE T1110)",
+        "sourceIps": "Ids. de origen",
+        "ipTooltip": "{ip}: {count} fallos",
+        "bruteForceCount": "Fuerza bruta {count}"
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "Agentes",
+        "vulnerabilities": "Vulnerabilidades",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Mostrar agentes"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Ordenar por"
-        },
-        "showVersion": {
-          "label": "Mostrar columna de versión Wazuh"
-        },
-        "showGroups": {
-          "label": "Mostrar columna de grupos"
-        }
-      },
-      "title": "Agentes",
-      "total": "{count} agentes",
-      "status": {
-        "active": "Activo",
-        "disconnected": "Desconectado",
-        "neverConnected": "Nunca conectado",
-        "pending": "Pendiente"
-      },
-      "statusLabel": {
-        "active": "Activo",
-        "disconnected": "Desconectado",
-        "never_connected": "Nunca conectado",
-        "pending": "Pendiente",
-        "unknown": "Desconocido"
-      },
-      "live": "Vivo",
-      "snapshot": "Instantánea de hace {age}",
-      "snapshotHint": "Lea desde el panel de control de Wazuh snapshot (monitoreo de wazuh) tomado en {time}. Añada credenciales API del servidor para datos en vivo.",
-      "staleSnapshot": "La instantánea del agente de {time} está desactualizada. Compruebe que el trabajo de monitoreo del panel de control de Wazuh se esté ejecutando, o añada credenciales de API del servidor.",
-      "noDisconnected": "Todos los agentes están conectados",
-      "empty": "Ningún agente coincide con este filtro",
-      "column": {
-        "status": "Estado",
-        "name": "Nombre de la tarea",
-        "ip": "IP",
-        "os": "Sistema Operativo",
-        "version": "Versión",
-        "lastKeepAlive": "Mantener",
-        "groups": "Grupos"
-      },
-      "outdated": "Anterior a la versión más reciente del agente ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Feed de alertas de Wazuh",
-      "description": "Alertas recientes de Wazuh con nivel, técnicas MITRE ATT&CK, agente y fuente IP",
-      "option": {
-        "minLevel": {
-          "label": "Nivel mínimo de regla",
-          "description": "Niveles de Wazuh: 0-6 bajo, 7-11, mediano, 12-14 alto, 15+ crítico"
-        },
-        "hours": {
-          "label": "Ventana de tiempo (horas)"
-        },
-        "limit": {
-          "label": "Número de alertas"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Mostrar agente"
-        },
-        "showSourceIp": {
-          "label": "Mostrar IP origen"
-        },
-        "showRuleId": {
-          "label": "Mostrar ID de regla"
-        }
-      },
-      "title": "Alertas · nivel {level}+ · {hours}h",
-      "empty": "No hay alertas a este nivel. Todo en silencio.",
-      "rule": "Regla {id}",
-      "openInDashboard": "Abrir esta alerta en el panel de control de Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "severidad de alerta de Wazuh",
-      "description": "Desglose de gravedad de alerta con una tendencia respecto al período anterior",
-      "option": {
         "range": {
           "label": "Rango de tiempo"
         },
@@ -5698,26 +6571,6 @@
         },
         "showFooter": {
           "label": "Mostrar pie de página"
-        }
-      },
-      "title": "Gravedad de alerta · {range}",
-      "alerts": "alertas",
-      "none": "Sin alertas",
-      "trend": {
-        "new": "nueva",
-        "tooltip": "Período anterior: {previous}"
-      },
-      "previous": "{range}anterior : {count}",
-      "maxLevel": "Nivel máximo {level}",
-      "health": "Salud del indexador: {status}",
-      "manager": "Gestor {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Gráfico acumulado de alertas de Wazuh a lo largo del tiempo por gravedad",
-      "option": {
-        "range": {
-          "label": "Rango de tiempo"
         },
         "interval": {
           "label": "Intervalo"
@@ -5730,60 +6583,32 @@
           "description": "La raíz de Square mantiene las alertas altas y críticas visibles junto a miles de bajas"
         },
         "minLevel": {
-          "label": "Nivel mínimo de regla"
+          "label": ""
         },
         "showLegend": {
           "label": "Mostrar leyenda con totales"
-        }
-      },
-      "title": "Alertas timeline · {range}",
-      "total": "Alertas {count}",
-      "interval": "por {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Lista superior de Wazuh",
-      "description": "Principales reglas, agentes, fuentes IP o MITRE ATT&CK y técnicas por conteo de alertas",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rango"
         },
-        "range": {
-          "label": "Rango de tiempo"
-        },
-        "limit": {
-          "label": "Número de entradas"
-        },
-        "minLevel": {
-          "label": "Nivel mínimo de regla"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
           "label": "Mostrar barras"
-        }
-      },
-      "title": {
-        "rules": "Mejores reglas · {range}",
-        "agents": "Top agentes · {range}",
-        "sourceIps": "Ids principales de origen · {range}",
-        "mitreTactics": "Tácticas MITRE · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "No hay alertas en este período",
-        "agents": "No hay alertas en este período",
-        "sourceIps": "No hay alertas con IP fuente en este período",
-        "mitreTactics": "No hay alertas asignadas a MITRE ATT&CK en este período",
-        "mitreTechniques": "No hay alertas asignadas a MITRE ATT&CK en este período"
-      },
-      "totalTooltip": "{count} alertas coincidentes",
-      "private": "LAN",
-      "public": "Pública",
-      "agents": "Visto en agentes {count}",
-      "others": "{count} alertas más en otras entradas"
-    },
-    "wazuhVulnerabilities": {
-      "name": "vulnerabilidades Wazuh",
-      "description": "Contadores de vulnerabilidad, mejores currículos y los agentes más vulnerables",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Mostrar agentes"
+        },
+        "agentSortBy": {
+          "label": "Ordenar por"
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
           "label": "Clasificar CVEs por"
         },
@@ -5798,73 +6623,42 @@
         },
         "showAgents": {
           "label": "Mostrar los agentes más vulnerables"
-        }
-      },
-      "title": "Vulnerabilidades",
-      "topCves": "Top CVEs",
-      "score": "Puntaje",
-      "agentsShort": "Agentes",
-      "topAgents": "Agentes más vulnerables",
-      "criticalHigh": "Crítico / alto",
-      "totalTooltip": "{count} hallazgos sobre agentes de {agents}",
-      "affected": "{count} agentes",
-      "empty": "No hay vulnerabilidades detectadas",
-      "distribution": "Distribución de la gravedad. No se muestran los hallazgos de {unscored} sin puntuación.",
-      "worst": "Peor: {id} ({score}) en agentes {agents}"
-    },
-    "wazuhFim": {
-      "name": "Integridad del archivo Wazuh",
-      "description": "Eventos recientes de monitorización de integridad del archivo (syscheck)",
-      "option": {
-        "range": {
-          "label": "Rango de tiempo"
         },
-        "event": {
+        "fimEvent": {
           "label": "Eventos"
         },
-        "limit": {
-          "label": "Número de eventos"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
           "label": "Incluye eventos de registro de Windows"
-        }
-      },
-      "title": "Integridad del archivo · {range}",
-      "event": {
-        "added": "Fecha Agregada",
-        "modified": "Modificado",
-        "deleted": "Eliminado",
-        "unknown": "Cambiado"
-      },
-      "empty": "No hay eventos de integridad del archivo en este período",
-      "user": "por {user}",
-      "registry": "Registro"
-    },
-    "wazuhAuthFailures": {
-      "name": "Fallos de autenticación Wazuh",
-      "description": "Fallo de inicio de sesión y alertas de fuerza bruta por agente con líneas de chispas por hora",
-      "option": {
-        "hours": {
-          "label": "Ventana de tiempo (horas)"
         },
-        "limit": {
-          "label": "Número de agentes"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
           "label": "Mostrar la fuente principal"
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": "Niveles de Wazuh: 0-6 bajo, 7-11, mediano, 12-14 alto, 15+ crítico"
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": "Mostrar agente"
+        },
+        "showSourceIp": {
+          "label": "Mostrar IP origen"
+        },
+        "showRuleId": {
+          "label": "Mostrar ID de regla"
         }
-      },
-      "title": "Fallos de autenticación · {hours}h",
-      "seriesTooltip": "Todos los agentes de los últimos {hours}h",
-      "peak": "Pico {count}/cubo",
-      "empty": "No hay entradas fallidas en este período",
-      "failed": "Inicio de sesión fallido",
-      "failedHint": "Fallos de autenticación única (sshd, PAM, inicio de sesión de Windows, usuarios no válidos)",
-      "bruteForce": "Fuerza bruta",
-      "bruteForceHint": "Reglas correlacionadas de fuerza bruta (múltiples fallos en un corto período, MITRE T1110)",
-      "sourceIps": "Ids. de origen",
-      "ipTooltip": "{ip}: {count} fallos",
-      "bruteForceCount": "Fuerza bruta {count}"
+      }
     }
   },
   "widgetPreview": {
@@ -5883,6 +6677,18 @@
       "addWidget": "Añadir widget",
       "addApp": "Añadir app",
       "connectService": "Conectar servicio"
+    },
+    "urlDrop": {
+      "hint": "",
+      "resolving": "",
+      "notification": {
+        "success": {
+          "message": ""
+        },
+        "full": {
+          "message": ""
+        }
+      }
     },
     "setupChecklist": {
       "title": "Hacer útil este tablero",
@@ -5921,7 +6727,7 @@
         "preview": "Vista previa de {name} con {count} elementos",
         "currentHidden": "Tablero actual: {name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "",
           "open": "Abrir",
           "instructions": "Tipo para filtrar tableros. Utilice las teclas de flecha para moverse a través de los resultados e Intro para abrir un tablero."
         },
@@ -5988,6 +6794,26 @@
           "createAndUse": "Crear y usar"
         }
       }
+    },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Inicio",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
     },
     "landmark": {
       "canvas": "Tela de panel",
@@ -6097,13 +6923,7 @@
       "itemRadius": {
         "label": "Radio del elemento",
         "description": "Cambia la curvatura de los elementos en tu tablero",
-        "option": {
-          "xs": "Muy pequeño",
-          "sm": "Pequeño",
-          "md": "Mediano",
-          "lg": "Grande",
-          "xl": "Muy grande"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Pública",
@@ -6131,7 +6951,7 @@
           },
           "role": {
             "mobile": "Móvil",
-            "base": "Base",
+            "base": "",
             "custom": "Personalizado"
           },
           "custom": {
@@ -6144,12 +6964,12 @@
             "columns": "columnas",
             "empty": "Este diseño está vacío",
             "dynamicSection": "Sección dinámica",
-            "editorWidthLabel": "{layoutName} · {width}px"
+            "editorWidthLabel": ""
           },
           "reset": {
             "action": "Restablecer de base",
             "confirm": {
-              "title": "Reset {layoutName}?",
+              "title": "",
               "message": "Esto reemplaza cada posición y tamaño guardados en este diseño con un nuevo diseño generado desde la Base. Esto no se puede deshacer."
             }
           },
@@ -6261,6 +7081,11 @@
           "description": "El administrador del servidor aún no ha establecido un tablero de inicio.",
           "link": "Ver tableros públicos",
           "notice": "Para hacer que esta página desaparezca, pide al administrador del servidor que establezca un tablero de inicio para el servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6278,9 +7103,9 @@
         "label": "Barra lateral fija",
         "description": "Reserve hasta tres columnas de tablero en ambos lados. El resto del lienzo se recarga automáticamente.",
         "left": {
-          "label": "Left sidebar",
+          "label": "",
           "description": "Mantén esta zona visible mientras el panel de control se desplaza.",
-          "thumbLabel": "Left sidebar width"
+          "thumbLabel": ""
         },
         "right": {
           "label": "Barra lateral derecha",
@@ -6332,10 +7157,12 @@
             "documentation": "Documentación",
             "submitIssue": "Enviar una incidencia",
             "discord": "Comunidad de Discord",
-            "sourceCode": "Código Fuente"
+            "sourceCode": "Código Fuente",
+            "changelog": ""
           }
         },
         "about": "Acerca de",
+        "updateAvailable": "Actualización disponible",
         "assistant": "Asistente"
       }
     },
@@ -6347,9 +7174,23 @@
           "authentication": "Autenticación",
           "authorization": "Autenticación"
         },
-        "heroBanner": {
-          "title": "Bienvenido de nuevo a...",
-          "subtitle": "{app} !!!"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6394,7 +7235,9 @@
         },
         "noResults": {
           "title": "",
-          "description": "Crea un tablero para organizar tus aplicaciones y widgets en un solo lugar."
+          "description": "Crea un tablero para organizar tus aplicaciones y widgets en un solo lugar.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6407,7 +7250,7 @@
             "title": "General",
             "header": {
               "title": "Estudio de encabezado",
-              "badge": "Personal",
+              "badge": "",
               "description": "Arrastre los controles en cualquier lugar de la fila. Queda fijo el centro y la derecha mientras los controles cambian a su alrededor.",
               "device": {
                 "desktop": "Escritorio",
@@ -6447,13 +7290,19 @@
                 "logoDisplay": {
                   "logo": "Sólo Logo",
                   "logoAndText": "Logo + texto"
+                },
+                "tabsDisplay": {
+                  "wide": "Ancho",
+                  "compact": "Compacto",
+                  "indicator": ""
                 }
               },
               "items": {
-                "logo": "Logo",
+                "logo": "",
                 "search": "Búsqueda",
                 "home": "Tableros",
                 "boardSwitcher": "Tableros",
+                "boardTabs": "",
                 "assistant": "Asistente",
                 "docker": "Docker",
                 "boardEdit": "Editar tablero",
@@ -6685,6 +7534,10 @@
             "title": "Apariencia",
             "defaultColorScheme": {
               "label": "Esquema de color predeterminado"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -6692,7 +7545,7 @@
             "groups": {
               "identity": "Identidad",
               "appearance": "Apariencia",
-              "customCss": "Custom CSS",
+              "customCss": "",
               "authentication": "Autenticación"
             },
             "identity": {
@@ -6706,7 +7559,7 @@
             },
             "logo": {
               "label": "Logo de la aplicación",
-              "placeholder": "/logo/logo.png"
+              "placeholder": ""
             },
             "favicon": {
               "label": "Icono del navegador (favicon)",
@@ -6729,15 +7582,13 @@
             "signInOverlay": {
               "label": "Capa de fondo"
             },
+            "signInMarquee": {
+              "label": "",
+              "description": ""
+            },
             "defaultRadius": {
               "label": "Estilo de esquina",
-              "options": {
-                "xs": "Estrecho",
-                "sm": "Sutil",
-                "md": "Equilibrado",
-                "lg": "Redondeado",
-                "xl": "Suave"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "CSS personalizado global",
@@ -6752,15 +7603,14 @@
             "summary": {
               "title": "Marca actual",
               "cornerStyle": "Estilo de esquina",
-              "palette": "Palette",
+              "palette": "",
               "backgroundConfigured": "Fondo personalizado · {overlay}% superposición",
               "backgroundDefault": "Fondo por defecto",
               "greetingConfigured": "Saludos personalizados",
               "greetingDefault": "Saludos por defecto",
               "boardColorLocked": "Color del foro bloqueado",
               "boardColorFlexible": "Colores permitidos",
-              "appName": "Nombre de la tarea",
-              "logo": "Logo",
+              "logo": "",
               "greeting": "Saludos",
               "on": "En",
               "off": "Apagado"
@@ -6894,6 +7744,7 @@
             "model": {
               "title": "Modelo",
               "description": "Seleccione un modelo descubierto o introduzca un ID exacto del modelo de punto final.",
+              "save": "",
               "placeholder": "ID del modelo",
               "refresh": "Actualizar modelos",
               "chooseModel": "Elija el modelo utilizado para nuevas conversaciones.",
@@ -6986,9 +7837,7 @@
             "lastExecution": {
               "label": "Última Ejecución"
             },
-            "actions": {
-              "label": "Acciones"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Buscar una tarea..."
@@ -7040,6 +7889,12 @@
             "apiKey": {
               "label": "Autenticación",
               "title": "Claves API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Crear token de API",
                 "confirmDeletion": "Confirmar eliminación"
@@ -7052,13 +7907,11 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Creado por",
-                  "source": "Integración",
-                  "actions": "Acciones"
+                  "createdBy": "Creado por"
                 }
               },
               "provenance": {
-                "oauth": "OAuth",
+                "oauth": "",
                 "unattributed": "Clave API manual o heredada",
                 "unnamedClient": "Nombre del cliente no grabado",
                 "clientNameHint": "Los nombres de clientes son autoreportados y no son verificados.",
@@ -7212,7 +8065,7 @@
               "relogin": "Restaurando la base de datos invalidó tu sesión actual. Homarr te enviará a iniciar sesión cuando el servidor esté listo."
             },
             "complete": {
-              "title": "Restore complete",
+              "title": "",
               "message": "La base de datos fue restaurada. Tu sesión anterior fue invalida, así que inicia sesión de nuevo para ver tu tablero restaurado.",
               "button": "Iniciar sesión ahora"
             },
@@ -7267,7 +8120,8 @@
               "openSpotlightApps": "Abrir búsqueda de app",
               "openSpotlightAssistant": "Abrir modo asistente",
               "openSpotlightPreferences": "Abrir modo de preferencias",
-              "openAssistant": "Asistente abierto"
+              "openAssistant": "Asistente abierto",
+              "switchBoardTab": ""
             },
             "note": "Sugerencia: Mod se refiere tanto a la tecla CTRL como a la tecla ⌘ en macOS"
           }
@@ -7307,7 +8161,7 @@
           "authentication": "Autenticación",
           "apiRequest": "API",
           "appRepresentation": "Aplicación",
-          "widgetConfiguration": "Widget",
+          "widgetConfiguration": "",
           "widgetQuery": "Consulta Widget"
         },
         "status": {
@@ -7347,7 +8201,6 @@
     },
     "field": {
       "state": {
-        "label": "Estado",
         "option": {
           "created": "Creado",
           "running": "En ejecución",
@@ -7374,7 +8227,6 @@
       }
     },
     "action": {
-      "title": "Acciones",
       "logs": {
         "label": "",
         "page": {
@@ -7487,8 +8339,8 @@
       },
       "status": {
         "available": "Disponible",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "",
+        "unavailable": ""
       },
       "unavailable": "No se puede alcanzar este contexto de Kubernetes. Seleccione otro contexto o verifique sus credenciales y punto final.",
       "metricsUnavailable": "Este contexto es accesible, pero el servidor de métricas no está disponible. El inventario sigue estando disponible sin el uso de CPU y memoria en vivo."
@@ -7520,7 +8372,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "",
         "kubernetesVersion": {
           "label": "Versión de Kubernetes"
         }
@@ -7612,27 +8464,13 @@
       "internalServerError": "Error al recuperar datos de Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Nombre de la tarea"
-      },
-      "namespace": {
-        "label": "Espacio de nombre"
-      },
-      "creationTimestamp": {
-        "label": "Creado"
-      },
-      "state": {
-        "label": "Estado de la tarea"
-      },
-      "status": {
-        "label": "Estado"
-      },
-      "type": {
-        "label": "Tipo de cliente de descarga"
-      },
-      "architecture": {
-        "label": "Arquitectura"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7659,10 +8497,7 @@
         "label": "Permisos"
       }
     },
-    "action": {
-      "saveUser": "Guardar permisos de usuario",
-      "saveGroup": "Guardar permisos de grupo"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -7754,7 +8589,7 @@
         "placeholder": "Assistente"
       },
       "external": {
-        "label": "Web",
+        "label": "",
         "placeholder": "Buscar con un motor de búsqueda externo"
       },
       "media": {
@@ -7772,9 +8607,8 @@
       "modeAriaLabel": "Modo {mode}",
       "resultsAriaLabel": "{mode} resultados",
       "footer": {
-        "navigate": "Navigate",
-        "open": "Abrir",
-        "close": "Cerrar"
+        "navigate": "",
+        "open": "Abrir"
       }
     },
     "error": {
@@ -8204,9 +9038,7 @@
         "urlTemplate": {
           "label": "Plantilla de búsqueda de URL"
         },
-        "description": {
-          "label": "Descripción"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8275,8 +9107,7 @@
             "table": {
               "header": {
                 "season": "Temporada",
-                "episodes": "Episodios",
-                "status": "Estado"
+                "episodes": "Episodios"
               },
               "status": {
                 "requested": ""
@@ -8461,6 +9292,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Un panel de control autoalojado para la *pila de arr y todo tu homelab. Integra con más de 50 servicios, widgets en tiempo real, sin archivos de configuración.",
     "dashboardTitle": "Tablero {appName}"
@@ -8489,6 +9326,14 @@
     "conversationActions": "Acciones de conversación",
     "searchConversations": "Buscar conversaciones",
     "noMatchingConversations": "No hay conversaciones coincidentes",
+    "historyError": {
+      "title": "",
+      "load": "",
+      "loadMessages": "",
+      "saveMessages": "",
+      "switch": "",
+      "retry": ""
+    },
     "moreActions": "Más acciones de respuesta",
     "renameConversation": {
       "action": "Renombrar",
@@ -8538,6 +9383,7 @@
       "imageInput": "Acepta entrada de imagen",
       "thinking": "Modo de pensamiento",
       "reasoning": {
+        "default": "Por defecto",
         "auto": "Automático",
         "none": "Apagado",
         "minimal": "Mínimo",
@@ -8608,11 +9454,14 @@
     },
     "mentions": {
       "menu": "Añadir contexto de Homarr",
+      "back": "",
+      "loading": "",
+      "empty": "",
       "context": "Contexto",
       "app": "Aplicaciones",
       "integration": "Integraciones",
       "board": "Tableros",
-      "widget": "Widgets",
+      "widget": "",
       "tools": "Herramientas disponibles"
     },
     "markdown": {
@@ -8622,6 +9471,8 @@
     },
     "commands": {
       "menu": "Comandos del asistente",
+      "hint": "",
+      "empty": "",
       "health": "Prepara un chequeo de estado del servicio",
       "explore": "Prepara un resumen de esta instancia de Homarr",
       "media": "Prepara una búsqueda de medios",
@@ -8655,11 +9506,11 @@
       "generationTime": "Tiempo de generación",
       "moderationLatency": "Moderación",
       "providerThroughput": "Proveedor a través",
-      "fallbacks": "Fallbacks",
+      "fallbacks": "",
       "fallbackLatency": "latencia de Fallback",
       "cacheDiscount": "Descuento en caché",
       "normalizedTokens": "Entrada / salida normalizada OpenRouter",
-      "byok": "BYOK",
+      "byok": "",
       "cost": "Costo",
       "reported": "Reportado por el proveedor",
       "estimated": "Estimado para el precio del modelo",
@@ -8764,16 +9615,15 @@
       "automaticContinue": "Aceptar el tablero propuesto cambia automáticamente",
       "resetAll": "Restablecer todos los cambios",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "",
         "appearance": "Apariencia",
         "background": "Fondo",
         "general": "Escritorio"
       },
       "cssDescription": "Editar la hoja de estilos completa. Las reglas existentes se mantienen a menos que se eliminen aquí.",
       "cssCharacters": "{count} de 16384 caracteres",
-      "copyCss": "Copy CSS",
-      "copied": "Copiado",
-      "restoreCss": "Restore current CSS",
+      "copyCss": "",
+      "restoreCss": "",
       "remoteCssTitle": "Este CSS carga un recurso remoto",
       "remoteCssDescription": "Las hojas de estilo importadas y las URL remotas se ponen en contacto con otro servidor cuando el foro se carga. Revísalas antes de continuar."
     },
@@ -8797,13 +9647,14 @@
       "errorDescription": "El modelo no ha proporcionado una configuración completa del widget. No se ha añadido ningún widget."
     },
     "approvalRequired": "Aprobación necesaria",
-    "complete": "Complete",
+    "complete": "",
     "denied": "Denegado",
     "failed": "Fallido",
     "working": "Trabajando",
     "approvalDescription": "Revisar este cambio antes de que se ejecute.",
     "approveAndRun": "Aprobar y ejecutar",
     "deny": "Denegar",
+    "approvalError": "",
     "autoApproval": {
       "label": "Aprobaciones automáticas",
       "composerLabel": "Aprobar para mí",

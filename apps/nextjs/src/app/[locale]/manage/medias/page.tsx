@@ -24,13 +24,13 @@ import { auth } from "@homarr/auth/next";
 import { defaultByteUnitSystem, formatBytes } from "@homarr/common";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { createLocalImageUrl } from "@homarr/icons/local";
+import { createLocalImageUrl, createLocalMediaUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
-import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, UserAvatar, NoResults } from "@homarr/ui";
 
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
 import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
@@ -119,10 +119,10 @@ export default async function MediaListPage(props: MediaListPageProps) {
                   <VisuallyHidden>{tMedia("field.preview")}</VisuallyHidden>
                 </TableTh>
                 <TableTh>{tCommon("field.name")}</TableTh>
-                <TableTh>{tMedia("field.size")}</TableTh>
+                <TableTh>{tCommon("field.size")}</TableTh>
                 <TableTh>{tMedia("field.creator")}</TableTh>
                 <TableTh>
-                  <VisuallyHidden>{tMedia("field.actions")}</VisuallyHidden>
+                  <VisuallyHidden>{tCommon("field.actions")}</VisuallyHidden>
                 </TableTh>
               </TableTr>
             </TableThead>
@@ -155,14 +155,26 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
   return (
     <TableTr>
       <TableTd w={64}>
-        <Image
-          // Switched to mantine image because next/image doesn't support svgs
-          src={createLocalImageUrl(media.id)}
-          alt={media.name}
-          w={64}
-          h={64}
-          fit="contain"
-        />
+        {media.contentType.startsWith("video/") ? (
+          <video
+            src={createLocalMediaUrl(media.id)}
+            aria-label={media.name}
+            muted
+            preload="metadata"
+            width={64}
+            height={64}
+            style={{ objectFit: "contain" }}
+          />
+        ) : (
+          <Image
+            // Switched to mantine image because next/image doesn't support svgs
+            src={createLocalImageUrl(media.id)}
+            alt={media.name}
+            w={64}
+            h={64}
+            fit="contain"
+          />
+        )}
       </TableTd>
       <TableTh scope="row">{media.name}</TableTh>
       <TableTd>{formatBytes(media.size, { unit: byteUnitSystem })}</TableTd>
@@ -185,7 +197,7 @@ const Row = async ({ media, byteUnitSystem }: RowProps) => {
             <ActionIcon
               aria-label={tMedia("action.open.labelNamed", { name: media.name })}
               component="a"
-              href={createLocalImageUrl(media.id)}
+              href={createLocalMediaUrl(media.id)}
               target="_blank"
               rel="noopener noreferrer"
               color="gray"

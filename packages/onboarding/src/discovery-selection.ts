@@ -9,7 +9,12 @@ export const resolveDiscoveredAppUrl = (
   override: string | undefined,
   suggestedUrl: string | null,
   generatedUrl: string | null,
-) => override ?? suggestedUrl ?? generatedUrl ?? "";
+  serverAddressEdited = false,
+) => {
+  if (override !== undefined) return override;
+  if (serverAddressEdited && generatedUrl) return generatedUrl;
+  return suggestedUrl || generatedUrl || "";
+};
 
 export const resolveIntegrationDraftUrl = ({
   currentUrl,
@@ -28,7 +33,9 @@ export const normalizeServiceUrl = (value: string) => {
     const trimmed = value.trim();
     if (!trimmed) return null;
     const url = new URL(/^[a-z][a-z0-9+.-]*:\/\//iu.test(trimmed) ? trimmed : `http://${trimmed}`);
-    return url.protocol === "http:" || url.protocol === "https:" ? url.toString().replace(/\/$/u, "") : null;
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    if (!url.hostname || /[\s%]/u.test(url.hostname)) return null;
+    return url.toString().replace(/\/$/u, "");
   } catch {
     return null;
   }

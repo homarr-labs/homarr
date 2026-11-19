@@ -1,7 +1,7 @@
-import { customJsxCatalogComponentByName } from "../core/component-catalog";
 import {
   customJsxBindableComponentNames,
   customJsxComponentByName,
+  customJsxRequiredPropsByName,
   customJsxSupportedPropsByName,
   resolveCustomJsxComponentName,
 } from "../core/component-registry";
@@ -211,9 +211,9 @@ export function analyzeCustomJsxElement(
       const attributeName = nodeOf(attribute.name);
       if (attributeName?.type === "JSXIdentifier") attributeNames.add(String(attributeName.name));
     }
-    for (const prop of customJsxCatalogComponentByName.get(resolvedName)?.props ?? []) {
-      if (prop.required && !attributeNames.has(prop.name)) {
-        context.add(opening, `MISSING_REQUIRED_PROP: '${prop.name}' on ${name} is required`);
+    for (const propName of customJsxRequiredPropsByName.get(resolvedName) ?? []) {
+      if (!attributeNames.has(propName)) {
+        context.add(opening, `MISSING_REQUIRED_PROP: '${propName}' on ${name} is required`);
       }
     }
   }

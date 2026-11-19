@@ -1,4 +1,4 @@
-import type { FocusEventHandler, ForwardedRef, PointerEventHandler, ReactNode } from "react";
+import type { FocusEventHandler, ForwardedRef, KeyboardEventHandler, PointerEventHandler, ReactNode } from "react";
 import { forwardRef } from "react";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon } from "@mantine/core";
@@ -10,6 +10,9 @@ type HeaderButtonProps = (
       onClick?: () => void;
       onFocus?: FocusEventHandler<HTMLButtonElement>;
       onPointerEnter?: PointerEventHandler<HTMLButtonElement>;
+      onPointerLeave?: PointerEventHandler<HTMLButtonElement>;
+      onBlur?: FocusEventHandler<HTMLButtonElement>;
+      onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
     }
   | {
       href: string;
@@ -18,7 +21,7 @@ type HeaderButtonProps = (
   children: ReactNode;
   onFocus?: () => void;
   onPointerDown?: () => void;
-  onPointerEnter?: () => void;
+  onPointerEnter?: PointerEventHandler<HTMLElement>;
 } & Partial<ActionIconProps>;
 
 const headerButtonActionIconProps: ActionIconProps = {
@@ -34,6 +37,7 @@ export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((pr
       <ActionIcon
         ref={ref as ForwardedRef<HTMLAnchorElement>}
         component={Link}
+        prefetch={false}
         {...props}
         {...headerButtonActionIconProps}
       >

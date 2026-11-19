@@ -1,8 +1,8 @@
 import type { BeszelSystemStatus } from "./types";
 
 export const thresholdColor = (value: number): string => {
-  if (value >= 80) return "red";
-  if (value >= 50) return "yellow";
+  if (value >= 90) return "red";
+  if (value >= 65) return "yellow";
   return "green";
 };
 

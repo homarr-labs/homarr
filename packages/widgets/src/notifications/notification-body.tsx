@@ -1,22 +1,6 @@
 import { Text } from "@mantine/core";
-import ReactMarkdown from "react-markdown";
-import type { Components } from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
-import remarkGfm from "remark-gfm";
 
-import { SAFE_NEW_TAB_REL } from "../common/application-url";
-import classes from "./component.module.css";
-
-const markdownPlugins = [rehypeSanitize];
-const htmlPlugins = [rehypeRaw, rehypeSanitize];
-const components: Components = {
-  a: ({ href, children }) => (
-    <a href={href} target="_blank" rel={SAFE_NEW_TAB_REL}>
-      {children}
-    </a>
-  ),
-};
+import { Markdown } from "@homarr/ui/markdown";
 
 interface NotificationBodyProps {
   body: string;
@@ -48,19 +32,11 @@ export const NotificationBody = ({ body, contentType, format, lineClamp, dense }
     );
   }
 
-  let plugins: React.ComponentProps<typeof ReactMarkdown>["rehypePlugins"] = markdownPlugins;
-  if (resolvedFormat === "html") plugins = htmlPlugins;
-
   return (
-    <Text component="div" c="dimmed" size={dense ? "xs" : "sm"} lineClamp={lineClamp} className={classes.body}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={plugins}
-        skipHtml={resolvedFormat !== "html"}
-        components={components}
-      >
+    <Text component="div" c="dimmed" size={dense ? "xs" : "sm"} lineClamp={lineClamp} w="100%">
+      <Markdown allowHtml={resolvedFormat === "html"} typography={false}>
         {body}
-      </ReactMarkdown>
+      </Markdown>
     </Text>
   );
 };

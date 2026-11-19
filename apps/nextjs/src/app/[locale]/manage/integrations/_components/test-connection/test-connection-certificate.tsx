@@ -33,9 +33,12 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
     clientApi.certificates.addCertificate.useMutation();
 
   const rootCertificate = getHeighestCertificate(error.data.certificate);
+  // The certificate can belong to a secondary endpoint of the integration (for example a separate indexer URL).
+  const certificateUrl = error.data.url;
+  const isSecondaryUrl = getOrigin(certificateUrl) !== getOrigin(url);
 
   const handleTrustHostname = async () => {
-    const { hostname } = new URL(url);
+    const { hostname } = new URL(certificateUrl);
     await trustHostnameAsync(
       {
         hostname,
@@ -60,7 +63,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   };
 
   const handleTrustSelfSigned = async () => {
-    const { hostname } = new URL(url);
+    const { hostname } = new URL(certificateUrl);
     const formData = new FormData();
     formData.append(
       "file",
@@ -71,21 +74,30 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
     await addCertificateAsync(formData, {
       onSuccess() {
         showSuccessNotification({
-          title: tError("certificate.selfSigned.notification.success.title"),
+          title: tError("certificate.hostnameMismatch.notification.success.title"),
           message: tError("certificate.selfSigned.notification.success.message"),
         });
         setShowRetryButton(true);
       },
       onError() {
         showErrorNotification({
-          title: tError("certificate.selfSigned.notification.error.title"),
+          title: tError("certificate.hostnameMismatch.notification.error.title"),
           message: tError("certificate.selfSigned.notification.error.message"),
         });
       },
     });
   };
 
-  const description = <Text size="md">{tError(`certificate.description.${error.data.reason}`)}</Text>;
+  const description = (
+    <>
+      <Text size="md">{tError(`certificate.description.${error.data.reason}`)}</Text>
+      {isSecondaryUrl && (
+        <Text size="sm" c="dimmed">
+          {tError("certificate.secondaryUrl", { url: certificateUrl })}
+        </Text>
+      )}
+    </>
+  );
   let trustConfirmLabel = tError("certificate.selfSigned.confirm.title");
   if (error.data.reason === "hostnameMismatch") {
     trustConfirmLabel = tError("certificate.hostnameMismatch.confirm.title");
@@ -141,7 +153,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
             </Button>
           )}
           {showUploadForm && (
-            <Card withBorder>
+            <Card>
               <CertificateUploadForm
                 embedded
                 onCancel={() => setShowUploadForm(false)}
@@ -324,6 +336,14 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
   },
   size: "lg",
 });
+
+const getOrigin = (value: string) => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return value;
+  }
+};
 
 const getHeighestCertificate = (certificate: MappedCertificate): MappedCertificate => {
   if (certificate.issuerCertificate) return getHeighestCertificate(certificate.issuerCertificate);

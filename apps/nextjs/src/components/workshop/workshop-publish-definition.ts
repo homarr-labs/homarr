@@ -1,7 +1,3 @@
-interface PublishableWorkshopDefinition {
-  sources: Record<string, { name?: string; networkScope?: string }>;
-}
-
 export const serializeWorkshopDefinition = (definition: unknown): string => {
   const serialized = JSON.stringify(definition, null, 2);
   if (serialized === undefined) throw new Error("Workshop definition is not serializable");
@@ -26,8 +22,3 @@ export async function publishWorkshopDefinition({
   await publish(serializeWorkshopDefinition(refreshedDefinition));
   return "published" as const;
 }
-
-export const getPrivateWorkshopSourceNames = (definition: PublishableWorkshopDefinition | undefined) =>
-  Object.entries(definition?.sources ?? {}).flatMap(([sourceId, source]) =>
-    source.networkScope === undefined || source.networkScope === "public" ? [] : [source.name ?? sourceId],
-  );

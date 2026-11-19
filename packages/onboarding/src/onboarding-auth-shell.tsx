@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { MantineRadius } from "@mantine/core";
 import { Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 
 import { OnboardingBackdrop } from "./onboarding-backdrop";
@@ -21,7 +22,8 @@ interface OnboardingAuthShellProps {
   logoImageUrl?: string;
   backgroundImageUrl?: string;
   backgroundOverlay?: number;
-  radius?: "xs" | "sm" | "md" | "lg" | "xl";
+  showMarquee?: boolean;
+  radius?: MantineRadius;
   width?: CSSProperties["width"];
 }
 
@@ -41,6 +43,7 @@ export const OnboardingAuthShell = ({
   logoImageUrl,
   backgroundImageUrl,
   backgroundOverlay = 0.55,
+  showMarquee = true,
   radius = "lg",
   width,
 }: OnboardingAuthShellProps) => (
@@ -62,7 +65,7 @@ export const OnboardingAuthShell = ({
         style={{ backgroundImage: `url(${JSON.stringify(backgroundImageUrl)})` }}
       />
     ) : null}
-    <OnboardingBackdrop />
+    {showMarquee && <OnboardingBackdrop />}
     <div className={`${classes.shell} ${classes.authShell}`}>
       <Stack className={classes.authLayout} gap="xl" align="center" justify="center" style={{ width }}>
         {showAppName || showAppLogo ? (

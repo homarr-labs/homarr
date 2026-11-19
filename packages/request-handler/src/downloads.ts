@@ -1,5 +1,5 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
+import type { DownloadClientJobsAndStatus, DownloadClientSelection } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
@@ -9,6 +9,7 @@ export const downloadClientRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"downloadClient">,
   {
     limit: number;
+    selection?: DownloadClientSelection;
     includeArchivedHistory: boolean;
     historyWindowDays: number;
   }

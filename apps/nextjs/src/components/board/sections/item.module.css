@@ -168,6 +168,7 @@
 }
 
 .containerBody[data-collapsed="true"] {
+  overflow: hidden;
   visibility: hidden;
   pointer-events: none;
   opacity: 0;

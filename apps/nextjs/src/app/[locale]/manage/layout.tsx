@@ -24,6 +24,7 @@ import {
   IconRobot,
   IconSearch,
   IconSettingsFilled,
+  IconSparkles,
   IconUserFilled,
   IconUsers,
   IconUsersGroup,
@@ -36,6 +37,7 @@ import { createDocumentationLink } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
+import { ManagementUpdateNavLink } from "~/components/layout/header/update";
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
@@ -162,6 +164,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.kubernetes"),
           icon: IconBox,
           href: "/manage/tools/kubernetes",
+          prefetch: false,
           hidden: !(session?.user.permissions.includes("admin") && (await getBackendRuntimeAsync()).kubernetesEnabled),
         },
         {
@@ -192,7 +195,9 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.backup"),
           icon: IconDatabaseExport,
           href: "/manage/tools/backup",
-          hidden: !session?.user.permissions.includes("admin") || (await getBackendRuntimeAsync()).databaseDriver !== "better-sqlite3",
+          hidden:
+            !session?.user.permissions.includes("admin") ||
+            (await getBackendRuntimeAsync()).databaseDriver !== "better-sqlite3",
         },
       ],
     },
@@ -237,6 +242,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "https://github.com/homarr-labs/homarr",
           external: true,
         },
+        {
+          label: t("items.help.items.changelog"),
+          icon: IconSparkles,
+          action: "changelog",
+          hidden: !session?.user.permissions.includes("admin"),
+        },
       ],
     },
     {
@@ -251,7 +262,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
   const shell = (
     <ClientShell hasNavigation>
       <MainHeader></MainHeader>
-      <MainNavigation links={navigationLinks}></MainNavigation>
+      <MainNavigation links={navigationLinks} afterLinks={<ManagementUpdateNavLink isAdmin={isAdmin} />} />
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );

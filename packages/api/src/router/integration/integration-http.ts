@@ -13,7 +13,7 @@ import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/htt
 import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
 import type { CustomWidgetAuthConfig, CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
 import type { Database } from "@homarr/db";
-import { asc, eq, inArray } from "@homarr/db";
+import { asc, eq, inArray, or } from "@homarr/db";
 import { groupMembers, integrations, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationHttpUnavailableReason } from "@homarr/definitions";
@@ -26,9 +26,17 @@ export interface IntegrationHttpContext {
   publishedIntegrationRead?: { readonly integrationId: string };
 }
 
+const getGroupPermissionWhere = (context: IntegrationHttpContext, userId: string) =>
+  or(
+    eq(integrationGroupPermissions.groupId, ""),
+    inArray(
+      integrationGroupPermissions.groupId,
+      context.db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+    ),
+  );
+
 export async function getIntegrationForHttpRequest(context: IntegrationHttpContext, integrationId: string) {
   const userId = context.session?.user.id ?? "";
-  const groups = await context.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
   const integration = await context.db.query.integrations.findFirst({
     where: eq(integrations.id, integrationId),
     with: {
@@ -36,7 +44,7 @@ export async function getIntegrationForHttpRequest(context: IntegrationHttpConte
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
-        where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
+        where: getGroupPermissionWhere(context, userId),
       },
     },
   });
@@ -71,7 +79,6 @@ export async function selectIntegrationForHttpRequest(
 ) {
   if (selector.integrationId) return getIntegrationForHttpRequest(context, selector.integrationId);
   const userId = context.session?.user.id ?? "";
-  const groups = await context.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
   let where;
   if (selector.integrationName) where = eq(integrations.name, selector.integrationName);
   else if (selector.integrationKind) where = eq(integrations.kind, selector.integrationKind);
@@ -84,7 +91,7 @@ export async function selectIntegrationForHttpRequest(
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
-        where: inArray(integrationGroupPermissions.groupId, groups.map(({ groupId }) => groupId).concat("")),
+        where: getGroupPermissionWhere(context, userId),
       },
     },
   });
@@ -116,7 +123,6 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
     const baseUrl = new URL(integration.url);
     return {
       baseUrl: baseUrl.href,
-      networkScope: "loopback" as const,
       pathPrefix: baseUrl.pathname,
       redactSecrets: secrets,
       cacheVersion: getIntegrationHttpCacheVersion(integration),
@@ -129,7 +135,6 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
           if (authenticate) {
             const authentication = await getIntegrationHttpAuthenticationAsync({
               ...integration,
-              externalUrl: null,
               decryptedSecrets: secrets,
             });
             headers = authentication.headers;

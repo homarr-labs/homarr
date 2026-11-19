@@ -10,6 +10,7 @@ const router = createLegacyApiRouter(orpcRouter);
 
 export async function handleLegacyRpcAsync(request: Request): Promise<Response> {
   const auth = await createBackendContextAsync(request);
+  if (auth.invalidApiKey) return Response.json({ message: "Invalid API key" }, { status: 401 });
   if (!isRpcOriginAllowed(request, auth.authenticatedWithApiKey)) {
     return Response.json(
       { message: "This origin is not allowed to make authenticated RPC requests." },

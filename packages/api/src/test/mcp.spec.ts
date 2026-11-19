@@ -45,6 +45,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_schema",
     "customWidget_validate",
     "customWidget_validateTemplate",
+    "customWidget_workshopCheckUpdate",
     "customWidget_workshopGet",
     "customWidget_workshopSearch",
     "dnsHole_summary",
@@ -57,6 +58,7 @@ const MCP_TOOL_ALLOWLIST = {
     "healthMonitoring_getClusterHealthStatus",
     "healthMonitoring_getSystemHealthStatus",
     "healthMonitoring_listStorageVolumes",
+    "icon_detectFavicon",
     "icon_findIcons",
     "info_getInfo",
     "integration_all",
@@ -79,10 +81,16 @@ const MCP_TOOL_ALLOWLIST = {
     "serverSettings_getBoardSettings",
     "serverSettings_getBranding",
     "searchEngine_catalog",
+    "smartHome_catalog",
     "smartHome_entityDetails",
     "smartHome_entityState",
+    "smartHome_forecast",
+    "smartHome_history",
+    "smartHome_snapshot",
     "stats_catalog",
     "stats_snapshot",
+    "theme_get",
+    "theme_getControls",
     "traefik_getDashboard",
     "user_getAll",
     "user_getById",
@@ -128,9 +136,11 @@ const MCP_TOOL_ALLOWLIST = {
     "invite_deleteInvite",
     "mediaRequests_answerRequest",
     "serverSettings_updateBoardSettings",
+    "smartHome_executeAction",
     "smartHome_executeAutomation",
     "smartHome_switchEntity",
     "stats_refresh",
+    "theme_update",
     "user_updatePreferences",
     "user_delete",
   ],
@@ -146,6 +156,7 @@ const MCP_TOOL_ALLOWLIST = {
     "customWidget_update",
     "customWidget_updateFromPreview",
     "customWidget_workshopInstall",
+    "customWidget_workshopUpdate",
     "user_create",
     "widgetSecrets_deleteSecret",
     "widgetSecrets_setSecret",
@@ -455,6 +466,7 @@ test.each([false, true])(
     };
     const params: Record<string, unknown> = {};
     if (modern) {
+      headers["MCP-Protocol-Version"] = "2026-07-28";
       headers["Mcp-Method"] = "tools/list";
       headers["Mcp-Name"] = "homarr";
       params["_meta"] = {

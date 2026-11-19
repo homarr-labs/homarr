@@ -1,5 +1,6 @@
 import type {
   WazuhAgentStatus,
+  WazuhAlert,
   WazuhAlertSeverityCounts,
   WazuhIndexerAlertSource,
   WazuhIndexerHit,
@@ -148,3 +149,37 @@ export const normalizeAgentStatus = (status: string | undefined): WazuhAgentStat
 export const normalizeGroups = (group: string[] | string | undefined) => asArray(group);
 
 export const normalizeVersion = (version: string | undefined) => version?.replace(/^Wazuh\s+/i, "") ?? null;
+
+/** Plain text body of a Wazuh alert in the notifications widget. */
+export const formatAlertNotificationBody = (alert: WazuhAlert) => {
+  const lines = [`Level ${alert.level}${alert.ruleId ? ` · Rule ${alert.ruleId}` : ""}`];
+  if (alert.agentName ?? alert.agentId) {
+    lines.push(
+      `Agent: ${alert.agentName ?? alert.agentId}${alert.agentName && alert.agentId ? ` (${alert.agentId})` : ""}`,
+    );
+  }
+  if (alert.sourceIp) lines.push(`Source IP: ${alert.sourceIp}`);
+  if (alert.mitre.ids.length > 0) lines.push(`MITRE ATT&CK: ${alert.mitre.ids.join(", ")}`);
+  return lines.join("\n");
+};
+
+const kuery = (query: string) =>
+  encodeURIComponent(
+    `(filters:!(),query:(language:kuery,query:'${query.replaceAll("!", "!!").replaceAll("'", "!'")}'))`,
+  );
+
+/**
+ * Link to an alert in the Wazuh dashboard (4.9+ routes). Mirrors the alert link of the Wazuh widgets: the events view
+ * filtered by the alert id within five minutes of the alert.
+ */
+export const createAlertDashboardUrl = (dashboardUrl: string, alert: WazuhAlert) => {
+  const time = new Date(alert.timestamp).getTime();
+  const window = 5 * 60 * 1000;
+  const from = new Date(time - window).toISOString();
+  const to = new Date(time + window).toISOString();
+  let url = `${dashboardUrl.replace(/\/+$/, "")}/app/threat-hunting#/overview/?tab=general&tabView=events`;
+  if (alert.agentId) url += `&agentId=${encodeURIComponent(alert.agentId)}`;
+  if (alert.alertId) url += `&_q=${kuery(`id:"${alert.alertId}"`)}`;
+  url += `&_g=${encodeURIComponent(`(time:(from:'${from}',to:'${to}'))`)}`;
+  return url;
+};

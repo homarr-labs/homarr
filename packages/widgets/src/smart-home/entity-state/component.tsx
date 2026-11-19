@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { Badge, Center, Group, Stack, Text, UnstyledButton } from "@mantine/core";
+import { useCallbackRef } from "@mantine/hooks";
 import { IconBinaryTree } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -74,6 +75,7 @@ export default function SmartHomeEntityStateWidget({
       integrationId,
     });
   }, [integrationId, isActionable, mutate, options.entityId]);
+  const handleSpotlightClick = useCallbackRef(handleClick);
 
   useRegisterSpotlightContextActions(
     `smartHome-entityState-${options.entityId}`,
@@ -86,14 +88,14 @@ export default function SmartHomeEntityStateWidget({
           return {
             type: "javaScript",
             onSelect() {
-              handleClick();
+              handleSpotlightClick();
             },
           };
         },
         disabled: !isActionable,
       },
     ],
-    [handleClick, isActionable, options.displayName, options.entityId],
+    [handleClick, handleSpotlightClick, isActionable, options.displayName, options.entityId],
   );
 
   if (entityError && entity === undefined) throw entityError;

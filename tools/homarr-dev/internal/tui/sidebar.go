@@ -46,6 +46,7 @@ type sidebar struct {
 	height   int
 	title    string
 	subtitle string
+	content  string
 }
 
 func newSidebar() sidebar {
@@ -62,6 +63,9 @@ func newSidebar() sidebar {
 // the border and two more to the horizontal padding. Vertically the border
 // costs two rows and the title and subtitle one each.
 func (s *sidebar) resize(width, height int) {
+	if s.width != width || s.height != height {
+		s.content = ""
+	}
 	s.width, s.height = width, height
 	s.viewport.SetWidth(s.textWidth())
 	s.viewport.SetHeight(max(height-4, 3))
@@ -73,6 +77,10 @@ func (s *sidebar) resize(width, height int) {
 func (s sidebar) textWidth() int { return max(s.width-4, 10) }
 
 func (s *sidebar) setContent(content string) {
+	if content == s.content {
+		return
+	}
+	s.content = content
 	atBottom := s.viewport.AtBottom()
 	s.viewport.SetContent(content)
 	if s.follow || atBottom {

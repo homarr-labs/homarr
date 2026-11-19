@@ -1,9 +1,10 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
 import type { FocusEventHandler } from "react";
 import {
   Anchor,
-  Avatar,
   CheckIcon,
   CloseButton,
   Combobox,
@@ -114,7 +115,7 @@ export const WidgetIntegrationSelect = ({
         <Group gap="sm" align="center">
           {isSelected && <CheckIcon size="var(--mantine-font-size-xs)" />}
           <Group gap={7} align="center">
-            <Avatar src={getIconUrl(item.kind)} size="sm" />
+            <Avatar src={getIconUrl(item.kind)} alt="" size="sm" />
             <Stack gap={0}>
               <span>{item.name}</span>
               <Text size="xs" c="dimmed">
@@ -135,13 +136,25 @@ export const WidgetIntegrationSelect = ({
           description={
             onOpenNewIntegration ? (
               <Text size="xs" span>
-                <Anchor size="xs" component="button" type="button" onClick={onOpenNewIntegration}>
+                <Anchor
+                  size="xs"
+                  c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
+                  component="button"
+                  type="button"
+                  onClick={onOpenNewIntegration}
+                >
                   {tCommon("action.create")}
                 </Anchor>
               </Text>
             ) : (
               <Text size="xs" span>
-                <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
+                <Anchor
+                  size="xs"
+                  c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
+                  component={Link}
+                  target="_blank"
+                  href="/manage/integrations"
+                >
                   {tIntegration("manage")}
                 </Anchor>
               </Text>
@@ -224,7 +237,7 @@ interface IntegrationPillProps {
 
 const IntegrationPill = ({ option, onRemove, showRemoveButton, removeLabel }: IntegrationPillProps) => (
   <Group align="center" wrap="nowrap" gap={0} className={classes.pill} mih={24} pr={!showRemoveButton ? 10 : undefined}>
-    <Avatar src={getIconUrl(option.kind)} size={14} mr={6} />
+    <Avatar src={getIconUrl(option.kind)} alt="" size={14} mr={6} />
     <Text span size="xs" lh={1} fw={500} title={option.origin?.workerName}>
       {option.name}
     </Text>

@@ -24,7 +24,7 @@ export function getMcpMetadata(request: Request, path: readonly string[]) {
         grant_types_supported: ["authorization_code"],
         code_challenge_methods_supported: ["S256"],
         token_endpoint_auth_methods_supported: ["none"],
-        scopes_supported: ["mcp:tools"],
+        scopes_supported: ["mcp:tools:read", "mcp:tools"],
         resource_indicators_supported: true,
       },
       { headers: corsHeaders },
@@ -34,7 +34,7 @@ export function getMcpMetadata(request: Request, path: readonly string[]) {
   if (kind === "oauth-protected-resource") {
     let resource = `${baseUrl}/api/mcp`;
     if (identifierPath) resource = `${baseUrl}/${identifierPath}`;
-    return Response.json({ resource, authorization_servers: [baseUrl] }, { headers: corsHeaders });
+    return Response.json({ resource, authorization_servers: [baseUrl], scopes_supported: ["mcp:tools:read"] }, { headers: corsHeaders });
   }
 
   return Response.json({ error: "not_found" }, { status: 404, headers: corsHeaders });

@@ -22,7 +22,9 @@ export const useBoardAddActions = () => {
   const { createItem } = useItemActions();
   const canCreateApp = session?.user.permissions.includes("app-create") ?? false;
   const canConnectService = session?.user.permissions.includes("integration-create") ?? false;
-  const addWidget = useCallback(() => openItemSelectModal({ boardId: board.id }), [board.id, openItemSelectModal]);
+  const addWidget = useCallback(() => {
+    openItemSelectModal({ boardId: board.id });
+  }, [board.id, openItemSelectModal]);
   const addApp = useCallback(
     () =>
       openAppSelectModal({

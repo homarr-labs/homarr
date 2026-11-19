@@ -138,10 +138,15 @@ function WorkerCustomWidgetEdit({ id }: { id: string }) {
 }
 
 function WorkerCustomWidgetPublish({ id }: { id: string }) {
+  const exported = clientApi.customWidget.export.useQuery({ id });
   const query = clientApi.customWidget.get.useQuery({ id });
   return (
     <WorkerQuery query={query}>
-      {(definition) => <WorkshopPublishForm widget={{ id, name: definition.name }} />}
+      {(definition) => (
+        <WorkerQuery query={exported}>
+          {(initialDefinition) => <WorkshopPublishForm widget={{ id, name: definition.name }} initialDefinition={initialDefinition} />}
+        </WorkerQuery>
+      )}
     </WorkerQuery>
   );
 }

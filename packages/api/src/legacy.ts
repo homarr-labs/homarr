@@ -16,6 +16,7 @@ import superjson from "superjson";
 import { ZodError } from "zod/v4";
 
 import { FlattenError } from "@homarr/common";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import type { ApiContext, ApiOperation } from "./procedure";
 import type { AppRouter as NativeAppRouter } from "./root";
@@ -28,6 +29,7 @@ const compatibility = initTRPC.context<ApiContext>().create({
       ...shape.data,
       zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
       error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+      isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
     },
   }),
 });

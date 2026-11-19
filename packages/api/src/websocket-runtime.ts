@@ -1,4 +1,5 @@
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
+import { TRPCError } from "@trpc/server";
 import { WebSocketServer } from "ws";
 
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
@@ -39,6 +40,9 @@ export function startWebSocketServer() {
     // ignore error on next line because the createContext must be set with this name
     // eslint-disable-next-line no-restricted-syntax
     createContext: async ({ req }) => {
+      if (req.headers.apikey !== undefined) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "API keys are not supported over WebSockets" });
+      }
       try {
         const headers = Object.entries(req.headers).map(
           ([key, value]) => [key, typeof value === "string" ? value : value?.[0]] as [string, string],

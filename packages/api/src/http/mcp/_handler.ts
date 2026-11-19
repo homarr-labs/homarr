@@ -21,6 +21,7 @@ import {
 } from "@homarr/custom-widgets/authoring-resources";
 import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 
 import packageJson from "../../../../../package.json";
 import { getSafeAssistantToolError } from "../assistant/assistant-tool-error";
@@ -83,9 +84,11 @@ function clearAuthFailures(ip: string | null) {
   authFailures.delete(ip ?? "unknown");
 }
 
-const getVisibleTools = (tools: McpTool[], isAdmin: boolean) => {
-  if (isAdmin) return tools;
-  return tools.filter((tool) => !tool.name.startsWith("customWidget_"));
+const getVisibleTools = (tools: McpTool[], isAdmin: boolean, readOnly: boolean) => {
+  return tools.filter((tool) => {
+    if (!isAdmin && tool.name.startsWith("customWidget_")) return false;
+    return !readOnly || tool.annotations?.readOnlyHint === true;
+  });
 };
 
 function registerCustomWidgetAuthoring(server: McpServer) {
@@ -212,6 +215,7 @@ const SAFE_ERROR_MESSAGES: Record<string, string> = {
 };
 
 function sanitizeErrorMessage(error: unknown, toolName: string): string {
+  if (error instanceof Error && error.cause instanceof BoardLayoutBoundsError) return error.cause.message;
   if (toolName.startsWith("customWidget_")) return getSafeAssistantToolError(error, { toolName });
   if (error instanceof Error && "code" in error) {
     const trpcCode = (error as Error & { code: string }).code;
@@ -232,7 +236,7 @@ Read current state when it matters, reuse results across a batch, and complete t
 
 function extractApiKeyValue(req: Request): string | null {
   const apiKeyHeader = req.headers.get(API_KEY_HEADER_NAME);
-  if (apiKeyHeader) return apiKeyHeader;
+  if (apiKeyHeader !== null) return apiKeyHeader;
 
   const authHeader = req.headers.get("Authorization");
   if (authHeader?.startsWith("Bearer ")) return authHeader.slice(7);
@@ -250,7 +254,7 @@ function jsonErrorResponse(status: number, body: Record<string, string>, extraHe
 const getOAuthChallenge = (req: Request) => {
   const baseUrl = getMcpBaseUrl(req.headers);
   const resourcePath = removeTrailingSlash(new URL(req.url).pathname);
-  return `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}"`;
+  return `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}", scope="mcp:tools:read"`;
 };
 
 export const handleMcpRequest = async (
@@ -319,11 +323,17 @@ export const handleMcpRequest = async (
   const ctx = createApiContext({ session, headers: req.headers });
   const caller = createApiCaller(mcpRouter, ctx);
   const isAdmin = session.user.permissions.includes("admin");
+  const readOnly = session.apiKey?.readOnly ?? false;
+  let instructions = SERVER_INSTRUCTIONS;
+  if (readOnly) {
+    instructions +=
+      "\n\nThis credential is read-only. Write operations and arbitrary upstream requests are unavailable.";
+  }
   const protocolHandler = createMcpProtocolHandler({
     caller,
-    tools: getVisibleTools(extractMcpTools(), isAdmin),
+    tools: getVisibleTools(extractMcpTools(), isAdmin, readOnly),
     version,
-    instructions: SERVER_INSTRUCTIONS,
+    instructions,
     configureServer: isAdmin ? registerCustomWidgetAuthoring : undefined,
     formatToolError: sanitizeErrorMessage,
     onToolError: (tool, error) => {
@@ -341,8 +351,8 @@ export const handleMcpRequest = async (
   return protocolHandler.fetch(req, {
     authInfo: {
       token: apiKeyValue ?? "encrypted-worker-session",
-      clientId: session.user.id,
-      scopes: ["mcp:tools"],
+      clientId: session.apiKey?.oauthClientId ?? session.user.id,
+      scopes: [readOnly ? "mcp:tools:read" : "mcp:tools"],
     },
   });
 };

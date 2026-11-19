@@ -29,7 +29,8 @@
     "isomorphic-dompurify": "catalog:",
     "sql.js": "catalog:",
     "zod": "catalog:",
-    "hono": "catalog:"
+    "hono": "catalog:",
+    "@homarr/validation": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

@@ -2,7 +2,7 @@ import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { hasQueryAccessToIntegrationsAsync, intersectFederationPermissions } from "@homarr/auth/server";
+import { filterIntegrationsWithQueryAccessAsync, intersectFederationPermissions } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -18,7 +18,12 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema";
-import type { GroupPermissionKey, IntegrationPermission, IntegrationSecretKind } from "@homarr/definitions";
+import type {
+  GroupPermissionKey,
+  IntegrationKindByCategory,
+  IntegrationPermission,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
 import {
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
@@ -28,6 +33,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
+import type { IntegrationInstanceOfKind } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
@@ -48,6 +54,11 @@ import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 import { integrationTestStoredConnectionProcedure } from "./integration-test-stored-connection";
 import { mapTestConnectionError } from "./map-test-connection-error";
+
+// Calling `searchAsync` on a union of integration classes types the result as only one member's, so the union is
+// spelled out per kind: Overseerr's results keep their media type, Thingport's keep their own shape.
+type IntegrationSearchResult<TKind extends IntegrationKindByCategory<"search"> = IntegrationKindByCategory<"search">> =
+  TKind extends unknown ? Awaited<ReturnType<IntegrationInstanceOfKind<TKind>["searchAsync"]>>[number] : never;
 
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
@@ -137,17 +148,10 @@ export const integrationRouter = createApiRouter({
       }),
     )
     .query(async ({ context, input }) => {
-      const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, context.session.user.id),
-      });
-
       const integrationsFromDb = await context.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
         orderBy: asc(integrations.name),
-        with: getIntegrationAccessRelationsAsync(
-          context.session.user.id,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
+        with: getIntegrationAccessRelations(context.db, context.session.user.id),
       });
 
       return integrationsFromDb
@@ -241,6 +245,7 @@ export const integrationRouter = createApiRouter({
         name: integration.name,
         kind: integration.kind,
         url: integration.url,
+        externalUrl: integration.externalUrl,
         secrets: integration.secrets.map((secret) => ({
           kind: secret.kind,
           // Only return the value if the secret is public, so for example the username
@@ -258,7 +263,7 @@ export const integrationRouter = createApiRouter({
         enabled: true,
         effect: "additive",
         description:
-          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
+          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'externalUrl' field is optional — the address browsers open from widget links; the linked app's URL, then the url, is used when omitted. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
     })
     .input(integrationCreateSchema)
@@ -305,6 +310,7 @@ export const integrationRouter = createApiRouter({
         id: integrationId,
         name: input.name,
         url: input.url,
+        externalUrl: input.externalUrl,
         kind: input.kind,
         appId,
       });
@@ -370,7 +376,9 @@ export const integrationRouter = createApiRouter({
         kind: integration.kind,
         secrets: input.secrets,
       },
-      integration.secrets,
+      isSameUrl(integration.url, input.url)
+        ? integration.secrets.filter((secret) => input.secrets.some((submitted) => submitted.kind === secret.kind))
+        : [],
     ).catch((error) => {
       if (!(error instanceof MissingSecretError)) throw error;
 
@@ -392,6 +400,7 @@ export const integrationRouter = createApiRouter({
       .set({
         name: input.name,
         url: input.url,
+        externalUrl: input.externalUrl,
         appId: input.appId,
       })
       .where(eq(integrations.id, input.id));
@@ -649,7 +658,7 @@ export const integrationRouter = createApiRouter({
     })
     .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
-    .query(async ({ context, input }) => {
+    .query(async ({ context, input }): Promise<IntegrationSearchResult[]> => {
       const integrationInstance = await createIntegrationAsync(context.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
@@ -711,7 +720,7 @@ export const integrationRouter = createApiRouter({
               name: integration.name,
               url: integration.url,
               kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
-              externalUrl: integration.app?.href ?? null,
+              externalUrl: integration.externalUrl ?? integration.app?.href ?? null,
               decryptedSecrets: integration.secrets.map((secret) => ({
                 ...secret,
                 value: decryptSecret(secret.value),
@@ -798,6 +807,14 @@ export const integrationRouter = createApiRouter({
     }),
 });
 
+const isSameUrl = (storedUrl: string, submittedUrl: string) => {
+  try {
+    return new URL(storedUrl).href === new URL(submittedUrl).href;
+  } catch {
+    return false;
+  }
+};
+
 const globalIntegrationPermissions = [
   "integration-use-all",
   "integration-interact-all",
@@ -815,27 +832,24 @@ const hasIntegrationQueryAccess = (
   },
 ) => hasGlobalIntegrationAccess(session) || constructIntegrationPermissions(integration, session).hasUseAccess;
 
-const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) => ({
+const getIntegrationAccessRelations = (db: Database, userId: string) => ({
   origin: originRelation,
   userPermissions: {
     where: eq(integrationUserPermissions.userId, userId),
   },
   groupPermissions: {
-    where: inArray(integrationGroupPermissions.groupId, groupIds),
+    where: inArray(
+      integrationGroupPermissions.groupId,
+      db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+    ),
   },
 });
 
 const getAccessibleIntegrationsAsync = async (context: { db: Database; session: Session }, where?: SQL) => {
-  const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, context.session.user.id),
-  });
-
   const integrationsFromDb = await context.db.query.integrations.findMany({
     where,
-    with: getIntegrationAccessRelationsAsync(
-      context.session.user.id,
-      groupsOfCurrentUser.map((group) => group.groupId),
-    ),
+    columns: { id: true, name: true, kind: true, url: true },
+    with: getIntegrationAccessRelations(context.db, context.session.user.id),
   });
 
   return integrationsFromDb
@@ -865,17 +879,13 @@ const getAccessibleIntegrationsAsync = async (context: { db: Database; session: 
 
 interface IntegrationRouterContext {
   db: Database;
-  session: Parameters<typeof hasQueryAccessToIntegrationsAsync>[2];
+  session: Session | null;
 }
 
 const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   context: IntegrationRouterContext,
   integrationIds?: string[],
 ) => {
-  const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, context.session?.user.id ?? ""),
-  });
-
   const integrationsFromDb = await context.db.query.integrations.findMany({
     where:
       integrationIds && integrationIds.length > 0
@@ -883,7 +893,6 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
         : inArray(integrations.kind, mediaRequestSearchKinds),
     orderBy: asc(integrations.name),
     with: {
-      origin: originRelation,
       app: true,
       secrets: true,
       items: {
@@ -893,15 +902,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
           },
         },
       },
-      userPermissions: {
-        where: eq(integrationUserPermissions.userId, context.session?.user.id ?? ""),
-      },
-      groupPermissions: {
-        where: inArray(
-          integrationGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
-      },
+      ...getIntegrationAccessRelations(context.db, context.session?.user.id ?? ""),
     },
   });
 
@@ -912,21 +913,20 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
     });
   }
 
-  const integrationsWithAccess = await Promise.all(
-    integrationsFromDb.map(async (integration) => ({
-      integration,
-      hasAccess: await hasQueryAccessToIntegrationsAsync(context.db, [integration], context.session),
-    })),
+  const integrationsWithAccess = await filterIntegrationsWithQueryAccessAsync(
+    context.db,
+    integrationsFromDb,
+    context.session,
   );
 
-  if (integrationIds && integrationsWithAccess.some(({ hasAccess }) => !hasAccess)) {
+  if (integrationIds && integrationsWithAccess.length !== integrationsFromDb.length) {
     throw new ApiError({
       code: "FORBIDDEN",
       message: "User does not have permission to query one or more media request search integrations",
     });
   }
 
-  return integrationsWithAccess.filter(({ hasAccess }) => hasAccess).map(({ integration }) => integration);
+  return integrationsWithAccess;
 };
 
 interface UpdateSecretInput {

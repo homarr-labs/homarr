@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, createElement, useContext, useEffect, useMemo, useRef } from "react";
+import { createContext, createElement, useContext, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import type { PropsWithChildren } from "react";
 import {
   skipToken,
@@ -110,7 +110,13 @@ interface ProcedureHooks<I, O> extends ProcedurePath {
       initialCursor?: unknown;
     },
   ): UseInfiniteQueryResult<D, ApiClientError>;
-  useSubscription(input: I | typeof skipToken, options: SubscriptionOptions<SubscriptionData<O>>): void;
+  useSubscription(
+    input: I | typeof skipToken,
+    options: SubscriptionOptions<SubscriptionData<O>>,
+  ): {
+    status: "idle" | "connecting" | "pending" | "error";
+    reset: () => void;
+  };
 }
 type Hooks<T> = {
   [K in keyof T]: T[K] extends (...args: never[]) => unknown
@@ -226,18 +232,53 @@ function hooks(path: string[]): unknown {
             const subscriptionPath = path.join(".");
             // Hash using the same native input values as the query cache, without callback identities.
             const inputKey = stableInputKey(input);
+            const [status, setStatus] = useState<"idle" | "connecting" | "pending" | "error">("idle");
+            const [attempt, setAttempt] = useState(0);
+            const reset = useCallback(() => setAttempt((value) => value + 1), []);
             useEffect(() => {
-              if (!enabled) return;
+              if (!enabled) {
+                setStatus("idle");
+                return;
+              }
+              let active = true;
+              setStatus("connecting");
               const subscription = request.subscription(subscriptionPath, subscriptionInput.current, {
                 signal,
-                onData: (value) => callbacks.current.onData?.(value),
-                onError: (error) => callbacks.current.onError?.(error),
-                onStarted: () => callbacks.current.onStarted?.(),
-                onStopped: () => callbacks.current.onStopped?.(),
-                onComplete: () => callbacks.current.onComplete?.(),
+                onData(value) {
+                  if (!active) return;
+                  setStatus("pending");
+                  callbacks.current.onData?.(value);
+                },
+                onError(error) {
+                  if (!active) return;
+                  setStatus("error");
+                  callbacks.current.onError?.(error);
+                },
+                onStarted() {
+                  if (!active) return;
+                  setStatus("pending");
+                  callbacks.current.onStarted?.();
+                },
+                onStopped() {
+                  if (!active) return;
+                  setStatus((current) => {
+                    if (current === "error") return current;
+                    return "idle";
+                  });
+                  callbacks.current.onStopped?.();
+                },
+                onComplete() {
+                  if (!active) return;
+                  setStatus("idle");
+                  callbacks.current.onComplete?.();
+                },
               });
-              return () => subscription.unsubscribe();
-            }, [request, inputKey, enabled, signal, subscriptionPath]);
+              return () => {
+                active = false;
+                subscription.unsubscribe();
+              };
+            }, [request, inputKey, enabled, signal, subscriptionPath, attempt]);
+            return { status, reset };
           };
         return hooks([...path, String(property)]);
       },

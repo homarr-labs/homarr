@@ -16,28 +16,40 @@ export default async function NotFoundBoardHomePage() {
 }
 
 const getPropsAsync = async (): Promise<BoardNotFoundProps> => {
-  const hasBoards = await api.frontend.hasBoards.query();
-  const t = await getI18n("board");
+  const [session, accessibleBoards, t] = await Promise.all([auth(), api.board.getAllBoards.query(), getI18n("board")]);
+  const canCreateBoards = session?.user.permissions.includes("board-create") ?? false;
 
-  if (!hasBoards) {
+  if (accessibleBoards.length === 0 && session && !canCreateBoards) {
+    return {
+      icon: IconHomeOff,
+      title: t("error.homeBoard.noAccess.title"),
+      description: t("error.homeBoard.noAccess.description"),
+      link: { label: t("error.notFound.link"), href: "/manage/boards" },
+      notice: t("error.homeBoard.noAccess.notice"),
+    };
+  }
+
+  if (accessibleBoards.length === 0 && canCreateBoards) {
     const { branding } = await getRscServerSettingsAsync();
     return {
       icon: { src: branding.logoImageUrl ?? homarrLogoPath, alt: `${branding.appName} logo` },
       title: t("error.noBoard.title"),
       description: t("error.noBoard.description"),
-      link: { label: t("error.noBoard.link"), href: "/manage/boards" },
+      link: { label: t("error.noBoard.link"), href: "/manage/boards?create=true" },
       notice: t("error.noBoard.notice"),
     };
   }
 
-  const session = await auth();
-  const isAdmin = session?.user.permissions.includes("admin");
-  const type = isAdmin ? "admin" : session !== null ? "user" : "anonymous";
-  const href = {
-    admin: "/manage/settings",
-    user: `/manage/users/${session?.user.id}/general`,
-    anonymous: "/manage/boards",
-  }[type];
+  let type: "admin" | "user" | "anonymous" = "anonymous";
+  let href = "/manage/boards";
+  if (session) {
+    type = "user";
+    href = `/manage/users/${session.user.id}/general`;
+  }
+  if (session?.user.permissions.includes("admin")) {
+    type = "admin";
+    href = "/manage/settings";
+  }
 
   return {
     icon: IconHomeOff,

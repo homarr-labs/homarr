@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { NamespacesTable } from "~/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
@@ -21,18 +21,15 @@ export default async function NamespacesPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  if (!context) return <DynamicBreadcrumb />;
   const tResource = await getI18n("kubernetes.cluster.resources");
   const namespaces =
     context.status === "unavailable"
       ? []
       : await api.kubernetes.namespaces.getNamespaces.query({ contextId: context.contextId });
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tResource("namespaces")}</Title>
-        <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tResource("namespaces")} container={false}>
+      <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
+    </ManagePageLayout>
   );
 }

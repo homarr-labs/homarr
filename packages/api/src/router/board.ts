@@ -4,12 +4,7 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import {
-  createId,
-  generateResponsiveGridFor,
-  getLayoutResizeSource,
-  serializeLayoutResizeSource,
-} from "@homarr/common";
+import { createId, getLayoutResizeSource, isRecord, serializeLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -42,16 +37,20 @@ import {
   emptySuperJSON,
   everyoneGroup,
   getBoardLaneColumnCount,
+  getBoardTabSections,
   getRootSectionLane,
   getWidgetIntegrationIssue,
   getWidgetIntegrationIssueMessage,
   getPermissionsWithChildren,
   getPermissionsWithParents,
+  maxBoardTabs,
   normalizeBoardLayoutRoles,
+  projectRootSections,
   rootSectionOffsets,
   widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
+import { normalizeAppWidgetOptions } from "@homarr/validation/app";
 import {
   addItemToBoardSchema,
   boardByNameSchema,
@@ -68,6 +67,8 @@ import {
   boardSummarySchema,
   updateBoardItemLayoutSchema,
 } from "@homarr/validation/board";
+import { getBoardLayoutBoundsIssue, getBoardPlacementBoundsIssue } from "@homarr/validation/board-layout-bounds";
+import { BoardLayoutBoundsError } from "@homarr/validation/board-layout-bounds-error";
 import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
@@ -140,6 +141,11 @@ const doBoardItemPlacementsOverlap = (left: BoardItemPlacementRectangle, right: 
   left.yOffset + left.height > right.yOffset &&
   left.xOffset < right.xOffset + right.width &&
   left.xOffset + left.width > right.xOffset;
+
+const throwIfBoardLayoutBoundsInvalid = (issue: string | null) => {
+  if (!issue) return;
+  throw new ApiError({ code: "BAD_REQUEST", message: issue, cause: new BoardLayoutBoundsError(issue) });
+};
 
 interface WidgetConfiguration {
   id: string;
@@ -216,32 +222,7 @@ const searchAccessibleBoardsAsync = async (
   limit?: number,
 ) => {
   const userId = context.session?.user.id;
-  const permissionsOfCurrentUserWhenPresent = await context.db.query.boardUserPermissions.findMany({
-    where: eq(boardUserPermissions.userId, userId ?? ""),
-  });
-
-  const permissionsOfCurrentUserGroupsWhenPresent = await context.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, userId ?? ""),
-    with: {
-      group: {
-        with: {
-          boardPermissions: {},
-          permissions: {},
-        },
-      },
-    },
-  });
-  const boardIds = permissionsOfCurrentUserWhenPresent
-    .map((permission) => permission.boardId)
-    .concat(
-      permissionsOfCurrentUserGroupsWhenPresent
-        .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-        .flat(),
-    );
-
-  const currentUserWhenPresent = await context.db.query.users.findFirst({
-    where: eq(users.id, userId ?? ""),
-  });
+  const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(context.db, userId);
 
   const foundBoards = await context.db.query.boards.findMany({
     where: and(
@@ -268,7 +249,7 @@ const searchAccessibleBoardsAsync = async (
         where: eq(boardUserPermissions.userId, context.session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
+        where: getBoardGroupPermissionWhere(groupMemberships),
       },
     },
   });
@@ -278,8 +259,8 @@ const searchAccessibleBoardsAsync = async (
     name: board.name,
     logoImageUrl: board.logoImageUrl,
     permissions: constructBoardPermissions(board, context.session),
-    isHome: currentUserWhenPresent?.homeBoardId === board.id,
-    isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+    isHome: currentUser?.homeBoardId === board.id,
+    isMobileHome: currentUser?.mobileHomeBoardId === board.id,
   }));
 };
 
@@ -411,6 +392,7 @@ export const boardRouter = createApiRouter({
         name: true,
         logoImageUrl: true,
         isPublic: true,
+        primaryColor: true,
       },
       with: {
         creator: {
@@ -448,9 +430,10 @@ export const boardRouter = createApiRouter({
             id: true,
             kind: true,
             xOffset: true,
+            yOffset: true,
           },
           where: eq(sections.kind, "empty"),
-          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.id)],
+          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.yOffset), asc(section.id)],
         },
       },
       where: getAccessibleBoardsWhere(canViewAllBoards, userId, boardIds),
@@ -648,6 +631,7 @@ export const boardRouter = createApiRouter({
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
         preview: previewLayout
           ? {
+              primaryColor: board.primaryColor,
               layouts: [previewLayout],
               sections: [...previewRoots, ...containerPreview],
               items: itemPreview,
@@ -877,14 +861,31 @@ export const boardRouter = createApiRouter({
         resizeSource: null,
       }));
 
+      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
-        ({ collapseStates: _, layouts: _layouts, ...section }) => ({
-          ...section,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: sectionMap.get(section.id)!,
-          boardId: newBoardId,
-        }),
+        ({ collapseStates: _, layouts: _layouts, ...section }) => {
+          let options = section.options;
+          if (section.kind === "container" && options) {
+            const parsed: unknown = superjson.parse(options);
+            if (isRecord(parsed) && isRecord(parsed.autoExpand) && typeof parsed.autoExpand.itemId === "string") {
+              options = superjson.stringify({
+                ...parsed,
+                autoExpand: {
+                  ...parsed.autoExpand,
+                  itemId: itemMap.get(parsed.autoExpand.itemId) ?? null,
+                },
+              });
+            }
+          }
+          return {
+            ...section,
+            options,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: sectionMap.get(section.id)!,
+            boardId: newBoardId,
+          };
+        },
       );
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
@@ -927,7 +928,6 @@ export const boardRouter = createApiRouter({
           ),
       );
 
-      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
         ({ integrations: _, layouts: _layouts, ...item }) => ({
           ...item,
@@ -1225,6 +1225,26 @@ export const boardRouter = createApiRouter({
       await throwIfActionForbiddenAsync(context, boardWhere, "view");
 
       return await getFullBoardWithWhereAsync(context.db, boardWhere, context.session?.user.id ?? null);
+    }),
+  getWidgetQuerySnapshot: publicProcedure
+    .input(z.object({ boardId: z.string().min(1).max(100), layoutId: z.string().min(1).max(100) }))
+    .query(async ({ context, input }) => {
+      if (context.workerAccess) {
+        throw new ApiError({ code: "FORBIDDEN", message: "Worker dashboards load widget data in the browser" });
+      }
+      const boardWhere = eq(boards.id, input.boardId);
+      await throwIfActionForbiddenAsync(context, boardWhere, "view");
+      const board = await getFullBoardWithWhereAsync(context.db, boardWhere, context.session?.user.id ?? null);
+      if (!board.layouts.some((layout) => layout.id === input.layoutId)) {
+        throw new ApiError({ code: "BAD_REQUEST", message: "Board layout not found" });
+      }
+      try {
+        const { getBoardWidgetQuerySnapshot } = await import("../board-widget-snapshot");
+        return await getBoardWidgetQuerySnapshot(context, board, input.layoutId);
+      } catch (error) {
+        boardLogger.warn("Unable to restore board widget cache", { boardId: board.id, error });
+        return { state: { queries: [], mutations: [] }, refreshQueryHashes: [] };
+      }
     }),
   getBoardSettings: protectedProcedure
     .meta({
@@ -1666,7 +1686,7 @@ export const boardRouter = createApiRouter({
       mcp: {
         enabled: true,
         description:
-          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus",
+          "Update visual and behavior settings for a board. Requires modify permission. REQUIRED: id (board ID). Optional fields include pageTitle, metaTitle, logoImageUrl, faviconImageUrl, backgroundImageUrl, colors, opacity, customCss, itemRadius, and disableStatus. Set primaryColor, secondaryColor, or itemRadius to null to inherit the instance theme.",
       },
     })
     .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
@@ -1713,12 +1733,12 @@ export const boardRouter = createApiRouter({
         protect: true,
         summary: "Save dashboard content",
         description:
-          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
       },
       mcp: {
         enabled: true,
         description:
-          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Read current content with board_getBoardByName first. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Up to five empty main canvas roots (xOffset 0) represent tabs, ordered by yOffset, with optional name. Preserve all tabs and their items. Requires modify access; Custom Widget placement changes require admin access.",
       },
     })
     .input(boardSaveSchema)
@@ -1727,6 +1747,8 @@ export const boardRouter = createApiRouter({
       await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "modify");
 
       const dbBoard = await getFullBoardWithWhereAsync(context.db, eq(boards.id, input.id), context.session.user.id);
+      throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
+      throwIfBoardTabsInvalid(input.sections);
       await validateWidgetConfigurationsAsync(context, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: context.session.user.permissions.includes("admin"),
@@ -1735,6 +1757,7 @@ export const boardRouter = createApiRouter({
       });
 
       for (const item of input.items) {
+        if (item.kind === "app") item.options = normalizeAppWidgetOptions(item.options);
         if (item.kind !== "timetable") continue;
         const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
         let previousOptions: Record<string, unknown> | undefined;
@@ -1764,7 +1787,7 @@ export const boardRouter = createApiRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section) ?? null,
                   boardId: dbBoard.id,
                 })),
               );
@@ -1883,7 +1906,7 @@ export const boardRouter = createApiRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section),
                 })
                 .where(eq(schema.sections.id, section.id));
 
@@ -1952,7 +1975,7 @@ export const boardRouter = createApiRouter({
                     yOffset: section.kind === "empty" ? section.yOffset : null,
                     xOffset: section.kind === "empty" ? section.xOffset : null,
                     options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                    name: null,
+                    name: getStoredSectionName(section) ?? null,
                     boardId: dbBoard.id,
                   })),
                 )
@@ -2078,7 +2101,7 @@ export const boardRouter = createApiRouter({
                   yOffset: section.kind === "empty" ? section.yOffset : null,
                   xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: null,
+                  name: getStoredSectionName(section),
                 })
                 .where(eq(sections.id, section.id))
                 .run();
@@ -2318,6 +2341,8 @@ export const boardRouter = createApiRouter({
     .mutation(async ({ context, input }) => {
       await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
+      if (input.kind === "app") input.options = normalizeAppWidgetOptions(input.options);
+
       await validateWidgetConfigurationsAsync(context, [
         { id: "", kind: input.kind, integrationIds: input.integrationIds },
       ]);
@@ -2394,6 +2419,12 @@ export const boardRouter = createApiRouter({
           };
         });
 
+        for (const placement of layoutRows) {
+          throwIfBoardLayoutBoundsInvalid(
+            getBoardPlacementBoundsIssue(board, placement, placement.sectionId, `Item "${itemId}"`),
+          );
+        }
+
         await context.db.insert(items).values({
           id: itemId,
           boardId: input.boardId,
@@ -2458,18 +2489,8 @@ export const boardRouter = createApiRouter({
           throw new ApiError({ code: "NOT_FOUND", message: "Item section not found on this board" });
         }
 
-        let columnCount: number;
-        if (section.kind === "empty") {
-          columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
-        } else {
-          const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layout.id);
-          if (!sectionLayout) {
-            throw new ApiError({ code: "BAD_REQUEST", message: "Item section has no layout at this breakpoint" });
-          }
-          columnCount = sectionLayout.width;
-        }
-
-        if (input.xOffset + input.width > columnCount || input.yOffset + input.height > 32767) {
+        throwIfBoardLayoutBoundsInvalid(getBoardPlacementBoundsIssue(board, input, section.id, `Item "${item.id}"`));
+        if (input.yOffset + input.height > 32767) {
           throw new ApiError({ code: "BAD_REQUEST", message: "Item layout exceeds its section bounds" });
         }
 
@@ -2590,6 +2611,29 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
   }
 };
 
+type SubmittedSection = z.infer<typeof sectionSchema>;
+
+const getStoredSectionName = (section: SubmittedSection) => {
+  if (section.kind !== "empty") return null;
+  return section.name;
+};
+
+const throwIfBoardTabsInvalid = (submittedSections: readonly SubmittedSection[]) => {
+  const tabCount = getBoardTabSections(submittedSections).length;
+  if (tabCount === 0) {
+    throw new ApiError({
+      code: "BAD_REQUEST",
+      message: "This board requires at least one main canvas tab",
+    });
+  }
+  if (tabCount <= maxBoardTabs) return;
+
+  throw new ApiError({
+    code: "BAD_REQUEST",
+    message: `This board supports at most ${maxBoardTabs} main canvas tabs`,
+  });
+};
+
 const getResizeSourceUpdate = (sources: ReadonlyMap<string, string | null>, layoutId: string) => {
   if (!sources.has(layoutId)) return {};
   return { resizeSource: sources.get(layoutId) ?? null };
@@ -2638,63 +2682,13 @@ const getUpdatedBoardLayout = (
   if (options.previous.layoutId === options.current.layoutId) serializedSource = savedLayout?.resizeSource;
   const source = getLayoutResizeSource(options.previous, currentElements, serializedSource);
   const elements = source.elements;
-  const previousGeometry = { ...source.geometry, layoutId: options.previous.layoutId };
-  const emptyRoots = board.sections
-    .filter((section) => section.kind === "empty")
-    .toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0) || first.id.localeCompare(second.id));
-  const rootByLane = new Map<BoardLane, (typeof emptyRoots)[number]>();
-  for (const root of emptyRoots) {
-    const lane = getRootSectionLane(root.xOffset);
-    if (!rootByLane.has(lane)) rootByLane.set(lane, root);
-  }
-  const mainRoot = rootByLane.get("main");
-  if (!mainRoot) throw new Error(`Board "${board.id}" has no main canvas root`);
-
-  const sourceRootById = new Map(
-    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
-  );
-  const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
-    boardLanes.map((lane) => [
-      lane,
-      lane !== "main" && getBoardLaneColumnCount(options.current, lane) === 0 ? "main" : lane,
-    ]),
-  );
-  const remappedElements = elements.map((element) => {
-    const sourceLane = sourceRootById.get(element.sectionId);
-    if (!sourceLane) return element;
-    const targetLane = targetLaneBySourceLane.get(sourceLane) ?? "main";
-    const targetRoot = rootByLane.get(targetLane) ?? mainRoot;
-    return {
-      ...element,
-      sectionId: targetRoot.id,
-    };
+  const updatedElements = projectRootSections({
+    sections: board.sections,
+    elements,
+    source: source.geometry,
+    target: options.current,
   });
-
-  const results = boardLanes.flatMap((lane) => {
-    const root = rootByLane.get(lane);
-    const width = getBoardLaneColumnCount(options.current, lane);
-    if (!root || width === 0) return [];
-    const sourceLanes = boardLanes.filter(
-      (sourceLane) =>
-        rootByLane.has(sourceLane) &&
-        getBoardLaneColumnCount(previousGeometry, sourceLane) > 0 &&
-        targetLaneBySourceLane.get(sourceLane) === lane,
-    );
-    const previousWidth =
-      sourceLanes.length === 1
-        ? getBoardLaneColumnCount(previousGeometry, sourceLanes[0] ?? "main")
-        : Number.MAX_SAFE_INTEGER;
-
-    return [
-      generateResponsiveGridFor({
-        items: remappedElements,
-        previousWidth,
-        width,
-        sectionId: root.id,
-      }),
-    ];
-  });
-  const updatedElements = results.flatMap((result) => result.items);
+  if (!updatedElements) throw new Error(`Board "${board.id}" has no main canvas root`);
   const updatedElementById = new Map(updatedElements.map((element) => [element.id, element]));
 
   const itemSectionLayoutsCollection = board.items.flatMap((item): InferInsertModel<typeof itemLayouts>[] => {
@@ -2891,29 +2885,30 @@ const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string)
 const protectedLayoutRepairPromises = new Map<string, Promise<void>>();
 
 const getBoardAccessContextAsync = async (db: Database, userId: string | undefined) => {
-  const [userPermissions, groupMemberships, currentUser] = await Promise.all([
-    db.query.boardUserPermissions.findMany({
-      where: eq(boardUserPermissions.userId, userId ?? ""),
-    }),
-    db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, userId ?? ""),
-      with: {
-        group: {
-          with: {
-            boardPermissions: {},
-            permissions: {},
+  const currentUser = await db.query.users.findFirst({
+    where: eq(users.id, userId ?? ""),
+    columns: {
+      homeBoardId: true,
+      mobileHomeBoardId: true,
+    },
+    with: {
+      boardPermissions: { columns: { boardId: true } },
+      groups: {
+        columns: { groupId: true },
+        with: {
+          group: {
+            columns: {},
+            with: {
+              boardPermissions: { columns: { boardId: true } },
+              permissions: { columns: { permission: true } },
+            },
           },
         },
       },
-    }),
-    db.query.users.findFirst({
-      where: eq(users.id, userId ?? ""),
-      columns: {
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-      },
-    }),
-  ]);
+    },
+  });
+  const userPermissions = currentUser?.boardPermissions ?? [];
+  const groupMemberships = currentUser?.groups ?? [];
   const boardIds = userPermissions
     .map((permission) => permission.boardId)
     .concat(

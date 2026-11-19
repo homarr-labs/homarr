@@ -12,6 +12,7 @@ import {
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { useDockerContainerOptions } from "./docker/use-container-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
@@ -21,7 +22,29 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
     return optionsBuilder.from(
       (factory) => ({
         appId: factory.app(),
-        openInNewTab: factory.switch({ defaultValue: true }),
+        dockerContainer: factory.dynamicSelect({
+          withDescription: true,
+          useOptions: (_query, _integrationIds, options) => useDockerContainerOptions(options),
+        }),
+        openIn: factory.select({
+          options: [
+            {
+              value: "currentTab",
+              label: (t) => t("widget.app.option.openIn.option.currentTab"),
+            },
+            {
+              value: "newTab",
+              label: (t) => t("widget.app.option.openIn.option.newTab"),
+            },
+            {
+              value: "newWindow",
+              label: (t) => t("widget.app.option.openIn.option.newWindow"),
+            },
+          ],
+          defaultValue: "newTab",
+          allowDeselect: false,
+          withDescription: true,
+        }),
         showTitle: factory.switch({ defaultValue: true }),
         descriptionDisplayMode: factory.select({
           options: [

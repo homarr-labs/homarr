@@ -1,19 +1,17 @@
-import { X509Certificate } from "node:crypto";
 import { notFound } from "next/navigation";
-import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Card, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { auth } from "@homarr/auth/next";
 import { getMantineColor } from "@homarr/common/theme";
-import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
+import { api } from "@homarr/api/server";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
-import { Link } from "@homarr/ui";
+import { NoResults } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { NoResults } from "~/components/no-results";
-import { AddCertificateSection } from "./_components/add-certificate";
+import { CertificatesPageContent } from "./_components/add-certificate";
 import { RemoveCertificate } from "./_components/remove-certificate";
 
 interface CertificatesPageProps {
@@ -30,50 +28,19 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
   const { locale } = await params;
   const t = await getI18n("certificate");
-  const certificates = await loadCustomRootCertificatesAsync();
-  const x509Certificates = certificates
-    .map((cert) => {
-      try {
-        const x509 = new X509Certificate(cert.content);
-        return {
-          ...cert,
-          isError: false,
-          x509,
-        } as const;
-      } catch {
-        return {
-          ...cert,
-          isError: true,
-          x509: null,
-        } as const;
-      }
-    })
-    .sort((certA, certB) => {
-      if (certA.isError) return -1;
-      if (certB.isError) return 1;
-      return certA.x509.validToDate.getTime() - certB.x509.validToDate.getTime();
-    });
+  const certificates = await api.frontend.certificates.query();
+  const x509Certificates = certificates.map((certificate) => {
+    if (certificate.isError || !certificate.validTo) {
+      return { ...certificate, isError: true, validToDate: null } as const;
+    }
+    return { ...certificate, isError: false, validToDate: new Date(certificate.validTo) } as const;
+  });
 
   return (
     <>
       <DynamicBreadcrumb />
 
-      <Stack>
-        <Group justify="space-between">
-          <Stack gap={4}>
-            <Title>{t("page.list.title")}</Title>
-            <Text>{t("page.list.description")}</Text>
-          </Stack>
-
-          <Group>
-            <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
-              {t("page.list.toHostnames")}
-            </Button>
-          </Group>
-        </Group>
-
-        <AddCertificateSection />
-
+      <CertificatesPageContent>
         {x509Certificates.length === 0 && (
           <NoResults icon={IconCertificateOff} title={t("page.list.noResults.title")} />
         )}
@@ -91,7 +58,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                   />
                 ) : (
                   <IconCertificate
-                    color={getMantineColor(iconColor(cert.x509.validToDate), 6)}
+                    color={getMantineColor(iconColor(cert.validToDate), 6)}
                     style={{ minWidth: 32 }}
                     size={32}
                     stroke={1.5}
@@ -100,7 +67,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                 <Stack flex={1} gap="xs" maw="calc(100% - 48px)">
                   <Group justify="space-between" wrap="nowrap">
                     <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>
-                      {cert.isError ? t("page.list.invalid.title") : cert.x509.subject}
+                      {cert.isError ? t("page.list.invalid.title") : cert.subject}
                     </Text>
                     <Text c="gray.6" ta="end" size="sm">
                       {cert.fileName}
@@ -112,10 +79,10 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                         {t("page.list.invalid.description")}
                       </Text>
                     ) : (
-                      <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
+                      <Text size="sm" c="gray.6" title={cert.validToDate.toISOString()}>
                         {t("page.list.expires", {
                           when: new Intl.RelativeTimeFormat(locale).format(
-                            dayjs(cert.x509.validToDate).diff(dayjs(), "days"),
+                            dayjs(cert.validToDate).diff(dayjs(), "days"),
                             "days",
                           ),
                         })}
@@ -128,7 +95,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
             </Card>
           ))}
         </SimpleGrid>
-      </Stack>
+      </CertificatesPageContent>
     </>
   );
 }

@@ -132,7 +132,7 @@ export default function RssFeed({ itemId, options, width, height, displayMode }:
                 className={classes.entry}
                 component={href ? "a" : "div"}
                 href={href}
-                radius={board.itemRadius}
+                radius={board.itemRadius ?? undefined}
                 target={href ? "_blank" : undefined}
                 rel={href ? SAFE_NEW_TAB_REL : undefined}
                 w="100%"
@@ -185,7 +185,7 @@ export default function RssFeed({ itemId, options, width, height, displayMode }:
                 key={feedEntry.id}
                 component={href ? "a" : "div"}
                 href={href}
-                radius={board.itemRadius}
+                radius={board.itemRadius ?? undefined}
                 target={href ? "_blank" : undefined}
                 rel={href ? SAFE_NEW_TAB_REL : undefined}
                 w="100%"

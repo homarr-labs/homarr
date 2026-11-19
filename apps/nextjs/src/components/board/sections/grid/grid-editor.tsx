@@ -39,13 +39,12 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { AddInPlaceGridLayer } from "~/components/board/in-place-editor/grid-layer";
 import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
   cancelGridTransaction,
   commitGridTransaction,
-  getContinuousGridDelta,
-  getContinuousResizePlacement,
   getGridTargetFallbackIds,
   getPreferredNestedExitTargetId,
   getPointerProjectedShape,
@@ -64,8 +63,12 @@ import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { GridInteraction } from "./grid-preview-layer";
 import { GridPreviewLayer } from "./grid-preview-layer";
 import { createGridResizeOutlineController } from "./grid-resize-outline";
+import { createGridRowProjection } from "./grid-row-projection";
+import type { GridRowProjection } from "./grid-row-projection";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
-import { useGridLayoutActions } from "./use-grid-layout-actions";
+import { commitSectionGridsCallback, useGridLayoutActions } from "./use-grid-layout-actions";
+import { getContainerGridMinimumHeights } from "./container-grid-sizing";
+import { useCollapsedSectionIds } from "../section-collapse";
 
 const GRID_ENTRY_TYPE = "homarr-board-grid-entry";
 const GRID_TARGET_TYPE = "homarr-board-grid-target";
@@ -89,6 +92,9 @@ interface RegisteredGrid {
   parentGridId: string | null;
   ownerPlacementId: string | null;
   placements: readonly SectionGridPlacement[];
+  rowProjection: GridRowProjection;
+  canvasScale: number;
+  minimumDisplayHeights?: ReadonlyMap<string, number>;
   depth: number;
   element: HTMLElement;
 }
@@ -120,12 +126,14 @@ interface ResizePreviewInput {
 }
 
 interface BoardGridEditorActionsContextValue {
+  getDisplayedPlacement: (sectionId: string, placement: SectionGridPlacement) => SectionGridPlacement;
+  getLogicalPointerPosition: (sectionId: string, position: { x: number; y: number }) => { x: number; y: number };
   registerGrid: (grid: RegisteredGrid) => () => void;
   getDepth: (gridId: string) => number;
   isDropTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean;
   canAcceptDrop: (source: AbstractDraggable, targetGridId: string) => boolean;
   beginResize: (input: ResizeStartInput) => boolean;
-  previewResize: (input: ResizePreviewInput) => boolean;
+  previewResize: (input: ResizePreviewInput) => SectionGridPlacement | null;
   completeResize: () => void;
   cancelResize: () => void;
 }
@@ -156,6 +164,7 @@ const useBoardGridEditorInteraction = () => {
 export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const collapsedSectionIds = useCollapsedSectionIds();
   const t = useI18n();
   const { announce } = useBoardGridPortalHost();
   const { commitSectionGrids } = useGridLayoutActions();
@@ -179,14 +188,48 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   );
   const getDepth = useCallback((gridId: string) => getGridDepth(gridId, parentGridById), [parentGridById]);
 
+  const publishInteraction = useCallback(
+    (interaction: GridInteraction | null) => {
+      if (!interaction) {
+        interactionStore.publish(null);
+        return;
+      }
+      const snapshots = interaction.state.grids.map((grid) => ({
+        layoutId: currentLayoutId,
+        sectionId: grid.id,
+        placements: grid.placements,
+      }));
+      const previewBoard = commitSectionGridsCallback(snapshots)(board);
+      const canvasScale = gridsRef.current.get(interaction.sourceGridId)?.canvasScale ?? 1;
+      const minimumDisplayHeights = getContainerGridMinimumHeights(
+        previewBoard,
+        currentLayoutId,
+        canvasScale,
+        collapsedSectionIds,
+      );
+      const affectedGridIds = new Set<string>();
+      for (const grid of gridsRef.current.values()) {
+        const hasChangedDisplayHeight = grid.placements.some(
+          (placement) =>
+            placement.type === "section" &&
+            grid.minimumDisplayHeights?.has(placement.id) &&
+            minimumDisplayHeights.get(placement.id) !== grid.minimumDisplayHeights?.get(placement.id),
+        );
+        if (hasChangedDisplayHeight) affectedGridIds.add(grid.id);
+      }
+      interactionStore.publish({ ...interaction, minimumDisplayHeights, affectedGridIds });
+    },
+    [board, currentLayoutId, collapsedSectionIds, interactionStore],
+  );
+
   const clearInteraction = useCallback(() => {
     window.cancelAnimationFrame(collisionFrameRef.current);
     collisionFrameRef.current = 0;
     activeRef.current = null;
     renderedInteractionRef.current = null;
-    interactionStore.publish(null);
+    publishInteraction(null);
     document.body.removeAttribute("data-board-grid-interacting");
-  }, [interactionStore]);
+  }, [publishInteraction]);
 
   useLayoutEffect(() => {
     clearInteraction();
@@ -264,7 +307,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           previewRevision: 0,
         };
         document.body.setAttribute("data-board-grid-interacting", mode);
-        interactionStore.publish({
+        publishInteraction({
           activeId,
           sourceGridId,
           targetGridId: mode === "resize" ? sourceGridId : null,
@@ -281,7 +324,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         return false;
       }
     },
-    [announce, clearInteraction, getCurrentState, interactionStore, t],
+    [announce, clearInteraction, getCurrentState, publishInteraction, t],
   );
 
   const updateDragPreview = useCallback(
@@ -296,7 +339,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
       const publishPreview = (preview: Omit<GridInteraction, "previewRevision">) => {
         active.previewRevision += 1;
-        interactionStore.publish({ ...preview, previewRevision: active.previewRevision });
+        publishInteraction({ ...preview, previewRevision: active.previewRevision });
       };
 
       const showInvalidPreview = (targetGridId: string | null, previewKey: string) => {
@@ -355,12 +398,25 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         const candidate = gridsRef.current.get(candidateId);
         if (!candidate) continue;
         const rectangle = candidate.element.getBoundingClientRect();
-        const renderedRowCount = Number(candidate.element.dataset.gridRowCount);
+        const visualScale = rectangle.width / getLogicalGridSize(candidate.columnCount);
+        const rowScale =
+          Number.parseFloat(getComputedStyle(candidate.element).getPropertyValue("--board-grid-row-scale")) || 1;
+        const rowPitch = LOGICAL_GRID_PITCH * visualScale * rowScale;
+        const interaction = interactionStore.getGridSnapshot(candidate.id);
+        let rowProjection = candidate.rowProjection;
+        if (interaction) {
+          const previewGrid = interaction.state.grids.find((grid) => grid.id === candidate.id);
+          rowProjection = createGridRowProjection(
+            previewGrid?.placements ?? candidate.placements,
+            interaction.minimumDisplayHeights ?? candidate.minimumDisplayHeights,
+          );
+        }
+        const logicalY = rowProjection.getLogicalRow((shape.top - rectangle.top) / rowPitch);
         const coordinates = getSnappedGridCoordinates({
-          dragShape: shape,
+          dragShape: { ...shape, top: rectangle.top + logicalY * rowPitch },
           target: rectangle,
           columnCount: candidate.columnCount,
-          verticalVisualScale: rectangle.height / getLogicalGridSize(renderedRowCount),
+          verticalVisualScale: visualScale * rowScale,
         });
         if (!coordinates) {
           invalidPreviewKey = `invalid:${candidate.id}:coordinates`;
@@ -398,7 +454,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
       showInvalidPreview(targetGrid.id, invalidPreviewKey);
     },
-    [canAcceptDrop, interactionStore, isDropTargetEligible],
+    [canAcceptDrop, publishInteraction, isDropTargetEligible, interactionStore],
   );
 
   const commitActiveTransaction = useCallback(
@@ -574,18 +630,26 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const applyResizePreview = useCallback(
     (input: ResizePreviewInput) => {
       const active = activeRef.current;
-      if (!active) return false;
+      if (!active) return null;
       active.mode = "resize";
       active.targetGridId = active.transaction.sourceGridId;
 
       const key = `${input.direction}:${input.deltaColumns}:${input.deltaRows}:${input.minWidth}:${input.minHeight}`;
-      if (active.lastPreviewKey === key) return active.valid;
+      const getAcceptedPlacement = () => {
+        if (!active.valid) return null;
+        return (
+          active.transaction.preview.grids
+            .find((grid) => grid.id === active.transaction.sourceGridId)
+            ?.placements.find((placement) => placement.id === active.transaction.activeId) ?? null
+        );
+      };
+      if (active.lastPreviewKey === key) return getAcceptedPlacement();
       active.lastPreviewKey = key;
       const result = previewGridResize(active.transaction, input);
       active.valid = result.accepted;
       if (!result.accepted) {
         active.previewRevision += 1;
-        interactionStore.publish({
+        publishInteraction({
           activeId: active.transaction.activeId,
           sourceGridId: active.transaction.sourceGridId,
           targetGridId: active.transaction.sourceGridId,
@@ -595,12 +659,12 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           valid: false,
           previewRevision: active.previewRevision,
         });
-        return false;
+        return null;
       }
 
       active.transaction = result.transaction;
       active.previewRevision += 1;
-      interactionStore.publish({
+      publishInteraction({
         activeId: active.transaction.activeId,
         sourceGridId: active.transaction.sourceGridId,
         targetGridId: active.transaction.sourceGridId,
@@ -613,23 +677,53 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         valid: true,
         previewRevision: active.previewRevision,
       });
-      return true;
+      return getAcceptedPlacement();
     },
-    [interactionStore],
+    [publishInteraction],
   );
 
   const previewResize = useCallback(
     (input: ResizePreviewInput) => {
       const active = activeRef.current;
-      if (!active || active.mode !== "resize") return false;
+      if (!active || active.mode !== "resize") return null;
       return applyResizePreview(input);
     },
     [applyResizePreview],
   );
 
+  const getDisplayedPlacement = useCallback(
+    (sectionId: string, placement: SectionGridPlacement) => {
+      const grid = gridsRef.current.get(sectionId);
+      if (!grid) return placement;
+      const preview = activeRef.current?.transaction.preview.grids.find((candidate) => candidate.id === sectionId);
+      const entries = (preview?.placements ?? grid.placements).map((entry) =>
+        entry.id === placement.id ? placement : entry,
+      );
+      return (
+        createGridRowProjection(
+          entries,
+          interactionStore.getSnapshot()?.minimumDisplayHeights ?? grid.minimumDisplayHeights,
+        ).placements.find((entry) => entry.id === placement.id) ?? placement
+      );
+    },
+    [interactionStore],
+  );
+
+  const getLogicalPointerPosition = useCallback((sectionId: string, position: { x: number; y: number }) => {
+    const grid = gridsRef.current.get(sectionId);
+    if (!grid) return position;
+    const rectangle = grid.element.getBoundingClientRect();
+    const rowScale = Number.parseFloat(getComputedStyle(grid.element).getPropertyValue("--board-grid-row-scale")) || 1;
+    const pitch = (rectangle.width / grid.columnCount) * rowScale;
+    const row = grid.rowProjection.getLogicalRow((position.y - rectangle.top) / pitch);
+    return { x: position.x, y: rectangle.top + row * pitch };
+  }, []);
+
   const actions = useMemo<BoardGridEditorActionsContextValue>(
     () => ({
       registerGrid,
+      getDisplayedPlacement,
+      getLogicalPointerPosition,
       getDepth,
       isDropTargetEligible,
       canAcceptDrop,
@@ -647,6 +741,8 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       previewResize,
       getDepth,
       registerGrid,
+      getDisplayedPlacement,
+      getLogicalPointerPosition,
     ],
   );
 
@@ -729,6 +825,8 @@ export default function GridEditor({
   maxRowCount,
   placements,
   transactionPlacements,
+  minimumDisplayHeights,
+  canvasScale = 1,
   className,
   section,
   items,
@@ -739,6 +837,12 @@ export default function GridEditor({
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const interactionStore = useBoardGridEditorInteractionStore();
   const gridRef = useRef<HTMLDivElement>(null);
+  const [addInPlaceRowCount, setAddInPlaceRowCount] = useState(0);
+  const renderedRowCount = Math.max(rowCount, addInPlaceRowCount);
+  const rowProjection = useMemo(
+    () => createGridRowProjection(placements, minimumDisplayHeights),
+    [placements, minimumDisplayHeights],
+  );
   const entryElements = useSyncExternalStore(
     entryElementStore.subscribe,
     entryElementStore.getSnapshot,
@@ -788,10 +892,37 @@ export default function GridEditor({
       parentGridId,
       ownerPlacementId,
       placements: transactionPlacements,
+      rowProjection,
+      minimumDisplayHeights,
+      canvasScale,
       depth,
       element,
     });
-  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, registerGrid, sectionId, transactionPlacements]);
+  }, [
+    columnCount,
+    depth,
+    maxRowCount,
+    ownerPlacementId,
+    parentGridId,
+    registerGrid,
+    sectionId,
+    transactionPlacements,
+    rowProjection,
+    minimumDisplayHeights,
+    canvasScale,
+  ]);
+
+  useLayoutEffect(() => {
+    const viewport = gridRef.current?.parentElement;
+    if (!viewport || maxRowCount !== null || renderedRowCount <= rowCount) return;
+    viewport.style.setProperty(
+      "--board-grid-drag-height",
+      `calc(${getLogicalGridSize(rowProjection.getDisplayRow(renderedRowCount))}px * var(--board-grid-row-scale, 1))`,
+    );
+    return () => {
+      viewport.style.removeProperty("--board-grid-drag-height");
+    };
+  }, [maxRowCount, renderedRowCount, rowCount, rowProjection]);
 
   return (
     <div
@@ -799,16 +930,16 @@ export default function GridEditor({
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
-      data-grid-row-count={rowCount}
+      data-grid-row-count={renderedRowCount}
       style={
         {
           width: getLogicalGridSize(columnCount),
-          height: `calc(${getLogicalGridSize(rowCount)}px * var(--board-grid-row-scale, 1))`,
+          height: `calc(${getLogicalGridSize(rowProjection.getDisplayRow(renderedRowCount))}px * var(--board-grid-row-scale, 1))`,
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }
     >
-      {placements.map((placement) => {
+      {transactionPlacements.map((placement) => {
         return (
           <DndGridEntry
             key={placement.id}
@@ -826,9 +957,21 @@ export default function GridEditor({
         rowCount={rowCount}
         maxRowCount={maxRowCount}
         placements={placements}
+        logicalPlacements={transactionPlacements}
+        minimumDisplayHeights={minimumDisplayHeights}
         gridRef={gridRef}
         entryElements={entryElements}
         interactionStore={interactionStore}
+      />
+      <AddInPlaceGridLayer
+        sectionId={sectionId}
+        columnCount={columnCount}
+        rowCount={rowCount}
+        maxRowCount={maxRowCount}
+        placements={placements}
+        rowProjection={rowProjection}
+        entryElements={entryElements}
+        onRowCountChange={setAddInPlaceRowCount}
       />
       <span
         data-grid-runtime="homarr-dnd-kit-v1"
@@ -840,15 +983,9 @@ export default function GridEditor({
   );
 }
 
-const DndGridEntryComponent = ({
-  sectionId,
-  placement,
-  label,
-  columnCount,
-  maxRowCount,
-  element,
-}: DndGridEntryProps) => {
-  const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
+const DndGridEntryComponent = ({ sectionId, placement, label, element }: DndGridEntryProps) => {
+  const { beginResize, previewResize, completeResize, cancelResize, getDisplayedPlacement, getLogicalPointerPosition } =
+    useBoardGridEditorActions();
   const placementRef = useRef(placement);
   placementRef.current = placement;
   const resizeOutlineController = useMemo(
@@ -856,8 +993,10 @@ const DndGridEntryComponent = ({
       createGridResizeOutlineController(
         () => element,
         () => placementRef.current,
+        (previewPlacement) =>
+          getDisplayedPlacement(sectionId, { ...previewPlacement, type: placementRef.current.type }),
       ),
-    [element],
+    [element, getDisplayedPlacement, sectionId],
   );
   const sourceData = useMemo<GridEntryData>(
     () => ({ kind: GRID_ENTRY_TYPE, sectionId, placement, label }),
@@ -915,13 +1054,12 @@ const DndGridEntryComponent = ({
         sectionId={sectionId}
         placement={placement}
         label={label}
-        columnCount={columnCount}
-        maxRowCount={maxRowCount}
         beginResize={beginResize}
         previewResize={previewResize}
         completeResize={completeResize}
         cancelResize={cancelResize}
         scheduleResizeOutline={resizeOutlineController.schedule}
+        getLogicalPointerPosition={getLogicalPointerPosition}
       />
     </>,
     element,
@@ -935,13 +1073,12 @@ interface GridResizeHandlesProps {
   sectionId: string;
   placement: SectionGridPlacement;
   label: string;
-  columnCount: number;
-  maxRowCount: number | null;
   beginResize: BoardGridEditorActionsContextValue["beginResize"];
   previewResize: BoardGridEditorActionsContextValue["previewResize"];
   completeResize: BoardGridEditorActionsContextValue["completeResize"];
   cancelResize: BoardGridEditorActionsContextValue["cancelResize"];
   scheduleResizeOutline: (preview: { placement: SectionGridPlacement; valid: boolean } | null) => void;
+  getLogicalPointerPosition: BoardGridEditorActionsContextValue["getLogicalPointerPosition"];
 }
 
 const RESIZE_DIRECTIONS: readonly GridResizeDirection[] = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
@@ -950,13 +1087,12 @@ const GridResizeHandles = ({
   sectionId,
   placement,
   label,
-  columnCount,
-  maxRowCount,
   beginResize,
   previewResize,
   completeResize,
   cancelResize,
   scheduleResizeOutline,
+  getLogicalPointerPosition,
 }: GridResizeHandlesProps) => {
   const pointerStartRef = useRef<{
     id: number;
@@ -1012,7 +1148,7 @@ const GridResizeHandles = ({
 
     const delta = getSnappedGridDelta({
       initial: { x: started.x, y: started.y },
-      current,
+      current: getLogicalPointerPosition(sectionId, current),
       visualScale: started.visualScale,
     });
     if (delta) update(started.direction, delta.x, delta.y);
@@ -1041,8 +1177,7 @@ const GridResizeHandles = ({
     pointerStartRef.current = {
       id: event.pointerId,
       handle: event.currentTarget,
-      x: event.clientX,
-      y: event.clientY,
+      ...getLogicalPointerPosition(sectionId, { x: event.clientX, y: event.clientY }),
       direction,
       visualScale,
       placement: { ...placement },
@@ -1057,25 +1192,15 @@ const GridResizeHandles = ({
     event.preventDefault();
     const input = {
       initial: { x: started.x, y: started.y },
-      current: { x: event.clientX, y: event.clientY },
+      current: getLogicalPointerPosition(sectionId, { x: event.clientX, y: event.clientY }),
       visualScale: started.visualScale,
     };
     const snappedDelta = getSnappedGridDelta(input);
-    const continuousDelta = getContinuousGridDelta(input);
-    if (!snappedDelta || !continuousDelta) return;
-    const valid = update(started.direction, snappedDelta.x, snappedDelta.y);
+    if (!snappedDelta) return;
+    const acceptedPlacement = update(started.direction, snappedDelta.x, snappedDelta.y);
     scheduleResizeOutline({
-      placement: getContinuousResizePlacement({
-        placement: started.placement,
-        direction: started.direction,
-        deltaColumns: continuousDelta.x,
-        deltaRows: continuousDelta.y,
-        columnCount,
-        maxRowCount,
-        minWidth: started.placement.minW ?? 1,
-        minHeight: started.placement.minH ?? 1,
-      }),
-      valid,
+      placement: acceptedPlacement ?? started.placement,
+      valid: acceptedPlacement !== null,
     });
   };
 
@@ -1243,10 +1368,9 @@ const preventGridDragActivation = (event: PointerEvent, source: DomDraggable) =>
 const getEntryVisualScale = (element: HTMLElement | null, placement: SectionGridPlacement) => {
   if (!element) return null;
   const rectangle = element.getBoundingClientRect();
-  const scale = {
-    x: rectangle.width / getLogicalGridSize(placement.w),
-    y: rectangle.height / getLogicalGridSize(placement.h),
-  };
+  const horizontalScale = rectangle.width / getLogicalGridSize(placement.w);
+  const rowScale = Number.parseFloat(getComputedStyle(element).getPropertyValue("--board-grid-row-scale")) || 1;
+  const scale = { x: horizontalScale, y: horizontalScale * rowScale };
   return Number.isFinite(scale.x) && scale.x > 0 && Number.isFinite(scale.y) && scale.y > 0 ? scale : null;
 };
 

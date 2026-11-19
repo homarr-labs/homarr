@@ -1,7 +1,9 @@
 import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationHttpAuthDefinition } from "@homarr/definitions/integration";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import { resolveDeclaredHttpAuthentication } from "../http-auth";
 import type { Integration, IntegrationInput } from "./integration";
 
 const logger = createLogger({ module: "integrationFactory" });
@@ -139,6 +141,14 @@ const integrationCreators = {
     return new StatsIntegration(input, plantitStatsProvider);
   },
 
+  yuvomi: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yuvomiStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/yuvomi"),
+    ]);
+    return new StatsIntegration(input, yuvomiStatsProvider);
+  },
+
   netdata: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { netdataStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
@@ -258,6 +268,8 @@ const integrationCreators = {
   plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),
   sonarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/sonarr/sonarr-integration")).SonarrIntegration(input),
+  sportarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/sportarr/sportarr-integration")).SportarrIntegration(input),
   radarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/radarr/radarr-integration")).RadarrIntegration(input),
   sabNzbd: async (input: IntegrationInput) =>
@@ -323,6 +335,8 @@ const integrationCreators = {
     new (await import("../immich/immich-integration")).ImmichIntegration(input),
   paperlessNgx: async (input: IntegrationInput) =>
     new (await import("../paperless-ngx/paperless-ngx-integration")).PaperlessNgxIntegration(input),
+  thingport: async (input: IntegrationInput) =>
+    new (await import("../thingport/thingport-integration")).ThingportIntegration(input),
   wazuh: async (input: IntegrationInput) => new (await import("../wazuh/wazuh-integration")).WazuhIntegration(input),
   patchmon: async (input: IntegrationInput) =>
     new (await import("../patchmon/patchmon-integration")).PatchMonIntegration(input),
@@ -402,6 +416,17 @@ export async function createIntegrationAsync(
 }
 
 export async function getIntegrationHttpAuthenticationAsync(integration: IntegrationInput & { kind: IntegrationKind }) {
+  if (Object.hasOwn(integrationCreators, integration.kind)) {
+    const definition = getIntegrationHttpAuthDefinition(integration.kind);
+    if (definition.type !== "adapter") {
+      try {
+        return resolveDeclaredHttpAuthentication(integration, definition);
+      } catch {
+        // Keep native error normalization for unsupported or incomplete saved credentials.
+      }
+    }
+  }
+
   const client = await createIntegrationAsync(integration);
   return client.getHttpAuthenticationAsync();
 }

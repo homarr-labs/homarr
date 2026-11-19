@@ -77,20 +77,26 @@ export const filterCatalog = <TOption>(
   const normalizedQuery = query.trim().toLowerCase();
   if (normalizedQuery.length === 0) return options.slice(0, limit);
 
-  return options
-    .map((option, index) => {
-      const values = getSearchableValues(option).map((value) => value.toLowerCase());
-      const score = values.reduce((currentScore, value) => {
-        if (value === normalizedQuery) return Math.min(currentScore, 0);
-        if (value.startsWith(normalizedQuery)) return Math.min(currentScore, 1);
-        if (value.includes(normalizedQuery)) return Math.min(currentScore, 2);
-        return currentScore;
-      }, Number.POSITIVE_INFINITY);
+  const matches: [TOption[], TOption[], TOption[]] = [[], [], []];
+  let bucketLimit = limit;
+  if (limit < 0) bucketLimit = Number.POSITIVE_INFINITY;
 
-      return { option, index, score };
-    })
-    .filter(({ score }) => Number.isFinite(score))
-    .toSorted((first, second) => first.score - second.score || first.index - second.index)
-    .slice(0, limit)
-    .map(({ option }) => option);
+  for (const option of options) {
+    let score = 3;
+    for (const value of getSearchableValues(option)) {
+      const normalizedValue = value.toLowerCase();
+      if (normalizedValue === normalizedQuery) {
+        score = 0;
+        break;
+      }
+      if (normalizedValue.startsWith(normalizedQuery)) score = Math.min(score, 1);
+      else if (normalizedValue.includes(normalizedQuery)) score = Math.min(score, 2);
+    }
+
+    // Each relevance bucket preserves catalog order; later entries cannot enter its visible slice.
+    const bucket = matches[score];
+    if (bucket && bucket.length < bucketLimit) bucket.push(option);
+  }
+
+  return matches.flat().slice(0, limit);
 };

@@ -76,6 +76,7 @@ import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { useWorkerBootstrap, useWorkerConnections, useWorkerWorkspace } from "~/worker/context";
 import { WorkerSharing } from "~/worker/sharing";
+import { WorkerQueryStatus } from "./query-state";
 
 export interface WorkerUsersRouteProps {
   /** Route segments after /manage, including users. */
@@ -236,29 +237,26 @@ const GroupsOverview = () => {
   if (groups.isError || !groups.data) return <QueryStatus {...groups} />;
   const defaultGroup = groups.data.find((group) => group.name === everyoneGroup);
   return (
-    <ManagePageLayout title={tCommon("entity.groups")}>
-      <Stack>
-        {defaultGroup && (
-          <UnstyledButton component={Link} href={`/manage/users/groups/${defaultGroup.id}`}>
-            <Card className={classes.everyoneGroup}>
-              <Group align="center">
-                <ThemeIcon radius="xl" variant="light">
-                  <IconUsersGroup size={16} />
-                </ThemeIcon>
-                <Stack gap={0} flex={1}>
-                  <Text fw={500}>{tGroup("defaultGroup.name")}</Text>
-                  <Text size="sm" c="gray.6">
-                    {tGroup("defaultGroup.description", { name: everyoneGroup })}
-                  </Text>
-                </Stack>
-                <IconChevronRight size={20} />
-              </Group>
-            </Card>
-          </UnstyledButton>
-        )}
-        <GroupsList groups={groups.data.filter((group) => group.name !== everyoneGroup)} />
-      </Stack>
-    </ManagePageLayout>
+    <GroupsList title={tCommon("entity.groups")} groups={groups.data.filter((group) => group.name !== everyoneGroup)}>
+      {defaultGroup && (
+        <UnstyledButton component={Link} href={`/manage/users/groups/${defaultGroup.id}`}>
+          <Card className={classes.everyoneGroup}>
+            <Group align="center">
+              <ThemeIcon radius="xl" variant="light">
+                <IconUsersGroup size={16} />
+              </ThemeIcon>
+              <Stack gap={0} flex={1}>
+                <Text fw={500}>{tGroup("defaultGroup.name")}</Text>
+                <Text size="sm" c="gray.6">
+                  {tGroup("defaultGroup.description", { name: everyoneGroup })}
+                </Text>
+              </Stack>
+              <IconChevronRight size={20} />
+            </Group>
+          </Card>
+        </UnstyledButton>
+      )}
+    </GroupsList>
   );
 };
 
@@ -462,6 +460,7 @@ const GroupPermissions = ({ group }: { group: GroupData }) => {
 };
 
 const GroupSettings = ({ group }: { group: GroupData }) => {
+  const boards = clientApi.board.getBoardsForGroup.useQuery({ groupId: group.id });
   const t = useI18n("management.page.group.setting.setting");
   const tEntity = useI18n("common.entity");
   return (
@@ -471,12 +470,16 @@ const GroupSettings = ({ group }: { group: GroupData }) => {
         {t("alert")}
       </Alert>
       <Title order={3}>{tEntity("boards")}</Title>
-      <GroupHomeBoards
-        key={group.id}
-        homeBoardId={group.homeBoardId}
-        mobileHomeBoardId={group.mobileHomeBoardId}
-        groupId={group.id}
-      />
+      {boards.data && (
+        <GroupHomeBoards
+          key={group.id}
+          homeBoardId={group.homeBoardId}
+          mobileHomeBoardId={group.mobileHomeBoardId}
+          groupId={group.id}
+          availableBoards={boards.data}
+        />
+      )}
+      {!boards.data && <WorkerQueryStatus queries={[boards]} />}
     </Stack>
   );
 };

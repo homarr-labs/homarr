@@ -7,7 +7,7 @@ import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
 import { BoardSelect } from "~/components/board/board-select";
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import type { FormValues } from "./settings-form";
 
 interface BoardSettingsFormProps {

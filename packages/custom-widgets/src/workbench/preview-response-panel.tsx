@@ -43,7 +43,10 @@ export function PreviewResponsePanel({
   onSampleDataChange,
   messages,
 }: PreviewResponsePanelProps) {
-  const responseJson = value == null ? "" : JSON.stringify(value, null, 2);
+  const responseJson = useMemo(() => {
+    if (value == null) return "";
+    return JSON.stringify(value, null, 2);
+  }, [value]);
   const [draft, setDraft] = useState(responseJson);
   const [editing, setEditing] = useState(false);
   const error = useMemo(() => {

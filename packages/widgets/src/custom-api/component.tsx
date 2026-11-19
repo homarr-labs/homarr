@@ -13,15 +13,19 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useDemoReadOnly } from "../demo-read-only";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
+import { CustomWidgetEditorPreview } from "./editor-preview";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
-export default function CustomApiWidget({
-  options,
-  itemId,
-  isEditMode,
-  removeItem,
-}: WidgetComponentProps<"customApi">) {
+export default function CustomApiWidget(props: WidgetComponentProps<"customApi">) {
+  const { data: session } = useSession();
+  if (props.isEditMode && session?.user.permissions.includes("admin")) {
+    return <CustomWidgetEditorPreview options={props.options} />;
+  }
+  return <PlacedCustomApiWidget {...props} />;
+}
+
+function PlacedCustomApiWidget({ options, itemId, isEditMode, removeItem }: WidgetComponentProps<"customApi">) {
   const t = useI18n("widget.customApi");
   const tCustomJsx = useI18n("widget.customApi.customJsx");
   const demoReadOnly = useDemoReadOnly();

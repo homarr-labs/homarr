@@ -7,7 +7,6 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import type { CustomWidgetDefinition, CustomWidgetSecret } from "@homarr/db/schema";
-import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetCreateInput, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
@@ -26,7 +25,7 @@ type StoredDefinitionState = Pick<
   | "enabled"
   | "creatorId"
   | "updatedAt"
->;
+> & { workshop?: string | null };
 type StoredSecretState = Pick<CustomWidgetSecret, "sourceId" | "kind" | "encryptedValue" | "updatedAt">;
 
 export function getCustomWidgetDefinitionStateFingerprint(
@@ -46,6 +45,7 @@ export function getCustomWidgetDefinitionStateFingerprint(
       enabled: definition.enabled,
       creatorId: definition.creatorId,
       updatedAt: definition.updatedAt.getTime(),
+      workshop: definition.workshop,
     },
     secrets: secrets
       .map((secret) => ({
@@ -66,10 +66,16 @@ export async function updateCustomWidgetDefinition(
     definition: HomarrCustomWidgetV2;
     secrets?: CustomWidgetCreateInput["secrets"];
     expectedStateFingerprint?: string;
+    workshop?: string;
+    updatedAt?: Date;
   },
 ) {
-  const updatedAt = new Date();
-  const definitionChanges = { ...serializeCustomWidgetDefinition(input.definition), updatedAt };
+  const updatedAt = input.updatedAt ?? new Date();
+  const definitionChanges = {
+    ...serializeCustomWidgetDefinition(input.definition),
+    updatedAt,
+    workshop: input.workshop,
+  };
   const secretRows = input.secrets?.map((secret) => ({
     definitionId: input.id,
     sourceId: secret.sourceId,
@@ -119,7 +125,7 @@ export async function updateCustomWidgetDefinition(
             );
         }
         for (const [sourceId, source] of Object.entries(input.definition.sources)) {
-          const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
+          const kinds = [...requiredSecretKinds(source.auth)];
           const where = and(
             eq(schema.customWidgetSecrets.definitionId, input.id),
             eq(schema.customWidgetSecrets.sourceId, sourceId),
@@ -179,7 +185,7 @@ export async function updateCustomWidgetDefinition(
               .run();
           }
           for (const [sourceId, source] of Object.entries(input.definition.sources)) {
-            const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
+            const kinds = [...requiredSecretKinds(source.auth)];
             const where = and(
               eq(customWidgetSecrets.definitionId, input.id),
               eq(customWidgetSecrets.sourceId, sourceId),

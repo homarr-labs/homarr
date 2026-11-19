@@ -2,7 +2,7 @@
 
 import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
+import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
@@ -20,7 +20,6 @@ import { getWidgetName } from "@homarr/definitions";
 import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { useIsMobile } from "@homarr/ui/hooks";
 import type {
   WidgetContextMenuAction,
   WidgetDataStatus,
@@ -36,9 +35,10 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { useBoardPermissions } from "../permissions/client";
 import { useItemActions } from "./item-actions";
+import { BoardItemContextMenu } from "./item-menu";
+import { ItemMenuDropdown } from "./item-menu-dropdown";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 import { matchesWidgetItemQuery } from "./widget-query-scope";
-import classes from "./widget-context-menu.module.css";
 
 type ToggleOption = [key: string, option: { type: string; skipContextMenu?: boolean }];
 
@@ -57,6 +57,10 @@ export const WidgetContextMenu = (props: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const settings = useSettings();
+
+  if (session && isEditMode) {
+    return <BoardItemContextMenu {...props} />;
+  }
 
   if (
     !session ||
@@ -287,7 +291,7 @@ const WidgetContextMenuInner = ({
       onChange={setMenuOpened}
     >
       <Menu.ContextMenu disabled={disabled}>{children}</Menu.ContextMenu>
-      <WidgetContextMenuDropdown opened={menuOpened} onClose={handleCloseMenu} title={getWidgetName(item.kind, t)}>
+      <ItemMenuDropdown opened={menuOpened} onClose={handleCloseMenu} title={getWidgetName(item.kind, t)}>
         {canOpenAdvancedFocus && (
           <>
             <Menu.Item closeMenuOnClick leftSection={<IconMaximize size={16} />} onClick={handleOpenAdvancedFocus}>
@@ -330,36 +334,8 @@ const WidgetContextMenuInner = ({
         >
           {tMenu("settings")}
         </Menu.Item>
-      </WidgetContextMenuDropdown>
+      </ItemMenuDropdown>
     </Menu>
-  );
-};
-
-interface WidgetContextMenuDropdownProps {
-  opened: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-}
-
-const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
-  const isMobile = useIsMobile();
-
-  if (!isMobile) return <Menu.Dropdown>{children}</Menu.Dropdown>;
-
-  return (
-    <Drawer
-      opened={opened}
-      onClose={onClose}
-      position="bottom"
-      size="min(80dvh, 40rem)"
-      title={title}
-      classNames={{ content: classes.mobileDrawerContent, body: classes.mobileDrawerBody }}
-    >
-      <div className={classes.mobileActionList} role="menu" aria-orientation="vertical" data-menu-dropdown>
-        {children}
-      </div>
-    </Drawer>
   );
 };
 
@@ -381,7 +357,7 @@ const WidgetContextMenuActions = ({
   onRefresh,
   t,
 }: WidgetContextMenuActionsProps) => {
-  const tMenu = useI18n("item.menu.label");
+  const tFields = useI18n("common.field");
   const tCommon = useI18n("common.action");
   const isQueryFetching =
     useIsFetching({
@@ -397,7 +373,7 @@ const WidgetContextMenuActions = ({
       {visibleWidgetActions.length > 0 && (
         <>
           {hasToggleOptions && <Menu.Divider />}
-          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          <Menu.Label>{tFields("actions")}</Menu.Label>
           {visibleWidgetActions.map((action) => {
             const Icon = action.icon;
             return (

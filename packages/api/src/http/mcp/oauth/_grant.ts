@@ -16,7 +16,7 @@ import {
   registerClient,
   secretMatches,
 } from "./_store";
-import type { GrantIdentity, PendingGrant } from "./_store";
+import type { GrantContext, GrantIdentity, PendingGrant } from "./_store";
 import { hasControlCharacters } from "./_validation";
 
 export interface McpConsentSession {
@@ -32,6 +32,7 @@ export interface McpConsentDisplay {
   clientName: string;
   redirectUri: string;
   expiresAt: number;
+  requestedScope: GrantContext["scope"];
 }
 
 export type McpConsentResult =
@@ -116,6 +117,7 @@ export function readMcpConsent(input: McpConsentInput): McpConsentResult {
       clientName: context.clientName,
       redirectUri: context.redirectUri,
       expiresAt,
+      requestedScope: context.scope,
     },
   };
 }
@@ -188,7 +190,10 @@ export function beginMcpAuthorization(
   ) {
     return failure("invalid_request", "Expected response_type=code, a registered callback and explicit S256 PKCE");
   }
-  if (scope !== undefined && scope !== "mcp:tools") return failure("invalid_scope", "Only mcp:tools is supported");
+  const scopes = (scope ?? "mcp:tools").split(" ").filter(Boolean);
+  if (!scopes.length || scopes.some((value) => value !== "mcp:tools" && value !== "mcp:tools:read")) {
+    return failure("invalid_scope", "Supported scopes are mcp:tools and mcp:tools:read");
+  }
   if (resource !== undefined && !resources.has(resource))
     return failure("invalid_target", "The resource must be the canonical Homarr MCP endpoint");
   const client = getClient(client_id);
@@ -204,7 +209,7 @@ export function beginMcpAuthorization(
       state: state ?? null,
       resource: resource ?? null,
       canonicalResources: [...resources],
-      scope: "mcp:tools",
+      scope: scopes.includes("mcp:tools") ? "mcp:tools" : "mcp:tools:read",
       clientExpiresAt: client.expiresAt,
     },
     identityFromSession(session),
@@ -213,7 +218,12 @@ export function beginMcpAuthorization(
   return { ok: true, ...pending, authenticated: identityFromSession(session) !== null } as const;
 }
 
-export function decideMcpAuthorization(input: McpConsentInput, consentToken: string, decision: string) {
+export function decideMcpAuthorization(
+  input: McpConsentInput,
+  consentToken: string,
+  decision: string,
+  accessMode = "readOnly",
+) {
   if ((decision !== "approve" && decision !== "deny") || !secret.test(consentToken))
     return failure("invalid_request", "Invalid consent decision");
   const result = validateConsent(input);
@@ -225,7 +235,14 @@ export function decideMcpAuthorization(input: McpConsentInput, consentToken: str
     );
   if (!result.pending.identity || !secretMatches(result.pending.consentToken, consentToken))
     return failure("invalid_request", "Invalid consent proof");
-  const transition = decidePending(input.pendingId, result.pending, decision, result.identity.userId);
+  if (accessMode !== "readOnly" && accessMode !== "readWrite") {
+    return failure("invalid_request", "Invalid access mode");
+  }
+  if (accessMode === "readWrite" && result.pending.context.scope !== "mcp:tools") {
+    return failure("invalid_scope", "Read-only access cannot be upgraded");
+  }
+  const grantedScope = accessMode === "readWrite" ? "mcp:tools" : "mcp:tools:read";
+  const transition = decidePending(input.pendingId, result.pending, decision, result.identity.userId, grantedScope);
   if (!transition.ok) return failure("server_error", "Consent request is no longer available", 503);
   const callback = new URL(result.pending.context.redirectUri);
   for (const field of ["code", "error", "error_description", "state"]) callback.searchParams.delete(field);
@@ -272,6 +289,7 @@ export async function redeemMcpAuthorization(params: Record<string, string>) {
       id,
       apiKey: hashedToken,
       userId: code.userId,
+      readOnly: code.context.scope === "mcp:tools:read",
       oauthClientId: code.context.clientId,
       oauthClientName: code.context.clientName,
       oauthRedirectUri: code.context.redirectUri,

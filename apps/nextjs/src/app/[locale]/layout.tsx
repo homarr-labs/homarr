@@ -1,5 +1,6 @@
+import { getBrandingAppearance, getThemeCustomCss } from "~/theme/branding";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 
 import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
@@ -32,12 +33,15 @@ import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { AssistantGate } from "~/components/assistant/assistant-gate";
+import { getBoardCanvasFittingScript } from "~/components/board/layout/board-canvas-fitting";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { env } from "~/env";
+import { ThemePreviewProvider } from "~/components/theme/theme-preview-context";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { ViewportHint } from "~/components/layout/viewport-hint";
+import { WhatsNewAutoOpen } from "~/components/layout/whats-new-auto-open";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { WorkerFrontendDocument } from "~/worker/document";
 import { isWorkerFrontend } from "~/worker/mode";
@@ -52,6 +56,8 @@ const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+const fontGeist = Geist({ subsets: ["latin"], variable: "--font-geist", preload: false });
+const fontGeistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", preload: false });
 
 const logger = createLogger({ module: "rootLayout" });
 
@@ -97,7 +103,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 export const generateViewport = async (): Promise<Viewport> => {
   if (isWorkerFrontend()) return { themeColor: "#fa5252" };
   const serverSettings = await getRscServerSettingsAsync();
-  return { themeColor: serverSettings.branding.primaryColor };
+  return { themeColor: getBrandingAppearance(serverSettings.branding).primaryColor };
 };
 
 export default async function Layout(props: {
@@ -181,6 +187,7 @@ export default async function Layout(props: {
     (innerProps) => <RPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
+    (innerProps) => <ThemePreviewProvider {...innerProps} />,
     (innerProps) => (
       <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} branding={serverSettings.branding} />
     ),
@@ -195,6 +202,7 @@ export default async function Layout(props: {
     <html
       lang={locale}
       dir={direction}
+      className={[fontSans.variable, fontGeist.variable, fontGeistMono.variable].join(" ")}
       style={{
         backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
       }}
@@ -202,6 +210,7 @@ export default async function Layout(props: {
     >
       <head>
         <ColorSchemeScript defaultColorScheme={colorScheme} />
+        <script id="homarr-board-canvas-fitting" dangerouslySetInnerHTML={{ __html: getBoardCanvasFittingScript() }} />
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
         {session ? (
           <>
@@ -211,13 +220,14 @@ export default async function Layout(props: {
         ) : null}
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
-        <style data-homarr-global-custom-css>{serverSettings.branding.customCss}</style>
+        <style data-homarr-global-custom-css>{getThemeCustomCss(serverSettings.branding)}</style>
       </head>
-      <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <ViewportHint />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />
+          <WhatsNewAutoOpen />
           {props.children}
         </StackedProvider>
       </body>

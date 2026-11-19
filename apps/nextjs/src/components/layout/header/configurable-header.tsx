@@ -12,11 +12,12 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import type { HeaderItem } from "@homarr/validation/user";
+import type { HeaderItem, HeaderTabsDisplay } from "@homarr/validation/user";
 import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 import { BoardSwitcher } from "~/components/board/board-switcher";
+import { HeaderBoardTabs } from "~/components/board/tabs/header-board-tabs";
 import type { BoardSwitcherControls } from "~/components/board/board-switcher";
 import { ClientBurger } from "./burger";
 import { HeaderButton } from "./button";
@@ -35,6 +36,7 @@ interface ConfigurableHeaderProps {
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
   hasNavigation: boolean;
+  withBoardTabs: boolean;
   avatar: ReactNode;
   userId: string | null;
   isAdmin: boolean;
@@ -55,6 +57,7 @@ export const ConfigurableHeader = ({
   boardEditAction,
   boardSettingsAction,
   hasNavigation,
+  withBoardTabs,
   avatar,
   userId,
   isAdmin,
@@ -80,7 +83,7 @@ export const ConfigurableHeader = ({
       {(boardSwitcher) => {
         const renderItems = (
           items: HeaderItem[],
-          display: { search: "input" | "icon"; logo: "logo" | "logoAndText" },
+          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay },
         ) =>
           items.map((item) => (
             <HeaderItem
@@ -98,6 +101,8 @@ export const ConfigurableHeader = ({
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
               searchDisplay={display.search}
               logoDisplay={display.logo}
+              tabsDisplay={display.tabs}
+              withBoardTabs={withBoardTabs}
               boardSwitcher={boardSwitcher}
               assistant={assistant}
               openDockerModal={openDockerModal}
@@ -110,8 +115,9 @@ export const ConfigurableHeader = ({
         const desktopDisplay = {
           search: headerPreferences.searchDisplay,
           logo: headerPreferences.logoDisplay,
+          tabs: headerPreferences.tabsDisplay,
         };
-        const mobileDisplay = { search: "icon", logo: "logo" } as const;
+        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator" } as const;
 
         return (
           <>
@@ -154,6 +160,9 @@ export const ConfigurableHeader = ({
               <FloatingHeaderControls>
                 {hasNavigation ? <ClientBurger /> : null}
                 {actions}
+                {withBoardTabs && allHeaderItems.some((item) => item.type === "builtin" && item.id === "boardTabs") && (
+                  <HeaderBoardTabs display="indicator" />
+                )}
                 <UserButtonClient
                   avatar={avatar}
                   isAdmin={isAdmin}
@@ -264,6 +273,8 @@ interface HeaderItemProps {
   board: HeaderBoard | undefined;
   searchDisplay: "input" | "icon";
   logoDisplay: "logo" | "logoAndText";
+  tabsDisplay: HeaderTabsDisplay;
+  withBoardTabs: boolean;
   boardSwitcher: BoardSwitcherControls;
   assistant: ReturnType<typeof useOptionalHomarrAssistant>;
   openDockerModal: () => void;
@@ -286,6 +297,8 @@ const HeaderItem = ({
   board,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
+  withBoardTabs,
   boardSwitcher,
   assistant,
   openDockerModal,
@@ -322,6 +335,7 @@ const HeaderItem = ({
 
   if (item.id === "boardEdit") return boardEditAction;
   if (item.id === "boardSettings") return boardSettingsAction;
+  if (item.id === "boardTabs") return withBoardTabs ? <HeaderBoardTabs display={tabsDisplay} /> : null;
 
   if (item.id === "search") {
     return (

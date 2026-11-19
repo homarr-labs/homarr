@@ -8,12 +8,12 @@ import { auth } from "@homarr/auth/next";
 import { getSafeApplicationUrl } from "@homarr/common";
 import { getIntegrationName } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
-import { IntegrationAvatar, Link, SearchInput } from "@homarr/ui";
+import { IntegrationAvatar, Link, SearchInput, NoResults } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { NoResults } from "~/components/no-results";
+
 import { getIntegrationsSectionAccess, getManageIntegrationsAsync } from "../_access";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 

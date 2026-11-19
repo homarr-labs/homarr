@@ -20,6 +20,7 @@ import { env } from "../../env";
 import { permissionRequiredProcedure } from "../../procedure";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { assertSecretSources } from "./secret-policy";
+import { getWorkshopContentHash, serializeWorkshopOrigin } from "./workshop-origin";
 
 const logger = createLogger({ module: "custom-widget:workshop" });
 const workshopUrls = resolveHomarrUrlConfig({
@@ -45,7 +46,7 @@ function throwWorkshopUnavailable(
   });
 }
 
-async function getWorkshopWidget(submissionId: string) {
+export async function getWorkshopWidget(submissionId: string) {
   try {
     const submission = await workshop.get(submissionId);
     if (submission.type !== "customWidget" || submission.widgetSchema !== CUSTOM_WIDGET_SCHEMA) {
@@ -71,12 +72,12 @@ const workshopSearchInputSchema = z.object({
   limit: z.number().int().min(1).max(20).default(10),
 });
 
-const sourceOverridesSchema = z.record(
+export const sourceOverridesSchema = z.record(
   customWidgetIdentifierSchema,
   z.strictObject({
     baseUrl: z.string().optional(),
+    networkScope: z.unknown().optional(),
     integrationId: z.string().min(1).max(100).optional(),
-    networkScope: z.enum(["public", "private", "loopback"]).optional(),
   }),
 );
 
@@ -134,6 +135,7 @@ export const workshopProcedures = {
           reportCount: submission.reportCount,
         },
         widget,
+        contentHash: getWorkshopContentHash(widget),
         sourceSetup: getCustomWidgetSourceSetups(widget.sources),
         hasActions: Object.values(widget.requests).some((request) => request.kind === "action"),
         methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
@@ -149,13 +151,24 @@ export const workshopProcedures = {
     .input(
       z.object({
         submissionId: z.string().min(1),
+        expectedRevision: z.number().int().positive().optional(),
+        expectedContentHash: z.string().length(64).optional(),
         name: z.string().trim().min(1).max(128).optional(),
         sources: sourceOverridesSchema.default({}),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
     .mutation(async ({ context, input }) => {
-      const { widget } = await getWorkshopWidget(input.submissionId);
+      const { submission, widget } = await getWorkshopWidget(input.submissionId);
+      if (
+        (input.expectedRevision !== undefined && input.expectedRevision !== submission.revision) ||
+        (input.expectedContentHash !== undefined && input.expectedContentHash !== getWorkshopContentHash(widget))
+      ) {
+        throw new ApiError({
+          code: "CONFLICT",
+          message: "Workshop revision changed. Review it again before installing.",
+        });
+      }
       const unknownSource = Object.keys(input.sources).find((sourceId) => !widget.sources[sourceId]);
       if (unknownSource) {
         throw new ApiError({ code: "BAD_REQUEST", message: `Unknown Workshop widget source '${unknownSource}'` });
@@ -171,7 +184,6 @@ export const workshopProcedures = {
               {
                 baseUrl: source.baseUrl,
                 integrationId: source.integrationId,
-                networkScope: source.networkScope ?? widget.sources[sourceId]?.networkScope ?? "public",
               },
             ]),
           ),
@@ -179,7 +191,13 @@ export const workshopProcedures = {
       });
       await assertCustomWidgetIntegrationBindings(context, configured.sources);
       assertSecretSources(configured.sources, input.secrets);
-      const id = await insertCustomWidgetDefinition(context.db, configured, context.session.user.id, input.secrets);
+      const id = await insertCustomWidgetDefinition(
+        context.db,
+        configured,
+        context.session.user.id,
+        input.secrets,
+        serializeWorkshopOrigin(submission, widget, configured),
+      );
       const configuredSecrets = new Set(input.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
       return {
         status: "installed" as const,

@@ -12,9 +12,11 @@ export default async function InitPage() {
   const [environment, requestHeaders] = await Promise.all([api.frontend.setup.query(), headers()]);
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
   let sqliteRestore;
-  if (environment.databaseDriver === "sqlite") sqliteRestore = <DatabaseRestoreFlow variant="standalone" />;
+  if (environment.currentStep === "start" && environment.databaseDriver === "sqlite")
+    sqliteRestore = <DatabaseRestoreFlow variant="standalone" />;
   let assistantConfiguration;
-  if (environment.canConfigurePrivileged) assistantConfiguration = <AssistantConfiguration refreshAfterSave={false} />;
+  if (environment.currentStep === "setup" && environment.canConfigurePrivileged)
+    assistantConfiguration = <AssistantConfiguration refreshAfterSave={false} />;
 
   return (
     <OnboardingStudio

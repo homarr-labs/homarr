@@ -12,13 +12,15 @@ export async function createBackendContextAsync(request: Request, options: { api
     ipAddressFromHeaders(request.headers),
     userAgent(request.headers).ua,
   );
+  const invalidApiKey = request.headers.has(API_KEY_HEADER_NAME) && apiKeySession === null;
   let session = apiKeySession;
-  if (!session && !options.apiKeyOnly) {
+  if (!session && !invalidApiKey && !options.apiKeyOnly) {
     session = await getSessionFromRequestAsync(request);
   }
   return {
     context: createApiContext({ headers: request.headers, session }),
     authenticatedWithApiKey: apiKeySession !== null,
+    invalidApiKey,
   };
 }
 
