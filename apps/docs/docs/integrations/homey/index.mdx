@@ -1,0 +1,52 @@
+---
+title: "Homey"
+description: "Homey is a smart home hub by Athom that connects Zigbee, Z-Wave, Wi-Fi, infrared and other devices and automates them with flows."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { homeyIntegration } from ".";
+import { smartHomeEntityStateWidget } from "@site/docs/widgets/smart-home-entity-state";
+import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-execute-automation";
+
+<IntegrationHeader integration={homeyIntegration} categories={["Smart Home", "Automation"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites
+  items={[
+    {
+      widget: smartHomeEntityStateWidget,
+    },
+    {
+      widget: smartHomeExecuteAutomationWidget,
+    },
+  ]}
+/>
+
+Homarr supports Homey Pro through its local Web API. Use your Homey's local address as the URL, for example `http://192.168.1.20`.
+
+Devices are listed by zone. Each controllable device appears as one entity, and each sensor reading appears as its own entity. Only flows that can be started manually are listed as automations. Live updates are polled every 5 seconds.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open the Homey web app at my.homey.app and select your Homey.",
+        "Go to Settings → API Keys and click New API Key.",
+        "Enter a name such as 'Homarr' and allow viewing and controlling devices, viewing zones, viewing and starting Flows, and viewing Insights. Allow editing Flows only if Homarr should enable and disable them.",
+        "Create the key, then copy it into the Homarr integration settings.",
+      ],
+    },
+  ]}
+/>

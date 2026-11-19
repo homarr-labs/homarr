@@ -169,7 +169,7 @@ const toActionError = (error: unknown) => {
   if (notFound) return new TRPCError({ code: "NOT_FOUND", message: notFound.message });
   const rejected = causes.find((cause) => cause instanceof HomeAssistantCommandError);
   if (rejected) return new TRPCError({ code: "BAD_REQUEST", message: rejected.message, cause: error });
-  return new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not run the action", cause: error });
+  return new TRPCError({ code: "BAD_GATEWAY", message: "The smart home server did not run the action", cause: error });
 };
 
 const MAX_PENDING_PATCHES = 1;
@@ -375,9 +375,7 @@ export const smartHomeRouter = createTRPCRouter({
           (error: unknown) => {
             if (controller.signal.aborted) return;
             logger.warn("Smart home live subscription failed", { integrationId: integration.id, error });
-            queue.fail(
-              new TRPCError({ code: "BAD_GATEWAY", message: "Live Home Assistant updates failed", cause: error }),
-            );
+            queue.fail(new TRPCError({ code: "BAD_GATEWAY", message: "Live smart home updates failed", cause: error }));
           },
         );
 

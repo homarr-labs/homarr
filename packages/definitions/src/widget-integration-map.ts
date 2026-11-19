@@ -88,6 +88,7 @@ export const statsIntegrationKinds = [
   "adGuardHome",
   "technitiumDns",
   "homeAssistant",
+  "homey",
   "openmediavault",
   "dashDot",
   "glances",

@@ -654,6 +654,15 @@ export const integrationDefs = {
     apiKeySettingsPath: "/profile/security",
     features: { docker: { aliases: ["homeassistant", "home-assistant", "hass"] } },
   },
+  homey: {
+    httpAuth: { type: "adapter" },
+    name: "Homey",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homey.svg",
+    category: ["smartHomeServer"],
+    documentationSlug: "homey",
+    defaultPort: 80,
+  },
   openmediavault: {
     httpAuth: { type: "adapter" },
     name: "OpenMediaVault",

@@ -1,0 +1,593 @@
+import type { z } from "zod/v4";
+import { ParseError, ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
+import type { IntegrationTestingInput } from "../base/integration";
+import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "../homeassistant/homeassistant-errors";
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { supportsSmartHomeAction } from "../interfaces/smart-home/smart-home-capabilities";
+import { bucketHistory } from "../interfaces/smart-home/smart-home-history";
+import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type {
+  SmartHomeAction,
+  SmartHomeArea,
+  SmartHomeCatalog,
+  SmartHomeEntity,
+  SmartHomeEntityPatch,
+  SmartHomeEntitySelection,
+  SmartHomeForecastDay,
+  SmartHomeHistorySeries,
+  SmartHomeSnapshot,
+} from "../interfaces/smart-home/smart-home-types";
+import { SMART_HOME_ENTITY_LIMIT, SmartHomeSelectionLimitError } from "../interfaces/smart-home/smart-home-types";
+import type { HomeyEntityRecord } from "./homey-normalize";
+import {
+  fromHvacMode,
+  isFractionPercent,
+  kelvinToHomeyTemperature,
+  normalizeHomeyDevices,
+  normalizeHomeyFlows,
+  normalizeHomeyZones,
+  rgbToHueSaturation,
+} from "./homey-normalize";
+import type { HomeyDevice, HomeyFlow } from "./homey-types";
+import { homeyDevicesSchema, homeyFlowsSchema, homeyInsightsEntriesSchema, homeyZonesSchema } from "./homey-types";
+
+const POLL_INTERVAL_MS = 5_000;
+const DEVICE_CACHE_MS = 2_000;
+const MAX_POLL_FAILURES = 3;
+
+const insightResolutions = [
+  { hours: 1, resolution: "lastHour" },
+  { hours: 6, resolution: "last6Hours" },
+  { hours: 24, resolution: "last24Hours" },
+  { hours: 24 * 7, resolution: "last7Days" },
+  { hours: 24 * 14, resolution: "last14Days" },
+  { hours: 24 * 31, resolution: "last31Days" },
+] as const;
+
+// Energy-monitored devices log their power reading as energy_power instead of measure_power.
+const insightLogIds = (capabilityId: string) =>
+  capabilityId === "measure_power" ? [capabilityId, "energy_power"] : [capabilityId];
+
+// Shares one device request between widgets and live subscriptions polling the same Homey.
+const deviceRequests = new Map<string, { at: number; promise: Promise<HomeyDevice[]> }>();
+
+interface CapabilityWrite {
+  capabilityId: string;
+  value: string | number | boolean;
+}
+
+export class HomeyIntegration extends Integration implements ISmartHomeIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return { headers: this.getAuthHeaders() };
+  }
+
+  public async getStatsAsync() {
+    const [devices, flows] = await Promise.all([this.getDevicesAsync(), this.getFlowsAsync()]);
+    const lights = normalizeHomeyDevices(devices).filter(({ entity }) => entity.domain === "light");
+    return {
+      devices: devices.length,
+      unavailable: devices.filter((device) => device.available === false).length,
+      lightsOn: lights.filter(({ entity }) => entity.state === "on").length,
+      flows: flows.length,
+    };
+  }
+
+  public async getSnapshotAsync(selection: SmartHomeEntitySelection): Promise<SmartHomeSnapshot> {
+    const [records, areas] = await Promise.all([this.getRecordsAsync(), this.getAreasAsync()]);
+    const entities = selectRecords(records, selection).map((record) => record.entity);
+    const usedAreas = new Set([...entities.map((entity) => entity.areaId), ...(selection.areaIds ?? [])]);
+    return { entities, areas: areas.filter((area) => usedAreas.has(area.id)), updatedAt: Date.now() };
+  }
+
+  public async getCatalogAsync(): Promise<SmartHomeCatalog> {
+    const [records, areas] = await Promise.all([this.getRecordsAsync(), this.getAreasAsync()]);
+    return {
+      entities: records
+        .map(({ entity, hidden }) => ({
+          id: entity.id,
+          domain: entity.domain,
+          name: entity.name,
+          areaId: entity.areaId,
+          icon: entity.icon,
+          deviceClass: entity.deviceClass,
+          hidden,
+        }))
+        .toSorted((left, right) => left.name.localeCompare(right.name)),
+      areas,
+      floors: [],
+    };
+  }
+
+  public async getHistoryAsync(entityIds: string[], hours: number, samples: number): Promise<SmartHomeHistorySeries[]> {
+    if (entityIds.length === 0) return [];
+    const records = new Map((await this.getRecordsAsync()).map((record) => [record.entity.id, record]));
+    const resolution = insightResolutions.find((candidate) => candidate.hours >= hours)?.resolution ?? "last31Days";
+    const end = Date.now();
+    const start = end - hours * 3_600_000;
+
+    return await Promise.all(
+      entityIds.map(async (entityId) => {
+        const target = records.get(entityId)?.target;
+        if (target?.kind !== "capability") return { entityId, points: [] };
+        const ownerUri = `homey:device:${target.device.id}`;
+        let entries: z.infer<typeof homeyInsightsEntriesSchema> | null = null;
+        for (const logId of insightLogIds(target.capabilityId)) {
+          const response = await this.getAsync(`/api/manager/insights/log/${ownerUri}/${ownerUri}:${logId}/entry`, {
+            resolution,
+          });
+          if (!response.ok) continue;
+          const parsed = homeyInsightsEntriesSchema.safeParse(await response.json());
+          if (parsed.success) {
+            entries = parsed.data;
+            break;
+          }
+        }
+        if (!entries) return { entityId, points: [] };
+        return {
+          entityId,
+          points: bucketHistory(
+            entries.values.map((entry) => ({
+              state: typeof entry.v === "number" ? entry.v.toString() : "",
+              time: Date.parse(entry.t),
+            })),
+            { start, end, samples },
+          ),
+        };
+      }),
+    );
+  }
+
+  public getForecastAsync(): Promise<SmartHomeForecastDay[]> {
+    return Promise.resolve([]);
+  }
+
+  public async executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void> {
+    deviceRequests.delete(this.cacheKey);
+    const record = (await this.getRecordsAsync()).find((candidate) => candidate.entity.id === entityId);
+    if (!record) throw new SmartHomeEntityNotFoundError(entityId);
+    if (!supportsSmartHomeAction(record.entity, action)) {
+      throw new SmartHomeActionNotSupportedError(entityId, action.type);
+    }
+
+    const { target } = record;
+    if (target.kind === "flow") {
+      await this.executeFlowActionAsync(entityId, target.flow, action);
+      return;
+    }
+
+    const writes = toCapabilityWrites(record, action);
+    if (!writes) throw new SmartHomeActionNotSupportedError(entityId, action.type);
+    for (const write of writes) {
+      await this.setCapabilityAsync(target.device.id, write);
+    }
+    deviceRequests.delete(this.cacheKey);
+  }
+
+  public async subscribeEntitiesAsync(
+    selection: SmartHomeEntitySelection,
+    onPatch: (patch: SmartHomeEntityPatch) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    let previous: Map<string, string> | null = null;
+    let failures = 0;
+    while (!signal.aborted) {
+      try {
+        const snapshot = await this.getSnapshotAsync(selection);
+        failures = 0;
+        if (signal.aborted) return;
+        const current = new Map(snapshot.entities.map((entity) => [entity.id, signature(entity)]));
+        const changed = previous
+          ? snapshot.entities.filter((entity) => previous?.get(entity.id) !== current.get(entity.id))
+          : snapshot.entities;
+        const removed = previous ? [...previous.keys()].filter((id) => !current.has(id)) : [];
+        if (!previous || changed.length > 0 || removed.length > 0) {
+          onPatch({ changed, removed, areas: previous ? undefined : snapshot.areas });
+        }
+        previous = current;
+      } catch (error) {
+        if (error instanceof SmartHomeSelectionLimitError || ++failures >= MAX_POLL_FAILURES) throw error;
+      }
+      await waitAsync(POLL_INTERVAL_MS, signal);
+    }
+  }
+
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/manager/devices/device/"), {
+      headers: this.getAuthHeaders(),
+    });
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const devices = homeyDevicesSchema.safeParse(await response.json());
+    if (!devices.success) return TestConnectionError.ParseResult(new ParseError("Expected Homey devices"));
+    return { success: true };
+  }
+
+  private get cacheKey() {
+    return `${this.integration.id}:${this.integration.url}`;
+  }
+
+  private async getRecordsAsync(): Promise<HomeyEntityRecord[]> {
+    const [devices, flows] = await Promise.all([this.getDevicesAsync(), this.getFlowsAsync()]);
+    return [...normalizeHomeyDevices(devices), ...normalizeHomeyFlows(flows)];
+  }
+
+  private async getDevicesAsync(): Promise<HomeyDevice[]> {
+    const cached = deviceRequests.get(this.cacheKey);
+    if (cached && Date.now() - cached.at < DEVICE_CACHE_MS) return await cached.promise;
+
+    const promise = this.getJsonAsync("/api/manager/devices/device/").then((data) =>
+      Object.values(homeyDevicesSchema.parse(data)),
+    );
+    deviceRequests.set(this.cacheKey, { at: Date.now(), promise });
+    promise.catch(() => {
+      if (deviceRequests.get(this.cacheKey)?.promise === promise) deviceRequests.delete(this.cacheKey);
+    });
+    return await promise;
+  }
+
+  private async getAreasAsync(): Promise<SmartHomeArea[]> {
+    const zones = homeyZonesSchema.parse(await this.getJsonAsync("/api/manager/zones/zone/"));
+    return normalizeHomeyZones(Object.values(zones));
+  }
+
+  /** Flows are optional: API keys without the flow scope still expose devices. */
+  private async getFlowsAsync(): Promise<HomeyFlow[]> {
+    const load = async (path: "/api/manager/flow/flow/" | "/api/manager/flow/advancedflow/", advanced: boolean) => {
+      const response = await this.getAsync(path);
+      if (!response.ok) return [];
+      const flows = homeyFlowsSchema.safeParse(await response.json());
+      if (!flows.success) return [];
+      return Object.values(flows.data).map((flow) => ({ ...flow, advanced }));
+    };
+    const [flows, advancedFlows] = await Promise.all([
+      load("/api/manager/flow/flow/", false),
+      load("/api/manager/flow/advancedflow/", true),
+    ]);
+    return [...flows, ...advancedFlows];
+  }
+
+  private async executeFlowActionAsync(entityId: string, flow: HomeyFlow, action: SmartHomeAction) {
+    const path = `/api/manager/flow/${flow.advanced ? "advancedflow" : "flow"}/${encodeURIComponent(flow.id)}` as const;
+    if (action.type === "trigger") {
+      await this.sendAsync("POST", `${path}/trigger`, {});
+      return;
+    }
+    const enabled = flow.enabled !== false;
+    let next: boolean | undefined;
+    if (action.type === "toggle") next = !enabled;
+    else if (action.type === "turnOn") next = true;
+    else if (action.type === "turnOff") next = false;
+    if (next === undefined) throw new SmartHomeActionNotSupportedError(entityId, action.type);
+    await this.sendAsync("PUT", path, { enabled: next });
+  }
+
+  private async setCapabilityAsync(deviceId: string, { capabilityId, value }: CapabilityWrite) {
+    await this.sendAsync(
+      "PUT",
+      `/api/manager/devices/device/${encodeURIComponent(deviceId)}/capability/${encodeURIComponent(capabilityId)}`,
+      { value },
+    );
+  }
+
+  private async getJsonAsync(path: `/api/${string}`): Promise<unknown> {
+    const response = await this.getAsync(path);
+    if (!response.ok) throw new ResponseError(response);
+    return await response.json();
+  }
+
+  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string>) {
+    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), { headers: this.getAuthHeaders() });
+  }
+
+  private async sendAsync(method: "POST" | "PUT", path: `/api/${string}`, body: unknown) {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
+      method,
+      headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) throw new ResponseError(response);
+  }
+
+  private getAuthHeaders() {
+    return { Authorization: `Bearer ${this.getSecretValue("apiKey")}` };
+  }
+}
+
+const signature = (entity: SmartHomeEntity) =>
+  JSON.stringify([entity.state, entity.name, entity.areaId, entity.lastChanged, entity.attributes]);
+
+const waitAsync = (ms: number, signal: AbortSignal) =>
+  new Promise<void>((resolve) => {
+    const timeout = setTimeout(done, ms);
+    function done() {
+      clearTimeout(timeout);
+      signal.removeEventListener("abort", done);
+      resolve();
+    }
+    signal.addEventListener("abort", done, { once: true });
+  });
+
+const selectRecords = (records: HomeyEntityRecord[], selection: SmartHomeEntitySelection) => {
+  const byId = new Map(records.map((record) => [record.entity.id, record]));
+  const requested = selection.entityIds ?? [];
+  const explicit = requested.flatMap((id) => byId.get(id) ?? []);
+  const domains = selection.domains && selection.domains.length > 0 ? new Set(selection.domains) : null;
+  const areaIds = selection.areaIds && selection.areaIds.length > 0 ? new Set(selection.areaIds) : null;
+  const excludedIds = new Set(selection.excludedEntityIds ?? []);
+  const includeAll = requested.length === 0 && !areaIds;
+
+  const implicit = records.filter(({ entity, hidden }) => {
+    if (hidden || excludedIds.has(entity.id)) return false;
+    if (domains && !domains.has(entity.domain)) return false;
+    if (areaIds) return entity.areaId !== null && areaIds.has(entity.areaId);
+    return includeAll;
+  });
+
+  const selected = [...new Set([...explicit, ...implicit])];
+  if (selected.length > SMART_HOME_ENTITY_LIMIT) throw new SmartHomeSelectionLimitError(selected.length);
+  return selected;
+};
+
+const capability = (device: HomeyDevice, id: string) => device.capabilitiesObj?.[id];
+const settable = (device: HomeyDevice, id: string) => capability(device, id)?.setable === true;
+
+const toCapabilityWrites = (record: HomeyEntityRecord, action: SmartHomeAction): CapabilityWrite[] | null => {
+  const { target, entity } = record;
+  if (target.kind === "capability") return toSecondaryWrites(entity, target.device, target.capabilityId, action);
+  if (target.kind !== "device") return null;
+  const { device } = target;
+  const has = (id: string) => settable(device, id);
+  const write = (capabilityId: string, value: CapabilityWrite["value"]): CapabilityWrite[] | null =>
+    has(capabilityId) ? [{ capabilityId, value }] : null;
+  const power = (on: boolean) => write("onoff", on);
+  const isOn = entity.state !== "off";
+
+  switch (target.role) {
+    case "light":
+      switch (action.type) {
+        case "toggle":
+          return power(!isOn) ?? write("dim", isOn ? 0 : 1);
+        case "turnOn":
+          return power(true) ?? write("dim", 1);
+        case "turnOff":
+          return power(false) ?? write("dim", 0);
+        case "setBrightness":
+          if (action.value <= 0) return power(false) ?? write("dim", 0);
+          return write("dim", Math.min(100, action.value) / 100);
+        case "setColorTemp": {
+          const writes = write("light_temperature", kelvinToHomeyTemperature(action.value));
+          return writes && [...(write("light_mode", "temperature") ?? []), ...writes];
+        }
+        case "setRgbColor": {
+          const { hue, saturation } = rgbToHueSaturation(action.value);
+          if (!has("light_hue") || !has("light_saturation")) return null;
+          return [
+            ...(write("light_mode", "color") ?? []),
+            { capabilityId: "light_hue", value: hue },
+            { capabilityId: "light_saturation", value: saturation },
+          ];
+        }
+        default:
+          return null;
+      }
+    case "switch":
+    case "fan":
+      switch (action.type) {
+        case "toggle":
+          return power(!isOn);
+        case "turnOn":
+          return power(true);
+        case "turnOff":
+          return power(false);
+        case "setFanPercentage":
+          if (action.value <= 0) return power(false);
+          return [
+            ...(isOn ? [] : (power(true) ?? [])),
+            ...(write("fan_speed", Math.min(100, action.value) / 100) ?? []),
+          ];
+        case "setOscillating":
+          return write("oscillating", action.value);
+        default:
+          return null;
+      }
+    case "cover":
+      return toCoverWrites(device, entity, action);
+    case "lock":
+      if (action.type === "lock") return write("locked", true);
+      if (action.type === "unlock") return write("locked", false);
+      if (action.type === "toggle") return write("locked", entity.state !== "locked");
+      return null;
+    case "climate":
+      return toClimateWrites(device, entity, action);
+    case "media_player":
+      return toMediaWrites(device, entity, action);
+    case "vacuum": {
+      const vacuum = (state: string, fallback: boolean | null) =>
+        write("vacuumcleaner_state", state) ?? (fallback === null ? null : power(fallback));
+      if (action.type === "vacuumStart") return vacuum("cleaning", true);
+      if (action.type === "vacuumPause") return vacuum("stopped", false);
+      if (action.type === "vacuumReturn") return vacuum("docked", null);
+      if (action.type === "toggle")
+        return entity.state === "cleaning" ? vacuum("stopped", false) : vacuum("cleaning", true);
+      return null;
+    }
+    case "button":
+      return action.type === "trigger" || action.type === "toggle" ? write("button", true) : null;
+    case "humidifier":
+      if (action.type === "toggle") return power(!isOn);
+      if (action.type === "turnOn") return power(true);
+      if (action.type === "turnOff") return power(false);
+      if (action.type === "setHumidity") return write("target_humidity", action.value / 100);
+      return null;
+    case "water_heater":
+      if (action.type === "setTemperature") return write("target_temperature", action.value);
+      if (action.type === "setMode") return write("heater_operation_mode", action.value);
+      if (action.type === "toggle") return power(!isOn);
+      if (action.type === "turnOn") return power(true);
+      if (action.type === "turnOff") return power(false);
+      return null;
+    case "alarm":
+      if (action.type === "alarmDisarm") return write("homealarm_state", "disarmed");
+      if (action.type === "alarmArm")
+        return write("homealarm_state", action.mode === "away" ? "armed" : "partially_armed");
+      return null;
+    case "valve": {
+      const open = (value: boolean) => power(value) ?? write("valve_position", value ? 1 : 0);
+      if (action.type === "open") return open(true);
+      if (action.type === "close") return open(false);
+      if (action.type === "toggle") return open(entity.state === "closed");
+      if (action.type === "setPosition") return write("valve_position", action.value / 100);
+      return null;
+    }
+  }
+};
+
+const toSecondaryWrites = (
+  entity: SmartHomeEntity,
+  device: HomeyDevice,
+  capabilityId: string,
+  action: SmartHomeAction,
+): CapabilityWrite[] | null => {
+  const write = (value: CapabilityWrite["value"]) => [{ capabilityId, value }];
+  switch (entity.domain) {
+    case "switch":
+      if (action.type === "toggle") return write(entity.state !== "on");
+      if (action.type === "turnOn") return write(true);
+      if (action.type === "turnOff") return write(false);
+      return null;
+    case "button":
+      return action.type === "trigger" || action.type === "toggle" ? write(true) : null;
+    case "select":
+      if (action.type !== "selectOption" || entity.attributes.options?.includes(action.value) !== true) return null;
+      return write(action.value);
+    case "number": {
+      if (action.type !== "setValue") return null;
+      const { min, max } = entity.attributes;
+      if ((min !== undefined && action.value < min) || (max !== undefined && action.value > max)) return null;
+      const homeyCapability = capability(device, capabilityId);
+      return write(homeyCapability && isFractionPercent(homeyCapability) ? action.value / 100 : action.value);
+    }
+    default:
+      return null;
+  }
+};
+
+const toCoverWrites = (device: HomeyDevice, entity: SmartHomeEntity, action: SmartHomeAction) => {
+  const move = (open: boolean): CapabilityWrite[] | null => {
+    if (settable(device, "garagedoor_closed")) return [{ capabilityId: "garagedoor_closed", value: !open }];
+    if (settable(device, "windowcoverings_state")) {
+      return [{ capabilityId: "windowcoverings_state", value: open ? "up" : "down" }];
+    }
+    if (settable(device, "windowcoverings_closed")) return [{ capabilityId: "windowcoverings_closed", value: !open }];
+    if (settable(device, "windowcoverings_set")) return [{ capabilityId: "windowcoverings_set", value: open ? 1 : 0 }];
+    return null;
+  };
+  switch (action.type) {
+    case "open":
+      return move(true);
+    case "close":
+      return move(false);
+    case "toggle":
+      return move(entity.state === "closed");
+    case "stop":
+      return settable(device, "windowcoverings_state")
+        ? [{ capabilityId: "windowcoverings_state", value: "idle" }]
+        : null;
+    case "setPosition":
+      return [{ capabilityId: "windowcoverings_set", value: action.value / 100 }];
+    case "setTiltPosition":
+      return [{ capabilityId: "windowcoverings_tilt_set", value: action.value / 100 }];
+    default:
+      return null;
+  }
+};
+
+const toClimateWrites = (device: HomeyDevice, entity: SmartHomeEntity, action: SmartHomeAction) => {
+  const modes = capability(device, "thermostat_mode")?.values?.map((mode) => mode.id) ?? [];
+  const setMode = (mode: string): CapabilityWrite[] | null => {
+    const homeyMode = fromHvacMode(mode);
+    const canPower = settable(device, "onoff");
+    if (mode === "off") {
+      if (canPower) return [{ capabilityId: "onoff", value: false }];
+      return modes.includes("off") ? [{ capabilityId: "thermostat_mode", value: "off" }] : null;
+    }
+    const writes: CapabilityWrite[] = [];
+    if (canPower && entity.state === "off") writes.push({ capabilityId: "onoff", value: true });
+    if (settable(device, "thermostat_mode") && modes.includes(homeyMode)) {
+      writes.push({ capabilityId: "thermostat_mode", value: homeyMode });
+    }
+    return writes.length > 0 ? writes : null;
+  };
+
+  switch (action.type) {
+    case "setTemperature":
+      return settable(device, "target_temperature")
+        ? [{ capabilityId: "target_temperature", value: action.value }]
+        : null;
+    case "setHvacMode":
+      return setMode(action.value);
+    case "toggle": {
+      if (entity.state !== "off") return setMode("off");
+      const mode = entity.attributes.hvacModes?.find((candidate) => candidate !== "off");
+      return mode ? setMode(mode) : null;
+    }
+    case "turnOn":
+    case "turnOff":
+      return settable(device, "onoff") ? [{ capabilityId: "onoff", value: action.type === "turnOn" }] : null;
+    case "setTemperatureRange":
+      return settable(device, "target_temperature_min") && settable(device, "target_temperature_max")
+        ? [
+            { capabilityId: "target_temperature_min", value: action.low },
+            { capabilityId: "target_temperature_max", value: action.high },
+          ]
+        : null;
+    case "setHumidity":
+      return settable(device, "target_humidity")
+        ? [{ capabilityId: "target_humidity", value: action.value / 100 }]
+        : null;
+    case "setFanMode": {
+      if (!entity.attributes.fanModes?.includes(action.value)) return null;
+      const fanCapability = settable(device, "thermostat_fan_speed") ? "thermostat_fan_speed" : "fan_mode";
+      return [{ capabilityId: fanCapability, value: action.value }];
+    }
+    default:
+      return null;
+  }
+};
+
+const toMediaWrites = (device: HomeyDevice, entity: SmartHomeEntity, action: SmartHomeAction) => {
+  const write = (capabilityId: string, value: CapabilityWrite["value"]): CapabilityWrite[] | null =>
+    settable(device, capabilityId) ? [{ capabilityId, value }] : null;
+  switch (action.type) {
+    case "mediaPlayPause":
+      return write("speaker_playing", entity.state !== "playing");
+    case "mediaPlay":
+      return write("speaker_playing", true);
+    case "mediaPause":
+      return write("speaker_playing", false);
+    case "mediaNext":
+      return write("speaker_next", true);
+    case "mediaPrevious":
+      return write("speaker_prev", true);
+    case "setVolume":
+      return write("volume_set", action.value);
+    case "setMuted":
+      return write("volume_mute", action.value);
+    case "selectSource":
+      return write("media_input", action.value);
+    case "turnOn":
+      return write("onoff", true);
+    case "turnOff":
+      return write("onoff", false);
+    case "toggle":
+      if (settable(device, "onoff")) return write("onoff", entity.state === "off");
+      return write("speaker_playing", entity.state !== "playing");
+    default:
+      return null;
+  }
+};

@@ -428,6 +428,17 @@ existingStatsProviders.homeAssistant = adapter(
   (client) => client.getEntityStatsAsync(),
   (data) => data,
 );
+existingStatsProviders.homey = adapter(
+  "homey",
+  [
+    metric("devices", "Devices"),
+    metric("unavailable", "Unavailable devices"),
+    metric("lightsOn", "Lights on"),
+    metric("flows", "Flows"),
+  ],
+  (client) => client.getStatsAsync(),
+  (data) => data,
+);
 existingStatsProviders.anchor = adapter(
   "anchor",
   [metric("notes", "Retrieved notes")],
