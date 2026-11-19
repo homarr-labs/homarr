@@ -1,0 +1,21 @@
+bun.lock
+  s_9b5fb7c88a8dd4::t_399d2f053fb2cd 1245-1246,1465,2045-2046,3977,4485,4651,4987
+package.json
+  s_9b5fb7c88a8dd4::t_42f29de1714f97 185,420
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "404c062467cb1b0a987f4bfccae7ec74d2007893",
+  "prompts": {},
+  "sessions": {
+    "s_9b5fb7c88a8dd4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f30c-5f31-7933-b02c-546d97ed99f3",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
