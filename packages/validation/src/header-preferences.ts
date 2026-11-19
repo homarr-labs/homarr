@@ -1,5 +1,9 @@
 import { z } from "zod/v4";
 
+import { widgetKinds } from "@homarr/definitions";
+
+import { itemAdvancedOptionsSchema } from "./shared";
+
 export const headerPreferencesVersion = 4 as const;
 
 export const headerBuiltinItemIds = [
@@ -49,10 +53,33 @@ const headerBoardItemSchema = z
   })
   .strict();
 
-export const headerItemSchema = z.discriminatedUnion("type", [headerBuiltinItemSchema, headerBoardItemSchema]);
+export const headerWidgetItemSchema = z
+  .object({
+    type: z.literal("widget"),
+    id: z.string().min(1).max(255),
+    kind: z.enum(widgetKinds),
+    options: z.record(z.string(), z.unknown()),
+    integrationIds: z.array(z.string().min(1).max(255)).max(100),
+    advancedOptions: itemAdvancedOptionsSchema,
+    size: z
+      .object({
+        width: z.number().int().min(1).max(12),
+        height: z.number().int().min(1).max(12),
+      })
+      .strict()
+      .default({ width: 2, height: 2 }),
+  })
+  .strict();
+
+export const headerItemSchema = z.discriminatedUnion("type", [
+  headerBuiltinItemSchema,
+  headerBoardItemSchema,
+  headerWidgetItemSchema,
+]);
 
 export type HeaderBuiltinItem = z.infer<typeof headerBuiltinItemSchema>;
 export type HeaderBoardItem = z.infer<typeof headerBoardItemSchema>;
+export type HeaderWidgetItem = z.infer<typeof headerWidgetItemSchema>;
 export type HeaderItem = z.infer<typeof headerItemSchema>;
 export type HeaderItemId = HeaderItem;
 export type HeaderZones = Record<HeaderZoneId, HeaderItem[]>;
@@ -66,6 +93,7 @@ export const isRequiredHeaderItem = (item: HeaderItem) =>
 
 export const getHeaderItemKey = (item: HeaderItem): string => {
   if (item.type === "board") return `board:${item.boardId}`;
+  if (item.type === "widget") return `widget:${item.id}`;
   return `builtin:${item.id}`;
 };
 
@@ -77,7 +105,7 @@ export const getHeaderItemZone = (zones: HeaderZones, item: HeaderItem): HeaderZ
 };
 
 export const getDefaultHeaderZone = (item: HeaderItem): HeaderZoneId => {
-  if (item.type === "board") return "right";
+  if (item.type !== "builtin") return "right";
   if (item.id === "logo") return "left";
   if (item.id === "search") return "center";
   return "right";

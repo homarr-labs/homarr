@@ -5,6 +5,7 @@ import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/de
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 
 const labelDisplayModeOptions = {
   textWithIcon: IconListDetails,
@@ -31,6 +32,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   ...getWidgetIntegrationConfig("systemResources"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      ...createWidgetRefreshIntervalOptions(10),
       hasShadow: factory.switch({ defaultValue: true }),
       resourceLayout: factory.select({
         options: (["vertical", "horizontal", "grid"] as const).map((value) => ({

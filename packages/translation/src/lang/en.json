@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "Refresh interval (seconds)"
+      },
       "location": {
         "query": "City / Postal code",
         "latitude": "Latitude",
@@ -5210,6 +5213,8 @@
         },
         "hideBackgroundImage": {
           "label": "Hide background image"
+        "hideFeedTitle": {
+          "label": "Hide feed title"
         },
         "showPosterImage": {
           "label": "Show poster image"
@@ -5593,6 +5598,7 @@
       },
       "openService": "Open notification service",
       "deleteNotification": "Delete notification from Gotify",
+      "dismissNotification": "Dismiss notification in Home Assistant",
       "deleteFailed": "Could not delete notification",
       "deleteFailedMessage": "The notification could not be deleted. Please try again."
     },
@@ -7288,9 +7294,13 @@
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
                 "boardShortcut": "Board shortcut",
+                "widget": "Widget",
                 "chooseBoard": "Choose a board"
               },
               "configuration": {
+                "widgetKind": "Widget",
+                "widgetOptions": "Options",
+                "boardOnly": "Requires placement on a board",
                 "description": "This control stays the same size as it does in the live header.",
                 "searchDisplay": {
                   "input": "Search bar",
@@ -7319,7 +7329,9 @@
                 "settings": "Your settings",
                 "themeToggle": "Toggle theme",
                 "user": "Account",
-                "boardUnavailable": "Board unavailable"
+                "boardUnavailable": "Board unavailable",
+                "notifications": "Notifications",
+                "widget": "Widget"
               }
             },
             "item": {

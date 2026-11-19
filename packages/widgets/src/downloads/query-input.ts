@@ -1,5 +1,7 @@
 import type { RouterInputs } from "@homarr/api";
 
+import { getWidgetRefreshInterval } from "../refresh-interval";
+
 export const resolveDownloadsQueryInput = (integrationIds: readonly string[], options: Record<string, unknown>) =>
   ({
     integrationIds: [...integrationIds],
@@ -16,4 +18,5 @@ export const resolveDownloadsQueryInput = (integrationIds: readonly string[], op
     },
     includeArchivedHistory: (options.includeArchivedHistory ?? false) === true,
     historyWindowDays: Number(options.historyWindowDays ?? 7),
+    refreshInterval: getWidgetRefreshInterval(options, 10),
   }) satisfies RouterInputs["widget"]["downloads"]["getJobsAndStatuses"];

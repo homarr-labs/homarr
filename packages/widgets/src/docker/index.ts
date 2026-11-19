@@ -7,6 +7,7 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 
 const columnsList = [
   "name",
@@ -33,6 +34,7 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        ...createWidgetRefreshIntervalOptions(30),
         endpointIds: factory.dynamicMultiSelect({
           defaultValue: [],
           maxValues: 100,

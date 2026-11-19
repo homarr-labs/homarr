@@ -62,6 +62,7 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
         defaultValue: false,
       }),
       hideBackgroundImage: factory.switch({
+      hideFeedTitle: factory.switch({
         defaultValue: false,
       }),
       showPosterImage: factory.switch({

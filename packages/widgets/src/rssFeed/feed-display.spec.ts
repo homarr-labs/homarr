@@ -14,7 +14,7 @@ describe("RSS feed display helpers", () => {
     expect(getHostname("https://example.com/feed.xml")).toBe("example.com");
   });
 
-  test("advanced mode exposes all fetched entry details", () => {
+  test("advanced mode exposes details while respecting hidden feed titles", () => {
     expect(
       getRssEntryDisplay({
         isAdvanced: true,
@@ -22,6 +22,7 @@ describe("RSS feed display helpers", () => {
         isTiny: true,
         isRoomy: true,
         hideDescription: true,
+        hideFeedTitle: true,
         showPosterImage: false,
         hideBackgroundImage: false,
         descriptionLines: 1,
@@ -30,6 +31,7 @@ describe("RSS feed display helpers", () => {
       }),
     ).toEqual({
       showDescription: true,
+      showFeedTitle: false,
       showImage: true,
       showSource: true,
       descriptionLineClamp: undefined,
