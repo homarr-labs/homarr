@@ -1,0 +1,24 @@
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  h_d6e478ca18e517 36,66-69
+apps/docs/docs/advanced/environment-variables/index.mdx
+  h_d6e478ca18e517 71
+apps/workshop/docker-compose.staging.yml
+  h_d6e478ca18e517 19
+apps/workshop/docker-compose.yml
+  h_d6e478ca18e517 34,69
+apps/workshop/homarr_provider.go
+  h_d6e478ca18e517 29-31,496,501-505
+apps/workshop/homarr_provider_test.go
+  h_d6e478ca18e517 126-127,140-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c4d0239bf1e06739c004199aa824abdc3a6d092f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
