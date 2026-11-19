@@ -34,9 +34,14 @@ const submitOnModEnter = (event: KeyboardEvent) => {
 };
 
 interface AppEditorFormProps extends WidgetEditorFormProps, InPlaceEditorFormProps {
-  appId: string;
+  appId?: string;
   target: PickTarget;
 }
+
+const getSelectedAppId = (draft: WidgetEditorFormProps["value"] | undefined) => {
+  if (typeof draft?.options.appId === "string") return draft.options.appId;
+  return undefined;
+};
 
 const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps }: AppEditorFormProps) => {
   const tItem = useI18n("item.edit");
@@ -49,12 +54,31 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
 
   const handleSubmit: WidgetEditorFormProps["onSubmit"] = async (draft) => {
     if (submittingRef.current) return;
+    const currentSession = getAddInPlaceState().session;
+    if (currentSession?.picked !== target) return;
+    const submittedAppId = getSelectedAppId(draft);
+    if (!submittedAppId) {
+      widgetFormProps.onSubmit(draft);
+      return;
+    }
+    const appEditHandle = appEditRef.current;
+    if (
+      submittedAppId !== appId ||
+      appEditHandle?.appId !== submittedAppId ||
+      (currentSession.draft && getSelectedAppId(currentSession.draft) !== submittedAppId)
+    ) {
+      // The widget's change effect may not have reached the bound App form yet.
+      widgetFormProps.onChange?.(draft);
+      setActiveView("app");
+      return;
+    }
     submittingRef.current = true;
     setIsSubmitting(true);
     try {
-      const appSaved = await appEditRef.current?.submitIfDirty();
+      const appSaved = await appEditHandle.submitIfDirty();
       // A save may finish after this editor was closed or another item was selected.
-      if (getAddInPlaceState().session?.picked !== target) return;
+      const latestSession = getAddInPlaceState().session;
+      if (latestSession?.picked !== target || getSelectedAppId(latestSession.draft) !== submittedAppId) return;
       if (!appSaved) {
         setActiveView("app");
         return;
@@ -78,7 +102,7 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
             aria-label={tItem("settings.label")}
             data={[
               { value: "widget", label: tItem("tab.widget") },
-              { value: "app", label: tItem("tab.app") },
+              { value: "app", label: tItem("tab.app"), disabled: !appId },
             ]}
           />,
           headerControlTarget,
@@ -95,7 +119,7 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
             />
           </div>
           <div hidden={activeView !== "app"}>
-            <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />
+            {appId && <EmbeddedAppEditForm key={appId} appId={appId} handleRef={appEditRef} />}
           </div>
           <div id={portalTargetId} />
         </Fieldset>
@@ -161,11 +185,13 @@ export const BoundEditorForm = ({ headerControlTarget }: InPlaceEditorFormProps)
   const targetKey = getTargetKey(session.picked, session.editItemId);
   let form = <WidgetEditorForm key={targetKey} {...widgetFormProps} />;
   if (resources.kind === "app" && resources.appId && authSession?.user.permissions.includes("app-modify-all")) {
+    let selectedAppId = resources.appId;
+    if (session.draft) selectedAppId = getSelectedAppId(session.draft) ?? "";
     form = (
       <AppEditorForm
         key={targetKey}
         {...widgetFormProps}
-        appId={resources.appId}
+        appId={selectedAppId}
         target={session.picked}
         headerControlTarget={headerControlTarget}
       />
