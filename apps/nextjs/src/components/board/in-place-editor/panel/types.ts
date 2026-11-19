@@ -4,6 +4,10 @@ import type { AddInPlaceCatalog } from "../catalog";
 import type { AddInPlaceActions } from "../store";
 import type { AddInPlaceSession, AddInPlaceStep } from "../types";
 
+export interface InPlaceEditorFormProps {
+  headerControlTarget?: HTMLDivElement | null;
+}
+
 export interface InPlaceEditorPanelProps {
   step: Exclude<AddInPlaceStep, "idle">;
   session: AddInPlaceSession;
@@ -11,7 +15,7 @@ export interface InPlaceEditorPanelProps {
   presentation: "floating" | "sheet";
   useCatalog: (search: string) => AddInPlaceCatalog;
   actions: AddInPlaceActions;
-  BoundEditorForm: ComponentType;
+  BoundEditorForm: ComponentType<InPlaceEditorFormProps>;
   editorFormId: string;
   AreaSizeInputs: ComponentType<{ compact?: boolean }>;
   CreateAppForm: ComponentType;

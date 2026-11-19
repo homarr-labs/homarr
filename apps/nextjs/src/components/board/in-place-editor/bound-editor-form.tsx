@@ -1,17 +1,22 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
-import { useEffect, useRef } from "react";
-import { Center, Loader, Text } from "@mantine/core";
+import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Center, Fieldset, Loader, MantineThemeProvider, Portal, SegmentedControl, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { WidgetEditorForm } from "@homarr/widgets/modals";
+import type { EmbeddedAppEditFormHandle, WidgetEditorFormProps } from "@homarr/widgets/modals";
+import { EmbeddedAppEditForm, WidgetEditorForm } from "@homarr/widgets/modals";
 
 import { getTargetKey, useTargetResources } from "./resources";
-import { addInPlaceActions, useAddInPlaceSession } from "./store";
+import { addInPlaceActions, getAddInPlaceState, useAddInPlaceSession } from "./store";
+import type { PickTarget } from "./types";
+import type { InPlaceEditorFormProps } from "./panel/types";
 
 export const editorFormId = "add-in-place-editor-form";
 
@@ -28,7 +33,78 @@ const submitOnModEnter = (event: KeyboardEvent) => {
   document.querySelector<HTMLFormElement>(`#${editorFormId}`)?.requestSubmit();
 };
 
-export const BoundEditorForm = () => {
+interface AppEditorFormProps extends WidgetEditorFormProps, InPlaceEditorFormProps {
+  appId: string;
+  target: PickTarget;
+}
+
+const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps }: AppEditorFormProps) => {
+  const tItem = useI18n("item.edit");
+  const [activeView, setActiveView] = useState<"widget" | "app">("widget");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const portalTargetId = `app-editor-portals-${useId().replaceAll(/[^a-zA-Z0-9_-]/g, "")}`;
+  const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
+  const submittingRef = useRef(false);
+  useBoardDraftChanges(widgetFormProps.boardId, () => appEditRef.current?.isDirty() ?? false);
+
+  const handleSubmit: WidgetEditorFormProps["onSubmit"] = async (draft) => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setIsSubmitting(true);
+    try {
+      const appSaved = await appEditRef.current?.submitIfDirty();
+      // A save may finish after this editor was closed or another item was selected.
+      if (getAddInPlaceState().session?.picked !== target) return;
+      if (!appSaved) {
+        setActiveView("app");
+        return;
+      }
+      widgetFormProps.onSubmit(draft);
+    } finally {
+      submittingRef.current = false;
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      {headerControlTarget &&
+        createPortal(
+          <SegmentedControl<"widget" | "app">
+            size="xs"
+            value={activeView}
+            onChange={setActiveView}
+            disabled={isSubmitting}
+            aria-label={tItem("settings.label")}
+            data={[
+              { value: "widget", label: tItem("tab.widget") },
+              { value: "app", label: tItem("tab.app") },
+            ]}
+          />,
+          headerControlTarget,
+        )}
+      <MantineThemeProvider
+        theme={{ components: { Portal: Portal.extend({ defaultProps: { target: `#${portalTargetId}` } }) } }}
+      >
+        <Fieldset variant="unstyled" disabled={isSubmitting} inert={isSubmitting} aria-label={tItem("settings.label")}>
+          <div hidden={activeView !== "widget"}>
+            <WidgetEditorForm
+              {...widgetFormProps}
+              onSubmit={handleSubmit}
+              onValidationError={() => setActiveView("widget")}
+            />
+          </div>
+          <div hidden={activeView !== "app"}>
+            <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />
+          </div>
+          <div id={portalTargetId} />
+        </Fieldset>
+      </MantineThemeProvider>
+    </>
+  );
+};
+
+export const BoundEditorForm = ({ headerControlTarget }: InPlaceEditorFormProps) => {
   const board = useRequiredBoard();
   const t = useI18n("item.inPlace");
   const session = useAddInPlaceSession();
@@ -67,26 +143,38 @@ export const BoundEditorForm = () => {
     );
   }
 
+  const widgetFormProps: WidgetEditorFormProps = {
+    kind: resources.kind,
+    definition: resources.definition,
+    value: resources.baseValue,
+    integrationData: resources.integrationData,
+    integrationSupport: resources.integrationSupport,
+    settings,
+    itemId: session.editItemId,
+    boardId: board.id,
+    formId: editorFormId,
+    showSettingsHeading: false,
+    canConfigureWidget: resources.kind !== "customApi" || (authSession?.user.permissions.includes("admin") ?? false),
+    onChange: addInPlaceActions.setDraft,
+    onSubmit: (draft) => addInPlaceActions.commit(draft),
+  };
+  const targetKey = getTargetKey(session.picked, session.editItemId);
+  let form = <WidgetEditorForm key={targetKey} {...widgetFormProps} />;
+  if (resources.kind === "app" && resources.appId && authSession?.user.permissions.includes("app-modify-all")) {
+    form = (
+      <AppEditorForm
+        key={targetKey}
+        {...widgetFormProps}
+        appId={resources.appId}
+        target={session.picked}
+        headerControlTarget={headerControlTarget}
+      />
+    );
+  }
+
   return (
     <div role="presentation" onKeyDown={submitOnModEnter}>
-      <WidgetEditorForm
-        key={getTargetKey(session.picked, session.editItemId)}
-        kind={resources.kind}
-        definition={resources.definition}
-        value={resources.baseValue}
-        integrationData={resources.integrationData}
-        integrationSupport={resources.integrationSupport}
-        settings={settings}
-        itemId={session.editItemId}
-        boardId={board.id}
-        formId={editorFormId}
-        showSettingsHeading={false}
-        canConfigureWidget={
-          resources.kind !== "customApi" || (authSession?.user.permissions.includes("admin") ?? false)
-        }
-        onChange={addInPlaceActions.setDraft}
-        onSubmit={(draft) => addInPlaceActions.commit(draft)}
-      />
+      {form}
     </div>
   );
 };
