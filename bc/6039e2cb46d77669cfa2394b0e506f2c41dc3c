@@ -1,0 +1,166 @@
+.agents/skills/homarr-custom-widget/references/runtime.md
+  h_d6e478ca18e517 3-6,8,26-30,32-35,37-42,44-45,47-50
+.agents/skills/homarr-custom-widget/references/schema.md
+  h_d6e478ca18e517 3-4,8-12,16,18-23,25-27,29-30,32-34,36-38
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 30,72,563-565,623
+apps/docs/src/components/workshop/SubmitForm.tsx
+  h_d6e478ca18e517 3,17-18,42,91-101,109,176-177,179,183-187,191,278,448-449,467
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  h_d6e478ca18e517 41,431,442
+apps/docs/src/components/workshop/WorkshopIntegrationBadges.tsx
+  h_d6e478ca18e517 1-30
+apps/docs/src/components/workshop/useWorkshop.ts
+  h_d6e478ca18e517 6-7,47
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 213,215,217-218,221-230,232,234-249
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  h_d6e478ca18e517 13,28,55-60,66,94
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-authoring-session.ts
+  h_d6e478ca18e517 1-128
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  h_d6e478ca18e517 74-75,84-85,110,112,122,125,132,159-160,166-167,185-186
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-sections.tsx
+  h_d6e478ca18e517 5,17,32,38,44,105,109,117,125,129,136,139-155
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  h_d6e478ca18e517 6-7,12,19,47-65,78
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css
+  h_d6e478ca18e517 67-82
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  h_d6e478ca18e517 5,50,58-62,99-102,115,119-123,138-214,222-239,253,255-256,265-266,269-273,290-297,314,318-326,329,335,349-359,372
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-option-fields.tsx
+  h_d6e478ca18e517 7-12,41-42,45,48-54,59,62-65,68,80-81,91-101,129-142,144-165,190-220
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx
+  h_d6e478ca18e517 8,19,23,33,60-65,67,101,133,189,224-230
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-dependencies.ts
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  h_d6e478ca18e517 25,54,68,71-73,77-79,94,118,155,170
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-sources-editor.tsx
+  h_d6e478ca18e517 8-9,14,16,22,26,34-38,41-42,44-50,89,92-93,95,133
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_import-custom-widget-button.tsx
+  h_d6e478ca18e517 4,18,80-81,88
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  h_d6e478ca18e517 4,8,14,28-31,35,41,52,54-58,61-63,82-93,95,97,105,116,133-160,170,192,201-211,235,250,252-255,270-277,323,325-336,351-354,356
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/_share-nudge.tsx
+  h_d6e478ca18e517 1-33
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  h_d6e478ca18e517 12,16,20,35
+apps/nextjs/src/app/[locale]/manage/custom-widgets/new/page.tsx
+  h_d6e478ca18e517 14,21-22,37-41
+apps/nextjs/src/app/[locale]/manage/custom-widgets/page.tsx
+  h_d6e478ca18e517 2-3,12,36,38,46,48-55
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  h_d6e478ca18e517 22,27-31,37-41,56-57,64,69,73-79,90,143-149,195-196,203,208-215
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx
+  h_d6e478ca18e517 21,32,91-93,164
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.spec.ts
+  h_d6e478ca18e517 127-129
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.ts
+  h_d6e478ca18e517 29
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts
+  h_d6e478ca18e517 628-635
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 118,121,216-221,575-580,1010,1012-1017,1082-1083,1085-1087,1089,1095-1101,1124,1135,1143
+apps/nextjs/src/components/workshop/workshop-integration-badges.tsx
+  h_d6e478ca18e517 1-29
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  h_d6e478ca18e517 11-12,78
+apps/workshop/Dockerfile
+  h_d6e478ca18e517 54-56
+apps/workshop/README.md
+  h_d6e478ca18e517 104-106
+apps/workshop/generate-integration-kinds.mts
+  h_d6e478ca18e517 1-16
+apps/workshop/pb_hooks/http-integration-kinds.json
+  h_d6e478ca18e517 1-92
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 12-35,94-95,160
+apps/workshop/pb_hooks/workshop.pb.js
+  h_d6e478ca18e517 81-89
+apps/workshop/pb_migrations/1792886400_workshop_integration_kinds.js
+  h_d6e478ca18e517 1-42
+apps/workshop/test.sh
+  h_d6e478ca18e517 12
+apps/workshop/tests/workshop-migration.mjs
+  h_d6e478ca18e517 1-3,27-29,39,97-102,114,122-124,127,130-136,138,151,170,172
+packages/api/src/router/custom-widget/management-queries.ts
+  h_d6e478ca18e517 3,9-14,36-61,73-81,165,179,204,234,238,245-252
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  h_d6e478ca18e517 7,79-81,147-149,157-159
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 113-123,133-143,212
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 2,5,28-32,46,48,52,56,102-103,105,114,132-140,142,144,163-168,180,186-187,192,200-201,234-241,251-253,255-256,274,281-282,294-295,301,319-320,323-330,332-337,340-345,348-353,356-376,378-399,401-420,423-428,431,437-448
+packages/custom-widgets/src/core/ai-response-context.ts
+  h_d6e478ca18e517 1-203
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 2-7,50-64,69,72-123,132-136,140,175-176,180-184,188,190-195,197-199,201-202,204-206,208-210,214-217,219,237-246,248-253,255-256,258,260-261
+packages/custom-widgets/src/core/component-example.ts
+  h_d6e478ca18e517 8-103,108-109,111,114-119,141-146,150-173
+packages/custom-widgets/src/core/options-schema.ts
+  h_d6e478ca18e517 86-89,101,103-104
+packages/custom-widgets/src/core/source-setup.ts
+  h_d6e478ca18e517 1-4,36-43
+packages/custom-widgets/src/jsx/analyzer-ast.ts
+  h_d6e478ca18e517 1-2,50
+packages/custom-widgets/src/jsx/bindings.ts
+  h_d6e478ca18e517 13,17,20,25-27,29-30,33-35,37,40-41,45,52,54-56,108-109,111-112
+packages/custom-widgets/src/jsx/collection-methods.ts
+  h_d6e478ca18e517 5,194
+packages/custom-widgets/src/jsx/interpreter.tsx
+  h_d6e478ca18e517 33-42,125-129,283,300-307,309-310,314-315,320,324
+packages/custom-widgets/src/jsx/number-format.ts
+  h_d6e478ca18e517 1-74
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  h_d6e478ca18e517 2,59-61,63
+packages/custom-widgets/src/jsx/safe-properties.ts
+  h_d6e478ca18e517 15-21,135
+packages/custom-widgets/src/runtime/context.tsx
+  h_d6e478ca18e517 4,12-22,24-51
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  h_d6e478ca18e517 2,64,75,214
+packages/custom-widgets/src/server/request-limits.ts
+  h_d6e478ca18e517 40-41,118-137,167-170,206,213-214,220,237-242,250-284
+packages/custom-widgets/src/server/response.ts
+  h_d6e478ca18e517 156-158,170-183
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 8,15,18-19,37-38,126-127,211-268,270-272
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  h_d6e478ca18e517 19,49-54
+packages/custom-widgets/src/workbench/code-editor.tsx
+  h_d6e478ca18e517 6,36,140-143,165,243,275
+packages/custom-widgets/src/workbench/code-language.ts
+  h_d6e478ca18e517 48-51,56-65,68,71
+packages/custom-widgets/src/workbench/index.ts
+  h_d6e478ca18e517 15
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  h_d6e478ca18e517 1,7-8,52-55,133
+packages/custom-widgets/src/workbench/source-draft.ts
+  h_d6e478ca18e517 1-146
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 893,959-972,1115,1119,1334,1354-1359
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 8,26-30,39-40,80,91-97,103-109,118-165,171,177,183-191,209,212,214,216-220,225,227,229-230,239,259,265,269-271,273-284,287,289-306,309-314,316-327,329-331,334,337-340,344-345,347-348,352-353,355-359,442-450
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  h_d6e478ca18e517 15,20-21,39-46,54-55,57-58,62-63,65,67,69-73,75-78,80,82-86,94,96-97,99,101-102,111
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  h_d6e478ca18e517 1-2,12,47
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  h_d6e478ca18e517 4,39,44-62,75,88-91,93-105,108-121,123-207,209-213,223
+packages/workshop/src/backend.ts
+  h_d6e478ca18e517 94
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 2-6,103-119,151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bc6039e2cb46d77669cfa2394b0e506f2c41dc3c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
