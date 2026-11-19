@@ -1,0 +1,44 @@
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 63,74-89,342-343,739-753,765,767-768,1016-1017
+apps/docs/src/components/workshop/SubmitForm.tsx
+  h_d6e478ca18e517 7,55,60-66,116-123,320,322-327,329,413,417,455,462
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  h_d6e478ca18e517 14,49-54,58-63,74
+apps/docs/src/lib/workshop-schema.ts
+  h_d6e478ca18e517 3,9-10,13-14
+apps/nextjs/src/components/theme/theme-editor.tsx
+  h_d6e478ca18e517 57-58,455-464
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  h_d6e478ca18e517 3-4,13,16,24-25,38-49,52,58,63,65-66,72,80-84,89,95-99,103-111,119-122,126,134-164,168,171-174,186,188,213-219
+apps/nextjs/src/components/workshop/workshop-session.tsx
+  h_d6e478ca18e517 59,75
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  h_d6e478ca18e517 13,47
+apps/nextjs/src/components/workshop/workshop-theme-publish-button.tsx
+  h_d6e478ca18e517 1-123
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 7-11,36,43-46,85-109
+apps/workshop/pb_hooks/workshop.pb.js
+  h_d6e478ca18e517 50-51
+apps/workshop/pb_migrations/1795104000_workshop_custom_themes.js
+  h_d6e478ca18e517 1-17
+bun.lock
+  h_d6e478ca18e517 1059
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1307-1324
+packages/workshop/package.json
+  h_d6e478ca18e517 29
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 3-4,11,15,89,121,123,240,251,256-259,266-288
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "808ec98d8c7ef8dea215283cdd791e0323e67b7d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
