@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-authoring-session.ts
+  h_d6e478ca18e517 68
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  h_d6e478ca18e517 58-59,102,115,119,121,123,269,271,328,349,351-352
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  h_d6e478ca18e517 3,35,54,56-58,133,180,190,294-299,305,322-323
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 11,317-318,343-348,350,353-361,364,366,370-374,380-383
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "04b4e5f2f6c33c393a6df450f70c79dae4bda31d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
