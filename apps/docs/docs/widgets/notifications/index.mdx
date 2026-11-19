@@ -13,6 +13,9 @@ import { ntfyIntegration } from "@site/docs/integrations/ntfy";
 import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
 import { gotifyIntegration } from "@site/docs/integrations/gotify";
 import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+import { beszelIntegration } from "@site/docs/integrations/beszel";
+import { homeAssistantIntegration } from "@site/docs/integrations/home-assistant";
+import { uptimeKumaIntegration } from "@site/docs/integrations/uptime-kuma";
 
 <WidgetHeader widget={notificationsWidget} categories={["Notifications", "Messaging"]} />
 
@@ -27,6 +30,9 @@ available service icons.
     { integration: nextcloudIntegration },
     { integration: gotifyIntegration },
     { integration: wazuhIntegration },
+    { integration: beszelIntegration },
+    { integration: homeAssistantIntegration },
+    { integration: uptimeKumaIntegration },
   ]}
 />
 
@@ -43,4 +49,8 @@ Scripts, event handlers, and unsafe links are removed; remote images in formatte
 
 The service link is a separate icon, so selecting message text or using message links does not open Gotify.
 Deleting a Gotify notification requires **Interact** permission on its integration and permanently removes the
-message from Gotify for all clients. Other notification integrations remain read-only.
+message from Gotify for all clients. Home Assistant exposes persistent notifications; dismissing one also requires
+**Interact** permission and removes it in Home Assistant. Mobile push notification history is not available.
+
+Beszel shows its 50 most recent alert events. Uptime Kuma shows published status-page incidents and currently down or
+pending public monitors. It does not expose private monitor events or sent notification history. These sources are read-only.

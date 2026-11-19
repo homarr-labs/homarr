@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Scrollable",
         "description": "Keep this container at its set size and scroll its contents instead of growing to fit them."
+      },
+      "autoExpand": {
+        "label": "Auto-expand when active",
+        "description": "Automatically reveal this container when a widget inside it goes active, and hide it again once it's not."
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Border color"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "Widget to watch",
+            "placeholder": "Select a widget"
+          },
+          "inactiveDisplay": {
+            "collapsed": "Collapsed",
+            "hidden": "Hidden"
+          },
+          "fitToContent": {
+            "label": "Shrink to fit content",
+            "description": "While active, only take up as much height as the watched widget needs. The saved size is the maximum, and the widgets below move up into the freed space."
+          }
         }
       },
       "remove": {
         "message": "Remove this container? Its contents will move into the surrounding area."
+      },
+      "editBar": {
+        "edit": "Edit"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Show location",
           "description": "Show whether the stream is on your LAN or WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "Detailed stats up to",
+          "description": "While this many streams or fewer are active, each one gets a row of extra stats underneath it. Set to 0 to always keep rows compact"
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "Transcoding to {target}",
           "containerChanged": "{container} (remux)",
           "position": "{position} / {duration}",
+          "progress": "Progress",
+          "endsAt": "Ends at",
+          "episode": "Episode",
+          "album": "Album",
           "unknown": "unknown format"
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Copy name",
         "copyId": "Copy ID",
+        "setCategory": "Set Category",
+        "setLabels": "Set Labels",
         "clearFilters": "Clear filters"
+      },
+      "setCategory": {
+        "none": "No category",
+        "loadFailed": "Could not load categories. Please try again.",
+        "labels": "Labels",
+        "labelsDescription": "Select labels or type a new label and press Enter.",
+        "labelsLoadFailed": "Could not load labels. Please try again.",
+        "delugePluginRequired": "Enable the Label plugin in Deluge's Preferences → Plugins to change categories.",
+        "transmissionUnsupported": "Transmission 3.0 or later is required to change labels."
       },
       "footer": {
         "filter": "Filter downloads"
@@ -5167,6 +5207,9 @@
         },
         "hideDescription": {
           "label": "Hide description"
+        },
+        "hideFeedTitle": {
+          "label": "Hide feed title"
         },
         "showPosterImage": {
           "label": "Show poster image"
@@ -5544,6 +5587,7 @@
       },
       "openService": "Open notification service",
       "deleteNotification": "Delete notification from Gotify",
+      "dismissNotification": "Dismiss notification in Home Assistant",
       "deleteFailed": "Could not delete notification",
       "deleteFailedMessage": "The notification could not be deleted. Please try again."
     },
@@ -7239,9 +7283,13 @@
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
                 "boardShortcut": "Board shortcut",
+                "widget": "Widget",
                 "chooseBoard": "Choose a board"
               },
               "configuration": {
+                "widgetKind": "Widget",
+                "widgetOptions": "Options",
+                "boardOnly": "Requires placement on a board",
                 "description": "This control stays the same size as it does in the live header.",
                 "searchDisplay": {
                   "input": "Search bar",
@@ -7270,7 +7318,9 @@
                 "settings": "Your settings",
                 "themeToggle": "Toggle theme",
                 "user": "Account",
-                "boardUnavailable": "Board unavailable"
+                "boardUnavailable": "Board unavailable",
+                "notifications": "Notifications",
+                "widget": "Widget"
               }
             },
             "item": {

@@ -12,6 +12,8 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
 import { supportsSmartHomeAction } from "../interfaces/smart-home/smart-home-capabilities";
 import type {
@@ -41,7 +43,12 @@ import {
 } from "./homeassistant-normalize";
 import type { EntityRegistryContext } from "./homeassistant-normalize";
 import type { RawEntityState } from "./homeassistant-types";
-import { calendarEventSchema, calendarsSchema, historyResultSchema } from "./homeassistant-types";
+import {
+  calendarEventSchema,
+  calendarsSchema,
+  historyResultSchema,
+  persistentNotificationsSchema,
+} from "./homeassistant-types";
 
 const CAMERA_REFRESH_MS = 10_000;
 
@@ -66,7 +73,10 @@ const forecastResultSchema = z.object({
 
 export { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "./homeassistant-errors";
 
-export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
+export class HomeAssistantIntegration
+  extends Integration
+  implements ISmartHomeIntegration, ICalendarIntegration, INotificationsIntegration
+{
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return { headers: this.getAuthHeaders() };
   }
@@ -79,6 +89,27 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       lightsOn: states.filter((entity) => entity.entityId.startsWith("light.") && entity.state === "on").length,
       peopleHome: states.filter((entity) => entity.entityId.startsWith("person.") && entity.state === "home").length,
     };
+  }
+
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const result = await this.getConnection().sendAsync({ type: "persistent_notification/get" });
+    return persistentNotificationsSchema.parse(result).map((notification) => ({
+      id: notification.notification_id,
+      time: notification.created_at,
+      title: notification.title?.trim() || "Home Assistant",
+      body: notification.message,
+      contentType: "text/markdown",
+      href: this.externalUrl("/").toString(),
+    }));
+  }
+
+  public async deleteNotificationAsync(id: string): Promise<void> {
+    await this.getConnection().sendAsync({
+      type: "call_service",
+      domain: "persistent_notification",
+      service: "dismiss",
+      service_data: { notification_id: id },
+    });
   }
 
   public async getSnapshotAsync(selection: SmartHomeEntitySelection): Promise<SmartHomeSnapshot> {

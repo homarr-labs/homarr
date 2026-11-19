@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "可滚动",
         "description": "让此容器保持设定大小并滚动其内容，而不是自动撑大以容纳它们。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "边框颜色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "已隐藏"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "移除此容器？其中的内容将移入周围区域。"
+      },
+      "editBar": {
+        "edit": "编辑"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "显示位置",
           "description": "显示流媒体是在局域网还是广域网"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "转码为 {target}",
           "containerChanged": "{container}（重封装）",
           "position": "",
+          "progress": "下载进度",
+          "endsAt": "",
+          "episode": "剧集",
+          "album": "相册",
           "unknown": "未知格式"
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "复制名称",
         "copyId": "复制 ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "清除筛选"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "筛选下载"

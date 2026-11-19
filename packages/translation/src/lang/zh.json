@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "可捲動",
         "description": "讓此容器維持設定的大小，捲動其內容而不是隨內容增長。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "邊框顏色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "隱藏"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "要移除此容器嗎？其內容將移至周圍區域。"
+      },
+      "editBar": {
+        "edit": "編輯"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "顯示位置",
           "description": "顯示串流位於 LAN 或 WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "下載進度",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "複製名稱",
         "copyId": "複製 ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "清除篩選器"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "篩選下載項目"
