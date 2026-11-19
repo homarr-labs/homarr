@@ -2491,7 +2491,12 @@
         "integration": "Edit integration"
       },
       "app": {
-        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards.",
+        "confirmDiscard": {
+          "title": "Discard other app changes?",
+          "message": "Only the selected app will be saved. Unsaved changes to other apps will be discarded.",
+          "confirm": "Save and discard"
+        }
       },
       "integration": {
         "action": "Edit connection",

@@ -3,11 +3,13 @@
 import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import type { ButtonProps, DataAttributes } from "@mantine/core";
 import { Center, Fieldset, Loader, MantineThemeProvider, Portal, SegmentedControl, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
+import { useConfirmModal } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { EmbeddedAppEditFormHandle, WidgetEditorFormProps } from "@homarr/widgets/modals";
@@ -73,9 +75,12 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
   const tItem = useI18n("item.edit");
   const [activeView, setActiveView] = useState<"widget" | "app">("widget");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { openConfirmModal } = useConfirmModal();
   const portalTargetId = `app-editor-portals-${useId().replaceAll(/[^a-zA-Z0-9_-]/g, "")}`;
   const appEditHandles = useRef(new Map<string, EmbeddedAppEditFormHandle>());
   const submittingRef = useRef(false);
+  const discardConfirmationRef = useRef<((confirmed: boolean) => void) | null>(null);
+  useEffect(() => () => discardConfirmationRef.current?.(false), []);
   useBoardDraftChanges(widgetFormProps.boardId, () =>
     Array.from(appEditHandles.current.values()).some((handle) => handle.isDirty()),
   );
@@ -96,15 +101,12 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
     const currentSession = getAddInPlaceState().session;
     if (currentSession?.picked !== target) return;
     const submittedAppId = getSelectedAppId(draft);
-    if (!submittedAppId) {
-      widgetFormProps.onSubmit(draft);
-      return;
-    }
-    const appEditHandle = appEditHandles.current.get(submittedAppId);
+    const appEditHandle = appEditHandles.current.get(submittedAppId ?? "");
     if (
-      submittedAppId !== appId ||
-      appEditHandle?.appId !== submittedAppId ||
-      (currentSession.draft && getSelectedAppId(currentSession.draft) !== submittedAppId)
+      submittedAppId &&
+      (submittedAppId !== appId ||
+        appEditHandle?.appId !== submittedAppId ||
+        (currentSession.draft && getSelectedAppId(currentSession.draft) !== submittedAppId))
     ) {
       // The widget's change effect may not have reached the bound App form yet.
       widgetFormProps.onChange?.(draft);
@@ -113,11 +115,43 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
     }
     submittingRef.current = true;
     setIsSubmitting(true);
+    const isCurrentSubmission = () => {
+      const latestSession = getAddInPlaceState().session;
+      return (
+        latestSession?.picked === target &&
+        getSelectedAppId(latestSession.draft) === submittedAppId &&
+        appEditHandles.current.get(submittedAppId ?? "") === appEditHandle
+      );
+    };
     try {
+      const hasOtherAppDrafts = Array.from(appEditHandles.current.values()).some(
+        (handle) => handle.appId !== submittedAppId && handle.isDirty(),
+      );
+      if (hasOtherAppDrafts) {
+        const confirmed = await new Promise<boolean>((resolve) => {
+          discardConfirmationRef.current = resolve;
+          openConfirmModal(
+            {
+              title: tItem("app.confirmDiscard.title"),
+              children: tItem("app.confirmDiscard.message"),
+              labels: { confirm: tItem("app.confirmDiscard.confirm") },
+              cancelProps: { "data-autofocus": true } as ButtonProps & DataAttributes,
+              confirmProps: { "data-autofocus": undefined } as ButtonProps & DataAttributes,
+              onConfirm: () => resolve(true),
+            },
+            { onClose: () => resolve(false) },
+          );
+        });
+        discardConfirmationRef.current = null;
+        if (!confirmed || !isCurrentSubmission()) return;
+      }
+      if (!appEditHandle) {
+        widgetFormProps.onSubmit(draft);
+        return;
+      }
       const appSaved = await appEditHandle.submitIfDirty();
       // A save may finish after this editor was closed or another item was selected.
-      const latestSession = getAddInPlaceState().session;
-      if (latestSession?.picked !== target || getSelectedAppId(latestSession.draft) !== submittedAppId) return;
+      if (!isCurrentSubmission()) return;
       if (!appSaved) {
         setActiveView("app");
         return;
