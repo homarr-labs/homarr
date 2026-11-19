@@ -1,8 +1,9 @@
 import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
 import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import { z } from "zod/v4";
+
 import type { CustomTheme } from "@homarr/validation/theme";
 import { customThemeSchema } from "@homarr/validation/theme";
-import { z } from "zod/v4";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
 export const WORKSHOP_API_URL = HOMARR_WEBSITE_URL;
