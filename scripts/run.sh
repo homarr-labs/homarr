@@ -109,7 +109,8 @@ NGINX_PROXY_TEMP_DIRECTIVE=$(printf '%s\n' "$NGINX_BUILD_OPTIONS" | awk '
                 continue
             }
             if (substr(args, 1, 1) == "\047") {
-                if (option == "--http-proxy-temp-path" || option == "--build") { valid = 0; break }
+                # Packages use quoted compiler/linker flags; inherit other custom quoting.
+                if (option != "--with-cc-opt" && option != "--with-ld-opt") { valid = 0; break }
                 args = substr(args, 2)
                 closing = index(args, "\047")
                 if (!closing) { valid = 0; break }
