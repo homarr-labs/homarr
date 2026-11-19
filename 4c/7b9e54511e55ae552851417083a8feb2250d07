@@ -1,0 +1,16 @@
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 205,207,209,216
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 126-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4c7b9e54511e55ae552851417083a8feb2250d07",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
