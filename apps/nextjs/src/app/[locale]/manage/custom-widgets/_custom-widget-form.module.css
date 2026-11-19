@@ -64,6 +64,22 @@
   min-width: 0;
 }
 
+@media (min-width: 48em) {
+  .compactSource {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    > .sourceType,
+    > .sourceUrl {
+      grid-column: auto;
+    }
+  }
+}
+
 .previewPane {
   display: flex;
   flex-direction: column;

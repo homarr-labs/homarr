@@ -625,6 +625,14 @@ const hasExplicitCustomWidgetIntent = (message: UIMessage) =>
       hasCustomWidgetAuthoringText(part.text),
   );
 
+export const isCustomWidgetManagementPath = (pathname: string | null | undefined) =>
+  typeof pathname === "string" && /^(?:\/[^/]+)?\/manage\/custom-widgets(?:\/|$)/u.test(pathname);
+
+export const hasCustomWidgetToolHistory = (messages: readonly UIMessage[]) =>
+  messages
+    .findLast((message) => message.role === "assistant")
+    ?.parts.some((part) => isToolUIPart(part) && getToolName(part).startsWith("customWidget_")) ?? false;
+
 export const needsCustomWidgetAuthoringContext = (messages: UIMessage[]) => {
   const latestMessage = messages.at(-1);
   if (!latestMessage) return false;

@@ -27,6 +27,7 @@ import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { integrationDefs, isHttpIntegrationKind } from "@homarr/definitions";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import { getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
 import {
   githubAvatarUrl,
   githubProfileUrl,
@@ -68,6 +69,7 @@ import { formatRelativeTime } from "./format";
 import { ScreenshotEditor } from "./ScreenshotEditor";
 import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
 import { WorkshopVoteControl } from "./WorkshopVoteControl";
+import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
@@ -558,6 +560,9 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const authorAvatarUrl = githubAvatarUrl(authorHandle);
   const authorGithubProfileUrl = githubProfileUrl(authorHandle);
   const sources = widgetDefinition ? Object.entries(widgetDefinition.sources) : [];
+  let integrationKinds = submission.integrationKinds;
+  if (integrationKinds.length === 0 && widgetDefinition)
+    integrationKinds = getCustomWidgetIntegrationKinds(widgetDefinition.sources);
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
   const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source));
@@ -615,6 +620,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                     {typeLabels[submission.type]}
                   </Badge>
                   {submission.outdated && <Badge variant="destructive">Outdated</Badge>}
+                  <WorkshopIntegrationBadges kinds={integrationKinds} />
                   <span className="text-xs text-muted-foreground">Revision {submission.revision}</span>
                 </div>
                 <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{submission.title}</h1>

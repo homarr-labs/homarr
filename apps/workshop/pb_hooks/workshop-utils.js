@@ -9,6 +9,30 @@ const isManifestMap = (value, max) =>
   Object.keys(value).length <= max &&
   Object.entries(value).every(([key, entry]) => /^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(key) && isManifestObject(entry));
 
+const isKnownHttpIntegrationKind = (kind) => require(`${__hooks}/http-integration-kinds.json`).includes(kind);
+
+const getSubmissionIntegrationKinds = (record) => {
+  if (record.getString("type") !== "customWidget" || record.getString("widgetSchema") !== "homarr-custom-widget-v2")
+    return [];
+  let manifest;
+  try {
+    manifest = JSON.parse(record.getString("content"));
+  } catch {
+    return [];
+  }
+  if (
+    !isManifestObject(manifest) ||
+    manifest.$schema !== "homarr-custom-widget-v2" ||
+    !isManifestMap(manifest.sources, 8)
+  )
+    return [];
+  const kinds = Object.values(manifest.sources).flatMap((source) => {
+    if (source.type !== "integration" || !isKnownHttpIntegrationKind(source.integrationKind)) return [];
+    return [source.integrationKind];
+  });
+  return [...new Set(kinds)].slice(0, 8);
+};
+
 const isManifestHttpUrl = (value) => {
   if (!isManifestString(value, 2048) || !/^https?:\/\//i.test(value)) return false;
   const authority = /^https?:\/\/([^/?#]+)/i.exec(value)?.[1];
@@ -67,10 +91,8 @@ const validateSubmissionManifest = (record) => {
   for (const source of Object.values(manifest.sources)) {
     const validSource =
       source.type === "integration"
-        ? isManifestString(source.integrationKind, 128)
-        : (source.type === undefined || source.type === "http") &&
-          isManifestHttpUrl(source.baseUrl) &&
-          ["public", "private", "loopback"].includes(source.networkScope);
+        ? isKnownHttpIntegrationKind(source.integrationKind)
+        : (source.type === undefined || source.type === "http") && isManifestHttpUrl(source.baseUrl);
     if (!validSource) rejectRequest("Widget manifest has an invalid source declaration");
   }
 };
@@ -135,6 +157,7 @@ const sendEmail = (app, recipientEmail, subject, text, html) => {
 module.exports = {
   emailTemplate,
   escapeHtml,
+  getSubmissionIntegrationKinds,
   rejectRequest,
   renderWorkshopSocialHtml,
   sendEmail,

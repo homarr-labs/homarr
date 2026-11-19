@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Dispatch, FormEventHandler, SetStateAction } from "react";
-import { Box, Paper, SegmentedControl, Stack } from "@mantine/core";
+import { Alert, Box, Button, Paper, SegmentedControl, Stack, Text } from "@mantine/core";
 
 import type { CustomWidgetAiDraft } from "@homarr/custom-widgets/authoring-prompt";
 import { customWidgetFormSchema, DEFAULT_CUSTOM_WIDGET_FORM_VALUES } from "@homarr/custom-widgets/workbench";
@@ -47,6 +47,7 @@ interface CustomWidgetFormProps {
   mode: "create" | "edit";
   initialValues?: Partial<CustomWidgetFormValues>;
   definitionId?: string;
+  initialAuthoringMode?: "assisted" | "advanced";
 }
 
 type MobilePane = "configure" | "preview";
@@ -54,6 +55,11 @@ type MobilePane = "configure" | "preview";
 interface CustomWidgetFormViewProps {
   mode: "create" | "edit";
   definitionId?: string;
+  assistedOrigin: boolean;
+  authoringMode: "assisted" | "advanced";
+  setAuthoringMode(mode: "assisted" | "advanced"): void;
+  hasGeneratedImport: boolean;
+  getSampleResponse(): string | null;
   form: CustomWidgetWorkbenchForm;
   formErrors: CustomWidgetWorkbenchForm["errors"];
   formRevision: string;
@@ -90,6 +96,10 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   const w = useI18n("customWidget.workbench");
   const documentStore = props.documentStore;
   const form = props.form;
+  const assisted = props.authoringMode === "assisted";
+  const saveDisabled =
+    props.assistedOrigin &&
+    (!props.hasGeneratedImport || !props.preview.session || props.preview.outcome !== "success");
   const setMobilePane = props.setMobilePane;
   const setPreview = props.setPreview;
   const { renameRequest, renameOption } = useMemo(
@@ -102,21 +112,15 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   );
   const readAiDraft = useCallback(() => {
     const draft = getAiDraft(documentStore.getValues());
+    if (props.assistedOrigin && !props.hasGeneratedImport) return { ...draft, template: "" };
     if (props.mode === "create" && areCustomWidgetValuesEqual(draft, getAiDraft(DEFAULT_CUSTOM_WIDGET_FORM_VALUES)))
       return null;
     return draft;
-  }, [documentStore, props.mode]);
-  const readAiDiagnostics = useCallback(
-    () => analyzeCustomWidgetAiDiagnostics(documentStore.getValues()),
-    [documentStore],
-  );
-  const readAiSampleResponse = useCallback(() => {
-    const data = Object.fromEntries(
-      Object.entries(props.preview.data).filter(([, value]) => value !== null && value !== undefined),
-    );
-    if (Object.keys(data).length === 0) return null;
-    return JSON.stringify(data);
-  }, [props.preview.data]);
+  }, [documentStore, props.mode, props.assistedOrigin, props.hasGeneratedImport]);
+  const readAiDiagnostics = useCallback(() => {
+    if (props.assistedOrigin && !props.hasGeneratedImport) return [];
+    return analyzeCustomWidgetAiDiagnostics(documentStore.getValues());
+  }, [documentStore, props.assistedOrigin, props.hasGeneratedImport]);
   const handleSectionSelect = useCallback(
     (section: string) => {
       setMobilePane(section === "preview" ? "preview" : "configure");
@@ -131,6 +135,83 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
       })),
     [setPreview],
   );
+  const compactSetup = assisted && !props.hasGeneratedImport;
+  const configurationSections = {
+    ai: (
+      <Box key="ai" data-authoring-section="ai">
+        <CustomWidgetAiSection
+          assisted={assisted}
+          getDraft={readAiDraft}
+          getDiagnostics={readAiDiagnostics}
+          getSampleResponse={props.getSampleResponse}
+          onPaste={props.onPasteAiResponse}
+        />
+      </Box>
+    ),
+    manifest: (
+      <Box key="manifest" hidden={assisted}>
+        <CustomWidgetAdvancedManifest form={form} />
+      </Box>
+    ),
+    general: (
+      <Box key="general" hidden={assisted && !props.hasGeneratedImport}>
+        <CustomWidgetGeneralSection form={form} formRevision={props.formRevision} mode={props.mode} />
+      </Box>
+    ),
+    sources: (
+      <Box key="sources" data-authoring-section="sources">
+        <CustomWidgetSourcesSection form={form} definitionId={props.definitionId} compact={compactSetup} />
+      </Box>
+    ),
+    requests: (
+      <Box key="requests" data-authoring-section="requests">
+        <CustomWidgetRequestsSection form={form} onRename={renameRequest} compact={compactSetup} />
+      </Box>
+    ),
+    test: (
+      <Box key="test" hidden={!assisted} data-authoring-section="test">
+        <Stack gap="xs">
+          <Button
+            type="button"
+            variant="light"
+            onClick={props.onPreview}
+            loading={props.previewPending}
+            disabled={props.savePending}
+          >
+            {props.hasGeneratedImport ? w("action.preview") : w("assisted.test")}
+          </Button>
+          <Text size="sm" c="dimmed">
+            {w("assisted.testDescription")}
+          </Text>
+        </Stack>
+      </Box>
+    ),
+    options: (
+      <Box key="options" hidden={assisted}>
+        <CustomWidgetOptionsSection form={form} onRename={renameOption} />
+      </Box>
+    ),
+    template: (
+      <Box key="template" hidden={assisted}>
+        <CustomWidgetTemplateSection form={form} />
+      </Box>
+    ),
+    save: (
+      <Paper key="save" p="md" className={classes.mobileSaveBar} shadow="sm">
+        <CustomWidgetSaveActions
+          mode={props.mode}
+          savePending={props.savePending}
+          previewPending={props.previewPending}
+          onPreview={props.onPreview}
+          saveDisabled={saveDisabled}
+          previewLabel={assisted && !props.hasGeneratedImport ? w("assisted.test") : undefined}
+        />
+      </Paper>
+    ),
+  };
+  const sectionOrder: Array<keyof typeof configurationSections> = assisted
+    ? ["sources", "requests", "test", "ai", "general", "manifest", "options", "template", "save"]
+    : ["ai", "manifest", "general", "sources", "requests", "test", "options", "template", "save"];
 
   return (
     <CustomWidgetFormDocumentProvider store={documentStore}>
@@ -138,6 +219,24 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
         <form onSubmit={props.onSubmit} className={classes.form}>
           <CustomWidgetUnsavedChangesGuard />
           <CustomWidgetOptionsSnapshotSync setOptionsSnapshot={props.setOptionsSnapshot} />
+          {props.mode === "create" && (
+            <Stack gap="xs" mb="md">
+              <SegmentedControl<"assisted" | "advanced">
+                aria-label={w("assisted.modeLabel")}
+                value={props.authoringMode}
+                onChange={props.setAuthoringMode}
+                data={[
+                  { value: "assisted", label: w("assisted.mode") },
+                  { value: "advanced", label: w("assisted.advancedMode") },
+                ]}
+              />
+              {assisted && (
+                <Text size="sm" c="dimmed">
+                  {w("assisted.description")}
+                </Text>
+              )}
+            </Stack>
+          )}
           <SegmentedControl
             className={classes.paneSwitcher}
             fullWidth
@@ -151,29 +250,10 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
             ]}
           />
           <CustomWidgetSaveIssuesAlert issues={props.saveIssues} />
-          <CustomWidgetSectionNavigation onSelect={handleSectionSelect} />
+          <CustomWidgetSectionNavigation onSelect={handleSectionSelect} assisted={assisted} />
           <div className={classes.workbench} data-mobile-pane={props.mobilePane}>
-            <Stack gap="lg" className={classes.configuration}>
-              <CustomWidgetAiSection
-                getDraft={readAiDraft}
-                getDiagnostics={readAiDiagnostics}
-                getSampleResponse={readAiSampleResponse}
-                onPaste={props.onPasteAiResponse}
-              />
-              <CustomWidgetAdvancedManifest form={form} />
-              <CustomWidgetGeneralSection form={form} formRevision={props.formRevision} mode={props.mode} />
-              <CustomWidgetSourcesSection form={form} definitionId={props.definitionId} />
-              <CustomWidgetRequestsSection form={form} onRename={renameRequest} />
-              <CustomWidgetOptionsSection form={form} onRename={renameOption} />
-              <CustomWidgetTemplateSection form={form} />
-              <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
-                <CustomWidgetSaveActions
-                  mode={props.mode}
-                  savePending={props.savePending}
-                  previewPending={props.previewPending}
-                  onPreview={props.onPreview}
-                />
-              </Paper>
+            <Stack gap="lg" className={classes.configuration} data-authoring-mode={props.authoringMode}>
+              {sectionOrder.map((section) => configurationSections[section])}
             </Stack>
             <Box id="preview" component="aside" className={classes.previewPane} aria-label={w("widgetPreview")}>
               <Paper p="md" className={classes.actionBar} shadow="sm">
@@ -182,8 +262,15 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
                   savePending={props.savePending}
                   previewPending={props.previewPending}
                   onPreview={props.onPreview}
+                  saveDisabled={saveDisabled}
+                  previewLabel={assisted && !props.hasGeneratedImport ? w("assisted.test") : undefined}
                 />
               </Paper>
+              {props.assistedOrigin && (
+                <Alert color="blue">
+                  {props.hasGeneratedImport ? w("assisted.finalPreview") : w("assisted.importRequired")}
+                </Alert>
+              )}
               <CustomWidgetPreviewSection
                 preview={props.preview}
                 size={props.previewSize}
@@ -200,7 +287,14 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   );
 });
 
-export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
+export function CustomWidgetForm({
+  mode,
+  initialValues,
+  definitionId,
+  initialAuthoringMode = "advanced",
+}: CustomWidgetFormProps) {
+  const [authoringMode, setAuthoringMode] = useState(initialAuthoringMode);
+  const [assistedOrigin, setAssistedOrigin] = useState(initialAuthoringMode === "assisted");
   const [formInitialValues] = useState<CustomWidgetFormValues>(() => ({
     ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
     ...initialValues,
@@ -217,18 +311,28 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [mobilePane, setMobilePane] = useState<MobilePane>("configure");
   const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null, outcome: "idle" });
   const [previewSize, setPreviewSize] = useState("standard");
-  const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>(() => {
+  const [optionsSnapshot, updateOptionsSnapshot] = useState<Record<string, unknown>>(() => {
     const initialDefinition = buildDefinition(formInitialValues);
     return initialDefinition.success ? getDefinitionDefaults(initialDefinition.data) : {};
   });
+  const optionsSnapshotRef = useRef(optionsSnapshot);
+  const getOptionsSnapshot = useCallback(() => optionsSnapshotRef.current, []);
+  const setOptionsSnapshot = useCallback<Dispatch<SetStateAction<Record<string, unknown>>>>((update) => {
+    const current = optionsSnapshotRef.current;
+    const next = typeof update === "function" ? update(current) : update;
+    if (areCustomWidgetValuesEqual(current, next)) return;
+    optionsSnapshotRef.current = next;
+    updateOptionsSnapshot(next);
+  }, []);
   const actions = useCustomWidgetFormActions({
     mode,
+    assistedOrigin,
     definitionId,
     form,
     documentStore,
     setPreview,
     setMobilePane,
-    optionsSnapshot,
+    getOptionsSnapshot,
     setOptionsSnapshot,
   });
   const latestActions = useRef(actions);
@@ -242,6 +346,17 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   return (
     <CustomWidgetFormView
       mode={mode}
+      assistedOrigin={assistedOrigin}
+      authoringMode={authoringMode}
+      setAuthoringMode={(next) => {
+        if (next === "assisted") {
+          latestActions.current.activateAssisted();
+          setAssistedOrigin(true);
+        }
+        setAuthoringMode(next);
+      }}
+      hasGeneratedImport={actions.hasGeneratedImport}
+      getSampleResponse={actions.getSampleResponse}
       definitionId={definitionId}
       form={form}
       formErrors={mantineForm.errors}
@@ -254,7 +369,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       previewSize={previewSize}
       setPreviewSize={setPreviewSize}
       optionsSnapshot={optionsSnapshot}
-      setOptionsSnapshot={setOptionsSnapshot}
+      setOptionsSnapshot={actions.setOptionsSnapshot}
       saveIssues={actions.saveIssues}
       savePending={actions.savePending}
       previewPending={actions.previewPending}

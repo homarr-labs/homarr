@@ -1,5 +1,5 @@
 import type { ComponentType, ErrorInfo, ReactNode } from "react";
-import { Component, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { Component, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -61,7 +61,7 @@ function ErrorAlert({ error }: { error: Error }) {
   );
 }
 
-export function CustomJsxRenderer(props: CustomJsxRendererProps) {
+export const CustomJsxRenderer = memo(function CustomJsxRenderer(props: CustomJsxRendererProps) {
   if (!props.template.trim())
     return (
       <Alert color="gray" variant="light" p="xs">
@@ -72,7 +72,7 @@ export function CustomJsxRenderer(props: CustomJsxRendererProps) {
     );
 
   return <CustomJsxRendererSession {...props} />;
-}
+});
 
 interface InputRegistration {
   name: string;
@@ -211,7 +211,7 @@ function CustomJsxRendererSession({
       };
     }
   }, [components, dataBindings, inputs, options, renderTemplate, status, template]);
-  useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
+  useEffect(() => setParseErrors((current) => (current.length === 0 ? current : [])), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>
       setParseErrors((current) => {
