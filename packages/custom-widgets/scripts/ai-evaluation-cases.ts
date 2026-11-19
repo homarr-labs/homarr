@@ -563,10 +563,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     id: "seed-dispatcharr-channels",
     documentationUrl: "https://dispatcharr.github.io/Dispatcharr-Docs/api/",
     request:
-      "Create the shipped Dispatcharr Channels widget for my private Dispatcharr instance. Show a bounded channel lineup ordered by channel number with effective name and number fallbacks, group and EPG context, catch-up and hidden state, total count, refresh, and complete loading, empty, error, and success states.",
+      "Create the Dispatcharr Channels widget for my private Dispatcharr instance. Show a bounded channel lineup ordered by channel number with effective name and number fallbacks, group and EPG context, catch-up and hidden state, total count, refresh, and complete loading, empty, error, and success states.",
     apiNotes:
       "Keep the shipped private-network HTTP source placeholder and X-API-Key header configuration; the user supplies the real URL and secret through secure source configuration. GET /api/channels/channels/ with page=1, page_size=12, ordering=channel_number returns {count,next,previous,results,has_unassigned_epg_channels}. Render results and do not invent system metrics or actions.",
-    preferredExampleId: "dispatcharr-channels",
     previewResponses: [
       {
         pathIncludes: "/api/channels/channels/",
@@ -649,10 +648,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.karakeep.app/api/karakeep-api/",
     request:
-      "Create the shipped Karakeep Recent Bookmarks widget using my saved Karakeep integration. Show at most eight newest unarchived bookmarks, handle link, text, asset, and unknown content without broken titles, and include favorite state, tags, summary or note fallbacks, cursor context, refresh, and complete loading, empty, error, and success states.",
+      "Create the Karakeep Recent Bookmarks widget using my saved Karakeep integration. Show at most eight newest unarchived bookmarks, handle link, text, asset, and unknown content without broken titles, and include favorite state, tags, summary or note fallbacks, cursor context, refresh, and complete loading, empty, error, and success states.",
     apiNotes:
       "Use the saved Karakeep integration and inherit its authentication. GET /api/v1/bookmarks with archived=false, sortOrder=desc, limit=8, includeContent=false returns {bookmarks,nextCursor}. content is a discriminated union: link has url/title, text has text/sourceUrl, asset has assetType/assetId, and unknown can have no useful payload.",
-    preferredExampleId: "karakeep-bookmarks",
     previewResponses: [
       {
         pathIncludes: "/api/v1/bookmarks",
@@ -739,10 +737,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.mealie.io/documentation/getting-started/api-usage/",
     request:
-      "Create the shipped Mealie Today widget using my saved Mealie integration. Render today's direct-array meal plan as a compact day view where recipe-backed and text-only entries remain useful. Show meal type, recipe name, servings, total time, rating, or title and text fallbacks, plus refresh and complete loading, empty, error, and success states.",
+      "Create the Mealie Today widget using my saved Mealie integration. Render today's direct-array meal plan as a compact day view where recipe-backed and text-only entries remain useful. Show meal type, recipe name, servings, total time, rating, or title and text fallbacks, plus refresh and complete loading, empty, error, and success states.",
     apiNotes:
       "Use the saved Mealie integration and inherit its authentication. GET /api/households/mealplans/today returns a direct array. Each entry has entryType, title, text, recipeId, and nullable recipe; recipe can include name, slug, recipeServings, recipeYield, totalTime, and rating. This today view does not need to display or invent a timezone for the date-only field.",
-    preferredExampleId: "mealie-today",
     previewResponses: [
       {
         pathIncludes: "/api/households/mealplans/today",
@@ -808,10 +805,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.romm.app/latest/developers/api-authentication/",
     request:
-      "Create the shipped RomM Library Overview widget using my saved RomM integration. Combine platform, ROM, save, and state totals with six recently added games. Handle the items envelope, missing names, filesystem availability, platform, and creation date with independent refresh, loading, error, empty, and success states. Keep it text-first and do not render protected cover URLs.",
+      "Create the RomM Library Overview widget using my saved RomM integration. Combine platform, ROM, save, and state totals with six recently added games. Handle the items envelope, missing names, filesystem availability, platform, and creation date with independent refresh, loading, error, empty, and success states. Keep it text-first and do not render protected cover URLs.",
     apiNotes:
       "Use the saved RomM integration and inherit its authentication. GET /api/stats returns PLATFORMS, ROMS, SAVES, STATES, SCREENSHOTS, and TOTAL_FILESIZE_BYTES. GET /api/roms with limit=6, offset=0, order_by=created_at, order_dir=desc, with_char_index=false, with_filter_values=false, with_rom_id_index=false, with_total=false returns {items,total,limit,offset,...}.",
-    preferredExampleId: "romm-library",
     previewResponses: [
       {
         pathIncludes: "/api/stats",
@@ -916,10 +912,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.tubearchivist.com/api/docs/",
     request:
-      "Create the shipped TubeArchivist Queue Health widget using my saved TubeArchivist integration. Combine channel counts, pending-download counts, and the first page of pending queue items. Show channel name, title, duration, message, type or status, honest page context, independent refresh and failures, and complete loading, empty, error, and success states without rendering authenticated thumbnails.",
+      "Create the TubeArchivist Queue Health widget using my saved TubeArchivist integration. Combine channel counts, pending-download counts, and the first page of pending queue items. Show channel name, title, duration, message, type or status, honest page context, independent refresh and failures, and complete loading, empty, error, and success states without rendering authenticated thumbnails.",
     apiNotes:
       "Use the saved TubeArchivist integration and inherit its Authorization token. GET /api/stats/channel/ returns channel counts. GET /api/stats/download/ returns nullable pending counts. GET /api/download/ with filter=pending,page=0 returns {data,paginate}; page 0 is the first page.",
-    preferredExampleId: "tubearchivist-queue",
     previewResponses: [
       {
         pathIncludes: "/api/stats/channel/",
@@ -1034,10 +1029,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.frigate.video/integrations/api/review-review-get/",
     request:
-      "Create the shipped Frigate Review Alerts widget using my saved Frigate integration. Show at most ten unreviewed alerts from the last 24 hours with camera, severity or active state, start time, reviewed state, objects, verified objects, zones, refresh, and complete loading, empty, error, and success states. Do not render protected relative thumbnails.",
+      "Create the Frigate Review Alerts widget using my saved Frigate integration. Show at most ten unreviewed alerts from the last 24 hours with camera, severity or active state, start time, reviewed state, objects, verified objects, zones, refresh, and complete loading, empty, error, and success states. Do not render protected relative thumbnails.",
     apiNotes:
       "Use the saved Frigate integration and inherit its connection settings. GET /api/review with reviewed=0, severity=alert, limit=10 returns a direct array. start_time and nullable end_time are Unix seconds. Filter the returned array client-side to start_time >= current Unix time minus 86400; do not invent date parameters.",
-    preferredExampleId: "frigate-alerts",
     previewResponses: [
       {
         pathIncludes: "/api/review",
@@ -1100,10 +1094,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.frigate.video/integrations/api/stats-stats-get/",
     request:
-      "Create the shipped Frigate System Metrics widget using my saved Frigate integration. Show service version and uptime, aggregate camera, detection, process, and skipped FPS, per-camera connection quality, reconnects and stalls, detector inference speed, storage usage, refresh, and complete loading, error, and success states in a responsive layout.",
+      "Create the Frigate System Metrics widget using my saved Frigate integration. Show service version and uptime, aggregate camera, detection, process, and skipped FPS, per-camera connection quality, reconnects and stalls, detector inference speed, storage usage, refresh, and complete loading, error, and success states in a responsive layout.",
     apiNotes:
       "Use the saved Frigate integration and inherit its connection settings. GET /api/stats returns a direct object with camera_fps, detection_fps, process_fps, skipped_fps, cameras, detectors, and service. service contains version, uptime, and a dynamic storage record; cameras and detectors are dynamic records. Detector inference_speed values are milliseconds. Storage free, used, and total values are decimal megabytes, matching Frigate's Prometheus conversion to bytes.",
-    preferredExampleId: "frigate-system",
     previewResponses: [
       {
         pathIncludes: "/api/stats",
@@ -1176,10 +1169,9 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     documentationUrl: "https://docs.frigate.video/integrations/api/go-2-rtc-streams-go-2-rtc-streams-get/",
     request:
-      "Create the shipped Frigate Stream Readiness widget using my saved Frigate integration. Show every configured go2rtc stream with producer and consumer counts, safe media descriptors, live or offline state, refresh, and complete loading, empty, error, and success states. Never expose producer URLs, remote addresses, credentials, or pretend the JSON runtime embeds protected live video.",
+      "Create the Frigate Stream Readiness widget using my saved Frigate integration. Show every configured go2rtc stream with producer and consumer counts, safe media descriptors, live or offline state, refresh, and complete loading, empty, error, and success states. Never expose producer URLs, remote addresses, credentials, or pretend the JSON runtime embeds protected live video.",
     apiNotes:
       "Use the saved Frigate integration and inherit its connection settings. GET /api/go2rtc/streams returns a dynamic object keyed by stream name. Each value can contain producers and consumers arrays; producers can contain a medias array. Render counts and medias only, never producer.url, remote_addr, token values, or other connection URLs.",
-    preferredExampleId: "frigate-live-streams",
     previewResponses: [
       {
         pathIncludes: "/api/go2rtc/streams",

@@ -808,7 +808,9 @@ export const getCustomWidgetPhaseToolNames = <TToolName extends string>(
   if (latestFocusedSearch) {
     const output = isRecord(latestFocusedSearch.output) ? latestFocusedSearch.output : null;
     if (Array.isArray(output?.components) && output.components.length > 0) {
-      return getAvailablePhaseTools(new Set(["customWidget_getComponents"]));
+      const batchLookup = getAvailablePhaseTools(new Set(["customWidget_getComponents"]));
+      if (batchLookup.length > 0) return batchLookup;
+      return getAvailablePhaseTools(customWidgetDirectPreviewPhaseToolNames);
     }
   }
   if (focusedSearches >= MAX_FOCUSED_COMPONENT_SEARCHES_PER_PHASE) {

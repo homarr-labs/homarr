@@ -1,4 +1,5 @@
 import {
+  catalogComponentsByName,
   customJsxBindableComponentNames,
   customJsxComponentByName,
   customJsxRequiredPropsByName,
@@ -41,7 +42,7 @@ const helperAdditionalProps: Readonly<Record<string, readonly string[]>> = {
   TabsContainer: ["children"],
 };
 const helperPropsByName = new Map(
-  [...customJsxCatalogComponentByName.values()]
+  [...catalogComponentsByName.values()]
     .filter((component) => component.package === "@homarr/widgets")
     .map((component) => [
       component.name,

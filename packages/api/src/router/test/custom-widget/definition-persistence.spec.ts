@@ -302,13 +302,14 @@ describe("custom widget definition persistence", () => {
     const db = await prepareDatabase();
     const caller = createCaller(db);
     const created = await caller.create({ ...jellyfin, secrets: [secret] });
-    const updatedTemplate = jellyfin.template.replace("Jellyfin library", "Updated Jellyfin library");
+    const updatedTemplate = jellyfin.template.replace("<RefreshButton />", "");
     const preview = await caller.previewCreate({
       definitionId: created.id,
       definition: { ...jellyfin, name: "Updated Jellyfin", template: updatedTemplate },
       secrets: [],
     });
     expect(preview.persistenceTool).toBe("customWidget_updateFromPreview");
+    expect(preview.removedFromSaved).toEqual(["component:RefreshButton"]);
     expect(preview.sourceConfigurations).toEqual([]);
     const previewSession = await getPreviewSession(preview.previewSession.id, userId);
     for (const [requestId, request] of Object.entries(previewSession.requests)) {
@@ -324,7 +325,16 @@ describe("custom widget definition persistence", () => {
       });
     }
 
-    const updated = await caller.updateFromPreview({ previewSessionId: previewSession.id });
+    const previewSessionId = previewSession.id;
+    await expect(caller.updateFromPreview({ previewSessionId })).rejects.toThrow("Unacknowledged removals");
+    await expect(
+      caller.updateFromPreview({ previewSessionId, acknowledgedRemovals: ["component:RefreshButton", "stale"] }),
+    ).rejects.toThrow("match");
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({ template: jellyfin.template });
+    const updated = await caller.updateFromPreview({
+      previewSessionId,
+      acknowledgedRemovals: preview.removedFromSaved,
+    });
 
     expect(updated).toEqual({
       id: created.id,

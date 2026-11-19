@@ -31,7 +31,7 @@ export interface CustomWidgetPresentationRemovalIntent {
 const presentationRemovalNegationPattern =
   /\b(?:do\s+not|don['’]?t|never|not|keep|preserve|cannot|can['’]?t|no\s+need(?:\s+to)?)\b/iu;
 const presentationRemovalPrefix =
-  "\\b(?:remove|hide|omit|drop|delete|replace|convert)\\s+(?:(?:the|a|an|its|this|these|those|my|our|all|any|existing|current|inline|decorative|header)\\s+)*";
+  "\\b(?:without|remove|hide|omit|drop|delete|replace|convert)\\s+(?:(?:the|a|an|its|this|these|those|my|our|all|any|existing|current|inline|decorative|header)\\s+)*";
 const presentationRemovalSuffix = "(?=\\s*(?:$|[.!?:]|\\b(?:from|on|in|of|with|by|to)\\b))";
 const iconRemovalPattern = new RegExp(`${presentationRemovalPrefix}icons?${presentationRemovalSuffix}`, "iu");
 const inlineStyleRemovalPattern = new RegExp(`${presentationRemovalPrefix}styles?${presentationRemovalSuffix}`, "iu");
@@ -42,7 +42,7 @@ export const getCustomWidgetPresentationRemovalIntent = (
   text: string,
 ): CustomWidgetPresentationRemovalIntent | undefined => {
   const clauses = text.split(/[.!?;,\n]|\bbut\b/iu).flatMap((sentence) => {
-    const parts = sentence.split(/\band\b/iu);
+    const parts = sentence.replace(/\s+please\s*$/iu, "").split(/\band\b/iu);
     return parts.map((clause, index) => {
       const previousClause = parts[index - 1];
       if (!previousClause || presentationRemovalNegationPattern.test(previousClause)) return clause;

@@ -5,8 +5,7 @@ description: Author, repair, preview, install, or configure Homarr Custom JSX v2
 
 # Homarr Custom Widget
 
-Build from verified contracts/samples and matching shipped examples; research only missing/changed contracts.
-Preserve working repairs/migrations; keep credentials in Homarr.
+Reuse verified samples and shipped examples. Research missing contracts; keep credentials in Homarr.
 
 ## Context
 
@@ -16,20 +15,16 @@ Reuse supplied context; load only missing references:
 - [runtime](references/runtime.md): response paths, manual interactions, input bindings, safe formatters.
 - [security](references/security.md): auth, network access, mutations.
 
-Use registered components. Resolve unknown names with `customWidget_findComponents`; batch details with
-`customWidget_getComponents`. Full documents are only for unresolved props/diagnostics.
-Reuse `contextAlreadyLoaded`; `phaseComplete` advances to the visible next phase.
+Discover unknown names with `customWidget_findComponents`; batch details via `customWidget_getComponents`.
+Reuse `contextAlreadyLoaded`; advance on `phaseComplete`.
 
 ## Working-app design
 
-Use faithful numbers, rows, or charts; no quotas. Keep identities, units and missingness honest; unknown is not zero.
-Ground series/history/denominators in verified data. Discover needed registered charts/helpers; verify safe props/data
-grammar, not assumed callbacks/overlays. Quiet theme tokens; persistent config in options. Use supported accessible
-motion/disclosure, reduced motion and keyboard/touch access. Keep facts visible; verify hover and narrow/wide host fit or
-report missing evidence. Preserve repairs/migrations.
+Use faithful numbers, rows or charts; no quotas. Preserve identities/units; unknown is not zero. Verify series, history,
+denominators and registered chart/helper props. Use quiet theme tokens, persistent options, accessible disclosure,
+reduced motion and keyboard/touch access. Keep facts visible; check hover and narrow/wide fit. Preserve repairs/migrations.
 
-https://impeccable.style/ and https://usehallmark.com/ are app references, not marketing pages, packages, catalogs,
-required tools, or API authority.
+https://impeccable.style/ and https://usehallmark.com/: design references, not API authority.
 
 ## Author
 
@@ -44,8 +39,6 @@ required tools, or API authority.
   browser requests, arbitrary functions, statements, IIFEs, and recursion are unavailable.
 
 ## Preview and save
-
-With requested creation/editing and available lifecycle tools:
 
 1. Call `customWidget_previewCreate` with the complete candidate (validates manifest/JSX). Edits: `definitionId`;
    multiline Assistant JSX: `templateLines`.

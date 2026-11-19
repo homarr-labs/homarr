@@ -250,12 +250,18 @@ function getChangedSecretBindings(stored: StoredDefinitionState, definition: Hom
 function assertAcknowledgedRemovals(
   stored: StoredDefinitionState,
   definition: HomarrCustomWidgetV2,
-  acknowledged: readonly string[] = [],
+  acknowledged: readonly string[],
 ) {
   const removals = getCustomWidgetRemovals(parseStoredCustomWidgetDefinition(stored), definition);
   const acknowledgedKeys = new Set(acknowledged);
   const unacknowledged = removals.filter((key) => !acknowledgedKeys.has(key));
-  if (unacknowledged.length === 0) return;
+  if (unacknowledged.length === 0) {
+    if (removals.length === acknowledgedKeys.size) return;
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Unacknowledged removals: acknowledgements must match the current removedFromSaved list exactly.",
+    });
+  }
   throw new TRPCError({
     code: "BAD_REQUEST",
     message: `Unacknowledged removals: ${JSON.stringify(unacknowledged)}. Restore them with customWidget_previewReviseTemplate, or pass these exact keys in acknowledgedRemovals only for removals the user explicitly requested. Manifest restorations require customWidget_previewCreate with definitionId.`,

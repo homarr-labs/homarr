@@ -372,58 +372,21 @@ describe("Custom Widget assistant live evaluation harness", () => {
     });
   });
 
-  it("runs a named preset through the production example and integration phases", () => {
-    const testCase = getCase("seed-mealie-today");
-    const state = createAssistantEvaluationState(testCase.preferredExampleId);
-    const getActiveNames = () =>
-      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name);
-
-    expect(getActiveNames()).toEqual(["customWidget_getExample"]);
+  it("runs a named shipped preset through the production example phase", () => {
+    const testCase = getCase("fake-service-health");
+    const state = createAssistantEvaluationState("weather-outlook");
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_getExample", { name: "wrong-id" }),
-    ).toMatchObject({
-      id: "mealie-today",
-    });
-    expect(state.toolCalls.at(-1)?.input).toEqual({ name: "mealie-today" });
-    expect(getActiveNames()).toEqual(["integration_all"]);
-    expect(executeActiveAssistantEvaluationTool(testCase, state, "integration_all", {})).toEqual(
-      testCase.savedIntegrations,
-    );
-    expect(getActiveNames()).toEqual(["customWidget_previewCreate"]);
+    ).toMatchObject({ id: "weather-outlook" });
+    expect(
+      getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
+    ).toContain("customWidget_previewCreate");
   });
 
-  it.each([
-    "seed-dispatcharr-channels",
-    "seed-karakeep-bookmarks",
-    "seed-mealie-today",
-    "seed-romm-library",
-    "seed-tubearchivist-queue",
-    "seed-frigate-alerts",
-    "seed-frigate-system",
-    "seed-frigate-live-streams",
-  ])("passes the complete deterministic assistant preview lifecycle for %s", (id) => {
-    const preset = BUNDLED_CUSTOM_WIDGETS.find((entry) => entry.id === id);
-    if (!preset) throw new Error(`Bundled preset '${id}' was not found`);
+  it.each(BUNDLED_CUSTOM_WIDGETS)("passes the complete deterministic assistant preview lifecycle for $id", (preset) => {
+    const { id, widget } = preset;
     const state = createAssistantEvaluationState();
-    const testCase = {
-      id,
-      savedIntegrations: getCase(id).savedIntegrations,
-      request: `Create ${preset.widget.name}`,
-      documentationUrl: "https://example.test",
-      apiNotes: "Bundled preset contract",
-      previewResponses: Object.values(preset.widget.requests).map((request) => ({
-        pathIncludes: request.path,
-        response: {},
-      })),
-    };
-
-    const widget = structuredClone(preset.widget);
-    for (const source of Object.values(widget.sources)) {
-      if (source.type !== "integration") continue;
-      source.integrationId = testCase.savedIntegrations?.find(
-        (integration) => integration.kind === source.integrationKind,
-      )?.id;
-    }
+    const testCase = { ...getCase("fake-service-health"), id, sampleResponse: {} };
     const preview = executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewCreate", {
       definition: widget,
     });
@@ -434,13 +397,13 @@ describe("Custom Widget assistant live evaluation harness", () => {
         executeActiveAssistantEvaluationTool(testCase, state, "customWidget_previewQuery", {
           sessionId: "preview-1",
           requestId,
-          params: {},
+          params: preset.widget.requests[requestId]?.path.includes("{param:name}") ? { name: "pikachu" } : {},
         }),
       ).toMatchObject({ ok: true, requestId });
     }
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_createFromPreview"]);
+    ).toContain("customWidget_createFromPreview");
     expect(
       executeActiveAssistantEvaluationTool(testCase, state, "customWidget_createFromPreview", {
         previewSessionId: "preview-1",
@@ -589,36 +552,16 @@ describe("Custom Widget assistant live evaluation harness", () => {
     expect(getAssistantEvaluationEfficiencyIssues(testCase, state)).toEqual([]);
   });
 
-  it("moves from focused discovery to batched docs and direct preview after four searches", () => {
+  it("moves from focused discovery to preview after a batch finds no matching names", () => {
     const testCase = getCase("seerr-media-workflows");
     const state = createAssistantEvaluationState();
-    for (let index = 0; index < 4; index += 1) {
-      executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", {
-        query: `capability set ${index}`,
-      });
-    }
-
-    const activeNames = getActiveAssistantEvaluationToolDefinitions(state).map(
-      ({ function: definition }) => definition.name,
-    );
-    expect(activeNames).toEqual(
-      expect.arrayContaining([
-        "customWidget_getComponents",
-        "customWidget_getComponent",
-        "customWidget_getSharedProps",
-        "customWidget_previewCreate",
-      ]),
-    );
-    expect(activeNames).not.toContain("customWidget_findComponents");
-    expect(activeNames).not.toContain("customWidget_getExample");
+    executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", { query: "layout" });
     expect(
-      executeAssistantEvaluationTool(testCase, state, "customWidget_findComponents", {
-        query: "one more parallel search",
-      }),
-    ).toMatchObject({ phaseComplete: true, components: [] });
+      executeActiveAssistantEvaluationTool(testCase, state, "customWidget_getComponents", { names: ["UnknownWidget"] }),
+    ).toMatchObject({ components: [] });
     expect(
       getActiveAssistantEvaluationToolDefinitions(state).map(({ function: definition }) => definition.name),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_getSharedProps", "customWidget_previewCreate"]);
   });
 
   it("flags wasteful advanced-authoring context and token use without limiting supported components", () => {

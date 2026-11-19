@@ -12,8 +12,8 @@ import {
 
 describe("AI prompt", () => {
   it("uses shipped service examples before researching a matching contract", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("dispatcharr-channels");
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("frigate-live-streams");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("weather-outlook");
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("pokedex");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("load that example once");
   });
 

@@ -973,7 +973,7 @@ export async function POST(request: Request) {
     }
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(
-          [...Object.keys(homarrTools), ...frontendToolNames],
+          [...Object.keys(homarrTools).filter(customWidgetDiscoveryPhase.canClaim), ...frontendToolNames],
           [...restoredCustomWidgetSteps, ...responseMessageSteps, ...steps],
           {
             continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,
@@ -995,7 +995,7 @@ export async function POST(request: Request) {
     // Authoring phases constrain server lifecycle calls, not the user's ability
     // to answer a question or review placement of an already saved widget.
     if (phaseToolNames) {
-      return [...new Set([...phaseToolNames.filter(customWidgetDiscoveryPhase.canClaim), ...frontendToolNames])];
+      return [...new Set([...phaseToolNames, ...frontendToolNames])];
     }
     return [
       assistantToolGroupActivationName,
