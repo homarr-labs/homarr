@@ -5208,6 +5208,9 @@
         "hideDescription": {
           "label": "Hide description"
         },
+        "hideFeedTitle": {
+          "label": "Hide feed title"
+        },
         "showPosterImage": {
           "label": "Show poster image"
         }
