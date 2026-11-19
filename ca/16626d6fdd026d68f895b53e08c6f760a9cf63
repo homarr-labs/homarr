@@ -1,0 +1,46 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  h_d6e478ca18e517 8,18-19,23-25,27
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.spec.ts
+  h_d6e478ca18e517 413,415-417,429-430,432
+apps/nextjs/src/app/api/assistant/chat/custom-widget-authoring-context.ts
+  h_d6e478ca18e517 598-600,602,605-607
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 976,998
+packages/api/src/router/custom-widget/definition-update.ts
+  h_d6e478ca18e517 253,258-264
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  h_d6e478ca18e517 305,312,328-337
+packages/api/src/test/mcp.spec.ts
+  h_d6e478ca18e517 49,124
+packages/custom-widgets/scripts/ai-assistant-evaluation.ts
+  h_d6e478ca18e517 475-479,517-518
+packages/custom-widgets/scripts/ai-evaluation-cases.ts
+  h_d6e478ca18e517 566,651,740,808,915,1032,1097,1172
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 171-172,185,197,205
+packages/custom-widgets/src/core/assistant-authoring-phase.ts
+  h_d6e478ca18e517 811-813
+packages/custom-widgets/src/core/assistant-follow-up.ts
+  h_d6e478ca18e517 34,45
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 256,266-267,271-273,275
+packages/custom-widgets/src/core/component-registry.ts
+  h_d6e478ca18e517 68-70
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  h_d6e478ca18e517 2,45
+packages/custom-widgets/src/test/ai-assistant-evaluation.spec.ts
+  h_d6e478ca18e517 375-377,380-383,386-387,389,400,406,555,558,560-561,564
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  h_d6e478ca18e517 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca16626d6fdd026d68f895b53e08c6f760a9cf63",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
