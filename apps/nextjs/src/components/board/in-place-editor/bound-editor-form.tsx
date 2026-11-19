@@ -1,9 +1,9 @@
 "use client";
 
-import type { KeyboardEvent } from "react";
+import type { ComponentPropsWithoutRef, KeyboardEvent } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { ButtonProps, DataAttributes } from "@mantine/core";
+import type { DataAttributes } from "@mantine/core";
 import { Center, Fieldset, Loader, MantineThemeProvider, Portal, SegmentedControl, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
@@ -135,8 +135,8 @@ const AppEditorForm = ({ appId, target, headerControlTarget, ...widgetFormProps 
               title: tItem("app.confirmDiscard.title"),
               children: tItem("app.confirmDiscard.message"),
               labels: { confirm: tItem("app.confirmDiscard.confirm") },
-              cancelProps: { "data-autofocus": true } as ButtonProps & DataAttributes,
-              confirmProps: { "data-autofocus": undefined } as ButtonProps & DataAttributes,
+              cancelProps: { "data-autofocus": true } as ComponentPropsWithoutRef<"button"> & DataAttributes,
+              confirmProps: { "data-autofocus": undefined } as ComponentPropsWithoutRef<"button"> & DataAttributes,
               onConfirm: () => resolve(true),
             },
             { onClose: () => resolve(false) },
