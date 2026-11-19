@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -22,6 +23,8 @@ import { ClientBurger } from "./burger";
 import { HeaderButton } from "./button";
 import { DockerQuickAccessModal } from "./docker-quick-access-modal";
 import { HeaderLogo } from "./header-logo";
+import { HeaderWidget } from "./header-widget";
+import { HeaderWidgetPreferencesProvider, useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
@@ -47,7 +50,16 @@ type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
 const floatingControlsIntroDurationMs = 5_000;
 const floatingControlsDismissDelayMs = 900;
 
-export const ConfigurableHeader = ({
+export const ConfigurableHeader = (props: ConfigurableHeaderProps) => {
+  const { headerPreferences } = useSettings();
+  return (
+    <HeaderWidgetPreferencesProvider key={props.userId} initialPreferences={headerPreferences} userId={props.userId}>
+      <ConfigurableHeaderContent {...props} />
+    </HeaderWidgetPreferencesProvider>
+  );
+};
+
+const ConfigurableHeaderContent = ({
   logo,
   logoWithTitle,
   actions,
@@ -60,7 +72,8 @@ export const ConfigurableHeader = ({
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
-  const { headerPreferences } = useSettings();
+  const { preferences: headerPreferences } = useHeaderWidgetPreferences();
+  const isMobile = useMediaQuery("(max-width: 48em)");
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
@@ -78,7 +91,7 @@ export const ConfigurableHeader = ({
       {(boardSwitcher) => {
         const renderItems = (
           items: HeaderItem[],
-          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay },
+          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay; active: boolean },
         ) =>
           items.map((item) => (
             <HeaderItem
@@ -90,6 +103,7 @@ export const ConfigurableHeader = ({
               boardSettingsAction={boardSettingsAction}
               avatar={avatar}
               userId={userId}
+              isActive={display.active}
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
@@ -110,8 +124,9 @@ export const ConfigurableHeader = ({
           search: headerPreferences.searchDisplay,
           logo: headerPreferences.logoDisplay,
           tabs: headerPreferences.tabsDisplay,
+          active: !isMobile,
         };
-        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator" } as const;
+        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator", active: isMobile } as const;
 
         return (
           <>
@@ -253,6 +268,7 @@ const FloatingHeaderControls = ({ children }: { children: ReactNode }) => {
 
 interface HeaderItemProps {
   item: HeaderItem;
+  isActive: boolean;
   logo: ReactNode;
   logoWithTitle: ReactNode;
   boardEditAction: ReactNode;
@@ -276,6 +292,7 @@ interface HeaderItemProps {
 
 const HeaderItem = ({
   item,
+  isActive,
   logo,
   logoWithTitle,
   boardEditAction,
@@ -296,6 +313,7 @@ const HeaderItem = ({
   label,
   boardUnavailableLabel,
 }: HeaderItemProps) => {
+  if (item.type === "widget") return <HeaderWidget item={item} userId={userId} isActive={isActive} />;
   if (item.type === "board") {
     if (!board) {
       return (

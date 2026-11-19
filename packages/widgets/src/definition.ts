@@ -135,6 +135,7 @@ export interface WidgetDefinition {
     >
   >;
   contextActions?: (props: WidgetContextActionProps) => WidgetContextMenuAction[];
+  activitySignal?: (data: unknown) => boolean;
 }
 
 export const supportsAdvancedFocus = (definition: object) =>

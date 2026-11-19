@@ -141,6 +141,14 @@ const integrationCreators = {
     return new StatsIntegration(input, plantitStatsProvider);
   },
 
+  yuvomi: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yuvomiStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/yuvomi"),
+    ]);
+    return new StatsIntegration(input, yuvomiStatsProvider);
+  },
+
   netdata: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { netdataStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
