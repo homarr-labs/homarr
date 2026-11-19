@@ -8,6 +8,7 @@ import {
   Fieldset,
   MultiSelect,
   NumberInput,
+  Pill,
   Select,
   Slider,
   Stack,
@@ -313,8 +314,8 @@ function DynamicOptionField({
     const label = getByPath(row, source?.labelPath ?? "");
     return isCustomWidgetChoiceValue(value) ? [{ value, label: String(label ?? value) }] : [];
   });
-  const uniqueChoices = new Map(choices.map((choice) => [String(choice.value), choice]));
-  const data = [...uniqueChoices.values()];
+  const uniqueChoices = new Map(choices.map((choice) => [dynamicChoiceKey(choice.value), choice]));
+  const data = [...uniqueChoices].map(([value, choice]) => ({ value, label: choice.label }));
   const error =
     query.error?.message ??
     (query.data && !query.data.ok ? (query.data.error ?? messages("requestFailed")) : undefined) ??
@@ -339,26 +340,45 @@ function DynamicOptionField({
     error: error ?? input.error,
     nothingFoundMessage: search("nothingFound"),
   };
-  if (option.control === "multiSelect")
+  if (option.control === "multiSelect") {
+    const currentValues = Array.isArray(input.value) ? input.value.filter(isCustomWidgetChoiceValue) : [];
+    const valuesByKey = new Map([
+      ...currentValues.map((value) => [dynamicChoiceKey(value), value] as const),
+      ...[...uniqueChoices].map(([key, choice]) => [key, choice.value] as const),
+    ]);
     return (
-      <MultiSelect<string | number>
+      <MultiSelect
         {...input}
         {...common}
-        value={Array.isArray(input.value) ? input.value.filter(isCustomWidgetChoiceValue) : []}
-        onChange={(value) => form.setFieldValue(path, value)}
+        value={currentValues.map(dynamicChoiceKey)}
+        renderPill={({ option: selected, value, onRemove, disabled }) => (
+          <Pill onRemove={onRemove} withRemoveButton={!disabled} disabled={disabled}>
+            {selected?.label || String(valuesByKey.get(value ?? "") ?? "")}
+          </Pill>
+        )}
+        onChange={(keys) =>
+          form.setFieldValue(path, keys.map((key) => valuesByKey.get(key)).filter(isCustomWidgetChoiceValue))
+        }
       />
     );
+  }
   return (
-    <Select<string | number>
+    <Select
       {...input}
       {...common}
       allowDeselect={false}
-      value={isCustomWidgetChoiceValue(input.value) ? input.value : null}
-      onChange={(value) => {
-        if (value !== null) form.setFieldValue(path, value);
+      value={isCustomWidgetChoiceValue(input.value) ? dynamicChoiceKey(input.value) : null}
+      onChange={(key) => {
+        if (key === null) return;
+        const value = uniqueChoices.get(key)?.value;
+        if (value !== undefined) form.setFieldValue(path, value);
       }}
     />
   );
+}
+
+function dynamicChoiceKey(value: string | number) {
+  return `${typeof value}:${value}`;
 }
 
 const editorMessages: CustomWidgetEditorMessages = {
