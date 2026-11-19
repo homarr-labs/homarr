@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Rullbar",
         "description": "Behold denne beholderen i settets størrelse, og bland innholdet sitt i stedet for å vokse for å passe det."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Grensefarge"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Skjult"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Fjern denne beholderen? Innholdet flytter seg inn i området rundt."
+      },
+      "editBar": {
+        "edit": "Rediger"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Vis posisjon",
           "description": "Vis om strømmen er på din LAN eller WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Nedlastings fremdrift",
+          "endsAt": "",
+          "episode": "",
+          "album": "Album ID",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopier navn",
         "copyId": "Kopier ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Nullstill filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrer nedlastinger"

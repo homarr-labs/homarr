@@ -1,5 +1,14 @@
 import { z } from "zod/v4";
 
+export const persistentNotificationsSchema = z.array(
+  z.object({
+    notification_id: z.string().min(1),
+    created_at: z.coerce.date(),
+    title: z.string().nullish(),
+    message: z.string(),
+  }),
+);
+
 export const calendarsSchema = z.array(
   z.object({
     name: z.string(),

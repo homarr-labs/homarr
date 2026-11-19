@@ -40,6 +40,7 @@ import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import { widgetEditorModalStyles } from "./styles";
 import { normalizeWidgetEditorState, useWidgetEditorForm, WidgetEditorFields } from "./widget-editor-form";
 import { WidgetLivePreview } from "./widget-live-preview";
+import type { WidgetPreviewMode } from "./widget-live-preview";
 import classes from "./widget-edit-modal.module.css";
 
 export interface WidgetEditModalState {
@@ -93,6 +94,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   previewSectionId?: string;
   previewResize?: WidgetEditPreviewResizeOptions;
   previewWrapper?: ComponentType<PropsWithChildren>;
+  previewMode?: WidgetPreviewMode;
 }
 
 interface WidgetEditPreviewProps {
@@ -112,6 +114,7 @@ interface WidgetEditPreviewProps {
     onChange: (size: WidgetEditModalSize) => void;
   };
   PreviewWrapper?: ComponentType<PropsWithChildren>;
+  previewMode?: WidgetPreviewMode;
 }
 
 const normalizePreviewSize = (size: WidgetEditModalSize, maximumSize: WidgetEditModalSize): WidgetEditModalSize => ({
@@ -132,6 +135,7 @@ const WidgetEditPreview = ({
   onChangeOptions,
   resize,
   PreviewWrapper,
+  previewMode = "board",
 }: WidgetEditPreviewProps) => {
   const t = useI18n();
   const tItem = useI18n("item.edit");
@@ -147,6 +151,8 @@ const WidgetEditPreview = ({
   }>();
 
   useEffect(() => {
+    if (previewMode === "standalone") return;
+
     let item: HTMLElement | null = null;
     if (itemId) {
       item = document.querySelector<HTMLElement>(
@@ -191,11 +197,19 @@ const WidgetEditPreview = ({
       mutationObserver.disconnect();
       observer.disconnect();
     };
-  }, [itemId, sectionId, board?.id]);
+  }, [itemId, sectionId, board?.id, previewMode]);
 
-  const sourceWidth = Math.max(boardAppearance?.width ?? dimensions.width - 2 * (boardAppearance?.inset ?? 0), 1);
-  const sourceHeight = Math.max(boardAppearance?.height ?? dimensions.height - 2 * (boardAppearance?.inset ?? 0), 1);
+  let previewAppearance = boardAppearance;
   let displayScale = boardAppearance?.scale ?? dimensions.scale ?? 1;
+  if (previewMode === "standalone") {
+    previewAppearance = undefined;
+    displayScale = 1;
+  }
+  const sourceWidth = Math.max(previewAppearance?.width ?? dimensions.width - 2 * (previewAppearance?.inset ?? 0), 1);
+  const sourceHeight = Math.max(
+    previewAppearance?.height ?? dimensions.height - 2 * (previewAppearance?.inset ?? 0),
+    1,
+  );
   if (!Number.isFinite(displayScale) || displayScale <= 0) displayScale = 1;
   let previewScale = displayScale;
   if (availableWidth > 0 && availableHeight > 0) {
@@ -203,6 +217,12 @@ const WidgetEditPreview = ({
   }
   const previewWidth = sourceWidth * previewScale;
   const previewHeight = sourceHeight * previewScale;
+  let previewUiScale = 1;
+  let contentDisplayScale = 1;
+  if (previewMode === "board") {
+    previewUiScale = calculateBoardUiScale(previewScale);
+    contentDisplayScale = previewScale;
+  }
 
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
@@ -283,8 +303,8 @@ const WidgetEditPreview = ({
           <Box
             className={classes.previewViewport}
             style={{
-              ...boardAppearance?.style,
-              "--board-canvas-ui-scale": calculateBoardUiScale(previewScale),
+              ...previewAppearance?.style,
+              "--board-canvas-ui-scale": previewUiScale,
               width: previewWidth,
               height: previewHeight,
             }}
@@ -299,12 +319,13 @@ const WidgetEditPreview = ({
               integrationData={integrationData}
               fallbackWidth={dimensions.width}
               fallbackHeight={dimensions.height}
-              displayScale={previewScale}
+              displayScale={contentDisplayScale}
               itemId={componentItemId}
               boardId={boardId}
               isEditMode={isPendingCustomWidget}
               onChangeOptions={onChangeOptions}
               PreviewWrapper={PreviewWrapper}
+              previewMode={previewMode}
               shellStyle={{
                 width: sourceWidth,
                 height: sourceHeight,
@@ -327,6 +348,8 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const tItem = useI18n("item.edit");
   const tCommon = useI18n("common");
   const board = useOptionalBoard();
+  let boardId = innerProps.boardId;
+  if (innerProps.previewMode !== "standalone") boardId ??= board?.id;
   const { data: session } = useSession();
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
   const integrationEditHandles = useRef(new Map<string, EmbeddedIntegrationEditFormHandle>());
@@ -350,7 +373,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     integrationSupport: innerProps.integrationSupport,
     settings: innerProps.settings,
   });
-  useBoardDraftChanges(innerProps.boardId ?? board?.id, () => {
+  useBoardDraftChanges(boardId, () => {
     if (form.isDirty() || appEditRef.current?.isDirty()) return true;
     if (Array.from(integrationEditHandles.current.values()).some((handle) => handle.isDirty())) return true;
     const resize = innerProps.previewResize;
@@ -484,13 +507,14 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           definition={definition}
           state={form.values}
           itemId={innerProps.itemId}
-          boardId={innerProps.boardId ?? board?.id}
+          boardId={boardId}
           dimensions={previewDimensions}
           sectionId={innerProps.previewSectionId}
           integrationData={innerProps.integrationData}
           onChangeOptions={handlePreviewOptionsChange}
           resize={resizeControls}
           PreviewWrapper={innerProps.previewWrapper}
+          previewMode={innerProps.previewMode}
         />
       )}
       {innerProps.previewComponent && <Divider orientation="vertical" className={classes.previewDivider} />}
@@ -502,7 +526,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         integrationSupport={innerProps.integrationSupport}
         settings={innerProps.settings}
         itemId={innerProps.itemId}
-        boardId={innerProps.boardId ?? board?.id}
+        boardId={boardId}
         formId={widgetFormId}
         canConfigureWidget={canConfigureWidget}
         onOpenNewIntegration={innerProps.onOpenNewIntegration}

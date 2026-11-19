@@ -12,6 +12,8 @@ import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IntegrationHttpAuthentication } from "../http-auth";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import type {
   BeszelAlert,
   BeszelAlertHistory,
@@ -125,7 +127,7 @@ export const parseTokenExpiration = (token: string): number | null => {
 export const isSessionExpired = (session: BeszelSession, now = Date.now()) =>
   session.expiresAt !== undefined && session.expiresAt - sessionExpiryLeewayMs <= now;
 
-export class BeszelIntegration extends Integration {
+export class BeszelIntegration extends Integration implements INotificationsIntegration {
   private readonly sessionStore: SessionStore<BeszelSession>;
 
   constructor(integration: IntegrationInput) {
@@ -362,9 +364,13 @@ export class BeszelIntegration extends Integration {
     return data.items;
   }
 
-  public async getAlertHistoryAsync(systemId?: string, perPage = 50): Promise<BeszelAlertHistory[]> {
+  public async getAlertHistoryAsync(
+    systemId?: string,
+    perPage = 50,
+    sort: "-created" | "-resolved" = "-created",
+  ): Promise<BeszelAlertHistory[]> {
     const params: Record<string, string> = {
-      sort: "-created",
+      sort,
       perPage: String(perPage),
     };
     if (systemId) {
@@ -373,6 +379,40 @@ export class BeszelIntegration extends Integration {
     const response = await this.fetchWithAuthAsync(this.url("/api/collections/alerts_history/records", params));
     const data = (await response.json()) as PocketBaseListResponse<BeszelAlertHistory>;
     return data.items;
+  }
+
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    // An older alert can be resolved after it leaves the newest-created history page.
+    const [history, resolvedHistory, systems] = await Promise.all([
+      this.getAlertHistoryAsync(),
+      this.getAlertHistoryAsync(undefined, 50, "-resolved"),
+      this.getSystemsAsync(),
+    ]);
+    const systemNames = new Map(systems.map((system) => [system.id, system.name]));
+    const notificationsById = new Map<string, Notification>();
+
+    for (const alert of [...history, ...resolvedHistory]) {
+      const time = new Date(alert.resolved || alert.created);
+      if (Number.isNaN(time.getTime())) continue;
+      const existing = notificationsById.get(alert.id);
+      if (existing && existing.time.getTime() >= time.getTime()) continue;
+      const systemName = systemNames.get(alert.system) ?? alert.system;
+      let body = `${alert.name} alert triggered on ${systemName}.`;
+      if (alert.resolved) body = `${alert.name} alert on ${systemName} has been resolved.`;
+
+      notificationsById.set(alert.id, {
+        id: alert.id,
+        time,
+        title: `${systemName}: ${alert.name}`,
+        body,
+        href: this.externalUrl(`/system/${encodeURIComponent(alert.system)}`).toString(),
+        source: { name: systemName },
+      });
+    }
+
+    return [...notificationsById.values()]
+      .toSorted((left, right) => right.time.getTime() - left.time.getTime())
+      .slice(0, 50);
   }
 
   public async createAlertAsync(systemId: string, input: CreateAlertInput): Promise<BeszelAlert> {

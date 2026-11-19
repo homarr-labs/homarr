@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Vieritettävissä",
         "description": "Säilytä tämä säiliö sen koko ja vieritä sen sisältö sen sijaan, että se kasvaisi sopivaksi."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Reunuksen väri"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Piilotettu"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Poistetaanko tämä säiliö? Sen sisältö siirtyy ympäröivälle alueelle."
+      },
+      "editBar": {
+        "edit": "Muokkaa"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Näytä sijainti",
           "description": "Näytä, onko suoratoisto LAN- vai WAN-verkossa."
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Edistyminen",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Kopioi nimi",
         "copyId": "Kopioi ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Tyhjennä suodattimet"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Suodata latauksia"

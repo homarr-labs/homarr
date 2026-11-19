@@ -72,13 +72,13 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
     return {
       ...result,
       entries:
-        result.entries
+        result.entries          
           ?.map((entry) => {
             const { mediaDescription, ...feedEntry } = entry as ExtendedFeedEntry & { mediaDescription?: string };
             if (!feedEntry.description && mediaDescription) {
               feedEntry.description = mediaDescription;
             }
-            return { ...feedEntry, feedUrl: input.url };
+            return { ...feedEntry, feedUrl: input.url, feedTitle: typeof result.title === "string" ? result.title : "" };
           })
           .slice(0, input.count) ?? [],
     };
@@ -147,6 +147,7 @@ const getFirstMediaProperty = (feedObject: object) => {
  */
 export interface ExtendedFeedEntry extends FeedEntry {
   feedUrl: string;
+  feedTitle: string;
   enclosure?: string;
 }
 
@@ -163,5 +164,6 @@ type ExtendedFeedData = Modify<
 
 export interface RssFeed {
   feedUrl: string;
+  feedTitle: string;
   feed: ExtendedFeedData;
 }

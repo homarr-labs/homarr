@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Desplazable",
         "description": "Mantenga este contenedor en su tamaño establecido y despliegue su contenido en lugar de crecer para ajustarse a ellos."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Color del borde"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Oculto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "¿Eliminar este contenedor? Su contenido se moverá a la zona circundante."
+      },
+      "editBar": {
+        "edit": "Editar"
       }
     }
   },
@@ -4369,6 +4390,10 @@
         "showLocation": {
           "label": "Mostrar ubicación",
           "description": "Mostrar si la retransmisión está en su LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4426,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progreso de Descarga",
+          "endsAt": "",
+          "episode": "Episodio",
+          "album": "ID de álbum",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4983,18 @@
       "contextMenu": {
         "copyName": "Copiar nombre",
         "copyId": "Copiar ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Limpiar filtros"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrar descargas"
@@ -5638,7 +5678,7 @@
       },
       "status": {
         "up": "Subida total",
-        "down": "Velocidad de Descarga",
+        "down": "Caído",
         "pending": "Pendiente",
         "maintenance": "",
         "stale": "",
