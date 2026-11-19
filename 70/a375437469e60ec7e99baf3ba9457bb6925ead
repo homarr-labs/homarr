@@ -1,0 +1,1986 @@
+.agents/skills/codebase-context/SKILL.md
+  h_d6e478ca18e517 20
+.agents/skills/homarr-custom-widget/SKILL.md
+  h_d6e478ca18e517 3,8-66
+.agents/skills/homarr-custom-widget/references/runtime.md
+  h_d6e478ca18e517 3-6,8-10,13-25,28-30,32-35,37-39,41-45,47-49
+.agents/skills/homarr-custom-widget/references/schema.md
+  h_d6e478ca18e517 16-18,24,30-34,41,47-48,50-53,55-57,59-62,64-65,67-69
+.agents/skills/release-notes/SKILL.md
+  h_d6e478ca18e517 1-133
+.agents/skills/release-notes/evals/feature-release-v2-10-0/case.yaml
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/01-title-names-version-and-main-change.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/02-ends-with-full-changelog-link.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/03-links-only-real-prs.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/04-drops-bot-and-chore-noise.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/05-bullets-credit-author-and-link-pr.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/06-two-to-four-highlights.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/graders/07-no-emojis.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-10-0/prompt.md
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/evals/feature-release-v2-9-0/case.yaml
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/01-title-names-version-and-main-change.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/02-ends-with-full-changelog-link.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/03-links-only-real-prs.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/04-drops-bot-and-chore-noise.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/05-bullets-credit-author-and-link-pr.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/06-two-to-four-highlights.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/graders/07-no-emojis.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/feature-release-v2-9-0/prompt.md
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/case.yaml
+  h_d6e478ca18e517 1-9
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/01-title-names-version-and-main-change.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/02-ends-with-full-changelog-link.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/03-links-only-real-prs.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/04-drops-bot-and-chore-noise.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/05-bullets-credit-author-and-link-pr.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/06-two-to-four-highlights.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/07-thanks-first-time-contributor.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/graders/08-no-emojis.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-contributor-release-v2-12-0/prompt.md
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/case.yaml
+  h_d6e478ca18e517 1-10
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/01-title-names-version-and-main-change.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/02-ends-with-full-changelog-link.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/03-links-only-real-prs.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/04-drops-bot-and-chore-noise.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/05-bullets-credit-author-and-link-pr.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/06-two-to-four-highlights.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/07-no-emojis.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/08-table-of-new-integrations-with-icon-column.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/graders/09-art-or-placeholder-above-table.md
+  h_d6e478ca18e517 1-7
+.agents/skills/release-notes/evals/new-integrations-release-v2-7-0/prompt.md
+  h_d6e478ca18e517 1-8
+.agents/skills/release-notes/references/example.md
+  h_d6e478ca18e517 1-131
+.agents/skills/release-notes/scripts/collect-release-input.ts
+  h_d6e478ca18e517 1-395
+.dockerignore
+  h_d6e478ca18e517 26-42
+.github/ISSUE_TEMPLATE/bug_report.yml
+  h_d6e478ca18e517 48-51
+.github/actions/extract-build-artifact/action.yaml
+  h_d6e478ca18e517 2,8,23,25-26,29,32-63,66,68-70,72-85,88,91-105,110,112-117
+.github/actions/extract-build-artifact/validate-native.cjs
+  h_d6e478ca18e517 1-47
+.github/actions/prebuilt-debian/action.yaml
+  h_d6e478ca18e517 1-2,5,7-9,12-13,15,17-35,42-48,50-52,54-66
+.github/release.yml
+  h_d6e478ca18e517 1-28
+.github/workflows/ci.yml
+  h_d6e478ca18e517 53-54,63,82-109,112-119,142-168,259,266-267,275-280,340-341,396,418,437-438,449,471,490-491,522
+.github/workflows/conventions-semantic-pull-requests.yml
+  h_d6e478ca18e517 18
+.github/workflows/crowdin-schedule-download.yml
+  h_d6e478ca18e517 7-15,22,30-31,44,46-47,50-51,57-74,76,79
+.github/workflows/crowdin-upload.yml
+  h_d6e478ca18e517 10-11,14-18,22-24,32,36
+.github/workflows/deployment-beta-release.yml
+  h_d6e478ca18e517 37
+.github/workflows/deployment-docker-image.yml
+  h_d6e478ca18e517 35,38,44,61,103-104,107-114,171,219,306-312,323,353-369,371-408
+.github/workflows/deployment-weekly-release.yml
+  h_d6e478ca18e517 40
+.github/workflows/on-pr-prebuilt-debian-validate.yml
+  h_d6e478ca18e517 13-18,32,37-49,52,54
+.github/workflows/on-release.yml
+  h_d6e478ca18e517 27-30,36,50
+.github/workflows/release-notes-regenerate.yml
+  h_d6e478ca18e517 1,4-14,20,23-24,26-32,38-43,45-47,49-60
+.github/workflows/update-contributors.yml
+  h_d6e478ca18e517 5,10-14,18,22,26-27,29,31,33-34,36,38-40,42-44,47-48,52,55-57,60-61,64,67,69-70,72
+.github/workflows/update-integration-list.yml
+  h_d6e478ca18e517 39
+.github/workflows/workshop.yml
+  h_d6e478ca18e517 101,107,121,131,151,205,208,252,255,287,294,300,306-312,314-322,324-350,352,364
+.nvmrc
+  h_d6e478ca18e517 1
+.out-of-scope/beszel-custom-thresholds.md
+  h_d6e478ca18e517 1-13
+.out-of-scope/custom-widget-viewer-identity.md
+  h_d6e478ca18e517 1-15
+.out-of-scope/single-layout-boards.md
+  h_d6e478ca18e517 1-15
+.oxfmtrc.json
+  h_d6e478ca18e517 20
+.releaserc.json
+  h_d6e478ca18e517 32
+AGENTS.md
+  h_d6e478ca18e517 58-65
+CHANGELOG.md
+  h_d6e478ca18e517 1-18,20-49,52-260,275,277-341,362,364-405,409,411-496,500,502-546,562-584,586-608,614-636,638-639,641-782,788-835
+Dockerfile
+  h_d6e478ca18e517 1,3,5-7,13-16,20,23-24,33-35,38,41-46,50-52,72
+PERFORMANCE_FINDINGS.md
+  h_d6e478ca18e517 1-395
+apps/docs/docs/advanced/development/workshop-operator.mdx
+  h_d6e478ca18e517 36,66-67
+apps/docs/docs/advanced/environment-variables/index.mdx
+  h_d6e478ca18e517 71
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  h_d6e478ca18e517 192-206
+apps/docs/docs/getting-started/installation/docker.mdx
+  h_d6e478ca18e517 27-30
+apps/docs/docs/getting-started/installation/helm.md
+  h_d6e478ca18e517 5,7,440
+apps/docs/docs/integrations/beszel/index.mdx
+  h_d6e478ca18e517 16,36
+apps/docs/docs/integrations/coolify/index.mdx
+  h_d6e478ca18e517 28
+apps/docs/docs/integrations/deluge/index.mdx
+  h_d6e478ca18e517 32-33
+apps/docs/docs/integrations/docker-labels/index.mdx
+  h_d6e478ca18e517 33-36
+apps/docs/docs/integrations/home-assistant/index.mdx
+  h_d6e478ca18e517 15,29-31
+apps/docs/docs/integrations/open-media-vault/index.mdx
+  h_d6e478ca18e517 55-60
+apps/docs/docs/integrations/synology/index.mdx
+  h_d6e478ca18e517 57,64-66
+apps/docs/docs/integrations/uptime-kuma/index.mdx
+  h_d6e478ca18e517 13,21
+apps/docs/docs/integrations/wazuh/index.mdx
+  h_d6e478ca18e517 23-24
+apps/docs/docs/integrations/yuvomi/index.mdx
+  h_d6e478ca18e517 1-44
+apps/docs/docs/integrations/yuvomi/index.ts
+  h_d6e478ca18e517 1-8
+apps/docs/docs/management/api/index.mdx
+  h_d6e478ca18e517 29-35
+apps/docs/docs/management/boards/index.mdx
+  h_d6e478ca18e517 61-80,94-96
+apps/docs/docs/management/mcp.mdx
+  h_d6e478ca18e517 63-67,75-77,126
+apps/docs/docs/widgets/app/index.ts
+  h_d6e478ca18e517 17-23
+apps/docs/docs/widgets/coolify/index.mdx
+  h_d6e478ca18e517 3,18-19,31-34,50,56-57
+apps/docs/docs/widgets/coolify/index.ts
+  h_d6e478ca18e517 7
+apps/docs/docs/widgets/docker-containers/index.mdx
+  h_d6e478ca18e517 38-42
+apps/docs/docs/widgets/notifications/index.mdx
+  h_d6e478ca18e517 16-18,33-35,52-56
+apps/docs/docs/widgets/rss-feed/index.tsx
+  h_d6e478ca18e517 63-68
+apps/docs/docs/widgets/stats/index.mdx
+  h_d6e478ca18e517 38,68
+apps/docs/docs/widgets/wazuh/index.mdx
+  h_d6e478ca18e517 53
+apps/docs/package.json
+  h_d6e478ca18e517 33,48,56,58
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 2015-2024,2027-2036,2057-2063,2066,2068-2069,2240-2249,2252-2261,2295-2301,2304,2306-2307,2725-2735,2763-2769,2804-2837,2912-2918,2953-2986,3069,3333,4906,4994,5013-5020,5043,5078-5240,5264,5299-5461,5485,5520-5682,6819,6846,6866-6874,6897,6932,6938,6941-6945,6948-7116,7119,7154-7316,7341,7376-7538,7668-8378,8982,9160,9371-9373,9766,9786-9794,9817,9852-10021,10046,10081-10250,10275,10310-10479,10499,10536,10540,10555-10558
+apps/docs/src/app/docs/[[...slug]]/page.tsx
+  h_d6e478ca18e517 63-68,70-80
+apps/docs/src/app/global.css
+  h_d6e478ca18e517 203-229
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  h_d6e478ca18e517 3,46-47,337-350
+apps/docs/src/components/workshop/WorkshopNotFoundRouter.tsx
+  h_d6e478ca18e517 4,13,27-31
+apps/docs/turbo.json
+  h_d6e478ca18e517 7-9,33-36
+apps/nextjs/next.config.ts
+  h_d6e478ca18e517 29-33,58,66-71,80,82,88-89
+apps/nextjs/package.json
+  h_d6e478ca18e517 15,126,140
+apps/nextjs/public/images/mock/PHOTO-CREDITS.md
+  h_d6e478ca18e517 1-10
+apps/nextjs/public/logo/homarr.svg
+  h_d6e478ca18e517 1
+apps/nextjs/scripts/assemble-standalone.mjs
+  h_d6e478ca18e517 1,8,10,19-25,27-29,39,44-45
+apps/nextjs/scripts/build-next.mjs
+  h_d6e478ca18e517 1-120
+apps/nextjs/scripts/cache-standalone.mjs
+  h_d6e478ca18e517 1-9,14-16
+apps/nextjs/scripts/compile-standalone.mjs
+  h_d6e478ca18e517 1,3-10,14-17
+apps/nextjs/scripts/standalone-artifact.mjs
+  h_d6e478ca18e517 1-12,20,76-91
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  h_d6e478ca18e517 6,13,16-17,25-31,36-39
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 64,189-197,226-241
+apps/nextjs/src/app/[locale]/auth/invite/[id]/_registration-form.tsx
+  h_d6e478ca18e517 4,9,76-89
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  h_d6e478ca18e517 10-11,51,68-71,76
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  h_d6e478ca18e517 9,34,46-49,54
+apps/nextjs/src/app/[locale]/auth/mcp/layout.tsx
+  h_d6e478ca18e517 8,19,34-37,42
+apps/nextjs/src/app/[locale]/auth/mcp/page.tsx
+  h_d6e478ca18e517 3,135-144
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 4-5,11,36-38,41-45,62-67,71,84,107-112,154-171,196,207
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 19,74,156
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  h_d6e478ca18e517 6-14,25,41,115-117
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 3,13,23,28-29,203,256-273,279-306
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  h_d6e478ca18e517 4,11-12,19-36,38-40,42,44-47,49-50,56-58
+apps/nextjs/src/app/[locale]/boards/(content)/_widget-resource-preload.tsx
+  h_d6e478ca18e517 4-7,10-13,15-31
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.spec.ts
+  h_d6e478ca18e517 1-116
+apps/nextjs/src/app/[locale]/boards/(content)/board-dirty-leave-guard.ts
+  h_d6e478ca18e517 1-84
+apps/nextjs/src/app/[locale]/boards/(content)/not-found.tsx
+  h_d6e478ca18e517 3,19-20,22-32,38,43-52
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  h_d6e478ca18e517 17,36-53,59
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_behavior.tsx
+  h_d6e478ca18e517 8
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_board-access.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  h_d6e478ca18e517 11
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_general.tsx
+  h_d6e478ca18e517 13
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  h_d6e478ca18e517 28
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  h_d6e478ca18e517 18,21,194-196
+apps/nextjs/src/app/[locale]/boards/_header-actions.tsx
+  h_d6e478ca18e517 6,12,15-18
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  h_d6e478ca18e517 37,47,110-128
+apps/nextjs/src/app/[locale]/boards/_providers.spec.tsx
+  h_d6e478ca18e517 29-38
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  h_d6e478ca18e517 8,40
+apps/nextjs/src/app/[locale]/boards/_types.ts
+  h_d6e478ca18e517 1-12
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/configuration-entry.tsx
+  h_d6e478ca18e517 13,28,76,97,155
+apps/nextjs/src/app/[locale]/init/page.tsx
+  h_d6e478ca18e517 32-43,75-84
+apps/nextjs/src/app/[locale]/layout.tsx
+  h_d6e478ca18e517 1,3,36,39,44,57-58,100,179,194,202,212,214,219
+apps/nextjs/src/app/[locale]/manage/_components/home/management-hero.tsx
+  h_d6e478ca18e517 1-169
+apps/nextjs/src/app/[locale]/manage/_components/home/management-home.module.css
+  h_d6e478ca18e517 1-392
+apps/nextjs/src/app/[locale]/manage/_components/home/seabed.tsx
+  h_d6e478ca18e517 1-32
+apps/nextjs/src/app/[locale]/manage/_components/home/statistic-tiles.tsx
+  h_d6e478ca18e517 1-70
+apps/nextjs/src/app/[locale]/manage/_components/lobster/playable-lobster.module.css
+  h_d6e478ca18e517 1-35
+apps/nextjs/src/app/[locale]/manage/_components/lobster/playable-lobster.tsx
+  h_d6e478ca18e517 1-151
+apps/nextjs/src/app/[locale]/manage/_components/lobster/rig.ts
+  h_d6e478ca18e517 1-146
+apps/nextjs/src/app/[locale]/manage/_components/lobster/scene.ts
+  h_d6e478ca18e517 1-217
+apps/nextjs/src/app/[locale]/manage/apps/edit/[id]/page.tsx
+  h_d6e478ca18e517 7,26-33
+apps/nextjs/src/app/[locale]/manage/apps/new/page.tsx
+  h_d6e478ca18e517 7,19-21
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  h_d6e478ca18e517 12,17
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  h_d6e478ca18e517 118,131
+apps/nextjs/src/app/[locale]/manage/boards/_components/board-card.tsx
+  h_d6e478ca18e517 49,126-127
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  h_d6e478ca18e517 10,19-24,29
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  h_d6e478ca18e517 124,201,227
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  h_d6e478ca18e517 50
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-sections.tsx
+  h_d6e478ca18e517 82
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  h_d6e478ca18e517 127-128
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  h_d6e478ca18e517 9,13,15,93
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-options-editor.tsx
+  h_d6e478ca18e517 34,96
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  h_d6e478ca18e517 55-62,133,200,280
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx
+  h_d6e478ca18e517 24,67
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  h_d6e478ca18e517 21,68,82,88
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-analysis.ts
+  h_d6e478ca18e517 98-102
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_workshop-widget-update.tsx
+  h_d6e478ca18e517 1-213
+apps/nextjs/src/app/[locale]/manage/custom-widgets/new/page.tsx
+  h_d6e478ca18e517 11-15,21-22,36
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  h_d6e478ca18e517 96,144,160,171,177
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx
+  h_d6e478ca18e517 25,32,43,51-53,135,168-169,208
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/_workshop-browse.tsx
+  h_d6e478ca18e517 9,13
+apps/nextjs/src/app/[locale]/manage/integrations/_components/integration-access-settings.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  h_d6e478ca18e517 25,28,72-76
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  h_d6e478ca18e517 8,39
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-inputs.tsx
+  h_d6e478ca18e517 81
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  h_d6e478ca18e517 28-32,36-49
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx
+  h_d6e478ca18e517 76,83,155
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  h_d6e478ca18e517 13,18,22,48,50,92,113,143,145-153,174,186-187,215,217,232-238,291-327
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/page.tsx
+  h_d6e478ca18e517 1,8,26-39,41-45
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  h_d6e478ca18e517 3,40,62,64,66,87-90,99,106,122,172,199-205,289,303,305-306,311
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  h_d6e478ca18e517 2,11,36-38,48-64
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  h_d6e478ca18e517 11,16
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  h_d6e478ca18e517 26,42,245-250,265
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  h_d6e478ca18e517 29,33,122,125
+apps/nextjs/src/app/[locale]/manage/page.tsx
+  h_d6e478ca18e517 2,5-6,10-12,22-32,34-49,54-57
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  h_d6e478ca18e517 98
+apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+  h_d6e478ca18e517 12,16
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx
+  h_d6e478ca18e517 3,7-9,19,22-29,31,33,36-41
+apps/nextjs/src/app/[locale]/manage/settings/_components/board-settings-form.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx
+  h_d6e478ca18e517 3,8,10,27
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  h_d6e478ca18e517 8
+apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx
+  h_d6e478ca18e517 8
+apps/nextjs/src/app/[locale]/manage/settings/_components/search-settings-form.tsx
+  h_d6e478ca18e517 9
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  h_d6e478ca18e517 3,43,63,84-96,151
+apps/nextjs/src/app/[locale]/manage/settings/_components/user-settings-form.tsx
+  h_d6e478ca18e517 8
+apps/nextjs/src/app/[locale]/manage/settings/theme/page.tsx
+  h_d6e478ca18e517 1-2,4-5,8-9,11-18,20-27,30
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+  h_d6e478ca18e517 4,92,95,151-158,165,170,174,194-205
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  h_d6e478ca18e517 153
+apps/nextjs/src/app/[locale]/manage/tools/api/components/oauth-connection-details.tsx
+  h_d6e478ca18e517 14,19
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-export-card.tsx
+  h_d6e478ca18e517 51
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-import-card.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/add-certificate.tsx
+  h_d6e478ca18e517 35
+apps/nextjs/src/app/[locale]/manage/tools/certificates/hostnames/page.tsx
+  h_d6e478ca18e517 21,24
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  h_d6e478ca18e517 12
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx
+  h_d6e478ca18e517 129
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  h_d6e478ca18e517 102,352-357
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.tsx
+  h_d6e478ca18e517 18,21
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx
+  h_d6e478ca18e517 27,31,36,41,48
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx
+  h_d6e478ca18e517 9,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  h_d6e478ca18e517 31,35,40,77,84
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx
+  h_d6e478ca18e517 9,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx
+  h_d6e478ca18e517 29,33,55,60,67
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx
+  h_d6e478ca18e517 9,32-34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx
+  h_d6e478ca18e517 31,36,54,81,89,96
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx
+  h_d6e478ca18e517 9,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx
+  h_d6e478ca18e517 9,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx
+  h_d6e478ca18e517 27,31,35,47,51,58
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx
+  h_d6e478ca18e517 9,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx
+  h_d6e478ca18e517 27,31,36,41,46,53
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx
+  h_d6e478ca18e517 9,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  h_d6e478ca18e517 28,32,37,42,65,72
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx
+  h_d6e478ca18e517 9,26-28
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx
+  h_d6e478ca18e517 27,31,35,40,70,77
+apps/nextjs/src/app/[locale]/manage/tools/tasks/_components/tasks-table.tsx
+  h_d6e478ca18e517 223
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  h_d6e478ca18e517 260,285,310,334,388
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.module.css
+  h_d6e478ca18e517 106,152-153
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+  h_d6e478ca18e517 20,28-29,35,48-50,53,60,75-76,115-118,172-175,179-192,240,271,290,313,342,353-385,412-424,484-500,559,575,610-611,628,657,667,679,694-695,710,719,723-728,756-773,813,823-832
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  h_d6e478ca18e517 22
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/_transfer-group-ownership.tsx
+  h_d6e478ca18e517 11
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/_add-group-member.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  h_d6e478ca18e517 38-39,289,353,433-440
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  h_d6e478ca18e517 73
+apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx
+  h_d6e478ca18e517 42-43,154-161
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  h_d6e478ca18e517 112
+apps/nextjs/src/app/[locale]/theme-preview/page.tsx
+  h_d6e478ca18e517 1-10
+apps/nextjs/src/app/api/[...trpc]/route.spec.ts
+  h_d6e478ca18e517 34,52-60
+apps/nextjs/src/app/api/[...trpc]/route.ts
+  h_d6e478ca18e517 37-39
+apps/nextjs/src/app/api/assistant/chat/assistant-stream-error.ts
+  h_d6e478ca18e517 2,5-25
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 98-102,452-459,1283,1406
+apps/nextjs/src/app/api/backup/export/route.ts
+  h_d6e478ca18e517 3,28,51,56
+apps/nextjs/src/app/api/backup/import/route.ts
+  h_d6e478ca18e517 298-305
+apps/nextjs/src/app/api/backup/sql-wasm/route.ts
+  h_d6e478ca18e517 13,24
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  h_d6e478ca18e517 61,70,79,84-101,356-376
+apps/nextjs/src/app/api/mcp/_handler.ts
+  h_d6e478ca18e517 87-91,240,258,323-328,331,333,351-352
+apps/nextjs/src/app/api/mcp/oauth/_grant.ts
+  h_d6e478ca18e517 21,37,122,195-198,214,223-228,240-247,294
+apps/nextjs/src/app/api/mcp/oauth/_store.ts
+  h_d6e478ca18e517 12,168-174,181-185
+apps/nextjs/src/app/api/mcp/oauth/authorize/route.ts
+  h_d6e478ca18e517 58-61,72
+apps/nextjs/src/app/api/mcp/oauth/flow.integration.spec.ts
+  h_d6e478ca18e517 40,196-197,253-291,302
+apps/nextjs/src/app/api/trpc/[trpc]/route.spec.ts
+  h_d6e478ca18e517 1-63
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  h_d6e478ca18e517 41-45,51
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  h_d6e478ca18e517 116
+apps/nextjs/src/app/manifest.ts
+  h_d6e478ca18e517 5-6,58
+apps/nextjs/src/app/well-known/[...path]/route.ts
+  h_d6e478ca18e517 28,41
+apps/nextjs/src/components/assistant/assistant-board-settings-tool.tsx
+  h_d6e478ca18e517 40,293,300,331
+apps/nextjs/src/components/assistant/assistant-message-metadata.ts
+  h_d6e478ca18e517 213,287,295,343,353-354,356-358
+apps/nextjs/src/components/assistant/assistant-preferences.spec.ts
+  h_d6e478ca18e517 6,114,117,125-128
+apps/nextjs/src/components/assistant/assistant-preferences.ts
+  h_d6e478ca18e517 1,15,21-22,24
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  h_d6e478ca18e517 210,214-215,242
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  h_d6e478ca18e517 41,76-77,79,81,84
+apps/nextjs/src/components/assistant/assistant-tool-contracts.ts
+  h_d6e478ca18e517 7,39-40,50
+apps/nextjs/src/components/assistant/assistant-widget.tsx
+  h_d6e478ca18e517 98
+apps/nextjs/src/components/backup/backup-preview-panel.tsx
+  h_d6e478ca18e517 38,120
+apps/nextjs/src/components/board/advanced-focus/manual-surface.tsx
+  h_d6e478ca18e517 83-84
+apps/nextjs/src/components/board/board-empty-state.tsx
+  h_d6e478ca18e517 24
+apps/nextjs/src/components/board/board-layout-thumbnail.tsx
+  h_d6e478ca18e517 8,39,64
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  h_d6e478ca18e517 56
+apps/nextjs/src/components/board/in-place-editor/anchor.ts
+  h_d6e478ca18e517 1-37
+apps/nextjs/src/components/board/in-place-editor/area-overlay.module.css
+  h_d6e478ca18e517 1-91
+apps/nextjs/src/components/board/in-place-editor/area-overlay.tsx
+  h_d6e478ca18e517 1-185
+apps/nextjs/src/components/board/in-place-editor/area-size-inputs.tsx
+  h_d6e478ca18e517 1-81
+apps/nextjs/src/components/board/in-place-editor/bound-editor-form.tsx
+  h_d6e478ca18e517 1-92
+apps/nextjs/src/components/board/in-place-editor/catalog.ts
+  h_d6e478ca18e517 1-227
+apps/nextjs/src/components/board/in-place-editor/create-app.tsx
+  h_d6e478ca18e517 1-78
+apps/nextjs/src/components/board/in-place-editor/dim-layer.tsx
+  h_d6e478ca18e517 1-43
+apps/nextjs/src/components/board/in-place-editor/empty-cell-layer.module.css
+  h_d6e478ca18e517 1-81
+apps/nextjs/src/components/board/in-place-editor/empty-cell-layer.tsx
+  h_d6e478ca18e517 1-267
+apps/nextjs/src/components/board/in-place-editor/grid-layer.tsx
+  h_d6e478ca18e517 1-65
+apps/nextjs/src/components/board/in-place-editor/host.tsx
+  h_d6e478ca18e517 1-224
+apps/nextjs/src/components/board/in-place-editor/keyboard.ts
+  h_d6e478ca18e517 1-34
+apps/nextjs/src/components/board/in-place-editor/occupancy.ts
+  h_d6e478ca18e517 1-118
+apps/nextjs/src/components/board/in-place-editor/panel/card-steps.tsx
+  h_d6e478ca18e517 1-153
+apps/nextjs/src/components/board/in-place-editor/panel/catalog-option.module.css
+  h_d6e478ca18e517 1-66
+apps/nextjs/src/components/board/in-place-editor/panel/catalog-option.tsx
+  h_d6e478ca18e517 1-93
+apps/nextjs/src/components/board/in-place-editor/panel/keyboard-hints.tsx
+  h_d6e478ca18e517 1-67
+apps/nextjs/src/components/board/in-place-editor/panel/panel.module.css
+  h_d6e478ca18e517 1-239
+apps/nextjs/src/components/board/in-place-editor/panel/panel.tsx
+  h_d6e478ca18e517 1-340
+apps/nextjs/src/components/board/in-place-editor/panel/pick-step.tsx
+  h_d6e478ca18e517 1-260
+apps/nextjs/src/components/board/in-place-editor/panel/placement.ts
+  h_d6e478ca18e517 1-120
+apps/nextjs/src/components/board/in-place-editor/panel/types.ts
+  h_d6e478ca18e517 1-21
+apps/nextjs/src/components/board/in-place-editor/resources.ts
+  h_d6e478ca18e517 1-140
+apps/nextjs/src/components/board/in-place-editor/store.ts
+  h_d6e478ca18e517 1-257
+apps/nextjs/src/components/board/in-place-editor/types.ts
+  h_d6e478ca18e517 1-47
+apps/nextjs/src/components/board/in-place-editor/use-add-in-place-entry.ts
+  h_d6e478ca18e517 1-83
+apps/nextjs/src/components/board/in-place-editor/use-edit-item-in-place.ts
+  h_d6e478ca18e517 1-52
+apps/nextjs/src/components/board/in-place-editor/workshop-step.tsx
+  h_d6e478ca18e517 1-77
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  h_d6e478ca18e517 2,23,27-36,38,49,52,97,118-133
+apps/nextjs/src/components/board/items/actions/duplicate-item.ts
+  h_d6e478ca18e517 2,5,12,16,24,37-41,53-54
+apps/nextjs/src/components/board/items/actions/move-entry-across-tabs.ts
+  h_d6e478ca18e517 1-109
+apps/nextjs/src/components/board/items/item-actions.tsx
+  h_d6e478ca18e517 4,37,39-43,47,49
+apps/nextjs/src/components/board/items/item-content.module.css
+  h_d6e478ca18e517 61-62,66-85
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 70,204-205,237-254,365,375,390-391,467,480,541,543
+apps/nextjs/src/components/board/items/item-menu-dropdown.tsx
+  h_d6e478ca18e517 1-59
+apps/nextjs/src/components/board/items/item-menu.tsx
+  h_d6e478ca18e517 2,15,18,36-48,56-57,68-94,96-115,119-143
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  h_d6e478ca18e517 2,6-7,13,20,135-155,181-193,264,311-317
+apps/nextjs/src/components/board/items/item-select-data.ts
+  h_d6e478ca18e517 2-5
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  h_d6e478ca18e517 1-2,11,19-20,26,33,49,56,62-65,70,89-105,110,118-119,121,125-126,130-132,146-154,156,172-178,186-187,190-200,229,234-262,320,363,370-388,481-510,528-530,538-559,576,578-594,625,627-634,643-653,656,676,685,703,720,729-730
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  h_d6e478ca18e517 5,16,35-46,137-140,178,191,201-211,236,262
+apps/nextjs/src/components/board/items/widget-card-connection.tsx
+  h_d6e478ca18e517 1-90
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 4-5,38-39,61-64,294,337,360,376
+apps/nextjs/src/components/board/items/workshop-widget-review.tsx
+  h_d6e478ca18e517 3,6,8-9,11-14,17-22,25-33,35-45,47-52,54-68,70,72
+apps/nextjs/src/components/board/items/workshop-widget-section.tsx
+  h_d6e478ca18e517 1-149
+apps/nextjs/src/components/board/layout/board-canvas-fitting.ts
+  h_d6e478ca18e517 1-148
+apps/nextjs/src/components/board/layout/board-lanes.ts
+  h_d6e478ca18e517 1,3,13-18,25-32,35,39,42-55,57
+apps/nextjs/src/components/board/layout/reflow.ts
+  h_d6e478ca18e517 80-81
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  h_d6e478ca18e517 1-4
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  h_d6e478ca18e517 4,6,11,15,42-43,46-51,68-80,82-84,87-90,92-97,99,102
+apps/nextjs/src/components/board/layout/test/board-lanes.spec.ts
+  h_d6e478ca18e517 64,66-71,74-76
+apps/nextjs/src/components/board/layout/test/reflow.spec.ts
+  h_d6e478ca18e517 51-69
+apps/nextjs/src/components/board/sections/auto-expand/auto-expand-watcher.tsx
+  h_d6e478ca18e517 1,3,5,7,9-16,18-19,21-23,25
+apps/nextjs/src/components/board/sections/auto-expand/fit-to-content.ts
+  h_d6e478ca18e517 1-87
+apps/nextjs/src/components/board/sections/auto-expand/use-widget-activity-signal.ts
+  h_d6e478ca18e517 1-109
+apps/nextjs/src/components/board/sections/container-section.tsx
+  h_d6e478ca18e517 15,17,22-23,39,41,49-52,61-71,76-77,128,133,142,163,170,184-210,228,233-235,242,244-245,250-252
+apps/nextjs/src/components/board/sections/container/actions/add-container.ts
+  h_d6e478ca18e517 3,11-13
+apps/nextjs/src/components/board/sections/container/container-actions.ts
+  h_d6e478ca18e517 3,18,21-22
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  h_d6e478ca18e517 3-13,16-17,23-30,33,39,41,43-61,63-68,74-78,83,93,105-149
+apps/nextjs/src/components/board/sections/container/container-menu.module.css
+  h_d6e478ca18e517 1-20,22-23,26-27,29-46,49-73
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  h_d6e478ca18e517 1-2,4,15,17,19-20,23,33-34,37,39,44-90
+apps/nextjs/src/components/board/sections/grid/container-grid-sizing.ts
+  h_d6e478ca18e517 1-165
+apps/nextjs/src/components/board/sections/grid/dnd/engine.ts
+  h_d6e478ca18e517 102-103,117-119,353-409
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  h_d6e478ca18e517 50-59,213
+apps/nextjs/src/components/board/sections/grid/grid-editor-registry.tsx
+  h_d6e478ca18e517 50-51
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  h_d6e478ca18e517 42,66-67,69-71,95-97,129-130,136,167,191-224,230,232,310,327,342,401-414,416,419,457,633,638-646,652,662,667,680,682,688,694-721,725-726,744-745,828-829,840-845,895-897,901-925,933,937,942,960-961,966-975,986-988,996-997,999,1062,1081,1095,1151,1180,1195,1199-1200,1202-1203,1371-1373
+apps/nextjs/src/components/board/sections/grid/grid-interaction-store.ts
+  h_d6e478ca18e517 4,20,29,35,38-40,42
+apps/nextjs/src/components/board/sections/grid/grid-preview-geometry.ts
+  h_d6e478ca18e517 16-17,32-33,36-37,45-47,49,83-88,100
+apps/nextjs/src/components/board/sections/grid/grid-preview-layer.tsx
+  h_d6e478ca18e517 4,11,22-23,31-32,43-44,56-67,69,88,91,96-97,112,125,138,143-144,149,165-168
+apps/nextjs/src/components/board/sections/grid/grid-resize-outline.ts
+  h_d6e478ca18e517 12,30-31,35-38
+apps/nextjs/src/components/board/sections/grid/grid-row-projection.ts
+  h_d6e478ca18e517 1-62
+apps/nextjs/src/components/board/sections/grid/section-grid-placements.ts
+  h_d6e478ca18e517 1,7-19,22
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 7,20,37,39-44,48-49,54-59,66,68,79,81,98-103,107,109-113,117-122,131-134,159-211,213,216-221,223-224,227,230-241,243-262,266-267,280,286-288,295,299-328,330-335,346,349,389-391,397,400-401,435-436,451,484-486,554-561
+apps/nextjs/src/components/board/sections/grid/test/category-grid-sizing.check.mjs
+  h_d6e478ca18e517 1-66
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  h_d6e478ca18e517 107
+apps/nextjs/src/components/board/sections/grid/test/grid-preview-geometry.spec.ts
+  h_d6e478ca18e517 34,67-69,71-73
+apps/nextjs/src/components/board/sections/grid/test/grid-resize-outline.spec.ts
+  h_d6e478ca18e517 32,34
+apps/nextjs/src/components/board/sections/grid/use-grid-layout-actions.ts
+  h_d6e478ca18e517 7,27-98,106-108
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  h_d6e478ca18e517 8-9,12,18-19,26-46,49,60-61,64-107,147-153,191-206,209-217,221-230,232-247,286-315
+apps/nextjs/src/components/board/sections/section-context.ts
+  h_d6e478ca18e517 17
+apps/nextjs/src/components/board/sections/test/fit-to-content-reporter.spec.tsx
+  h_d6e478ca18e517 1-113
+apps/nextjs/src/components/board/sections/test/fit-to-content.spec.ts
+  h_d6e478ca18e517 1-27
+apps/nextjs/src/components/board/sections/test/section-collapse.spec.ts
+  h_d6e478ca18e517 1-36
+apps/nextjs/src/components/board/sections/use-section-items.ts
+  h_d6e478ca18e517 4,11
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 10,20-22,39,44-52,58,77-81,151,173,188,329,340-355,370-433,444,451
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  h_d6e478ca18e517 16,21,27,41,43-44,95-96,122-124,240,255,273-292,304
+apps/nextjs/src/components/board/selection/board-selection.spec.tsx
+  h_d6e478ca18e517 31
+apps/nextjs/src/components/board/tabs/board-tabs.module.css
+  h_d6e478ca18e517 1-21
+apps/nextjs/src/components/board/tabs/board-tabs.tsx
+  h_d6e478ca18e517 1-280
+apps/nextjs/src/components/board/tabs/header-board-tabs.module.css
+  h_d6e478ca18e517 1-16
+apps/nextjs/src/components/board/tabs/header-board-tabs.tsx
+  h_d6e478ca18e517 1-123
+apps/nextjs/src/components/board/tabs/tab-actions.ts
+  h_d6e478ca18e517 1-182
+apps/nextjs/src/components/board/tabs/use-board-tab-actions.ts
+  h_d6e478ca18e517 1-56
+apps/nextjs/src/components/board/tabs/use-board-tab-label.ts
+  h_d6e478ca18e517 1-23
+apps/nextjs/src/components/board/tabs/use-prepared-board-tabs.ts
+  h_d6e478ca18e517 1-45
+apps/nextjs/src/components/board/use-board-add-actions.ts
+  h_d6e478ca18e517 25-27
+apps/nextjs/src/components/custom-css/custom-css-editor.tsx
+  h_d6e478ca18e517 3,8
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  h_d6e478ca18e517 5,41,68-69
+apps/nextjs/src/components/custom-widgets/custom-widget-source-setup-dialog.tsx
+  h_d6e478ca18e517 7,86-91,132
+apps/nextjs/src/components/custom-widgets/use-custom-widget-import-messages.ts
+  h_d6e478ca18e517 3,6-7,9-35,37
+apps/nextjs/src/components/custom-widgets/use-custom-widget-import.ts
+  h_d6e478ca18e517 15,19-20,25,34,73,105-108,110-111,113,120-151,160-161
+apps/nextjs/src/components/integration/embedded-integration-edit-form.tsx
+  h_d6e478ca18e517 38
+apps/nextjs/src/components/integration/integration-completion-modal.tsx
+  h_d6e478ca18e517 46-48
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  h_d6e478ca18e517 4,19-22,42-46
+apps/nextjs/src/components/layout/header.tsx
+  h_d6e478ca18e517 17,27,42
+apps/nextjs/src/components/layout/header/button.tsx
+  h_d6e478ca18e517 1,13-15,24
+apps/nextjs/src/components/layout/header/configurable-header.tsx
+  h_d6e478ca18e517 6,15,20,26-27,41,53-62,69,75-76,94,106,112-113,126-127,129,171-173,271,283-284,295,307-308,316,346
+apps/nextjs/src/components/layout/header/docker-quick-access-modal.tsx
+  h_d6e478ca18e517 3-4,7-9
+apps/nextjs/src/components/layout/header/header-widget-editor.ts
+  h_d6e478ca18e517 1-68
+apps/nextjs/src/components/layout/header/header-widget-preferences.tsx
+  h_d6e478ca18e517 1-139
+apps/nextjs/src/components/layout/header/header-widget-runtime-boundary.tsx
+  h_d6e478ca18e517 5-8,10-38,41-47
+apps/nextjs/src/components/layout/header/header-widget-support.ts
+  h_d6e478ca18e517 1-4
+apps/nextjs/src/components/layout/header/header-widget.tsx
+  h_d6e478ca18e517 1-212
+apps/nextjs/src/components/layout/header/update.tsx
+  h_d6e478ca18e517 3-5,8-9,12-16,18-43,46-61
+apps/nextjs/src/components/layout/header/user-client.tsx
+  h_d6e478ca18e517 12,23,28-33
+apps/nextjs/src/components/layout/header/whats-new-modal.tsx
+  h_d6e478ca18e517 1-120
+apps/nextjs/src/components/layout/navigation-link.tsx
+  h_d6e478ca18e517 13,65-81,84-85,95-98,117-119,121
+apps/nextjs/src/components/layout/navigation.tsx
+  h_d6e478ca18e517 12,16,59,80-82,84
+apps/nextjs/src/components/layout/search-engine-optimization.tsx
+  h_d6e478ca18e517 1,4
+apps/nextjs/src/components/layout/whats-new-auto-open.tsx
+  h_d6e478ca18e517 1-39
+apps/nextjs/src/components/manage/advanced-settings.tsx
+  h_d6e478ca18e517 1-25
+apps/nextjs/src/components/manage/manage-collection.tsx
+  h_d6e478ca18e517 52
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  h_d6e478ca18e517 3,13-15,27-28,36-40,47-60
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  h_d6e478ca18e517 3-5,11-13,16,19-25,27-39
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  h_d6e478ca18e517 22-25
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  h_d6e478ca18e517 7-8,52-54,63,68-71,73,192,195-196
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  h_d6e478ca18e517 5,12,17,32-36,39-58,93-101,106-114,116-118,121-123,130,132,134-139,141,144-173,182-183,195-199,206-208,239-240,253,255,267-278
+apps/nextjs/src/components/theme/theme-editor.tsx
+  h_d6e478ca18e517 1-687
+apps/nextjs/src/components/theme/theme-layout-controls.tsx
+  h_d6e478ca18e517 1-117
+apps/nextjs/src/components/theme/theme-length-input.tsx
+  h_d6e478ca18e517 1-177
+apps/nextjs/src/components/theme/theme-length.ts
+  h_d6e478ca18e517 1-16
+apps/nextjs/src/components/theme/theme-preview-context.tsx
+  h_d6e478ca18e517 1-70
+apps/nextjs/src/components/theme/theme-preview-frame.tsx
+  h_d6e478ca18e517 1-87
+apps/nextjs/src/components/theme/theme-preview.tsx
+  h_d6e478ca18e517 1-301
+apps/nextjs/src/components/theme/theme-settings.tsx
+  h_d6e478ca18e517 1-92
+apps/nextjs/src/components/workshop/workshop-code-viewer.tsx
+  h_d6e478ca18e517 3,9-12,25-33
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/components/workshop/workshop-install-review.tsx
+  h_d6e478ca18e517 1-55
+apps/nextjs/src/components/workshop/workshop-screenshots.tsx
+  h_d6e478ca18e517 45,123-131
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  h_d6e478ca18e517 26,31-32
+apps/nextjs/src/theme/branding.ts
+  h_d6e478ca18e517 1-10,14-24,45-165
+apps/nextjs/src/versions/package-reader.ts
+  h_d6e478ca18e517 7,18,20,22-24,26
+apps/nextjs/turbo.json
+  h_d6e478ca18e517 29,34-43
+apps/tasks/src/on-start/session-cleanup.ts
+  h_d6e478ca18e517 3,18-21,23-27,29,31
+apps/websocket/src/main.ts
+  h_d6e478ca18e517 2,41-43
+apps/workshop/Dockerfile
+  h_d6e478ca18e517 1,5,18,71
+apps/workshop/docker-compose.staging.yml
+  h_d6e478ca18e517 19
+apps/workshop/docker-compose.yml
+  h_d6e478ca18e517 34,69
+apps/workshop/go.mod
+  h_d6e478ca18e517 3
+apps/workshop/homarr_provider.go
+  h_d6e478ca18e517 29,499
+apps/workshop/homarr_provider_test.go
+  h_d6e478ca18e517 126-127,139,143-144
+apps/workshop/pb_migrations/1794000000_workshop_widget_catalog.js
+  h_d6e478ca18e517 1-35
+bun.lock
+  h_d6e478ca18e517 18,21,29,32,34,57,72,80,82,209,223,624,632,727,850,940,944-947,964,979,1080,1090,1105-1107,1123,1157-1159,1169-1170,1235-1236,1245-1246,1323,1362,1395,1408,1432,1457,1465,1485,1488,1494,1498,1505,1507,1524,1534,1587,1597,1599,1737,2045-2046,2207,2209,2211,2213,2215,2217,2219,2221,2223,2249,2603,2605,2607,2609,2611,2613,2779,2781,2783,2785,2787,2789,2791,2793,2795,2797,2799,2801,2803,2805,2807,2937,2939,2941,2943,2945,2947,2949,3087-3088,3363,3411,3523,3525,3527,3529,3827,3885,3887,3925,3977,4161,4353,4485,4525,4597-4598,4651,4705,4791,4813,4815,4987,5097-5098,5113,5135,5149,5187-5188,5249,5285,5297,5471,5475,5515-5516,5811-5812,5861-5867,5871,5873,5927-5928,5935,6317-6319,6359-6364,6465-6489,6503-6504,6765-6766
+deployments/prebuilt-debian/Dockerfile
+  h_d6e478ca18e517 1-4,7-14,16-17
+deployments/prebuilt-debian/bun.lock
+  h_d6e478ca18e517 8,16,18
+deployments/prebuilt-debian/package.json
+  h_d6e478ca18e517 5,9
+docs/README.md
+  h_d6e478ca18e517 691-697
+docs/img/releases/2.7.0/whats-new.svg
+  h_d6e478ca18e517 1-23
+mise.toml
+  h_d6e478ca18e517 2
+nginx.conf
+  h_d6e478ca18e517 1
+package.json
+  h_d6e478ca18e517 3,43,82,115,128,152,177,185,205,208,214,218,225,227,244,254,272,306,308,339,342,350,353,355,370-372,378,390,394,416,420,438,442
+packages/api/src/credential-access.ts
+  h_d6e478ca18e517 1-6
+packages/api/src/mcp-tools.ts
+  h_d6e478ca18e517 7-8,117-122,148
+packages/api/src/mcp.ts
+  h_d6e478ca18e517 33,51
+packages/api/src/middlewares/integration.ts
+  h_d6e478ca18e517 81-83,114,166-168,208
+packages/api/src/root.ts
+  h_d6e478ca18e517 8
+packages/api/src/router/apiKeys.ts
+  h_d6e478ca18e517 7,14,70-71,75,79
+packages/api/src/router/app.ts
+  h_d6e478ca18e517 11,238-239
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 7,40,46,48,225,248,258-259,429,432,860,863-884,1665,1717,1727,1766,1885,1954,2080,2584-2606,2655-2659,2661,2858-2874,2878-2881
+packages/api/src/router/custom-widget/creation-procedures.ts
+  h_d6e478ca18e517 131
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  h_d6e478ca18e517 34,74
+packages/api/src/router/custom-widget/definition-insert.ts
+  h_d6e478ca18e517 15,18
+packages/api/src/router/custom-widget/definition-update.ts
+  h_d6e478ca18e517 29,49,71-72,75-80,104,172
+packages/api/src/router/custom-widget/management-queries.ts
+  h_d6e478ca18e517 38,63,90,131
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  h_d6e478ca18e517 13,21-23,46,74,94,119-126,161
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  h_d6e478ca18e517 41
+packages/api/src/router/custom-widget/source-resolver.ts
+  h_d6e478ca18e517 15-16,22,24,26,34-56,59-103,108-110
+packages/api/src/router/custom-widget/workshop-origin.ts
+  h_d6e478ca18e517 1-82
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  h_d6e478ca18e517 23,49,75,138,154-155,162-171,194-200
+packages/api/src/router/custom-widget/workshop-update-procedures.ts
+  h_d6e478ca18e517 1-155
+packages/api/src/router/icons.ts
+  h_d6e478ca18e517 64
+packages/api/src/router/integration/integration-access.ts
+  h_d6e478ca18e517 7,38-46
+packages/api/src/router/integration/integration-http.ts
+  h_d6e478ca18e517 15,26-34,43,77
+packages/api/src/router/integration/integration-router.ts
+  h_d6e478ca18e517 5,135,220,237,284,345-347,369,682,775,780-783,790-791,817,840,851,853,860
+packages/api/src/router/integration/integration-test-connection.ts
+  h_d6e478ca18e517 11
+packages/api/src/router/integration/integration-test-stored-connection.ts
+  h_d6e478ca18e517 14,31-41
+packages/api/src/router/integration/map-test-connection-error.ts
+  h_d6e478ca18e517 60-64,68-69,71,73-74,76,81-87,94
+packages/api/src/router/onboard/onboard-router.ts
+  h_d6e478ca18e517 46,184-190,222-237,282,408-409,413,472,1011-1018,1023-1024,1028,1039
+packages/api/src/router/serverSettings.ts
+  h_d6e478ca18e517 170-172
+packages/api/src/router/test/apiKeys.spec.ts
+  h_d6e478ca18e517 26,138,147,163-182
+packages/api/src/router/test/onboard.spec.ts
+  h_d6e478ca18e517 45-46,63,209-211,373-375
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  h_d6e478ca18e517 268
+packages/api/src/router/theme.ts
+  h_d6e478ca18e517 1-120
+packages/api/src/router/update-checker.ts
+  h_d6e478ca18e517 1-2,4-8,10,15-33,36-72
+packages/api/src/router/user.ts
+  h_d6e478ca18e517 16,20,22-24,52-56,692,697,833,841-878
+packages/api/src/router/user/preferences.ts
+  h_d6e478ca18e517 6,14,18,28,48-52,56-70,76,81-94,96-122,125-139
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 1,40,111-122,165,174,190,222,236,298,315,331,360-361
+packages/api/src/router/widgets/downloads.ts
+  h_d6e478ca18e517 9,49-51,185-215
+packages/api/src/router/widgets/indexer-manager.ts
+  h_d6e478ca18e517 1,40-42,44-53,57
+packages/api/src/router/widgets/notifications.ts
+  h_d6e478ca18e517 1,13,16,20-22
+packages/api/src/router/widgets/releases.ts
+  h_d6e478ca18e517 45
+packages/api/src/router/widgets/rssFeed.ts
+  h_d6e478ca18e517 34,37
+packages/api/src/router/widgets/smart-home.ts
+  h_d6e478ca18e517 4,7-18,22-248,251-403,409,413,415-416,423,427,429-430,437,441,443-447,449,457,461,463
+packages/api/src/router/widgets/timetable.ts
+  h_d6e478ca18e517 268
+packages/api/src/router/widgets/wazuh.ts
+  h_d6e478ca18e517 43,45
+packages/api/src/shared.ts
+  h_d6e478ca18e517 46
+packages/api/src/test/mcp.spec.ts
+  h_d6e478ca18e517 84,87-89,92-93,139,143
+packages/api/src/test/read-only-credentials.spec.ts
+  h_d6e478ca18e517 1-114
+packages/api/src/trpc.ts
+  h_d6e478ca18e517 24-25,81,130-137,161,185
+packages/auth/api-key/get-api-key-session.ts
+  h_d6e478ca18e517 45-46,77-81
+packages/auth/api-key/test/get-api-key-session.spec.ts
+  h_d6e478ca18e517 27-34,117,134
+packages/auth/index.ts
+  h_d6e478ca18e517 12-15
+packages/auth/permissions/integration-query-permissions.ts
+  h_d6e478ca18e517 3,6,31-33,35-46,48-79,82-96
+packages/auth/providers/credentials/authorization/ldap-authorization.ts
+  h_d6e478ca18e517 25-111,113-135,148,157,178-186
+packages/auth/providers/oidc/profile.ts
+  h_d6e478ca18e517 6-9
+packages/auth/providers/oidc/test/profile.spec.ts
+  h_d6e478ca18e517 19,31-34
+packages/auth/server.ts
+  h_d6e478ca18e517 1-4
+packages/boards/package.json
+  h_d6e478ca18e517 16,21-23
+packages/boards/src/context.tsx
+  h_d6e478ca18e517 4,119-121,123-124
+packages/boards/src/draft-changes.ts
+  h_d6e478ca18e517 1-27
+packages/boards/src/edit-mode.tsx
+  h_d6e478ca18e517 4,7-9,12-16,22,34-35
+packages/boards/src/layout-data.ts
+  h_d6e478ca18e517 1-107
+packages/boards/src/layout-preview.ts
+  h_d6e478ca18e517 1,3-4,35,51,100-101
+packages/boards/src/tabs.tsx
+  h_d6e478ca18e517 1-116
+packages/cli/package.json
+  h_d6e478ca18e517 18
+packages/common/package.json
+  h_d6e478ca18e517 18
+packages/common/src/grid-algorithm.ts
+  h_d6e478ca18e517 28-37,40-47,53-55,65
+packages/common/src/string.ts
+  h_d6e478ca18e517 18-31
+packages/cron-jobs/src/jobs/icons-updater.ts
+  h_d6e478ca18e517 34-36
+packages/custom-widgets/scripts/check-architecture.mjs
+  h_d6e478ca18e517 88-89,91-110
+packages/custom-widgets/scripts/generate-component-metadata.ts
+  h_d6e478ca18e517 155-169,173
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 43,93,110,113,115,124,126,128,130,132,134,136,138,140,142,150-152,154,156-160,190-192
+packages/custom-widgets/src/core/authoring-catalog.ts
+  h_d6e478ca18e517 3,7,43-58,63-68,70-74,108,110-121,178,186,189-190,193-195
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 2,49-52,54,64-65,70,75,134-136,142,148-152,159,165-166,168-171,173-175,177-180,182-183,185-187,191-194,196-198,201-213,216-218,220-223,225-227,229-233,235-237,251,256-259,261,263-265,267-269,271,273-277,279-280,282-340
+packages/custom-widgets/src/core/component-catalog.runtime.generated.json
+  h_d6e478ca18e517 1
+packages/custom-widgets/src/core/component-registry.ts
+  h_d6e478ca18e517 1-2,4,6-21,23-26,44-45,54-59,68,81,84
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  h_d6e478ca18e517 27-30,221
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  h_d6e478ca18e517 4,278-280
+packages/custom-widgets/src/jsx/analyzer-language.ts
+  h_d6e478ca18e517 62-63,66-68,71
+packages/custom-widgets/src/jsx/analyzer.ts
+  h_d6e478ca18e517 89-99
+packages/custom-widgets/src/jsx/bindings.ts
+  h_d6e478ca18e517 99-101,103-113,116-124,148-166,178
+packages/custom-widgets/src/jsx/interpreter.tsx
+  h_d6e478ca18e517 4,35,44-52,129,133,318,332,350-364
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  h_d6e478ca18e517 6,188-195,198-199,201,213
+packages/custom-widgets/src/server/request-executor.ts
+  h_d6e478ca18e517 3,17,31,38-39,128-131,133,135-137,257-260,269-271,286,290,297-331
+packages/custom-widgets/src/server/response.ts
+  h_d6e478ca18e517 3,17-23,55,93-104,106
+packages/custom-widgets/src/workbench/code-editor.tsx
+  h_d6e478ca18e517 104-107
+packages/custom-widgets/src/workbench/component-reference.tsx
+  h_d6e478ca18e517 18-40,56-102,105-119,121-126
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  h_d6e478ca18e517 46-49
+packages/db/migrations/custom/0007_wazuh_dashboard_url.ts
+  h_d6e478ca18e517 1-32
+packages/db/migrations/custom/index.ts
+  h_d6e478ca18e517 9,19
+packages/db/migrations/demo-board/board.ts
+  h_d6e478ca18e517 1-100
+packages/db/migrations/demo-board/custom-widget.ts
+  h_d6e478ca18e517 1-22
+packages/db/migrations/demo-board/preferences.ts
+  h_d6e478ca18e517 1-26
+packages/db/migrations/demo-board/seed.ts
+  h_d6e478ca18e517 1-263
+packages/db/migrations/demo-board/types.ts
+  h_d6e478ca18e517 1-28
+packages/db/migrations/demo-board/widgets.ts
+  h_d6e478ca18e517 1-430
+packages/db/migrations/postgresql/0020_add_integration_external_url.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/0021_add_api_key_read_only.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/0022_add_workshop_widget_origin.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/0023_board_theme_inheritance.sql
+  h_d6e478ca18e517 1-6
+packages/db/migrations/postgresql/meta/0020_snapshot.json
+  h_d6e478ca18e517 1-2781
+packages/db/migrations/postgresql/meta/0021_snapshot.json
+  h_d6e478ca18e517 1-2788
+packages/db/migrations/postgresql/meta/0022_snapshot.json
+  h_d6e478ca18e517 1-2794
+packages/db/migrations/postgresql/meta/0023_snapshot.json
+  h_d6e478ca18e517 1-2791
+packages/db/migrations/postgresql/meta/_journal.json
+  h_d6e478ca18e517 144-171
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 3-4,19,22-23,430,541-551,627-639,643-671,673-681,684-699,701,703-713,715-717
+packages/db/migrations/sqlite/0051_add_integration_external_url.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/sqlite/0052_add_api_key_read_only.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/sqlite/0053_add_workshop_widget_origin.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/sqlite/0054_board_theme_inheritance.sql
+  h_d6e478ca18e517 1-29
+packages/db/migrations/sqlite/meta/0051_snapshot.json
+  h_d6e478ca18e517 1-2819
+packages/db/migrations/sqlite/meta/0052_snapshot.json
+  h_d6e478ca18e517 1-2827
+packages/db/migrations/sqlite/meta/0053_snapshot.json
+  h_d6e478ca18e517 1-2834
+packages/db/migrations/sqlite/meta/0054_snapshot.json
+  h_d6e478ca18e517 1-2831
+packages/db/migrations/sqlite/meta/_journal.json
+  h_d6e478ca18e517 361-388
+packages/db/migrations/sqlite/migrate.ts
+  h_d6e478ca18e517 15-22
+packages/db/package.json
+  h_d6e478ca18e517 22-23,33
+packages/db/queries/server-setting.ts
+  h_d6e478ca18e517 58,60-62
+packages/db/schema/postgresql.ts
+  h_d6e478ca18e517 59,217,302-303,307,660
+packages/db/schema/sqlite.ts
+  h_d6e478ca18e517 41,203,287-288,292,657
+packages/db/test/sqlite-migration.spec.ts
+  h_d6e478ca18e517 11,28-67,116,118-128,130,133-135,138-227,230-238,242-250,280-299,302,305-311,313-334
+packages/definitions/src/board.ts
+  h_d6e478ca18e517 4-6
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  h_d6e478ca18e517 202
+packages/definitions/src/docs/widget-doc-slugs.ts
+  h_d6e478ca18e517 19
+packages/definitions/src/hotkeys.ts
+  h_d6e478ca18e517 10
+packages/definitions/src/index.ts
+  h_d6e478ca18e517 11
+packages/definitions/src/integration.ts
+  h_d6e478ca18e517 31,256-266,651,661,901,958
+packages/definitions/src/release-provider.ts
+  h_d6e478ca18e517 60-61,63,65,73-77,80-82,112-117
+packages/definitions/src/section.ts
+  h_d6e478ca18e517 1-3,24-50,62-120
+packages/definitions/src/theme.ts
+  h_d6e478ca18e517 1-68
+packages/definitions/src/widget-integration-map.ts
+  h_d6e478ca18e517 54,139-142
+packages/definitions/src/widget.ts
+  h_d6e478ca18e517 17,85
+packages/docker/src/discovery/index.ts
+  h_d6e478ca18e517 2-7
+packages/docker/src/discovery/parse-container-labels.ts
+  h_d6e478ca18e517 43-44
+packages/docker/src/icon-match.ts
+  h_d6e478ca18e517 1-30
+packages/docker/src/index.ts
+  h_d6e478ca18e517 31
+packages/forms-collection/package.json
+  h_d6e478ca18e517 15-17,29,37
+packages/forms-collection/src/access/access-picker.tsx
+  h_d6e478ca18e517 23,25,36,38,46,52,59-65,67-70,126,130
+packages/forms-collection/src/access/access-settings.tsx
+  h_d6e478ca18e517 1-2,85,127-137,160-172,176-182
+packages/forms-collection/src/access/access-table-rows.tsx
+  h_d6e478ca18e517 22,46
+packages/forms-collection/src/access/context.tsx
+  h_d6e478ca18e517 10,22,49
+packages/forms-collection/src/access/group-access-form.tsx
+  h_d6e478ca18e517 24,27,79
+packages/forms-collection/src/access/group-select.tsx
+  h_d6e478ca18e517 3,33-47,64,66,72-73
+packages/forms-collection/src/access/index.ts
+  h_d6e478ca18e517 1-4
+packages/forms-collection/src/access/user-access-form.tsx
+  h_d6e478ca18e517 40,43,100
+packages/forms-collection/src/access/user-select.tsx
+  h_d6e478ca18e517 3,34-51,69,71,76-89
+packages/forms-collection/src/board-appearance/board-appearance-fields.tsx
+  h_d6e478ca18e517 1-129
+packages/forms-collection/src/custom-widgets/code-editor.tsx
+  h_d6e478ca18e517 1-15
+packages/forms-collection/src/custom-widgets/index.ts
+  h_d6e478ca18e517 1-3
+packages/forms-collection/src/custom-widgets/use-custom-widget-editor-messages.ts
+  h_d6e478ca18e517 5,9,12,25,37-43,45,47
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  h_d6e478ca18e517 99-102,485
+packages/forms-collection/src/index.tsx
+  h_d6e478ca18e517 3,7-8
+packages/forms-collection/src/new-app/_form.tsx
+  h_d6e478ca18e517 146
+packages/forms-collection/src/new-app/_url-label.tsx
+  h_d6e478ca18e517 3,10,15
+packages/forms-collection/src/user-create/user-create-password-fields.tsx
+  h_d6e478ca18e517 4,13,20,25
+packages/icons/src/auto-icon-searcher.ts
+  h_d6e478ca18e517 1,11-48
+packages/icons/src/repositories/github.icon-repository.ts
+  h_d6e478ca18e517 6,50-56
+packages/icons/src/repositories/icon-repository.ts
+  h_d6e478ca18e517 1-2,7,39-54
+packages/icons/src/repositories/jsdelivr.icon-repository.ts
+  h_d6e478ca18e517 5,27-31,33
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 4,54
+packages/integrations/package.json
+  h_d6e478ca18e517 19
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  h_d6e478ca18e517 54-64,80
+packages/integrations/src/base/creator.ts
+  h_d6e478ca18e517 2,6,144-151,419-429
+packages/integrations/src/base/test-connection/test-connection-error.ts
+  h_d6e478ca18e517 10-11,134-137,139-141,153-157,180-185,187-188
+packages/integrations/src/beszel/beszel-integration.ts
+  h_d6e478ca18e517 15-16,130,367-371,373,384-417
+packages/integrations/src/beszel/beszel-types.ts
+  h_d6e478ca18e517 326,330
+packages/integrations/src/coolify/coolify-integration.ts
+  h_d6e478ca18e517 3,33-36,157-158,258-264,272,311,323-341
+packages/integrations/src/coolify/coolify-types.ts
+  h_d6e478ca18e517 32,80,134
+packages/integrations/src/coolify/test/coolify-integration.spec.ts
+  h_d6e478ca18e517 18-21,213-246,273-279,295-300,321,324-326,329-347
+packages/integrations/src/dashdot/dashdot-integration.ts
+  h_d6e478ca18e517 42,46-58,105,114
+packages/integrations/src/download-client/deluge/deluge-integration.ts
+  h_d6e478ca18e517 178-202
+packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts
+  h_d6e478ca18e517 200-209
+packages/integrations/src/download-client/transmission/transmission-integration.ts
+  h_d6e478ca18e517 131-161
+packages/integrations/src/glances/glances-integration.ts
+  h_d6e478ca18e517 46,59,160-163,183
+packages/integrations/src/homeassistant/homeassistant-actions.ts
+  h_d6e478ca18e517 1-203
+packages/integrations/src/homeassistant/homeassistant-connection.ts
+  h_d6e478ca18e517 1-675
+packages/integrations/src/homeassistant/homeassistant-errors.ts
+  h_d6e478ca18e517 1-31
+packages/integrations/src/homeassistant/homeassistant-history.ts
+  h_d6e478ca18e517 1-56
+packages/integrations/src/homeassistant/homeassistant-integration.ts
+  h_d6e478ca18e517 3,5-7,13,15-16,18-31,33-72,74,76-79,85,87-90,94-288,290-317,319-355,358-361,365-368,409-414,420-428,432-440,442-480,490-553
+packages/integrations/src/homeassistant/homeassistant-normalize.ts
+  h_d6e478ca18e517 1-293
+packages/integrations/src/homeassistant/homeassistant-types.ts
+  h_d6e478ca18e517 3-10,35-141
+packages/integrations/src/ical/ical-integration.ts
+  h_d6e478ca18e517 19-23,30,78-79,101,104-105,135-136
+packages/integrations/src/index.ts
+  h_d6e478ca18e517 36
+packages/integrations/src/interfaces/calendar/calendar-types.ts
+  h_d6e478ca18e517 36
+packages/integrations/src/interfaces/health-monitoring/health-monitoring-types.ts
+  h_d6e478ca18e517 7-8,28-29
+packages/integrations/src/interfaces/smart-home/smart-home-capabilities.ts
+  h_d6e478ca18e517 1-132
+packages/integrations/src/interfaces/smart-home/smart-home-integration.ts
+  h_d6e478ca18e517 1-10,13-22
+packages/integrations/src/interfaces/smart-home/smart-home-optimistic.ts
+  h_d6e478ca18e517 1-160
+packages/integrations/src/interfaces/smart-home/smart-home-types.ts
+  h_d6e478ca18e517 1-99,101-185,188-235
+packages/integrations/src/jackett/jackett-indexer-test-error.ts
+  h_d6e478ca18e517 1-8
+packages/integrations/src/jackett/jackett-integration.ts
+  h_d6e478ca18e517 4,7-9,16-18,68-77,80-81,83-98,102-104
+packages/integrations/src/jellyfin/jellyfin-integration.ts
+  h_d6e478ca18e517 87-111,287-288,302-307
+packages/integrations/src/mock/data/beszel.ts
+  h_d6e478ca18e517 16-28,36,42-47,49-51,56,59-62,64-65,67-73,81,85-96,99,104,107-108,110-116,121-125,127-145,152-153,158-165,169-213,216-219,221-224,227-230,233-306,308-309,312-330,338-351,357-389,400,407,417,426,431,455,467,471-481,485-491,495-496
+packages/integrations/src/mock/data/calendar.ts
+  h_d6e478ca18e517 184-188,190-195,197-211
+packages/integrations/src/mock/data/dns-hole.ts
+  h_d6e478ca18e517 8-9,12,14
+packages/integrations/src/mock/data/indexer-manager.ts
+  h_d6e478ca18e517 4-10,13,15
+packages/integrations/src/mock/data/media-releases.ts
+  h_d6e478ca18e517 27,79,97,133
+packages/integrations/src/mock/data/media-request.ts
+  h_d6e478ca18e517 2-45,49-50,52-64,66,71-72,74,76-86,88,90,96
+packages/integrations/src/mock/data/media-server.ts
+  h_d6e478ca18e517 4-18,25,30-32,48-50,64-66,76-77,79,82-94,103,108-122,136-138,145
+packages/integrations/src/mock/data/notifications.ts
+  h_d6e478ca18e517 4-21,24,26-29
+packages/integrations/src/mock/data/smart-home-fixtures.ts
+  h_d6e478ca18e517 1-407
+packages/integrations/src/mock/data/smart-home-state.ts
+  h_d6e478ca18e517 1-103
+packages/integrations/src/mock/data/smart-home.ts
+  h_d6e478ca18e517 1-4,6-27,30-45,47-171,173-192,194-216,218-253
+packages/integrations/src/mock/data/system-health-monitoring.ts
+  h_d6e478ca18e517 5-6,8-15,17-23,25-26,29-35,37-39,43-52,54,60-64
+packages/integrations/src/mock/mock-integration.ts
+  h_d6e478ca18e517 1-3,37,75-79,149-154
+packages/integrations/src/mock/widget-data.ts
+  h_d6e478ca18e517 18,32-33,35-45,49,52-56,64,96-103,120-140,146,161,163,171-172,174,185-186,188,193,197-198,202-208,218,230,239,292,294-297,299,301,338-340,359-361,381-382,476-601
+packages/integrations/src/ntfy/ntfy-integration.ts
+  h_d6e478ca18e517 9-10,48-53,57-77
+packages/integrations/src/ntfy/ntfy-schema.ts
+  h_d6e478ca18e517 3-6,9,13-17,21-26
+packages/integrations/src/openmediavault/openmediavault-integration.ts
+  h_d6e478ca18e517 3,17-18,105-111,210,226-251,254,275-288,307-311
+packages/integrations/src/openmediavault/openmediavault-totp-error.ts
+  h_d6e478ca18e517 1-25
+packages/integrations/src/openmediavault/totp.ts
+  h_d6e478ca18e517 1-39
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.spec.ts
+  h_d6e478ca18e517 3,8-10,14-31,34-57,60-74,77-83,85-91
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts
+  h_d6e478ca18e517 30-43
+packages/integrations/src/plex/plex-integration.ts
+  h_d6e478ca18e517 374
+packages/integrations/src/stats/frigate-auth.spec.ts
+  h_d6e478ca18e517 12-14,16,25,28,63-106,124,130,172-175,183,193,202,246-296
+packages/integrations/src/stats/frigate-authentication-error.ts
+  h_d6e478ca18e517 1-20
+packages/integrations/src/stats/providers.ts
+  h_d6e478ca18e517 32,65
+packages/integrations/src/stats/providers/frigate.ts
+  h_d6e478ca18e517 3-4,32-39,49-72,74
+packages/integrations/src/stats/providers/yuvomi.ts
+  h_d6e478ca18e517 1-48
+packages/integrations/src/stats/stats-integration.ts
+  h_d6e478ca18e517 3,16-26,42,47,65,80-81,84,87-89,93,96,98,108,111,131-139,144,149-157
+packages/integrations/src/stats/types.ts
+  h_d6e478ca18e517 5,30
+packages/integrations/src/types.ts
+  h_d6e478ca18e517 2-4
+packages/integrations/src/unraid/unraid-integration.ts
+  h_d6e478ca18e517 69
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  h_d6e478ca18e517 8-9,36-73
+packages/integrations/src/wazuh/test/wazuh-integration.spec.ts
+  h_d6e478ca18e517 67,74,251-258
+packages/integrations/test/home-assistant-normalize.spec.ts
+  h_d6e478ca18e517 1,3,5-21,23-24,26-40
+packages/modals-collection/package.json
+  h_d6e478ca18e517 25
+packages/modals-collection/src/apps/app-select-modal.tsx
+  h_d6e478ca18e517 59-61,63-68
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  h_d6e478ca18e517 58
+packages/modals/index.ts
+  h_d6e478ca18e517 1
+packages/modals/src/index.tsx
+  h_d6e478ca18e517 21,70-74,103,123-139,153-158
+packages/modals/src/type.ts
+  h_d6e478ca18e517 26
+packages/onboarding/src/confetti.ts
+  h_d6e478ca18e517 1-9
+packages/onboarding/src/finish.tsx
+  h_d6e478ca18e517 3,11,44,57,64
+packages/onboarding/src/interactive-wordmark.tsx
+  h_d6e478ca18e517 1-62
+packages/onboarding/src/onboarding-auth-shell.tsx
+  h_d6e478ca18e517 2,26
+packages/onboarding/src/onboarding-studio.module.css
+  h_d6e478ca18e517 4,586
+packages/onboarding/src/onboarding-studio.tsx
+  h_d6e478ca18e517 4,12-20,107,122-134
+packages/onboarding/src/onboarding-wordmark.tsx
+  h_d6e478ca18e517 3,6-9,32,61-72
+packages/onboarding/src/setup-studio.tsx
+  h_d6e478ca18e517 72,87-88,93,95,162,411,571-575,617,621,796-797,866-872,1544,1677,1741,1768,1784,1820,1852
+packages/onboarding/src/types.ts
+  h_d6e478ca18e517 18
+packages/onboarding/src/welcome.tsx
+  h_d6e478ca18e517 138
+packages/ping/src/index.ts
+  h_d6e478ca18e517 26
+packages/redis/src/lib/channel.ts
+  h_d6e478ca18e517 68,70,72
+packages/request-handler/src/docker-log-decode.ts
+  h_d6e478ca18e517 50-52,55-75,77-78,82,84-85,89,97-99,103-110
+packages/request-handler/src/docker.ts
+  h_d6e478ca18e517 12-18,454-469,522-526
+packages/request-handler/src/release-providers/docker-hub.ts
+  h_d6e478ca18e517 3-4,6,16-21,24,38,50,52,56-61,63-86,117-120
+packages/request-handler/src/release-providers/github-container-registry.ts
+  h_d6e478ca18e517 2-3,117-122,124-138,165,170
+packages/request-handler/src/release-providers/index.ts
+  h_d6e478ca18e517 2,30,32-37,42
+packages/request-handler/src/release-providers/registry-tags.ts
+  h_d6e478ca18e517 2,55,77,82-88
+packages/request-handler/src/release-providers/types.ts
+  h_d6e478ca18e517 51
+packages/request-handler/src/release-providers/versions.ts
+  h_d6e478ca18e517 2
+packages/request-handler/src/rss-feeds.spec.ts
+  h_d6e478ca18e517 1-137
+packages/request-handler/src/rss-feeds.ts
+  h_d6e478ca18e517 5,13-25,34-35,37-38,40-66,74-83,108,150,167
+packages/request-handler/src/smart-home.ts
+  h_d6e478ca18e517 3-8,12,14-26,28-41,43-46,48-50,52-55,57-67
+packages/request-handler/src/test/update-checker.spec.ts
+  h_d6e478ca18e517 50,75
+packages/request-handler/src/update-checker.ts
+  h_d6e478ca18e517 19-21,24,29,53,57,77,80,91,115,117,132-149,159-183,185-190,210,217-218,233,248-251,255,264
+packages/server-settings/package.json
+  h_d6e478ca18e517 26
+packages/server-settings/src/index.ts
+  h_d6e478ca18e517 3-4,16,21-22,46-47,61-62,102-158,163-164,202-205
+packages/settings/src/context.tsx
+  h_d6e478ca18e517 4,16-18
+packages/spotlight/src/components/spotlight.tsx
+  h_d6e478ca18e517 7,23-29,47,51-59,62-68,73,123,125,186,198,338
+packages/spotlight/src/lib/catalog.ts
+  h_d6e478ca18e517 80-101
+packages/spotlight/src/modes/command/children/theme.tsx
+  h_d6e478ca18e517 1-69
+packages/spotlight/src/modes/command/global-group.tsx
+  h_d6e478ca18e517 7,13,21,29,48-50,54,58-65
+packages/spotlight/src/spotlight-store.ts
+  h_d6e478ca18e517 8-9,13-14
+packages/translation/src/lang/ca.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/cn.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/cr.json
+  h_d6e478ca18e517 62,64,104-105,130-131,147,209,274-275,280-288,809,909,911,1248-1261,1410,1456,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3973-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5867,5869,5981-5983,5998-6003,6798-6817,6926,6991,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7544,7591,7747,7774,7840,7892-7897,7910,7961,7971,8123-8124,8196,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/cs.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,847,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2435,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/da.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/de-CH.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/de.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,847,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2435,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7150,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7478,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/el.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/en-gb.json
+  h_d6e478ca18e517 104-105,130-131,147,246-257,259,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5076,5103,5146,5193,5196,5199,5206,5209,5212,5224,5308,5311,5324,5455-5459,5568,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,6940,7057,7065,7084-7088,7128,7141,7157-7161,7165,7173-7175,7177-7193,7197,7200,7218,7238-7240,7244,7293-7297,7305,7317,7326,7384,7387,7390,7398,7444,7454,7457,7462,7476,7537-7540,7591,7747,7804,7823,7835,7838,7840,7843,7891-7897,7899,7910,8090,8093-8094,8097-8098,8101-8102,8105-8106,8109-8110,8123-8124,8198,8467-8473,8487,8497,8500,8611,8615,8619,8640,8649,8660,9041,9110,9295-9300,9386
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 64,147,209,274-275,280-288,809,909,911,1248-1261,1410,1456,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3973-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5211-5213,5311,5314,5452,5590,5849-5865,5871,5873,6331-6334,6336-6338,6802-6821,6930,6995,7088-7092,7164-7165,7169,7181-7197,7242-7244,7286,7290-7292,7301-7305,7313,7321-7323,7547-7550,7554,7601,7850,7902-7907,7920,7971,7981,8133-8134,8206,8477-8483,8510,8621,9051,9120,9305-9310,9396
+packages/translation/src/lang/es.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5681,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/et.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/fi.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1911,1919,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/fr.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,847,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2435,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5357,5359,5437-5438,5445,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/he.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/hr.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/hu.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/it.json
+  h_d6e478ca18e517 77,104-105,130-131,147,151,170,180,264,283-289,623,809,847,909,911,921,943,967,998,1067,1089,1162,1171,1175,1248-1261,1304,1307,1325,1331-1332,1410,1462-1464,1512,1532-1552,1752-1756,1838-1840,1850,1859,1929,1937-1939,1951-1952,1966,2031-2040,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2400-2412,2435,2448-2450,2454,2472,2476,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,2747,3105,3131,3139,3307,3376,3393-3527,3687,3850,3974-4001,4033-4039,4056,4073-4074,4393-4396,4414,4417,4421-4423,4429-4433,4465,4468,4471,4474,4477,4480-4481,4483,4493,4511-4512,4516,4519,4522,4526,4528,4534-4535,4540,4546,4549,4553,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5236,5249,5256,5260,5269,5308,5311,5365,5382-5383,5395-5397,5399,5439-5440,5442-5443,5451,5455-5459,5477-5478,5480,5580-5581,5644,5648,5656,5691,5695-5696,5698-5699,5731,5734,5737,5740,5775,5777,5845-5861,5869,5919,5981-5983,5998-6003,6144-6148,6232,6234,6262-6265,6324,6371,6376,6429-6432,6475,6496,6505,6553-6554,6558,6563,6689,6730,6798-6817,6926,7084-7088,7106,7160-7161,7165,7177-7193,7238-7240,7256,7293-7297,7301,7305,7312,7537-7540,7548,7562,7591,7606,7613,7747,7840,7892-7897,7910,7914,8123-8124,8164,8343,8375,8467-8473,8500,8592,8611,9041,9110,9295-9300,9335,9386,9457,9513,9618,9625,9650
+packages/translation/src/lang/ja.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,2990,3393-3527,3789-3790,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/ko.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,6977,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/lt.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/lv.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/nl.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7544,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/no.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/pl.json
+  h_d6e478ca18e517 104-105,112,130-131,134,136-137,139,142,147,150-151,170,180,195,199,201,205,207,218,253,267,269,271,275,281-288,809,828-829,847,870,874,909,911,919,936,938,943,967,998,1067,1089,1129,1160,1248-1261,1291,1304,1325-1326,1331,1368,1410,1462-1464,1512,1532-1552,1582,1752-1756,1838-1840,1850,1859,1929,1937-1939,1951-1952,1966,2031-2040,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2430-2432,2435-2436,2440,2448-2450,2454,2476,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,2747,2789,2836,2874,2878,2927,2930,2935-2939,2942-2945,3004-3005,3013,3016,3020,3036-3038,3088-3089,3098,3104-3105,3131,3139,3142,3147,3150,3154,3282,3376,3393-3527,3671-3672,3678,3694,3776,3780,3793,3850,3874,3965,3974-4001,4027,4033-4039,4056,4073-4074,4393-4396,4412-4414,4416-4417,4421-4424,4426-4433,4440,4457,4463-4465,4468,4471,4474,4477,4480-4481,4483,4486-4487,4490,4493,4496-4501,4504-4506,4511-4512,4516,4519,4522-4526,4528-4532,4534-4535,4538-4540,4543,4546,4549,4553-4555,4558-4560,4562-4563,4620,4767-4771,4775,4779,4787-4788,4828,4849,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5000,5007,5133,5146,5160,5219,5229,5231,5236-5237,5239-5240,5245-5246,5249-5250,5253-5254,5256-5257,5260,5262,5266-5267,5269,5271,5274,5278-5279,5308,5311,5313-5314,5357-5366,5370-5371,5374-5375,5379,5382-5383,5387-5389,5391,5394-5397,5399,5402,5404-5405,5408-5409,5412-5413,5416-5417,5421,5425,5428-5429,5432-5433,5437-5440,5442-5445,5448-5451,5455-5459,5477-5478,5480,5560,5573,5580-5581,5633,5636-5637,5640-5641,5644-5645,5648-5649,5652-5653,5656,5658-5661,5665-5666,5669,5672,5675-5676,5683-5685,5688-5692,5695-5699,5702-5706,5709,5712,5715-5716,5719,5723-5724,5726,5731-5734,5737-5738,5740,5767-5769,5845-5861,5869,5889,5919,5964-5965,5981-5983,5998-6003,6107,6109,6144-6146,6148,6232,6234,6244,6262-6265,6324,6371-6372,6375-6376,6381-6382,6391,6394-6395,6398-6399,6403,6406,6425-6426,6429-6432,6436-6437,6440,6443,6445,6450,6452,6455-6457,6461-6465,6474-6478,6482,6485-6487,6491-6493,6496-6499,6504-6505,6508,6511,6514-6515,6518-6521,6523-6524,6527,6529-6531,6539,6541,6543-6546,6548-6549,6552-6555,6557-6559,6563-6564,6583,6586,6592,6595,6607,6610,6613,6616,6625,6631,6637,6640,6643-6644,6647,6650,6682-6683,6686,6689,6730,6798-6817,6909,6926,6967,6972,7084-7088,7106,7108,7160-7161,7165,7177-7193,7238-7240,7293-7297,7301,7305,7537-7540,7548,7562,7576,7586-7587,7591,7606,7613,7664,7747,7757,7819-7821,7840,7892-7897,7910,7914,7961,7967-7969,7971,8110,8123-8124,8136,8173,8278-8279,8329,8342-8343,8375,8467-8473,8500,8592,8610-8611,9041,9110,9295-9300,9330-9335,9358,9361-9362,9374,9379,9386,9457-9459,9474-9475,9509,9538-9539,9618,9625-9626,9650,9657
+packages/translation/src/lang/pt-br.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/pt.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/ro.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,847,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2435,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/ru.json
+  h_d6e478ca18e517 62,104-105,130-131,147,274-275,280-288,809,909,911,1248-1261,1410,1456,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3973-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7774,7840,7892-7897,7910,7961,7971,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/sk.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/sl.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1008,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/sv.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,847,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2435,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/tr.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/uk.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/vi.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/translation/src/lang/zh.json
+  h_d6e478ca18e517 104-105,130-131,147,283-289,809,909,911,1248-1261,1410,1462-1464,1532-1552,1752-1756,1838-1840,1859,1937-1939,1951-1952,2034-2042,2095-2106,2124-2284,2304-2307,2326,2332-2345,2350-2352,2367,2401-2412,2448-2450,2454,2521,2537-2566,2610-2616,2619-2633,2711-2714,2737-2739,3393-3527,3974-4001,4033-4039,4056,4393-4396,4429-4432,4905,4908,4911,4918,4920-4921,4927,4937-4938,4940,4946,4986-4987,4990-4998,5146,5308,5311,5455-5459,5845-5861,5869,5981-5983,5998-6003,6798-6817,6926,7084-7088,7160-7161,7165,7177-7193,7238-7240,7293-7297,7305,7537-7540,7591,7747,7840,7892-7897,7910,8123-8124,8467-8473,8500,8611,9041,9110,9295-9300,9386
+packages/ui/package.json
+  h_d6e478ca18e517 18-19,22-23,43,47-50
+packages/ui/src/components/color-scheme-combobox.tsx
+  h_d6e478ca18e517 3,5,12,18-24,28-29,32-42,44-47,52-53,55,62,66-67,70-72,78,80-87,95
+packages/ui/src/components/corner-style-picker.tsx
+  h_d6e478ca18e517 3-4,7-9,11,13-14,21-26,35-40,43-50,54-69,75,87,96,101-105
+packages/ui/src/components/index.tsx
+  h_d6e478ca18e517 41-42
+packages/ui/src/components/language-combobox.tsx
+  h_d6e478ca18e517 61
+packages/ui/src/components/no-results.tsx
+  h_d6e478ca18e517 4
+packages/ui/src/components/search-input.tsx
+  h_d6e478ca18e517 4,7,26,37-41,46-64
+packages/ui/src/components/section-card.tsx
+  h_d6e478ca18e517 11
+packages/ui/src/components/select-with-custom-items.tsx
+  h_d6e478ca18e517 68-72,75
+packages/ui/src/components/user-avatar.tsx
+  h_d6e478ca18e517 5,30
+packages/ui/src/icons/index.ts
+  h_d6e478ca18e517 1,3-8
+packages/ui/src/markdown/github-alerts.tsx
+  h_d6e478ca18e517 1-84
+packages/ui/src/markdown/github-mentions.tsx
+  h_d6e478ca18e517 1-54
+packages/ui/src/markdown/index.ts
+  h_d6e478ca18e517 1-2
+packages/ui/src/markdown/markdown.module.css
+  h_d6e478ca18e517 1-41
+packages/ui/src/markdown/markdown.module.d.css.ts
+  h_d6e478ca18e517 1-2
+packages/ui/src/markdown/markdown.tsx
+  h_d6e478ca18e517 1-85
+packages/ui/src/theme.ts
+  h_d6e478ca18e517 18,22
+packages/ui/src/themes/index.ts
+  h_d6e478ca18e517 1-203
+packages/ui/src/themes/presets/absolutely.ts
+  h_d6e478ca18e517 1-32
+packages/ui/src/themes/presets/ayu.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/cappuccin.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/dracula.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/everforest.ts
+  h_d6e478ca18e517 1-28
+packages/ui/src/themes/presets/github.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/gruvbox.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/linear.ts
+  h_d6e478ca18e517 1-31
+packages/ui/src/themes/presets/lobster.ts
+  h_d6e478ca18e517 1-30
+packages/ui/src/themes/presets/material.ts
+  h_d6e478ca18e517 1-35
+packages/ui/src/themes/presets/matrix.ts
+  h_d6e478ca18e517 1-31
+packages/ui/src/themes/presets/monokai.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/night-owl.ts
+  h_d6e478ca18e517 1-35
+packages/ui/src/themes/presets/nord.ts
+  h_d6e478ca18e517 1-35
+packages/ui/src/themes/presets/notion.ts
+  h_d6e478ca18e517 1-31
+packages/ui/src/themes/presets/og.ts
+  h_d6e478ca18e517 1-30
+packages/ui/src/themes/presets/one.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/oscurange.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/raycast.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/rose-pine.ts
+  h_d6e478ca18e517 1-28
+packages/ui/src/themes/presets/sentry.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/shadcn.ts
+  h_d6e478ca18e517 1-44
+packages/ui/src/themes/presets/solarized.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/temple.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/tokyo-night.ts
+  h_d6e478ca18e517 1-29
+packages/ui/src/themes/presets/vercel.ts
+  h_d6e478ca18e517 1-38
+packages/ui/src/themes/presets/vscode-plus.ts
+  h_d6e478ca18e517 1-31
+packages/ui/src/themes/presets/xcode.ts
+  h_d6e478ca18e517 1-32
+packages/ui/src/themes/registry.ts
+  h_d6e478ca18e517 1-68
+packages/ui/src/themes/theme-select.tsx
+  h_d6e478ca18e517 1-65
+packages/ui/src/themes/theme.spec.ts
+  h_d6e478ca18e517 1-47
+packages/ui/src/themes/types.ts
+  h_d6e478ca18e517 1-19
+packages/ui/src/widget-icons.ts
+  h_d6e478ca18e517 51,83
+packages/validation/package.json
+  h_d6e478ca18e517 28
+packages/validation/src/board.ts
+  h_d6e478ca18e517 8,68-71,75-78
+packages/validation/src/header-preferences.ts
+  h_d6e478ca18e517 3-7,14,35,40,56-78,82,96,108,139,151,205,243-256,262,265-272,281,286
+packages/validation/src/integration.ts
+  h_d6e478ca18e517 9-15,22,44
+packages/validation/src/onboarding.ts
+  h_d6e478ca18e517 8,76
+packages/validation/src/shared.ts
+  h_d6e478ca18e517 50-51,57,60-77,86,98
+packages/validation/src/theme-controls.ts
+  h_d6e478ca18e517 1-391
+packages/validation/src/theme.ts
+  h_d6e478ca18e517 1-382
+packages/validation/src/user.ts
+  h_d6e478ca18e517 28,30,37,46
+packages/widgets/package.json
+  h_d6e478ca18e517 34,49
+packages/widgets/src/_inputs/widget-date-time-event-list-input.tsx
+  h_d6e478ca18e517 175
+packages/widgets/src/_inputs/widget-location-input.tsx
+  h_d6e478ca18e517 228
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  h_d6e478ca18e517 49-50,442-445,461,520-524,555,836
+packages/widgets/src/_inputs/widget-slider-input.tsx
+  h_d6e478ca18e517 20
+packages/widgets/src/_inputs/widget-stats-entries-input.tsx
+  h_d6e478ca18e517 85
+packages/widgets/src/_inputs/widget-timezone-list-input.tsx
+  h_d6e478ca18e517 188
+packages/widgets/src/air-quality/component.tsx
+  h_d6e478ca18e517 218,268,285,301,330
+packages/widgets/src/app/app.module.css
+  h_d6e478ca18e517 49-52
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 4,10,21-23,27-36,40-42,66-73,139,141,145-152
+packages/widgets/src/app/docker/container-option.spec.ts
+  h_d6e478ca18e517 1-17
+packages/widgets/src/app/docker/container-option.ts
+  h_d6e478ca18e517 1-71
+packages/widgets/src/app/docker/container-toggle.tsx
+  h_d6e478ca18e517 1-150
+packages/widgets/src/app/docker/use-container-options.ts
+  h_d6e478ca18e517 1-53
+packages/widgets/src/app/index.ts
+  h_d6e478ca18e517 15,25-28
+packages/widgets/src/app/ping/ping-indicator.tsx
+  h_d6e478ca18e517 1,6,11,14,16,19-22
+packages/widgets/src/beszel-system-grid/component.tsx
+  h_d6e478ca18e517 171,426,537
+packages/widgets/src/beszel-system-table/component.tsx
+  h_d6e478ca18e517 219
+packages/widgets/src/beszel/_shared/chart.tsx
+  h_d6e478ca18e517 43-81,201,203,251,254,265,268,276-281,283-285,287,293,301-302,315,318,323,325-326,335,372,375,383-388,390,392-394
+packages/widgets/src/beszel/_shared/interactive-chart.tsx
+  h_d6e478ca18e517 2-3,8,29,34-39,64-99
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  h_d6e478ca18e517 22,141-147,161,174-179,182,188,194,196,232,237,242,246-256
+packages/widgets/src/beszel/_shared/tooltip-position.tsx
+  h_d6e478ca18e517 1-85
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 4,7,22-23,104,107,124-129,162,164,166-168,173-185,202,208,211,227-233,235,242-248,356,359,372,376,405,415,438,467-503,519,523-526,531,546,565-611
+packages/widgets/src/bookmarks/index.tsx
+  h_d6e478ca18e517 59
+packages/widgets/src/bookmarks/layout.ts
+  h_d6e478ca18e517 198,202-204,210,214-216,224,263-264,266,323
+packages/widgets/src/calendar/calendar-events.ts
+  h_d6e478ca18e517 7-17
+packages/widgets/src/calendar/component.tsx
+  h_d6e478ca18e517 15,74
+packages/widgets/src/clock/advanced-view.tsx
+  h_d6e478ca18e517 102,129,198,287,304
+packages/widgets/src/common/empty-state.tsx
+  h_d6e478ca18e517 1,6-10,16
+packages/widgets/src/common/sparkline.tsx
+  h_d6e478ca18e517 1-171
+packages/widgets/src/coolify/component.module.css
+  h_d6e478ca18e517 1-360,363-369,372-373,376-377,380-730,733-736
+packages/widgets/src/coolify/component.tsx
+  h_d6e478ca18e517 3-4,7,13-15,18-20,25,27,30,32-38,45-54,56-58,60,65-66,70,74-97,100-116,118-123,125,132,136,142-155,157
+packages/widgets/src/coolify/coolify-utils.spec.ts
+  h_d6e478ca18e517 5-6,9-11,14,17,44-150
+packages/widgets/src/coolify/coolify-utils.ts
+  h_d6e478ca18e517 6-7,14-33,51,56-58,82-85,94-95,107-111,119-120,130-134,137-147,170-176,179-262
+packages/widgets/src/coolify/instance-view.tsx
+  h_d6e478ca18e517 1-700
+packages/widgets/src/coolify/resource-row.tsx
+  h_d6e478ca18e517 3-4,6,11-14,31,34,37,47,50-57,60-107
+packages/widgets/src/coolify/server-row.tsx
+  h_d6e478ca18e517 7-9,18,23-40,43-47,52-60
+packages/widgets/src/coolify/service-application-row.tsx
+  h_d6e478ca18e517 7-9,13,19-20,22,24,26,28-29
+packages/widgets/src/coolify/status-pill.tsx
+  h_d6e478ca18e517 1-41
+packages/widgets/src/countdown/component.tsx
+  h_d6e478ca18e517 164,298,337
+packages/widgets/src/custom-api/component.tsx
+  h_d6e478ca18e517 16,20-28
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  h_d6e478ca18e517 16,29,71-82,86-88
+packages/widgets/src/custom-api/editor-preview.tsx
+  h_d6e478ca18e517 1-114
+packages/widgets/src/definition.ts
+  h_d6e478ca18e517 114,138
+packages/widgets/src/dns-hole/controls/component.tsx
+  h_d6e478ca18e517 172,191,214,313,452
+packages/widgets/src/dns-hole/summary/component.tsx
+  h_d6e478ca18e517 226
+packages/widgets/src/docker/component.tsx
+  h_d6e478ca18e517 148,525,537
+packages/widgets/src/docker/index.ts
+  h_d6e478ca18e517 22,25,67-70
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 38,54,74,332,514,521,580,620,692,725,873,878-879,883,886,889,892,896,921,959,964,972,979,981,986,988-989,1106-1109,1184-1204,1285,1328,1358
+packages/widgets/src/downloads/index.ts
+  h_d6e478ca18e517 12-30,72,80
+packages/widgets/src/downloads/set-category-modal.tsx
+  h_d6e478ca18e517 4,6-8,11-16,19-53,56-75,77-105,108-122,124-127
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  h_d6e478ca18e517 28,34
+packages/widgets/src/health-monitoring/system-health.tsx
+  h_d6e478ca18e517 166,218,233,268-272
+packages/widgets/src/indexer-manager/component.tsx
+  h_d6e478ca18e517 3,64-66,68-78,86-90,169,189,273
+packages/widgets/src/media-missing/component.module.css
+  h_d6e478ca18e517 25,30
+packages/widgets/src/media-missing/component.tsx
+  h_d6e478ca18e517 104,160,164,175,192
+packages/widgets/src/media-releases/component.tsx
+  h_d6e478ca18e517 3,49,63,65,72,84-119
+packages/widgets/src/media-requests/list/component.tsx
+  h_d6e478ca18e517 128
+packages/widgets/src/media-requests/stats/component.tsx
+  h_d6e478ca18e517 141,176
+packages/widgets/src/media-server/activity-signal.spec.ts
+  h_d6e478ca18e517 1-33
+packages/widgets/src/media-server/component.module.css
+  h_d6e478ca18e517 75-89
+packages/widgets/src/media-server/component.spec.tsx
+  h_d6e478ca18e517 20,205-213
+packages/widgets/src/media-server/component.tsx
+  h_d6e478ca18e517 4,183-190,193,223-228,258,280,286,292,296-302,325,348-351,354-387,389-395,397-400,402-415,418-442,444,673,678,693-700,758-853
+packages/widgets/src/media-server/index.ts
+  h_d6e478ca18e517 2,24-28,31-39
+packages/widgets/src/media-transcoding/component.tsx
+  h_d6e478ca18e517 269
+packages/widgets/src/media-transcoding/panels/panel-table.tsx
+  h_d6e478ca18e517 1-45
+packages/widgets/src/media-transcoding/panels/queue.panel.tsx
+  h_d6e478ca18e517 1,8-9,18,22-45,47-54
+packages/widgets/src/media-transcoding/panels/statistics.panel.tsx
+  h_d6e478ca18e517 101
+packages/widgets/src/media-transcoding/panels/workers.panel.tsx
+  h_d6e478ca18e517 1,7-8,19-71,73-75
+packages/widgets/src/modals/embedded-app-edit-form.tsx
+  h_d6e478ca18e517 14,51
+packages/widgets/src/modals/index.ts
+  h_d6e478ca18e517 2-3
+packages/widgets/src/modals/styles.ts
+  h_d6e478ca18e517 1-16
+packages/widgets/src/modals/widget-edit-modal.module.css
+  h_d6e478ca18e517 94,105,107,139,143
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 22,24,26,32-33,35,40-43,68,97,117,138,154-155,200,202,204-212,220-225,306-307,312,314-317,319-329,334,351-352,370-382,465,510,517,521-534,546-556,558-598,600,602-635,646
+packages/widgets/src/modals/widget-editor-form.tsx
+  h_d6e478ca18e517 1-381
+packages/widgets/src/modals/widget-live-preview.tsx
+  h_d6e478ca18e517 1-154
+packages/widgets/src/notifications/component.tsx
+  h_d6e478ca18e517 10,41,108-109,114,128,155,177-178,183-184
+packages/widgets/src/notifications/notification-body.tsx
+  h_d6e478ca18e517 3,36-37,39
+packages/widgets/src/registry.ts
+  h_d6e478ca18e517 52,89,159,236
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 409
+packages/widgets/src/releases/release-detail.tsx
+  h_d6e478ca18e517 21,42,45-47,225,227
+packages/widgets/src/releases/use-release-entries.ts
+  h_d6e478ca18e517 65,98-102,123-126,158
+packages/widgets/src/rssFeed/component.tsx
+  h_d6e478ca18e517 50,105,128-131,138,170,191,222-230,265,275,280
+packages/widgets/src/rssFeed/feed-display.spec.ts
+  h_d6e478ca18e517 17,24,30
+packages/widgets/src/rssFeed/index.ts
+  h_d6e478ca18e517 54-56
+packages/widgets/src/smart-home/_inputs/catalog-index.ts
+  h_d6e478ca18e517 1-203
+packages/widgets/src/smart-home/_inputs/index.ts
+  h_d6e478ca18e517 1-29
+packages/widgets/src/smart-home/_inputs/picker-shared.tsx
+  h_d6e478ca18e517 1-116
+packages/widgets/src/smart-home/_inputs/smart-home-area-picker.tsx
+  h_d6e478ca18e517 1-112
+packages/widgets/src/smart-home/_inputs/smart-home-entity-picker.tsx
+  h_d6e478ca18e517 1-230
+packages/widgets/src/smart-home/_inputs/use-smart-home-catalog.ts
+  h_d6e478ca18e517 1-29
+packages/widgets/src/smart-home/_inputs/use-smart-home-choices.ts
+  h_d6e478ca18e517 1-36
+packages/widgets/src/smart-home/_shared/use-smart-home.ts
+  h_d6e478ca18e517 1-212
+packages/widgets/src/smart-home/controls/component.tsx
+  h_d6e478ca18e517 1-638
+packages/widgets/src/smart-home/controls/configuration.module.css
+  h_d6e478ca18e517 1-163
+packages/widgets/src/smart-home/controls/configuration.tsx
+  h_d6e478ca18e517 1-370
+packages/widgets/src/smart-home/controls/control-center/capabilities.ts
+  h_d6e478ca18e517 1-88
+packages/widgets/src/smart-home/controls/control-center/code-prompt.tsx
+  h_d6e478ca18e517 1-46
+packages/widgets/src/smart-home/controls/control-center/color-controls.tsx
+  h_d6e478ca18e517 1-183
+packages/widgets/src/smart-home/controls/control-center/controls.tsx
+  h_d6e478ca18e517 1-691
+packages/widgets/src/smart-home/controls/control-center/detail-panel.tsx
+  h_d6e478ca18e517 1-356
+packages/widgets/src/smart-home/controls/control-center/detail-trigger.tsx
+  h_d6e478ca18e517 1-116
+packages/widgets/src/smart-home/controls/control-center/details.ts
+  h_d6e478ca18e517 1-6
+packages/widgets/src/smart-home/controls/control-center/entity-controls.tsx
+  h_d6e478ca18e517 1-1718
+packages/widgets/src/smart-home/controls/control-center/history.ts
+  h_d6e478ca18e517 1-22
+packages/widgets/src/smart-home/controls/control-center/hooks.tsx
+  h_d6e478ca18e517 1-154
+packages/widgets/src/smart-home/controls/control-center/styles.module.css
+  h_d6e478ca18e517 1-1816
+packages/widgets/src/smart-home/controls/control-center/theme.tsx
+  h_d6e478ca18e517 1-174
+packages/widgets/src/smart-home/controls/index.ts
+  h_d6e478ca18e517 1-79
+packages/widgets/src/smart-home/controls/inline-editor.tsx
+  h_d6e478ca18e517 1-202
+packages/widgets/src/smart-home/controls/live.tsx
+  h_d6e478ca18e517 1-1072
+packages/widgets/src/smart-home/controls/semantics.ts
+  h_d6e478ca18e517 1-494
+packages/widgets/src/smart-home/controls/store.ts
+  h_d6e478ca18e517 1-150
+packages/widgets/src/smart-home/controls/technical/action-status.tsx
+  h_d6e478ca18e517 1-33
+packages/widgets/src/smart-home/controls/technical/controls.tsx
+  h_d6e478ca18e517 1-525
+packages/widgets/src/smart-home/controls/technical/layout.ts
+  h_d6e478ca18e517 1-16
+packages/widgets/src/smart-home/controls/technical/list.tsx
+  h_d6e478ca18e517 1-67
+packages/widgets/src/smart-home/controls/technical/meta.ts
+  h_d6e478ca18e517 1-86
+packages/widgets/src/smart-home/controls/technical/root.tsx
+  h_d6e478ca18e517 1-26
+packages/widgets/src/smart-home/controls/technical/row.tsx
+  h_d6e478ca18e517 1-284
+packages/widgets/src/smart-home/controls/technical/spark.tsx
+  h_d6e478ca18e517 1-56
+packages/widgets/src/smart-home/controls/technical/styles.module.css
+  h_d6e478ca18e517 1-884
+packages/widgets/src/smart-home/controls/technical/tile.tsx
+  h_d6e478ca18e517 1-140
+packages/widgets/src/smart-home/controls/technical/use-run.ts
+  h_d6e478ca18e517 1-163
+packages/widgets/src/smart-home/controls/types.ts
+  h_d6e478ca18e517 1-208
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  h_d6e478ca18e517 23,69
+packages/widgets/src/speedtest-tracker/recent-results.tsx
+  h_d6e478ca18e517 14,55,57-59,89-94,117-127,140-143,149-150,239,347
+packages/widgets/src/speedtest-tracker/speed-stat-card.tsx
+  h_d6e478ca18e517 43
+packages/widgets/src/stats/component.tsx
+  h_d6e478ca18e517 4,64-71,73,75,166-167,178-212,214,227,313
+packages/widgets/src/system-disks/component.tsx
+  h_d6e478ca18e517 169
+packages/widgets/src/system-resources/chart-layout.tsx
+  h_d6e478ca18e517 1-54
+packages/widgets/src/system-resources/chart/common-chart.tsx
+  h_d6e478ca18e517 4,12,21,27,35,50,52-53,93,157-167
+packages/widgets/src/system-resources/chart/cpu-chart.tsx
+  h_d6e478ca18e517 13,15,19,22,28,30,32,35-38
+packages/widgets/src/system-resources/chart/disk-chart.tsx
+  h_d6e478ca18e517 1-79
+packages/widgets/src/system-resources/chart/gpu-chart.tsx
+  h_d6e478ca18e517 34
+packages/widgets/src/system-resources/chart/memory-chart.tsx
+  h_d6e478ca18e517 54
+packages/widgets/src/system-resources/chart/network-traffic.tsx
+  h_d6e478ca18e517 36
+packages/widgets/src/system-resources/component.tsx
+  h_d6e478ca18e517 7-8,15,17-18,25,40,44,49,53,56-58,65-71,90-91,98-99,105-109,111-113,254-255,260-261,268,284-301,306-329,334-336,338-339,345-387
+packages/widgets/src/system-resources/index.ts
+  h_d6e478ca18e517 16-19,22,35-50,52,67-73,81-84
+packages/widgets/src/timer/component.tsx
+  h_d6e478ca18e517 409,420,553
+packages/widgets/src/umami/component.tsx
+  h_d6e478ca18e517 8,101
+packages/widgets/src/umami/umami-content.tsx
+  h_d6e478ca18e517 17,77
+packages/widgets/src/umami/umami-events-content.tsx
+  h_d6e478ca18e517 9,31
+packages/widgets/src/umami/umami-utils.ts
+  h_d6e478ca18e517 3,18-23,28
+packages/widgets/src/vpn/vpn-card.tsx
+  h_d6e478ca18e517 61
+packages/widgets/src/wazuh/_shared/options.ts
+  h_d6e478ca18e517 7-11
+packages/widgets/src/weather/advanced.tsx
+  h_d6e478ca18e517 69
+packages/widgets/src/widget-card-shell.module.css
+  h_d6e478ca18e517 2-3,27-28
+packages/widgets/src/widget-integration-select.tsx
+  h_d6e478ca18e517 117,138-144,150-156,238
+packages/widgets/src/wud/component.tsx
+  h_d6e478ca18e517 151-156
+packages/workshop/src/backend.ts
+  h_d6e478ca18e517 12,26,43-44,273,305-318,320-322,405-453,461-466,474-486,599-606,840-849
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 88,130,156-163
+patches/@mantine__schedule@9.6.0.patch
+  h_d6e478ca18e517 1-12
+scripts/check-custom-widget-bundle.mjs
+  h_d6e478ca18e517 7,37,46-52,54,56-58,60-74,78-82,87,108-121,155,159
+scripts/entrypoint.sh
+  h_d6e478ca18e517 33,51-52
+scripts/release-art/assets.ts
+  h_d6e478ca18e517 1-185
+scripts/release-art/board.ts
+  h_d6e478ca18e517 1-243
+scripts/release-art/cli.ts
+  h_d6e478ca18e517 1-50
+scripts/release-art/detect.ts
+  h_d6e478ca18e517 1-256
+scripts/release-art/fonts/LICENSE-inter-tight
+  h_d6e478ca18e517 1-93
+scripts/release-art/fonts/LICENSE-jetbrains-mono
+  h_d6e478ca18e517 1-93
+scripts/release-art/items.ts
+  h_d6e478ca18e517 1-56
+scripts/release-art/layout.ts
+  h_d6e478ca18e517 1-133
+scripts/release-art/read-capped.ts
+  h_d6e478ca18e517 1-17
+scripts/release-art/render.ts
+  h_d6e478ca18e517 1-100
+scripts/release-art/svg.ts
+  h_d6e478ca18e517 1-62
+scripts/release-art/text.ts
+  h_d6e478ca18e517 1-90
+scripts/release-art/tiles.ts
+  h_d6e478ca18e517 1-147
+scripts/release-notes.mjs
+  h_d6e478ca18e517 2,5-31,34-76
+scripts/release-notes/ai-notes.mjs
+  h_d6e478ca18e517 1-165
+scripts/release-notes/announcement.mjs
+  h_d6e478ca18e517 1-211
+scripts/release-notes/github-notes.mjs
+  h_d6e478ca18e517 1-30
+scripts/release-notes/openrouter.mjs
+  h_d6e478ca18e517 1-93
+scripts/release-notes/paths.mjs
+  h_d6e478ca18e517 1-4
+scripts/release-notes/regenerate.mjs
+  h_d6e478ca18e517 1-135
+scripts/run-turbo.mjs
+  h_d6e478ca18e517 1-28
+scripts/run.sh
+  h_d6e478ca18e517 84-91,93,101
+static-data/contributors.json
+  h_d6e478ca18e517 1
+static-data/opencollective-contributors.json
+  h_d6e478ca18e517 1
+static-data/translators.json
+  h_d6e478ca18e517 1
+tooling/github/setup/action.yml
+  h_d6e478ca18e517 23
+tools/brand-art/bun.lock
+  h_d6e478ca18e517 13,24
+tools/brand-art/package.json
+  h_d6e478ca18e517 14
+tools/homarr-dev/go.mod
+  h_d6e478ca18e517 3,7-8
+tools/homarr-dev/go.sum
+  h_d6e478ca18e517 5-6,9-10
+tools/homarr-dev/internal/tui/sidebar.go
+  h_d6e478ca18e517 49,66-68,80-83
+tools/mysql-to-sqlite/package.json
+  h_d6e478ca18e517 14
+tools/v2-showreel/bun.lock
+  h_d6e478ca18e517 11-12,15,17,82,88,98,100
+tools/v2-showreel/package.json
+  h_d6e478ca18e517 13-14,17,19
+turbo.json
+  h_d6e478ca18e517 6,14,45-46,53,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "70a375437469e60ec7e99baf3ba9457bb6925ead",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
