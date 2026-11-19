@@ -128,7 +128,7 @@ export const creationProcedures = {
         definition,
         secrets,
         expectedStateFingerprint: session.definitionStateFingerprint,
-        acknowledgedRemovals: input.acknowledgedRemovals,
+        acknowledgedRemovals: input.acknowledgedRemovals ?? [],
       });
       logger.info("Updated custom widget definition from tested preview", {
         id: session.definitionId,

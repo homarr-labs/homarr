@@ -91,16 +91,15 @@ export const IconPicker = ({
   const canUpload = session?.user.permissions.includes("media-upload") ?? false;
   const canDetectFavicon = session?.user.permissions.includes("app-create") ?? false;
 
-  const query = clientApi.icon.findIcons.useQuery(
-    { searchText, limitPerGroup: 24 },
-    { enabled: directUrl === null, placeholderData: (previous) => previous },
-  );
-
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
+  const query = clientApi.icon.findIcons.useQuery(
+    { searchText, limitPerGroup: 24 },
+    { enabled: combobox.dropdownOpened && directUrl === null, placeholderData: (previous) => previous },
+  );
   const faviconSource = faviconSourceUrl?.trim() ?? "";
   const faviconPage = isHttpUrl(faviconSource) ? new URL(faviconSource) : null;
   const faviconHostname = faviconPage?.hostname ?? null;
@@ -483,7 +482,7 @@ export const IconPicker = ({
               </Group>
             </Paper>
           ) : (
-            renderSearchResults()
+            combobox.dropdownOpened && renderSearchResults()
           )}
         </Combobox.Options>
       </Combobox.Dropdown>

@@ -33,6 +33,7 @@ export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { JackettIntegration } from "./jackett/jackett-integration";
+export { JackettIndexerTestError } from "./jackett/jackett-indexer-test-error";
 export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { SynologyIntegration } from "./synology/synology-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
@@ -67,7 +68,6 @@ export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/heal
 export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
-export type { EntityState } from "./interfaces/smart-home/smart-home-types";
 export type {
   TdarrQueue,
   TdarrPieSegment,

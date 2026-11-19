@@ -163,7 +163,7 @@ export const SystemHealthMonitoring = ({
                     variant={"light"}
                     color="var(--mantine-color-text)"
                     size="sm"
-                    radius={board.itemRadius}
+                    radius={board.itemRadius ?? undefined}
                     onClick={() => setOpenedIntegrationId(integrationId)}
                     aria-label={t("popover.information")}
                   >
@@ -215,7 +215,7 @@ export const SystemHealthMonitoring = ({
                   ))}
               </Flex>
               {isAdvanced && (
-                <Card className={classes.card} radius={board.itemRadius} p="sm">
+                <Card className={classes.card} radius={board.itemRadius ?? undefined} p="sm">
                   <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} compact />
                 </Card>
               )}
@@ -230,7 +230,7 @@ export const SystemHealthMonitoring = ({
                       )}
                       style={{ overflow: "visible" }}
                       key={disk.deviceName}
-                      radius={board.itemRadius}
+                      radius={board.itemRadius ?? undefined}
                       p="xs"
                     >
                       <Stack gap="xs">
@@ -265,7 +265,11 @@ export const SystemHealthMonitoring = ({
                             )}
                           </Group>
                         </Group>
-                        <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
+                        <Progress.Root
+                          className="health-monitoring-disk-use"
+                          radius={board.itemRadius ?? undefined}
+                          size="lg"
+                        >
                           <Progress.Section
                             value={disk.percentage}
                             color={progressColor(disk.percentage)}

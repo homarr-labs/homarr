@@ -2,12 +2,19 @@ import dayjs from "dayjs";
 import frenchLocale from "dayjs/locale/fr";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
+
 import {
   formatRelativeTime,
+  getCoolifyAttentionItems,
+  getCoolifyAttentionSummary,
+  getCoolifyProjectSummaries,
   getCoolifySectionVisibility,
   getCoolifyServerState,
+  getStatusColor,
   getResourceTimestamp,
   isCoolifyServerOnline,
+  parseStatus,
 } from "./coolify-utils";
 
 describe("Coolify time formatting", () => {
@@ -31,6 +38,113 @@ describe("Coolify time formatting", () => {
     expect(formatRelativeTime(undefined)).toBeUndefined();
     expect(formatRelativeTime("invalid")).toBeUndefined();
     expect(getResourceTimestamp({ status: "running", updated_at: "2026-08-02T11:00:00Z" }, "service")).toBeUndefined();
+  });
+});
+
+describe("Coolify projects overview", () => {
+  const info = {
+    version: "4.5.3",
+    projects: [
+      { uuid: "other", name: "Other" },
+      { uuid: "main", name: "Main", environments: [{ id: 1, uuid: "production", name: "Production" }] },
+    ],
+    servers: [],
+    applications: [{ uuid: "app", name: "App", projectUuid: "main" }],
+    services: [{ uuid: "service", name: "Service", projectUuid: "main" }],
+  } as CoolifyInstanceInfo;
+
+  it("sorts projects and distinguishes unavailable context from an empty project", () => {
+    expect(getCoolifyProjectSummaries(info)).toEqual([
+      { project: info.projects?.[1], applications: 1, services: 1, contextAvailable: true },
+      { project: info.projects?.[0], applications: 0, services: 0, contextAvailable: false },
+    ]);
+    expect(getCoolifyProjectSummaries({ ...info, projects: null })).toEqual([]);
+  });
+});
+
+describe("Coolify attention overview", () => {
+  const info = {
+    version: "4.0.0",
+    servers: [
+      { uuid: "offline", name: "Offline server", is_reachable: false },
+      { uuid: "unusable", name: "Unusable server", is_reachable: true, is_usable: false },
+      { uuid: "online", name: "Online server", is_reachable: true },
+    ],
+    applications: [
+      {
+        uuid: "unhealthy",
+        name: "Unhealthy app",
+        status: "running:unhealthy",
+        projectUuid: "project",
+        environmentUuid: "environment",
+        projectName: "Production",
+        environmentName: "Main",
+      },
+      { uuid: "running", name: "Running app", status: "running:healthy" },
+    ],
+    services: [{ uuid: "starting", name: "Starting service", status: "starting:unhealthy" }],
+  } as CoolifyInstanceInfo;
+
+  it("shows unhealthy and offline resources before transitioning resources", () => {
+    expect(parseStatus("running:unhealthy")).toBe("unhealthy");
+    expect(getStatusColor("unusable")).toBe("red");
+    expect(getStatusColor("online")).toBe("green");
+    expect(getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true })).toEqual([
+      { kind: "server", uuid: "offline", name: "Offline server", status: "offline" },
+      { kind: "server", uuid: "unusable", name: "Unusable server", status: "unusable" },
+      {
+        kind: "application",
+        uuid: "unhealthy",
+        name: "Unhealthy app",
+        status: "unhealthy",
+        projectUuid: "project",
+        environmentUuid: "environment",
+        projectName: "Production",
+        environmentName: "Main",
+      },
+      {
+        kind: "service",
+        uuid: "starting",
+        name: "Starting service",
+        status: "starting",
+        projectUuid: undefined,
+        environmentUuid: undefined,
+        projectName: undefined,
+        environmentName: undefined,
+      },
+    ]);
+  });
+
+  it("honors compact section visibility", () => {
+    expect(
+      getCoolifyAttentionItems(info, { showServers: false, showApplications: true, showServices: false }),
+    ).toHaveLength(1);
+  });
+
+  it("normalizes unexpected API statuses to an unknown state", () => {
+    expect(parseStatus("degraded")).toBe("unknown");
+  });
+
+  it("keeps transitional states distinct from unhealthy resources", () => {
+    expect(parseStatus("starting:unhealthy")).toBe("starting");
+    expect(parseStatus("restarting:unhealthy")).toBe("restarting");
+    expect(parseStatus("degraded:unhealthy")).toBe("unhealthy");
+    expect(parseStatus("running:unknown")).toBe("running");
+    expect(parseStatus("running:unhealthy:excluded")).toBe("running");
+  });
+
+  it("does not label starting resources as failures", () => {
+    const transitioning = getCoolifyAttentionItems(
+      { ...info, servers: [], applications: [], services: info.services },
+      { showServers: true, showApplications: true, showServices: true },
+    );
+    expect(getCoolifyAttentionSummary(transitioning, 1)).toEqual({ kind: "transition", count: 1 });
+    expect(
+      getCoolifyAttentionSummary(
+        getCoolifyAttentionItems(info, { showServers: true, showApplications: true, showServices: true }),
+        6,
+      ),
+    ).toEqual({ kind: "problem", count: 3 });
   });
 });
 

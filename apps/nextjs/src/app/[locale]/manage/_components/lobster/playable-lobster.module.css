@@ -1,0 +1,35 @@
+.lobster {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+  border-radius: 50%;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: 4px;
+  }
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+
+  & canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.fallback {
+  width: 62%;
+  height: auto;
+  user-select: none;
+}

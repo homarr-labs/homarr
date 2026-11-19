@@ -1,18 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
 import { ActionIcon, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { UserAvatarMenu } from "~/components/user-avatar-menu";
 import type { BoardSwitcherControls } from "~/components/board/board-switcher";
-import { UpdateIndicator } from "./update";
+import { useAvailableUpdates } from "./update";
 
 interface UserButtonClientProps {
   avatar: ReactNode;
@@ -22,41 +19,18 @@ interface UserButtonClientProps {
 }
 
 export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitcher }: UserButtonClientProps) => {
-  const [canCheckForUpdates, setCanCheckForUpdates] = useState(false);
   const t = useI18n("common.userAvatar.menu");
-  const session = useSession();
+  const availableUpdates = useAvailableUpdates(isAdmin);
   const { toggleColorScheme } = useMantineColorScheme();
   useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
-  const isCurrentSessionAdmin =
-    isAdmin && session.status === "authenticated" && session.data.user.permissions.includes("admin");
-
-  useEffect(() => {
-    if (!isCurrentSessionAdmin) {
-      setCanCheckForUpdates(false);
-      return;
-    }
-
-    const timeout = window.setTimeout(() => setCanCheckForUpdates(true), 2_000);
-    return () => window.clearTimeout(timeout);
-  }, [isCurrentSessionAdmin]);
-
-  const { data: availableUpdates } = clientApi.updateChecker.getAvailableUpdates.useQuery(undefined, {
-    enabled: canCheckForUpdates,
-    refetchOnWindowFocus: false,
-    retry: false,
-    staleTime: 60 * 60 * 1_000,
-  });
-  const visibleUpdates = isCurrentSessionAdmin ? availableUpdates : undefined;
 
   return (
-    <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
-      <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
-        <Tooltip label={t("open")} events={{ hover: true, focus: true, touch: false }}>
-          <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl">
-            {avatar}
-          </ActionIcon>
-        </Tooltip>
-      </UpdateIndicator>
+    <UserAvatarMenu availableUpdates={availableUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
+      <Tooltip label={t("open")} events={{ hover: true, focus: true, touch: false }}>
+        <ActionIcon aria-label={t("open")} variant="subtle" color="gray" size={44} radius="xl">
+          {avatar}
+        </ActionIcon>
+      </Tooltip>
     </UserAvatarMenu>
   );
 };

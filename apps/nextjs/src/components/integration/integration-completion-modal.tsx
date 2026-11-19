@@ -31,7 +31,6 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const t = useI18n();
   const board = useOptionalBoard();
   const { data: session } = useSession();
-  const { data: integrations = [] } = clientApi.integration.all.useQuery();
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const compatibleWidgets = getWidgetKindsForIntegration(innerProps.result.integration.kind);
   const boardMatchesContext = board !== null && board.id === innerProps.boardId;
@@ -43,6 +42,9 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const [recommendationsDismissed, setRecommendationsDismissed] = useLocalStorage({
     key: dismissalKey,
     defaultValue: false,
+  });
+  const { data: integrations = [] } = clientApi.integration.all.useQuery(undefined, {
+    enabled: canModifyBoard && !recommendationsDismissed,
   });
   const configuredIntegrationKinds = [
     ...new Set<IntegrationKind>([

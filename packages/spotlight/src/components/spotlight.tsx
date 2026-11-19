@@ -1,11 +1,10 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd, Text } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
 import { IconArrowDown, IconArrowLeft, IconArrowUp, IconCornerDownLeft, IconSearch, IconX } from "@tabler/icons-react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -21,7 +20,13 @@ import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { useSpotlightCatalogs } from "../lib/catalog";
 import { searchModes } from "../modes";
-import { mediaRequestSearchScopeAtom, selectAction, spotlightActions, spotlightStore } from "../spotlight-store";
+import {
+  mediaRequestSearchScopeAtom,
+  selectAction,
+  spotlightActions,
+  spotlightSearchStateAtom,
+  spotlightStore,
+} from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
 import { SpotlightActionGroups } from "./actions/groups/action-group";
 import { SpotlightModeRail } from "./mode-rail";
@@ -39,20 +44,33 @@ const resetSelection = () => {
 export const Spotlight = () => {
   useSpotlightCatalogs();
 
-  const [mode, setMode] = useState<SpotlightMode>(defaultMode);
-  const [query, setQuery] = useState("");
+  const [{ mode, query }, setSearchState] = useAtom(spotlightSearchStateAtom);
   const setMediaRequestSearchScope = useSetAtom(mediaRequestSearchScopeAtom);
   const activeMode = useMemo(() => searchModes.find((searchMode) => searchMode.mode === mode), [mode]);
 
+  const setMode = useCallback(
+    (nextMode: SpotlightMode) => setSearchState((state) => ({ ...state, mode: nextMode })),
+    [setSearchState],
+  );
+  const setQuery = useCallback(
+    (nextQuery: string) => setSearchState((state) => ({ ...state, query: nextQuery })),
+    [setSearchState],
+  );
+
   const applyOpenOptions = useCallback(
     (options: SpotlightOpenIntent) => {
-      setMode(options.mode);
-      setQuery(options.query ?? "");
+      setSearchState((state) => {
+        let nextQuery = options.query ?? "";
+        if (options.query === undefined && options.mode === defaultMode && state.mode === defaultMode) {
+          nextQuery = state.query;
+        }
+        return { mode: options.mode, query: nextQuery };
+      });
       if (options.mode !== "media") setMediaRequestSearchScope({});
       spotlightActions.open();
       resetSelection();
     },
-    [setMediaRequestSearchScope],
+    [setMediaRequestSearchScope, setSearchState],
   );
 
   useEffect(() => {
@@ -102,9 +120,9 @@ export const Spotlight = () => {
 
 interface SpotlightWithActiveModeProps {
   mode: SpotlightMode;
-  setMode: Dispatch<SetStateAction<SpotlightMode>>;
+  setMode: (mode: SpotlightMode) => void;
   query: string;
-  setQuery: Dispatch<SetStateAction<string>>;
+  setQuery: (query: string) => void;
   activeMode: SearchMode;
 }
 
@@ -165,6 +183,7 @@ const SpotlightWithActiveMode = ({ mode, setMode, query, setQuery, activeMode }:
   return (
     <MantineSpotlight.Root
       shortcut={null}
+      clearQueryOnClose={false}
       size={760}
       yOffset={64}
       scrollable
@@ -176,9 +195,8 @@ const SpotlightWithActiveMode = ({ mode, setMode, query, setQuery, activeMode }:
         requestAnimationFrame(() => inputRef.current?.focus());
       }}
       onSpotlightClose={() => {
-        setMode(defaultMode);
+        if (childrenStack.length > 0) setQuery("");
         clearChildrenStack();
-        setQuery("");
       }}
       query={query}
       onQueryChange={(nextQuery) => {
@@ -317,7 +335,7 @@ const SpotlightWithActiveMode = ({ mode, setMode, query, setQuery, activeMode }:
           <Group gap={4} wrap="nowrap" className={classes.footerSecondary}>
             <Kbd size="xs">esc</Kbd>
             <Text size="xs" className={classes.footerHint}>
-              {t("search.modePicker.footer.close")}
+              {t("common.action.close")}
             </Text>
           </Group>
         </Group>

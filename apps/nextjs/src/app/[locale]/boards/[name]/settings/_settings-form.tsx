@@ -15,9 +15,10 @@ import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { homarrLogoPath } from "~/components/layout/logo/constants";
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
+import { AdvancedSettings } from "~/components/manage/advanced-settings";
 
 import type { Board } from "../../_types";
 import { ColorSettingsContent } from "./_appereance";
@@ -189,8 +190,10 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
           />
           <BackgroundSettingsContent form={form} />
           <ColorSettingsContent form={form} />
-          <CustomCssSettingsContent form={form} />
           <BehaviorSettingsContent form={form} />
+          <AdvancedSettings>
+            <CustomCssSettingsContent form={form} />
+          </AdvancedSettings>
 
           {form.isDirty() && (
             <UnsavedChangesBar>

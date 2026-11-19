@@ -12,6 +12,7 @@ import { IconBinaryTree } from "@tabler/icons-react";
 import { homeAssistantIntegration } from ".";
 import { smartHomeEntityStateWidget } from "@site/docs/widgets/smart-home-entity-state";
 import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-execute-automation";
+import { notificationsWidget } from "@site/docs/widgets/notifications";
 
 <IntegrationHeader integration={homeAssistantIntegration} categories={["Smart Home", "Automation"]} />
 
@@ -24,6 +25,9 @@ import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-
     },
     {
       widget: smartHomeExecuteAutomationWidget,
+    },
+    {
+      widget: notificationsWidget,
     },
   ]}
 />

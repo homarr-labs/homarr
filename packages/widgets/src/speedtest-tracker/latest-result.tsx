@@ -20,6 +20,7 @@ export function LatestResultSection({
   compactSurface?: boolean;
 }) {
   const t = useI18n("widget.speedtestTracker");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
   const timestamp = Intl.DateTimeFormat(locale, {
     month: "short",
@@ -65,7 +66,7 @@ export function LatestResultSection({
             icon={result.healthy ? IconCircleCheck : IconCircleX}
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}
-            label={t("status")}
+            label={tCommon("field.status")}
             legacySurface={compactSurface}
           />
         )}

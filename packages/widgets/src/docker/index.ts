@@ -19,10 +19,10 @@ const allColumnsList = ["name", "state", "host", "cpuUsage", "memoryUsage", "act
 
 const columnTranslationKeyMap = {
   name: "common.field.name",
-  state: "docker.field.state.label",
+  state: "common.field.state",
   host: "docker.field.host.label",
   memoryUsage: "docker.field.stats.memory.label",
-  actions: "docker.action.title",
+  actions: "common.field.actions",
 } as const satisfies Record<Exclude<(typeof allColumnsList)[number], "cpuUsage">, string>;
 
 export const { definition, componentLoader } = createWidgetDefinition("dockerContainers", {
@@ -64,7 +64,10 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
           defaultValue: "name",
           options: columnsList.map((value) => ({
             value,
-            label: (t) => t(`widget.dockerContainers.option.defaultSort.option.${value}`),
+            label: (t) => {
+              if (value === "name" || value === "state") return t(columnTranslationKeyMap[value]);
+              return t(`widget.dockerContainers.option.defaultSort.option.${value}`);
+            },
           })),
         }),
         descendingDefaultSort: factory.switch({

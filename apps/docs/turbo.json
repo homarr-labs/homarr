@@ -4,6 +4,9 @@
     "build": {
       "env": [
         "$TURBO_EXTENDS$",
+        "SKIP_ENV_VALIDATION",
+        "NEXT_DEPLOYMENT_ID",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY",
         "HOMARR_WEBSITE_URL",
         "WORKSHOP_API_URL",
         "WORKSHOP_WEB_URL",
@@ -27,7 +30,10 @@
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "out/**", "next-env.d.ts", ".source/**"]
     },
     "typecheck": {
-      "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/tools/motion-reel/three/**"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/tools/motion-reel/three/**"]
+    },
+    "topo": {
+      "inputs": ["$TURBO_DEFAULT$"]
     }
   }
 }

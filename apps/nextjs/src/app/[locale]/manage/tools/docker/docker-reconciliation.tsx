@@ -126,7 +126,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
   const toggleLabel = isOpen ? tCommon("action.hide") : t("action.review");
 
   return (
-    <Paper withBorder p="sm">
+    <Paper p="sm">
       <Stack gap={isOpen ? "sm" : 0}>
         <Group justify="space-between" align="start">
           <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>

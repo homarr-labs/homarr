@@ -111,6 +111,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   supportsAdvancedFocus?: boolean;
+  supportsInlineEditing?: boolean;
   /** Start the browser runtime on first visibility, then retain its state offscreen. */
   deferUntilVisible?: boolean;
   queryKey?: QueryKey;
@@ -134,6 +135,7 @@ export interface WidgetDefinition {
     >
   >;
   contextActions?: (props: WidgetContextActionProps) => WidgetContextMenuAction[];
+  activitySignal?: (data: unknown) => boolean;
 }
 
 export const supportsAdvancedFocus = (definition: object) =>

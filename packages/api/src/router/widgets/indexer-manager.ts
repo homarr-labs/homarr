@@ -1,5 +1,4 @@
-import { TRPCError } from "@trpc/server";
-
+import { JackettIndexerTestError } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
@@ -38,21 +37,23 @@ export const indexerManagerRouter = createTRPCRouter({
   testAllIndexers: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "indexerManager"))
     .mutation(async ({ ctx }) => {
-      const results = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
           const client = await createIntegrationAsync(integration);
-          await client.testAllAsync().catch((err) => {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: `Failed to test all indexers for ${integration.name} (${integration.id})`,
-              cause: err,
-            });
-          });
-        }),
+          await client.testAllAsync();
+          return { integrationId: integration.id, integrationName: integration.name, error: null };
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            error: error instanceof JackettIndexerTestError ? error.message : toPublicIntegrationError(error),
+          }),
+        },
       );
       await indexerManagerRequestHandler.invalidateCacheAsync(ctx.integrations.map(({ id }) => id));
 
-      const firstFailure = results.find((result) => result.status === "rejected");
-      if (firstFailure?.status === "rejected") throw firstFailure.reason;
+      return results;
     }),
 });

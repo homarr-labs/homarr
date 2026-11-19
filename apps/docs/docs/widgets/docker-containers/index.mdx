@@ -35,6 +35,11 @@ Enable **Allow wildcards** to use `*` for zero or more characters: `qbit*` match
 `*arr` matches names ending in `arr`. The entire name must still match. All other characters, including
 `%` and regex symbols, are literal. Disable **Case sensitive** to match `Qbittorrent` with `qbittorrent`.
 
+### Container icons
+
+Set a container's `homarr.icon` label to an icon URL to choose its icon; `homepage.icon` is used when it is absent.
+Without either label, the icon is matched from the image name. See [Docker label discovery](/docs/integrations/docker-labels).
+
 ### Interactions
 
 Column order and width are saved per widget. These controls are unavailable while the board is in edit mode.

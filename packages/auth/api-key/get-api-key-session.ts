@@ -42,6 +42,8 @@ export const getSessionFromApiKeyAsync = async (
     columns: {
       id: true,
       apiKey: true,
+      readOnly: true,
+      oauthClientId: true,
     },
     with: {
       user: {
@@ -72,5 +74,9 @@ export const getSessionFromApiKeyAsync = async (
     id: apiKeyFromDb.user.id,
   });
 
-  return await createSessionAsync(db, apiKeyFromDb.user);
+  const session = await createSessionAsync(db, apiKeyFromDb.user);
+  return {
+    ...session,
+    apiKey: { readOnly: apiKeyFromDb.readOnly, oauthClientId: apiKeyFromDb.oauthClientId },
+  };
 };

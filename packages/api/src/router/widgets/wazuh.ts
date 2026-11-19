@@ -37,18 +37,12 @@ interface WazuhContextIntegration {
   kind: string;
   url: string;
   externalUrl: string | null;
-  decryptedSecrets: { kind: string; value: string }[];
 }
 
-/**
- * Base URL for deep links into the Wazuh dashboard: the optional "Dashboard URL" field, otherwise the linked app
- * (unless the app just points at the API or indexer URL that the integration talks to).
- */
 const getDashboardUrl = (integration: WazuhContextIntegration): string | null => {
-  const configured = integration.decryptedSecrets.find((secret) => secret.kind === "wazuhDashboardUrl")?.value;
-  const candidate = configured?.trim() ? configured : integration.externalUrl;
+  const candidate = integration.externalUrl;
   if (!candidate) return null;
-  if (!configured && removeTrailingSlash(candidate) === removeTrailingSlash(integration.url)) return null;
+  if (removeTrailingSlash(candidate) === removeTrailingSlash(integration.url)) return null;
   try {
     const url = new URL(candidate);
     if (url.protocol !== "https:" && url.protocol !== "http:") return null;

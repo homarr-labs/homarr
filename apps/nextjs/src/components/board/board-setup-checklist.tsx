@@ -53,7 +53,7 @@ export const BoardSetupChecklist = () => {
 
   return (
     <Affix position={{ bottom: 16, left: 16 }} className={classes.root}>
-      <Paper className={classes.panel} withBorder shadow="md" radius="md" p="md">
+      <Paper className={classes.panel} shadow="md" radius="md" p="md">
         <Stack gap="sm">
           <Group justify="space-between" wrap="nowrap">
             <div>

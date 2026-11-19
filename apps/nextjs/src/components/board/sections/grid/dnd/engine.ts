@@ -99,7 +99,8 @@ export const previewGridMove = <TPlacement extends GridPlacement>(
 /**
  * Computes an eight-direction resize preview. Deltas describe movement of the
  * selected handle, while the opposite edge stays anchored. Bounds and caller
- * constraints are applied before pinned collision reflow.
+ * constraints are applied first, growth stops at stationary containers, and
+ * pinned collision reflow then pushes only items.
  */
 export const previewGridResize = <TPlacement extends GridPlacement>(
   transaction: GridTransaction<TPlacement>,
@@ -113,7 +114,9 @@ export const previewGridResize = <TPlacement extends GridPlacement>(
   }
 
   const constraints = getResizeConstraints(input, grid);
-  const resized = resizePlacement(active, input.direction, input, constraints, grid);
+  const requested = resizePlacement(active, input.direction, input, constraints, grid);
+  if (!requested) return rejected(transaction, { code: "resize-constraints" });
+  const resized = clampResizeAroundContainers(active, requested, grid.placements, constraints);
   if (!resized) return rejected(transaction, { code: "resize-constraints" });
 
   const preview = cloneGridState(transaction.snapshot);
@@ -345,6 +348,63 @@ const resizePlacement = <TPlacement extends GridPlacement>(
   }
 
   return { ...placement, x, y, w: width, h: height };
+};
+
+const clampResizeAroundContainers = <TPlacement extends GridPlacement>(
+  active: TPlacement,
+  requested: TPlacement,
+  placements: readonly TPlacement[],
+  constraints: ResolvedResizeConstraints,
+): TPlacement | null => {
+  const obstacles = placements.filter((placement) => placement.id !== active.id && isContainerPlacement(placement));
+  const collides = (candidate: TPlacement) =>
+    obstacles.some((obstacle) => doGridPlacementsOverlap(candidate, obstacle));
+  if (!collides(requested)) return requested;
+
+  // resizePlacement constrains changed axes; preserve an undersized unchanged
+  // axis when clipping growth around containers as well.
+  const minWidth = Math.min(requested.w, constraints.minWidth);
+  const minHeight = Math.min(requested.h, constraints.minHeight);
+  const growsWest = Math.max(0, active.x - requested.x);
+  const growsEast = Math.max(0, requested.x + requested.w - (active.x + active.w));
+  const growsNorth = Math.max(0, active.y - requested.y);
+  const growsSouth = Math.max(0, requested.y + requested.h - (active.y + active.h));
+  const horizontalGrowth = growsWest + growsEast;
+  const verticalGrowth = growsNorth + growsSouth;
+
+  // Only obstacle edges can improve the largest non-overlapping candidate.
+  // Keep the search independent of the distance travelled by the pointer.
+  const columnCuts = new Set([0, horizontalGrowth]);
+  const rowCuts = new Set([0, verticalGrowth]);
+  for (const obstacle of obstacles) {
+    if (growsWest > 0) columnCuts.add(clamp(obstacle.x + obstacle.w - requested.x, 0, horizontalGrowth));
+    if (growsEast > 0) columnCuts.add(clamp(requested.x + requested.w - obstacle.x, 0, horizontalGrowth));
+    if (growsNorth > 0) rowCuts.add(clamp(obstacle.y + obstacle.h - requested.y, 0, verticalGrowth));
+    if (growsSouth > 0) rowCuts.add(clamp(requested.y + requested.h - obstacle.y, 0, verticalGrowth));
+  }
+
+  const sortedColumnCuts = [...columnCuts].toSorted((first, second) => first - second);
+  const sortedRowCuts = [...rowCuts].toSorted((first, second) => first - second);
+  let best: TPlacement | null = null;
+  for (const cutRows of sortedRowCuts) {
+    for (const cutColumns of sortedColumnCuts) {
+      const cutWest = Math.min(growsWest, cutColumns);
+      const cutEast = Math.min(growsEast, cutColumns);
+      const cutNorth = Math.min(growsNorth, cutRows);
+      const cutSouth = Math.min(growsSouth, cutRows);
+      const candidate = {
+        ...requested,
+        x: requested.x + cutWest,
+        y: requested.y + cutNorth,
+        w: requested.w - cutWest - cutEast,
+        h: requested.h - cutNorth - cutSouth,
+      };
+      if (candidate.w < minWidth || candidate.h < minHeight || collides(candidate)) continue;
+      if (!best || candidate.w * candidate.h > best.w * best.h) best = candidate;
+      break;
+    }
+  }
+  return best;
 };
 
 const evaluateMoveGuards = <TPlacement extends GridPlacement>(

@@ -15,6 +15,13 @@ export const appWidget: WidgetDefinition = {
         defaultValue: "-",
       },
       {
+        name: "Docker container",
+        description:
+          "Adds a button to the tile that starts the container when it is stopped and stops it while it runs. Only admins see it.",
+        values: "Container from your Docker endpoints",
+        defaultValue: "-",
+      },
+      {
         name: "Open app in",
         description: "Choose where the app opens. Browser settings may override requests for a separate window.",
         values: { type: "select", options: ["Current tab", "New tab", "New window"] },

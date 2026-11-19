@@ -25,21 +25,21 @@ interface ServicesTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.services">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesService>[] => [
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "type",
-    header: tField("type.label"),
+    header: tField("type"),
   },
   {
     accessorKey: "ports",
@@ -62,14 +62,14 @@ const createColumns = (
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function ServicesTable({ contextId, initialServices }: ServicesTableComponentProps) {
   const tServices = useI18n("kubernetes.services");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.services.getServices.useQuery(
     { contextId },

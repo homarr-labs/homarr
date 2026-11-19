@@ -1,14 +1,14 @@
 "use client";
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
-import confetti from "canvas-confetti";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { celebrateWithConfetti } from "./confetti";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
@@ -18,8 +18,6 @@ import classes from "./onboarding-studio.module.css";
 export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useI18n("init.studio.finish");
   const sounds = useOnboardingSounds();
-  const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
-  const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";
   const board = environment.initialBoard ?? environment.availableBoards[0];
   let boardHref = "/manage/boards";
   if (board) {
@@ -43,7 +41,7 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
 
     event.preventDefault();
     const button = event.currentTarget.getBoundingClientRect();
-    void confetti({
+    celebrateWithConfetti({
       particleCount: 120,
       spread: 75,
       startVelocity: 45,
@@ -51,28 +49,19 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
         x: (button.left + button.width / 2) / window.innerWidth,
         y: (button.top + button.height / 2) / window.innerHeight,
       },
-      disableForReducedMotion: true,
     });
     window.setTimeout(() => window.location.assign(destination), 450);
   };
 
   return (
-    <main
-      className={classes.page}
-      style={
-        {
-          "--studio-glow-color": primaryColor,
-          "--studio-secondary-glow-color": secondaryColor,
-        } as CSSProperties
-      }
-    >
+    <main className={classes.page}>
       <OnboardingBackdrop />
       <div className={classes.shell}>
         <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
           <div style={{ width: "100%", maxWidth: "52rem" }}>
             <Paper className={classes.studio} radius="lg" p={{ base: "lg", sm: "xl" }}>
               <Stack gap="xl" align="center">
-                <OnboardingWordmark primaryColor={primaryColor} secondaryColor={secondaryColor} />
+                <OnboardingWordmark />
                 <Stack gap="xs" align="center">
                   <Title ta="center">{t("title")}</Title>
                   <Text c="dimmed" ta="center" maw="42rem">

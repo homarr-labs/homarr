@@ -25,13 +25,16 @@ export {
   headerPreferencesSchema,
   headerPreferencesVersion,
   headerSearchDisplayValues,
+  headerTabsDisplayValues,
   headerZoneIds,
+  headerWidgetItemSchema,
   isRequiredHeaderItem,
   parseHeaderPreferences,
   requiredHeaderBuiltinItemIds,
 } from "./header-preferences";
 export type {
   HeaderBoardItem,
+  HeaderWidgetItem,
   HeaderBuiltinItem,
   HeaderBuiltinItemId,
   HeaderItem,
@@ -40,6 +43,7 @@ export type {
   HeaderPreferenceItemId,
   HeaderPreferences,
   HeaderSearchDisplay,
+  HeaderTabsDisplay,
   HeaderZoneId,
   HeaderZones,
 } from "./header-preferences";

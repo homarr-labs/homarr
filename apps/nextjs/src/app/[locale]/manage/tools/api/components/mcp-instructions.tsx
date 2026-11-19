@@ -150,7 +150,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreat
               size="compact-sm"
               variant="filled"
               leftSection={<IconPlus size={14} />}
-              onClick={() => createApiKey()}
+              onClick={() => createApiKey({ readOnly: true })}
               loading={isPending}
             >
               {t("createApiKeyButton")}

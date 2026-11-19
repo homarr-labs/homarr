@@ -12,13 +12,13 @@ import {
   IconStar,
 } from "@tabler/icons-react";
 import { useFormatter } from "next-intl";
-import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage, zoomCompensatedSize } from "@homarr/ui";
+import { Markdown } from "@homarr/ui/markdown";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import classes from "./component.module.css";
@@ -39,10 +39,12 @@ const markdownComponents: Components = {
       </a>
     );
   },
-  img: ({ src, alt }) => {
+  img: ({ src, alt, width, height }) => {
     const safeSrc = getSafeApplicationUrl(src);
     if (!safeSrc) return null;
-    return <img src={safeSrc} alt={alt ?? ""} loading="lazy" referrerPolicy="no-referrer" />;
+    return (
+      <img src={safeSrc} alt={alt ?? ""} width={width} height={height} loading="lazy" referrerPolicy="no-referrer" />
+    );
   },
 };
 
@@ -220,9 +222,9 @@ export const ReleaseDetail = ({ entry, now, layout, onMarkViewed }: ReleaseDetai
       <div className={classes.label}>{t("whatChanged")}</div>
       {entry.releaseNotes && (
         <div className={classes.notes}>
-          <ReactMarkdown skipHtml components={markdownComponents}>
+          <Markdown allowHtml typography={false} components={markdownComponents}>
             {entry.releaseNotes}
-          </ReactMarkdown>
+          </Markdown>
         </div>
       )}
       {!entry.releaseNotes && (

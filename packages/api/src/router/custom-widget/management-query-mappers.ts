@@ -10,6 +10,7 @@ import {
 } from "@homarr/custom-widgets/core";
 
 import { safeParseStoredCustomWidgetDefinition } from "./stored-definition";
+import { parseWorkshopOrigin } from "./workshop-origin";
 
 const logger = createLogger({ module: "custom-widget:management" });
 
@@ -17,7 +18,9 @@ type StoredDefinition = InferSelectModel<typeof customWidgetDefinitions>;
 type StoredSecret = InferSelectModel<typeof customWidgetSecrets>;
 type LegacyDefinition = InferSelectModel<typeof legacyCustomWidgetDefinitions>;
 
-export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets: readonly StoredSecret[] }) {
+export function mapCustomWidgetListItem(
+  definition: StoredDefinition & { secrets: readonly Pick<StoredSecret, "sourceId" | "kind">[] },
+) {
   const result = safeParseStoredCustomWidgetDefinition(definition);
   if (!result.success) {
     logger.warn("Skipped parsing invalid custom widget definition", {
@@ -40,6 +43,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
       valid: false as const,
       migrationRequired: false as const,
       validationIssues: result.issues,
+      workshop: null,
     };
   }
 
@@ -67,6 +71,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
     valid: true as const,
     migrationRequired: false as const,
     validationIssues: [],
+    workshop: parseWorkshopOrigin(definition.workshop),
   };
 }
 
@@ -86,6 +91,7 @@ export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
     valid: false as const,
     migrationRequired: true as const,
     validationIssues: [],
+    workshop: null,
   };
 }
 
@@ -110,6 +116,14 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
       options: widget.options,
       defaultOptions: getCustomWidgetDefaultOptions(widget.options),
       template: widget.template,
+      integrationKinds: [
+        ...new Set(
+          Object.values(widget.sources).flatMap((source) => {
+            if (source.type === "integration") return [source.integrationKind];
+            return [];
+          }),
+        ),
+      ],
       sources: Object.entries(widget.sources).map(([id, source]) => ({
         id,
         name: source.name,
@@ -144,6 +158,7 @@ export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
     options: {},
     defaultOptions: {},
     template: "",
+    integrationKinds: [],
     sources: [],
     requestCapabilities: [],
     optionRequests: [],

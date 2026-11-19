@@ -10,7 +10,7 @@ const wasmCandidates = [
   path.join(process.cwd(), "node_modules/sql.js/dist/sql-wasm.wasm"),
 ];
 
-let cachedWasm: Buffer | null = null;
+let cachedWasm: Buffer<ArrayBuffer> | null = null;
 
 export async function GET() {
   if (!cachedWasm) {
@@ -21,7 +21,7 @@ export async function GET() {
     cachedWasm = fs.readFileSync(found);
   }
 
-  return new NextResponse(new Uint8Array(cachedWasm), {
+  return new NextResponse(new Uint8Array(cachedWasm.buffer, cachedWasm.byteOffset, cachedWasm.byteLength), {
     headers: {
       "Content-Type": "application/wasm",
       "Cache-Control": "public, max-age=31536000, immutable",

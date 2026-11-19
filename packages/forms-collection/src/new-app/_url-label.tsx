@@ -1,17 +1,18 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { ActionIcon, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-export const AppUrlLabel = () => {
+export const AppUrlLabel = ({ label = invariantTechnicalLabels.url }: { label?: ReactNode }) => {
   const tApp = useI18n("app");
 
   return (
     <Group component="span" gap={4} wrap="nowrap">
-      {invariantTechnicalLabels.url}
+      {label}
       <Tooltip
         interactive
         withArrow

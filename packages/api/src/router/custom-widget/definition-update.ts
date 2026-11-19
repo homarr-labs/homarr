@@ -26,7 +26,7 @@ type StoredDefinitionState = Pick<
   | "enabled"
   | "creatorId"
   | "updatedAt"
->;
+> & { workshop?: string | null };
 type StoredSecretState = Pick<CustomWidgetSecret, "sourceId" | "kind" | "encryptedValue" | "updatedAt">;
 
 export function getCustomWidgetDefinitionStateFingerprint(
@@ -46,6 +46,7 @@ export function getCustomWidgetDefinitionStateFingerprint(
       enabled: definition.enabled,
       creatorId: definition.creatorId,
       updatedAt: definition.updatedAt.getTime(),
+      workshop: definition.workshop,
     },
     secrets: secrets
       .map((secret) => ({
@@ -67,10 +68,16 @@ export async function updateCustomWidgetDefinition(
     secrets?: CustomWidgetCreateInput["secrets"];
     expectedStateFingerprint?: string;
     acknowledgedRemovals?: readonly string[];
+    workshop?: string;
+    updatedAt?: Date;
   },
 ) {
-  const updatedAt = new Date();
-  const definitionChanges = { ...serializeCustomWidgetDefinition(input.definition), updatedAt };
+  const updatedAt = input.updatedAt ?? new Date();
+  const definitionChanges = {
+    ...serializeCustomWidgetDefinition(input.definition),
+    updatedAt,
+    workshop: input.workshop,
+  };
   const secretRows = input.secrets?.map((secret) => ({
     definitionId: input.id,
     sourceId: secret.sourceId,
@@ -94,7 +101,7 @@ export async function updateCustomWidgetDefinition(
           .from(schema.customWidgetSecrets)
           .where(eq(schema.customWidgetSecrets.definitionId, input.id));
         assertExpectedState(stored, storedSecrets, input.expectedStateFingerprint);
-        if (input.expectedStateFingerprint !== undefined) {
+        if (input.acknowledgedRemovals !== undefined) {
           assertAcknowledgedRemovals(stored, input.definition, input.acknowledgedRemovals);
         }
         const changedSecretBindings = getChangedSecretBindings(stored, input.definition);
@@ -162,7 +169,7 @@ export async function updateCustomWidgetDefinition(
             .where(eq(customWidgetSecrets.definitionId, input.id))
             .all();
           assertExpectedState(stored, storedSecrets, input.expectedStateFingerprint);
-          if (input.expectedStateFingerprint !== undefined) {
+          if (input.acknowledgedRemovals !== undefined) {
             assertAcknowledgedRemovals(stored, input.definition, input.acknowledgedRemovals);
           }
           const changedSecretBindings = getChangedSecretBindings(stored, input.definition);

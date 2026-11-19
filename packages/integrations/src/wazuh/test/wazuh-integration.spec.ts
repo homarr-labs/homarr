@@ -64,13 +64,14 @@ const createIntegration = (
     wazuhIndexerUsername: "homarr",
     wazuhIndexerPassword: "indexer-password",
   },
+  externalUrl: string | null = null,
 ) =>
   new WazuhIntegration({
     id: "wazuh",
     name: "Wazuh",
     kind: "wazuh",
     url,
-    externalUrl: null,
+    externalUrl,
     decryptedSecrets: Object.entries(secrets).map(([kind, value]) => ({
       kind: kind as IntegrationSecretKind,
       value,
@@ -247,11 +248,14 @@ describe("WazuhIntegration notifications", () => {
         }),
       ),
     );
-    const integration = createIntegration(INDEXER_URL, {
-      wazuhIndexerUsername: "homarr",
-      wazuhIndexerPassword: "indexer-password",
-      wazuhDashboardUrl: "https://wazuh.example.com/",
-    });
+    const integration = createIntegration(
+      INDEXER_URL,
+      {
+        wazuhIndexerUsername: "homarr",
+        wazuhIndexerPassword: "indexer-password",
+      },
+      "https://wazuh.example.com/",
+    );
 
     const notifications = await integration.getNotificationsAsync();
 

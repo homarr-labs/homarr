@@ -6,6 +6,7 @@ import { migrateWidgetOnlyIntegrationsToOptionsAsync } from "./0003_remove_widge
 import { migrateLegacySectionsToContainersAsync } from "./0004_unify_sections_and_gutters";
 import { migrateReleasesWidgetOptionsAsync } from "./0005_releases_widget_options";
 import { migrateAppWidgetOpenInAsync } from "./0006_app_widget_open_in";
+import { migrateWazuhDashboardUrlAsync } from "./0007_wazuh_dashboard_url";
 
 export const applyCustomMigrationsAsync = async (db: Database) => {
   await migrateReleaseWidgetProviderToOptionsAsync(db);
@@ -15,4 +16,5 @@ export const applyCustomMigrationsAsync = async (db: Database) => {
   await migrateLegacySectionsToContainersAsync(db);
   await migrateReleasesWidgetOptionsAsync(db);
   await migrateAppWidgetOpenInAsync(db);
+  await migrateWazuhDashboardUrlAsync(db);
 };

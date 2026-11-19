@@ -1,0 +1,91 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1100;
+  pointer-events: none;
+}
+
+.area {
+  box-sizing: border-box;
+  padding: var(--board-grid-item-inset, 0px);
+  pointer-events: none;
+  transition:
+    left 100ms ease,
+    top 100ms ease,
+    width 100ms ease,
+    height 100ms ease;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
+}
+
+.preview {
+  position: absolute;
+  inset: 0;
+  animation: area-in 140ms ease both;
+}
+
+.shell {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: var(--mantine-spacing-xs);
+  color: var(--mantine-color-dimmed);
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  opacity: 0.85;
+}
+
+.outline {
+  position: absolute;
+  inset: var(--board-grid-item-inset, 0px);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+}
+
+.area[data-area-step="pick"] .outline {
+  border-style: dashed;
+}
+
+.handle {
+  position: absolute;
+  right: calc(var(--board-grid-item-inset, 0px) - 7px);
+  bottom: calc(var(--board-grid-item-inset, 0px) - 7px);
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: nwse-resize;
+  touch-action: none;
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: 4px;
+  background: var(--mantine-color-body);
+}
+
+@keyframes area-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

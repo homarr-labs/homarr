@@ -1,10 +1,10 @@
 import fsPromises from "fs/promises";
-import { glob } from "glob";
 
 import packageJson from "../../../../package.json";
 
 export const getPackageVersion = () => packageJson.version;
 export const getDependenciesAsync = async (): Promise<PackageJsonDependencies> => {
+  const { glob } = await import("glob");
   const pathNames = await glob("**/package.json", {
     ignore: "**/node_modules/**",
     cwd: "../../",
@@ -15,22 +15,15 @@ export const getDependenciesAsync = async (): Promise<PackageJsonDependencies> =
     .map((packageContent) => (JSON.parse(packageContent) as PackageJson).dependencies)
     .filter((dependencies) => dependencies !== undefined);
 
-  const catalog = await parseDependencyCatalogsAsync();
+  const catalog = new Map(Object.entries(packageJson.workspaces.catalog));
 
-  let dependencies = {};
+  const dependencies = new Map<string, string>();
   for (const dependenciesOfPackage of packageDependencies) {
-    const resolvedDependencies = Object.entries(dependenciesOfPackage).map(([name, version]) => {
-      const catalogVersion = catalog.get(name);
-      return [name, catalogVersion ?? version] as const;
-    });
-    dependencies = { ...dependencies, ...Object.fromEntries(resolvedDependencies) };
+    for (const [name, version] of Object.entries(dependenciesOfPackage)) {
+      dependencies.set(name, catalog.get(name) ?? version);
+    }
   }
-  return dependencies;
-};
-
-type DependencyCatalog = Map<string, string>;
-const parseDependencyCatalogsAsync = async (): Promise<DependencyCatalog> => {
-  return new Map(Object.entries(packageJson.workspaces.catalog));
+  return Object.fromEntries(dependencies);
 };
 
 export type PackageJsonDependencies = Record<string, string>;

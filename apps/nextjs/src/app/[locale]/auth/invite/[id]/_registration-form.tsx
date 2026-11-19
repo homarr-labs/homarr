@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
+import { Button, Stack, TextInput } from "@mantine/core";
 import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
+import { UserCreatePasswordFields } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { CustomPasswordInput } from "@homarr/ui";
 import { userRegistrationSchema } from "@homarr/validation/user";
 
 interface RegistrationFormProps {
@@ -73,21 +73,20 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
             {...form.getInputProps("username")}
             name="username"
           />
-          <CustomPasswordInput
-            withPasswordRequirements
-            label={t("field.password.label")}
-            id="password"
-            autoComplete="new-password"
-            {...form.getInputProps("password")}
-            name="password"
-          />
-
-          <PasswordInput
-            label={t("field.passwordConfirm.label")}
-            id="password-confirm"
-            autoComplete="new-password"
-            {...form.getInputProps("confirmPassword")}
-            name="password-confirmation"
+          <UserCreatePasswordFields
+            gap="lg"
+            passwordInputProps={{
+              id: "password",
+              autoComplete: "new-password",
+              ...form.getInputProps("password"),
+              name: "password",
+            }}
+            confirmPasswordInputProps={{
+              id: "password-confirm",
+              autoComplete: "new-password",
+              ...form.getInputProps("confirmPassword"),
+              name: "password-confirmation",
+            }}
           />
           <Button type="submit" fullWidth loading={isPending}>
             {t("action.register.label")}

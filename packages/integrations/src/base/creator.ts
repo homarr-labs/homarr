@@ -1,7 +1,9 @@
 import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationHttpAuthDefinition } from "@homarr/definitions/integration";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import { resolveDeclaredHttpAuthentication } from "../http-auth";
 import type { Integration, IntegrationInput } from "./integration";
 
 const logger = createLogger({ module: "integrationFactory" });
@@ -137,6 +139,14 @@ const integrationCreators = {
       import("../stats/providers/plantit"),
     ]);
     return new StatsIntegration(input, plantitStatsProvider);
+  },
+
+  yuvomi: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yuvomiStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/yuvomi"),
+    ]);
+    return new StatsIntegration(input, yuvomiStatsProvider);
   },
 
   netdata: async (input: IntegrationInput) => {
@@ -406,6 +416,17 @@ export async function createIntegrationAsync(
 }
 
 export async function getIntegrationHttpAuthenticationAsync(integration: IntegrationInput & { kind: IntegrationKind }) {
+  if (Object.hasOwn(integrationCreators, integration.kind)) {
+    const definition = getIntegrationHttpAuthDefinition(integration.kind);
+    if (definition.type !== "adapter") {
+      try {
+        return resolveDeclaredHttpAuthentication(integration, definition);
+      } catch {
+        // Keep native error normalization for unsupported or incomplete saved credentials.
+      }
+    }
+  }
+
   const client = await createIntegrationAsync(integration);
   return client.getHttpAuthenticationAsync();
 }

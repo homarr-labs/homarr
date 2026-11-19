@@ -1,9 +1,10 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Accordion,
+  ActionIcon,
   Avatar,
   Box,
   Card,
@@ -18,8 +19,8 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { useLocalStorage, useReducedMotion } from "@mantine/hooks";
-import { IconArrowUpRight, IconBookmark, IconLink } from "@tabler/icons-react";
+import { useClipboard, useLocalStorage, useReducedMotion, useTimeout } from "@mantine/hooks";
+import { IconArrowUpRight, IconBookmark, IconCheck, IconCopy, IconLink, IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -100,9 +101,10 @@ export default function BookmarksWidget({
   const isTight = responsiveHeight < 120;
   let contentPadding = 12;
   if (isTight) contentPadding = 6;
+  const fillAvailableHeight = !advanced && options.layout === "grid" && sections.length === 0;
   let layoutHeight = contentHeight;
   let layoutItemCount = data.length;
-  if (!advanced && options.layout === "column") {
+  if (!advanced && (options.layout === "column" || fillAvailableHeight)) {
     layoutHeight = Math.max(0, responsiveHeight - contentPadding * 2 - 2);
     if (showTitle) layoutHeight = Math.max(0, layoutHeight - options.titleSize * 1.2 - contentPadding);
     if (sections.length > 0) {
@@ -118,6 +120,12 @@ export default function BookmarksWidget({
       layoutHeight += Math.max(0, visibleListCount - 1) * Math.min(bookmarkSpacingPixels[options.spacing], 4);
       layoutHeight = Math.max(0, layoutHeight);
     }
+  }
+  let preferredLayoutHeight = layoutHeight;
+  let availableLayoutHeight: number | undefined;
+  if (fillAvailableHeight) {
+    preferredLayoutHeight = contentHeight;
+    availableLayoutHeight = layoutHeight;
   }
   let layoutWidth = responsiveWidth;
   if (options.layout === "gridHorizontal") layoutWidth = width;
@@ -151,14 +159,30 @@ export default function BookmarksWidget({
     () =>
       getBookmarkDisplayPlan({
         advanced,
+        availableHeight: availableLayoutHeight,
         gap: bookmarkSpacingPixels[options.spacing],
-        height: layoutHeight,
+        height: preferredLayoutHeight,
         hideHostname: options.hideHostname,
+        hideIcon: options.hideIcon,
+        hideTitle: options.hideTitle,
+        showFullUrls: options.showFullUrls,
         itemCount: layoutItemCount,
         layout: options.layout,
         width: layoutWidth,
       }),
-    [advanced, layoutHeight, layoutItemCount, layoutWidth, options.hideHostname, options.layout, options.spacing],
+    [
+      advanced,
+      availableLayoutHeight,
+      layoutItemCount,
+      layoutWidth,
+      options.hideHostname,
+      options.hideIcon,
+      options.hideTitle,
+      options.showFullUrls,
+      options.layout,
+      options.spacing,
+      preferredLayoutHeight,
+    ],
   );
 
   const cardDisplay = getBookmarkCardDisplay({
@@ -175,14 +199,16 @@ export default function BookmarksWidget({
         key={bookmark.id}
         bookmark={bookmark}
         advanced={advanced}
+        fillHeight={fillAvailableHeight}
         orientation={cardDisplay.orientation}
         showHostname={cardDisplay.showHostname}
         showIcon={cardDisplay.showIcon}
         showTitle={cardDisplay.showTitle}
         openNewTab={options.openNewTab}
+        showFullUrls={options.showFullUrls && cardDisplay.orientation !== "icon"}
         variant={options.variant}
         withBorder={options.withBorder}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? "default"}
         height={plan.itemHeight}
         width={plan.horizontalScroll ? plan.itemWidth : undefined}
       />
@@ -198,16 +224,28 @@ export default function BookmarksWidget({
       );
     if (options.grow)
       return (
-        <Grid grow columns={plan.columns} gap={plan.itemGap}>
+        <Grid
+          grow
+          columns={plan.columns}
+          gap={plan.itemGap}
+          h={fillAvailableHeight ? "100%" : undefined}
+          styles={fillAvailableHeight ? { inner: { height: "100%", alignContent: "stretch" } } : undefined}
+        >
           {cards.map((card) => (
-            <Grid.Col key={card.key} span={1}>
+            <Grid.Col key={card.key} span={1} mih={fillAvailableHeight ? 0 : undefined}>
               {card}
             </Grid.Col>
           ))}
         </Grid>
       );
     return (
-      <SimpleGrid cols={plan.columns} spacing={plan.itemGap} verticalSpacing={plan.itemGap}>
+      <SimpleGrid
+        cols={plan.columns}
+        spacing={plan.itemGap}
+        verticalSpacing={plan.itemGap}
+        h={fillAvailableHeight ? "100%" : undefined}
+        autoRows={fillAvailableHeight ? `minmax(${rem(plan.itemHeight)}, 1fr)` : undefined}
+      >
         {cards}
       </SimpleGrid>
     );
@@ -315,8 +353,10 @@ export default function BookmarksWidget({
 interface BookmarkCardProps {
   advanced: boolean;
   bookmark: BookmarkItem;
+  fillHeight: boolean;
   height: number;
   openNewTab: boolean;
+  showFullUrls: boolean;
   orientation: BookmarkOrientation;
   radius: string;
   showHostname: boolean;
@@ -329,9 +369,11 @@ interface BookmarkCardProps {
 
 const BookmarkCard = ({
   advanced,
+  fillHeight,
   bookmark,
   height,
   openNewTab,
+  showFullUrls,
   orientation,
   radius,
   showHostname,
@@ -360,7 +402,7 @@ const BookmarkCard = ({
   if (isUltraDense) padding = 4;
   if (advanced) padding = "md";
 
-  const content =
+  let content =
     orientation === "vertical" && !advanced ? (
       <Stack h="100%" align="center" justify="center" gap={6} flex={1}>
         {showIcon ? <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={iconOnly ? 34 : 38} /> : null}
@@ -370,7 +412,7 @@ const BookmarkCard = ({
           </Text>
         ) : null}
         {showHostname ? (
-          <Text fz={9} c="dimmed" ta="center" truncate w="100%">
+          <Text size="xxs" fw={500} lh={1.2} c="dimmed" ta="center" truncate w="100%">
             {hostname}
           </Text>
         ) : null}
@@ -393,7 +435,7 @@ const BookmarkCard = ({
               </Text>
             ) : null}
             {showHostname ? (
-              <Text fz={advanced ? 10 : 9} c="dimmed" truncate>
+              <Text size="xxs" fw={500} lh={1.2} c="dimmed" truncate>
                 {hostname}
               </Text>
             ) : null}
@@ -422,6 +464,43 @@ const BookmarkCard = ({
       </Group>
     );
 
+  if (showFullUrls && href) {
+    content = (
+      <Group h="100%" gap={4} wrap="nowrap" miw={0}>
+        <Box
+          component="a"
+          href={href}
+          target={openNewTab ? "_blank" : "_self"}
+          rel={openNewTab ? SAFE_NEW_TAB_REL : undefined}
+          aria-label={bookmark.name}
+          miw={0}
+          flex={1}
+          td="none"
+          c="inherit"
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          {showIcon ? <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={avatarSize} /> : null}
+          <Stack gap={0} miw={0} flex={1}>
+            {showTitle && !isUltraDense ? (
+              <Text size="xxs" fw={600} lh={1.2} truncate>
+                {bookmark.name}
+              </Text>
+            ) : null}
+            <Text size="xxs" fw={500} lh={1.2} c="dimmed" truncate title={href}>
+              {href}
+            </Text>
+            {advanced && bookmark.description ? (
+              <Text fz={10} c="dimmed" lineClamp={2}>
+                {bookmark.description}
+              </Text>
+            ) : null}
+          </Stack>
+        </Box>
+        <BookmarkCopyUrl href={href} />
+      </Group>
+    );
+  }
+
   return (
     <Tooltip
       label={
@@ -437,19 +516,19 @@ const BookmarkCard = ({
         </Stack>
       }
       openDelay={450}
-      disabled={advanced}
+      disabled={advanced || showFullUrls}
       withArrow
     >
       <Card
-        component={href ? "a" : "div"}
-        href={href}
-        target={href ? (openNewTab ? "_blank" : "_self") : undefined}
-        rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
+        component={href && !showFullUrls ? "a" : "div"}
+        href={showFullUrls ? undefined : href}
+        target={href && !showFullUrls ? (openNewTab ? "_blank" : "_self") : undefined}
+        rel={href && !showFullUrls && openNewTab ? SAFE_NEW_TAB_REL : undefined}
         aria-label={bookmark.name}
         radius={radius}
         withBorder={withBorder || variant === "outline"}
         p={padding}
-        h={height}
+        h={fillHeight ? "100%" : height}
         w={width}
         miw={width}
         onMouseEnter={() => setActive(true)}
@@ -464,7 +543,7 @@ const BookmarkCard = ({
               : "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38))",
             boxShadow: active ? "var(--mantine-shadow-sm)" : undefined,
             color: "var(--mantine-color-text)",
-            cursor: href ? "pointer" : "default",
+            cursor: href && !showFullUrls ? "pointer" : "default",
             display: "flex",
             outline: active ? "2px solid var(--mantine-primary-color-light)" : undefined,
             outlineOffset: -2,
@@ -479,6 +558,53 @@ const BookmarkCard = ({
       >
         {content}
       </Card>
+    </Tooltip>
+  );
+};
+
+const BookmarkCopyUrl = ({ href }: { href: string }) => {
+  const clipboard = useClipboard({ timeout: 1500 });
+  const { start, clear } = useTimeout(clipboard.reset, 1500);
+  const t = useI18n("widget.bookmarks");
+  useEffect(() => {
+    if (clipboard.error) start();
+    return clear;
+  }, [clipboard.error, start, clear]);
+  let label = t("copyUrl");
+  let color = "gray";
+  let Icon = IconCopy;
+  if (clipboard.copied) {
+    label = t("copied");
+    color = "teal";
+    Icon = IconCheck;
+  }
+  if (clipboard.error) {
+    label = t("copyFailed");
+    color = "red";
+    Icon = IconAlertTriangle;
+  }
+  return (
+    <Tooltip
+      label={label}
+      multiline
+      maw={260}
+      withArrow
+      opened={clipboard.error || clipboard.copied ? true : undefined}
+    >
+      <ActionIcon
+        variant="subtle"
+        color={color}
+        size="xs"
+        aria-label={label}
+        style={{ flexShrink: 0 }}
+        onClick={(event) => {
+          event.stopPropagation();
+          clipboard.reset();
+          clipboard.copy(href);
+        }}
+      >
+        <Icon style={iconSizes.xs} />
+      </ActionIcon>
     </Tooltip>
   );
 };

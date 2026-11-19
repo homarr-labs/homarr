@@ -1,52 +1,66 @@
 ---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, repair, preview, install, or configure Homarr Custom JSX v2 widgets through tools or an importable definition.
 ---
 
 # Homarr Custom Widget
 
-- Read missing/changed API contracts in primary docs; samples/successful previews are binding. Load only needed references/components.
-- Batch unknown component searches/details. `contextAlreadyLoaded` reuses context; `phaseComplete` advances.
-  Only genuine provider/model, lifecycle-service or workbench-closure failures are terminal.
-- Community: `customWidget_workshopSearch`, `customWidget_workshopGet`, `customWidget_workshopInstall`; configure/persist.
+Build from verified contracts/samples and matching shipped examples; research only missing/changed contracts.
+Preserve working repairs/migrations; keep credentials in Homarr.
 
-Return one complete fenced `json` definition, evidence outside: keyed `sources`/`requests`, `template`, optional `options`.
+## Context
 
-- Require `sources.default`. HTTP uses `baseUrl`/credential-free `auth`; Homarr holds secrets.
-- Saved integrations: discover kinds/full-access entries via `integration_getKinds`/`integration_all`; bind `integrationId`
-  before preview, use `type: "integration"`/`integrationKind`, omit URL/auth; non-GET requests are actions.
-- Slash-prefixed paths use `{option:name}`/`{param:name}`; query/body: `{"$option":"name"}`/`{"$param":"name"}`.
-  Loads: `trigger: "load"`; manual helpers: `trigger: "manual"`.
-- Actions use `kind: "action"`, manual trigger, `confirmation`/`permission`/`invalidates`; DELETE requires full permission/confirmation.
-  `$param` is manual-only; `$option` may drive loads.
-- Loads: data.requestId/status.requestId + RefreshButton; status.requestId?.ok === false signals error. Manual SubFetch
-  keeps results local; render fields in its (result, metadata) child.
-- Options need `label`/`control`/`default`; installation config is `options.name`, not `inputs`. TextInput/Select/NumberInput/Pagination
-  request controls use literal `bind` + default; manual `SubFetch params` map `inputs.<name>` to `$param`.
-  Dependent pagination: `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls without an option/request/helper.
-  Guard arrays/nesting with `??`; preserve documented timezones; UTC only for UTC contracts.
-- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks or arbitrary functions. Discover registered names; `Icon` aliases `TablerIcon`. Keep purposeful hierarchy,
-  theme tokens, useful states and narrow/wide layouts.
+Reuse supplied context; load only missing references:
 
-## Bounded lifecycle
+- [schema](references/schema.md): new manifests, sources, requests, options, migration contracts.
+- [runtime](references/runtime.md): response paths, manual interactions, input bindings, safe formatters.
+- [security](references/security.md): auth, network access, mutations.
 
-1. Build a credential-free definition from the request, verified context/sample. Preserve migration path/method/body/options/behavior;
-   omit unknown requests instead of guessing.
-2. Send the complete definition directly to `customWidget_previewCreate` (manifest + JSX validation).
-   `customWidget_validateTemplate` is only for isolated JSX diagnostics, never a preview prerequisite.
-   Assistant multiline JSX uses `templateLines`.
-3. Test every returned query/simulated action once; batch independent queries. Fix concrete schema/preview errors and retry
-   `customWidget_previewCreate`; JSX-only repairs after creation use `customWidget_previewReviseTemplate`.
-4. Before saving, if a browser/renderer is available, render at requested sizes and inspect actual screenshots and bounds.
-   Repair clipping, overlap and unrequested scrolling without hiding required content or controls; render and inspect again after repairs.
-   Otherwise report visual verification missing. Never invent tool calls or treat validation as proof of fit.
-5. Persist with `customWidget_updateFromPreview` if preview used `definitionId`, otherwise `customWidget_createFromPreview`.
-   Follow create `nextAction` once. Configure secrets in Homarr; never repeat plaintext secrets.
-   Edits: inspect `removedFromSaved`, restore unrelated losses; `acknowledgedRemovals` covers only exact user-requested removals.
-   The guard is heuristic, not authorization or proof of semantic preservation.
+Use registered components. Resolve unknown names with `customWidget_findComponents`; batch details with
+`customWidget_getComponents`. Full documents are only for unresolved props/diagnostics.
+Reuse `contextAlreadyLoaded`; `phaseComplete` advances to the visible next phase.
 
-## Delivery
+## Working-app design
 
-Report actual lifecycle results; if unavailable, add one post-artifact `Unverified:` line naming missing validation/preview/renderer/persistence.
-Schema checks prove neither rendering nor persistence.
+Use faithful numbers, rows, or charts; no quotas. Keep identities, units and missingness honest; unknown is not zero.
+Ground series/history/denominators in verified data. Discover needed registered charts/helpers; verify safe props/data
+grammar, not assumed callbacks/overlays. Quiet theme tokens; persistent config in options. Use supported accessible
+motion/disclosure, reduced motion and keyboard/touch access. Keep facts visible; verify hover and narrow/wide host fit or
+report missing evidence. Preserve repairs/migrations.
+
+https://impeccable.style/ and https://usehallmark.com/ are app references, not marketing pages, packages, catalogs,
+required tools, or API authority.
+
+## Author
+
+- Definition: `$schema: "homarr-custom-widget-v2"`, `name`, keyed `sources`/`requests`, one JSX `template`, optional `options`.
+  `sources.default` is always required, even static. HTTP: `baseUrl`, credential-free `auth`. Integrations:
+  `type: "integration"`/`integrationKind`; bind a matching full-access `integrationId` before preview.
+- Loads: `data.requestId`/`status.requestId`, RefreshButton, useful loading/error/empty/success states. Preserve envelopes;
+  guard nullable fields. Manual SubFetch renders its result in its child callback.
+- Config: `options.name`. Temporary controls: literal `bind`, default, `inputs.name` passed through manual request `params`.
+  Every control affects a request or visible selection.
+- JSX: one expression, registered names, concise callbacks, theme tokens, wrapping tiles. Imports, hooks, raw HTML/events,
+  browser requests, arbitrary functions, statements, IIFEs, and recursion are unavailable.
+
+## Preview and save
+
+With requested creation/editing and available lifecycle tools:
+
+1. Call `customWidget_previewCreate` with the complete candidate (validates manifest/JSX). Edits: `definitionId`;
+   multiline Assistant JSX: `templateLines`.
+2. Configure sources in Homarr. Test every returned query/simulated action once; batch independent reads. Match response
+   paths/params to JSX. Live mutations require an explicit request.
+3. Fix concrete diagnostics; preserve accepted behavior. Manifest changes: fresh `previewCreate`; JSX-only:
+   `customWidget_previewReviseTemplate` resets evidence. Retest.
+4. With a renderer, inspect screenshots and bounds at requested sizes. Repair clipping, overlap or unwanted scrolling
+   without hiding required content, then inspect again. Otherwise report visual verification missing.
+5. For edits, restore unrelated `removedFromSaved` losses. `acknowledgedRemovals` must match only user-requested removals;
+   this heuristic does not prove behavior was preserved. Save with `customWidget_updateFromPreview` (edit) or `customWidget_createFromPreview` (new).
+   Follow `nextAction` once; briefly report the actual saved result.
+
+`customWidget_validateTemplate`: isolated JSX diagnostics only, never a preview prerequisite. Stop unavailable or repeatedly
+stalled paths. Workshop: search/get/install, then configure sources. Schema checks prove neither rendering nor persistence.
+
+Without tools or on an artifact request: one complete fenced `json` definition plus one `Unverified:` line naming missing
+preview/renderer/persistence evidence. Successful saves need no duplicate manifest.

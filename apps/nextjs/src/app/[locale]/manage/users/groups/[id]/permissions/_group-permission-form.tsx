@@ -15,7 +15,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  Transition,
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -35,6 +34,8 @@ import {
 import { createFormContext } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+
+import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 
 export type PermissionLabels = Partial<Record<GroupPermissionKey, string>>;
 
@@ -285,7 +286,7 @@ interface PermissionMatrixProps {
 }
 
 export const PermissionMatrix = ({ permissionLabels, permissionDescriptions }: PermissionMatrixProps) => (
-  <Card withBorder p="md">
+  <Card p="md">
     <Stack gap="md">
       {objectKeys(permissionMatrix).map((category, index) => (
         <Stack key={category} gap="md">
@@ -349,7 +350,7 @@ export const EffectivePermissionPreview = ({ permissionLabels }: EffectivePermis
     .filter(({ keys }) => keys.length > 0);
 
   return (
-    <Card withBorder p="md">
+    <Card p="md">
       <UnstyledButton onClick={toggle} w="100%" aria-expanded={opened} aria-controls={panelId}>
         <Group justify="space-between" wrap="nowrap">
           <Stack gap={0}>
@@ -429,24 +430,13 @@ export const SaveAffix = ({ groupId }: SaveAffixProps) => {
   }, [form, groupId, mutate, tNotification]);
 
   return (
-    <div style={{ position: "sticky", bottom: 20 }}>
-      <Transition transition="slide-up" mounted={form.isDirty()}>
-        {(transitionStyles) => (
-          <Card style={transitionStyles}>
-            <Group justify="space-between">
-              <Text fw={500}>{tCommon("unsavedChanges")}</Text>
-              <Group>
-                <Button disabled={isPending} onClick={form.reset}>
-                  {tCommon("action.discard")}
-                </Button>
-                <Button loading={isPending} onClick={handleSubmit}>
-                  {tCommon("action.saveChanges")}
-                </Button>
-              </Group>
-            </Group>
-          </Card>
-        )}
-      </Transition>
-    </div>
+    <UnsavedChangesBar visible={form.isDirty()}>
+      <Button disabled={isPending} onClick={form.reset}>
+        {tCommon("action.discard")}
+      </Button>
+      <Button loading={isPending} onClick={handleSubmit}>
+        {tCommon("action.saveChanges")}
+      </Button>
+    </UnsavedChangesBar>
   );
 };

@@ -4,7 +4,7 @@ import type { Session } from "@homarr/auth";
 import type { IntegrationPermissionsProps } from "@homarr/auth/shared";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
-import { eq, inArray } from "@homarr/db";
+import { eq, inArray, or } from "@homarr/db";
 import { groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
 
@@ -27,9 +27,6 @@ const throwIfActionsForbiddenAsync = async (
   permission: IntegrationPermission,
 ) => {
   const { db, session } = ctx;
-  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, session?.user.id ?? ""),
-  });
   const integrationRecords = await db.query.integrations.findMany({
     where: integrationWhere,
     columns: { id: true },
@@ -38,9 +35,15 @@ const throwIfActionsForbiddenAsync = async (
         where: eq(integrationUserPermissions.userId, session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: inArray(
-          integrationGroupPermissions.groupId,
-          groupsOfCurrentUser.map(({ groupId }) => groupId).concat(""),
+        where: or(
+          eq(integrationGroupPermissions.groupId, ""),
+          inArray(
+            integrationGroupPermissions.groupId,
+            db
+              .select({ groupId: groupMembers.groupId })
+              .from(groupMembers)
+              .where(eq(groupMembers.userId, session?.user.id ?? "")),
+          ),
         ),
       },
     },

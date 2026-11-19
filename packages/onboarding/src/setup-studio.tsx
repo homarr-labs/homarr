@@ -13,7 +13,6 @@ import {
   Button,
   Checkbox,
   Code,
-  ColorSwatch,
   CopyButton,
   Fieldset,
   Group,
@@ -41,7 +40,6 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconBrandDocker,
-  IconBorderRadius,
   IconCheck,
   IconCode,
   IconCopy,
@@ -71,6 +69,7 @@ import type {
   ColorScheme,
   IntegrationKind,
   IntegrationSecretKind,
+  ThemeId,
   UrlTemplateMode,
   WidgetKind,
 } from "@homarr/definitions";
@@ -85,21 +84,15 @@ import {
   getIntegrationName,
   getWidgetKindsForIntegration,
   generalWidgets,
+  isThemeId,
+  themeNames,
 } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import type { CornerStyle } from "@homarr/ui";
-import {
-  BoardColorInput,
-  ColorSchemeCombobox,
-  CornerStylePicker,
-  cornerStyleValues,
-  IntegrationAvatar,
-  LanguageCombobox,
-  Link,
-} from "@homarr/ui";
+import { ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
+import { ThemeSelect } from "@homarr/ui/theme-select";
 
 import type { OnboardingStudioProps } from "./types";
 import { getBoardValidationErrors } from "./board-validation";
@@ -153,8 +146,6 @@ const sectionDefinitions = [
   { id: "review", icon: IconCheck },
 ] as const;
 
-const initialPrimaryColor = "#fa5252";
-const initialSecondaryColor = "#fd7e14";
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
 
@@ -168,6 +159,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [incompleteConnectionConfirmationOpened, setIncompleteConnectionConfirmationOpened] = useState(false);
   const [sectionAfterSkipping, setSectionAfterSkipping] = useState<StudioSection>("board");
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
+  const [themeId, setThemeId] = useState<ThemeId>("default");
   const [serverOrigin, setServerOrigin] = useState(environment.serverOrigin);
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
   const [serverAddressEdited, setServerAddressEdited] = useState(false);
@@ -188,9 +180,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
   const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
-  const [primaryColor, setPrimaryColor] = useState(initialPrimaryColor);
-  const [secondaryColor, setSecondaryColor] = useState(initialSecondaryColor);
-  const [itemRadius, setItemRadius] = useState<CornerStyle>("lg");
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
@@ -419,14 +408,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
         server: {
           defaultLocale: selectedLocale,
           defaultColorScheme: colorScheme as ColorScheme,
+          themeId,
           analyticsEnabled,
         },
         board: {
           id: selectedBoardId ?? undefined,
           name: boardName,
-          primaryColor,
-          secondaryColor,
-          itemRadius,
           layoutPreset: getLayoutPresetForColumnCount(columnCount),
           columnCount,
           leftSidebar,
@@ -581,12 +568,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       sounds.click();
       setSelectedBoardId(value);
     },
-    primaryColor,
-    setPrimaryColor,
-    secondaryColor,
-    setSecondaryColor,
-    itemRadius,
-    setItemRadius,
+    themeId,
+    setThemeId: (value) => {
+      sounds.click();
+      setThemeId(value);
+    },
     columnCount,
     setColumnCount,
     leftSidebar,
@@ -628,22 +614,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     }
   };
   return (
-    <main
-      className={classes.page}
-      style={
-        {
-          "--studio-glow-color": primaryColor,
-          "--studio-secondary-glow-color": secondaryColor,
-        } as CSSProperties
-      }
-    >
+    <main className={classes.page}>
       <OnboardingBackdrop />
       <div className={classes.shell}>
         <Group className={classes.topbar} justify="center" mb="lg">
-          <OnboardingWordmark
-            primaryColor={primaryColor}
-            secondaryColor={secondaryColor.toLowerCase() === initialSecondaryColor ? undefined : secondaryColor}
-          />
+          <OnboardingWordmark />
         </Group>
 
         <Paper className={classes.studio} radius="lg">
@@ -653,7 +628,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                 active={activeIndex}
                 bulletSize={32}
                 lineWidth={2}
-                color={primaryColor}
                 className={classes.timeline}
                 classNames={{ itemBullet: classes.timelineBullet }}
               >
@@ -819,12 +793,8 @@ interface StudioSectionProps {
   selectedBoardId: string | null;
   boardValidationAttempted: boolean;
   setSelectedBoardId: (value: string | null) => void;
-  primaryColor: string;
-  setPrimaryColor: (value: string) => void;
-  secondaryColor: string;
-  setSecondaryColor: (value: string) => void;
-  itemRadius: CornerStyle;
-  setItemRadius: (value: CornerStyle) => void;
+  themeId: ThemeId;
+  setThemeId: (value: ThemeId) => void;
   columnCount: number;
   setColumnCount: (value: number) => void;
   leftSidebar: boolean;
@@ -892,6 +862,13 @@ const Essentials = (props: StudioSectionProps) => {
           width="100%"
         />
       </SimpleGrid>
+
+      <ThemeSelect
+        value={props.themeId}
+        onChange={(value) => {
+          if (isThemeId(value)) props.setThemeId(value);
+        }}
+      />
 
       <Switch
         checked={props.analyticsEnabled}
@@ -1422,7 +1399,6 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.board");
-  const sounds = useOnboardingSounds();
   const validationErrors = getBoardValidationErrors({
     attempted: props.boardValidationAttempted,
     hasExistingBoards: props.environment.availableBoards.length > 0,
@@ -1431,9 +1407,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
   });
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
-  const colorsCustomized =
-    props.primaryColor.toLowerCase() !== initialPrimaryColor ||
-    props.secondaryColor.toLowerCase() !== initialSecondaryColor;
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -1465,47 +1438,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
             withAsterisk
             error={validationErrors.name ? t("nameRequired") : undefined}
           />
-          <Stack gap="xs">
-            <SimpleGrid cols={2}>
-              <BoardColorInput
-                label={t("primaryColor")}
-                value={props.primaryColor}
-                onChange={props.setPrimaryColor}
-                defaultColor={initialPrimaryColor}
-              />
-              <BoardColorInput
-                label={t("secondaryColor")}
-                value={props.secondaryColor}
-                onChange={props.setSecondaryColor}
-                defaultColor={initialSecondaryColor}
-              />
-            </SimpleGrid>
-            {colorsCustomized ? (
-              <Button
-                variant="subtle"
-                size="compact-sm"
-                leftSection={<IconRefresh size={14} />}
-                onClick={() => {
-                  sounds.pop();
-                  props.setPrimaryColor(initialPrimaryColor);
-                  props.setSecondaryColor(initialSecondaryColor);
-                }}
-                w="fit-content"
-              >
-                {t("resetColors")}
-              </Button>
-            ) : null}
-          </Stack>
-          <CornerStylePicker
-            label={t("radius")}
-            value={props.itemRadius}
-            labels={
-              Object.fromEntries(
-                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}`)]),
-              ) as Record<CornerStyle, string>
-            }
-            onChange={props.setItemRadius}
-          />
         </Stack>
 
         <Stack gap="lg">
@@ -1536,7 +1468,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
           </Stack>
           <BoardPreview
             ariaLabel={t("previewLabel")}
-            itemRadius={props.itemRadius}
             baseColumnCount={props.columnCount}
             leftSidebar={props.leftSidebar}
             rightSidebar={props.rightSidebar}
@@ -1563,7 +1494,6 @@ const BoardBuilder = (props: StudioSectionProps) => {
 
 const BoardPreview = ({
   ariaLabel,
-  itemRadius,
   baseColumnCount,
   leftSidebar,
   rightSidebar,
@@ -1571,7 +1501,6 @@ const BoardPreview = ({
   appCount,
 }: {
   ariaLabel: string;
-  itemRadius: CornerStyle;
   baseColumnCount: number;
   leftSidebar: boolean;
   rightSidebar: boolean;
@@ -1612,7 +1541,7 @@ const BoardPreview = ({
               style={{
                 gridColumn: `span ${Math.min(columnCount, item.width)}`,
                 gridRow: `span ${Math.min(3, item.height)}`,
-                borderRadius: `var(--mantine-radius-${itemRadius})`,
+                borderRadius: "var(--mantine-radius-default)",
               }}
             />
           ))}
@@ -1745,6 +1674,7 @@ const WorkshopFeature = ({ title, description }: { title: string; description: s
 
 const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
   const t = useI18n("init.studio.extend.mcpSetup");
+  const tCommon = useI18n("common");
   const [apiKey, setApiKey] = useState<string | null>(null);
   const sounds = useOnboardingSounds();
   const createKey = clientApi.apiKeys.create.useMutation({
@@ -1808,7 +1738,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
               loading={createKey.isPending}
               onClick={() => {
                 sounds.click();
-                createKey.mutate();
+                createKey.mutate({ readOnly: true });
               }}
             >
               {t("createKey")}
@@ -1835,7 +1765,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
                 }}
                 leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
               >
-                {copied ? t("copied") : t("copy")}
+                {copied ? tCommon("action.copied") : t("copy")}
               </Button>
             )}
           </CopyButton>
@@ -1851,6 +1781,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
 
 const Review = (props: StudioSectionProps) => {
   const t = useI18n("init.studio.review");
+  const tTheme = useI18n("common.customTheme");
   const themeLabel = {
     auto: t("themeAuto"),
     light: t("themeLight"),
@@ -1886,23 +1817,7 @@ const Review = (props: StudioSectionProps) => {
     },
     { icon: IconLanguage, label: t("language"), value: props.selectedLocale },
     { icon: IconSunMoon, label: t("theme"), value: themeLabel },
-    {
-      icon: IconPalette,
-      label: t("colors"),
-      value: (
-        <Group gap="xs" wrap="nowrap">
-          <ColorSwatch color={props.primaryColor} size={18} />
-          <Text size="sm" fw={650} ff="monospace">
-            {props.primaryColor}
-          </Text>
-          <ColorSwatch color={props.secondaryColor} size={18} />
-          <Text size="sm" fw={650} ff="monospace">
-            {props.secondaryColor}
-          </Text>
-        </Group>
-      ),
-    },
-    { icon: IconBorderRadius, label: t("radius"), value: props.itemRadius.toUpperCase() },
+    { icon: IconPalette, label: tTheme("label"), value: themeNames[props.themeId] },
   ];
   return (
     <Stack gap="lg">
@@ -1934,7 +1849,7 @@ const Review = (props: StudioSectionProps) => {
         {t("automaticDescription")}
       </Alert>
       {props.applyProgress > 0 ? (
-        <Paper withBorder radius="lg" p="md">
+        <Paper radius="lg" p="md">
           <Stack gap="xs">
             <Group justify="space-between">
               <Text size="sm" fw={650}>

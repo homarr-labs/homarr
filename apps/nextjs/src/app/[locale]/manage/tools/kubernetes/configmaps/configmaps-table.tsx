@@ -24,28 +24,28 @@ interface ConfigMapsTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.configmaps">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesBaseResource>[] => [
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTableComponentProps) {
   const tConfigMaps = useI18n("kubernetes.configmaps");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.configMaps.getConfigMaps.useQuery(
     { contextId },

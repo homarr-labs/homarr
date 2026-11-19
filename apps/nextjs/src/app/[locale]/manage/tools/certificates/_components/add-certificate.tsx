@@ -32,7 +32,7 @@ export const CertificatesPageContent = ({ children }: PropsWithChildren) => {
       />
       <Text>{t("page.list.description")}</Text>
       <Collapse expanded={opened}>
-        <Card withBorder>
+        <Card>
           <CertificateUploadForm
             onCancel={close}
             onSuccess={async () => {

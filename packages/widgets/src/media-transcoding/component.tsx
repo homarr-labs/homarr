@@ -266,7 +266,7 @@ export const resolveQueuePagination = (
 });
 
 const AdvancedPanel = ({ title, icon: Icon, children }: { title: string; icon: TablerIcon; children: ReactNode }) => (
-  <Paper withBorder radius="sm" p="xs" mih={280} style={{ display: "flex", flexDirection: "column" }}>
+  <Paper radius="sm" p="xs" mih={280} style={{ display: "flex", flexDirection: "column" }}>
     <Group gap="xs" mb="xs">
       <Icon size="var(--mantine-font-size-md)" style={{ flexShrink: 0 }} />
       <Text size="sm" fw={600}>

@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -116,18 +116,12 @@ export const BoardProvider = ({
   useEffect(() => {
     persistViewportWidth(getViewportWidth());
   }, []);
-  return (
-    <BoardContext.Provider
-      value={{
-        board: data,
-        layoutOverrideId,
-        currentLayout,
-        initialViewportWidth,
-      }}
-    >
-      {children}
-    </BoardContext.Provider>
+  const value = useMemo(
+    () => ({ board: data, layoutOverrideId, currentLayout, initialViewportWidth }),
+    [currentLayout, data, initialViewportWidth, layoutOverrideId],
   );
+
+  return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>;
 };
 
 export const useRequiredBoard = () => {

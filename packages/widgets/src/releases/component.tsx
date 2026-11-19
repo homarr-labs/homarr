@@ -406,7 +406,7 @@ const ReleasesInbox = ({
       data-layout={layout}
       data-narrow={width < 260 || undefined}
       data-edit={isEditMode || undefined}
-      style={{ ["--releases-pane-radius" as string]: `var(--mantine-radius-${board.itemRadius})` }}
+      style={{ ["--releases-pane-radius" as string]: `var(--mantine-radius-${board.itemRadius ?? "default"})` }}
     >
       {showHeader && (
         <header

@@ -4,6 +4,8 @@ import { addFormats, AjvJsonSchemaValidator } from "@modelcontextprotocol/server
 import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
 
+import { isReadOnlyProcedure } from "./credential-access";
+
 export interface McpMeta {
   mcp?: {
     enabled: boolean;
@@ -112,6 +114,12 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
       const inputSchema = z.toJSONSchema(input, {
         io: "input",
         override: ({ zodSchema, jsonSchema }) => {
+          if (zodSchema["_zod"].def.type === "literal" && jsonSchema.const === "") {
+            // Preserve the blank sentinel without an empty-string constant for provider adapters.
+            delete jsonSchema.const;
+            jsonSchema.type = "string";
+            jsonSchema.maxLength = 0;
+          }
           if (zodSchema["_zod"].def.type !== "string") return;
           if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
             // trim/case normalization runs before these checks in tRPC. They cannot constrain raw JSON.
@@ -137,7 +145,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         description: metadata.description ?? "",
         type: definition.type,
         annotations: {
-          readOnlyHint: definition.type === "query",
+          readOnlyHint: isReadOnlyProcedure(definition.type, definition.meta),
           destructiveHint: definition.type === "mutation" && metadata.effect !== "additive",
         },
         pathInRouter: path.split("."),

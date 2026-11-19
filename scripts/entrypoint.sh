@@ -30,7 +30,7 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     chown -R "${PUID}:${PGID}" /var/cache/nginx
     chown -R "${PUID}:${PGID}" /var/log/nginx
     chown -R "${PUID}:${PGID}" /var/lib/nginx
-    chown -R "${PUID}:${PGID}" /run/nginx/nginx.pid
+    chown -R "${PUID}:${PGID}" /run/nginx
     chown -R "${PUID}:${PGID}" /etc/nginx
     echo "Changing owner to $PUID:$PGID, done."
 fi
@@ -48,8 +48,8 @@ for file_var in $(env | cut -d '=' -f 1 | grep "_FILE$"); do
     fi
 done
 
-if [ "${PUID}" != "0" ]; then
-    exec su-exec $PUID:$PGID "$@"
+if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
+    exec setpriv --reuid="$PUID" --regid="$PGID" --clear-groups "$@"
 else
     exec "$@"
 fi

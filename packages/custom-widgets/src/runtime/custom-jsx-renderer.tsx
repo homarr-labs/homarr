@@ -3,7 +3,7 @@ import { Component, useCallback, useEffect, useId, useMemo, useRef, useState } f
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { renderSafeJsx } from "../jsx/interpreter";
+import { createSafeJsxRenderer } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import { sameInputRecord, sameStringArray, sameTypeRecord } from "./input-state-utils";
@@ -185,11 +185,20 @@ function CustomJsxRendererSession({
       return { ...current, values: { ...current.values, [name]: activeRegistration.initialValue } };
     });
   }, []);
+  const renderTemplate = useMemo(() => createSafeJsxRenderer(template), [template]);
+  const dataBindings = useMemo(() => {
+    try {
+      return { value: createBindings(data) };
+    } catch (error) {
+      return { error };
+    }
+  }, [createBindings, data]);
   const rendered = useMemo(() => {
     try {
-      const bindings = { ...createBindings(data), status, options, inputs };
+      if ("error" in dataBindings) throw dataBindings.error;
+      const bindings = { ...dataBindings.value, status, options, inputs };
       return {
-        ...renderSafeJsx({ template, components, bindings }),
+        ...renderTemplate({ components, bindings }),
         boundaryKey: createBoundaryKey(template, bindings),
         error: null,
       };
@@ -201,7 +210,7 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
+  }, [components, dataBindings, inputs, options, renderTemplate, status, template]);
   useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>

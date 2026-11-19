@@ -323,11 +323,11 @@ export interface BeszelAlert {
 
 export interface BeszelAlertHistory {
   id: string;
-  alert: string;
+  alert_id: string;
   user: string;
   system: string;
   name: string;
-  val: number;
+  value: number;
   created: string;
   resolved?: string | null;
 }

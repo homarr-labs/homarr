@@ -1,4 +1,4 @@
-import { getCustomWidgetIntegrationCacheVersion, resolveCustomWidgetSource } from "../custom-widget/source-resolver";
+import { createCustomWidgetSourceResolver } from "../custom-widget/source-resolver";
 import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
@@ -37,6 +37,7 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
+const upstreamProcedure = publicProcedure.meta({ readOnly: false });
 interface CustomWidgetItemOptions {
   definitionId: string;
   configuration: Record<string, unknown>;
@@ -107,7 +108,18 @@ async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) 
       message: `Custom widget configuration needs repair: ${issues[0]?.path} ${issues[0]?.message}`,
     });
   }
-  return { item, stored, definition, itemOptions, configuration };
+  const cacheVersion = getCustomWidgetCacheVersion(stored);
+  const sourceResolver = createCustomWidgetSourceResolver(ctx);
+  const permissions = new Map<BoardPermission, Promise<void>>([["view", Promise.resolve()]]);
+  const authorizeRequest = (permission: BoardPermission) => {
+    let authorized = permissions.get(permission);
+    if (!authorized) {
+      authorized = throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), permission);
+      permissions.set(permission, authorized);
+    }
+    return authorized;
+  };
+  return { item, stored, definition, itemOptions, configuration, cacheVersion, sourceResolver, authorizeRequest };
 }
 
 const findRequest = (resolved: ResolvedDefinition, requestId: string, kind: "query" | "action") => {
@@ -150,7 +162,7 @@ const withRequestLimit = async <T>(
 };
 
 const getCacheKey = (resolved: ResolvedDefinition, request: IdentifiedRequest, params: Record<string, unknown>) =>
-  `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${request.id}:${hashRuntimeParams(params)}`;
+  `custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:${request.id}:${hashRuntimeParams(params)}`;
 
 const executeRequest = async (
   ctx: RouterContext,
@@ -159,7 +171,7 @@ const executeRequest = async (
   params: Record<string, string | number | boolean>,
   load?: RequestLimitInput["load"],
 ) => {
-  await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
+  await resolved.authorizeRequest(request.permission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   let category: RequestLimitInput["category"] = "query";
@@ -175,7 +187,7 @@ const executeRequest = async (
     resolved,
     category,
     async () => {
-      const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+      const connection = await resolved.sourceResolver.resolveSource(source, request, () =>
         resolved.stored.secrets
           .filter((secret) => secret.sourceId === source.id)
           .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
@@ -207,9 +219,7 @@ export const customApiRouter = createTRPCRouter({
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     try {
       await withRequestLimit(ctx, resolved, "refresh", async () => {
-        invalidateCustomWidgetResponseCache([
-          `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
-        ]);
+        invalidateCustomWidgetResponseCache([`custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:`]);
       });
     } catch (error) {
       if (error instanceof TRPCError && error.code === "TOO_MANY_REQUESTS") {
@@ -223,7 +233,7 @@ export const customApiRouter = createTRPCRouter({
     }
   }),
 
-  getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
+  getData: upstreamProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
@@ -285,7 +295,7 @@ export const customApiRouter = createTRPCRouter({
         if (source?.type !== "integration") return [sourceId, "unavailable"] as const;
         try {
           const version = await withRequestLimit(ctx, resolved, "metadata", () =>
-            getCustomWidgetIntegrationCacheVersion(ctx, source),
+            resolved.sourceResolver.getIntegrationCacheVersion(source),
           );
           return [sourceId, version] as const;
         } catch {
@@ -302,7 +312,7 @@ export const customApiRouter = createTRPCRouter({
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
-      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
+      queryCacheKey: `${resolved.cacheVersion}:${hashRuntimeParams(resolved.configuration)}:${integrationCacheKey}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,
@@ -318,7 +328,7 @@ export const customApiRouter = createTRPCRouter({
     };
   }),
 
-  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
+  queryRequest: upstreamProcedure.input(namedRequestInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const request = findRequest(resolved, input.requestId, "query");
     if (request.trigger !== "manual") {
@@ -347,8 +357,8 @@ export const customApiRouter = createTRPCRouter({
       if (response.ok && request.invalidates?.length) {
         invalidateCustomWidgetResponseCache(
           request.invalidates.flatMap((requestId) => [
-            `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
-            `custom-widget:options:${resolved.stored.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
+            `custom-jsx:${resolved.item.id}:${resolved.cacheVersion}:${requestId}:`,
+            `custom-widget:options:${resolved.stored.id}:${resolved.cacheVersion}:${requestId}:`,
           ]),
         );
       }

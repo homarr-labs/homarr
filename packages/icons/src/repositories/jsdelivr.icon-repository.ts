@@ -1,9 +1,8 @@
-import { parse } from "path";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
+import type { RepositoryIcon } from "../types/repository-icon";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
 import { IconRepository } from "./icon-repository";
 
@@ -25,26 +24,13 @@ export class JsdelivrIconRepository extends IconRepository {
     );
     const listOfFiles = (await response.json()) as JsdelivrApiResponse;
 
-    return {
-      success: true,
-      icons: listOfFiles.files
-        .filter(({ name: path }) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
-        )
-        .map(({ name: path, size: sizeInBytes, hash: checksum }) => {
-          const file = parse(path);
-          const fileNameWithExtension = file.base;
+    const icons: RepositoryIcon[] = [];
+    for (const { name, size, hash } of listOfFiles.files) {
+      const icon = this.createIcon(name, size, hash);
+      if (icon) icons.push(icon);
+    }
 
-          return {
-            imageUrl: this.repositoryBlobUrlTemplate.replace("{0}", path).replace("{1}", file.name),
-            fileNameWithExtension,
-            local: false,
-            sizeInBytes,
-            checksum,
-          };
-        }),
-      slug: this.slug,
-    };
+    return { success: true, icons, slug: this.slug };
   }
 }
 
