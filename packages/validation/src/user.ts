@@ -27,12 +27,14 @@ export {
   headerSearchDisplayValues,
   headerTabsDisplayValues,
   headerZoneIds,
+  headerWidgetItemSchema,
   isRequiredHeaderItem,
   parseHeaderPreferences,
   requiredHeaderBuiltinItemIds,
 } from "./header-preferences";
 export type {
   HeaderBoardItem,
+  HeaderWidgetItem,
   HeaderBuiltinItem,
   HeaderBuiltinItemId,
   HeaderItem,

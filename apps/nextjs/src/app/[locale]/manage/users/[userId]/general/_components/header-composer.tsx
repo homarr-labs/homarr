@@ -17,6 +17,7 @@ import {
   Menu,
   Paper,
   SegmentedControl,
+  Select,
   Stack,
   Text,
   ThemeIcon,
@@ -24,6 +25,8 @@ import {
 } from "@mantine/core";
 import {
   IconBrandDocker,
+  IconBell,
+  IconApps,
   IconEye,
   IconEyeOff,
   IconGripVertical,
@@ -42,14 +45,19 @@ import {
 } from "@tabler/icons-react";
 
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
+import { createId } from "@homarr/common";
+import { getWidgetName, widgetKinds } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import type {
   HeaderBuiltinItemId,
   HeaderItem,
   HeaderPreferences,
   HeaderZoneId,
   HeaderZones,
+  HeaderWidgetItem,
 } from "@homarr/validation/user";
 import {
   createBoardHeaderItem,
@@ -64,6 +72,8 @@ import {
 
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
 import { HomarrLogo } from "~/components/layout/logo/homarr-logo";
+import { useHeaderWidgetEditor } from "~/components/layout/header/header-widget-editor";
+import { isBoardOnlyHeaderWidget } from "~/components/layout/header/header-widget-support";
 import classes from "./header-composer.module.css";
 
 interface HeaderComposerProps {
@@ -102,6 +112,10 @@ const headerSortablePlugins = [SortableKeyboardPlugin];
 const headerGuideZones = ["left", "center", "right"] as const;
 
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
+  const latestPreferences = useRef({ value, onChange });
+  latestPreferences.current = { value, onChange };
+  const tAll = useI18n();
+  const widgetEditor = useHeaderWidgetEditor();
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
   const zoneTableRef = useRef<HTMLDivElement>(null);
@@ -155,7 +169,25 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
 
   const itemLabel = (item: HeaderItem) => {
     if (item.type === "board") return boardsById.get(item.boardId)?.name ?? t("items.boardUnavailable");
+    if (item.type === "widget") {
+      if (item.id === "notifications") return t("items.notifications");
+      return item.advancedOptions.title ?? getWidgetName(item.kind, tAll);
+    }
     return t(`items.${item.id}` as never);
+  };
+
+  const updateWidget = (nextItem: HeaderWidgetItem) => {
+    const latest = latestPreferences.current;
+    const zones = { ...latest.value.zones };
+    for (const zone of headerGuideZones) {
+      zones[zone] = zones[zone].map((item) => {
+        if (getHeaderItemKey(item) === getHeaderItemKey(nextItem)) return nextItem;
+        return item;
+      });
+    }
+    const nextValue = { ...latest.value, zones };
+    latestPreferences.current = { ...latest, value: nextValue };
+    latest.onChange(nextValue);
   };
 
   const updateZones = (zones: HeaderZones) => onChange({ ...value, zones });
@@ -318,6 +350,39 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                   </Text>
                 </Stack>
                 <Group gap="xs">
+                  {selectedItem.type === "widget" && (
+                    <>
+                      {selectedItem.id !== "notifications" && (
+                        <Select
+                          size="xs"
+                          aria-label={t("configuration.widgetKind")}
+                          value={selectedItem.kind}
+                          disabled={widgetEditor.loading}
+                          searchable
+                          allowDeselect={false}
+                          data={widgetKinds.map((kind) => {
+                            let label = getWidgetName(kind, tAll);
+                            const boardOnly = isBoardOnlyHeaderWidget(kind);
+                            if (boardOnly) label = `${label} (${t("configuration.boardOnly")})`;
+                            return { value: kind, label, disabled: boardOnly };
+                          })}
+                          onChange={(kind) => {
+                            if (!kind || kind === selectedItem.kind) return;
+                            updateWidget(createHeaderWidgetItem(kind as WidgetKind, selectedItem.id));
+                          }}
+                        />
+                      )}
+                      <Button
+                        size="xs"
+                        variant="default"
+                        leftSection={<IconSettings size={14} />}
+                        loading={widgetEditor.loading}
+                        onClick={() => void widgetEditor.open(selectedItem, updateWidget)}
+                      >
+                        {t("configuration.widgetOptions")}
+                      </Button>
+                    </>
+                  )}
                   {selectedItem.type === "builtin" && selectedItem.id === "search" ? (
                     <SegmentedControl
                       size="xs"
@@ -416,6 +481,23 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
             </Menu>
           </Group>
           <Group gap="xs">
+            <Button
+              size="xs"
+              variant="default"
+              leftSection={<IconBell size={16} />}
+              disabled={activeItemKeySet.has("widget:notifications")}
+              onClick={() => addItem(createHeaderWidgetItem("notifications", "notifications"))}
+            >
+              {t("items.notifications")}
+            </Button>
+            <Button
+              size="xs"
+              variant="default"
+              leftSection={<IconApps size={16} />}
+              onClick={() => addItem(createHeaderWidgetItem("clock", createId()))}
+            >
+              {t("available.widget")}
+            </Button>
             {inactiveBuiltinIds.length === 0 ? (
               <Text c="dimmed" size="sm">
                 {t("available.allAdded")}
@@ -639,6 +721,11 @@ const PreviewItem = ({
   boardLogo: string | null | undefined;
 }) => {
   const tTabs = useI18n("board.tabs");
+  if (item.type === "widget") {
+    let Icon = widgetCatalogIcons[item.kind];
+    if (item.id === "notifications") Icon = IconBell;
+    return <Icon size={20} stroke={1.7} />;
+  }
   if (item.type === "board") {
     return (
       <Avatar src={boardLogo} size={22} radius="sm">
@@ -733,3 +820,13 @@ const getBuiltinItemIcon = (itemId: HeaderBuiltinItemId) => {
   if (itemId === "user") return IconUserCircle;
   return IconLayoutDashboard;
 };
+
+const createHeaderWidgetItem = (kind: WidgetKind, id: string): HeaderWidgetItem => ({
+  type: "widget",
+  id,
+  kind,
+  options: {},
+  integrationIds: [],
+  advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+  size: { width: 2, height: 2 },
+});
