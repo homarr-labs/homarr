@@ -2,12 +2,13 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
-import { and, eq } from "@homarr/db";
-import { sectionCollapseStates, sections } from "@homarr/db/schema";
+import { eq } from "@homarr/db";
+import { boards, sectionCollapseStates, sections } from "@homarr/db/schema";
 import { emptySuperJSON } from "@homarr/definitions";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 export const sectionRouter = createTRPCRouter({
   changeCollapsed: protectedProcedure
@@ -20,11 +21,6 @@ export const sectionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const section = await ctx.db.query.sections.findFirst({
         where: eq(sections.id, input.sectionId),
-        with: {
-          collapseStates: {
-            where: eq(sectionCollapseStates.userId, ctx.session.user.id),
-          },
-        },
       });
 
       if (!section) {
@@ -33,6 +29,8 @@ export const sectionRouter = createTRPCRouter({
           message: `Section not found id=${input.sectionId}`,
         });
       }
+
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, section.boardId), "view");
 
       if (section.kind !== "container") {
         throw new TRPCError({
@@ -51,22 +49,16 @@ export const sectionRouter = createTRPCRouter({
         });
       }
 
-      if (section.collapseStates.length === 0) {
-        await ctx.db.insert(sectionCollapseStates).values({
+      await ctx.db
+        .insert(sectionCollapseStates)
+        .values({
           sectionId: section.id,
           userId: ctx.session.user.id,
           collapsed: input.collapsed,
-        });
-        return;
-      }
-
-      await ctx.db
-        .update(sectionCollapseStates)
-        .set({
-          collapsed: input.collapsed,
         })
-        .where(
-          and(eq(sectionCollapseStates.sectionId, section.id), eq(sectionCollapseStates.userId, ctx.session.user.id)),
-        );
+        .onConflictDoUpdate({
+          target: [sectionCollapseStates.userId, sectionCollapseStates.sectionId],
+          set: { collapsed: input.collapsed },
+        });
     }),
 });

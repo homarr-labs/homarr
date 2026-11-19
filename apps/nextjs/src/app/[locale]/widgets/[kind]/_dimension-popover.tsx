@@ -54,10 +54,22 @@ export const PreviewDimensionsPopover = ({ target, dimensions, setDimensions }: 
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
             <InputWrapper label={t("item.moveResize.field.width.label")}>
-              <Slider min={64} max={1024} step={64} {...form.getInputProps("width")} />
+              <Slider
+                thumbLabel={t("item.moveResize.field.width.label")}
+                min={64}
+                max={1024}
+                step={64}
+                {...form.getInputProps("width")}
+              />
             </InputWrapper>
             <InputWrapper label={t("item.moveResize.field.height.label")}>
-              <Slider min={64} max={1024} step={64} {...form.getInputProps("height")} />
+              <Slider
+                thumbLabel={t("item.moveResize.field.height.label")}
+                min={64}
+                max={1024}
+                step={64}
+                {...form.getInputProps("height")}
+              />
             </InputWrapper>
             <Group justify="end">
               <Button variant="subtle" color="gray" onClick={handleClose}>

@@ -97,7 +97,7 @@ export const ScreenshotEditor = ({
             if (!disabled) onAdd(event.dataTransfer.files);
           }}
           className={cn(
-            "flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border px-4 py-3 transition-colors hover:border-primary/50 hover:bg-primary/5",
+            "flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border px-4 py-3 transition-colors hover:border-primary/50 hover:bg-primary/5 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
             dragOver && "border-primary bg-primary/10",
             disabled && "pointer-events-none opacity-50",
           )}
@@ -114,7 +114,7 @@ export const ScreenshotEditor = ({
             accept="image/png,image/jpeg,image/webp"
             multiple
             disabled={disabled}
-            className="hidden"
+            className="sr-only"
             onChange={(event) => {
               if (event.target.files) onAdd(event.target.files);
               event.currentTarget.value = "";

@@ -27,7 +27,10 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/artist"), {
       headers: (await this.getHttpAuthenticationAsync()).headers,
     });
-    if (!response.ok) throw new Error(`Lidarr library request failed (${response.status})`);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error(`Lidarr library request failed (${response.status})`);
+    }
     const library = z.array(z.object({ monitored: z.boolean() })).parse(await response.json());
     return { artists: library.length, monitored: library.filter((artist) => artist.monitored).length };
   }
@@ -44,7 +47,10 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
     return { success: true };

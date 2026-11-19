@@ -55,6 +55,9 @@ export const IntegrationSelectGrid = ({
         data-autofocus
         onKeyDown={(event) => {
           if (event.key === "Enter" && filtered.length === 1 && filtered[0]) {
+            if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+
+            event.preventDefault();
             onSelect(filtered[0].kind);
           }
         }}

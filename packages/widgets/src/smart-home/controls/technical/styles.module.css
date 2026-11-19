@@ -176,7 +176,8 @@
 
 .row:focus-visible {
   background: var(--hover);
-  box-shadow: inset 0 0 0 1.5px var(--c);
+  outline: 2px solid var(--c, var(--mantine-primary-color-filled));
+  outline-offset: -2px;
 }
 
 .row[data-active]::before {
@@ -195,7 +196,9 @@
 }
 
 .row[data-pending] .chip {
-  animation: pulse 700ms ease-in-out infinite alternate;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: pulse 700ms ease-in-out infinite alternate;
+  }
 }
 
 @keyframes pulse {
@@ -616,7 +619,9 @@
 }
 
 .tile[data-pending] .chip {
-  animation: pulse 700ms ease-in-out infinite alternate;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: pulse 700ms ease-in-out infinite alternate;
+  }
 }
 
 .tileTop {

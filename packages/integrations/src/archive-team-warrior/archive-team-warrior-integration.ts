@@ -40,6 +40,7 @@ export class ArchiveTeamWarriorIntegration extends Integration {
     const response = await input.fetchAsync(this.url("/index.html"), {
       headers: this.createAuthHeaders(),
     });
+    await response.body?.cancel();
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
@@ -49,9 +50,10 @@ export class ArchiveTeamWarriorIntegration extends Integration {
   public async getStatusAsync(): Promise<ArchiveTeamWarriorStatus> {
     const baseUrl = this.url("/").toString().replace(/\/$/, "");
 
-    await fetchWithTrustedCertificatesAsync(`${baseUrl}/index.html`, {
+    const response = await fetchWithTrustedCertificatesAsync(`${baseUrl}/index.html`, {
       headers: this.createAuthHeaders(),
     });
+    await response.body?.cancel();
 
     return await this.readSockJsSnapshotAsync(baseUrl);
   }
@@ -80,7 +82,7 @@ export class ArchiveTeamWarriorIntegration extends Integration {
         clearTimeout(timeout);
 
         if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
-          socket.close();
+          socket.terminate();
         }
 
         resolve();
@@ -91,12 +93,14 @@ export class ArchiveTeamWarriorIntegration extends Integration {
 
         isSettled = true;
         clearTimeout(timeout);
+        socket.terminate();
         reject(new Error("Failed to connect to ArchiveTeam Warrior websocket"));
       };
 
       const timeout = setTimeout(finish, SOCKJS_SNAPSHOT_TIMEOUT_MS);
 
       socket.on("message", (data: RawData) => {
+        if (isSettled) return;
         const frames = this.parseSockJsMessage(this.decodeWebSocketData(data));
 
         for (const frame of frames) {

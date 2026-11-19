@@ -33,6 +33,7 @@ export class TraefikIntegration extends Integration {
     const response = await input.fetchAsync(this.url("/api/version"), { headers: this.getAuthHeaders() });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -212,6 +213,7 @@ export class TraefikIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

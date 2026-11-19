@@ -217,7 +217,8 @@ export const AssistantAskUserTool = ({
                   value={other}
                   onChange={(event) => setOther(event.currentTarget.value)}
                   onKeyDown={(event) => {
-                    if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                    if (event.key === "Enter") {
+                      if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
                       event.preventDefault();
                       submitOther();
                     }

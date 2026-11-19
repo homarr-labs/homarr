@@ -118,10 +118,11 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
     }
   };
 
+  const reportsBySubmission = Object.groupBy(reports, (report) => report.submission);
   const grouped = submissions
     .map((submission) => ({
       submission,
-      reports: reports.filter((report) => report.submission === submission.id),
+      reports: reportsBySubmission[submission.id] ?? [],
     }))
     .toSorted(
       (left, right) =>

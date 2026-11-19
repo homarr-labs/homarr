@@ -380,7 +380,7 @@ const StepType = ({
           onJsonDrop(e.dataTransfer.files);
         }}
         className={cn(
-          "flex cursor-pointer items-center gap-3 rounded-xl border border-dashed p-3 transition-all hover:border-primary/40 hover:bg-primary/5",
+          "flex cursor-pointer items-center gap-3 rounded-xl border border-dashed p-3 transition-all hover:border-primary/40 hover:bg-primary/5 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
           dropActive && "border-primary bg-primary/10",
         )}
       >
@@ -395,7 +395,7 @@ const StepType = ({
           type="file"
           aria-label="Choose a widget JSON file"
           accept=".json,application/json"
-          className="hidden"
+          className="sr-only"
           onChange={(e) => {
             if (e.target.files) onJsonDrop(e.target.files);
           }}

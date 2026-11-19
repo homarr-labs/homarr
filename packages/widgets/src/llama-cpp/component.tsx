@@ -430,6 +430,7 @@ function LlamacppContent({ integrationId, options, width, height, displayMode }:
       {options.showContextUsage && contextUsage && (
         <Group gap={6} wrap="nowrap" miw={0} w="100%" align="center">
           <Progress
+            aria-label={t("stats.contextUsage")}
             value={contextUsage.percent}
             size="xs"
             radius="xs"
@@ -507,6 +508,7 @@ function LlamacppContent({ integrationId, options, width, height, displayMode }:
 const StatusDot = ({ color, label }: { color: string; label?: string }) => {
   const dot = (
     <Box
+      role={label ? "img" : undefined}
       aria-label={label}
       style={{
         width: 9,
@@ -555,7 +557,7 @@ const AdvancedRow = ({ icon, label, value, valueTooltip, progress }: AdvancedRow
         </Text>
       )}
     </Group>
-    {progress && <Progress value={progress.value} size="xs" radius="xs" color={progress.color} />}
+    {progress && <Progress aria-label={label} value={progress.value} size="xs" radius="xs" color={progress.color} />}
   </Stack>
 );
 

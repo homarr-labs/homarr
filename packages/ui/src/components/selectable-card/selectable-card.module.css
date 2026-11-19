@@ -13,9 +13,14 @@
   border: 1px solid var(--mantine-color-default-border);
   box-shadow: var(--mantine-shadow-xs);
   transition:
-    transform 150ms ease,
     box-shadow 150ms ease,
     border-color 150ms ease;
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      border-color 150ms ease;
+  }
   overflow: hidden;
   font-family: inherit;
   color: inherit;
@@ -23,7 +28,9 @@
 }
 
 .root:hover:not(:disabled) {
-  transform: translateY(-2px);
+  @media (prefers-reduced-motion: no-preference) {
+    transform: translateY(-2px);
+  }
   box-shadow: var(--mantine-shadow-sm);
   border-color: var(--mantine-primary-color-filled);
 }
@@ -41,6 +48,13 @@
 .root:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+@media (forced-colors: active) {
+  .root[data-selected] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
 }
 
 .header {

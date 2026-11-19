@@ -19,6 +19,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { formatBitRate } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { FirewallInterfacesSummary } from "@homarr/integrations";
@@ -111,6 +112,10 @@ export default function FirewallWidget({
     defaultValue: "interfaces",
   });
 
+  for (const query of queries) {
+    if (isTrpcForbiddenError(query.error)) throw query.error;
+  }
+
   if (hasTotalFailure) {
     throw new Error(t("error.internalServerError"));
   }
@@ -147,6 +152,7 @@ export default function FirewallWidget({
         {!isAdvanced && (
           <Group justify="space-between" wrap="nowrap" gap={4} w="100%" p={isTiny ? 4 : "xs"}>
             <FirewallMenu
+              label={t("name")}
               onChange={handleSelect}
               selectedFirewall={activeFirewall}
               dropdownItems={dropdownItems}

@@ -103,7 +103,10 @@ export class BinderyIntegration extends Integration implements IMediaOrganizerIn
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
     return { success: true };

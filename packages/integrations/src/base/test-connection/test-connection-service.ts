@@ -124,6 +124,10 @@ export class TestConnectionService {
     const host = url.hostname.replace(/^\[(.*)\]$/, "$1");
     const port = getPortFromUrl(url);
     const socket = await new Promise<tls.TLSSocket>((resolve, reject) => {
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const clearDeadline = () => {
+        if (timer) clearTimeout(timer);
+      };
       try {
         const innerSocket = tls.connect(
           {
@@ -134,19 +138,35 @@ export class TestConnectionService {
             rejectUnauthorized: false,
           },
           () => {
+            clearDeadline();
             resolve(innerSocket);
           },
         );
+        timer = setTimeout(() => {
+          innerSocket.destroy(new Error("Certificate handshake timed out"));
+        }, 10_000);
+        timer.unref?.();
         innerSocket.once("error", (error) => {
+          clearDeadline();
+          innerSocket.destroy();
           reject(new Error("Unable to fetch certificate", { cause: error }));
         });
+        innerSocket.once("close", () => {
+          clearDeadline();
+          reject(new Error("Connection closed before fetching certificate"));
+        });
       } catch (error) {
+        clearDeadline();
         reject(new Error("Unable to fetch certificate", { cause: error }));
       }
     });
 
-    const x509 = socket.getPeerX509Certificate();
-    socket.destroy();
+    let x509: X509Certificate | undefined;
+    try {
+      x509 = socket.getPeerX509Certificate();
+    } finally {
+      socket.destroy();
+    }
 
     logger.debug("Fetched certificate", {
       url: url.toString(),

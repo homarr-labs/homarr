@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Anchor, Badge, Box, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Anchor, Badge, Box, Center, Group, Stack, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import {
   IconBrandAndroid,
   IconBrandApple,
@@ -179,11 +179,9 @@ export function WazuhAgentsView({
         visible: true,
         render: (agent) => (
           <Tooltip label={t(`statusLabel.${agent.status}`)} withArrow openDelay={200}>
-            <span
-              className={classes.statusDot}
-              data-status={agent.status}
-              aria-label={t(`statusLabel.${agent.status}`)}
-            />
+            <span className={classes.statusDot} data-status={agent.status}>
+              <VisuallyHidden>{t(`statusLabel.${agent.status}`)}</VisuallyHidden>
+            </span>
           </Tooltip>
         ),
       },

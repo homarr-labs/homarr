@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useRef } from "react";
 import type { PropsWithChildren } from "react";
-import dayjs from "dayjs";
 
 import type { Session } from "@homarr/auth";
 import { SessionProvider, signIn } from "@homarr/auth/client";
@@ -40,10 +39,20 @@ export const useAuthContext = () => {
 
 const useLoginRedirectOnSessionExpiry = (session: Session | null) => {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    if (!session) return () => {};
-    //setTimeout doesn't allow for a number higher than 2147483647 (2³¹-1 , or roughly 24 days)
-    const timeout = setTimeout(() => void signIn(), Math.min(dayjs(session.expires).diff(), 2147483647));
+    if (!session) return;
+    const expiresAt = Date.parse(session.expires);
+    if (!Number.isFinite(expiresAt)) return;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const checkExpiry = () => {
+      const remaining = expiresAt - Date.now();
+      if (remaining <= 0) {
+        void signIn();
+        return;
+      }
+      // Browsers cap a timeout at about 24 days; recheck longer sessions before redirecting.
+      timeout = setTimeout(checkExpiry, Math.min(remaining, 2147483647));
+    };
+    checkExpiry();
     return () => clearTimeout(timeout);
   }, [session]);
 };

@@ -42,7 +42,7 @@ import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./as
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getSafeAssistantAttachmentImageSource, getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
-import { getSafeAssistantHttpUrl } from "./assistant-url";
+import { getSafeAssistantHttpUrl, getSafeAssistantRelativeUrl } from "./assistant-url";
 
 // Load Shiki only when a settled response contains a code block.
 const ShikiHighlighter = lazy(() => import("react-shiki/web"));
@@ -88,7 +88,7 @@ export const ContextDirectiveChip = ({
 };
 
 const getInternalAssistantHref = (href: string) => {
-  if (href.startsWith("/") && !href.startsWith("//")) return href;
+  if (href.startsWith("/")) return getSafeAssistantRelativeUrl(href);
   if (typeof window === "undefined" || !URL.canParse(href)) return null;
   const url = new URL(href);
   return url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : null;
@@ -100,26 +100,27 @@ export const hasModifiedLinkClick = (event: ReactMouseEvent<HTMLAnchorElement>) 
 const MarkdownLink = ({ href, children, onClick, onMouseEnter, ...props }: ComponentPropsWithoutRef<"a">) => {
   const router = useRouter();
   const httpLink = href !== undefined && /^https?:\/\//iu.test(href);
-  const relativeLink = href?.startsWith("/") && !href.startsWith("//");
-  const safeLink = href?.startsWith("#") || href?.startsWith("mailto:") || httpLink || relativeLink;
+  const relativeLink = getSafeAssistantRelativeUrl(href);
+  const safeLink = href?.startsWith("#") || href?.startsWith("mailto:") || httpLink || relativeLink !== null;
 
   if (!href || !safeLink) return <span>{children}</span>;
+  const safeHref = relativeLink ?? href;
 
   return (
     <a
-      href={href}
+      href={safeHref}
       target={httpLink ? "_blank" : undefined}
       rel={httpLink ? "noreferrer" : undefined}
       {...props}
       onMouseEnter={(event) => {
         onMouseEnter?.(event);
-        const internalHref = getInternalAssistantHref(href);
+        const internalHref = getInternalAssistantHref(safeHref);
         if (internalHref) router.prefetch(internalHref);
       }}
       onClick={(event) => {
         onClick?.(event);
         if (event.defaultPrevented || hasModifiedLinkClick(event)) return;
-        const internalHref = getInternalAssistantHref(href);
+        const internalHref = getInternalAssistantHref(safeHref);
         if (!internalHref) return;
         event.preventDefault();
         router.push(internalHref);

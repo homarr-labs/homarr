@@ -39,7 +39,10 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       });
     });
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     await response.body?.cancel();
     if (!sessionId) throw new Error("Pi-hole did not return an authenticated session");
     return { headers: { sid: sessionId }, redactValues: [sessionId] };
@@ -55,6 +58,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -73,6 +77,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -113,6 +118,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       });
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new ResponseError(response);
     }
@@ -129,6 +135,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       });
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new ResponseError(response);
     }
@@ -153,6 +160,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
         return response;
       }
 
+      await response.body?.cancel().catch(() => undefined);
       logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
@@ -178,7 +186,10 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       },
     });
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
 
     const data = await response.json();
     const result = await sessionResponseSchema.parseAsync(data);
@@ -221,6 +232,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       logger.warn("Failed to clear session", { statusCode: response.status, content: await response.text() });
     }
 
+    await response.body?.cancel().catch(() => undefined);
     logger.debug("Cleared session successfully");
   }
 }

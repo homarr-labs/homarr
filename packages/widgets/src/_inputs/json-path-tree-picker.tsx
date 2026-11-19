@@ -246,7 +246,7 @@ export function JsonPathTreePicker({
   const toggleExpand = (path: string) => {
     const childPaths = flatNodes.filter((n) => n.hasChildren && isChildPath(n.path, path)).map((n) => n.path);
     setExpanded((prev) => {
-      const isCurrentlyExpanded = prev[path] ?? false;
+      const isCurrentlyExpanded = prev[path] ?? nodesByPath.get(path)?.isExpanded ?? false;
       const next = { ...prev, [path]: !isCurrentlyExpanded };
       for (const cp of childPaths) {
         next[cp] = !isCurrentlyExpanded;
@@ -296,6 +296,7 @@ export function JsonPathTreePicker({
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter" && isTyping) {
+              if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
               event.preventDefault();
               onChange(search);
               setIsTyping(false);

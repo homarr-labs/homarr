@@ -139,6 +139,10 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
               data-autofocus
               onKeyDown={(event) => {
                 if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
+                  // Safari can finish composition before dispatching the confirming Enter.
+                  // oxlint-disable-next-line typescript/no-deprecated
+                  if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+                  event.preventDefault();
                   handleSelect(filteredApps[0]);
                 }
               }}

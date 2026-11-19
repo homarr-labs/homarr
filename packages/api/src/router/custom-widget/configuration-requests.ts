@@ -89,8 +89,13 @@ export async function claimCustomWidgetConfigurationRequestForUser(id: string, u
   if (!request || request.status !== "pending") return null;
   const claimed = await claim(request);
   if (!claimed) return null;
-  const applying = { ...claimed, status: "applying" as const };
   try {
+    const current = await getCustomWidgetConfigurationRequestForUser(id, userId);
+    if (!current || current.status !== "pending") {
+      await releaseCustomWidgetConfigurationRequest(id);
+      return null;
+    }
+    const applying = { ...current, status: "applying" as const };
     await save(applying);
     return applying;
   } catch (error) {

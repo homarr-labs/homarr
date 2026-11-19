@@ -3,6 +3,7 @@
 import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -15,6 +16,8 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { BaseWidgetError } from "../errors/base-component";
 import classes from "./component.module.scss";
+
+dayjs.extend(relativeTime);
 
 const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   const query = clientApi.widget.rssFeed.getFeeds.useQuery(input);

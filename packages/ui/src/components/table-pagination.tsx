@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Box, Group, Pagination } from "@mantine/core";
 
@@ -13,9 +13,6 @@ interface TablePaginationProps {
 }
 
 export const TablePagination = ({ total }: TablePaginationProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { replace } = useRouter();
-  const pathName = usePathname();
   const searchParams = useSearchParams();
   const t = useI18n("common.pagination");
   const current = parsePage(searchParams.getAll("page"));
@@ -40,26 +37,10 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     [current, getItemProps, total],
   );
 
-  const handleChange = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", page.toString());
-      replace(`${pathName}?${params.toString()}`);
-    },
-    [pathName, replace, searchParams],
-  );
-
   if (total <= 0) return null;
 
   return (
-    <Pagination.Root
-      total={total}
-      value={current}
-      layout="responsive"
-      w="100%"
-      getItemProps={getItemProps}
-      onChange={handleChange}
-    >
+    <Pagination.Root total={total} value={current} layout="responsive" w="100%" getItemProps={getItemProps}>
       <Group gap={8} justify="end" wrap="nowrap">
         <Pagination.Previous {...getControlProps("previous")} />
         <Box className={Pagination.classes.items}>

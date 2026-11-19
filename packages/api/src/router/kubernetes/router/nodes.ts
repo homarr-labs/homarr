@@ -25,6 +25,7 @@ export const nodesRouter = createTRPCRouter({
         ]);
         const cpuResourceParser = new CpuResourceParser();
         const memoryResourceParser = new MemoryResourceParser();
+        const nodeMetricsByName = new Map(nodeMetricsClient?.items.map((metric) => [metric.metadata.name, metric]));
 
         return nodes.items.map((node) => {
           const name = node.metadata?.name ?? "unknown";
@@ -39,7 +40,7 @@ export const nodesRouter = createTRPCRouter({
           let cpuUsage = 0;
           let memoryUsage = 0;
 
-          const nodeMetric = nodeMetricsClient?.items.find((metric) => metric.metadata.name === name);
+          const nodeMetric = nodeMetricsByName.get(name);
           if (nodeMetric) {
             cpuUsage += cpuResourceParser.parse(nodeMetric.usage.cpu);
             memoryUsage += memoryResourceParser.parse(nodeMetric.usage.memory);

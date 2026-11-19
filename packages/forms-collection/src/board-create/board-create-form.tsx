@@ -81,7 +81,7 @@ export const BoardCreateForm = ({ onCancel }: BoardCreateFormProps) => {
         <Switch
           label={tBoard("field.isPublic.label")}
           description={tBoard("field.isPublic.description")}
-          {...form.getInputProps("isPublic")}
+          {...form.getInputProps("isPublic", { type: "checkbox" })}
         />
 
         <Group justify="end" wrap="wrap">

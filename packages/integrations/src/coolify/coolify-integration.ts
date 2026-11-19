@@ -43,6 +43,7 @@ export class CoolifyIntegration extends Integration {
     const healthUrl = this.url("/api/health");
     const healthResponse = await input.fetchAsync(healthUrl, {});
 
+    await healthResponse.body?.cancel().catch(() => undefined);
     if (!healthResponse.ok) {
       throw new ResponseError(healthResponse);
     }
@@ -53,6 +54,7 @@ export class CoolifyIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
 
+    await versionResponse.body?.cancel().catch(() => undefined);
     if (!versionResponse.ok) {
       throw new ResponseError(versionResponse);
     }
@@ -71,6 +73,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -89,6 +92,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -106,6 +110,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -123,6 +128,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -140,6 +146,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -159,6 +166,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -176,6 +184,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -193,6 +202,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -210,6 +220,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -227,6 +238,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -244,6 +256,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

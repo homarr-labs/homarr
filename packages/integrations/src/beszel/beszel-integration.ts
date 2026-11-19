@@ -184,6 +184,7 @@ export class BeszelIntegration extends Integration {
     logger.debug("Beszel auth response received", { integrationId: this.integration.id, status: response.status });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       logger.warn("Beszel auth failed", { integrationId: this.integration.id, status: response.status });
       throw new ResponseError(response);
     }
@@ -242,6 +243,7 @@ export class BeszelIntegration extends Integration {
     });
 
     if (response.status === 401) {
+      await response.body?.cancel().catch(() => undefined);
       logger.warn("Beszel 401, clearing session and retrying", {
         integrationId: this.integration.id,
         method,
@@ -261,6 +263,7 @@ export class BeszelIntegration extends Integration {
     }
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       logger.warn("Beszel request failed", {
         integrationId: this.integration.id,
         method,
@@ -403,29 +406,45 @@ export class BeszelIntegration extends Integration {
   }
 
   public async deleteAlertAsync(alertId: string): Promise<void> {
-    await this.fetchWithAuthAsync(this.url(`/api/collections/alerts/records/${alertId}` as `/${string}`), {
-      method: "DELETE",
-    });
+    const response = await this.fetchWithAuthAsync(
+      this.url(`/api/collections/alerts/records/${alertId}` as `/${string}`),
+      {
+        method: "DELETE",
+      },
+    );
+    await response.body?.cancel().catch(() => undefined);
   }
 
   public async pauseSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
-      method: "PATCH",
-      body: JSON.stringify({ status: "paused" }),
-    });
+    const response = await this.fetchWithAuthAsync(
+      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "paused" }),
+      },
+    );
+    await response.body?.cancel().catch(() => undefined);
   }
 
   public async resumeSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
-      method: "PATCH",
-      body: JSON.stringify({ status: "pending" }),
-    });
+    const response = await this.fetchWithAuthAsync(
+      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "pending" }),
+      },
+    );
+    await response.body?.cancel().catch(() => undefined);
   }
 
   public async deleteSystemAsync(systemId: string): Promise<void> {
-    await this.fetchWithAuthAsync(this.url(`/api/collections/systems/records/${systemId}` as `/${string}`), {
-      method: "DELETE",
-    });
+    const response = await this.fetchWithAuthAsync(
+      this.url(`/api/collections/systems/records/${systemId}` as `/${string}`),
+      {
+        method: "DELETE",
+      },
+    );
+    await response.body?.cancel().catch(() => undefined);
   }
 
   /** Subscribe to Beszel's custom one-second `rt_metrics` PocketBase topic. */
@@ -497,7 +516,10 @@ export class BeszelIntegration extends Integration {
           session = await this.authenticateAsync();
           response = await openStream();
         }
-        if (!response.ok) throw new ResponseError(response);
+        if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
+          throw new ResponseError(response);
+        }
 
         const reader = response.body?.getReader();
         if (!reader) throw new Error("Beszel realtime response has no body");
@@ -630,6 +652,7 @@ export class BeszelIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult({ status: response.status, url: response.url });
     }
 

@@ -8,6 +8,8 @@ import {
   widgetKinds,
 } from "@homarr/definitions";
 
+import { getSafeAssistantRelativeUrl } from "./assistant-url";
+
 export const assistantAskUserOptionKinds = ["affirmative", "negative", "alternative"] as const;
 export type AssistantAskUserOptionKind = (typeof assistantAskUserOptionKinds)[number];
 
@@ -157,7 +159,7 @@ export type ConfigureWidgetResult =
 
 export const normalizeAssistantAppIconUrl = (value: string | undefined) => {
   if (!value) return "";
-  if (value.startsWith("/") && !value.startsWith("//")) return value;
+  if (value.startsWith("/")) return getSafeAssistantRelativeUrl(value) ?? "";
   if (!URL.canParse(value)) return "";
   const protocol = new URL(value).protocol;
   return protocol === "http:" || protocol === "https:" ? value : "";

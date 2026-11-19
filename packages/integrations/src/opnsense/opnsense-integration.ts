@@ -28,7 +28,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         Authorization: this.getAuthHeaders(),
       },
     });
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const result = await response.json();
     if (typeof result === "object" && result !== null) return { success: true };
@@ -52,6 +55,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       },
     );
     if (!responseVersion.ok) {
+      await responseVersion.body?.cancel().catch(() => undefined);
       throw new ResponseError(responseVersion);
     }
     const summary = opnsenseSystemSummarySchema.parse(await responseVersion.json());
@@ -75,6 +79,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     });
 
     if (!responseInterfaces.ok) {
+      await responseInterfaces.body?.cancel().catch(() => undefined);
       throw new ResponseError(responseInterfaces);
     }
     const interfaces = opnsenseInterfacesSchema.parse(await responseInterfaces.json());
@@ -113,6 +118,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       },
     );
     if (!responseMemory.ok) {
+      await responseMemory.body?.cancel().catch(() => undefined);
       throw new ResponseError(responseMemory);
     }
 
@@ -137,6 +143,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     });
 
     if (!responseCpu.ok) {
+      await responseCpu.body?.cancel().catch(() => undefined);
       throw new ResponseError(responseCpu);
     }
 
@@ -147,6 +154,8 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const reader = responseCpu.body.getReader();
     const decoder = new TextDecoder();
     let loopCounter = 0;
+    let samples = 0;
+    let pending = "";
     try {
       while (loopCounter < 10) {
         loopCounter++;
@@ -160,16 +169,18 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
         const value: AllowSharedBufferSource = result.value;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
+        pending += decoder.decode(value, { stream: true });
+        if (pending.length > 65_536) throw new Error("OPNsense CPU event exceeds the size limit.");
+        const lines = pending.split("\n");
+        pending = lines.pop() ?? "";
 
         for (const line of lines) {
           if (!line.startsWith("data:")) {
             continue;
           }
-          if (loopCounter < 2) {
-            continue;
-          }
+          // The first sample initializes the upstream counters; skip the sample, not a transport chunk.
+          samples++;
+          if (samples < 2) continue;
           const data = line.substring(5).trim();
           const cpuValues = opnsenseCPUSchema.parse(JSON.parse(data));
 

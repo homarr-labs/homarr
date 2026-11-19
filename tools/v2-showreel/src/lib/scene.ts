@@ -61,7 +61,7 @@ export interface Scene {
 
 /** Map between authored scene time and output time for a set of slow-motion holds. */
 export function timeWarp(warp: [number, number, number][] = []) {
-  const w = [...warp].sort((a, b) => a[0] - b[0]);
+  const w = warp.toSorted((a, b) => a[0] - b[0]);
   const toOut = (t: number) => {
     let u = t;
     for (const [a, b, sp] of w) if (t > a) u += (Math.min(t, b) - a) * (1 / sp - 1);

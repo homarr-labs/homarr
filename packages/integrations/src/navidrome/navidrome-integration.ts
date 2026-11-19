@@ -40,6 +40,7 @@ export class NavidromeIntegration extends Integration implements IMediaServerInt
     const response = await input.fetchAsync(url);
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(response);
     }
 
@@ -181,6 +182,7 @@ export class NavidromeIntegration extends Integration implements IMediaServerInt
     const response = await fetchWithTrustedCertificatesAsync(url);
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

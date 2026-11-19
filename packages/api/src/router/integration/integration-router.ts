@@ -242,7 +242,7 @@ export const integrationRouter = createTRPCRouter({
       logger.info("Creating integration", {
         name: input.name,
         kind: input.kind,
-        url: input.url,
+        origin: URL.parse(input.url)?.origin,
       });
 
       if (input.app && "name" in input.app && !ctx.session.user.permissions.includes("app-create")) {
@@ -300,7 +300,7 @@ export const integrationRouter = createTRPCRouter({
         id: integrationId,
         name: input.name,
         kind: input.kind,
-        url: input.url,
+        origin: URL.parse(input.url)?.origin,
       });
 
       return {
@@ -372,13 +372,7 @@ export const integrationRouter = createTRPCRouter({
       .where(eq(integrations.id, input.id));
 
     const changedSecrets = input.secrets.filter(
-      (secret): secret is { kind: IntegrationSecretKind; value: string } =>
-        secret.value !== null && // only update secrets that have a value
-        !integration.secrets.find(
-          // Checked above
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
-        ),
+      (secret): secret is { kind: IntegrationSecretKind; value: string } => secret.value !== null, // only update secrets that have a value
     );
 
     if (changedSecrets.length > 0) {
@@ -415,7 +409,7 @@ export const integrationRouter = createTRPCRouter({
       id: input.id,
       name: input.name,
       kind: integration.kind,
-      url: input.url,
+      origin: URL.parse(input.url)?.origin,
     });
 
     // Invalidate all cached data for this integration so that widgets pick up the
@@ -894,7 +888,7 @@ const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integ
 
   logger.info("Creating app", {
     name: app.name,
-    url: app.href,
+    origin: URL.parse(app.href ?? "")?.origin,
   });
   const appId = createId();
   await db.insert(apps).values({
@@ -909,7 +903,7 @@ const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integ
   logger.info("Created app", {
     id: appId,
     name: app.name,
-    url: app.href,
+    origin: URL.parse(app.href ?? "")?.origin,
   });
 
   return appId;

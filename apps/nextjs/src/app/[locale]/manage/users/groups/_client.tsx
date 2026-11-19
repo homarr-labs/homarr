@@ -25,7 +25,7 @@ export const GroupsList = ({ title, groups, children }: PropsWithChildren<Groups
   const [isCreateOpen, setIsCreateOpen] = useState(searchParams.get("create") === "true");
   const [formKey, setFormKey] = useState(0);
   const initialGroupIds = useMemo(
-    () => groups.sort((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
+    () => groups.toSorted((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
     [groups],
   );
   const filteredGroups = useMemo(
@@ -87,6 +87,7 @@ export const GroupsList = ({ title, groups, children }: PropsWithChildren<Groups
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
         placeholder={`${tGroup("search")}...`}
+        aria-label={tGroup("search")}
       />
       <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
     </ManagePageLayout>

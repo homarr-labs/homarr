@@ -34,7 +34,6 @@ import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { useBoardPermissions } from "../permissions/client";
-import { useItemActions } from "./item-actions";
 import { BoardItemContextMenu } from "./item-menu";
 import { ItemMenuDropdown } from "./item-menu-dropdown";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
@@ -99,7 +98,6 @@ const WidgetContextMenuInner = ({
   const t = useI18n();
   const tMenu = useI18n("item.menu.label");
   const { openModal } = useModalAction(LazyWidgetEditModal);
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
   const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
     enabled: hasSupportedIntegrations,
@@ -211,9 +209,6 @@ const WidgetContextMenuInner = ({
           integrationIds: item.integrationIds,
         },
         onSuccessfulEdit: (editResult) => {
-          updateItemOptions({ itemId: item.id, newOptions: editResult.options });
-          updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
-          updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
           persistBoard((previous) => ({
             ...previous,
             items: previous.items.map((boardItem) =>
@@ -257,9 +252,6 @@ const WidgetContextMenuInner = ({
     persistBoard,
     previewDimensions,
     settings,
-    updateItemAdvancedOptions,
-    updateItemIntegrations,
-    updateItemOptions,
   ]);
 
   const handleToggle = useCallback(

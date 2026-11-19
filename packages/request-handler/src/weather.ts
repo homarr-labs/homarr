@@ -79,7 +79,10 @@ const requestWeatherAsync = async (
     await setTimeout(150, undefined, { signal });
     res = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
   }
-  if (!res.ok) throw new ResponseError(res);
+  if (!res.ok) {
+    await res.body?.cancel().catch(() => undefined);
+    throw new ResponseError(res);
+  }
 
   const json: unknown = await res.json();
   const weather = await atLocationOutput.parseAsync(json);

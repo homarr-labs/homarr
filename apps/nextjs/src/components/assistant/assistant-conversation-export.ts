@@ -121,7 +121,18 @@ const renderToolPart = (part: Record<string, unknown>) => {
     lines.push(`- Provider executed: ${part.providerExecuted ? "Yes" : "No"}`);
   if (typeof part.preliminary === "boolean") lines.push(`- Preliminary result: ${part.preliminary ? "Yes" : "No"}`);
   if (input !== undefined) lines.push("#### Input", fencedJson(input));
-  if (rawInput !== undefined && rawInput !== input) lines.push("#### Raw streamed input", fencedJson(rawInput));
+  if (rawInput !== undefined && rawInput !== input) {
+    let exportInput = rawInput;
+    if (typeof rawInput === "string") {
+      try {
+        exportInput = JSON.parse(rawInput) as unknown;
+      } catch {
+        // Partial JSON cannot be reliably checked for sensitive fields.
+        exportInput = "[Incomplete tool input omitted because it could not be safely redacted]";
+      }
+    }
+    lines.push("#### Raw streamed input", fencedJson(exportInput));
+  }
   if (output !== undefined) lines.push("#### Output", fencedJson(output));
   if (typeof part.errorText === "string") lines.push("#### Error", part.errorText);
   else if (part.isError === true) lines.push("#### Error", "The tool result was marked as an error.");

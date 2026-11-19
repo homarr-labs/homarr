@@ -62,6 +62,7 @@ export default function ThingportLibraryStatsWidget({
             target={options.openInNewTab ? "_blank" : undefined}
             rel={options.openInNewTab ? SAFE_NEW_TAB_REL : undefined}
             className={classes.tile}
+            aria-label={`${data[field].toLocaleString(locale)} ${t(key)}`}
           >
             <Icon className={classes.icon} stroke={1.5} />
             <span className={classes.value}>{data[field].toLocaleString(locale)}</span>

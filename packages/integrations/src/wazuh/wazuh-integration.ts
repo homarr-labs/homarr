@@ -204,7 +204,10 @@ export class WazuhIntegration extends Integration implements INotificationsInteg
       { method: "POST", headers: { Authorization: basicAuth(api.username, api.password) } },
       fetchAsync,
     );
-    if (!response.ok) throw WazuhRequestError.fromResponse("api", response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw WazuhRequestError.fromResponse("api", response);
+    }
 
     const token = (await response.text()).trim();
     if (!token || token.startsWith("{")) throw new WazuhRequestError("api", "invalidResponse");
@@ -232,13 +235,18 @@ export class WazuhIntegration extends Integration implements INotificationsInteg
 
     let response = await doRequest(await this.getApiTokenAsync());
     if (response.status === 401) {
+      await response.body?.cancel().catch(() => undefined);
       await this.sessionStore.clearAsync();
       response = await doRequest(await this.getApiTokenAsync());
     }
-    if (!response.ok) throw WazuhRequestError.fromResponse("api", response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw WazuhRequestError.fromResponse("api", response);
+    }
 
     const body = (await response.json()) as WazuhApiResponse<TData>;
-    if (typeof body !== "object" || !("data" in body)) throw new WazuhRequestError("api", "invalidResponse");
+    if (body === null || typeof body !== "object" || !("data" in body))
+      throw new WazuhRequestError("api", "invalidResponse");
     return body.data;
   }
 
@@ -263,7 +271,10 @@ export class WazuhIntegration extends Integration implements INotificationsInteg
       },
       fetchAsync,
     );
-    if (!response.ok) throw WazuhRequestError.fromResponse("indexer", response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw WazuhRequestError.fromResponse("indexer", response);
+    }
     return (await response.json()) as WazuhIndexerSearchResponse<TSource, TAggregations>;
   }
 
@@ -273,7 +284,10 @@ export class WazuhIntegration extends Integration implements INotificationsInteg
     const response = await this.requestAsync("indexer", `${indexer.url}${path}`, {
       headers: { Authorization: basicAuth(indexer.username, indexer.password) },
     });
-    if (!response.ok) throw WazuhRequestError.fromResponse("indexer", response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw WazuhRequestError.fromResponse("indexer", response);
+    }
     return (await response.json()) as TData;
   }
 

@@ -40,6 +40,9 @@ export const createWazuhDashboardLinks = (baseUrl: string | null | undefined): W
     alert: ({ alertId, timestamp, agentId }) => {
       const time = new Date(timestamp).getTime();
       const window = 5 * 60 * 1000;
+      if (!Number.isFinite(time)) {
+        return events({ agentId, query: alertId ? `id:"${alertId}"` : undefined });
+      }
       return events({
         agentId,
         query: alertId ? `id:"${alertId}"` : undefined,

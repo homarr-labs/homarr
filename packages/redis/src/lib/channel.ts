@@ -829,7 +829,7 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       const items: TData[] = [];
       const itemsInCollection = await client.lrange(channelName, 0, length - 1);
 
-      for (let i = 0; i < length - 1; i++) {
+      for (let i = 0; i < itemsInCollection.length; i++) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(itemsInCollection[i]!);
         if (deserializedItem.timestamp < time) {

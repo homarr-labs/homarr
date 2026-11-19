@@ -194,6 +194,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
         return response;
       }
 
+      await response.body?.cancel().catch(() => undefined);
       logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
@@ -220,6 +221,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     );
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -241,7 +243,10 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
         { Cookie: cookie },
         fetchAsync,
       );
-      if (!verified.ok) throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+      if (!verified.ok) {
+        await verified.body?.cancel().catch(() => undefined);
+        throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");
+      }
       const verifiedData = readAuthResponse(await verified.json());
       if (typeof verifiedData.sessionid !== "string" || !verifiedData.sessionid) {
         throw new OpenMediaVaultTotpError(this.publicIntegration, "totpVerificationFailed");

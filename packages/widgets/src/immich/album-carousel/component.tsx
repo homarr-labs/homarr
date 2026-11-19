@@ -14,6 +14,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 
@@ -83,6 +84,8 @@ export default function ImmichAlbumCarouselWidget({
     widgetRuntimeRef,
     photoAssets.length > 1 ? { previousPhoto, nextPhoto, toggleSlideshow } : {},
   );
+
+  if (isTrpcForbiddenError(previewQuery.error)) throw previewQuery.error;
 
   if (!album || (!fullAlbum && album.assets.length === 0)) return <WidgetEmptyState />;
 

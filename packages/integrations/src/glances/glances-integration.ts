@@ -25,15 +25,11 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
     let session = await this.sessionStore.getAsync();
 
     if (session == null) {
-      await this.sessionStore.setAsync({
+      session = {
         version: await this.getGlancesVersionAsync(),
-      });
-
-      // update the store to re-use the values below.
-      session = await this.sessionStore.getAsync();
+      };
+      await this.sessionStore.setAsync(session);
     }
-
-    if (session == null) throw new Error("Session was unexpectitly null");
 
     const [stats, cpuTemp, smart] = await Promise.all([
       this.getAllStatsAsync(),
@@ -80,6 +76,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/version"));
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -93,6 +90,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/sensors"));
 
       if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
         return undefined;
       }
 
@@ -110,6 +108,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/smart"));
 
       if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
         return [];
       }
 
@@ -124,6 +123,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/all"));
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -135,6 +135,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       headers: { "User-Agent": "Homarr" },
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }

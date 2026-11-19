@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { buildDockerServiceUrlCandidates } from "@homarr/definitions";
+import { buildDockerServiceUrlCandidates, invariantTechnicalLabels } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -55,6 +55,8 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
     },
   });
   const handleSubmit = ({ containerUrls }: z.infer<typeof formSchema>) => {
+    if (isPending) return;
+
     mutate(
       innerProps.selectedContainers.map((container, index) => ({
         name: container.name,
@@ -90,7 +92,15 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
               >
                 <Group justify="space-between" wrap={"nowrap"}>
                   <Text lineClamp={1}>{container.name}</Text>
-                  <TextInput {...inputProps} value={inputProps.value ?? ""} />
+                  <TextInput
+                    {...inputProps}
+                    value={inputProps.value ?? ""}
+                    aria-label={`${container.name} ${invariantTechnicalLabels.url}`}
+                    disabled={isPending}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                  />
                 </Group>
               </List.Item>
             );
@@ -100,7 +110,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
           <Button onClick={actions.closeModal} variant="light" px={"xl"}>
             {t("common.action.cancel")}
           </Button>
-          <Button type="submit" px={"xl"}>
+          <Button type="submit" px={"xl"} loading={isPending}>
             {t("common.action.add")}
           </Button>
         </Group>

@@ -222,9 +222,6 @@ function sanitizeErrorMessage(error: unknown, toolName: string): string {
     const safeMessage = SAFE_ERROR_MESSAGES[trpcCode];
     if (safeMessage) return safeMessage;
   }
-  if (error instanceof Error && error.message.length < 200 && !error.message.includes("/")) {
-    return error.message;
-  }
   return "Tool execution failed";
 }
 

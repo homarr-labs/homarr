@@ -56,6 +56,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       href={props.href}
       prefetch={props.prefetch ?? true}
       active={isActive}
+      aria-current={isActive ? "page" : undefined}
       onClick={() => setNavigationCollapsed(true)}
     />
   );

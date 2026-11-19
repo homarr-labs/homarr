@@ -144,7 +144,13 @@ function OptionField({
             {option.description}
           </Text>
         )}
-        <Slider min={option.min ?? 0} max={option.max ?? 100} step={option.step ?? 1} {...input} />
+        <Slider
+          thumbLabel={option.label}
+          min={option.min ?? 0}
+          max={option.max ?? 100}
+          step={option.step ?? 1}
+          {...input}
+        />
       </Stack>
     );
   const choices = option.choices?.map((choice) => ({ label: choice.label, value: String(choice.value) })) ?? [];

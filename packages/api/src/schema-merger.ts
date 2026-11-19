@@ -9,9 +9,15 @@ export function convertIntersectionToZodObject<TIntersection extends ZodIntersec
 
   // Merge the shapes
   const mergedShape = { ...left.def.shape, ...right.def.shape };
+  const checks = [...(left.def.checks ?? []), ...(right.def.checks ?? [])] as z.core.$ZodCheck<
+    Record<string, unknown>
+  >[];
 
-  // Return a new ZodObject
-  return z.object(mergedShape) as unknown as TIntersection extends ZodIntersection<infer TLeft, infer TRight>
+  // Keep object-level checks, including matching password confirmations.
+  return z.object(mergedShape).check(...checks) as unknown as TIntersection extends ZodIntersection<
+    infer TLeft,
+    infer TRight
+  >
     ? TLeft extends ZodObject
       ? TRight extends ZodObject
         ? ZodObject<TLeft["shape"] & TRight["shape"]>

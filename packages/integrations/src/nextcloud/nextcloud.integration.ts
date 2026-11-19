@@ -53,6 +53,7 @@ const notificationSchema = z.object({
 });
 
 const logger = createLogger({ module: "nextcloudIntegration" });
+const MAX_OCCURRENCE_ITERATIONS = 100_000;
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -102,7 +103,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
         const veventObject = new ICAL.Event(veventComponent);
 
-        logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
+        logger.debug("Converting Nextcloud calendar event", { etag: event.etag });
 
         const eventUrlWithoutHost = new URL(event.url).pathname;
         const eventSlug = Buffer.from(eventUrlWithoutHost).toString("base64url");
@@ -117,9 +118,18 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
           // Iterate through occurrences within the time range
           let next: ICAL.Time | undefined;
+          let iterations = 0;
           // next actually returns undefined when there are no more occurrences
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           while ((next = iterator.next())) {
+            if (iterations >= MAX_OCCURRENCE_ITERATIONS) {
+              logger.warn("Stopped expanding an excessive Nextcloud recurring event", {
+                integrationId: this.integration.id,
+                maxOccurrences: MAX_OCCURRENCE_ITERATIONS,
+              });
+              break;
+            }
+            iterations += 1;
             const nextStartDate = next.isDate
               ? next.toJSDate()
               : next.convertToZone(ICAL.Timezone.utcTimezone).toJSDate();
@@ -182,7 +192,10 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
       },
     });
 
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
 
     const json = notificationSchema.parse(await response.json());
 

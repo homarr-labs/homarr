@@ -22,7 +22,8 @@ export const WidgetIntegrationSelectInput = ({
   const integrationIds = form.values.integrationIds as string[];
 
   const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
-  const currentValue = form.getInputProps(`options.${property}`).value as string;
+  const inputProps = form.getInputProps(`options.${property}`);
+  const currentValue = inputProps.value as string;
   const hasCurrentInData = !currentValue || selectData.some((opt) => opt.value === currentValue);
   const data = hasCurrentInData ? selectData : [...selectData, { value: currentValue, label: currentValue }];
 
@@ -48,8 +49,8 @@ export const WidgetIntegrationSelectInput = ({
       nothingFoundMessage={tCommon("noResults")}
       data={data}
       disabled={isError}
-      error={error}
-      {...form.getInputProps(`options.${property}`)}
+      {...inputProps}
+      error={inputProps.error ?? error}
     />
   );
 };

@@ -124,8 +124,7 @@ const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAl
   const { mutate, isPending } = clientApi.invite.deleteInvite.useMutation();
   const utils = clientApi.useUtils();
   const handleDelete = useCallback(() => {
-    mutate({ id: row.original.id });
-    void utils.invite.getAll.invalidate();
+    mutate({ id: row.original.id }, { onSuccess: () => void utils.invite.getAll.invalidate() });
   }, [row.original.id, mutate, utils]);
 
   return (

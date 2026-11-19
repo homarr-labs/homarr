@@ -103,6 +103,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
       },
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }
@@ -122,6 +123,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new Error(`Emby server ${this.integration.id} returned a non successful status code: ${response.status}`);
     }
 
@@ -243,6 +245,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
     );
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -297,6 +300,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
       },
     });
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
     const users = z.array(userSchema).parse(await response.json());

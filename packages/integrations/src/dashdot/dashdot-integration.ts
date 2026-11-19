@@ -14,7 +14,10 @@ import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/hea
 export class DashDotIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/info"));
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     await response.json();
 
@@ -112,17 +115,18 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     return {
       sumLoad: this.getAverageOfCpu(data),
       cores: data.map((core, id) => ({ id, utilization: core.load })),
-      averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / data.length,
+      averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / Math.max(1, data.length),
     };
   }
 
   private getAverageOfCpuFlat(cpuLoad: z.infer<typeof cpuLoadPerCoreApiList>[]) {
+    if (cpuLoad.length === 0) return 0;
     const averages = cpuLoad.map((load) => this.getAverageOfCpu(load));
     return averages.reduce((acc, current) => acc + current, 0) / averages.length;
   }
 
   private getAverageOfCpu(cpuLoad?: z.infer<typeof cpuLoadPerCoreApiList>) {
-    if (!cpuLoad) {
+    if (!cpuLoad || cpuLoad.length === 0) {
       return 0;
     }
     return cpuLoad.reduce((acc, current) => acc + current.load, 0) / cpuLoad.length;

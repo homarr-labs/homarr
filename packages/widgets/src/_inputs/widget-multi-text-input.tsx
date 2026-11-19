@@ -100,6 +100,7 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
                     event.preventDefault();
                     onChange(values.slice(0, -1));
                   } else if (event.key === "Enter") {
+                    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
                     event.preventDefault();
                     handleAddSearch();
                   }

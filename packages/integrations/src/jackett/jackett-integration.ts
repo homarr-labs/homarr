@@ -43,7 +43,10 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
       signal: AbortSignal.timeout(30_000),
       redirect: "error",
     });
-    if (!response.ok) throw new Error(`Jackett indexers request failed (${response.status})`);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error(`Jackett indexers request failed (${response.status})`);
+    }
     const parsed = indexersSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
     if (parsed.indexers === "") return [];
     return (parsed.indexers.indexer ?? []).filter((indexer) => indexer.$.configured === "true");
@@ -70,7 +73,10 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
       signal: AbortSignal.timeout(30_000),
       redirect: "error",
     });
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
     searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
   }
@@ -106,7 +112,10 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.torznabUrl("all", "caps"), { redirect: "error" });
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
     capsSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
     return { success: true };
   }

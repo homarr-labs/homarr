@@ -143,7 +143,13 @@ function StreamCard({
 
         {stream.durationMs && stream.durationMs > 0 && (
           <Group gap="xs" align="center">
-            <Progress value={progressPercent} size="xs" style={{ flex: 1 }} radius="xl" />
+            <Progress
+              value={progressPercent}
+              size="xs"
+              style={{ flex: 1 }}
+              radius="xl"
+              aria-label={`${stream.username}: ${mediaLabel}`}
+            />
             <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
               {formatDuration(stream.progressMs)} / {formatDuration(stream.durationMs)}
             </Text>

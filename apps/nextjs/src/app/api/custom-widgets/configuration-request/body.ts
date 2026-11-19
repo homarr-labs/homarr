@@ -54,6 +54,8 @@ export async function readConfigurationRequestBody(
     }
   } catch {
     return { status: "invalid" };
+  } finally {
+    reader.releaseLock();
   }
 
   const bytes = new Uint8Array(byteLength);

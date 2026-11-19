@@ -41,7 +41,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
   const isPending = isPendingQuery || isPendingMutation;
   const t = useI18n();
-  const requestedSeasons = new Set(data?.requestedSeasons ?? []);
+  const requestedSeasons = useMemo(() => new Set(data?.requestedSeasons ?? []), [data?.requestedSeasons]);
 
   const columns = useMemo<MRT_ColumnDef<Season>[]>(
     () => [
@@ -64,7 +64,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
           ) : null,
       },
     ],
-    [data?.requestedSeasons],
+    [requestedSeasons, t],
   );
 
   const table = useTranslatedMantineReactTable({
@@ -91,6 +91,8 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
   const anySelected = Object.keys(table.getState().rowSelection).length > 0;
 
   const handleMutate = () => {
+    if (isPending || !data) return;
+
     const selectedSeasons = table.getSelectedRowModel().rows.flatMap((row) => row.original.seasonNumber);
     mutate({
       integrationId: innerProps.integrationId,
@@ -116,7 +118,11 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
         <Button onClick={actions.closeModal} variant="light">
           {t("common.action.cancel")}
         </Button>
-        <Button onClick={handleMutate} disabled={!anySelected && innerProps.mediaType === "tv"}>
+        <Button
+          onClick={handleMutate}
+          loading={isPendingMutation}
+          disabled={isPendingQuery || !data || (!anySelected && innerProps.mediaType === "tv")}
+        >
           {t("search.engine.media.request.modal.button.send")}
         </Button>
       </Group>

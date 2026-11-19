@@ -65,6 +65,7 @@ export function HomarrDataTable<T>({
   const handleMouseDownCapture = useCallback(
     (event: React.MouseEvent<HTMLTableElement>) => {
       onMouseDownCapture?.(event);
+      if (event.defaultPrevented || event.button !== 0) return;
       const target = event.target;
       if (!(target instanceof Element)) return;
 

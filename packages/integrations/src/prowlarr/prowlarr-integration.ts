@@ -29,10 +29,13 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
       },
     });
     if (!indexerResponse.ok) {
+      await indexerResponse.body?.cancel().catch(() => undefined);
       throw new Error(
         `Failed to fetch indexers for ${this.integration.name} (${this.integration.id}): ${indexerResponse.statusText}`,
       );
     }
+
+    const indexersResult = indexerResponseSchema.array().safeParse(await indexerResponse.json());
 
     const statusResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexerstatus"), {
       headers: {
@@ -40,12 +43,12 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
       },
     });
     if (!statusResponse.ok) {
+      await statusResponse.body?.cancel().catch(() => undefined);
       throw new Error(
         `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
       );
     }
 
-    const indexersResult = indexerResponseSchema.array().safeParse(await indexerResponse.json());
     const statusResult = statusResponseSchema.safeParse(await statusResponse.json());
 
     const errorMessages: string[] = [];
@@ -84,6 +87,7 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new Error(
         `Failed to test all indexers for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
       );
@@ -105,7 +109,10 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
       },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const responseSchema = z.object({});
 

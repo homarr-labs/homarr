@@ -72,6 +72,7 @@ export default function ThingportModelsWidget({
               value={list}
               px={isNarrow ? 6 : undefined}
               title={t(`tab.${list}`)}
+              aria-label={t(`tab.${list}`)}
               leftSection={<Icon size="var(--mantine-font-size-sm)" />}
             >
               {isNarrow ? null : t(`tab.${list}`)}

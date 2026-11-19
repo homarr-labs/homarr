@@ -74,6 +74,7 @@ export class UmamiIntegration extends Integration {
       headers: authHeaders,
     });
 
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
     }
@@ -85,7 +86,10 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const url = this.url("/websites");
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     const json = await response.json();
     // Response envelope differs by hosting:
     //   - Umami self-hosted returns the array directly: [website, ...]
@@ -226,6 +230,7 @@ export class UmamiIntegration extends Integration {
     const url = this.url(`/websites/${websiteId}/active`);
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       logger.warn("Failed to load active visitors", { status: response.status, websiteId });
       return 0;
     }
@@ -243,7 +248,10 @@ export class UmamiIntegration extends Integration {
   private async getWebsiteByIdAsync(websiteId: string, authHeaders: Record<string, string>): Promise<UmamiWebsite> {
     const url = this.url(`/websites/${websiteId}`);
     const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     return umamiWebsiteSchema.parse(await response.json());
   }
 
@@ -315,6 +323,7 @@ export class UmamiIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       logger.warn("Failed to load website metrics", { status: response.status, websiteId, type });
       return [];
     }
@@ -358,6 +367,7 @@ export class UmamiIntegration extends Integration {
       });
       const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
       if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
         logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName, page });
         return undefined;
       }
@@ -426,6 +436,7 @@ export class UmamiIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -450,6 +461,7 @@ export class UmamiIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 
@@ -475,7 +487,10 @@ export class UmamiIntegration extends Integration {
         password: this.getSecretValue("password"),
       }),
     });
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
     return umamiAuthResponseSchema.parse(await response.json()).token;
   }
 }

@@ -101,7 +101,7 @@ const resolveExactWallDateTime = (value: WallDateTime, timeZone: string): Date[]
     if (wallDateTimeEquals(value, dayjs(candidate).tz(timeZone))) matches.push(candidate);
   }
   // oxlint-disable-next-line unicorn/no-array-sort -- Array.toSorted is not supported in all target browsers.
-  return [...matches].sort((left, right) => left.getTime() - right.getTime());
+  return matches.sort((left, right) => left.getTime() - right.getTime());
 };
 
 /** Resolves a local wall-clock value, preferring the earlier repeated time and the first valid time after a DST gap. */

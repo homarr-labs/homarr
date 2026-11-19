@@ -58,7 +58,10 @@ export const airQualityRequestHandler = createWidgetRequestHandler({
     url.searchParams.set("timezone", "auto");
 
     const response = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
-    if (!response.ok) throw new ResponseError(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ResponseError(response);
+    }
 
     const json: unknown = await response.json();
     const airQuality = await atLocationOutput.parseAsync(json);

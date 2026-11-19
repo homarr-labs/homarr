@@ -63,13 +63,14 @@ export const DockerLogsTerminal = ({ endpointId, containerId }: DockerLogsTermin
     pendingLogsRef.current = [];
     terminal.refresh(0, terminal.rows - 1);
 
-    setTimeout(() => {
+    const fitTimeout = setTimeout(() => {
       const fitAddon = new FitAddon();
       terminalRef.current?.loadAddon(fitAddon);
       fitAddon.fit();
     });
 
     return () => {
+      clearTimeout(fitTimeout);
       isTerminalReadyRef.current = false;
       pendingLogsRef.current = [];
       canvasAddon.dispose();

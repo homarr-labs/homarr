@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "@mantine/hooks";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
@@ -78,13 +79,16 @@ async function loadObjectAsync(url: string, format: ThingportMeshFormat, signal:
 
 /** A model spinning slowly in the primary colour; drag to turn it, click to open it. */
 export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, onLoaded, onError }: ModelViewerProps) {
+  const reduceMotion = useReducedMotion(true);
+  const shouldAutoRotate = autoRotate && !reduceMotion;
   const mountRef = useRef<HTMLDivElement>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
   // Read inside the effect without reloading the model when they change.
   const callbacksRef = useRef({ onOpen, onLoaded, onError });
   callbacksRef.current = { onOpen, onLoaded, onError };
-  const initialRef = useRef({ color, autoRotate });
+  const initialRef = useRef({ color, autoRotate: shouldAutoRotate });
+  initialRef.current = { color, autoRotate: shouldAutoRotate };
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -243,8 +247,8 @@ export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, o
   }, [color]);
 
   useEffect(() => {
-    if (controlsRef.current) controlsRef.current.autoRotate = autoRotate;
-  }, [autoRotate]);
+    if (controlsRef.current) controlsRef.current.autoRotate = shouldAutoRotate;
+  }, [shouldAutoRotate]);
 
   return <div ref={mountRef} style={{ position: "absolute", inset: 0, cursor: "grab" }} />;
 }

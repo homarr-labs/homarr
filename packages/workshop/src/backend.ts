@@ -718,7 +718,8 @@ export const workshopQueryKeys = {
     [...workshopQueryKeys.lists(backend.baseUrl), listKeyOptions(options)] as const,
   details: (baseUrl?: string) => [...workshopQueryKeys.all, "detail", baseUrl] as const,
   detail: (backend: WorkshopBackend, id: string) => [...workshopQueryKeys.details(backend.baseUrl), id] as const,
-  reports: (backend: WorkshopBackend) => [...workshopQueryKeys.all, "reports", backend.baseUrl] as const,
+  reports: (backend: WorkshopBackend) =>
+    [...workshopQueryKeys.all, "reports", backend.baseUrl, backend.currentUser?.id ?? "anonymous"] as const,
   reportSummaries: (backend: WorkshopBackend, submission: string) =>
     [
       ...workshopQueryKeys.all,

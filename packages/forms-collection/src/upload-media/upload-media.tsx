@@ -58,7 +58,11 @@ export const UploadMedia = ({
   };
 
   return (
-    <FileButton onChange={handleFileUploadAsync} accept={accept.join(",")} multiple={multiple}>
+    <FileButton
+      onChange={(files) => void handleFileUploadAsync(files).catch(() => undefined)}
+      accept={accept.join(",")}
+      multiple={multiple}
+    >
       {({ onClick }) => children({ onClick, loading: isPending })}
     </FileButton>
   );

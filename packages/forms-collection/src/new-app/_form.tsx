@@ -159,7 +159,13 @@ export const AppForm = ({
         />
 
         <Collapse expanded={opened}>
-          <TextInput {...form.getInputProps("pingUrl")} />
+          <TextInput
+            {...form.getInputProps("pingUrl")}
+            label={tApp("field.useDifferentUrlForPing.checkbox.label")}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+          />
         </Collapse>
 
         {!hideButtons && (

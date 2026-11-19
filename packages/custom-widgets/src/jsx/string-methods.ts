@@ -1,5 +1,15 @@
 import { numericArgument, SafeJsxError } from "./interpreter-foundation";
 import type { InterpreterMethodContext } from "./interpreter-method-context";
+import { isSafeRegexLiteral } from "./regex-policy";
+
+function safePattern(value: unknown): RegExp {
+  if (value instanceof RegExp) return value;
+  const pattern = String(value ?? "");
+  if (!isSafeRegexLiteral({ pattern, flags: "" })) {
+    throw new SafeJsxError("UNSAFE_REGEX: Invalid regular expression pattern");
+  }
+  return new RegExp(pattern);
+}
 
 export function callStringMethod(
   receiver: string,
@@ -49,6 +59,7 @@ export function callStringMethod(
           break;
         }
         result += receiver.slice(cursor, matchIndex) + replacement;
+        context.budget.string(result);
         cursor = matchIndex + search.length;
       }
       return { handled: true, value: context.budget.string(result) };
@@ -106,13 +117,13 @@ export function callStringMethod(
       return { handled: true, value: split };
     }
     case "match": {
-      const pattern = args[0] instanceof RegExp ? args[0] : String(args[0] ?? "");
+      const pattern = safePattern(args[0]);
       const matches = receiver.match(pattern);
       if (matches) context.budget.collection(matches.length);
       return { handled: true, value: matches ? [...matches] : null };
     }
     case "search":
-      return { handled: true, value: receiver.search(args[0] instanceof RegExp ? args[0] : String(args[0] ?? "")) };
+      return { handled: true, value: receiver.search(safePattern(args[0])) };
     default:
       return { handled: false };
   }

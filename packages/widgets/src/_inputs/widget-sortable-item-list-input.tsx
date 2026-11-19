@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   closestCenter,
@@ -54,20 +54,13 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
-  const isFirstAnnouncement = useRef(true);
   const getIndex = (id: TOptionValue) => values.indexOf(id);
-  const activeIndex = activeId ? getIndex(activeId) : -1;
+  const activeIndex = activeId !== null ? getIndex(activeId) : -1;
 
   useEffect(() => {
     if (Array.isArray(currentValue)) return;
     form.setFieldValue(fieldPath, options.defaultValue);
   }, [currentValue, fieldPath, form, options.defaultValue]);
-
-  useEffect(() => {
-    if (!activeId) {
-      isFirstAnnouncement.current = true;
-    }
-  }, [activeId]);
 
   const getItem = useCallback(
     (id: TOptionValue) => {
@@ -158,7 +151,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
 
             if (over) {
               const overIndex = getIndex(over.id as TOptionValue);
-              if (activeIndex !== overIndex) {
+              if (activeIndex >= 0 && overIndex >= 0 && activeIndex !== overIndex) {
                 updateItems((items) => arrayMove(items, activeIndex, overIndex));
               }
             }

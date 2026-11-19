@@ -136,10 +136,18 @@ export class Aria2Integration extends Integration implements IDownloadClientInte
 
             return await fetchAsync(url, { method: "POST", body })
               .then(async (response) => {
-                const responseBody = (await response.json()) as { result: ReturnType<Aria2GetClient[typeof method]> };
+                const responseBody: unknown = await response.json();
 
                 if (!response.ok) {
                   throw new ResponseError(response);
+                }
+                if (
+                  responseBody === null ||
+                  typeof responseBody !== "object" ||
+                  "error" in responseBody ||
+                  !("result" in responseBody)
+                ) {
+                  throw new Error("Aria2 RPC request failed");
                 }
                 return responseBody.result;
               })

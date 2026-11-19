@@ -57,8 +57,8 @@ export const formatMemoryUsage = (
   formatBytesPair: (used: number, total: number) => { used: string; total: string },
 ) => {
   const totalMemory = memFree + memUsed;
-  const memFreePercent = Math.round((memFree / totalMemory) * 100);
-  const memUsedPercent = Math.round((memUsed / totalMemory) * 100);
+  const memFreePercent = totalMemory > 0 ? Math.round((memFree / totalMemory) * 100) : 0;
+  const memUsedPercent = totalMemory > 0 ? Math.round((memUsed / totalMemory) * 100) : 0;
   const { used: formattedFree, total: formattedTotal } = formatBytesPair(memFree, totalMemory);
 
   return {

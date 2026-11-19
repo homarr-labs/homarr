@@ -52,11 +52,7 @@ export default function BookmarksWidget({
   const board = useRequiredBoard();
   const advanced = displayMode === "advanced";
   const appIds = useMemo(() => options.items.filter((value) => !getDirectBookmarkUrl(value)), [options.items]);
-  const appsQuery = clientApi.app.byIds.useQuery(appIds, {
-    select(selectedApps) {
-      return selectedApps;
-    },
-  });
+  const appsQuery = clientApi.app.byIds.useQuery(appIds);
   const apps = getUsableWidgetQueryData(appsQuery) ?? [];
   const appsById = new Map(apps.map((app) => [app.id, app]));
   const configuredItems = options.items.flatMap((value) => {

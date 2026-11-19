@@ -14,6 +14,7 @@ export class BazarrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(response);
     }
 
@@ -28,6 +29,7 @@ export class BazarrIntegration extends Integration {
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new Error(
         `Failed to fetch Bazarr badges for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
       );

@@ -33,7 +33,7 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
         getExtraEntryFields: (feedEntry) => {
           const extraFields: Record<string, unknown> = {};
 
-          const media = attemptGetImageFromEntry(input.url, feedEntry);
+          const media = attemptGetImageFromEntry(feedEntry);
           if (media) {
             extraFields.enclosure = media;
           }
@@ -72,28 +72,26 @@ export const rssFeedsRequestHandler = createWidgetRequestHandler({
     return {
       ...result,
       entries:
-        result.entries
-          ?.map((entry) => {
-            const { mediaDescription, ...feedEntry } = entry as ExtendedFeedEntry & { mediaDescription?: string };
-            if (!feedEntry.description && mediaDescription) {
-              feedEntry.description = mediaDescription;
-            }
-            return { ...feedEntry, feedUrl: input.url };
-          })
-          .slice(0, input.count) ?? [],
+        result.entries?.slice(0, input.count).map((entry) => {
+          const { mediaDescription, ...feedEntry } = entry as ExtendedFeedEntry & { mediaDescription?: string };
+          if (!feedEntry.description && mediaDescription) {
+            feedEntry.description = mediaDescription;
+          }
+          return { ...feedEntry, feedUrl: input.url };
+        }) ?? [],
     };
   },
 });
 
-const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
+const attemptGetImageFromEntry = (entry: object) => {
   const media = getFirstMediaProperty(entry);
   if (media !== null) {
     return media;
   }
-  return getImageFromStringAsFallback(feedUrl, JSON.stringify(entry));
+  return getImageFromStringAsFallback(JSON.stringify(entry));
 };
 
-const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
+const getImageFromStringAsFallback = (content: string) => {
   const regex =
     /https?:\/\/[^\s"'<>\\]+?\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff)\b(?:\?[^\s"'<>\\#]*)?(?:#[^\s"'<>\\]*)?/i;
   const result = regex.exec(content);
@@ -102,9 +100,7 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
     return null;
   }
 
-  console.debug(
-    `Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`,
-  );
+  logger.debug("Found a feed image using the fallback search");
   return result[0].replaceAll("&amp;", "&");
 };
 

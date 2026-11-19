@@ -195,7 +195,7 @@ const InPlaceEditorPanelContent = (
   }, [isSheet, viewport.height]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (isModalOpen || event.nativeEvent.isComposing) return;
+    if (isModalOpen || event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && step === "configure") {
       event.preventDefault();
       event.stopPropagation();

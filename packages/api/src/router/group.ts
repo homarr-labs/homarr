@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, like, not, sql } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
@@ -367,23 +367,7 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
 
-      const user = await ctx.db.query.users.findFirst({
-        where: eq(users.id, input.userId),
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      if (!isGroupMembershipManagedLocally(user.provider)) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User's provider is not managed locally",
-        });
-      }
+      await throwIfUserMembershipNotManagedLocallyAsync(ctx.db, input.userId);
 
       await ctx.db.insert(groupMembers).values({
         groupId: input.groupId,
@@ -397,6 +381,7 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
+      await throwIfUserMembershipNotManagedLocallyAsync(ctx.db, input.userId);
 
       await ctx.db
         .delete(groupMembers)
@@ -406,7 +391,7 @@ export const groupRouter = createTRPCRouter({
 
 const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreId?: string) => {
   const similar = await db.query.groups.findFirst({
-    where: and(like(groups.name, `${name}`), not(eq(groups.id, ignoreId ?? ""))),
+    where: and(sql`lower(${groups.name}) = ${name.toLowerCase()}`, not(eq(groups.id, ignoreId ?? ""))),
   });
 
   if (similar) {
@@ -414,6 +399,19 @@ const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreI
       code: "CONFLICT",
       message: "Found group with similar name",
     });
+  }
+};
+
+const throwIfUserMembershipNotManagedLocallyAsync = async (db: Database, userId: string) => {
+  const user = await db.query.users.findFirst({
+    columns: { provider: true },
+    where: eq(users.id, userId),
+  });
+  if (!user) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+  }
+  if (!isGroupMembershipManagedLocally(user.provider)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "User's provider is not managed locally" });
   }
 };
 

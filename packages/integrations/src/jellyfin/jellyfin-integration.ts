@@ -139,7 +139,10 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       }).catch(() => {
         throw new Error("Jellyfin authentication failed");
       });
-      if (!response.ok) throw new Error("Jellyfin authentication failed");
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new Error("Jellyfin authentication failed");
+      }
       const result = (await response.json().catch(() => null)) as { AccessToken?: unknown } | null;
       if (typeof result?.AccessToken !== "string" || result.AccessToken.length === 0)
         throw new Error("Jellyfin authentication failed");

@@ -111,7 +111,14 @@ export const PickStep = ({ useCatalog, actions, AreaSizeInputs, onKeyDown, flipp
       onKeyDown(event);
       return;
     }
-    if (event.nativeEvent.isComposing || event.shiftKey || event.ctrlKey || event.metaKey) return;
+    if (
+      event.nativeEvent.isComposing ||
+      event.nativeEvent.keyCode === 229 ||
+      event.shiftKey ||
+      event.ctrlKey ||
+      event.metaKey
+    )
+      return;
     if (event.key === "ArrowDown") {
       event.preventDefault();
       combobox.selectNextOption();

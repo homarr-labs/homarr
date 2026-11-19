@@ -191,13 +191,12 @@ export default async function Layout(props: {
     <html
       lang={locale}
       dir={direction}
+      data-mantine-color-scheme={colorScheme}
       className={[fontSans.variable, fontGeist.variable, fontGeistMono.variable].join(" ")}
-      style={{
-        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
-      }}
       suppressHydrationWarning
     >
       <head>
+        <meta name="color-scheme" content={colorScheme === "auto" ? "light dark" : colorScheme} />
         <ColorSchemeScript defaultColorScheme={colorScheme} />
         <script id="homarr-board-canvas-fitting" dangerouslySetInnerHTML={{ __html: getBoardCanvasFittingScript() }} />
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />

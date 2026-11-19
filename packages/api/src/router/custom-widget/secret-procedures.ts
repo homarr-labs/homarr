@@ -74,7 +74,9 @@ export const secretProcedures = {
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
       const definition = parseStoredCustomWidgetDefinition(existing);
       assertSecretSources(definition.sources, [input.secret]);
-      await setCustomWidgetSecret(ctx.db, input.definitionId, input.secret);
+      const source = definition.sources[input.secret.sourceId];
+      if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
+      await setCustomWidgetSecret(ctx.db, input.definitionId, input.secret, source);
       return { sourceId: input.secret.sourceId, kind: input.secret.kind, isSet: true };
     }),
 

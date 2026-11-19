@@ -135,7 +135,7 @@ export const WazuhStatTile = ({ label, value, color, href, active, onClick, hint
     </Stack>
   );
   const wrapped = onClick ? (
-    <UnstyledButton onClick={onClick} className={classes.tileButton}>
+    <UnstyledButton onClick={onClick} aria-pressed={active} className={classes.tileButton}>
       {content}
     </UnstyledButton>
   ) : href ? (

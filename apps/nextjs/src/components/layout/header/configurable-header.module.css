@@ -43,10 +43,12 @@
 
 .zone[data-zone="center"] {
   justify-content: center;
+  justify-content: safe center;
 }
 
 .zone[data-zone="right"] {
   justify-content: flex-end;
+  justify-content: safe flex-end;
 }
 
 .search {
@@ -104,6 +106,7 @@
 
 .mobileZone[data-zone="right"] {
   justify-content: flex-end;
+  justify-content: safe flex-end;
   max-width: 72vw;
 }
 

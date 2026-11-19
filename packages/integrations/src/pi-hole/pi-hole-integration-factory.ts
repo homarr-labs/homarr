@@ -10,6 +10,7 @@ export const createPiHoleIntegrationAsync = async (input: IntegrationInput) => {
     const baseUrl = removeTrailingSlash(input.url);
     const url = new URL(`${baseUrl}/api/info/login`);
     const response = await fetchWithTrustedCertificatesAsync(url);
+    await response.body?.cancel().catch(() => undefined);
 
     /**
      * In pi-hole 5 the api was at /admin/api.php, in pi-hole 6 it was moved to /api

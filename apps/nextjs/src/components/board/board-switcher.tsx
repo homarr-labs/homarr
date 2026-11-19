@@ -118,6 +118,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   }, [activeIndex, filteredBoards.length, isOpen]);
 
   const handleModalKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
     const isSearchInput =
       event.target instanceof HTMLInputElement && event.target.dataset.boardSwitcherSearch !== undefined;
 

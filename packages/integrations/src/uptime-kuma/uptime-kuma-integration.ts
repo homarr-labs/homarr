@@ -35,6 +35,7 @@ export class UptimeKumaIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const statusPageResponse = await input.fetchAsync(this.statusPageApiUrl());
     if (!statusPageResponse.ok) {
+      await statusPageResponse.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(statusPageResponse);
     }
 
@@ -47,6 +48,7 @@ export class UptimeKumaIntegration extends Integration {
 
     const heartbeatResponse = await input.fetchAsync(this.heartbeatApiUrl());
     if (!heartbeatResponse.ok) {
+      await heartbeatResponse.body?.cancel().catch(() => undefined);
       return TestConnectionError.StatusResult(heartbeatResponse);
     }
 
@@ -62,13 +64,13 @@ export class UptimeKumaIntegration extends Integration {
 
   public async getStatusPageAsync(signal?: AbortSignal, statusPageSlug?: string): Promise<UptimeKumaStatusPage> {
     const slug = statusPageSlug?.trim().toLowerCase() || this.getSlug();
-    const [statusPageResponse, heartbeatResponse] = await Promise.all([
-      this.fetchOkAsync(this.statusPageApiUrl(slug), signal),
-      this.fetchOkAsync(this.heartbeatApiUrl(slug), signal),
+    const [statusPageJson, heartbeatJson] = await Promise.all([
+      this.fetchJsonAsync(this.statusPageApiUrl(slug), signal),
+      this.fetchJsonAsync(this.heartbeatApiUrl(slug), signal),
     ]);
 
-    const statusPage = uptimeKumaStatusPageResponseSchema.parse(await statusPageResponse.json());
-    const heartbeat = uptimeKumaHeartbeatResponseSchema.parse(await heartbeatResponse.json());
+    const statusPage = uptimeKumaStatusPageResponseSchema.parse(statusPageJson);
+    const heartbeat = uptimeKumaHeartbeatResponseSchema.parse(heartbeatJson);
     const heartbeatsByMonitor = new Map(
       Object.entries(heartbeat.heartbeatList).map(([monitorId, heartbeats]) => [
         Number(monitorId),
@@ -101,12 +103,13 @@ export class UptimeKumaIntegration extends Integration {
     };
   }
 
-  private async fetchOkAsync(url: URL, signal?: AbortSignal) {
+  private async fetchJsonAsync(url: URL, signal?: AbortSignal) {
     const response = await fetchWithTrustedCertificatesAsync(url, { signal });
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
-    return response;
+    return response.json();
   }
 
   private statusPageApiUrl(slug = this.getSlug()) {

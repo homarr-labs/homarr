@@ -314,6 +314,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
               </Group>
               <Progress
                 value={clampPercent(summary.load)}
+                aria-label={`${summary.name}: ${t("field.load")}`}
                 size="sm"
                 color={getLoadColor(summary.load)}
                 styles={{ root: { backgroundColor: neutralSurfaceBackground } }}

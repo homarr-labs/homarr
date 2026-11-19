@@ -124,6 +124,7 @@ export class NzbGetIntegration extends Integration implements IDownloadClientInt
     return await fetchAsync(url, { method: "POST", body, headers })
       .then(async (response) => {
         if (!response.ok) {
+          await response.body?.cancel().catch(() => undefined);
           throw new ResponseError(response);
         }
         return ((await response.json()) as { result: ReturnType<NzbGetClient[CallType]> }).result;

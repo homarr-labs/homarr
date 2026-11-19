@@ -175,11 +175,13 @@ const kuery = (query: string) =>
 export const createAlertDashboardUrl = (dashboardUrl: string, alert: WazuhAlert) => {
   const time = new Date(alert.timestamp).getTime();
   const window = 5 * 60 * 1000;
-  const from = new Date(time - window).toISOString();
-  const to = new Date(time + window).toISOString();
+  const from = new Date(time - window);
+  const to = new Date(time + window);
   let url = `${dashboardUrl.replace(/\/+$/, "")}/app/threat-hunting#/overview/?tab=general&tabView=events`;
   if (alert.agentId) url += `&agentId=${encodeURIComponent(alert.agentId)}`;
   if (alert.alertId) url += `&_q=${kuery(`id:"${alert.alertId}"`)}`;
-  url += `&_g=${encodeURIComponent(`(time:(from:'${from}',to:'${to}'))`)}`;
+  if (Number.isFinite(from.getTime()) && Number.isFinite(to.getTime())) {
+    url += `&_g=${encodeURIComponent(`(time:(from:'${from.toISOString()}',to:'${to.toISOString()}'))`)}`;
+  }
   return url;
 };

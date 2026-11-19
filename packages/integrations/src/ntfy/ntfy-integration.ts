@@ -11,7 +11,8 @@ import type { NtfyNotification } from "./ntfy-schema";
 
 export class NTFYIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    await input.fetchAsync(this.url("/v1/account"), { headers: this.getHeaders() });
+    const response = await input.fetchAsync(this.url("/v1/account"), { headers: this.getHeaders() });
+    await response.body?.cancel().catch(() => undefined);
     return { success: true };
   }
 
@@ -27,8 +28,11 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
     const notifications = await Promise.all(
       (
         await fetchWithTrustedCertificatesAsync(url, { headers: this.getHeaders() })
-          .then((response) => {
-            if (!response.ok) throw new ResponseError(response);
+          .then(async (response) => {
+            if (!response.ok) {
+              await response.body?.cancel().catch(() => undefined);
+              throw new ResponseError(response);
+            }
             return response.text();
           })
           .catch((error) => {

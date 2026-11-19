@@ -76,7 +76,7 @@ export function isCompiledFile(file) {
 // Key the large dependency artifact by its traced contents, independently of
 // application chunks. Paths and symlink kinds/targets also affect restoration.
 export function createDependencyManifest(files) {
-  return [...files].sort().map((file) => {
+  return files.toSorted().map((file) => {
     const symbolicLink = lstatSync(file).isSymbolicLink();
     const hash = createHash("sha256");
     if (symbolicLink) hash.update(readlinkSync(file));

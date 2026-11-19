@@ -9,6 +9,7 @@ import {
   TableThead,
   TableTr,
   Text,
+  UnstyledButton,
 } from "@mantine/core";
 
 import { invariantTechnicalLabels } from "@homarr/definitions";
@@ -30,21 +31,21 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
     <Table highlightOnHover>
       <TableThead>
         <TableTr fz="xs">
-          <TableTh ta="start" p={0}>
+          <TableTh scope="col" ta="start" p={0}>
             {tCommon("field.name")}
           </TableTh>
           {!isTiny && type !== "storage" ? (
-            <TableTh ta="start" p={0}>
+            <TableTh scope="col" ta="start" p={0}>
               {invariantTechnicalLabels.cpu}
             </TableTh>
           ) : null}
           {!isTiny && type !== "storage" ? (
-            <TableTh ta="start" p={0}>
+            <TableTh scope="col" ta="start" p={0}>
               {invariantTechnicalLabels.ram}
             </TableTh>
           ) : null}
           {!isTiny && type === "storage" ? (
-            <TableTh ta="start" p={0}>
+            <TableTh scope="col" ta="start" p={0}>
               {t("cluster.table.header.node")}
             </TableTh>
           ) : null}
@@ -60,30 +61,32 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
           .map((item) => {
             return (
               <ResourcePopover key={item.id} item={item}>
-                <Popover.Target>
-                  <TableTr fz="xs">
-                    <TableTd>
-                      <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
-                        <Indicator size={isTiny ? 6 : 8} color={item.isRunning ? "green" : "yellow"}>
-                          {null}
-                        </Indicator>
-                        <Text lineClamp={1} fz="xs">
-                          {item.name}
-                        </Text>
-                      </Group>
-                    </TableTd>
-                    {isTiny ? null : item.type === "storage" ? (
-                      <TableTd style={{ WebkitLineClamp: "1" }}>{item.node}</TableTd>
-                    ) : (
-                      <>
-                        <TableTd style={{ whiteSpace: "nowrap" }}>{(item.cpu.utilization * 100).toFixed(1)}%</TableTd>
-                        <TableTd style={{ whiteSpace: "nowrap" }}>
-                          {(item.memory.total ? (item.memory.used / item.memory.total) * 100 : 0).toFixed(1)}%
-                        </TableTd>
-                      </>
-                    )}
-                  </TableTr>
-                </Popover.Target>
+                <TableTr fz="xs">
+                  <TableTd>
+                    <Popover.Target>
+                      <UnstyledButton aria-label={`${item.name}: ${item.status}`}>
+                        <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
+                          <Indicator size={isTiny ? 6 : 8} color={item.isRunning ? "green" : "yellow"}>
+                            {null}
+                          </Indicator>
+                          <Text lineClamp={1} fz="xs">
+                            {item.name}
+                          </Text>
+                        </Group>
+                      </UnstyledButton>
+                    </Popover.Target>
+                  </TableTd>
+                  {isTiny ? null : item.type === "storage" ? (
+                    <TableTd style={{ WebkitLineClamp: "1" }}>{item.node}</TableTd>
+                  ) : (
+                    <>
+                      <TableTd style={{ whiteSpace: "nowrap" }}>{(item.cpu.utilization * 100).toFixed(1)}%</TableTd>
+                      <TableTd style={{ whiteSpace: "nowrap" }}>
+                        {(item.memory.total ? (item.memory.used / item.memory.total) * 100 : 0).toFixed(1)}%
+                      </TableTd>
+                    </>
+                  )}
+                </TableTr>
               </ResourcePopover>
             );
           })}

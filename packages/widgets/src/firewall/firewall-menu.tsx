@@ -4,15 +4,17 @@ import type { Firewall } from "./component";
 import classes from "./firewall.module.css";
 
 interface FirewallMenuProps {
+  label: string;
   onChange: (value: string | null) => void;
   dropdownItems: Firewall[];
   selectedFirewall: string;
   isTiny: boolean;
 }
 
-export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall }: FirewallMenuProps) => (
+export const FirewallMenu = ({ label, onChange, isTiny, dropdownItems, selectedFirewall }: FirewallMenuProps) => (
   <Box style={{ flex: 1, minWidth: 0 }}>
     <Select
+      aria-label={label}
       value={selectedFirewall}
       onChange={onChange}
       size="xs"

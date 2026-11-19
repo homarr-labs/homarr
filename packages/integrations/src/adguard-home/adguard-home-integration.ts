@@ -19,33 +19,24 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     const headers = {
       Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
     };
-    const [statsResponse, statusResponse, filteringStatusResponse] = await Promise.all([
-      fetchWithTrustedCertificatesAsync(this.url("/control/stats"), { headers }),
-      fetchWithTrustedCertificatesAsync(this.url("/control/status"), { headers }),
-      fetchWithTrustedCertificatesAsync(this.url("/control/filtering/status"), { headers }),
+    const fetchJsonAsync = async (path: `/${string}`, label: string) => {
+      const response = await fetchWithTrustedCertificatesAsync(this.url(path), { headers });
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new Error(
+          `Failed to fetch ${label} for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+        );
+      }
+      return response.json();
+    };
+    // Each request owns its body even if another endpoint fails first.
+    const [stats, status, filteringStatus] = await Promise.all([
+      fetchJsonAsync("/control/stats", "stats").then((body) => statsResponseSchema.safeParse(body)),
+      fetchJsonAsync("/control/status", "status").then((body) => statusResponseSchema.safeParse(body)),
+      fetchJsonAsync("/control/filtering/status", "filtering status").then((body) =>
+        filteringStatusSchema.safeParse(body),
+      ),
     ]);
-
-    if (!statsResponse.ok) {
-      throw new Error(
-        `Failed to fetch stats for ${this.integration.name} (${this.integration.id}): ${statsResponse.statusText}`,
-      );
-    }
-
-    if (!statusResponse.ok) {
-      throw new Error(
-        `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
-      );
-    }
-
-    if (!filteringStatusResponse.ok) {
-      throw new Error(
-        `Failed to fetch filtering status for ${this.integration.name} (${this.integration.id}): ${filteringStatusResponse.statusText}`,
-      );
-    }
-
-    const stats = statsResponseSchema.safeParse(await statsResponse.json());
-    const status = statusResponseSchema.safeParse(await statusResponse.json());
-    const filteringStatus = filteringStatusSchema.safeParse(await filteringStatusResponse.json());
 
     const errorMessages: string[] = [];
     if (!stats.success) {
@@ -98,7 +89,10 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       },
     });
 
-    if (!response.ok) return TestConnectionError.StatusResult(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      return TestConnectionError.StatusResult(response);
+    }
 
     const result = await response.json();
     if (typeof result === "object" && result !== null) return { success: true };
@@ -117,6 +111,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
         enabled: true,
       }),
     });
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new Error(
         `Failed to enable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
@@ -136,6 +131,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
         duration: duration * 1000,
       }),
     });
+    await response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
       throw new Error(
         `Failed to disable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,

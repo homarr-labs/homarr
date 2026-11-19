@@ -3,7 +3,7 @@ import { WebSocket } from "ws";
 import z from "zod";
 
 import { createId, isRecord } from "@homarr/common";
-import { matchErrorCode, RequestError, ResponseError } from "@homarr/common/server";
+import { createKeyedFingerprint, matchErrorCode, RequestError, ResponseError } from "@homarr/common/server";
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
@@ -18,6 +18,7 @@ import { trueNasApis } from "./truenas-api";
 const logger = createLogger({ module: "trueNasClient" });
 
 const REQUEST_TIMEOUT_MS = 5000;
+const IDLE_TIMEOUT_MS = 5 * 60_000;
 
 type CertificateOptions = IntegrationTestingInput["options"];
 
@@ -35,12 +36,16 @@ export class TrueNasClient {
   // callers reuse a single socket instead of racing to open duplicates.
   private static readonly connectionMap = new Map<string, Promise<TrueNasSocket>>();
   private static readonly apiMap = new Map<string, TrueNasApi>();
+  private static readonly configurationMap = new Map<string, string>();
+  private readonly configurationKey: string;
 
   constructor(
     private readonly id: string,
     private readonly webSocketUrl: (path: `/${string}`) => URL,
     private readonly credentials: TrueNasCredentials,
-  ) {}
+  ) {
+    this.configurationKey = createKeyedFingerprint(JSON.stringify([webSocketUrl("/").toString(), credentials]));
+  }
 
   /** Sends an authenticated request, reusing the cached connection while it is open. */
   public async requestAsync(method: string, params: unknown[] = []): Promise<unknown> {
@@ -66,6 +71,11 @@ export class TrueNasClient {
   }
 
   private getSocketAsync(): Promise<TrueNasSocket> {
+    if (TrueNasClient.configurationMap.get(this.id) !== this.configurationKey) {
+      this.evictConnection();
+      TrueNasClient.apiMap.delete(this.id);
+      TrueNasClient.configurationMap.set(this.id, this.configurationKey);
+    }
     let connection = TrueNasClient.connectionMap.get(this.id);
     if (!connection) {
       connection = this.connectAndAuthenticateAsync();
@@ -74,6 +84,8 @@ export class TrueNasClient {
       const evict = () => {
         if (TrueNasClient.connectionMap.get(this.id) === connection) {
           TrueNasClient.connectionMap.delete(this.id);
+          TrueNasClient.apiMap.delete(this.id);
+          TrueNasClient.configurationMap.delete(this.id);
         }
       };
       // Reconnect on the next request once this attempt fails or the server drops the socket.
@@ -160,12 +172,24 @@ export class TrueNasClient {
  * ({@link trueNasApis}) was negotiated when it was opened.
  */
 class TrueNasSocket {
+  private idleTimer: ReturnType<typeof setTimeout> | undefined;
+
   constructor(
     private readonly webSocket: WebSocket,
     private readonly api: TrueNasApi,
-  ) {}
+  ) {
+    this.touch();
+    webSocket.once("close", () => clearTimeout(this.idleTimer));
+  }
+
+  private touch() {
+    clearTimeout(this.idleTimer);
+    this.idleTimer = setTimeout(() => this.close(), IDLE_TIMEOUT_MS);
+    this.idleTimer.unref?.();
+  }
 
   public close() {
+    clearTimeout(this.idleTimer);
     this.webSocket.close();
   }
 
@@ -180,18 +204,43 @@ class TrueNasSocket {
    */
   public registerSessionAsync(): Promise<void> {
     return new Promise((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        this.webSocket.off("message", handler);
+        this.webSocket.off("close", onClose);
+        this.webSocket.off("error", onError);
+      };
+      const onClose = () => {
+        cleanup();
+        reject(new Error("TrueNAS connection closed before establishing a session"));
+      };
+      const onError = (error: Error) => {
+        cleanup();
+        reject(error);
+      };
       const handler = (raw: RawData) => {
         const message = parseMessage(raw);
         if (message?.msg === "connected") {
-          this.webSocket.off("message", handler);
+          cleanup();
           resolve();
         } else if (message?.msg === "failed") {
-          this.webSocket.off("message", handler);
+          cleanup();
           reject(new Error("Unable to establish TrueNAS session"));
         }
       };
 
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(
+          new RequestError(
+            { type: "timeout", reason: "aborted", code: "ECONNABORTED" },
+            { cause: new Error("TrueNAS session handshake timed out") },
+          ),
+        );
+      }, REQUEST_TIMEOUT_MS);
       this.webSocket.on("message", handler);
+      this.webSocket.once("close", onClose);
+      this.webSocket.once("error", onError);
       this.webSocket.send(JSON.stringify({ msg: "connect", version: "1", support: ["1"] }));
     });
   }
@@ -201,6 +250,7 @@ class TrueNasSocket {
    * {@link REQUEST_TIMEOUT_MS} when no matching response was received.
    */
   public requestAsync(method: string, params: unknown[] = []): Promise<unknown> {
+    this.touch();
     return new Promise((resolve, reject) => {
       const id = createId();
 
@@ -284,6 +334,7 @@ const openTrueNasSocketAsync = async (
       // The @types/ws contract types this as returning a boolean, but ws forwards it to
       // tls.connect which uses Node's `Error | undefined` contract that our helper follows.
       checkServerIdentity: certificate.checkServerIdentity as never,
+      handshakeTimeout: REQUEST_TIMEOUT_MS,
     });
 
     socket.once("open", () => resolve(socket));
@@ -294,7 +345,12 @@ const openTrueNasSocketAsync = async (
   });
 
   const socket = new TrueNasSocket(webSocket, api);
-  if (api.requiresSessionHandshake) await socket.registerSessionAsync();
+  try {
+    if (api.requiresSessionHandshake) await socket.registerSessionAsync();
+  } catch (error) {
+    webSocket.terminate();
+    throw error;
+  }
   return socket;
 };
 

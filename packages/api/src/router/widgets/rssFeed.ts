@@ -3,6 +3,7 @@ import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
+import { isRecord } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
@@ -10,7 +11,6 @@ import { boards, items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { isActionAllowedAsync } from "../board/board-access";
 
@@ -144,8 +144,15 @@ export async function restrictUrlsAsync(ctx: { db: Database; session: Session | 
 
   const urlsByBoard = new Map<string, Set<string>>();
   for (const item of rssFeedItems) {
-    const matchingUrls = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls.filter(
-      (url) => requestedUrls.has(url),
+    let options: unknown;
+    try {
+      options = SuperJSON.parse<unknown>(item.options);
+    } catch {
+      continue;
+    }
+    if (!isRecord(options) || !Array.isArray(options.feedUrls)) continue;
+    const matchingUrls = options.feedUrls.filter(
+      (url): url is string => typeof url === "string" && requestedUrls.has(url),
     );
     if (matchingUrls.length === 0) continue;
 

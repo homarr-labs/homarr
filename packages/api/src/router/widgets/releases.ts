@@ -36,7 +36,7 @@ const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFi
 
 const releaseVersionFilterSchema = z.object({
   prefix: z.string().optional(),
-  precision: z.number(),
+  precision: z.number().int().min(0).max(100),
   suffix: z.string().optional(),
 });
 

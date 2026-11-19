@@ -34,7 +34,7 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
         const labelKey = isReserved ? "capacity.resource.reserved" : "capacity.resource.used";
 
         return (
-          <div key={stat.percentageValue}>
+          <div key={stat.type}>
             <Group justify={"space-between"} mt="xs">
               <Text fz="sm" c="dimmed">
                 {isRTL ? (
@@ -72,7 +72,12 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
                 {isRTL ? `%${stat.percentageValue}` : `${stat.percentageValue}%`}
               </Text>
             </Group>
-            <Progress value={stat.percentageValue} mt={5} color={getProgressBarColor(stat.percentageValue)} />
+            <Progress
+              value={stat.percentageValue}
+              mt={5}
+              color={getProgressBarColor(stat.percentageValue)}
+              aria-label={`${props.kubernetesCapacity.type}: ${tCluster(labelKey)}`}
+            />
           </div>
         );
       })}

@@ -1,28 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-type Contributor = {
-  login: string;
-  avatar_url: string;
-};
+import contributions from "@site/public/data/contributions.json";
 
 // do not add any real users here
 const blacklistedUsernames = ["deepsource-autofix[bot]", "deepsource-io[bot]", "renovate[bot]", "dependabot[bot]"];
+const contributors = contributions.filter((contributor) => !blacklistedUsernames.includes(contributor.login));
 
 export const CodeContributorList = () => {
-  const [contributors, setContributors] = useState<Contributor[]>([]);
-
-  useEffect(() => {
-    fetch("/data/contributions.json").then(async (response) => {
-      const data = await response.json();
-      setContributors(data.filter((contributor: Contributor) => !blacklistedUsernames.includes(contributor.login)));
-    });
-  }, []);
-
   return (
     <div className={"flex flex-wrap gap-3 argos-ignore"}>
-      {contributors.map((contributor: Contributor) => (
+      {contributors.map((contributor) => (
         <div key={contributor.login} className={"flex flex-col items-center w-24"}>
           <img
             className={"mb-2 aspect-square h-24 w-24 rounded"}

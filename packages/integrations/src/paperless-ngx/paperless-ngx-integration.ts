@@ -15,6 +15,7 @@ export class PaperlessNgxIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
 
+    await statisticsResponse.body?.cancel().catch(() => undefined);
     if (!statisticsResponse.ok) {
       return TestConnectionError.StatusResult(statisticsResponse);
     }
@@ -44,6 +45,7 @@ export class PaperlessNgxIntegration extends Integration {
       headers: this.getAuthHeaders(),
     });
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
     return response;

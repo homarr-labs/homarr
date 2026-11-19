@@ -198,6 +198,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     });
 
     if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
       throw new ResponseError(response);
     }
 

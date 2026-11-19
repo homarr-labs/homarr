@@ -20,7 +20,7 @@ import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
-import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
+import { loadWidgetDefinition } from "@homarr/widgets/manifest";
 
 import { useSectionItems } from "../use-section-items";
 
@@ -45,17 +45,22 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
 
   useEffect(() => {
     let cancelled = false;
-    void loadAllWidgetDefinitions().then((definitions) => {
+    const kinds = [...new Set(items.map((item) => item.kind))];
+    void Promise.allSettled(kinds.map((kind) => loadWidgetDefinition(kind))).then((definitions) => {
       if (cancelled) return;
-      const kinds = [...definitions.entries()]
-        .filter(([, definition]) => definition.activitySignal !== undefined)
-        .map(([kind]) => kind);
-      setActivityCapableKinds(new Set(kinds));
+      setActivityCapableKinds(
+        new Set(
+          kinds.filter((_, index) => {
+            const result = definitions[index];
+            return result?.status === "fulfilled" && result.value.activitySignal !== undefined;
+          }),
+        ),
+      );
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [items]);
 
   const activityCapableItems = items.filter((item) => activityCapableKinds.has(item.kind));
   const form = useZodForm(containerEditFormSchema, {

@@ -18,7 +18,7 @@ import { ImageProxy } from "@homarr/image-proxy";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
 import { apiKeyAuth } from "../http-auth";
-import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 
@@ -51,10 +51,6 @@ const carouselPhotoCount = 50;
 export class ImmichIntegration extends Integration {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return apiKeyAuth(this.integration);
-  }
-
-  constructor(integration: IntegrationInput) {
-    super(integration);
   }
 
   public async getServerStatsAsync(): Promise<ImmichServerStats> {
@@ -155,6 +151,7 @@ export class ImmichIntegration extends Integration {
       withExif: false,
     };
     const pages = new Map<number, ReturnType<typeof searchAssets>>();
+    let lastConsumedPage = 0;
     const getPage = (page: number) => {
       const existing = pages.get(page);
       if (existing) return existing;
@@ -171,7 +168,9 @@ export class ImmichIntegration extends Integration {
       .then(
         (album) => {
           const initialPages = Math.min(4, Math.ceil(album.assetCount / pageSize));
-          for (let page = 2; page <= initialPages; page++) getPage(page);
+          for (let page = 2; page <= initialPages; page++) {
+            if (page > lastConsumedPage) getPage(page);
+          }
         },
         () => undefined,
       )
@@ -181,6 +180,8 @@ export class ImmichIntegration extends Integration {
     let page: number | null = 1;
     do {
       const result = await getPage(page);
+      lastConsumedPage = page;
+      pages.delete(page);
       assets.push(...result.assets.items);
       if (result.assets.nextPage === null) break;
       const nextPage = Number(result.assets.nextPage);

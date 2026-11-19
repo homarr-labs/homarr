@@ -104,6 +104,7 @@ export const NoticeIndicator = ({ notices }: { notices: readonly Notice[] }) => 
   return (
     <Tooltip
       label={notices.map((notice) => notice.title).join("\n")}
+      events={{ hover: true, focus: true, touch: true }}
       multiline
       maw={280}
       withArrow

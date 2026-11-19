@@ -159,7 +159,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           }}
         />
         {props.reference && (
-          <Collapse expanded={referenceOpened}>
+          <Collapse expanded={referenceOpened} keepMounted={false}>
             <CustomWidgetSchemaReference
               id={`${props.id}-schema-reference`}
               reference={props.reference}
@@ -248,7 +248,7 @@ export function CustomWidgetSchemaReference({
   const values = { schema: reference.schema, minimal: reference.minimal, full: reference.full };
   const labels = { schema: messages.schemaTab, minimal: messages.minimalTab, full: messages.fullTab };
   return (
-    <Tabs defaultValue="schema" className={classes.reference}>
+    <Tabs defaultValue="schema" className={classes.reference} keepMounted={false}>
       <Tabs.List>
         <Tabs.Tab value="schema">{messages.schemaTab}</Tabs.Tab>
         <Tabs.Tab value="minimal">{messages.minimalTab}</Tabs.Tab>

@@ -254,7 +254,10 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     return () => {
       window.removeEventListener("pointermove", handlePointerMove, { capture: true });
       window.removeEventListener("pointerover", handlePointerMove, { capture: true });
-      if (pointerFrameRef.current !== null) cancelAnimationFrame(pointerFrameRef.current);
+      if (pointerFrameRef.current !== null) {
+        cancelAnimationFrame(pointerFrameRef.current);
+        pointerFrameRef.current = null;
+      }
     };
   }, [cancelHoverTimer, cancelPreviewLeaveTimer, hover, schedulePreviewClose]);
 
@@ -271,6 +274,10 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
 
   const dismiss = useCallback(
     (itemId: string) => {
+      if (hoveredRef.current?.itemId === itemId) {
+        hoveredRef.current = null;
+        cancelHoverTimer();
+      }
       if (activeRef.current?.itemId !== itemId) return;
       cancelHoverTimer();
       cancelPreviewLeaveTimer();

@@ -103,9 +103,10 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   await handleTransactionsAsync(db, {
     async handleAsync(db, schema) {
       await db.transaction(async (transaction) => {
-        const result = await transaction.delete(schema.icons).where(deadIconsFilter);
-
-        countDeleted += result.rowCount ?? 0;
+        if (deadIconsFilter) {
+          const result = await transaction.delete(schema.icons).where(deadIconsFilter);
+          countDeleted += result.rowCount ?? 0;
+        }
 
         if (deadIconRepositories.length >= 1) {
           await transaction.delete(schema.iconRepositories).where(
@@ -130,8 +131,10 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     },
     handleSync() {
       db.transaction((transaction) => {
-        const result = transaction.delete(icons).where(deadIconsFilter).run();
-        countDeleted += result.changes;
+        if (deadIconsFilter) {
+          const result = transaction.delete(icons).where(deadIconsFilter).run();
+          countDeleted += result.changes;
+        }
 
         if (deadIconRepositories.length >= 1) {
           transaction

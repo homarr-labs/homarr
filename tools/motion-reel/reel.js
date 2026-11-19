@@ -2437,8 +2437,8 @@
       [960, LANE],
       [1480, LANE],
     ]);
-    const RBW = route([[1480, LANE]], RW.pts.slice().reverse());
-    const RBA = route([[1480, LANE]], RA.pts.slice().reverse());
+    const RBW = route([[1480, LANE]], RW.pts.toReversed());
+    const RBA = route([[1480, LANE]], RA.pts.toReversed());
     // first route position where the packet's centre passes x (packets leave and enter ports edge-first)
     const pAtX = (r, x, dir) => {
       for (let i = 0; i <= 600; i++) {

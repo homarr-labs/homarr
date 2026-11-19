@@ -375,6 +375,9 @@ const ProviderTokenInput = ({
       await onSave(value.trim());
       setValue("");
       setEditing(false);
+    } catch {
+      // The mutation reports the error; keep the token draft available for retry.
+      return;
     } finally {
       setSaving(false);
     }
@@ -386,6 +389,9 @@ const ProviderTokenInput = ({
       await onDelete();
       setValue("");
       setEditing(false);
+    } catch {
+      // The mutation reports the error and the configured token remains unchanged.
+      return;
     } finally {
       setSaving(false);
     }
@@ -394,6 +400,7 @@ const ProviderTokenInput = ({
   return (
     <Group gap="xs" align="end">
       <PasswordInput
+        disabled={saving}
         label={`${getReleaseProviderName(provider)} ${tRepository("tokens.token")}`}
         placeholder={hasToken ? tRepository("tokens.configured") : tRepository("tokens.notConfigured")}
         value={value}

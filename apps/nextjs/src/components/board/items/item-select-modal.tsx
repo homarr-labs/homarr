@@ -400,6 +400,7 @@ const ItemSelectModalContent = ({
         currentData: integrationData,
         ensureDataAsync: ensureIntegrationDataAsync,
       });
+      if (!pickerOpen.current) return;
 
       const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
       const matchingIntegrationCount = Math.min(matchingIntegrations.length, maxIntegrations);
@@ -471,7 +472,7 @@ const ItemSelectModalContent = ({
       actions.closeModal();
       openEditor(matchingIntegrations);
     } catch (error) {
-      notifyDefinitionLoadError(error);
+      if (pickerOpen.current) notifyDefinitionLoadError(error);
     } finally {
       unlockSelection(selectionLock);
       setLoadingSelection(null);
@@ -523,12 +524,15 @@ const ItemSelectModalContent = ({
             onKeyDown={(event) => {
               if (
                 event.key === "Enter" &&
+                !event.nativeEvent.isComposing &&
+                event.nativeEvent.keyCode !== 229 &&
                 loadingSelection === null &&
                 filteredItems.length === 1 &&
                 filteredItems[0] &&
                 filteredCustomWidgets.length === 0 &&
                 (!isAdmin || (!workshop.isPending && workshop.items.length === 0))
               ) {
+                event.preventDefault();
                 void handleAdd(filteredItems[0].kind);
               }
             }}

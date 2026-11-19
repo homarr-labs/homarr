@@ -57,10 +57,9 @@ export const DangerousActionConfirmation = ({
         </Alert>
 
         <Box>
-          <Text size="sm" fw={500} mb={4}>
-            {typePrompt}
-          </Text>
           <TextInput
+            label={typePrompt}
+            labelProps={{ mb: 4 }}
             value={value}
             onChange={(e) => setValue(e.currentTarget.value)}
             placeholder={CONFIRMATION_PHRASE}

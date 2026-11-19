@@ -40,7 +40,7 @@ export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
         },
         {
           onSuccess() {
-            void revalidatePathActionAsync(`/users/groups/${group.id}`);
+            void revalidatePathActionAsync(`/manage/users/groups/${group.id}`);
             showSuccessNotification({
               title: tCommon("notification.update.success"),
               message: tGroup("action.update.notification.success.message", {
