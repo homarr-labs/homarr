@@ -55,7 +55,8 @@ type MobilePane = "configure" | "preview";
 interface CustomWidgetFormViewProps {
   mode: "create" | "edit";
   definitionId?: string;
-  assistedOrigin: boolean;
+  requiresImport: boolean;
+  requiresPreview: boolean;
   authoringMode: "assisted" | "advanced";
   setAuthoringMode(mode: "assisted" | "advanced"): void;
   hasGeneratedImport: boolean;
@@ -98,8 +99,7 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   const form = props.form;
   const assisted = props.authoringMode === "assisted";
   const saveDisabled =
-    props.assistedOrigin &&
-    (!props.hasGeneratedImport || !props.preview.session || props.preview.outcome !== "success");
+    props.requiresImport || (props.requiresPreview && (!props.preview.session || props.preview.outcome !== "success"));
   const setMobilePane = props.setMobilePane;
   const setPreview = props.setPreview;
   const { renameRequest, renameOption } = useMemo(
@@ -112,15 +112,15 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
   );
   const readAiDraft = useCallback(() => {
     const draft = getAiDraft(documentStore.getValues());
-    if (props.assistedOrigin && !props.hasGeneratedImport) return { ...draft, template: "" };
+    if (props.requiresImport) return { ...draft, template: "" };
     if (props.mode === "create" && areCustomWidgetValuesEqual(draft, getAiDraft(DEFAULT_CUSTOM_WIDGET_FORM_VALUES)))
       return null;
     return draft;
-  }, [documentStore, props.mode, props.assistedOrigin, props.hasGeneratedImport]);
+  }, [documentStore, props.mode, props.requiresImport]);
   const readAiDiagnostics = useCallback(() => {
-    if (props.assistedOrigin && !props.hasGeneratedImport) return [];
+    if (props.requiresImport) return [];
     return analyzeCustomWidgetAiDiagnostics(documentStore.getValues());
-  }, [documentStore, props.assistedOrigin, props.hasGeneratedImport]);
+  }, [documentStore, props.requiresImport]);
   const handleSectionSelect = useCallback(
     (section: string) => {
       setMobilePane(section === "preview" ? "preview" : "configure");
@@ -266,9 +266,9 @@ const CustomWidgetFormView = memo(function CustomWidgetFormView(props: CustomWid
                   previewLabel={assisted && !props.hasGeneratedImport ? w("assisted.test") : undefined}
                 />
               </Paper>
-              {props.assistedOrigin && (
+              {(props.requiresImport || props.requiresPreview) && (
                 <Alert color="blue">
-                  {props.hasGeneratedImport ? w("assisted.finalPreview") : w("assisted.importRequired")}
+                  {props.requiresImport ? w("assisted.importRequired") : w("assisted.finalPreview")}
                 </Alert>
               )}
               <CustomWidgetPreviewSection
@@ -294,7 +294,6 @@ export function CustomWidgetForm({
   initialAuthoringMode = "advanced",
 }: CustomWidgetFormProps) {
   const [authoringMode, setAuthoringMode] = useState(initialAuthoringMode);
-  const [assistedOrigin, setAssistedOrigin] = useState(initialAuthoringMode === "assisted");
   const [formInitialValues] = useState<CustomWidgetFormValues>(() => ({
     ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
     ...initialValues,
@@ -326,7 +325,7 @@ export function CustomWidgetForm({
   }, []);
   const actions = useCustomWidgetFormActions({
     mode,
-    assistedOrigin,
+    assisted: authoringMode === "assisted",
     definitionId,
     form,
     documentStore,
@@ -346,16 +345,11 @@ export function CustomWidgetForm({
   return (
     <CustomWidgetFormView
       mode={mode}
-      assistedOrigin={assistedOrigin}
       authoringMode={authoringMode}
-      setAuthoringMode={(next) => {
-        if (next === "assisted") {
-          latestActions.current.activateAssisted();
-          setAssistedOrigin(true);
-        }
-        setAuthoringMode(next);
-      }}
+      setAuthoringMode={setAuthoringMode}
       hasGeneratedImport={actions.hasGeneratedImport}
+      requiresImport={actions.requiresImport}
+      requiresPreview={actions.requiresPreview}
       getSampleResponse={actions.getSampleResponse}
       definitionId={definitionId}
       form={form}

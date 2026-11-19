@@ -65,8 +65,7 @@ function responseIdentity(values: CustomWidgetFormValues, options: Record<string
   };
 }
 
-export function createCustomWidgetAuthoringSession(assisted: boolean) {
-  let imported = false;
+export function createCustomWidgetAuthoringSession() {
   let sample: { identity: NonNullable<ReturnType<typeof responseIdentity>>; response: string } | null = null;
   let finalPreview: {
     values: CustomWidgetFormValues;
@@ -81,17 +80,6 @@ export function createCustomWidgetAuthoringSession(assisted: boolean) {
 
   return {
     invalidate,
-    isAssisted: () => assisted,
-    enableAssisted: () => {
-      if (assisted) return;
-      assisted = true;
-      finalPreview = null;
-    },
-    markImported: () => {
-      imported = true;
-      finalPreview = null;
-    },
-    needsImport: () => assisted && !imported,
     captureSample: (
       values: CustomWidgetFormValues,
       options: Record<string, unknown>,
@@ -111,7 +99,6 @@ export function createCustomWidgetAuthoringSession(assisted: boolean) {
       options: Record<string, unknown>,
       session: { id: string; expiresAt: number },
     ) => {
-      if (assisted && !imported) return;
       finalPreview = { values: structuredClone(values), options: structuredClone(options), session };
     },
     getFinalPreview: (values: CustomWidgetFormValues, options: Record<string, unknown>) => {

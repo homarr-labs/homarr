@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dispatch, FormEventHandler, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -32,7 +32,7 @@ import {
 
 interface FormActionsInput {
   mode: "create" | "edit";
-  assistedOrigin: boolean;
+  assisted: boolean;
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
   documentStore: CustomWidgetFormDocumentStore;
@@ -51,11 +51,11 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const updateMutation = clientApi.customWidget.update.useMutation();
   const createFromPreviewMutation = clientApi.customWidget.createFromPreview.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
-  const [authoringSession] = useState(() => createCustomWidgetAuthoringSession(input.assistedOrigin));
+  const [authoringSession] = useState(createCustomWidgetAuthoringSession);
   const [hasGeneratedImport, setHasGeneratedImport] = useState(false);
-  useLayoutEffect(() => {
-    if (input.assistedOrigin) authoringSession.enableAssisted();
-  }, [authoringSession, input.assistedOrigin]);
+  const [hasAssistedImport, setHasAssistedImport] = useState(false);
+  const requiresImport = input.assisted && !hasGeneratedImport;
+  const requiresPreview = input.assisted || hasAssistedImport;
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
   const documentStore = input.documentStore;
@@ -131,18 +131,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     try {
       if (input.mode === "create") {
         const persist = async () => {
-          if (!authoringSession.isAssisted())
-            return createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
-          if (authoringSession.needsImport()) {
-            reportSaveIssues(
-              input.form,
-              [{ message: w("assisted.importRequired") }],
-              setSaveIssues,
-              actionLabel,
-              (count) => w("saveError.more", { count }),
-            );
-            return null;
-          }
+          if (!requiresPreview) return createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
           const session = authoringSession.getFinalPreview(values, input.getOptionsSnapshot());
           if (!session) {
             reportSaveIssues(
@@ -189,7 +178,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       }
     } catch (error) {
       const issues = extractCustomWidgetSaveIssues(error);
-      if (authoringSession.isAssisted() && issues.length > 0) issues.push({ message: w("assisted.evidenceHelp") });
+      if (requiresPreview && issues.length > 0) issues.push({ message: w("assisted.evidenceHelp") });
       if (issues.length > 0) {
         reportSaveIssues(input.form, issues, setSaveIssues, actionLabel, (count) => w("saveError.more", { count }));
       } else {
@@ -199,7 +188,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   });
 
   const save: FormEventHandler<HTMLFormElement> = (event) => {
-    if (authoringSession.needsImport()) {
+    if (requiresImport) {
       event.preventDefault();
       reportSaveIssues(input.form, [{ message: w("assisted.importRequired") }], setSaveIssues, actionLabel, (count) =>
         w("saveError.more", { count }),
@@ -322,17 +311,18 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const pasteAiResponse = (response: string): string | null => {
     const result = parseCustomWidgetAiResponse(response);
     if (!result.success) return formatCustomWidgetImportIssues(result.issues);
-    if (authoringSession.isAssisted()) {
-      const incompatible = getIncompatibleCustomWidgetImportSources(input.documentStore.getValues(), result.widget);
-      if (!incompatible) return w("assisted.invalidSources");
-      if (incompatible.length > 0) return w("assisted.incompatibleSources", { sources: incompatible.join(", ") });
-    }
+    const values = input.documentStore.getValues();
+    const incompatible = getIncompatibleCustomWidgetImportSources(values, result.widget);
+    if (!incompatible && (requiresPreview || values.secrets.some(({ hasValue, value }) => hasValue || value.trim())))
+      return w("assisted.invalidSources");
+    if (incompatible && incompatible.length > 0)
+      return w("assisted.incompatibleSources", { sources: incompatible.join(", ") });
     previewGeneration.current += 1;
-    authoringSession.markImported();
     applyDefinition(input.form, result.widget);
     changeOptionsSnapshot(getDefinitionDefaults(result.widget));
     authoringSession.invalidate(input.documentStore.getValues(), input.getOptionsSnapshot());
     setHasGeneratedImport(true);
+    if (input.assisted) setHasAssistedImport(true);
     clearPreview();
     showSuccessNotification({
       title: w("ai.response"),
@@ -349,7 +339,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     runPreview,
     pasteAiResponse,
     hasGeneratedImport,
-    activateAssisted: authoringSession.enableAssisted,
+    requiresImport,
+    requiresPreview,
     getSampleResponse: () => authoringSession.readSample(input.documentStore.getValues(), input.getOptionsSnapshot()),
     setOptionsSnapshot: changeOptionsSnapshot,
     saveIssues,
