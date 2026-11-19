@@ -123,8 +123,8 @@ describe("AI prompt", () => {
   });
 
   it("makes the connected MCP workflow lazy, batch-capable, and evidence-driven", () => {
-    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(10_500);
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(11_000);
+    expect(CUSTOM_WIDGET_ASSISTANT_POLICY.length).toBeLessThan(8_000);
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.length).toBeLessThan(8_500);
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("do not call customWidget_getSkill");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Make lifecycle/mutation calls one per step");
     expect(CUSTOM_WIDGET_ASSISTANT_POLICY).toContain("Core schema/runtime/safety/lifecycle rules are bundled");

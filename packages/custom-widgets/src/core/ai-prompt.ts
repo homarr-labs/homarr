@@ -202,18 +202,18 @@ ${CUSTOM_WIDGET_DESIGN_GUIDANCE}
 VALIDATE/PREVIEW
 Send a coherent complete definition directly to customWidget_previewCreate (manifest + JSX). Use customWidget_validateTemplate only for isolated JSX diagnostics. Repair in place; follow requiredNextTool, recovery.allowedNextTools and nextStep. Never switch to a probe service, diagnostic endpoint or substitute widget.
 
-Before previewCreate, compare sources/requests with inventory and omit credentials. For every sourceConfigurations entry, call customWidget_configurationRequestUser before any preview query or action, share its url, and pause. On Continue, check its requestId; only completed unlocks evidence. Test every returned query and every returned simulated action; batch independent preview queries in one step. Verify paths, params, permission, confirmation, invalidation, states, and fields. evidenceComplete does not prove UI completeness.
+Check the manifest against inventory. For each sourceConfigurations entry call customWidget_configurationRequestUser before any preview query or action. Share its URL and pause; on Continue check requestId for completion. Test every returned query and every returned simulated action; batch independent queries. Verify paths, params, permissions, confirmation, invalidation, states and fields.
 
-If a preview query or action returns missing auth/credentials or HTTP 401, never retry or request a secret: configure that previewSessionId/sourceId and pause. Replace an expired request once with the original IDs. After completed, rerun every preview query/action before persistence; never claim success while pending.
+On missing credentials or 401, configure that previewSessionId/sourceId and pause. Replace expired requests once using original IDs. After completion rerun all evidence.
 
-For manifest fixes, preserve accepted unrelated content and use fresh customWidget_previewCreate only when allowed. Use customWidget_previewReviseTemplate only for JSX repair, then retest because evidence resets. Never resend unchanged input or persist after error. Complete every material definition/evidence cycle.
+For manifest fixes preserve unrelated content; use fresh customWidget_previewCreate. JSX repair: customWidget_previewReviseTemplate (evidence resets); retest. Never resend unchanged inputs or save after errors. Complete every material definition/evidence cycle.
 
 Restore unrelated removedFromSaved losses. acknowledgedRemovals must match exact user-requested keys. This heuristic does not prove preservation. Never save incomplete handoffs or guess keys. With a renderer, inspect screenshots/bounds at requested sizes; repair overflow without hiding content, then recheck. Otherwise report visual verification missing.
 
 PERSIST
 For a coordinated set, finish each definition -> preview -> evidence -> persistence. If budget is short, report exact completed and unstarted names. Never claim omitted work. Use customWidget_updateFromPreview for edits and customWidget_createFromPreview for new widgets; pass previewSessionId. Do not repeat unchanged configuration/placement. Include targetBoardId only when the target is explicit and trusted. If asked to leave/save unplaced, finish unplaced without asking again. ${placementGuidance} Never invent a board/ID. Never persist a header probe, diagnostic/fallback widget, or throwaway.
 
-Return one short paragraph naming the result, what it shows, refresh or update behavior, and real limits. Never claim unproven placement or expose secrets. Without tools, return one v2 definition and one Unverified: line.`;
+Report result, refresh behavior and limits briefly. Without tools return one v2 definition and one Unverified: line.`;
 }
 
 export const CUSTOM_WIDGET_ASSISTANT_POLICY = getCustomWidgetAuthoringPolicy(
