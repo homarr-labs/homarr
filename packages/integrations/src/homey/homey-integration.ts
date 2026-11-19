@@ -1,6 +1,6 @@
 import type { z } from "zod/v4";
 import { ParseError, ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { fetchWithTrustedCertificatesAsync, getHttpRequestSignal } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -45,7 +45,6 @@ import {
 } from "./homey-types";
 
 const POLL_INTERVAL_MS = 5_000;
-const DEVICE_CACHE_MS = 2_000;
 const MAX_POLL_FAILURES = 3;
 
 const insightResolutions = [
@@ -60,9 +59,6 @@ const insightResolutions = [
 // Energy-monitored devices log their power reading as energy_power instead of measure_power.
 const insightLogIds = (capabilityId: string) =>
   capabilityId === "measure_power" ? [capabilityId, "energy_power"] : [capabilityId];
-
-// Shares one device request between widgets and live subscriptions polling the same Homey.
-const deviceRequests = new Map<string, { at: number; promise: Promise<HomeyDevice[]> }>();
 
 interface CapabilityWrite {
   capabilityId: string;
@@ -181,7 +177,6 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
   }
 
   public async executeActionAsync(entityId: string, action: SmartHomeAction): Promise<void> {
-    deviceRequests.delete(this.cacheKey);
     const record = (await this.getRecordsAsync()).find((candidate) => candidate.entity.id === entityId);
     if (!record) throw new SmartHomeEntityNotFoundError(entityId);
     if (!supportsSmartHomeAction(record.entity, action)) {
@@ -199,7 +194,6 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     for (const write of writes) {
       await this.setCapabilityAsync(target.device.id, write);
     }
-    deviceRequests.delete(this.cacheKey);
   }
 
   public async subscribeEntitiesAsync(
@@ -245,22 +239,18 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     return { success: true };
   }
 
-  private get cacheKey() {
-    return `${this.integration.id}:${this.integration.url}`;
-  }
-
   /** Energy needs its own API key permission; without it these statistics stay empty. */
   private async getEnergyAsync() {
     const now = new Date();
     const date = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
       .map((part) => part.toString().padStart(2, "0"))
       .join("-");
-    const [liveResponse, dayResponse] = await Promise.all([
-      this.getAsync("/api/manager/energy/live"),
-      this.getAsync("/api/manager/energy/report/day", { date }),
+    const [liveData, dayData] = await Promise.all([
+      this.getOptionalJsonAsync("/api/manager/energy/live"),
+      this.getOptionalJsonAsync("/api/manager/energy/report/day", { date }),
     ]);
-    const live = liveResponse.ok ? homeyEnergyLiveSchema.safeParse(await liveResponse.json()) : null;
-    const day = dayResponse.ok ? homeyEnergyDaySchema.safeParse(await dayResponse.json()) : null;
+    const live = homeyEnergyLiveSchema.safeParse(liveData);
+    const day = homeyEnergyDaySchema.safeParse(dayData);
     return {
       powerUsage: (live?.success ? live.data.totalConsumed?.W : null) ?? null,
       powerGenerated: (live?.success ? live.data.totalGenerated?.W : null) ?? null,
@@ -271,8 +261,7 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
 
   /** System information needs its own API key permission; without it these statistics stay empty. */
   private async getSystemAsync() {
-    const response = await this.getAsync("/api/manager/system/");
-    const parsed = response.ok ? homeySystemSchema.safeParse(await response.json()) : null;
+    const parsed = homeySystemSchema.safeParse(await this.getOptionalJsonAsync("/api/manager/system/"));
     const system = parsed?.success ? parsed.data : null;
     const cores = system?.cpus?.length ?? 0;
     const load = system?.loadavg?.[0];
@@ -295,17 +284,7 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
   }
 
   private async getDevicesAsync(): Promise<HomeyDevice[]> {
-    const cached = deviceRequests.get(this.cacheKey);
-    if (cached && Date.now() - cached.at < DEVICE_CACHE_MS) return await cached.promise;
-
-    const promise = this.getJsonAsync("/api/manager/devices/device/").then((data) =>
-      Object.values(homeyDevicesSchema.parse(data)),
-    );
-    deviceRequests.set(this.cacheKey, { at: Date.now(), promise });
-    promise.catch(() => {
-      if (deviceRequests.get(this.cacheKey)?.promise === promise) deviceRequests.delete(this.cacheKey);
-    });
-    return await promise;
+    return Object.values(homeyDevicesSchema.parse(await this.getJsonAsync("/api/manager/devices/device/")));
   }
 
   private async getAreasAsync(): Promise<SmartHomeArea[]> {
@@ -350,6 +329,17 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
       `/api/manager/devices/device/${encodeURIComponent(deviceId)}/capability/${encodeURIComponent(capabilityId)}`,
       { value },
     );
+  }
+
+  private async getOptionalJsonAsync(path: `/api/${string}`, queryParams?: Record<string, string>): Promise<unknown> {
+    try {
+      const response = await this.getAsync(path, queryParams);
+      return response.ok ? await response.json() : null;
+    } catch (error) {
+      getHttpRequestSignal()?.throwIfAborted();
+      if (error instanceof Error && error.name === "AbortError") throw error;
+      return null;
+    }
   }
 
   private async getJsonAsync(path: `/api/${string}`): Promise<unknown> {

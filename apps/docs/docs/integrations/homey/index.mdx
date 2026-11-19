@@ -11,6 +11,7 @@ import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { homeyIntegration } from ".";
 import { smartHomeEntityStateWidget } from "@site/docs/widgets/smart-home-entity-state";
 import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-execute-automation";
+import { statsWidget } from "@site/docs/widgets/stats";
 
 <IntegrationHeader integration={homeyIntegration} categories={["Smart Home", "Automation"]} />
 
@@ -24,10 +25,15 @@ import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-
     {
       widget: smartHomeExecuteAutomationWidget,
     },
+    {
+      widget: statsWidget,
+    },
   ]}
 />
 
-Homarr supports Homey Pro through its local Web API. Use your Homey's HTTPS address as the URL, for example `https://192-168-1-20.homey.homeylocal.com` for a Homey at `192.168.1.20`. Plain `http://` sends the API key unencrypted, so only use it on a network you trust.
+Homarr supports Homey Pro (Early 2023), Homey Pro (2026), and Homey Pro mini through their local Web API and API keys. Older models, including Homey Pro (2019), do not support this API-key setup. See [Homey's API key requirements](https://support.homey.app/hc/en-us/articles/8178797067292-Create-and-use-API-Keys-on-Homey-Pro).
+
+Use your Homey's HTTPS address as the URL, for example `https://192-168-1-20.homey.homeylocal.com` for a Homey at `192.168.1.20`. Plain `http://` sends the API key unencrypted, so only use it on a network you trust.
 
 Devices are listed by zone. Each controllable device appears as one entity, and each sensor reading appears as its own entity. Only flows that can be started manually are listed as automations. Live updates are polled every 5 seconds.
 
