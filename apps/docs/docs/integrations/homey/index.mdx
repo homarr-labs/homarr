@@ -27,7 +27,7 @@ import { smartHomeExecuteAutomationWidget } from "@site/docs/widgets/smart-home-
   ]}
 />
 
-Homarr supports Homey Pro through its local Web API. Use your Homey's local address as the URL, for example `http://192.168.1.20`.
+Homarr supports Homey Pro through its local Web API. Use your Homey's HTTPS address as the URL, for example `https://192-168-1-20.homey.homeylocal.com` for a Homey at `192.168.1.20`. Plain `http://` sends the API key unencrypted, so only use it on a network you trust.
 
 Devices are listed by zone. Each controllable device appears as one entity, and each sensor reading appears as its own entity. Only flows that can be started manually are listed as automations. Live updates are polled every 5 seconds.
 
@@ -44,7 +44,7 @@ Devices are listed by zone. Each controllable device appears as one entity, and 
       steps: [
         "Open the Homey web app at my.homey.app and select your Homey.",
         "Go to Settings → API Keys and click New API Key.",
-        "Enter a name such as 'Homarr' and allow viewing and controlling devices, viewing zones, viewing and starting Flows, and viewing Insights. Allow editing Flows only if Homarr should enable and disable them.",
+        "Enter a name such as 'Homarr' and allow viewing and controlling devices, viewing zones, viewing and starting Flows, and viewing Insights. Allow viewing energy and system information for the energy and system statistics, and editing Flows only if Homarr should enable and disable them.",
         "Create the key, then copy it into the Homarr integration settings.",
       ],
     },

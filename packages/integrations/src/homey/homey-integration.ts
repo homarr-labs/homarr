@@ -34,7 +34,15 @@ import {
   rgbToHueSaturation,
 } from "./homey-normalize";
 import type { HomeyDevice, HomeyFlow } from "./homey-types";
-import { homeyDevicesSchema, homeyFlowsSchema, homeyInsightsEntriesSchema, homeyZonesSchema } from "./homey-types";
+import {
+  homeyDevicesSchema,
+  homeyEnergyDaySchema,
+  homeyEnergyLiveSchema,
+  homeyFlowsSchema,
+  homeyInsightsEntriesSchema,
+  homeySystemSchema,
+  homeyZonesSchema,
+} from "./homey-types";
 
 const POLL_INTERVAL_MS = 5_000;
 const DEVICE_CACHE_MS = 2_000;
@@ -67,13 +75,30 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
   }
 
   public async getStatsAsync() {
-    const [devices, flows] = await Promise.all([this.getDevicesAsync(), this.getFlowsAsync()]);
+    const [devices, flows, energy, system] = await Promise.all([
+      this.getDevicesAsync(),
+      this.getFlowsAsync(),
+      this.getEnergyAsync(),
+      this.getSystemAsync(),
+    ]);
     const lights = normalizeHomeyDevices(devices).filter(({ entity }) => entity.domain === "light");
+    const available = devices.filter((device) => device.available !== false);
     return {
       devices: devices.length,
-      unavailable: devices.filter((device) => device.available === false).length,
+      unavailable: devices.length - available.length,
       lightsOn: lights.filter(({ entity }) => entity.state === "on").length,
       flows: flows.length,
+      ...energy,
+      batteriesLow: available.filter((device) => {
+        const level = capabilityValue(device, "measure_battery");
+        return (
+          capabilityValue(device, "alarm_battery") === true ||
+          (typeof level === "number" && level < LOW_BATTERY_PERCENT)
+        );
+      }).length,
+      openContacts: available.filter((device) => capabilityValue(device, "alarm_contact") === true).length,
+      activeAlarms: available.filter(hasActiveAlarm).length,
+      ...system,
     };
   }
 
@@ -128,15 +153,24 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
           }
         }
         if (!entries) return { entityId, points: [] };
+        const homeyCapability = target.device.capabilitiesObj?.[target.capabilityId];
+        const scale = homeyCapability?.setable && isFractionPercent(homeyCapability) ? 100 : 1;
+        const observations = entries.values
+          .map((entry) => ({
+            state: typeof entry.v === "number" ? (entry.v * scale).toString() : "",
+            time: Date.parse(entry.t),
+          }))
+          .toSorted((left, right) => left.time - right.time);
+        // Coarse Insights resolutions return entries before the window; only the latest of them is still current.
+        const latestBeforeStart = observations.findLast((observation) => observation.time < start);
+        const inWindow = observations.filter((observation) => observation.time >= start);
         return {
           entityId,
-          points: bucketHistory(
-            entries.values.map((entry) => ({
-              state: typeof entry.v === "number" ? entry.v.toString() : "",
-              time: Date.parse(entry.t),
-            })),
-            { start, end, samples },
-          ),
+          points: bucketHistory(latestBeforeStart ? [latestBeforeStart, ...inWindow] : inWindow, {
+            start,
+            end,
+            samples,
+          }),
         };
       }),
     );
@@ -174,6 +208,7 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     signal: AbortSignal,
   ): Promise<void> {
     let previous: Map<string, string> | null = null;
+    let previousAreas: string | null = null;
     let failures = 0;
     while (!signal.aborted) {
       try {
@@ -185,10 +220,13 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
           ? snapshot.entities.filter((entity) => previous?.get(entity.id) !== current.get(entity.id))
           : snapshot.entities;
         const removed = previous ? [...previous.keys()].filter((id) => !current.has(id)) : [];
-        if (!previous || changed.length > 0 || removed.length > 0) {
-          onPatch({ changed, removed, areas: previous ? undefined : snapshot.areas });
+        const areas = JSON.stringify(snapshot.areas);
+        const areasChanged = areas !== previousAreas;
+        if (!previous || changed.length > 0 || removed.length > 0 || areasChanged) {
+          onPatch({ changed, removed, areas: areasChanged ? snapshot.areas : undefined });
         }
         previous = current;
+        previousAreas = areas;
       } catch (error) {
         if (error instanceof SmartHomeSelectionLimitError || ++failures >= MAX_POLL_FAILURES) throw error;
       }
@@ -209,6 +247,46 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
 
   private get cacheKey() {
     return `${this.integration.id}:${this.integration.url}`;
+  }
+
+  /** Energy needs its own API key permission; without it these statistics stay empty. */
+  private async getEnergyAsync() {
+    const now = new Date();
+    const date = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
+      .map((part) => part.toString().padStart(2, "0"))
+      .join("-");
+    const [liveResponse, dayResponse] = await Promise.all([
+      this.getAsync("/api/manager/energy/live"),
+      this.getAsync("/api/manager/energy/report/day", { date }),
+    ]);
+    const live = liveResponse.ok ? homeyEnergyLiveSchema.safeParse(await liveResponse.json()) : null;
+    const day = dayResponse.ok ? homeyEnergyDaySchema.safeParse(await dayResponse.json()) : null;
+    return {
+      powerUsage: (live?.success ? live.data.totalConsumed?.W : null) ?? null,
+      powerGenerated: (live?.success ? live.data.totalGenerated?.W : null) ?? null,
+      energyToday: (day?.success ? day.data.electricity?.consumedPeriod : null) ?? null,
+      energyGeneratedToday: (day?.success ? day.data.electricity?.generatedPeriod : null) ?? null,
+    };
+  }
+
+  /** System information needs its own API key permission; without it these statistics stay empty. */
+  private async getSystemAsync() {
+    const response = await this.getAsync("/api/manager/system/");
+    const parsed = response.ok ? homeySystemSchema.safeParse(await response.json()) : null;
+    const system = parsed?.success ? parsed.data : null;
+    const cores = system?.cpus?.length ?? 0;
+    const load = system?.loadavg?.[0];
+    const { totalmem: total, freemem: free } = system ?? {};
+    return {
+      uptime: typeof system?.uptime === "number" ? formatUptime(system.uptime) : null,
+      cpuLoad: typeof load === "number" && cores > 0 ? Math.round((load / cores) * 1000) / 10 : null,
+      memoryUsage:
+        typeof total === "number" && typeof free === "number" && total > 0
+          ? Math.round(((total - free) / total) * 1000) / 10
+          : null,
+      temperature: system?.videoCoreTemperature ?? null,
+      version: system?.homeyVersion ?? null,
+    };
   }
 
   private async getRecordsAsync(): Promise<HomeyEntityRecord[]> {
@@ -297,6 +375,29 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     return { Authorization: `Bearer ${this.getSecretValue("apiKey")}` };
   }
 }
+
+const LOW_BATTERY_PERCENT = 20;
+
+const capabilityValue = (device: HomeyDevice, id: string) => device.capabilitiesObj?.[id]?.value;
+
+/** Battery and contact alarms have their own statistics. */
+const hasActiveAlarm = (device: HomeyDevice) =>
+  Object.values(device.capabilitiesObj ?? {}).some(
+    (capability) =>
+      capability.id.startsWith("alarm_") &&
+      !capability.id.startsWith("alarm_battery") &&
+      !capability.id.startsWith("alarm_contact") &&
+      capability.value === true,
+  );
+
+const formatUptime = (seconds: number) => {
+  const days = Math.floor(seconds / 86_400);
+  const hours = Math.floor((seconds % 86_400) / 3_600);
+  const minutes = Math.floor((seconds % 3_600) / 60);
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  return `${minutes}m`;
+};
 
 const signature = (entity: SmartHomeEntity) =>
   JSON.stringify([entity.state, entity.name, entity.areaId, entity.lastChanged, entity.attributes]);

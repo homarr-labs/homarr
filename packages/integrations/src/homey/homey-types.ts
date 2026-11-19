@@ -58,6 +58,24 @@ export type HomeyFlow = z.infer<typeof homeyFlowSchema> & { advanced: boolean };
 
 export const homeyFlowsSchema = z.record(z.string(), homeyFlowSchema);
 
+const wattsSchema = z.object({ W: z.number().nullish() }).nullish();
+
+export const homeyEnergyLiveSchema = z.object({ totalConsumed: wattsSchema, totalGenerated: wattsSchema });
+
+export const homeyEnergyDaySchema = z.object({
+  electricity: z.object({ consumedPeriod: z.number().nullish(), generatedPeriod: z.number().nullish() }).nullish(),
+});
+
+export const homeySystemSchema = z.object({
+  homeyVersion: z.string().nullish(),
+  uptime: z.number().nullish(),
+  totalmem: z.number().nullish(),
+  freemem: z.number().nullish(),
+  loadavg: z.array(z.number()).nullish(),
+  cpus: z.array(z.unknown()).nullish(),
+  videoCoreTemperature: z.number().nullish(),
+});
+
 export const homeyInsightsEntriesSchema = z.object({
   values: z.array(z.object({ t: z.string(), v: z.union([z.number(), z.boolean(), z.null()]) })),
 });
