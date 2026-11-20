@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 6,137-143
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 81-83,89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9891b07185f56641d392afbdf231ac1f0d03b3fc",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
