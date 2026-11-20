@@ -151,6 +151,7 @@ export default function ReleasesWidget({
       summary={summary}
       sections={sections}
       collapsedSections={options.collapsedSections}
+      expandedSections={options.expandedSections}
       showChangelogPreview={options.showChangelogPreview}
       groupReleases={options.groupReleases}
       setOptions={setOptions}
@@ -174,6 +175,7 @@ interface ReleasesInboxProps {
   summary: ReleaseSummaryMode;
   sections: readonly ReleaseSectionKey[];
   collapsedSections: ReleaseSectionKey[];
+  expandedSections: ReleaseSectionKey[];
   showChangelogPreview: boolean;
   groupReleases: boolean;
   setOptions: WidgetComponentProps<"releases">["setOptions"];
@@ -195,6 +197,7 @@ const ReleasesInbox = ({
   summary,
   sections,
   collapsedSections,
+  expandedSections,
   showChangelogPreview,
   groupReleases,
   setOptions,
@@ -248,26 +251,26 @@ const ReleasesInbox = ({
   const highlightedId = (isSplit && activeId) || knownSelection;
 
   const isOpen = (key: ReleaseSectionKey) =>
-    sectionOpen[key] ?? (!collapsedSections.includes(key) && (density === "regular" || key === "new"));
+    sectionOpen[key] ??
+    (expandedSections.includes(key) || (!collapsedSections.includes(key) && (density === "regular" || key === "new")));
   const toggleSection = (key: ReleaseSectionKey) => {
     if (savePendingRef.current) return;
     const nextOpen = !isOpen(key);
     const previousOpen = sectionOpen[key];
     setSectionOpen((previous) => ({ ...previous, [key]: nextOpen }));
 
-    // Density closes some sections without recording them. Only a toggle that changes the saved list is stored.
-    const persistedCollapsed = collapsedSections.includes(key);
-    if (persistedCollapsed !== nextOpen) return;
+    const nextCollapsed = collapsedSections.filter((section) => section !== key);
+    const nextExpanded = expandedSections.filter((section) => section !== key);
+    if (nextOpen) nextExpanded.push(key);
+    else nextCollapsed.push(key);
 
-    const nextCollapsed = nextOpen
-      ? collapsedSections.filter((section) => section !== key)
-      : [...collapsedSections, key];
-    setOptions({ newOptions: { collapsedSections: nextCollapsed } });
+    const newOptions = { collapsedSections: nextCollapsed, expandedSections: nextExpanded };
+    setOptions({ newOptions });
     if (!hasChangeAccess || !boardId || !itemId) return;
 
     savePendingRef.current = true;
     saveCollapsedSections(
-      { boardId, itemId, newOptions: { collapsedSections: nextCollapsed } },
+      { boardId, itemId, newOptions },
       {
         onError: () => {
           setSectionOpen((current) => {
@@ -278,7 +281,7 @@ const ReleasesInbox = ({
             }
             return { ...current, [key]: previousOpen };
           });
-          setOptions({ newOptions: { collapsedSections } });
+          setOptions({ newOptions: { collapsedSections, expandedSections } });
         },
         onSettled: () => {
           savePendingRef.current = false;
