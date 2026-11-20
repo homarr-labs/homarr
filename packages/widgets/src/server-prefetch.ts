@@ -14,6 +14,7 @@ import {
 } from "./beszel-system-stats/selection";
 import { resolveDownloadsQueryInput } from "./downloads/query-input";
 import { ALL_PHOTOS_ALBUM_ID } from "./immich/album-carousel/constants";
+import { getWidgetRefreshInterval } from "./refresh-interval";
 
 const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   queryClient: QueryClient,
@@ -142,7 +143,13 @@ export const prefetchInitialWidgetData = (
       case "dnsHoleSummary":
       case "dnsHoleControls":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
+          prefetchQuery(
+            queryClient,
+            trpc.widget.dnsHole.summary.queryOptions({
+              integrationIds,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
+            }),
+          );
         break;
       case "beszelSystemStats":
       case "beszelSystemTable":
@@ -176,6 +183,7 @@ export const prefetchInitialWidgetData = (
             trpc.widget.mediaServer.getCurrentStreams.queryOptions({
               integrationIds,
               showOnlyPlaying: (options.showOnlyPlaying ?? true) === true,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
             }),
           );
         break;
@@ -228,13 +236,15 @@ export const prefetchInitialWidgetData = (
         break;
       }
       case "dockerContainers": {
-        let input: RouterInputs["docker"]["getContainers"];
+        const input: RouterInputs["docker"]["getContainers"] = {
+          refreshInterval: getWidgetRefreshInterval(options, 30),
+        };
         if (
           Array.isArray(options.endpointIds) &&
           options.endpointIds.length > 0 &&
           options.endpointIds.every((id) => typeof id === "string")
         )
-          input = { endpointIds: options.endpointIds };
+          input.endpointIds = options.endpointIds;
         prefetchQuery(queryClient, trpc.docker.getContainers.queryOptions(input));
         break;
       }

@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import { isRecord } from "@homarr/common";
 
 const asErrorRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
@@ -10,6 +12,15 @@ const getErrorChain = (error: unknown) => {
     current = asErrorRecord(current.cause);
   }
   return chain;
+};
+
+export const getAssistantToolErrorCode = (error: unknown): string => {
+  const chain = getErrorChain(error);
+  for (const candidate of chain) {
+    if (candidate instanceof TRPCError) return candidate.code;
+    if (candidate.name === "ZodError") return "BAD_REQUEST";
+  }
+  return "INTERNAL_SERVER_ERROR";
 };
 
 const sanitizeValidationText = (value: string) =>

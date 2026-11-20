@@ -3,7 +3,8 @@ import { createMcpHandler, fromJsonSchema, McpServer } from "@modelcontextprotoc
 import { callMcpTool } from "@homarr/api/mcp";
 import type { McpTool } from "@homarr/api/mcp";
 
-import { toAssistantToolOutput } from "../assistant/chat/assistant-tool-output";
+import { getAssistantToolErrorCode } from "../assistant/chat/assistant-tool-error";
+import { getAssistantToolOutputOptions, toAssistantToolOutput } from "../assistant/chat/assistant-tool-output";
 import { serializeMcpToolResult } from "./_serialize-result";
 
 interface CreateMcpProtocolHandlerOptions {
@@ -55,7 +56,12 @@ export const createMcpProtocolHandler = ({
                 content: [
                   {
                     type: "text" as const,
-                    text: serializeMcpToolResult(toAssistantToolOutput(result)),
+                    text: serializeMcpToolResult(
+                      toAssistantToolOutput(result, {
+                        ...getAssistantToolOutputOptions(tool.name),
+                        maxCharacters: undefined,
+                      }),
+                    ),
                   },
                 ],
               };
@@ -63,7 +69,14 @@ export const createMcpProtocolHandler = ({
               onToolError?.(tool.name, error);
               return {
                 content: [
-                  { type: "text" as const, text: JSON.stringify({ error: formatToolError(error, tool.name) }) },
+                  {
+                    type: "text" as const,
+                    text: JSON.stringify({
+                      error: formatToolError(error, tool.name),
+                      code: getAssistantToolErrorCode(error),
+                      toolName: tool.name,
+                    }),
+                  },
                 ],
                 isError: true,
               };

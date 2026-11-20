@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { createWidgetRefreshIntervalOptions } from "../../refresh-interval";
 
 export const widgetKind = "dnsHoleSummary";
 
@@ -14,6 +15,7 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      ...createWidgetRefreshIntervalOptions(10),
       usePiHoleColors: factory.switch({
         defaultValue: true,
       }),

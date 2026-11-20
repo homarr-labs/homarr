@@ -11,6 +11,7 @@ import type { AxiosInstance } from "axios";
 import {
   createAxiosCertificateInstanceAsync,
   fetchWithTrustedCertificatesAsync,
+  withHttpRequestSignalAsync,
 } from "@homarr/core/infrastructure/http";
 
 import { createKeyedFingerprint } from "@homarr/common/server";
@@ -110,6 +111,7 @@ function groupRecentEpisodes(items: BaseItemDto[]): Map<string, BaseItemDto[]> {
 }
 
 const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
+const authenticationTimeoutMs = 30_000;
 const pendingAuthentications = new Map<string, Promise<string>>();
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
@@ -145,7 +147,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         throw new Error("Jellyfin authentication failed");
       return result.AccessToken;
     };
-    const pending = authenticate();
+    // Other operations share this login, so its deadline must not belong to the first waiter.
+    const pending = withHttpRequestSignalAsync(AbortSignal.timeout(authenticationTimeoutMs), authenticate);
     pendingAuthentications.set(identity, pending);
     try {
       return await pending;

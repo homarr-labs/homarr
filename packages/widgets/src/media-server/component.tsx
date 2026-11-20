@@ -40,6 +40,8 @@ import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import classes from "./component.module.css";
@@ -174,10 +176,12 @@ export default function MediaServerWidget({
   isEditMode,
   displayMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
-    integrationIds,
-    showOnlyPlaying: options.showOnlyPlaying,
-  });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
+    { integrationIds, showOnlyPlaying: options.showOnlyPlaying, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
   const isRefreshFailing = currentStreamsQuery.isError;

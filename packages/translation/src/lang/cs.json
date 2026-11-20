@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Město / PSČ",
         "latitude": "Šířka",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Skrýt popis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Zobrazit obrázek plakátu"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Otevřít službu oznámení",
       "deleteNotification": "Odstranit oznámení z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nelze odstranit oznámení",
       "deleteFailedMessage": "Oznámení nelze odstranit. Zkuste to prosím znovu."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Každé vestavěné ovládání je již v záhlaví.",
                 "add": "Přidat {item}",
                 "boardShortcut": "Zástupce desky",
+                "widget": "",
                 "chooseBoard": "Vybrat desku"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Možnosti",
+                "boardOnly": "",
                 "description": "Tento ovládací prvek zůstává ve stejné velikosti jako v živém záhlaví.",
                 "searchDisplay": {
                   "input": "Vyhledávací lišta",
@@ -7310,7 +7321,9 @@
                 "settings": "Vaše nastavení",
                 "themeToggle": "Přepnout motiv",
                 "user": "Účet",
-                "boardUnavailable": "Board není k dispozici"
+                "boardUnavailable": "Board není k dispozici",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

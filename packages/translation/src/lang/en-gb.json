@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "City / Postal code",
         "latitude": "Latitude",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Hide description"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Show poster image"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Open notification service",
       "deleteNotification": "Delete notification from Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Could not delete notification",
       "deleteFailedMessage": "The notification could not be deleted. Please try again."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "All built-in controls are already in your header.",
                 "add": "Add {item}",
                 "boardShortcut": "Board shortcut",
+                "widget": "",
                 "chooseBoard": "Choose a board"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "This control remains the same size as in the live header.",
                 "searchDisplay": {
                   "input": "Search bar",
@@ -7310,7 +7321,9 @@
                 "settings": "Your settings",
                 "themeToggle": "Toggle theme",
                 "user": "Account",
-                "boardUnavailable": "Board unavailable"
+                "boardUnavailable": "Board unavailable",
+                "notifications": "Notifications",
+                "widget": ""
               }
             },
             "item": {
