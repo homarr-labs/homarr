@@ -1,0 +1,32 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 12-14,24,29,34-36,63,95-104,112,116,125
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  h_d6e478ca18e517 17,28-32,54,87,117
+apps/nextjs/src/app/[locale]/boards/(content)/_visible-widget-items.ts
+  h_d6e478ca18e517 1-30
+apps/nextjs/src/app/[locale]/boards/(content)/_widget-resource-preload.tsx
+  h_d6e478ca18e517 7-8,14
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  h_d6e478ca18e517 8,28-30,33
+packages/boards/package.json
+  h_d6e478ca18e517 23
+packages/boards/src/layout-selection.ts
+  h_d6e478ca18e517 8-16
+packages/boards/src/tab-selection.ts
+  h_d6e478ca18e517 1-31
+packages/boards/src/tabs.tsx
+  h_d6e478ca18e517 7,11-12,14-15,17
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 41,105,111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "eb486286cc17e584d99ea007f53b2554d87aa93d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
