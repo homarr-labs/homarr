@@ -127,7 +127,7 @@ export function RowControl({ entity, run, level }: ControlProps) {
                 onCommit={(value) => run.request({ type: "setPosition", value })}
               />
             )}
-          <CoverButtons entity={entity} run={run} />
+          <CoverButtons entity={entity} run={run} full={attributes.coverPositionUnknown} />
         </div>
       );
     case "climate":

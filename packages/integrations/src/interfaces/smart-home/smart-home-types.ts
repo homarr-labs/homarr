@@ -38,6 +38,7 @@ export interface SmartHomeEntityAttributes {
   mode?: string;
   modes?: string[];
   position?: number;
+  coverPositionUnknown?: boolean;
   tiltPosition?: number;
   percentage?: number;
   percentageStep?: number;

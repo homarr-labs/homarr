@@ -32,6 +32,7 @@ import {
   normalizeHomeyFlows,
   normalizeHomeyZones,
   rgbToHueSaturation,
+  supportsHomeyCoverMotion,
 } from "./homey-normalize";
 import type { HomeyDevice, HomeyFlow } from "./homey-types";
 import {
@@ -295,9 +296,7 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
   /** Flows are optional: API keys without the flow scope still expose devices. */
   private async getFlowsAsync(): Promise<HomeyFlow[]> {
     const load = async (path: "/api/manager/flow/flow/" | "/api/manager/flow/advancedflow/", advanced: boolean) => {
-      const response = await this.getAsync(path);
-      if (!response.ok) return [];
-      const flows = homeyFlowsSchema.safeParse(await response.json());
+      const flows = homeyFlowsSchema.safeParse(await this.getOptionalJsonAsync(path));
       if (!flows.success) return [];
       return Object.values(flows.data).map((flow) => ({ ...flow, advanced }));
     };
@@ -569,11 +568,12 @@ const toSecondaryWrites = (
 };
 
 const toCoverWrites = (device: HomeyDevice, entity: SmartHomeEntity, action: SmartHomeAction) => {
+  const motion = capability(device, "windowcoverings_state");
   const move = (open: boolean): CapabilityWrite[] | null => {
     if (settable(device, "garagedoor_closed")) return [{ capabilityId: "garagedoor_closed", value: !open }];
-    if (settable(device, "windowcoverings_state")) {
-      return [{ capabilityId: "windowcoverings_state", value: open ? "up" : "down" }];
-    }
+    const direction = open ? "up" : "down";
+    if (supportsHomeyCoverMotion(motion, direction))
+      return [{ capabilityId: "windowcoverings_state", value: direction }];
     if (settable(device, "windowcoverings_closed")) return [{ capabilityId: "windowcoverings_closed", value: !open }];
     if (settable(device, "windowcoverings_set")) return [{ capabilityId: "windowcoverings_set", value: open ? 1 : 0 }];
     return null;
@@ -586,7 +586,7 @@ const toCoverWrites = (device: HomeyDevice, entity: SmartHomeEntity, action: Sma
     case "toggle":
       return move(entity.state === "closed");
     case "stop":
-      return settable(device, "windowcoverings_state")
+      return supportsHomeyCoverMotion(motion, "idle")
         ? [{ capabilityId: "windowcoverings_state", value: "idle" }]
         : null;
     case "setPosition":

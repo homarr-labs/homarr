@@ -74,6 +74,7 @@ export interface HaAttributes {
   minHumidity?: number;
   maxHumidity?: number;
   position?: number;
+  coverPositionUnknown?: boolean;
   percentage?: number;
   mediaTitle?: string;
   mediaArtist?: string;

@@ -43,6 +43,7 @@ export const supportsSmartHomeAction = (entity: CapabilityEntity, action: SmartH
   switch (action.type) {
     case "toggle":
       if (entity.domain === "cover") {
+        if (attributes.coverPositionUnknown) return false;
         const required = coverFeatures.open | coverFeatures.close;
         return ((attributes.supportedFeatures ?? 0) & required) === required;
       }
