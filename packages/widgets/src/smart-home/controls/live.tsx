@@ -73,6 +73,7 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   minHumidity: attributes.minHumidity,
   maxHumidity: attributes.maxHumidity,
   position: attributes.position,
+  coverPositionUnknown: attributes.coverPositionUnknown,
   percentage: attributes.percentage,
   mediaTitle: attributes.mediaTitle,
   mediaArtist: attributes.mediaArtist,
