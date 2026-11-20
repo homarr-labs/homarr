@@ -1,0 +1,16 @@
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 9021,9200
+apps/workshop/pb_hooks/http-integration-kinds.json
+  h_d6e478ca18e517 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "414a66b2d4f18156b0d6055834ea90d82ee8b869",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
