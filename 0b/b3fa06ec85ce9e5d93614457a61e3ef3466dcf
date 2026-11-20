@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  h_d6e478ca18e517 104,106,197
+packages/redis/src/lib/channel.ts
+  h_d6e478ca18e517 522,560
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0bb3fa06ec85ce9e5d93614457a61e3ef3466dcf",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
