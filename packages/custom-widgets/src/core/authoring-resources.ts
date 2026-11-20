@@ -277,8 +277,7 @@ description: Author, repair, preview, install, or configure Homarr Custom JSX v2
 
 # Homarr Custom Widget
 
-Build from verified contracts/samples and matching shipped examples; research only missing/changed contracts.
-Preserve working repairs/migrations; keep credentials in Homarr.
+Reuse verified samples and shipped examples. Research missing contracts; keep credentials in Homarr.
 
 ## Context
 
@@ -288,20 +287,16 @@ Reuse supplied context; load only missing references:
 - [runtime](references/runtime.md): response paths, manual interactions, input bindings, safe formatters.
 - [security](references/security.md): auth, network access, mutations.
 
-Use registered components. Resolve unknown names with \`customWidget_findComponents\`; batch details with
-\`customWidget_getComponents\`. Full documents are only for unresolved props/diagnostics.
-Reuse \`contextAlreadyLoaded\`; \`phaseComplete\` advances to the visible next phase.
+Discover unknown names with \`customWidget_findComponents\`; batch details via \`customWidget_getComponents\`.
+Reuse \`contextAlreadyLoaded\`; advance on \`phaseComplete\`.
 
 ## Working-app design
 
-Use faithful numbers, rows, or charts; no quotas. Keep identities, units and missingness honest; unknown is not zero.
-Ground series/history/denominators in verified data. Discover needed registered charts/helpers; verify safe props/data
-grammar, not assumed callbacks/overlays. Quiet theme tokens; persistent config in options. Use supported accessible
-motion/disclosure, reduced motion and keyboard/touch access. Keep facts visible; verify hover and narrow/wide host fit or
-report missing evidence. Preserve repairs/migrations.
+Use faithful numbers, rows or charts; no quotas. Preserve identities/units; unknown is not zero. Verify series, history,
+denominators and registered chart/helper props. Use quiet theme tokens, persistent options, accessible disclosure,
+reduced motion and keyboard/touch access. Keep facts visible; check hover and narrow/wide fit. Preserve repairs/migrations.
 
-https://impeccable.style/ and https://usehallmark.com/ are app references, not marketing pages, packages, catalogs,
-required tools, or API authority.
+https://impeccable.style/ and https://usehallmark.com/: design references, not API authority.
 
 ## Author
 
@@ -317,15 +312,16 @@ required tools, or API authority.
 
 ## Preview and save
 
-With requested creation/editing and available lifecycle tools:
-
 1. Call \`customWidget_previewCreate\` with the complete candidate (validates manifest/JSX). Edits: \`definitionId\`;
    multiline Assistant JSX: \`templateLines\`.
 2. Configure sources in Homarr. Test every returned query/simulated action once; batch independent reads. Match response
    paths/params to JSX. Live mutations require an explicit request.
 3. Fix concrete diagnostics; preserve accepted behavior. Manifest changes: fresh \`previewCreate\`; JSX-only:
    \`customWidget_previewReviseTemplate\` resets evidence. Retest.
-4. Save the exact tested preview: \`customWidget_updateFromPreview\` (edit) or \`customWidget_createFromPreview\` (new).
+4. With a renderer, inspect screenshots and bounds at requested sizes. Repair clipping, overlap or unwanted scrolling
+   without hiding required content, then inspect again. Otherwise report visual verification missing.
+5. For edits, restore unrelated \`removedFromSaved\` losses. \`acknowledgedRemovals\` must match only user-requested removals;
+   this heuristic does not prove behavior was preserved. Save with \`customWidget_updateFromPreview\` (edit) or \`customWidget_createFromPreview\` (new).
    Follow \`nextAction\` once; briefly report the actual saved result.
 
 \`customWidget_validateTemplate\`: isolated JSX diagnostics only, never a preview prerequisite. Stop unavailable or repeatedly
@@ -346,11 +342,15 @@ edit and templateLines for multiline Assistant tool input. Configure sources in 
 simulated action, then save the exact tested preview with updateFromPreview for edits or createFromPreview for new widgets.
 Manifest changes need a fresh preview; JSX-only fixes use previewReviseTemplate and reset evidence. validateTemplate is only
 for focused diagnostics. Batch reads; reuse contextAlreadyLoaded and advance on phaseComplete. Stop a failing path when
-repeated attempts make no progress.
+repeated attempts make no progress. Use customWidget_getReference for named references.
 
 Include sources.default, keyed requests, optional options, and one JSX template. Preserve source shape, request shape,
 response envelopes, and migration behavior. Keep credentials outside definitions. Every control affects a request or visible
 selection; render useful states in narrow tiles.
+
+Before saving, inspect screenshots and bounds at requested sizes, repair clipping/overlap and recheck; if no renderer,
+report visual verification missing. Restore unrelated removedFromSaved losses; acknowledgedRemovals must exactly match
+the user-requested keys. Report saved but unplaced until placement succeeds.
 
 After a tool save, report its actual result briefly. When tools are unavailable or an artifact is requested, return one
 complete fenced JSON definition and one Unverified: line naming missing evidence.

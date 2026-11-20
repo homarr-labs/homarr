@@ -73,7 +73,8 @@ const sourceConfigurationPausedMessages = (latestUserText: string): UIMessage[] 
         input: { definition: {} },
         output: {
           success: true,
-          previewSession: { id: "preview-dispatcharr" },
+          persistenceTool: "customWidget_createFromPreview",
+          previewSession: { id: "preview-dispatcharr", revision: 0 },
           sourceConfigurations: [{ sourceId: "default" }],
           queries: [{ requestId: "channels" }],
           actions: [],
@@ -132,7 +133,8 @@ const persistedAndPlacedWidgetMessages = (latestUserText: string): UIMessage[] =
         output: {
           success: true,
           persistenceTool: "customWidget_createFromPreview",
-          previewSession: { id: "preview-mealie" },
+          previewSession: { id: "preview-mealie", revision: 0 },
+          sourceConfigurations: [],
           queries: [{ requestId: "meals" }],
           actions: [],
         },
@@ -541,8 +543,11 @@ describe("Custom Widget authoring context", () => {
       "customWidget_getReference",
       "customWidget_findComponents",
       "customWidget_getComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_validateTemplate",
       "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
       "customWidget_previewQuery",
       "customWidget_configurationRequestUser",
       "customWidget_createFromPreview",
@@ -588,7 +593,11 @@ describe("Custom Widget authoring context", () => {
       restoredStepCount: restoredSteps.length,
       continueAfterPersistence: false,
     });
-    expect(editTools).toContain("customWidget_previewCreate");
+    expect(editTools).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+    ]);
     expect(editTools).not.toContain("customWidget_validateTemplate");
     expect(editTools).not.toContain("customWidget_list");
     expect(editTools).not.toContain("customWidget_createFromPreview");
@@ -604,7 +613,9 @@ describe("Custom Widget authoring context", () => {
             output: {
               success: true,
               persistenceTool: "customWidget_updateFromPreview",
-              previewSession: { id: "preview-edit-1" },
+              definitionId: "mealie-widget-1",
+              removedFromSaved: [],
+              previewSession: { id: "preview-edit-1", revision: 0 },
               sourceConfigurations: [],
               queries: [{ requestId: "meals" }],
               actions: [],
@@ -627,7 +638,13 @@ describe("Custom Widget authoring context", () => {
         restoredStepCount: restoredSteps.length,
         continueAfterPersistence: false,
       }),
-    ).toEqual(["customWidget_updateFromPreview"]);
+    ).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_updateFromPreview",
+    ]);
   });
 
   test("resumes a feature/request edit without freezing the data contract", () => {
@@ -971,6 +988,8 @@ describe("Custom Widget authoring context", () => {
     const tools = [
       "customWidget_findComponents",
       "customWidget_getComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_validateTemplate",
       "customWidget_previewCreate",
       "customWidget_previewReviseTemplate",
@@ -984,19 +1003,26 @@ describe("Custom Widget authoring context", () => {
       getCustomWidgetPhaseToolNames(tools, [
         { toolResults: [{ toolName: "customWidget_validateTemplate", output: { valid: true } }] },
       ]),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_getSharedProps", "customWidget_previewCreate"]);
     expect(
       getCustomWidgetPhaseToolNames(tools, [
-        { toolResults: [{ toolName: "customWidget_previewCreate", output: { success: true } }] },
+        {
+          toolResults: [
+            {
+              toolName: "customWidget_previewCreate",
+              output: {
+                success: true,
+                persistenceTool: "customWidget_createFromPreview",
+                previewSession: { id: "preview-1", revision: 0 },
+                queries: [{ requestId: "status" }],
+                actions: [],
+                sourceConfigurations: [],
+              },
+            },
+          ],
+        },
       ]),
-    ).toEqual([
-      "customWidget_previewCreate",
-      "customWidget_previewReviseTemplate",
-      "customWidget_previewQuery",
-      "customWidget_previewAction",
-      "customWidget_previewJournal",
-      "customWidget_createFromPreview",
-    ]);
+    ).toEqual(["customWidget_previewQuery"]);
     expect(
       getCustomWidgetPhaseToolNames(tools, [
         { toolResults: [{ toolName: "customWidget_createFromPreview", output: { id: "widget-1" } }] },
@@ -1018,7 +1044,13 @@ describe("Custom Widget authoring context", () => {
           ],
         },
       ]),
-    ).toEqual(["customWidget_findComponents", "customWidget_getComponents", "customWidget_previewCreate"]);
+    ).toEqual([
+      "customWidget_findComponents",
+      "customWidget_getComponents",
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+    ]);
   });
 
   test("keeps an approved preview in the evidence phase before step zero", () => {
@@ -1044,8 +1076,11 @@ describe("Custom Widget authoring context", () => {
               type: "json",
               value: {
                 success: true,
-                previewSession: { id: "preview-1" },
+                persistenceTool: "customWidget_createFromPreview",
+                previewSession: { id: "preview-1", revision: 0 },
                 queries: [{ requestId: "status" }],
+                actions: [],
+                sourceConfigurations: [],
               },
             },
           },
@@ -1114,7 +1149,8 @@ describe("Custom Widget authoring context", () => {
             input: { definition: {} },
             output: {
               success: true,
-              previewSession: { id: "preview-1" },
+              persistenceTool: "customWidget_createFromPreview",
+              previewSession: { id: "preview-1", revision: 0 },
               sourceConfigurations: [{ sourceId: "primary" }, { sourceId: "secondary" }],
               queries: [{ requestId: "primary-status" }, { requestId: "secondary-status" }],
               actions: [],
@@ -1203,7 +1239,8 @@ describe("Custom Widget authoring context", () => {
           toolName: "customWidget_previewCreate",
           output: {
             success: true,
-            previewSession: { id: "preview-1" },
+            persistenceTool: "customWidget_createFromPreview",
+            previewSession: { id: "preview-1", revision: 0 },
             sourceConfigurations: [{ sourceId: "default" }],
             queries: [{ requestId: "status" }],
             actions: [],
@@ -1264,7 +1301,8 @@ describe("Custom Widget authoring context", () => {
             toolName: "customWidget_previewCreate",
             output: {
               success: true,
-              previewSession: { id: "preview-1" },
+              persistenceTool: "customWidget_createFromPreview",
+              previewSession: { id: "preview-1", revision: 0 },
               sourceConfigurations: [{ sourceId: "default" }],
               queries: [{ requestId: "status" }],
               actions: [],
@@ -1350,7 +1388,8 @@ describe("Custom Widget authoring context", () => {
           toolName: "customWidget_previewCreate",
           output: {
             success: true,
-            previewSession: { id: "preview-1" },
+            persistenceTool: "customWidget_createFromPreview",
+            previewSession: { id: "preview-1", revision: 0 },
             sourceConfigurations: [],
             queries: [{ requestId: "status" }],
             actions: [],
@@ -1523,6 +1562,8 @@ describe("Custom Widget authoring context", () => {
 
   test("keeps prior preview evidence after an unchanged revision", () => {
     const tools = [
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_validateTemplate",
       "customWidget_previewCreate",
       "customWidget_previewReviseTemplate",
@@ -1536,9 +1577,11 @@ describe("Custom Widget authoring context", () => {
             toolName: "customWidget_previewCreate",
             output: {
               success: true,
-              previewSession: { id: "preview-1" },
+              persistenceTool: "customWidget_createFromPreview",
+              previewSession: { id: "preview-1", revision: 0 },
               queries: [{ requestId: "status" }],
               actions: [],
+              sourceConfigurations: [],
             },
           },
         ],
@@ -1567,11 +1610,19 @@ describe("Custom Widget authoring context", () => {
       },
     ];
 
-    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_createFromPreview"]);
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_createFromPreview",
+    ]);
   });
 
-  test("advances directly to persistence after revised preview evidence completes", () => {
+  test("allows persistence and exact template repair after revised preview evidence completes", () => {
     const tools = [
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_validateTemplate",
       "customWidget_previewReviseTemplate",
       "customWidget_previewQuery",
@@ -1584,9 +1635,11 @@ describe("Custom Widget authoring context", () => {
             toolName: "customWidget_previewReviseTemplate",
             output: {
               success: true,
+              persistenceTool: "customWidget_createFromPreview",
               previewSession: { id: "preview-1", revision: 1 },
               queries: [{ requestId: "status" }],
               actions: [],
+              sourceConfigurations: [],
             },
           },
         ],
@@ -1607,12 +1660,20 @@ describe("Custom Widget authoring context", () => {
       },
     ];
 
-    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_createFromPreview"]);
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewReviseTemplate",
+      "customWidget_createFromPreview",
+    ]);
   });
 
   test("finalizes an edit preview through updateFromPreview", () => {
     const tools = [
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
       "customWidget_previewQuery",
       "customWidget_createFromPreview",
       "customWidget_updateFromPreview",
@@ -1625,9 +1686,12 @@ describe("Custom Widget authoring context", () => {
             output: {
               success: true,
               persistenceTool: "customWidget_updateFromPreview",
-              previewSession: { id: "preview-edit" },
+              definitionId: "widget-1",
+              removedFromSaved: [],
+              previewSession: { id: "preview-edit", revision: 0 },
               queries: [{ requestId: "status" }],
               actions: [],
+              sourceConfigurations: [],
             },
           },
         ],
@@ -1642,8 +1706,18 @@ describe("Custom Widget authoring context", () => {
       },
     ];
 
-    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual(["customWidget_updateFromPreview"]);
+    expect(getCustomWidgetPhaseToolNames(tools, steps)).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_updateFromPreview",
+    ]);
     expect(getCustomWidgetPhaseToolNames(tools, steps, { legacyMigrationOnly: true })).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
       "customWidget_updateFromPreview",
     ]);
   });
@@ -1800,11 +1874,13 @@ describe("Custom Widget authoring context", () => {
           toolResults: [{ toolName: "customWidget_getComponent", output: { name: "RefreshButton", props: [] } }],
         },
       ]),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_previewCreate"]);
   });
 
   test("keeps evidence tools until every preview request succeeds, then allows persistence", () => {
     const tools = [
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
       "customWidget_validateTemplate",
       "customWidget_previewCreate",
       "customWidget_previewReviseTemplate",
@@ -1819,9 +1895,11 @@ describe("Custom Widget authoring context", () => {
           toolName: "customWidget_previewCreate",
           output: {
             success: true,
-            previewSession: { id: "preview-1" },
+            persistenceTool: "customWidget_createFromPreview",
+            previewSession: { id: "preview-1", revision: 0 },
             queries: [{ requestId: "counts" }, { requestId: "recent" }],
             actions: [{ requestId: "approve" }],
+            sourceConfigurations: [],
           },
         },
       ],
@@ -1859,8 +1937,19 @@ describe("Custom Widget authoring context", () => {
       },
     ];
 
-    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual(["customWidget_createFromPreview"]);
-    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence, { legacyMigrationOnly: true })).toEqual([]);
+    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence)).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+      "customWidget_createFromPreview",
+    ]);
+    expect(getCustomWidgetPhaseToolNames(tools, completeEvidence, { legacyMigrationOnly: true })).toEqual([
+      "customWidget_getComponent",
+      "customWidget_getSharedProps",
+      "customWidget_previewCreate",
+      "customWidget_previewReviseTemplate",
+    ]);
   });
 
   test("recognizes the current user v1 migration task without inheriting it into a new task", () => {
@@ -1901,7 +1990,7 @@ describe("Custom Widget authoring context", () => {
     ]);
   });
 
-  test("previews directly after Homarr reports that context retrieval is complete", () => {
+  test("keeps exact lookup and preview after Homarr reports that context retrieval is complete", () => {
     const tools = [
       "customWidget_getReference",
       "customWidget_getComponents",
@@ -1922,7 +2011,7 @@ describe("Custom Widget authoring context", () => {
           ],
         },
       ]),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_getSharedProps", "customWidget_previewCreate"]);
   });
 
   test("keeps a fresh authoring phase on focused context and direct preview tools", () => {
@@ -1979,10 +2068,30 @@ describe("Custom Widget authoring context", () => {
       ["customWidget_getSkill", { skillMd: "skill" }],
       ["customWidget_getReference", { name: "schema", content: "schema" }],
       ["customWidget_findComponents", { components: [] }],
-      ["customWidget_previewReviseTemplate", { success: true }],
+      [
+        "customWidget_previewReviseTemplate",
+        {
+          success: true,
+          persistenceTool: "customWidget_createFromPreview",
+          previewSession: { id: "preview-1", revision: 1 },
+          queries: [],
+          actions: [],
+          sourceConfigurations: [],
+        },
+      ],
       ["customWidget_previewAction", { ok: true, error: null }],
       ["customWidget_validateTemplate", { valid: true, diagnostics: [{ severity: "warning", message: "review" }] }],
-      ["customWidget_previewCreate", { success: true }],
+      [
+        "customWidget_previewCreate",
+        {
+          success: true,
+          persistenceTool: "customWidget_createFromPreview",
+          previewSession: { id: "preview-1", revision: 0 },
+          queries: [],
+          actions: [],
+          sourceConfigurations: [],
+        },
+      ],
       ["customWidget_previewQuery", { ok: true, error: null }],
       ["customWidget_previewQuery", { ok: false, status: 401, error: "HTTP 401: Unauthorized" }],
       ["customWidget_configurationRequestUser", { status: "completed" }],
@@ -2142,7 +2251,7 @@ describe("Custom Widget authoring context", () => {
     ).toBe(false);
   });
 
-  test("previews directly after a selected documentation batch", () => {
+  test("retains exact component and shared-prop lookup after a selected documentation batch", () => {
     const tools = [
       "customWidget_findComponents",
       "customWidget_getReference",
@@ -2164,7 +2273,7 @@ describe("Custom Widget authoring context", () => {
           ],
         },
       ]),
-    ).toEqual(["customWidget_previewCreate"]);
+    ).toEqual(["customWidget_getComponent", "customWidget_getSharedProps", "customWidget_previewCreate"]);
   });
 
   test("bounds parallel focused searches and reopens after failed validation", () => {

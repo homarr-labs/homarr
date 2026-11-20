@@ -993,7 +993,7 @@ export async function POST(request: Request) {
     }
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(
-          [...Object.keys(homarrTools), ...frontendToolNames],
+          [...Object.keys(homarrTools).filter(customWidgetDiscoveryPhase.canClaim), ...frontendToolNames],
           [...restoredCustomWidgetSteps, ...responseMessageSteps, ...steps],
           {
             continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,

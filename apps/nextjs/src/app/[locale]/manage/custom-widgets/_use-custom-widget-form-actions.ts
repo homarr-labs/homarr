@@ -71,6 +71,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       if (
         preview.outcome === "idle" &&
         preview.session === null &&
+        !preview.setupIssues?.length &&
         Object.keys(preview.data).length === 0 &&
         Object.keys(preview.status).length === 0
       )
@@ -115,7 +116,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const submit = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
     setSaveIssues([]);
-    const definition = buildDefinition(values);
+    const definition = buildDefinition(values, input.mode === "create");
     if (!definition.success) {
       reportSaveIssues(
         input.form,
@@ -199,9 +200,21 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
 
   const runPreview = async () => {
     if (activePreviewGeneration.current !== null) return;
+    clearTimeout(previewInvalidationTimeout.current);
+    clearPreview();
     const valuesAtStart = input.documentStore.getValues();
-    const candidateAtStart = buildDefinition(valuesAtStart);
+    const candidateAtStart = buildDefinition(valuesAtStart, true);
     if (!candidateAtStart.success) {
+      input.setPreview({
+        data: {},
+        status: {},
+        session: null,
+        outcome: "error",
+        setupIssues: candidateAtStart.error.issues.map((issue) => ({
+          path: issue.path.map(String).join(".") || undefined,
+          message: issue.message,
+        })),
+      });
       showErrorNotification({
         title: w("section.preview"),
         message: candidateAtStart.error.issues[0]?.message ?? w("invalidWidget"),
@@ -212,6 +225,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, optionsAtStart);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
+      input.setPreview({ data: {}, status: {}, session: null, outcome: "error", setupIssues: optionIssues });
       showErrorNotification({
         title: w("section.preview"),
         message: issue ? `${issue.path}: ${issue.message}` : w("invalidWidget"),
@@ -274,10 +288,19 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       }
     } catch (error) {
       if (!isCurrent()) return;
-      input.setPreview((current) => ({ ...current, outcome: "error" }));
+      const errorData = isRecord(error) ? error.data : undefined;
+      let setupIssues: CustomWidgetSaveIssue[] = [{ message: t("notification.previewError") }];
+      if (
+        isRecord(errorData) &&
+        (isRecord(errorData.zodError) || errorData.code === "BAD_REQUEST" || errorData.code === "NOT_FOUND")
+      ) {
+        const extractedIssues = extractCustomWidgetSaveIssues(error);
+        if (extractedIssues.length > 0) setupIssues = extractedIssues;
+      }
+      input.setPreview({ data: {}, status: {}, session: null, outcome: "error", setupIssues });
       showErrorNotification({
         title: w("section.preview"),
-        message: error instanceof Error ? error.message : t("notification.previewError"),
+        message: setupIssues[0]?.message ?? t("notification.previewError"),
       });
     } finally {
       if (activePreviewGeneration.current === generation) {
