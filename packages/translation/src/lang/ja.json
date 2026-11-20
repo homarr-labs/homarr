@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "都市／郵便番号",
         "latitude": "緯度",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "詳細を非表示"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "ポスターの画像を表示"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "通知サービスを開く",
       "deleteNotification": "Goティフィスから通知を削除",
+      "dismissNotification": "",
       "deleteFailed": "通知を削除できませんでした",
       "deleteFailedMessage": "通知を削除できませんでした。もう一度やり直してください。"
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "すべての組み込み制御は、すでにヘッダーにあります。",
                 "add": "{item} を追加",
                 "boardShortcut": "ボードショートカット",
+                "widget": "ウィジェット",
                 "chooseBoard": "ボードを選択"
               },
               "configuration": {
+                "widgetKind": "ウィジェット",
+                "widgetOptions": "オプション",
+                "boardOnly": "",
                 "description": "このコントロールは、ライブヘッダーと同じサイズを維持します。",
                 "searchDisplay": {
                   "input": "検索バー",
@@ -7310,7 +7321,9 @@
                 "settings": "設定",
                 "themeToggle": "テーマの切り替え",
                 "user": "アカウント",
-                "boardUnavailable": "ボードが利用できません"
+                "boardUnavailable": "ボードが利用できません",
+                "notifications": "通知",
+                "widget": "ウィジェット"
               }
             },
             "item": {

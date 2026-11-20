@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stadt / Postleitzahl",
         "latitude": "Breitengrad",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Beschreibung ausblenden"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Poster Bild anzeigen"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Benachrichtigungsdienst öffnen",
       "deleteNotification": "Benachrichtigung von Gotify löschen",
+      "dismissNotification": "",
       "deleteFailed": "Benachrichtigung konnte nicht gelöscht werden",
       "deleteFailedMessage": "Die Benachrichtigung konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Jede eingebaute Steuerung ist bereits in Ihrem Header.",
                 "add": "{item} hinzufügen",
                 "boardShortcut": "Board-Verknüpfung",
+                "widget": "Widget",
                 "chooseBoard": "Board auswählen"
               },
               "configuration": {
+                "widgetKind": "Widget",
+                "widgetOptions": "Optionen",
+                "boardOnly": "",
                 "description": "Diese Steuerung bleibt die gleiche Größe wie im Live-Header.",
                 "searchDisplay": {
                   "input": "Suchleiste",
@@ -7310,7 +7321,9 @@
                 "settings": "Ihre Einstellungen",
                 "themeToggle": "Theme umschalten",
                 "user": "Konto",
-                "boardUnavailable": "Board nicht verfügbar"
+                "boardUnavailable": "Board nicht verfügbar",
+                "notifications": "Benachrichtigungen",
+                "widget": "Widget"
               }
             },
             "item": {

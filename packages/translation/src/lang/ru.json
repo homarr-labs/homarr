@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Город / Почтовый индекс",
         "latitude": "Широта",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Скрывать описание"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Показывать постер"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Открыть сервис уведомлений",
       "deleteNotification": "Удалить уведомление из Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не удалось удалить уведомление",
       "deleteFailedMessage": "Не удалось удалить уведомление. Попробуйте ещё раз."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Все встроенные элементы уже есть в вашей шапке.",
                 "add": "Добавить {item}",
                 "boardShortcut": "Ярлык панели",
+                "widget": "Виджет",
                 "chooseBoard": "Выберите панель"
               },
               "configuration": {
+                "widgetKind": "Виджет",
+                "widgetOptions": "Опции",
+                "boardOnly": "",
                 "description": "В макете этот элемент того же размера, что и в настоящей шапке.",
                 "searchDisplay": {
                   "input": "Строка поиска",
@@ -7310,7 +7321,9 @@
                 "settings": "Ваши настройки",
                 "themeToggle": "Переключить тему",
                 "user": "Учётная запись",
-                "boardUnavailable": "Панель недоступна"
+                "boardUnavailable": "Панель недоступна",
+                "notifications": "Уведомления",
+                "widget": "Виджет"
               }
             },
             "item": {
