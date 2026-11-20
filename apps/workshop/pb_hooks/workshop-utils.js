@@ -113,6 +113,13 @@ const validateSubmissionManifest = (record) => {
   }
 };
 
+const paletteKeys = new Set(["body", "surface", "hover", "border", "text", "dimmed", "primary", "secondary"]);
+const isThemePalette = (value) =>
+  isManifestObject(value) &&
+  Object.entries(value).every(
+    ([key, color]) => paletteKeys.has(key) && typeof color === "string" && /^#[0-9a-f]{6}$/i.test(color),
+  );
+
 const validateThemeManifest = (content) => {
   if (content.length > 49_152) rejectRequest("Theme bundle exceeds 48 KB");
   let theme;
@@ -126,8 +133,8 @@ const validateThemeManifest = (content) => {
     (theme.preset !== undefined && !themePresets.has(theme.preset)) ||
     (theme.theme !== undefined && !isManifestObject(theme.theme)) ||
     Object.keys(theme).some((key) => !["preset", "theme", "light", "dark", "customCss"].includes(key)) ||
-    (theme.light !== undefined && !isManifestObject(theme.light)) ||
-    (theme.dark !== undefined && !isManifestObject(theme.dark))
+    (theme.light !== undefined && !isThemePalette(theme.light)) ||
+    (theme.dark !== undefined && !isThemePalette(theme.dark))
   ) {
     rejectRequest("Theme content must be a portable Homarr theme document");
   }

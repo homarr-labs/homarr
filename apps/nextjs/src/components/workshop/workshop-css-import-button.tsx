@@ -2,11 +2,23 @@
 
 import { useRef, useState } from "react";
 import type { ButtonProps } from "@mantine/core";
-import { ActionIcon, Button, Group, Loader, Modal, Pagination, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Loader,
+  Modal,
+  Pagination,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react";
 
-import { modalSizeSelect, useConfirmModal } from "@homarr/modals";
+import { modalSizeSelect } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
@@ -78,12 +90,11 @@ function WorkshopAppearanceImportButton(props: AppearanceImport & { size?: Butto
 function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void }) {
   const t = useI18n("workshop");
   const session = useWorkshopSession();
-  const { openConfirmModal } = useConfirmModal();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 250);
   const [page, setPage] = useState(1);
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const [review, setReview] = useState<{ title: string; json: string } | null>(null);
+  const [review, setReview] = useState<{ title: string; json: string; css?: string } | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const isTheme = props.type === "customTheme";
   const searchLabel = t(isTheme ? "theme.search" : "searchCss");
@@ -103,19 +114,10 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
       const submission = await session.client.get(item.id);
       const validation = readWorkshopTheme(submission);
       if (!validation.success) throw new Error(validation.error);
-      if (props.type === "customTheme") {
-        setReview({ title: submission.title, json: JSON.stringify(validation.data, null, 2) });
-        return;
-      }
-      const css = validation.data.customCss;
-      if (!css?.trim()) throw new Error(t("theme.noCss"));
-      openConfirmModal({
-        title: t("importCss"),
-        children: t("importCssConfirm", { title: item.title }),
-        onConfirm: () => {
-          props.onImport(css);
-          props.onClose();
-        },
+      setReview({
+        title: submission.title,
+        json: JSON.stringify(validation.data, null, 2),
+        css: validation.data.customCss,
       });
     } catch (cause) {
       showErrorNotification({
@@ -126,6 +128,41 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
       setPendingId(null);
     }
   };
+
+  const backToList = () => {
+    setReview(null);
+    requestAnimationFrame(() => searchInput.current?.focus());
+  };
+
+  if (review && props.type === "customCss") {
+    const css = review.css;
+    return (
+      <Stack gap="md">
+        <Text fw={600}>{review.title}</Text>
+        {css?.trim() ? (
+          <Textarea label={t("theme.cssContent")} readOnly value={css} rows={8} />
+        ) : (
+          <Text>{t("theme.noCss")}</Text>
+        )}
+        <Group justify="space-between">
+          <Button type="button" variant="default" ref={focusOnMount} onClick={backToList}>
+            {t("theme.backToThemes")}
+          </Button>
+          {css?.trim() && (
+            <Button
+              type="button"
+              onClick={() => {
+                props.onImport(css);
+                props.onClose();
+              }}
+            >
+              {t("useCss")}
+            </Button>
+          )}
+        </Group>
+      </Stack>
+    );
+  }
 
   if (review && props.type === "customTheme") {
     return (
@@ -138,10 +175,7 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
             if (!error) props.onClose();
             return error;
           }}
-          onBack={() => {
-            setReview(null);
-            requestAnimationFrame(() => searchInput.current?.focus());
-          }}
+          onBack={backToList}
           backLabel={t("theme.backToThemes")}
         />
       </Stack>
@@ -202,7 +236,7 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
                 loading={pendingId === item.id}
                 onClick={() => void reviewSubmission(item)}
               >
-                {t(isTheme ? "theme.review" : "useCss")}
+                {t(isTheme ? "theme.review" : "theme.reviewCss")}
               </Button>
             </Group>
           </>
@@ -211,4 +245,8 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
       {totalPages > 1 && <Pagination total={totalPages} value={page} onChange={setPage} mx="auto" />}
     </Stack>
   );
+}
+
+function focusOnMount(element: HTMLButtonElement | null) {
+  element?.focus();
 }

@@ -220,6 +220,9 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const [manualCopy, setManualCopy] = useState(false);
+  const focusManualCopy = useCallback((element: HTMLTextAreaElement | null) => {
+    element?.focus();
+  }, []);
   const [editOpen, setEditOpen] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -814,9 +817,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                 rows={6}
                 className="mt-2 w-full rounded-md border bg-background p-3 font-mono text-sm"
                 onFocus={(event) => event.currentTarget.select()}
-                ref={(element) => {
-                  element?.focus();
-                }}
+                ref={focusManualCopy}
               />
             </section>
           )}

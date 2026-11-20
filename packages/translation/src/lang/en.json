@@ -1312,6 +1312,8 @@
       "listLabel": "Workshop themes",
       "empty": "No Workshop themes found",
       "review": "Review theme",
+      "reviewCss": "Review CSS",
+      "cssContent": "Custom CSS",
       "importConfirm": "Only settings in this JSON change. Your preset and CSS stay as they are unless you choose to replace them. Nothing goes live until you save the theme.",
       "cssWarning": "Only include CSS you trust. It can load external resources.",
       "useCss": "Replace my custom CSS",
