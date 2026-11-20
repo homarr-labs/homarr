@@ -5,7 +5,7 @@ import { isRecord } from "@homarr/common";
 import { selectSequentialCustomWidgetToolCalls } from "@homarr/custom-widgets/core";
 
 import { normalizeOpenRouterWebSearchSources } from "./assistant-openrouter";
-import { getAssistantToolOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
+import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistant-tool-output";
 
 const reloadableCustomWidgetResourceToolNames = [
   "customWidget_getSkill",
@@ -127,9 +127,7 @@ const compactToolOutputs = (messages: UIMessage[]): UIMessage[] =>
 
       return {
         ...part,
-        output: toAssistantToolOutput(record.output, {
-          maxCharacters: getAssistantToolOutputMaxCharacters(toolName),
-        }),
+        output: toAssistantToolOutput(record.output, getAssistantToolOutputOptions(toolName)),
       } as unknown as typeof part;
     }),
   }));

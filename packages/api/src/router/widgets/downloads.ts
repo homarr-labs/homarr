@@ -5,6 +5,7 @@ import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { downloadClientItemSchema } from "@homarr/integrations/downloads";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
@@ -90,6 +91,7 @@ export const downloadsRouter = createTRPCRouter({
           .optional(),
         includeArchivedHistory: z.boolean().default(false),
         historyWindowDays: z.number().int().min(1).default(7),
+        refreshInterval: widgetRefreshIntervalSchema.default(10),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -102,7 +104,7 @@ export const downloadsRouter = createTRPCRouter({
             includeArchivedHistory: input.includeArchivedHistory,
             historyWindowDays: input.historyWindowDays,
           });
-          const { data, timestamp } = await innerHandler.getDataAsync();
+          const { data, timestamp } = await innerHandler.getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
             integrationId: integration.id,
             integrationName: integration.name,

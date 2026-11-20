@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Mesto / poštna številka",
         "latitude": "Zemljepisna širina",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Skrij opis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Prikaži sliko plakata"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Odpri storitev obvestil",
       "deleteNotification": "Izbriši obvestilo iz Gotifyja",
+      "dismissNotification": "",
       "deleteFailed": "Obvestila ni mogoče izbrisati",
       "deleteFailedMessage": "Obvestila ni bilo mogoče izbrisati. Poskusite znova."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Vsi vgrajeni kontrolniki so že v vaši glavi.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Bližnjica do nadzorne plošče",
+                "widget": "",
                 "chooseBoard": "Izberite nadzorno ploščo"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Ta kontrolnik ostane enako velik kot v glavi v živo.",
                 "searchDisplay": {
                   "input": "Iskalna vrstica",
@@ -7310,7 +7321,9 @@
                 "settings": "Vaše nastavitve",
                 "themeToggle": "Preklopi temo",
                 "user": "Račun",
-                "boardUnavailable": "Nadzorna plošča ni na voljo"
+                "boardUnavailable": "Nadzorna plošča ni na voljo",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

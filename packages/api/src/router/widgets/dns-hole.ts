@@ -4,6 +4,7 @@ import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import {
   createManyWidgetIntegrationMiddleware,
@@ -35,11 +36,14 @@ export const dnsHoleRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "dnsHoleSummary"))
-    .query(async ({ ctx }) => {
+    .input(z.object({ refreshInterval: widgetRefreshIntervalSchema.default(10) }))
+    .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], DnsHoleSummaryResult>(
         ctx.integrations,
         async (integration) => {
-          const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
+          const { data, timestamp } = await dnsHoleRequestHandler
+            .handler(integration, {})
+            .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
             integrationId: integration.id,
             integrationName: integration.name,

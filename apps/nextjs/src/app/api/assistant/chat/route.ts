@@ -101,7 +101,11 @@ import {
   getAssistantStreamErrorMessage,
 } from "./assistant-stream-error";
 import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
-import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
+import {
+  getAssistantToolErrorCode,
+  getCustomWidgetConfigurationStatusRecovery,
+  getSafeAssistantToolError,
+} from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistant-tool-output";
 import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
@@ -123,7 +127,7 @@ import {
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
-import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
+import { createAssistantMcpToolGroups, getEnabledAssistantMcpToolGroupIds } from "./assistant-tool-groups";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
@@ -781,7 +785,7 @@ export async function POST(request: Request) {
                   ...(typeof executionInput.requestId === "string" ? { requestId: executionInput.requestId } : {}),
                 };
               }
-              return { error: safeError };
+              return { error: safeError, code: getAssistantToolErrorCode(error), toolName: mcpTool.name };
             }
           },
         }),
@@ -854,10 +858,12 @@ export async function POST(request: Request) {
       .max(maxAssistantToolGroupsPerActivation)
       .describe("MCP router groups whose typed Homarr tools are needed for the current task."),
   });
-  const enabledToolGroupIds = new Set<string>();
+  // Approval and browser-tool continuations start a new HTTP request. Restore
+  // successful activations from this conversation before preparing model steps.
+  const enabledToolGroupIds = getEnabledAssistantMcpToolGroupIds(incomingMessages, assistantToolGroups.ids);
   const toolGroupActivation = tool({
     description:
-      "Enable task-needed typed Homarr tools by MCP router group. Enabled groups remain available on later steps.",
+      "Enable task-needed typed Homarr tools by MCP router group. Enabled groups remain available throughout this conversation, including after approvals and browser-tool results.",
     inputSchema: jsonSchema(z.toJSONSchema(assistantToolGroupActivationSchema) as Parameters<typeof jsonSchema>[0]),
     execute: (value) => {
       if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(assistantToolGroupActivationName)) {

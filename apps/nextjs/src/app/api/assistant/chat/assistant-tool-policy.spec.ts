@@ -20,6 +20,17 @@ const assistantMessage = (...parts: UIMessage["parts"]): UIMessage => ({
   parts,
 });
 
+test("keeps board items and placements readable when the creator has a large avatar", () => {
+  const board = {
+    id: "board",
+    creator: { id: "user", name: "Owner", image: `data:image/png;base64,${"A".repeat(92_000)}` },
+    items: [{ id: "item", options: { presentation: "entities" }, layouts: [{ layoutId: "base", xOffset: 2 }] }],
+  };
+  const output = toAssistantToolOutput(board, getAssistantToolOutputOptions("board_getBoardByName"));
+  expect(output).toEqual({ ...board, creator: { id: "user", name: "Owner" } });
+  expect(board.creator.image).toHaveLength(92_022);
+});
+
 describe("hasDeniedAssistantToolApproval", () => {
   const denied = assistantMessage({
     type: "dynamic-tool",

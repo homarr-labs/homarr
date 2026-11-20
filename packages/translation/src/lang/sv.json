@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stad/postnummer",
         "latitude": "Latitud",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Dölj beskrivning"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Visa affischbild"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Öppna meddelandetjänst",
       "deleteNotification": "Ta bort avisering från Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kunde inte ta bort avisering",
       "deleteFailedMessage": "Meddelandet kunde inte raderas. Försök igen."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Varje inbyggd kontroll finns redan i ditt huvud.",
                 "add": "Lägg till {item}",
                 "boardShortcut": "Genväg till tavlan",
+                "widget": "",
                 "chooseBoard": "Välj en tavla"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Alternativ",
+                "boardOnly": "",
                 "description": "Denna kontroll förblir samma storlek som den gör i live-huvudet.",
                 "searchDisplay": {
                   "input": "Sök i fältet",
@@ -7310,7 +7321,9 @@
                 "settings": "Dina inställningar",
                 "themeToggle": "Växla tema",
                 "user": "Konto",
-                "boardUnavailable": "Brädan är inte tillgänglig"
+                "boardUnavailable": "Brädan är inte tillgänglig",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

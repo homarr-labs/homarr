@@ -71,8 +71,10 @@ export const applySmartHomeAction = (entity: SmartHomeEntity, action: SmartHomeA
       return next({ state: value > 0 ? "open" : "closed", attributes: { position: value } });
     }
     case "open":
+      if (attributes.coverPositionUnknown) return entity;
       return next({ state: "open", attributes: { position: 100 } });
     case "close":
+      if (attributes.coverPositionUnknown) return entity;
       return next({ state: "closed", attributes: { position: 0 } });
     case "lock":
       return next({ state: "locked" });

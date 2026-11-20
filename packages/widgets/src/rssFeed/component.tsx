@@ -195,7 +195,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                 p="sm"
                 title={feedEntry.title}
               >
-                {feedEntry.enclosure !== undefined && (
+                {feedEntry.enclosure !== undefined && !options.hideBackgroundImage && (
                   <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="" />
                 )}
                 <Group wrap="nowrap">
@@ -205,8 +205,9 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt={feedEntry.title}
-                      w={140}
-                      h={140}
+                      w={options.thumbnailWidth}
+                      maw="50%"
+                      style={{ aspectRatio: `${options.thumbnailWidth} / ${options.thumbnailHeight}` }}
                       radius="sm"
                       fit="cover"
                     />
@@ -219,7 +220,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       <Text dir={languageDir} c="dimmed" size="sm" lineClamp={options.textLinesClamp}>
                         {feedDescriptionToText(feedEntry.description)}
                       </Text>
-                    )}                   
+                    )}
                     <Group justify="space-between" wrap="nowrap" gap="sm">
                       {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
                       {!options.hideFeedTitle && feedEntry.feedTitle && (

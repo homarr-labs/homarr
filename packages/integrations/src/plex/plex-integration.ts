@@ -355,6 +355,15 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
               ? (item.parentTitle ?? item.title)
               : item.title;
 
+        // External and linked app URLs may already point to Plex Web.
+        const href = new URL(this.integration.externalUrl ?? this.integration.url);
+        let basePath = href.pathname.replace(/\/+$/, "");
+        if (this.integration.externalUrl) {
+          basePath = basePath.replace(/\/web(?:\/index\.html)?$/, "");
+        }
+        href.pathname = `${basePath}/web/index.html`;
+        href.hash = `!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`;
+
         return {
           id: item.Media?.at(0)?.id.toString() ?? item.key,
           type: mapType(item.type),
@@ -370,11 +379,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           producer: item.studio,
           rating: item.rating?.toFixed(1),
           tags: item.Genre?.map((genre) => genre.tag) ?? [],
-          href: super
-            .externalUrl(
-              `/web/index.html#!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key.replace("/children", ""))}`,
-            )
-            .toString(),
+          href: href.toString(),
           length: item.duration ? Math.round(item.duration / 1000) : undefined,
         };
       });

@@ -12,7 +12,9 @@ import { zoomCompensatedSize } from "@homarr/ui";
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import type { WidgetComponentProps } from "../../definition";
+import { useDemoReadOnly } from "../../demo-read-only";
 import { formatUptime } from "../system-health";
+import { getWidgetRefreshInterval } from "../../refresh-interval";
 import { getClusterAccordionDefault, getClusterVisibleSections } from "./accordion-state";
 import { ResourceAccordionItem } from "./resource-accordion-item";
 import { ResourceTable } from "./resource-table";
@@ -44,7 +46,12 @@ export const ClusterHealthMonitoring = ({
   displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n("widget.healthMonitoring");
-  const healthQuery = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const healthQuery = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery(
+    { integrationId, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const healthData = getUsableWidgetQueryData(healthQuery);
   const visibleSections = getClusterVisibleSections(displayMode, options.visibleClusterSections);
   const accordionScope = `${displayMode}:${visibleSections.join(",")}`;

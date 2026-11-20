@@ -31,7 +31,8 @@ export const ChartLayout = ({
       miw={0}
       type="auto"
       scrollbars="xy"
-      offsetScrollbars={horizontal ? "x" : "y"}
+      // Reserve the gutter only while a scrollbar is shown, so unscrolled charts keep symmetric widget padding.
+      offsetScrollbars="present"
       scrollbarSize={6}
       styles={{
         // Nested charts must scroll within their allocated group, not size its parent tracks.
