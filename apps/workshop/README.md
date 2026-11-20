@@ -118,10 +118,11 @@ and promotion. Publish by immutable digest, validate that exact digest in stagin
 
 ### Convert legacy CSS listings
 
-Start the upgraded Workshop once to add the theme type. Keep legacy CSS listings in place while releasing the updated
-Homarr client. Once supported clients can import both formats, schedule a maintenance window. These commands apply only
-to deployments using this repository's `apps/workshop/docker-compose.yml` and the same Compose project name. Back up
-that project's `pb_data` volume before running the commands from `apps/workshop`:
+Back up the deployed Workshop's `pb_data` volume before starting the upgraded Workshop to add the theme type.
+Keep legacy CSS listings in place while releasing the updated Homarr client. Once supported clients can import both
+formats, schedule a maintenance window. These commands apply only to deployments using this repository's
+`apps/workshop/docker-compose.yml` and the same Compose project name. Back up that project's `pb_data` volume again
+before running the commands from `apps/workshop`:
 
 ```sh
 docker compose stop workshop
