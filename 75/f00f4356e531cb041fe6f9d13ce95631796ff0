@@ -1,0 +1,20 @@
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 223-225,820
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  h_d6e478ca18e517 5-17,21,97,117-120,132-166,178,239,249-252
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 116-122,136-137
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1315-1316
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "75f00f4356e531cb041fe6f9d13ce95631796ff0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
