@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "城市 / 郵遞區號",
         "latitude": "緯度",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "隱藏說明"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "顯示封面圖片"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "開啟通知服務",
       "deleteNotification": "從 Gotify 刪除通知",
+      "dismissNotification": "",
       "deleteFailed": "無法刪除通知",
       "deleteFailedMessage": "無法刪除通知。請再試一次。"
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "所有內建控制項都已在您的標頭中。",
                 "add": "新增 {item}",
                 "boardShortcut": "面板捷徑",
+                "widget": "",
                 "chooseBoard": "選擇面板"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "此控制項會維持與即時標頭中相同的大小。",
                 "searchDisplay": {
                   "input": "搜尋列",
@@ -7310,7 +7321,9 @@
                 "settings": "您的設定",
                 "themeToggle": "切換主題",
                 "user": "帳戶",
-                "boardUnavailable": "面板無法使用"
+                "boardUnavailable": "面板無法使用",
+                "notifications": "通知",
+                "widget": ""
               }
             },
             "item": {

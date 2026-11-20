@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Città / Codice postale",
         "latitude": "Latitudine",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Nascondi descrizione"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostra immagine poster"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Apri servizio di notifica",
       "deleteNotification": "Elimina notifica da Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Impossibile eliminare la notifica",
       "deleteFailedMessage": "La notifica non può essere eliminata. Riprova."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Ogni controllo integrato è già nella tua intestazione.",
                 "add": "Aggiungi {item}",
                 "boardShortcut": "Scorciatoia scheda",
+                "widget": "Widget",
                 "chooseBoard": "Scegli una scheda"
               },
               "configuration": {
+                "widgetKind": "Widget",
+                "widgetOptions": "Opzioni",
+                "boardOnly": "",
                 "description": "Questo controllo rimane la stessa dimensione di cui ha bisogno nell'intestazione live.",
                 "searchDisplay": {
                   "input": "Barra di ricerca",
@@ -7310,7 +7321,9 @@
                 "settings": "Le tue impostazioni",
                 "themeToggle": "Attiva/Disattiva tema",
                 "user": "Account",
-                "boardUnavailable": "Tavola non disponibile"
+                "boardUnavailable": "Tavola non disponibile",
+                "notifications": "Notifiche",
+                "widget": "Widget"
               }
             },
             "item": {

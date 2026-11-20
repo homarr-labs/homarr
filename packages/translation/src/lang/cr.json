@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "crwdns12977:0crwdne12977:0"
+      },
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
         "latitude": "crwdns1112:0crwdne1112:0",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "crwdns3674:0crwdne3674:0"
         },
+        "hideFeedTitle": {
+          "label": "crwdns12961:0crwdne12961:0"
+        },
         "showPosterImage": {
           "label": "crwdns4012:0crwdne4012:0"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "crwdns8821:0crwdne8821:0",
       "deleteNotification": "crwdns8823:0crwdne8823:0",
+      "dismissNotification": "crwdns12963:0crwdne12963:0",
       "deleteFailed": "crwdns8825:0crwdne8825:0",
       "deleteFailedMessage": "crwdns8827:0crwdne8827:0"
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "crwdns9737:0crwdne9737:0",
                 "add": "crwdns9739:0{item}crwdne9739:0",
                 "boardShortcut": "crwdns9741:0crwdne9741:0",
+                "widget": "crwdns12965:0crwdne12965:0",
                 "chooseBoard": "crwdns9743:0crwdne9743:0"
               },
               "configuration": {
+                "widgetKind": "crwdns12967:0crwdne12967:0",
+                "widgetOptions": "crwdns12969:0crwdne12969:0",
+                "boardOnly": "crwdns12971:0crwdne12971:0",
                 "description": "crwdns9745:0crwdne9745:0",
                 "searchDisplay": {
                   "input": "crwdns9747:0crwdne9747:0",
@@ -7310,7 +7321,9 @@
                 "settings": "crwdns9771:0crwdne9771:0",
                 "themeToggle": "crwdns9773:0crwdne9773:0",
                 "user": "crwdns9775:0crwdne9775:0",
-                "boardUnavailable": "crwdns9777:0crwdne9777:0"
+                "boardUnavailable": "crwdns9777:0crwdne9777:0",
+                "notifications": "crwdns12973:0crwdne12973:0",
+                "widget": "crwdns12975:0crwdne12975:0"
               }
             },
             "item": {

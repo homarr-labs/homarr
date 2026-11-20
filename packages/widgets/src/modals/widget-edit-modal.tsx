@@ -38,7 +38,12 @@ import type { IntegrationSelectOption } from "../widget-integration-select";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import { widgetEditorModalStyles } from "./styles";
-import { normalizeWidgetEditorState, useWidgetEditorForm, WidgetEditorFields } from "./widget-editor-form";
+import {
+  focusWidgetEditorError,
+  normalizeWidgetEditorState,
+  useWidgetEditorForm,
+  WidgetEditorFields,
+} from "./widget-editor-form";
 import { WidgetLivePreview } from "./widget-live-preview";
 import type { WidgetPreviewMode } from "./widget-live-preview";
 import classes from "./widget-edit-modal.module.css";
@@ -468,7 +473,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         setIsSubmitting(false);
       }
     },
-    () => setActiveTab("widget"),
+    (errors, _values, event) => {
+      setActiveTab("widget");
+      focusWidgetEditorError(form, errors, event);
+    },
   );
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {

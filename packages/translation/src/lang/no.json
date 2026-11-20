@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "By / Postnummer",
         "latitude": "Breddegrad",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Skjul beskrivelse"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Vis plakatbilde"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Åpen varslingstjeneste",
       "deleteNotification": "Slett varsel fra Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kan ikke slette varsel",
       "deleteFailedMessage": "Varselet kunne ikke slettes. Vennligst prøv igjen."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Alle innebygde kontroller finnes allerede i hodet.",
                 "add": "Legg til {item}",
                 "boardShortcut": "Snarvei for tavle",
+                "widget": "Moduler",
                 "chooseBoard": "Velg en tavle"
               },
               "configuration": {
+                "widgetKind": "Moduler",
+                "widgetOptions": "Alternativer",
+                "boardOnly": "",
                 "description": "Denne kontrollen forblir den samme størrelsen som den gjør i live header.",
                 "searchDisplay": {
                   "input": "Søk i bar",
@@ -7310,7 +7321,9 @@
                 "settings": "Dine innstillinger",
                 "themeToggle": "Veksle tema",
                 "user": "Konto",
-                "boardUnavailable": "Styret er utilgjengelig"
+                "boardUnavailable": "Styret er utilgjengelig",
+                "notifications": "Varsler",
+                "widget": "Moduler"
               }
             },
             "item": {

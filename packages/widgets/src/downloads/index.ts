@@ -6,6 +6,7 @@ import { getIntegrationKindsByCategory, getWidgetIntegrationConfig } from "@homa
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
 import { resolveDownloadsQueryInput } from "./query-input";
 
@@ -65,6 +66,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        ...createWidgetRefreshIntervalOptions(10),
         columns: factory.multiSelect({
           defaultValue: ["name", "progress", "downSpeed", "time", "state"],
           options: DOWNLOAD_COLUMN_ACCESSORS.map((value) => ({

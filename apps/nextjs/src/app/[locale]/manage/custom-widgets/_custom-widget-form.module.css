@@ -102,13 +102,6 @@
   background: var(--mantine-color-body);
 }
 
-.mobileSaveBar {
-  position: sticky;
-  bottom: var(--mantine-spacing-sm);
-  z-index: 10;
-  background: var(--mantine-color-body);
-}
-
 @media (min-width: 75em) {
   .paneSwitcher {
     display: none;
