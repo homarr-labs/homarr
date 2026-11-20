@@ -1,0 +1,14 @@
+apps/workshop/README.md
+  h_d6e478ca18e517 104-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7c75289a95915a8dbe7387beba1eb3134d8176a3",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
