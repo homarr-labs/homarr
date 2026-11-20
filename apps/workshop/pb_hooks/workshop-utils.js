@@ -121,7 +121,7 @@ const isThemePalette = (value) =>
   );
 
 const validateThemeManifest = (content) => {
-  if (content.length > 49_152) rejectRequest("Theme bundle exceeds 48 KB");
+  if (content.length > 160 * 1024) rejectRequest("Theme JSON is too large");
   let theme;
   try {
     theme = JSON.parse(content);

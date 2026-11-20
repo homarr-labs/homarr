@@ -3,7 +3,7 @@ import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-w
 import { z } from "zod/v4";
 
 import type { CustomThemePatch } from "@homarr/validation/theme";
-import { customThemePatchSchema } from "@homarr/validation/theme";
+import { customThemeCssMaxLength, customThemeJsonMaxLength, customThemePatchSchema } from "@homarr/validation/theme";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
 export const WORKSHOP_API_URL = HOMARR_WEBSITE_URL;
@@ -15,7 +15,7 @@ export const WORKSHOP_SCHEMA_BY_TYPE = {
   customCss: WORKSHOP_CSS_SCHEMA,
   customTheme: WORKSHOP_THEME_SCHEMA,
 } as const;
-export const MAX_WORKSHOP_CSS_LENGTH = 16_384;
+export const MAX_WORKSHOP_CSS_LENGTH = customThemeCssMaxLength;
 export const MAX_WORKSHOP_CONTENT_LENGTH = 1_000_000;
 export const MAX_WORKSHOP_SCREENSHOTS = 5;
 export const MAX_WORKSHOP_SCREENSHOT_BYTES = 5 * 1024 * 1024;
@@ -269,7 +269,7 @@ export function formatWorkshopContent(type: WorkshopSubmissionType, content: str
 export function validateWorkshopTheme(
   content: string,
 ): { success: true; data: CustomThemePatch } | { success: false; error: string } {
-  if (content.length > MAX_WORKSHOP_CONTENT_LENGTH) {
+  if (content.length > customThemeJsonMaxLength) {
     return { success: false, error: "Theme JSON is too large" };
   }
   let parsed: unknown;

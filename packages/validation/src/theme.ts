@@ -6,8 +6,11 @@ import { z } from "zod/v4";
 export const themeSelectionSchema = z.enum([...themeIds, "custom"]);
 export type ThemeSelectionId = z.infer<typeof themeSelectionSchema>;
 
-export const customThemeMaxLength = 49_152;
-export const themeCustomCssSchema = z.string().max(16_384);
+export const customThemeJsonMaxLength = 160 * 1024;
+export const customThemeCssMaxLength = 16_384;
+export const themeCustomCssSchema = z
+  .string()
+  .refine((css) => css.length <= customThemeCssMaxLength, `CSS must be at most ${customThemeCssMaxLength} characters`);
 
 const safeKey = z
   .string()
@@ -327,9 +330,6 @@ const checkThemeSize = (value: Partial<z.infer<typeof themeDocument>>, context: 
   if (JSON.stringify(configuration).length > 32_768) {
     context.addIssue({ code: "custom", message: "Theme configuration exceeds 32 KB" });
   }
-  if (JSON.stringify(value).length > customThemeMaxLength) {
-    context.addIssue({ code: "custom", message: "Theme bundle exceeds 48 KB" });
-  }
 };
 
 export const customThemePatchSchema = themeDocument.partial().superRefine(checkThemeSize);
@@ -407,7 +407,7 @@ export const parseStoredCustomTheme = (value: unknown): CustomTheme | null => {
   try {
     let input = value;
     if (typeof input === "string") {
-      if (input.length > customThemeMaxLength) return null;
+      if (input.length > customThemeJsonMaxLength) return null;
       input = JSON.parse(input) as unknown;
     }
     const parsed = customThemeSchema.safeParse(input);

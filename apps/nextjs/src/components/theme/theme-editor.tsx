@@ -44,7 +44,7 @@ import { ThemeSelect } from "@homarr/ui/theme-select";
 import { getThemePalette } from "@homarr/ui/themes";
 import type { CustomTheme } from "@homarr/validation/theme";
 import {
-  customThemeMaxLength,
+  customThemeJsonMaxLength,
   customThemeSchema,
   mergeCustomThemePatch,
   resolveThemeSelection,
@@ -242,7 +242,7 @@ export const ThemeEditor = ({
   const updateJson = (value: string) => {
     draftRevision.current += 1;
     setJsonText(value);
-    if (value.length > customThemeMaxLength) {
+    if (value.length > customThemeJsonMaxLength) {
       setJsonError(t("editor.tooLong"));
       return;
     }
