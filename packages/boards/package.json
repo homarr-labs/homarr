@@ -20,6 +20,7 @@
     "./edit-mode": "./src/edit-mode.tsx",
     "./scale": "./src/scale.ts",
     "./layout-data": "./src/layout-data.ts",
+    "./tab-selection": "./src/tab-selection.ts",
     "./tabs": "./src/tabs.tsx"
   },
   "scripts": {

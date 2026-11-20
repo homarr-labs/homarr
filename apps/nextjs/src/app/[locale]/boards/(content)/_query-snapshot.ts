@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 
-import superjson from "superjson";
+import { parse, stringify } from "superjson";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { dehydrate, hydrate, QueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
-import { persistQueryClientRestore, persistQueryClientSave } from "@tanstack/react-query-persist-client";
+import { persistQueryClientRestore } from "@tanstack/react-query-persist-client";
 
 import type { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import {
@@ -89,7 +89,7 @@ const getShareableQueries = (
     if (query.state.dataUpdatedAt < Date.now() - snapshotMaxAgeMs) return false;
     const ids = getQueryIntegrationIds(query.queryKey, board);
     if (!ids?.every((id) => boardIntegrationIds.has(id) && allowedIds.has(id))) return false;
-    const serialized = superjson.stringify({ key: query.queryKey, data: query.state.data });
+    const serialized = stringify({ key: query.queryKey, data: query.state.data });
     const queryBytes = Buffer.byteLength(serialized);
     const path = query.queryKey[0];
     let limit = maxQueryBytes;
@@ -134,8 +134,8 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
   const redisPersister = createAsyncStoragePersister({
     key: board.id,
     throttleTime: 0,
-    serialize: superjson.stringify,
-    deserialize: superjson.parse,
+    serialize: stringify,
+    deserialize: parse,
     storage: {
       getItem: async () => await channel.getAsync(),
       setItem: async (_key, value) => {
@@ -183,7 +183,7 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
     },
   };
 
-  let restoreInFlight: Promise<void> = Promise.resolve();
+  let restoreInFlight: Promise<ReturnType<typeof dehydrate> | undefined> = Promise.resolve(undefined);
 
   return {
     restoreAsync: async (queryClient: QueryClient) => {
@@ -196,10 +196,7 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
         maxAge: snapshotMaxAgeMs,
         buster: snapshotVersion,
       }).then(() => dehydrate(restoredClient));
-      restoreInFlight = restore.then(
-        () => undefined,
-        () => undefined,
-      );
+      restoreInFlight = restore.catch(() => undefined);
 
       let timeout: ReturnType<typeof setTimeout> | undefined;
       try {
@@ -216,15 +213,22 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
     },
     saveAsync: async (queryClient: QueryClient) => {
       // A late invalid/expired restore may remove its key; let it finish before saving.
-      await restoreInFlight;
-      await persistQueryClientSave({
-        queryClient,
-        persister,
+      const restored = await restoreInFlight;
+      const current = dehydrate(queryClient, {
+        shouldDehydrateMutation: () => false,
+        shouldDehydrateQuery: (query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success",
+      });
+      const queries = new Map(current.queries.map((query) => [query.queryHash, query]));
+      for (const query of restored?.queries ?? []) {
+        const currentQuery = queries.get(query.queryHash);
+        if (!currentQuery || currentQuery.state.dataUpdatedAt < query.state.dataUpdatedAt) {
+          queries.set(query.queryHash, query);
+        }
+      }
+      await persister.persistClient({
+        timestamp: Date.now(),
         buster: snapshotVersion,
-        dehydrateOptions: {
-          shouldDehydrateMutation: () => false,
-          shouldDehydrateQuery: (query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success",
-        },
+        clientState: { mutations: [], queries: [...queries.values()] },
       });
     },
   };
