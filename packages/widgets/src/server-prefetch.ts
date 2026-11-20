@@ -63,6 +63,9 @@ export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) =
   ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
 ];
 
+const getBeszelSystemsQueryOptions = (integrationIds: string[]) =>
+  trpc.widget.beszel.getSystems.queryOptions({ integrationIds }, { meta: { rscWidgetPrefetch: true } });
+
 const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
@@ -74,7 +77,7 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     (key) => (options[key] ?? true) === true,
   );
   if (!selection) {
-    return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
+    return queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds)).then(
       (systems) => {
         const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
         if (!selected) return;
@@ -100,7 +103,7 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
   prefetchQuery(queryClient, {
     ...query,
     queryFn: async () => {
-      const systems = await queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+      const systems = await queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds));
       const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
       if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
         throw new Error("The selected Beszel system is no longer available");
@@ -151,7 +154,7 @@ export const prefetchInitialWidgetData = (
       case "beszelSystemTable":
       case "beszelSystemGrid":
         if (!integrationIds.length) break;
-        prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+        prefetchQuery(queryClient, getBeszelSystemsQueryOptions(integrationIds));
         if (item.kind === "beszelSystemStats") {
           const discovery = prefetchBeszelStats(queryClient, item);
           if (discovery) dependentQueries.push(discovery);
