@@ -16,13 +16,17 @@ const updateCheckLockTtlSeconds = 2 * 60;
 const updateCheckWaitIntervalMs = 100;
 const updateCheckWaitAttempts = 50;
 
+const releasesPerPage = 100;
+const maxRecentReleases = 10;
+
 type UpdateCheckCacheEntry = {
   availableUpdates: Update[];
+  recentReleases: Release[];
   attemptedAt: number;
   checkedAt: number | null;
 };
 
-const updateCheckCacheVersion = `v2:${packageJson.version}`;
+const updateCheckCacheVersion = `v3:${packageJson.version}`;
 const freshUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>(
   `update-checker:fresh:${updateCheckCacheVersion}`,
 );
@@ -46,10 +50,11 @@ const waitForConcurrentUpdateCheckAsync = async () => {
   return await staleUpdateCheckChannel.getAsync();
 };
 
-const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> => {
+const getCachedUpdateCheckAsync = async (): Promise<UpdateCheckCacheEntry> => {
   if (env.NO_EXTERNAL_CONNECTION) {
     return {
       availableUpdates: [],
+      recentReleases: [],
       attemptedAt: Date.now(),
       checkedAt: null,
     };
@@ -69,9 +74,10 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
 
   try {
     const attemptedAt = Date.now();
-    const availableUpdates = await getAvailableUpdatesAsync(packageJson.version);
+    const { availableUpdates, recentReleases } = await getReleaseSummaryAsync(packageJson.version);
     const result: UpdateCheckCacheEntry = {
       availableUpdates,
+      recentReleases,
       attemptedAt,
       checkedAt: attemptedAt,
     };
@@ -82,6 +88,7 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
     const stale = await staleUpdateCheckChannel.getAsync();
     const result: UpdateCheckCacheEntry = {
       availableUpdates: stale?.availableUpdates ?? [],
+      recentReleases: stale?.recentReleases ?? [],
       attemptedAt: Date.now(),
       checkedAt: stale?.checkedAt ?? null,
     };
@@ -105,9 +112,9 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
 export const updateCheckerRequestHandler = {
   handler: (_input: Record<string, never>) => ({
     getDataAsync: async () => {
-      const result = await getCachedAvailableUpdatesAsync();
+      const result = await getCachedUpdateCheckAsync();
       return {
-        data: { availableUpdates: result.availableUpdates },
+        data: { availableUpdates: result.availableUpdates, recentReleases: result.recentReleases },
         timestamp: new Date(result.checkedAt ?? result.attemptedAt),
       };
     },
@@ -122,6 +129,24 @@ interface Update {
   isPrerelease: boolean;
 }
 
+interface Release extends Update {
+  body: string;
+  publishedAt: Date;
+}
+
+interface ReleaseSummary {
+  availableUpdates: Update[];
+  recentReleases: Release[];
+}
+
+const toUpdate = ({ name, contentHtml, url, tagName, isPrerelease }: Release): Update => ({
+  name,
+  contentHtml,
+  url,
+  tagName,
+  isPrerelease,
+});
+
 const isPrereleaseTag = (tagName: string) => {
   try {
     const parsed = parseSemVer(tagName);
@@ -131,8 +156,38 @@ const isPrereleaseTag = (tagName: string) => {
   }
 };
 
+const selectRecentReleases = (releases: Release[], currentVersion: string) => {
+  if (isPrereleaseTag(currentVersion)) return [];
+
+  return releases
+    .filter((release) => !release.isPrerelease && !isPrereleaseTag(release.tagName))
+    .filter((release) => compareSemVer(release.tagName, currentVersion) <= 0)
+    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName))
+    .slice(0, maxRecentReleases);
+};
+
+export const selectUnseenReleases = (
+  recentReleases: Release[],
+  currentVersion: string,
+  lastSeenVersion: string | null,
+) => {
+  if (lastSeenVersion === null || !isValidSemVer(lastSeenVersion)) {
+    return recentReleases.filter((release) => compareSemVer(release.tagName, currentVersion) === 0);
+  }
+
+  return recentReleases.filter(
+    (release) =>
+      compareSemVer(release.tagName, lastSeenVersion) > 0 && compareSemVer(release.tagName, currentVersion) <= 0,
+  );
+};
+
 export const getAvailableUpdatesAsync = async (currentVersion: string) => {
-  if (env.NO_EXTERNAL_CONNECTION) return [];
+  const { availableUpdates } = await getReleaseSummaryAsync(currentVersion);
+  return availableUpdates;
+};
+
+const getReleaseSummaryAsync = async (currentVersion: string): Promise<ReleaseSummary> => {
+  if (env.NO_EXTERNAL_CONNECTION) return { availableUpdates: [], recentReleases: [] };
 
   if (!isValidSemVer(currentVersion)) {
     throw new ErrorWithMetadata("Unable to check for updates due to non semantic current version", {
@@ -152,12 +207,15 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
   const releases = await octokit.rest.repos.listReleases({
     owner: "homarr-labs",
     repo: "homarr",
+    per_page: releasesPerPage,
   });
 
   const { skippedTags, semanticReleases } = releases.data
     .map((release) => ({
       name: release.name,
       contentHtml: release.body_html,
+      body: release.body ?? "",
+      publishedAt: new Date(release.published_at ?? release.created_at),
       url: release.html_url,
       tagName: release.tag_name,
       isPrerelease: release.prerelease,
@@ -172,7 +230,7 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
         prev.semanticReleases.push(curr);
         return prev;
       },
-      { semanticReleases: [] as Update[], skippedTags: [] as string[] },
+      { semanticReleases: [] as Release[], skippedTags: [] as string[] },
     );
 
   if (skippedTags.length > 0) {
@@ -187,11 +245,14 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
   const availableUpdates = semanticReleases
     .filter((release) => isCurrentPrerelease || !release.isPrerelease)
     .filter((release) => compareSemVer(release.tagName, currentVersion) > 0)
-    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName));
+    .toSorted((releaseA, releaseB) => compareSemVer(releaseB.tagName, releaseA.tagName))
+    .map(toUpdate);
+
+  const recentReleases = selectRecentReleases(semanticReleases, currentVersion);
 
   if (availableUpdates.length === 0) {
     logger.debug("No available updates found", { currentVersion });
-    return [];
+    return { availableUpdates, recentReleases };
   }
 
   logger.info("Found available updates", {
@@ -200,5 +261,5 @@ export const getAvailableUpdatesAsync = async (currentVersion: string) => {
     currentVersion,
   });
 
-  return availableUpdates;
+  return { availableUpdates, recentReleases };
 };

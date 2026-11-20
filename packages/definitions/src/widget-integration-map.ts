@@ -51,6 +51,7 @@ export const statsIntegrationKinds = [
   "stash",
   "prometheus",
   "plantit",
+  "yuvomi",
   "netdata",
   "fileflows",
   "trilium",
@@ -87,6 +88,7 @@ export const statsIntegrationKinds = [
   "adGuardHome",
   "technitiumDns",
   "homeAssistant",
+  "homey",
   "openmediavault",
   "dashDot",
   "glances",
@@ -132,6 +134,10 @@ export const widgetIntegrationConfigs = {
     maxIntegrations: 1,
   },
   "smartHome-executeAutomation": {
+    supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+    maxIntegrations: 1,
+  },
+  "smartHome-controls": {
     supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
     maxIntegrations: 1,
   },

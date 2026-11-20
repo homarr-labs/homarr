@@ -9,6 +9,7 @@ it("shares a tight row budget between active widgets and keeps the quiet widget 
   const now = 1_000;
   const ready = (count: number, requestedRows: number): WidgetActivity => ({
     count,
+    relevance: count ? "ongoing" : "quiet",
     requestedRows,
     updatedAt: now,
     status: "ready",

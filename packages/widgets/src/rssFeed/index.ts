@@ -28,32 +28,58 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
     },
   },
   createOptions() {
-    return optionsBuilder.from((factory) => ({
-      feedUrls: factory.multiText({
-        defaultValue: [],
-        validate: z.string().url(),
+    return optionsBuilder.from(
+      (factory) => ({
+        feedUrls: factory.multiText({
+          defaultValue: [],
+          validate: z.string().url(),
+        }),
+        enableRtl: factory.switch({
+          defaultValue: false,
+        }),
+        textLinesClamp: factory.number({
+          defaultValue: 5,
+          validate: z.number().min(1).max(50),
+        }),
+        descriptionMaxLength: factory.number({
+          defaultValue: 250,
+          validate: z.number().int().min(1).max(5000),
+        }),
+        maximumAmountPosts: factory.number({
+          defaultValue: 100,
+          validate: z.number().min(1).max(9999),
+        }),
+        hideDescription: factory.switch({
+          defaultValue: false,
+        }),
+        hideFeedTitle: factory.switch({
+          defaultValue: false,
+        }),
+        hideBackgroundImage: factory.switch({
+          defaultValue: false,
+        }),
+        showPosterImage: factory.switch({
+          defaultValue: false,
+        }),
+        thumbnailWidth: factory.number({
+          defaultValue: 140,
+          step: 10,
+          validate: z.number().int().min(40).max(400),
+        }),
+        thumbnailHeight: factory.number({
+          defaultValue: 140,
+          step: 10,
+          validate: z.number().int().min(40).max(400),
+        }),
       }),
-      enableRtl: factory.switch({
-        defaultValue: false,
-      }),
-      textLinesClamp: factory.number({
-        defaultValue: 5,
-        validate: z.number().min(1).max(50),
-      }),
-      descriptionMaxLength: factory.number({
-        defaultValue: 250,
-        validate: z.number().int().min(1).max(5000),
-      }),
-      maximumAmountPosts: factory.number({
-        defaultValue: 100,
-        validate: z.number().min(1).max(9999),
-      }),
-      hideDescription: factory.switch({
-        defaultValue: false,
-      }),
-      showPosterImage: factory.switch({
-        defaultValue: false,
-      }),
-    }));
+      {
+        thumbnailWidth: {
+          shouldHide: (options) => !options.showPosterImage,
+        },
+        thumbnailHeight: {
+          shouldHide: (options) => !options.showPosterImage,
+        },
+      },
+    );
   },
 }).withDynamicImport(() => import("./component"));

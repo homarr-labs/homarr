@@ -236,7 +236,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       tickLine="none"
       withLegend
       fillOpacity={0.2}
-      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
+      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius ?? "default"] } }}
       valueFormatter={formatChartBitRate}
       xAxisProps={{
         type: "number",
@@ -344,7 +344,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
       tickLine="none"
       withLegend={false}
       fillOpacity={0.2}
-      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
+      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius ?? "default"] } }}
       valueFormatter={(val: number) => `${val} ms`}
       xAxisProps={{
         type: "number",

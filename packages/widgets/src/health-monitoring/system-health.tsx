@@ -52,11 +52,13 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
 import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
 import { formatMemoryUsage, MemoryRing } from "./rings/memory-ring";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import classes from "./system-health.module.css";
 
 dayjs.extend(duration);
@@ -69,7 +71,12 @@ export const SystemHealthMonitoring = ({
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
   const t = useI18n("widget.healthMonitoring");
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const healthResults = getUsableWidgetQueryData(healthQuery) ?? [];
   const healthData = healthResults.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
@@ -163,7 +170,7 @@ export const SystemHealthMonitoring = ({
                     variant={"light"}
                     color="var(--mantine-color-text)"
                     size="sm"
-                    radius={board.itemRadius}
+                    radius={board.itemRadius ?? undefined}
                     onClick={() => setOpenedIntegrationId(integrationId)}
                     aria-label={t("popover.information")}
                   >
@@ -215,7 +222,7 @@ export const SystemHealthMonitoring = ({
                   ))}
               </Flex>
               {isAdvanced && (
-                <Card className={classes.card} radius={board.itemRadius} p="sm">
+                <Card className={classes.card} radius={board.itemRadius ?? undefined} p="sm">
                   <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} compact />
                 </Card>
               )}
@@ -230,7 +237,7 @@ export const SystemHealthMonitoring = ({
                       )}
                       style={{ overflow: "visible" }}
                       key={disk.deviceName}
-                      radius={board.itemRadius}
+                      radius={board.itemRadius ?? undefined}
                       p="xs"
                     >
                       <Stack gap="xs">
@@ -265,7 +272,11 @@ export const SystemHealthMonitoring = ({
                             )}
                           </Group>
                         </Group>
-                        <Progress.Root className="health-monitoring-disk-use" radius={board.itemRadius} size="lg">
+                        <Progress.Root
+                          className="health-monitoring-disk-use"
+                          radius={board.itemRadius ?? undefined}
+                          size="lg"
+                        >
                           <Progress.Section
                             value={disk.percentage}
                             color={progressColor(disk.percentage)}

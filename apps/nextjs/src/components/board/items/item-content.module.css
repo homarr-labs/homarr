@@ -58,7 +58,29 @@
     height: calc(44px * var(--board-canvas-inverse-scale, 1));
     min-height: 0;
     max-height: calc(100% - var(--mantine-spacing-sm) / 2);
+    border: 0;
+    background: transparent;
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .settingsButton:hover,
+  .settingsButton:active {
+    background: transparent;
+  }
+
+  .settingsButtonIcon {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    border: var(--ai-bd);
+    border-radius: var(--ai-radius);
+    background: var(--ai-bg);
+    zoom: var(--board-canvas-inverse-scale, 1);
+  }
+
+  .settingsButton:hover .settingsButtonIcon,
+  .settingsButton:active .settingsButtonIcon {
+    background: var(--ai-hover);
   }
 }

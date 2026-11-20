@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
-import { Button, Stack, Switch, Tabs, TextInput } from "@mantine/core";
+import { useEffect, useId, useMemo, useState } from "react";
+import { Box, Button, Stack, Switch, Tabs, TextInput } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +9,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/common";
 import { getWidgetName } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
@@ -18,7 +19,8 @@ import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/val
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 import { smartContainerStateItemLimit, smartContainerStateLimit } from "@homarr/validation/smart-container";
 import { WidgetEditFooter, WidgetEditWorkspace } from "@homarr/widgets/edit-workspace";
-import { loadWidgetDefinition } from "@homarr/widgets/manifest";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
+import { loadAllWidgetDefinitions, loadWidgetDefinition } from "@homarr/widgets/manifest";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { getLogicalGridSize } from "~/components/board/layout";
@@ -43,18 +45,34 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const t = useI18n("section.container.smart");
   const translate = useI18n();
   const board = useRequiredBoard();
+  const [initialBoard] = useState(board);
   const currentLayoutId = useCurrentLayout();
   const { updateBoard } = useUpdateBoard();
   const settings = useSettings();
   const formId = useId();
   const utils = clientApi.useUtils();
   const [initialSmart] = useState(() =>
-    getContainerEditorSmartOptions(innerProps.value, board.items, innerProps.containerId, t("state")),
+    getContainerEditorSmartOptions(
+      innerProps.value,
+      board.items,
+      board.sections.find((section) => section.id === innerProps.containerId && section.kind === "container") ?? {
+        id: innerProps.containerId,
+        kind: "container",
+        layouts: [],
+      },
+      t("state"),
+    ),
   );
-  const form = useZodForm(containerSectionOptionsSchema.unwrap(), {
-    mode: "controlled",
-    initialValues: { ...innerProps.value, smart: initialSmart },
-  });
+  const form = useZodForm(
+    containerSectionOptionsSchema.unwrap().superRefine((options, context) => {
+      if (options.smart?.enabled || !options.autoExpand.enabled || options.autoExpand.itemId !== null) return;
+      context.addIssue({ code: "invalid_type", expected: "string", input: null, path: ["autoExpand", "itemId"] });
+    }),
+    {
+      mode: "controlled",
+      initialValues: { ...innerProps.value, smart: initialSmart },
+    },
+  );
   const smart = form.values.smart ?? initialSmart;
   const [selectedStateId, setSelectedStateId] = useState(initialSmart.states[0]?.id ?? "");
   const [isPlayingPreview, setPlayingPreview] = useState(false);
@@ -63,6 +81,23 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const [editedItems, setEditedItems] = useState<Map<string, Item>>(() => new Map());
   const [deletedIds, setDeletedIds] = useState<Set<string>>(() => new Set());
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
+  const [activityCapableKinds, setActivityCapableKinds] = useState<ReadonlySet<WidgetKind>>(() => new Set());
+  useEffect(() => {
+    let cancelled = false;
+    void loadAllWidgetDefinitions().then((definitions) => {
+      if (cancelled) return;
+      setActivityCapableKinds(
+        new Set(
+          [...definitions.entries()]
+            .filter(([, definition]) => definition.activitySignal !== undefined)
+            .map(([kind]) => kind),
+        ),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const { openModal: openItemPicker } = useModalAction(ItemSelectModal);
   const { openModal: openWidgetEditor } = useModalAction(LazyWidgetEditModal);
   const items = useMemo(
@@ -236,10 +271,33 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   };
   const submit = form.onSubmit(
     (values) => {
-      const addedItems = newItems.map((item) => editedItems.get(item.id) ?? item);
-      updateBoard((previous) =>
-        applyContainerEditorDraft(previous, innerProps.containerId, values, addedItems, editedItems, deletedIds),
-      );
+      let conflict = false;
+      const updated = updateBoard((previous) => {
+        const result = applyContainerEditorDraft(
+          previous,
+          initialBoard,
+          innerProps.containerId,
+          innerProps.value,
+          {
+            ...values,
+            smart: !innerProps.value.smart && !values.smart?.enabled ? undefined : values.smart,
+            collapsible:
+              values.collapsible ||
+              (!values.smart?.enabled &&
+                values.autoExpand.enabled &&
+                values.autoExpand.inactiveDisplay === "collapsed"),
+          },
+          newItems,
+          editedItems,
+          deletedIds,
+        );
+        if (!result) conflict = true;
+        return result ?? previous;
+      });
+      if (conflict || !updated) {
+        showErrorNotification({ title: translate("common.error"), message: t("concurrentChange") });
+        return;
+      }
       actions.closeModal();
     },
     () => {
@@ -297,68 +355,96 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
           checked={smart.enabled}
           onChange={(event) => setSmartOption("enabled", event.currentTarget.checked)}
         />
-        <Tabs defaultValue="states" keepMounted>
-          <Tabs.List grow className={classes.tabsList}>
-            <Tabs.Tab className={classes.tab} value="states">
-              {t("states")}
-            </Tabs.Tab>
-            <Tabs.Tab className={classes.tab} value="rotation">
-              {t("rotation")}
-            </Tabs.Tab>
-            <Tabs.Tab className={classes.tab} value="appearance">
-              {t("appearance")}
-            </Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="states" pt="md">
-            <ContainerStateSettings
-              smart={smart}
-              selectedStateId={selectedStateId}
-              onSelectState={setSelectedStateId}
-              onChange={setSmart}
-              onAddState={addState}
-              onDeleteState={deleteState}
-            />
-          </Tabs.Panel>
-          <Tabs.Panel value="rotation" pt="md">
-            <ContainerRotationSettings smart={smart} setSmartOption={setSmartOption} />
-          </Tabs.Panel>
-          <Tabs.Panel value="appearance" pt="md">
-            <ContainerAppearanceSettings form={form} smart={smart} setSmartOption={setSmartOption} />
-          </Tabs.Panel>
-        </Tabs>
+        {smart.enabled ? (
+          <Tabs defaultValue="states" keepMounted>
+            <Tabs.List grow className={classes.tabsList}>
+              <Tabs.Tab className={classes.tab} value="states">
+                {t("states")}
+              </Tabs.Tab>
+              <Tabs.Tab className={classes.tab} value="rotation">
+                {t("rotation")}
+              </Tabs.Tab>
+              <Tabs.Tab className={classes.tab} value="appearance">
+                {t("appearance")}
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="states" pt="md">
+              <ContainerStateSettings
+                smart={smart}
+                selectedStateId={selectedStateId}
+                onSelectState={setSelectedStateId}
+                onChange={setSmart}
+                onAddState={addState}
+                onDeleteState={deleteState}
+              />
+            </Tabs.Panel>
+            <Tabs.Panel value="rotation" pt="md">
+              <ContainerRotationSettings smart={smart} setSmartOption={setSmartOption} />
+            </Tabs.Panel>
+            <Tabs.Panel value="appearance" pt="md">
+              <ContainerAppearanceSettings
+                form={form}
+                smart={smart}
+                setSmartOption={setSmartOption}
+                activityItems={items.filter(
+                  (item) =>
+                    item.layouts.some((layout) => layout.sectionId === innerProps.containerId) &&
+                    activityCapableKinds.has(item.kind),
+                )}
+              />
+            </Tabs.Panel>
+          </Tabs>
+        ) : (
+          <ContainerAppearanceSettings
+            form={form}
+            smart={smart}
+            setSmartOption={setSmartOption}
+            activityItems={items.filter(
+              (item) =>
+                item.layouts.some((layout) => layout.sectionId === innerProps.containerId) &&
+                activityCapableKinds.has(item.kind),
+            )}
+          />
+        )}
       </Stack>
     </form>
   );
   return (
-    <>
-      {isTabbed ? (
-        <Tabs defaultValue="widgets" keepMountedMode="display-none">
-          <Tabs.List grow mb="sm">
-            <Tabs.Tab value="widgets" className={classes.tab}>
-              {t("editorContent")}
-            </Tabs.Tab>
-            <Tabs.Tab value="settings" className={classes.tab}>
-              {t("editorSettings")}
-            </Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="widgets" className={classes.editorPanel}>
-            {preview}
-          </Tabs.Panel>
-          <Tabs.Panel value="settings" className={classes.editorPanel}>
-            {settingsPanel}
-          </Tabs.Panel>
-        </Tabs>
-      ) : (
-        <WidgetEditWorkspace preview={preview}>{settingsPanel}</WidgetEditWorkspace>
-      )}
+    <Stack gap={0} mih={0} flex={1}>
+      <Box p="md" pt={0} mih={0} flex={1} style={{ overflowY: "auto" }}>
+        {!smart.enabled ? (
+          settingsPanel
+        ) : isTabbed ? (
+          <Tabs defaultValue="widgets" keepMounted keepMountedMode="display-none">
+            <Tabs.List grow mb="sm">
+              <Tabs.Tab value="widgets" className={classes.tab}>
+                {t("editorContent")}
+              </Tabs.Tab>
+              <Tabs.Tab value="settings" className={classes.tab}>
+                {t("editorSettings")}
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="widgets" className={classes.editorPanel}>
+              {preview}
+            </Tabs.Panel>
+            <Tabs.Panel value="settings" className={classes.editorPanel}>
+              {settingsPanel}
+            </Tabs.Panel>
+          </Tabs>
+        ) : (
+          <WidgetEditWorkspace preview={preview}>{settingsPanel}</WidgetEditWorkspace>
+        )}
+      </Box>
       <WidgetEditFooter>
         <ModalFormFooter onCancel={actions.closeModal} form={formId} />
       </WidgetEditFooter>
-    </>
+    </Stack>
   );
 }).withOptions({
   defaultTitle: (t) => t("section.container.smart.edit"),
   size: "100rem",
   keepMounted: true,
+  withCloseButton: false,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

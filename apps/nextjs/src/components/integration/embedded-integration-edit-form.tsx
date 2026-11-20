@@ -35,6 +35,7 @@ export const EmbeddedIntegrationEditForm = ({
   useImperativeHandle(
     handleRef,
     () => ({
+      isDirty: () => integrationFormRef.current?.isDirty() ?? false,
       submitIfDirty: async () => {
         if (!integrationFormRef.current?.isDirty()) {
           return true;

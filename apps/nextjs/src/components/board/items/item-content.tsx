@@ -37,6 +37,7 @@ import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
 import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
+import { useSmartContainerPreviewState } from "../sections/smart-container/smart-container-context";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
@@ -67,7 +68,7 @@ const BoardItemCard = ({ item, innerRef, children }: BoardItemCardProps) => {
       w="100%"
       h="100%"
       data-grid-item-content
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? "default"}
       p={0}
     >
       {children}
@@ -201,6 +202,8 @@ const ResolvedBoardItemContent = ({
   const sourceRef = useRef<HTMLDivElement>(null);
   const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const widgetContentRef = useRef<HTMLDivElement>(null);
+  const [advancedSize, setAdvancedSize] = useState<{ width: number; height: number } | null>(null);
   const previewEntranceFrameRef = useRef<number | null>(null);
   const board = useRequiredBoard();
   const boardCanvasScale = useBoardCanvasScale();
@@ -231,6 +234,24 @@ const ResolvedBoardItemContent = ({
   const closePosition = advancedRect ? getAdvancedFocusClosePosition(advancedRect, viewportWidth) : null;
   const isPreview = activeFocus?.activation === "preview";
   const isManual = activeFocus?.activation === "manual";
+
+  const mountWidgetContent = useCallback(
+    (element: HTMLDivElement | null) => {
+      widgetContentRef.current = element;
+      return contentRef(element);
+    },
+    [contentRef],
+  );
+
+  useIsomorphicEffect(() => {
+    const element = widgetContentRef.current;
+    if (!isAdvanced || !element) {
+      setAdvancedSize(null);
+      return;
+    }
+    const style = getComputedStyle(element);
+    setAdvancedSize({ width: Number.parseFloat(style.width), height: Number.parseFloat(style.height) });
+  }, [advancedRect?.width, advancedRect?.height, isAdvanced, manualSurface]);
 
   useIsomorphicEffect(() => {
     if (!supportsAdvancedFocus) return;
@@ -342,7 +363,7 @@ const ResolvedBoardItemContent = ({
       aria-label={isPreview ? advancedViewLabel : undefined}
       data-advanced-focus-surface={isPreview || undefined}
       data-grid-item-content
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? "default"}
       p={isAdvanced ? undefined : 0}
       h={isManual ? "100%" : isAdvanced ? undefined : "100%"}
       w={isManual ? "100%" : isAdvanced ? undefined : "100%"}
@@ -352,7 +373,7 @@ const ResolvedBoardItemContent = ({
       )}
       style={previewStyle}
     >
-      <Box ref={contentRef} w="100%" h="100%" mih={0}>
+      <Box ref={mountWidgetContent} w="100%" h="100%" mih={0}>
         <ErrorBoundary
           resetKeys={[item]}
           fallbackRender={({ resetErrorBoundary, error }) => (
@@ -367,8 +388,8 @@ const ResolvedBoardItemContent = ({
         >
           <InnerContent
             item={item}
-            width={width}
-            height={height}
+            width={advancedSize?.width ?? width}
+            height={advancedSize?.height ?? height}
             displayScale={boardCanvasScale}
             widgetStateRef={widgetStateRef}
             widgetRuntimeRef={widgetRuntimeRef}
@@ -444,7 +465,7 @@ const ResolvedBoardItemContent = ({
               rect={advancedRect}
               closePosition={closePosition}
               sourceRect={activeFocus.sourceRect}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? "default"}
               contentRef={setManualSurface}
               onClose={() => close()}
             >
@@ -457,7 +478,7 @@ const ResolvedBoardItemContent = ({
         <WidgetTitleBadge
           advancedOptions={item.advancedOptions}
           opacity={board.opacity / 100}
-          radius={board.itemRadius}
+          radius={board.itemRadius ?? "default"}
         />
       )}
     </>
@@ -480,10 +501,9 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
+  const isContainerPreview = Boolean(useSmartContainerPreviewState());
   const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
   const { removeItem, updateItemOptions } = useItemActions();
-  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
-    updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
@@ -518,27 +538,29 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
           />
           <div
             className={itemContentClasses.editModeInertContent}
-            data-board-grid-inert-content={isEditMode ? "true" : undefined}
+            data-board-grid-inert-content={isEditMode && !definition.supportsInlineEditing ? "true" : undefined}
             data-homarr-widget-ready={Component ? item.kind : undefined}
-            inert={isEditMode}
+            inert={isEditMode && !definition.supportsInlineEditing}
           >
             <WidgetRuntime
               kind={item.kind}
               Component={Component}
               options={options as never}
               integrationIds={item.integrationIds}
-              isEditMode={isEditMode}
-              boardId={board.id}
-              itemId={item.id}
-              removeItem={() => removeItem({ itemId: item.id })}
-              setOptions={(partialNewOptions) =>
-                updateOptions({
+              isEditMode={isEditMode || (isContainerPreview && item.kind === "customApi")}
+              boardId={isContainerPreview ? undefined : board.id}
+              itemId={isContainerPreview && item.kind === "assistant" ? undefined : item.id}
+              removeItem={isContainerPreview ? undefined : () => removeItem({ itemId: item.id })}
+              setOptions={(partialNewOptions) => {
+                if (isContainerPreview) return;
+                updateItemOptions({
+                  itemId: item.id,
                   newOptions: {
                     ...options,
                     ...partialNewOptions.newOptions,
                   },
-                })
-              }
+                });
+              }}
               {...dimensions}
             />
           </div>

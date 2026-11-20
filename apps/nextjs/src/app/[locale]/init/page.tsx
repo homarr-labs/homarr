@@ -38,7 +38,7 @@ export default async function InitPage() {
             where: eq(groups.name, everyoneGroup),
             columns: { homeBoardId: true },
           }),
-          db.query.boards.findMany({ columns: { id: true, name: true, primaryColor: true, secondaryColor: true } }),
+          db.query.boards.findMany({ columns: { id: true, name: true } }),
         ])
       : [undefined, []];
   const homeBoardId = defaultGroup?.homeBoardId;

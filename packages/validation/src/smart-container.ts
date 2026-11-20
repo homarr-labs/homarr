@@ -14,7 +14,7 @@ export const smartContainerStateSchema = z.object({
 export const smartContainerOptionsSchema = z
   .object({
     enabled: z.boolean().default(false),
-    mode: z.enum(["manual", "timed", "smart", "hybrid"]).default("hybrid"),
+    mode: z.enum(["manual", "timed", "smart", "hybrid"]).default("smart"),
     intervalSeconds: z.number().int().min(5).max(3600).default(12),
     skipInactive: z.boolean().default(true),
     pauseOnHover: z.boolean().default(true),
@@ -107,27 +107,38 @@ interface SmartContainerItem {
   layouts: readonly { sectionId: string; layoutId: string }[];
 }
 
+export const getSmartContainerMemberIds = (
+  section: SmartContainerSection,
+  items: readonly SmartContainerItem[],
+): Set<string> => {
+  const layoutIds = new Set(section.layouts?.map((layout) => layout.layoutId));
+  const memberIds = new Set<string>();
+  for (const item of items) {
+    if (item.layouts.some((layout) => layout.sectionId === section.id && layoutIds.has(layout.layoutId))) {
+      memberIds.add(item.id);
+    }
+  }
+  return memberIds;
+};
+
 /** Keep state membership aligned with native widget placement after editor changes. */
 export const reconcileSmartContainerStates = <TSection extends SmartContainerSection>(
   sections: TSection[],
   items: readonly SmartContainerItem[],
 ): TSection[] => {
+  if (!sections.some((section) => section.kind === "container" && section.options?.smart?.states.length)) {
+    return sections;
+  }
   let membershipChanged = false;
   const reconciledSections = sections.map((section) => {
     const smart = section.options?.smart;
     if (section.kind !== "container" || !smart || smart.states.length === 0) return section;
 
-    const containerLayoutIds = new Set(section.layouts?.map((layout) => layout.layoutId));
-    const memberIds = [
-      ...new Set(
-        items
-          .filter((item) =>
-            item.layouts.some((layout) => layout.sectionId === section.id && containerLayoutIds.has(layout.layoutId)),
-          )
-          .map((item) => item.id),
-      ),
-    ];
-    const states = resolveSmartContainerMembership(smart.states, new Set(memberIds), smart.enabled);
+    const states = resolveSmartContainerMembership(
+      smart.states,
+      getSmartContainerMemberIds(section, items),
+      smart.enabled,
+    );
     if (states.every((state, index) => state === smart.states[index])) return section;
     membershipChanged = true;
     return { ...section, options: { ...section.options, smart: { ...smart, states } } };

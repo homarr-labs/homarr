@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
@@ -21,7 +22,8 @@ import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { WidgetError } from "../../errors/component";
-import { useReportWidgetActivity } from "../../activity";
+import { useReportWidgetActivity, useWidgetActivityWatched } from "../../activity";
+import { getMediaRequestsActivityFacts } from "./activity";
 import { MediaRequestsEmptyState } from "../empty-state";
 import classes from "./component.module.css";
 import searchClasses from "../search-button.module.css";
@@ -47,11 +49,16 @@ export default function MediaServerWidget({
         : ["pending", "approved", "declined", "failed", "completed"],
     recentDays: options.recentDays,
   });
+  const activityWatched = useWidgetActivityWatched(itemId);
+  const activityFacts = useMemo(() => {
+    if (!activityWatched) return { relevance: "quiet" as const, count: 0 };
+    return getMediaRequestsActivityFacts(mediaRequestQuery.data?.requests ?? []);
+  }, [activityWatched, mediaRequestQuery.data]);
   useReportWidgetActivity({
     itemId,
     query: mediaRequestQuery,
     recordsPerRow: 2,
-    count: mediaRequestQuery.data?.requests.length ?? 0,
+    ...activityFacts,
     complete: mediaRequestQuery.data?.failedIntegrations.length === 0,
     configured: integrationIds.length > 0,
     sourceUpdatedAt: mediaRequestQuery.data?.updatedAt?.getTime() ?? 0,
@@ -141,7 +148,7 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
   return (
     <Card
       className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
-      radius={board.itemRadius}
+      radius={board.itemRadius ?? undefined}
       p="xs"
     >
       <Image

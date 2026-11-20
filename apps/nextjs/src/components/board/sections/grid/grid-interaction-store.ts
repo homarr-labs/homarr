@@ -1,6 +1,7 @@
 interface GridScopedInteraction {
   sourceGridId: string;
   targetGridId: string | null;
+  affectedGridIds?: ReadonlySet<string>;
 }
 
 export interface GridInteractionStore<TInteraction extends GridScopedInteraction> {
@@ -16,6 +17,7 @@ const getAffectedGridIds = (interaction: GridScopedInteraction | null) => {
   if (interaction) {
     ids.add(interaction.sourceGridId);
     if (interaction.targetGridId) ids.add(interaction.targetGridId);
+    for (const sectionId of interaction.affectedGridIds ?? []) ids.add(sectionId);
   }
   return ids;
 };
@@ -24,18 +26,20 @@ export const createGridInteractionStore = <
   TInteraction extends GridScopedInteraction,
 >(): GridInteractionStore<TInteraction> => {
   let snapshot: TInteraction | null = null;
+  let snapshotGridIds = new Set<string>();
   const listeners = new Set<() => void>();
   const gridListeners = new Map<string, Set<() => void>>();
 
   return {
     getSnapshot: () => snapshot,
-    getGridSnapshot: (sectionId) =>
-      snapshot && (snapshot.sourceGridId === sectionId || snapshot.targetGridId === sectionId) ? snapshot : null,
+    getGridSnapshot: (sectionId) => (snapshotGridIds.has(sectionId) ? snapshot : null),
     publish: (interaction) => {
       if (Object.is(snapshot, interaction)) return;
-      const affectedGridIds = getAffectedGridIds(snapshot);
-      for (const sectionId of getAffectedGridIds(interaction)) affectedGridIds.add(sectionId);
+      const affectedGridIds = snapshotGridIds;
+      const nextGridIds = getAffectedGridIds(interaction);
+      for (const sectionId of nextGridIds) affectedGridIds.add(sectionId);
       snapshot = interaction;
+      snapshotGridIds = nextGridIds;
       for (const listener of listeners) listener();
       for (const sectionId of affectedGridIds) {
         for (const listener of gridListeners.get(sectionId) ?? []) listener();

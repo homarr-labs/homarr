@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { boardTabSearchParam, BoardTabsProvider } from "@homarr/boards/tabs";
 
 import type { Board } from "./_types";
 
@@ -36,7 +37,7 @@ export const BoardProviders = ({
         initialViewportWidth={initialViewportWidth}
         layoutOverrideId={layoutOverrideId}
       >
-        {children}
+        <BoardTabsProvider initialTabKey={searchParams.get(boardTabSearchParam)}>{children}</BoardTabsProvider>
       </BoardProvider>
     </EditModeProvider>
   );

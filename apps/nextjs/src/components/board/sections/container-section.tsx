@@ -12,22 +12,20 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { CONTAINER_HEADER_HEIGHT } from "~/components/board/layout";
+import { useFitContentReporter } from "./auto-expand/fit-to-content";
 import { SectionGrid } from "./grid/section-grid";
-import { useSectionCollapse } from "./section-collapse";
+import { useAutoExpandTargetSectionIds, useIsAutoExpanded, useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
 import { SmartContainerSurface, SmartContainerToolbar } from "./smart-container/smart-container-surface";
 
-const BoardContainerMenu = dynamic(
-  () => import("./container/container-menu").then((module) => module.BoardContainerMenu),
+const BoardContainerEditBar = dynamic(
+  () => import("./container/container-menu").then((module) => module.BoardContainerEditBar),
   { ssr: false },
 );
 
 const ContainerDepthContext = createContext(0);
-
-const getBoundedMenuOffset = (offset: number) =>
-  `max(0px, min(calc(${offset}px * var(--mantine-scale)), calc(100% - 24px * var(--mantine-scale))))`;
 
 interface Props {
   section: ContainerSectionItem;
@@ -37,12 +35,11 @@ export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const togglePointer = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const containerDepth = useContext(ContainerDepthContext);
-  // Stagger nested controls inward and downward without wrapping back over ancestors.
-  const menuRightOffset = 4 + containerDepth * 32;
-  const menuTopOffset = 4 + containerDepth * 32;
   const parent = useSectionContext();
   let containerInlineInsetCount = 2;
+  let containerBlockInsetCount = 2;
   if (parent.section.kind === "empty" && getRootSectionLane(parent.section.xOffset) !== "main") {
+    if (section.yOffset === 0) containerBlockInsetCount -= 1;
     if (section.xOffset === 0) containerInlineInsetCount -= 1;
     if (section.xOffset + section.width === parent.columnCount) containerInlineInsetCount -= 1;
   }
@@ -51,9 +48,10 @@ export const BoardContainerSection = ({ section }: Props) => {
   const tSection = useI18n("section");
   const options = section.options;
   const isSmart = Boolean(options.smart?.enabled && options.smart.states.length > 0);
-  let bodyHeight = "100%";
-  if (isSmart) bodyHeight = "calc(100% - 44px * var(--board-canvas-ui-scale, 1))";
-  const hasHeader = options.collapsible && options.showLabel;
+  const hasAutoExpandTarget = useAutoExpandTargetSectionIds().has(section.id);
+  const usesHiddenAutoExpand = hasAutoExpandTarget && options.autoExpand.inactiveDisplay === "hidden";
+  const showCollapseToggle = options.collapsible && !usesHiddenAutoExpand;
+  const hasHeader = showCollapseToggle && options.showLabel;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
     section.id,
     options.showOpenAll && !isEditMode,
@@ -62,28 +60,24 @@ export const BoardContainerSection = ({ section }: Props) => {
     sectionId: section.id,
     collapsible: options.collapsible,
   });
+  const isAutoExpanded = useIsAutoExpanded(section.id);
+  const isHiddenInactive = usesHiddenAutoExpand && !isAutoExpanded && !isEditMode;
+  const effectivelyCollapsed = isVisuallyCollapsed || isHiddenInactive;
+  const fitsContent =
+    !isSmart &&
+    options.autoExpand.enabled &&
+    options.autoExpand.fitToContent &&
+    isAutoExpanded &&
+    !isEditMode &&
+    !effectivelyCollapsed;
+  const bodyRef = useRef<HTMLDivElement>(null);
+  useFitContentReporter({ sectionId: section.id, itemId: options.autoExpand.itemId, bodyRef, enabled: fitsContent });
   const label = options.title.trim() || t("untitled");
   const contentId = useId();
-  let menuTop = getBoundedMenuOffset(menuTopOffset);
-  if (hasHeader) {
-    menuTop = "calc(var(--container-header-height) / 2 - 12px * var(--mantine-scale))";
-  }
-  const menuPosition = { right: getBoundedMenuOffset(menuRightOffset), top: menuTop };
   const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
   const labelLeft = 8;
-  let labelRight = 8;
-  if (isEditMode) {
-    labelRight = menuRightOffset + 32;
-  } else if (options.showOpenAll) {
-    labelRight = 40;
-  }
-  let labelMaxWidth = `calc(100% - ${labelLeft + labelRight}px)`;
-  let collapsedLabelPaddingRight: number | string = labelRight;
-  if (isEditMode) {
-    const reservedMenuWidth = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
-    labelMaxWidth = `calc(100% - ${labelLeft}px - ${reservedMenuWidth})`;
-    collapsedLabelPaddingRight = reservedMenuWidth;
-  }
+  const labelRight = options.showOpenAll && !isEditMode ? 40 : 8;
+  const labelMaxWidth = `calc(100% - ${labelLeft + labelRight}px)`;
   // The native toggle spans the header; sibling actions stay above it.
   const toggleLayout = isVisuallyCollapsed
     ? { top: 0, left: 0, w: "100%", h: "100%", maw: "100%" }
@@ -118,10 +112,6 @@ export const BoardContainerSection = ({ section }: Props) => {
       toggle();
     },
   };
-  let headerActionInset = "0px";
-  if (isEditMode) {
-    headerActionInset = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
-  }
 
   const content = (
     <Box
@@ -138,22 +128,22 @@ export const BoardContainerSection = ({ section }: Props) => {
           classes.itemCard,
           classes.containerCard,
           options.customCssClasses.join(" "),
-          isVisuallyCollapsed && !hasHeader && classes.collapsedContainerCard,
+          effectivelyCollapsed && !hasHeader && classes.collapsedContainerCard,
           hasHeader && classes.labeledContainerCard,
         )}
         w="100%"
         h="100%"
-        data-board-container-collapsed={isVisuallyCollapsed ? "true" : "false"}
+        data-board-container-collapsed={effectivelyCollapsed ? "true" : "false"}
+        data-smart-edit-bar-in-toolbar={isSmart && !hasHeader && isEditMode ? "true" : undefined}
         styles={{
           root: {
             overflow: "visible",
             "--opacity": board.opacity / 100,
             "--container-border-color": options.borderColor || undefined,
-            "--container-action-inset": headerActionInset,
             "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
           },
         }}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         p={0}
       >
         {hasHeader && (
@@ -174,14 +164,14 @@ export const BoardContainerSection = ({ section }: Props) => {
             </button>
           </div>
         )}
-        {options.collapsible && !hasHeader && (
+        {showCollapseToggle && !hasHeader && (
           <Button
             className={classes.containerToggle}
             pos="absolute"
             {...toggleLayout}
             px={6}
             ps={labelLeft}
-            pe={collapsedLabelPaddingRight}
+            pe={labelRight}
             radius="sm"
             variant="default"
             justify="center"
@@ -195,28 +185,34 @@ export const BoardContainerSection = ({ section }: Props) => {
             {toggleIcon}
           </Button>
         )}
-        {!isSmart && !isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
-          <Badge
-            className={classes.containerLabel}
-            pos="absolute"
-            top={labelTop}
-            left={labelLeft}
-            maw={labelMaxWidth}
-            size="md"
-            radius="sm"
-            variant="default"
-            c="var(--mantine-color-text)"
-            style={{
-              zIndex: 9,
-              pointerEvents: "none",
-            }}
-            title={options.title}
-            data-board-container-label
-          >
-            {options.title}
-          </Badge>
-        )}
-        {options.showOpenAll && !isEditMode && (
+        {!isEditMode &&
+          !isSmart &&
+          !isVisuallyCollapsed &&
+          !showCollapseToggle &&
+          !isHiddenInactive &&
+          options.showLabel &&
+          options.title && (
+            <Badge
+              className={classes.containerLabel}
+              pos="absolute"
+              top={labelTop}
+              left={labelLeft}
+              maw={labelMaxWidth}
+              size="md"
+              radius="sm"
+              variant="default"
+              c="var(--mantine-color-text)"
+              style={{
+                zIndex: 9,
+                pointerEvents: "none",
+              }}
+              title={options.title}
+              data-board-container-label
+            >
+              {options.title}
+            </Badge>
+          )}
+        {options.showOpenAll && !isEditMode && !isHiddenInactive && (
           <ActionIcon
             className={classes.containerAction}
             pos="absolute"
@@ -233,28 +229,45 @@ export const BoardContainerSection = ({ section }: Props) => {
             <IconExternalLink size="var(--mantine-font-size-md)" />
           </ActionIcon>
         )}
-        {isSmart && !isVisuallyCollapsed && <SmartContainerToolbar section={section} />}
         <Box
+          ref={bodyRef}
           id={contentId}
           className={classes.containerBody}
-          h={bodyHeight}
+          h="100%"
           data-board-container-body
-          data-collapsed={isVisuallyCollapsed ? "true" : "false"}
-          aria-hidden={isVisuallyCollapsed}
-          inert={isVisuallyCollapsed}
+          data-collapsed={effectivelyCollapsed ? "true" : "false"}
+          aria-hidden={effectivelyCollapsed}
+          inert={effectivelyCollapsed}
         >
+          {isSmart && !effectivelyCollapsed && <SmartContainerToolbar section={section} />}
           <ContainerDepthContext value={containerDepth + 1}>
             <SectionGrid
               section={section}
               columnCount={section.width}
               containerInlineInsetCount={containerInlineInsetCount}
+              containerBlockInsetCount={containerBlockInsetCount}
               requestedRowCount={section.height}
-              viewportRowCountOverride={isVisuallyCollapsed ? section.height : undefined}
+              viewportRowCountOverride={
+                isVisuallyCollapsed
+                  ? section.height
+                  : isHiddenInactive
+                    ? 0
+                    : isSmart && !isEditMode
+                      ? parent.displayPlacementById?.get(section.id)?.h
+                      : undefined
+              }
+              fittedViewportRowCount={fitsContent ? parent.displayPlacementById?.get(section.id)?.h : undefined}
               label={label}
             />
           </ContainerDepthContext>
         </Box>
-        {isEditMode && <BoardContainerMenu section={section} position={menuPosition} />}
+        {isEditMode && (
+          <BoardContainerEditBar
+            section={section}
+            placement={hasHeader || isSmart ? "header" : "border"}
+            depth={containerDepth}
+          />
+        )}
       </Card>
     </Box>
   );

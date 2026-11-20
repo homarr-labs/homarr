@@ -3,8 +3,6 @@
 }
 
 .preview {
-  position: sticky;
-  top: 0;
   min-width: 0;
   width: 100%;
   padding: var(--mantine-spacing-lg);
@@ -54,7 +52,6 @@
 
 @media (max-width: 68em) {
   .preview {
-    position: static;
     padding: var(--mantine-spacing-sm);
   }
 }

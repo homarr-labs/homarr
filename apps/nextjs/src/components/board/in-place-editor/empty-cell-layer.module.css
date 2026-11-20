@@ -1,0 +1,81 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+:global(body[data-board-grid-interacting]) .layer {
+  display: none;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--board-grid-item-inset, 0px);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--mantine-radius-lg);
+  color: var(--mantine-primary-color-filled);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 8%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--mantine-primary-color-filled) 55%, transparent);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.cell:hover .plus,
+.cell:focus-visible .plus {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 48em), (hover: none), (pointer: coarse) {
+  .cell {
+    touch-action: pan-y;
+  }
+
+  .cell .plus {
+    opacity: 0.65;
+    transform: none;
+  }
+}
+
+.layer[data-dragging] .cell:hover .plus {
+  opacity: 0;
+}
+
+.selection {
+  z-index: 2;
+  box-sizing: border-box;
+  pointer-events: none;
+  padding: var(--board-grid-item-inset, 0px);
+}
+
+.selection::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-lg);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent);
+}

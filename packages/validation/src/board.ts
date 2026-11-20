@@ -13,6 +13,7 @@ import {
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 import { commonItemSchema, sectionSchema } from "./shared";
+import { getSmartContainerMemberIds } from "./smart-container";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -65,12 +66,17 @@ export const boardSavePartialSettingsSchema = z
     backgroundImageAttachment: z.enum(backgroundImageAttachments.values),
     backgroundImageRepeat: z.enum(backgroundImageRepeats.values),
     backgroundImageSize: z.enum(backgroundImageSizes.values),
-    primaryColor: hexColorSchema,
-    secondaryColor: hexColorSchema,
+    primaryColor: hexColorSchema.nullable().describe("Board accent override; null inherits the instance theme"),
+    secondaryColor: hexColorSchema
+      .nullable()
+      .describe("Board secondary accent override; null inherits the instance theme"),
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     iconColor: hexColorNullableSchema,
-    itemRadius: z.union(cornerStyleValues.map((value) => z.literal(value))),
+    itemRadius: z
+      .enum(cornerStyleValues)
+      .nullable()
+      .describe("Widget roundness override; null inherits the instance theme"),
     disableStatus: z.boolean(),
   })
   .partial();
@@ -149,14 +155,8 @@ export const reconciledBoardSaveSchema = boardSaveSchema.superRefine((board, ctx
   board.sections.forEach((section, sectionIndex) => {
     if (section.kind !== "container" || !section.options.smart) return;
 
-    const containerLayoutIds = new Set(section.layouts.map((layout) => layout.layoutId));
-    const availableIds = new Set(
-      board.items
-        .filter((item) =>
-          item.layouts.some((layout) => layout.sectionId === section.id && containerLayoutIds.has(layout.layoutId)),
-        )
-        .map((item) => item.id),
-    );
+    if (section.options.smart.states.length === 0) return;
+    const availableIds = getSmartContainerMemberIds(section, board.items);
     const assignedIds = new Set<string>();
     section.options.smart.states.forEach((state, stateIndex) => {
       state.itemIds.forEach((itemId, itemIndex) => {

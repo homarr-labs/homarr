@@ -30,11 +30,10 @@ export const NetworkTrafficChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey={"index"}
       series={[{ name: "usage", color: "yellow.5" }]}
       title={isUp ? t("up") : t("down")}
       icon={isUp ? IconArrowUp : IconArrowDown}
-      yAxisProps={{ domain: [0, upperBound] }}
+      yDomain={[0, upperBound]}
       lastValue={formatByteRate(Math.round(latest))}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}

@@ -1,0 +1,12 @@
+diff --git a/esm/utils/expand-recurring-events/expand-recurring-events.mjs b/esm/utils/expand-recurring-events/expand-recurring-events.mjs
+--- a/esm/utils/expand-recurring-events/expand-recurring-events.mjs
++++ b/esm/utils/expand-recurring-events/expand-recurring-events.mjs
+@@ -3,7 +3,7 @@
+ import dayjs from "dayjs";
+ import * as rruleAll from "rrule";
+ //#region packages/@mantine/schedule/src/utils/expand-recurring-events/expand-recurring-events.ts
+-const RRule = "default" in rruleAll ? rruleAll.default.RRule : rruleAll.RRule;
++const RRule = "default" in rruleAll ? Reflect.get(rruleAll, "default").RRule : rruleAll.RRule;
+ function getRecurrenceKey(recurringEventId, recurrenceId) {
+ 	return `${recurringEventId}::${recurrenceId}`;
+ }

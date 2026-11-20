@@ -43,6 +43,7 @@ import {
 import type { IntegrationKind, OnboardingLayoutPreset, WidgetKind } from "@homarr/definitions";
 import { onboardingCompleteSetupSchema, onboardingIntegrationDraftSchema } from "@homarr/validation/onboarding";
 
+import packageJson from "../../../../../package.json";
 import { onboardingClaimSettingKey } from "../../onboarding-claim";
 import { env } from "../../env";
 import { createTRPCRouter, onboardingClaimedProcedure, onboardingProcedure, publicProcedure } from "../../trpc";
@@ -180,7 +181,13 @@ export const onboardRouter = createTRPCRouter({
     const empty = { integrations: [] as DiscoveredIntegration[], apps: [] as DiscoveredApp[] };
 
     try {
-      const { createDockerSourceId, listDiscoveredContainersAsync, dockerLabels } = await import("@homarr/docker");
+      const {
+        createDockerSourceId,
+        listDiscoveredContainersAsync,
+        dockerLabels,
+        getContainerImageIconFallback,
+        getContainerImageIconNamePattern,
+      } = await import("@homarr/docker");
       const discovery = await listDiscoveredContainersAsync();
       const successfulHosts = discovery.hosts.filter((host) => host.status === "success");
       const unavailableHosts = discovery.hosts.filter((host) => host.status === "unavailable");
@@ -212,6 +219,22 @@ export const onboardRouter = createTRPCRouter({
         );
       };
 
+      const fallbackPatterns = [
+        ...new Set(
+          imageCandidates
+            .map((container) => extractContainerImageName(container.Image))
+            .filter((imageName) => !strictIconMatch(imageName))
+            .map(getContainerImageIconNamePattern)
+            .filter(Boolean),
+        ),
+      ].slice(0, 64);
+      const fallbackIcons =
+        fallbackPatterns.length > 0
+          ? await ctx.db.query.icons.findMany({
+              columns: { name: true, url: true },
+              where: or(...fallbackPatterns.map((pattern) => like(icons.name, pattern))),
+            })
+          : [];
       const discoveredIntegrations: DiscoveredIntegration[] = [];
       const discoveredApps: DiscoveredApp[] = [];
 
@@ -256,7 +279,7 @@ export const onboardRouter = createTRPCRouter({
       for (const container of imageCandidates) {
         const imageName = extractContainerImageName(container.Image);
         const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
-        const dbIcon = strictIconMatch(imageName);
+        const dbIcon = strictIconMatch(imageName) ?? getContainerImageIconFallback(imageName, fallbackIcons);
         const iconUrl = dbIcon?.url ?? cdnIconUrl(imageName.toLowerCase());
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
         const kind = matchIntegrationKindFromContainer({ image: container.Image, name: containerName });
@@ -382,12 +405,12 @@ export const onboardRouter = createTRPCRouter({
               backgroundImageAttachment: "fixed",
               backgroundImageRepeat: "no-repeat",
               backgroundImageSize: "cover",
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
+              primaryColor: null,
+              secondaryColor: null,
               opacity: 100,
               customCss: null,
               iconColor: null,
-              itemRadius: input.board.itemRadius,
+              itemRadius: null,
               disableStatus: false,
               sections: [],
               layouts: pendingLayouts,
@@ -985,14 +1008,24 @@ export const onboardRouter = createTRPCRouter({
         }
       }
 
-      const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings] = await Promise.all([
+      const [
+        currentAppearance,
+        currentCulture,
+        currentAnalytics,
+        currentBoardSettings,
+        currentBranding,
+        currentWhatsNew,
+      ] = await Promise.all([
         getServerSettingByKeyAsync(ctx.db, "appearance"),
         getServerSettingByKeyAsync(ctx.db, "culture"),
         getServerSettingByKeyAsync(ctx.db, "analytics"),
         getServerSettingByKeyAsync(ctx.db, "board"),
+        getServerSettingByKeyAsync(ctx.db, "branding"),
+        getServerSettingByKeyAsync(ctx.db, "whatsNew"),
       ]);
       const settingValues = {
         appearance: SuperJSON.stringify({ ...currentAppearance, defaultColorScheme: input.server.defaultColorScheme }),
+        branding: SuperJSON.stringify({ ...currentBranding, themeId: input.server.themeId }),
         culture: SuperJSON.stringify({ ...currentCulture, defaultLocale: input.server.defaultLocale }),
         analytics: SuperJSON.stringify({
           ...currentAnalytics,
@@ -1003,6 +1036,7 @@ export const onboardRouter = createTRPCRouter({
           homeBoardId: targetBoard.id,
           mobileHomeBoardId: targetBoard.id,
         }),
+        whatsNew: SuperJSON.stringify({ ...currentWhatsNew, lastSeenVersion: packageJson.version }),
       };
 
       await handleTransactionsAsync(ctx.db, {
@@ -1038,9 +1072,6 @@ export const onboardRouter = createTRPCRouter({
             }
             const boardValues = {
               name: targetBoardName,
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
-              itemRadius: input.board.itemRadius,
             };
             if (pendingBoardRow) {
               await transaction.insert(schema.boards).values({ ...pendingBoardRow, ...boardValues });
@@ -1128,9 +1159,6 @@ export const onboardRouter = createTRPCRouter({
             }
             const boardValues = {
               name: targetBoardName,
-              primaryColor: input.board.primaryColor,
-              secondaryColor: input.board.secondaryColor,
-              itemRadius: input.board.itemRadius,
             };
             if (pendingBoardRow) {
               transaction

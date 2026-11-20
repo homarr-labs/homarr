@@ -14,8 +14,10 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
 import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 
 type DiskDisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
 
@@ -166,7 +168,7 @@ const SystemDiskCard = ({
       withinPortal
     >
       <Card
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         py="xs"
         withBorder={isAdvanced}
         bg={cardBackground}
@@ -238,8 +240,12 @@ export default function SystemResources({
 }: WidgetComponentProps<"systemDisks">) {
   const t = useI18n("widget.systemDisks");
   const { formatBytesPair } = useByteFormatter();
-  const queryInput = { integrationIds };
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
   const data = results.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,

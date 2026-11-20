@@ -20,6 +20,7 @@ import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 import type { SmartContainerOptions } from "@homarr/validation/smart-container";
+import { WidgetActivityProvider } from "@homarr/widgets/activity";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionItems } from "../use-section-items";
@@ -43,23 +44,36 @@ interface SurfaceProps extends PropsWithChildren {
   collapsed: boolean;
 }
 
-export const SmartContainerSurface = ({ section, children, collapsed }: SurfaceProps) => {
-  const smart = section.options.smart;
-  if (!smart?.enabled || smart.states.length === 0) return children;
+export const SmartContainerSurface = (props: SurfaceProps) => {
+  const smart = props.section.options.smart;
+  if (!smart?.enabled || smart.states.length === 0) return props.children;
+  return <ObservedContainer {...props} options={smart} />;
+};
+
+const ObservedContainer = (props: SurfaceProps & { options: SmartContainerOptions }) => {
+  const { items, innerSections } = useSectionItems(props.section.id);
+  const watchedItemIds = useMemo(() => new Set(items.map((item) => item.id)), [items]);
   return (
-    <ReelSurface section={section} options={smart} collapsed={collapsed}>
-      {children}
-    </ReelSurface>
+    <WidgetActivityProvider watchedItemIds={watchedItemIds}>
+      <ReelSurface {...props} items={items} innerSections={innerSections} />
+    </WidgetActivityProvider>
   );
 };
 
-const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & { options: SmartContainerOptions }) => {
+const ReelSurface = ({
+  section,
+  options,
+  children,
+  collapsed,
+  items,
+  innerSections,
+}: SurfaceProps & { options: SmartContainerOptions } & ReturnType<typeof useSectionItems>) => {
   const board = useRequiredBoard();
   const layoutId = useCurrentLayout();
   const [isEditMode] = useEditMode();
-  const preview = useSmartContainerPreviewState();
+  const inheritedPreview = useSmartContainerPreviewState();
+  const preview = inheritedPreview?.containerId === section.id ? inheritedPreview : undefined;
   const previewStateId = preview?.stateId;
-  const { items, innerSections } = useSectionItems(section.id);
   const runtime = useSmartContainerRuntime({
     options,
     items,
@@ -103,7 +117,7 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
   const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
   const projection = (!isEditMode && focusedProjection) || liveProjection;
   const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
-  const showPeeks = options.appearance === "reel" && states.length > 1 && section.height >= 3;
+  const showPeeks = options.appearance === "reel" && states.length > 2 && section.height >= 3;
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);
@@ -169,9 +183,19 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         onPointerLeave={(event) => {
           if (event.pointerType === "mouse") runtime.setHovered(false);
         }}
-        onFocusCapture={(event) => {
-          if (!(event.target instanceof Element) || !event.target.closest('[data-grid-item-type="item"]')) return;
+        onPointerDownCapture={(event) => {
+          if (!(event.target instanceof Element) || event.target.closest("[data-smart-resume]")) return;
+          if (
+            !event.target.closest(
+              'button, a[href], input, select, textarea, [contenteditable="true"], [role="button"], [role="slider"], [role="switch"], [role="menuitem"], [role="option"], [role="row"][tabindex]',
+            )
+          )
+            return;
           runtime.holdForFocus();
+        }}
+        onFocusCapture={(event) => {
+          runtime.holdForFocus();
+          if (!(event.target instanceof Element) || !event.target.closest('[data-grid-item-type="item"]')) return;
           if (event.target.closest("[data-smart-compact-control]")) return;
           setFocusedItemId(
             event.target.closest<HTMLElement>('[data-grid-item-type="item"]')?.dataset.gridItemId ?? null,
@@ -239,7 +263,7 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
         )}
         <span
           className={classes.liveRegion}
-          aria-live={runtime.isPaused || options.mode === "smart" || options.mode === "manual" ? "polite" : "off"}
+          aria-live={runtime.pauseReason === "manual" ? "polite" : "off"}
           aria-atomic="true"
         >
           {selectedState?.title} · {t("position", { current: selectedIndex + 1, total: states.length })}
@@ -251,15 +275,25 @@ const ReelSurface = ({ section, options, children, collapsed }: SurfaceProps & {
 
 export const SmartContainerToolbar = ({ section }: { section: ContainerSectionItem }) => {
   const context = useSmartContainerProjection();
-  const preview = useSmartContainerPreviewState();
+  const inheritedPreview = useSmartContainerPreviewState();
   const [isEditMode] = useEditMode();
   const openEditor = useOpenContainerEditor(section);
   const t = useI18n("section.container.smart");
+  const pointerWasHeld = useRef(false);
   if (!context || context.sectionId !== section.id) return null;
   const { runtime } = context;
+  const preview = inheritedPreview?.containerId === section.id && inheritedPreview.stateId;
   const selectedIndex = runtime.states.findIndex((state) => state.id === runtime.selectedStateId);
   const stateName = runtime.selectedState?.title || t("state");
   const position = t("position", { current: selectedIndex + 1, total: runtime.states.length });
+  const relevance = runtime.selectedState?.relevance ?? "unknown";
+  const activityLabel = {
+    playback: t("activityPlayback"),
+    ongoing: t("activityOngoing"),
+    background: t("activityBackground"),
+    quiet: t("activityQuiet"),
+    unknown: t("activityUnknown"),
+  }[relevance];
   const containerTitle = section.options.showLabel && !section.options.collapsible && section.options.title;
   let pauseLabel = t("pause");
   let pauseIcon = <IconPlayerPause style={iconSizes.sm} />;
@@ -291,14 +325,17 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         </ActionIcon>
         <Menu position="bottom-start" shadow="md" returnFocus>
           <Menu.Target>
-            <UnstyledButton className={classes.statePicker} aria-label={t("chooseState", { stateName, position })}>
+            <UnstyledButton
+              className={classes.statePicker}
+              aria-label={`${t("chooseState", { stateName, position })} · ${activityLabel}`}
+            >
               <span className={classes.stateTitle}>
                 <Text component="span" size="sm" fw={650} truncate>
                   {stateName}
                 </Text>
                 <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
                   {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
-                  {isEditMode ? t("allStatesInEdit") : position}
+                  {isEditMode ? t("allStatesInEdit") : activityLabel}
                 </Text>
               </span>
               <IconChevronDown size={14} aria-hidden />
@@ -335,15 +372,25 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           {runtime.remainingSeconds}s
         </Text>
       )}
-      {!isEditMode && !preview?.stateId && section.options.smart?.mode !== "manual" && (
+      {!isEditMode && !preview && section.options.smart?.mode !== "manual" && (
         <ActionIcon
+          data-smart-resume
           variant="subtle"
           style={zoomCompensatedSize(44)}
           aria-label={pauseLabel}
           title={pauseLabel}
-          onClick={() => {
-            if (runtime.pauseReason === "manual" || runtime.pauseReason === "focus" || runtime.pauseReason === "paused")
-              runtime.resume();
+          onPointerDown={() => {
+            pointerWasHeld.current =
+              runtime.pauseReason === "manual" || runtime.pauseReason === "focus" || runtime.pauseReason === "paused";
+          }}
+          onClick={(event) => {
+            const held =
+              event.detail > 0
+                ? pointerWasHeld.current
+                : runtime.pauseReason === "manual" ||
+                  runtime.pauseReason === "focus" ||
+                  runtime.pauseReason === "paused";
+            if (held) runtime.resume();
             else runtime.pause();
           }}
         >

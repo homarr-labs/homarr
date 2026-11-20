@@ -10,6 +10,7 @@ import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { uptimeKumaIntegration } from ".";
 import { uptimeKumaWidget } from "@site/docs/widgets/uptime-kuma";
+import { notificationsWidget } from "@site/docs/widgets/notifications";
 
 <IntegrationHeader integration={uptimeKumaIntegration} categories={["Monitoring"]} />
 
@@ -17,7 +18,7 @@ Uptime Kuma monitors the availability of your services and provides uptime stati
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[{ widget: uptimeKumaWidget }]} />
+<IntegrationCapabilites items={[{ widget: uptimeKumaWidget }, { widget: notificationsWidget }]} />
 
 ### Adding the integration
 

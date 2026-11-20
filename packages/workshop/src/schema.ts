@@ -85,7 +85,7 @@ export const workshopReportCategorySchema = z.enum([
 export const workshopSubmissionTypeSchema = z.enum(["customWidget", "customCss"]);
 export type WorkshopSubmissionType = z.infer<typeof workshopSubmissionTypeSchema>;
 
-const workshopFileListSchema = z
+const workshopStringListSchema = z
   .preprocess((value) => {
     if (typeof value !== "string") return value;
     try {
@@ -127,7 +127,7 @@ const workshopSubmissionBaseObjectSchema = z.object({
   title: z.string(),
   description: z.string().default(""),
   widgetSchema: z.string(),
-  screenshots: workshopFileListSchema,
+  screenshots: workshopStringListSchema,
   author: z.string(),
   authorName: z.string().default(""),
   score: z.number().int().default(0),
@@ -152,6 +152,14 @@ export const workshopSubmissionDetailSchema = z.preprocess(
   workshopSubmissionBaseObjectSchema.extend({ content: z.string() }),
 );
 export type WorkshopSubmissionDetail = z.infer<typeof workshopSubmissionDetailSchema>;
+
+export const workshopWidgetCatalogEntrySchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().default(""),
+  integrationKinds: workshopStringListSchema,
+});
+export type WorkshopWidgetCatalogEntry = z.infer<typeof workshopWidgetCatalogEntrySchema>;
 
 export const workshopSubmissionInputSchema = z
   .object({

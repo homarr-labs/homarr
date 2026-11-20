@@ -80,13 +80,13 @@ export const SmartContainerEditorPreview = ({
       ...board.sections
         .filter((entry) => included.has(entry.id))
         .map((entry) => {
-          if (entry.id !== containerId || entry.kind !== "container") return entry;
+          if (entry.kind !== "container") return entry;
           return {
             ...entry,
             collapsed: false,
             options: { ...entry.options, collapsible: false, showOpenAll: false },
             layouts: entry.layouts.map((entryLayout) => {
-              if (entryLayout.layoutId !== layout.layoutId) return entryLayout;
+              if (entry.id !== containerId || entryLayout.layoutId !== layout.layoutId) return entryLayout;
               return { ...entryLayout, xOffset: 0, yOffset: 0, parentSectionId: rootId };
             }),
           };
@@ -117,7 +117,11 @@ export const SmartContainerEditorPreview = ({
                   <BoardSectionCollapseProvider>
                     <BoardGridPortalHost>
                       <SmartContainerPreviewStateProvider
-                        value={{ stateId: selectedStateId, onSelectState: selectedStateId ? onSelectState : undefined }}
+                        value={{
+                          containerId,
+                          stateId: selectedStateId,
+                          onSelectState: selectedStateId ? onSelectState : undefined,
+                        }}
                       >
                         <div className={classes.preview} data-smart-container-editor-preview>
                           <ScaledBoardCanvas
@@ -125,7 +129,6 @@ export const SmartContainerEditorPreview = ({
                             initialLogicalHeight={getLogicalGridSize(preview.section.height)}
                             initialAvailableWidth={500}
                             label={preview.section.options.title}
-                            fitBeforeHydration={false}
                           >
                             <BoardGridEditorBoundary>
                               <BoardEmptySection

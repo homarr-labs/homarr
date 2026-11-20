@@ -224,7 +224,7 @@ export default function StatsWidget({
   let gap = 8;
   if (options.spacing === "sm") gap = 12;
   if (options.spacing === "md") gap = 16;
-  const rootStyle = { "--stats-radius": `var(--mantine-radius-${board.itemRadius})` } as CSSProperties;
+  const rootStyle = { "--stats-radius": `var(--mantine-radius-${board.itemRadius ?? "default"})` } as CSSProperties;
   if (!advanced && displayScale > 1) {
     Object.assign(rootStyle, { "--mantine-scale": 1 / displayScale, "--board-canvas-ui-scale": 1 / displayScale });
   }

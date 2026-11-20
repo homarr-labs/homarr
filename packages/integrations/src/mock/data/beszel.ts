@@ -13,6 +13,19 @@ import type {
 const KIBIBYTE = 1024;
 const MEBIBYTE = 1024 * KIBIBYTE;
 const GIBIBYTE = 1024 * MEBIBYTE;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TORRENT_RECEIVE_BYTES = 48_100_000;
+const USENET_RECEIVE_BYTES = 73_000_000;
+const DOWNLOAD_SEND_BYTES = 9_340_000;
+// Only playing sessions contribute: 8 + 24 + 4 + 0.95 Mbit/s.
+const MEDIA_SEND_BYTES = 36_950_000 / 8;
+const DOWNLOAD_RECEIVE_BYTES = TORRENT_RECEIVE_BYTES + USENET_RECEIVE_BYTES;
+
+interface MockFilesystem {
+  path: string;
+  capacityGiB: number;
+  usage: number;
+}
 
 interface MockSystemDef {
   name: string;
@@ -20,27 +33,44 @@ interface MockSystemDef {
   os: string;
   cpu: string;
   cores: number;
+  threads: number;
   mem: number;
   arch: string;
   baseCpu: number;
   baseMem: number;
   baseDisk: number;
+  diskGiB: number;
+  networkMiB: [number, number];
+  diskIoMiB: [number, number];
+  networkVariation?: number;
+  diskIoVariation?: number;
+  filesystems: MockFilesystem[];
   containers: number[];
+  phase: number;
+  uptimeDays: number;
+  gpu?: string;
 }
 
 const mockSystems: MockSystemDef[] = [
   {
-    name: "web-server",
+    name: "services",
     host: "192.168.1.10",
     os: "Ubuntu 24.04",
-    cpu: "AMD Ryzen 9 7950X",
-    cores: 16,
-    mem: 64 * GIBIBYTE,
+    cpu: "AMD Ryzen 5 5600G",
+    cores: 6,
+    threads: 12,
+    mem: 32 * GIBIBYTE,
     arch: "amd64",
-    baseCpu: 35,
-    baseMem: 55,
+    baseCpu: 21,
+    baseMem: 41,
     baseDisk: 42,
-    containers: [0, 1, 2, 3, 5],
+    diskGiB: 512,
+    networkMiB: [0.9, 1.2],
+    diskIoMiB: [2.4, 1.1],
+    filesystems: [{ path: "/mnt/appdata", capacityGiB: 1024, usage: 34 }],
+    containers: [0, 1, 2, 3, 5, 7],
+    phase: 1,
+    uptimeDays: 21,
   },
   {
     name: "nas-01",
@@ -48,150 +78,256 @@ const mockSystems: MockSystemDef[] = [
     os: "Debian 12",
     cpu: "Intel Xeon E-2388G",
     cores: 8,
+    threads: 16,
     mem: 32 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 12,
-    baseMem: 70,
-    baseDisk: 68,
-    containers: [1, 2, 6],
+    baseMem: 58,
+    baseDisk: 38,
+    diskGiB: 256,
+    networkMiB: [12, 3],
+    diskIoMiB: [24, 8],
+    filesystems: [
+      { path: "/mnt/media", capacityGiB: 8192, usage: 68 },
+      { path: "/mnt/backups", capacityGiB: 4096, usage: 61 },
+    ],
+    containers: [6, 11, 12],
+    phase: 2,
+    uptimeDays: 34,
   },
   {
-    name: "pi-cluster-1",
+    name: "test-node",
     host: "192.168.1.30",
     os: "Raspberry Pi OS",
     cpu: "ARM Cortex-A76",
     cores: 4,
+    threads: 4,
     mem: 8 * GIBIBYTE,
     arch: "aarch64",
-    baseCpu: 45,
-    baseMem: 82,
+    baseCpu: 5,
+    baseMem: 24,
     baseDisk: 35,
-    containers: [0, 2, 7],
+    diskGiB: 128,
+    networkMiB: [0.04, 0.06],
+    diskIoMiB: [0.2, 0.1],
+    filesystems: [],
+    containers: [0, 2],
+    phase: 3,
+    uptimeDays: 5,
   },
   {
     name: "media-server",
     host: "192.168.1.40",
-    os: "Proxmox VE 8.2",
-    cpu: "Intel i7-13700K",
-    cores: 16,
-    mem: 128 * GIBIBYTE,
+    os: "Debian 12",
+    cpu: "Intel Core i5-12500",
+    cores: 6,
+    threads: 12,
+    mem: 32 * GIBIBYTE,
     arch: "amd64",
-    baseCpu: 22,
-    baseMem: 48,
-    baseDisk: 55,
-    containers: [0, 1, 2, 3, 4, 5, 6, 7],
+    baseCpu: 26,
+    baseMem: 44,
+    baseDisk: 34,
+    diskGiB: 512,
+    networkMiB: [
+      ((DOWNLOAD_SEND_BYTES + MEDIA_SEND_BYTES) * 1.04) / MEBIBYTE,
+      (DOWNLOAD_RECEIVE_BYTES * 1.025) / MEBIBYTE,
+    ],
+    diskIoMiB: [18, (DOWNLOAD_RECEIVE_BYTES * 1.08) / MEBIBYTE],
+    networkVariation: 0.01,
+    diskIoVariation: 0.02,
+    filesystems: [
+      { path: "/mnt/media", capacityGiB: 8192, usage: 68 },
+      { path: "/mnt/downloads", capacityGiB: 1024, usage: 27 },
+    ],
+    containers: [4, 8, 9, 10, 5, 13],
+    phase: 4,
+    uptimeDays: 14,
+    gpu: "Intel UHD Graphics 770",
   },
   {
     name: "backup-node",
     host: "192.168.1.50",
     os: "TrueNAS SCALE",
     cpu: "Intel Xeon E5-2680",
-    cores: 12,
+    cores: 8,
+    threads: 16,
     mem: 48 * GIBIBYTE,
     arch: "amd64",
     baseCpu: 8,
     baseMem: 30,
-    baseDisk: 78,
-    containers: [1, 6],
+    baseDisk: 28,
+    diskGiB: 256,
+    networkMiB: [0.2, 2],
+    diskIoMiB: [1, 8],
+    filesystems: [{ path: "/mnt/archive", capacityGiB: 8192, usage: 61 }],
+    containers: [6],
+    phase: 5,
+    uptimeDays: 7,
   },
 ];
 
-const containerProfiles: { name: string; cpuBase: number; memMiB: number; netKiB: number }[] = [
-  { name: "nginx", cpuBase: 2, memMiB: 120, netKiB: 800 },
-  { name: "postgres", cpuBase: 8, memMiB: 450, netKiB: 200 },
-  { name: "redis", cpuBase: 3, memMiB: 180, netKiB: 500 },
-  { name: "grafana", cpuBase: 5, memMiB: 280, netKiB: 150 },
-  { name: "prometheus", cpuBase: 6, memMiB: 350, netKiB: 300 },
-  { name: "traefik", cpuBase: 4, memMiB: 90, netKiB: 1200 },
-  { name: "minio", cpuBase: 3, memMiB: 200, netKiB: 600 },
-  { name: "gitea", cpuBase: 4, memMiB: 250, netKiB: 100 },
+interface MockContainerProfile {
+  name: string;
+  cpuBase: number;
+  memMiB: number;
+  sendMiB: number;
+  recvMiB: number;
+  networkVariation?: number;
+}
+
+const containerProfiles: MockContainerProfile[] = [
+  { name: "homarr", cpuBase: 2, memMiB: 240, sendMiB: 0.12, recvMiB: 0.04 },
+  { name: "postgres", cpuBase: 4, memMiB: 512, sendMiB: 0.08, recvMiB: 0.06 },
+  { name: "redis", cpuBase: 1, memMiB: 128, sendMiB: 0.04, recvMiB: 0.03 },
+  { name: "home-assistant", cpuBase: 6, memMiB: 640, sendMiB: 0.03, recvMiB: 0.02 },
+  {
+    name: "jellyfin",
+    cpuBase: 10,
+    memMiB: 1024,
+    sendMiB: MEDIA_SEND_BYTES / MEBIBYTE,
+    recvMiB: 0.2,
+    networkVariation: 0.01,
+  },
+  { name: "traefik", cpuBase: 1.5, memMiB: 96, sendMiB: 0.4, recvMiB: 0.3 },
+  { name: "restic", cpuBase: 0.4, memMiB: 96, sendMiB: 0.1, recvMiB: 0.3 },
+  { name: "mosquitto", cpuBase: 0.5, memMiB: 32, sendMiB: 0.01, recvMiB: 0.01 },
+  {
+    name: "qbittorrent",
+    cpuBase: 4,
+    memMiB: 384,
+    sendMiB: DOWNLOAD_SEND_BYTES / MEBIBYTE,
+    recvMiB: TORRENT_RECEIVE_BYTES / MEBIBYTE,
+    networkVariation: 0.01,
+  },
+  { name: "sonarr", cpuBase: 1.2, memMiB: 256, sendMiB: 0.01, recvMiB: 0.02 },
+  { name: "radarr", cpuBase: 1.2, memMiB: 256, sendMiB: 0.01, recvMiB: 0.02 },
+  { name: "minio", cpuBase: 2, memMiB: 512, sendMiB: 0.8, recvMiB: 0.6 },
+  { name: "syncthing", cpuBase: 2, memMiB: 256, sendMiB: 1.2, recvMiB: 0.7 },
+  {
+    name: "sabnzbd",
+    cpuBase: 2,
+    memMiB: 320,
+    sendMiB: 0.02,
+    recvMiB: USENET_RECEIVE_BYTES / MEBIBYTE,
+    networkVariation: 0.01,
+  },
 ];
 
-const rand = (min: number, max: number) => min + Math.random() * (max - min);
-const randInt = (min: number, max: number) => Math.floor(rand(min, max));
-const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+const typeToMinutes: Record<string, number> = { "1m": 1, "10m": 10, "20m": 20, "120m": 120, "480m": 480 };
+const statusByIndex: Record<number, "up" | "paused" | "down"> = { 2: "paused", 4: "down" };
+const sampleTime = () => Math.floor(Date.now() / 1000) * 1000;
+const rounded = (value: number) => Math.round(value * 100) / 100;
 
-function smoothWalk(base: number, amplitude: number, steps: number, lo: number, hi: number): number[] {
-  const values: number[] = [];
-  let current = base + rand(-amplitude * 0.3, amplitude * 0.3);
-  for (let i = 0; i < steps; i++) {
-    const spike = Math.random() < 0.08 ? rand(-amplitude * 2, amplitude * 3) : 0;
-    current += rand(-amplitude, amplitude) + spike;
-    current = clamp(current, lo, hi);
-    values.push(current);
-  }
-  return values;
-}
+// Sampling by timestamp keeps overlapping histories, summaries and live streams consistent.
+const wave = (time: number, periodMinutes: number, phase: number) =>
+  Math.sin(time / (periodMinutes * 60_000) + phase) * 0.75 +
+  Math.sin(time / (periodMinutes * 18_600) + phase * 1.7) * 0.25;
 
 function resolveSystem(systemId: string): MockSystemDef {
-  const idx = Number(systemId.replace("mock-sys-", "")) - 1;
-  return mockSystems[idx] ?? mockSystems[0] ?? (mockSystems.find(Boolean) as MockSystemDef);
+  const index = Number(systemId.replace("mock-sys-", "")) - 1;
+  const fallback = mockSystems[0];
+  if (!fallback) throw new Error("Mock systems are not configured");
+  return mockSystems[index] ?? fallback;
 }
 
-const typeToMinutes: Record<string, number> = {
-  "1m": 1,
-  "10m": 10,
-  "20m": 20,
-  "120m": 120,
-  "480m": 480,
-};
-
-function generateSystemStatsSeries(count: number, sys: MockSystemDef): BeszelSystemStats[] {
-  const cpuWalk = smoothWalk(sys.baseCpu, 3, count, 1, 98);
-  const memPctWalk = smoothWalk(sys.baseMem, 1.5, count, 10, 95);
-  const diskPctWalk = smoothWalk(sys.baseDisk, 0.2, count, 5, 95);
-  const diskReadWalk = smoothWalk(5, 3, count, 0, 80);
-  const diskWriteWalk = smoothWalk(3, 2, count, 0, 50);
-  const netSendWalk = smoothWalk(500, 200, count, 10, 8000);
-  const netRecvWalk = smoothWalk(800, 300, count, 10, 12000);
-
-  const diskTotal = rand(200, 2000) * GIBIBYTE;
-
-  return cpuWalk.map((cpu, i) => {
-    const memPct = memPctWalk[i] ?? sys.baseMem;
-    const diskPct = diskPctWalk[i] ?? sys.baseDisk;
-    const memTotalGiB = sys.mem / GIBIBYTE;
-    const diskTotalGiB = diskTotal / GIBIBYTE;
-    return {
-      cpu,
-      la: [cpu / 20 + rand(0, 0.5), cpu / 25 + rand(0, 0.3), cpu / 30 + rand(0, 0.2)] as [number, number, number],
-      m: memTotalGiB,
-      mu: (memTotalGiB * memPct) / 100,
-      mp: memPct,
-      mb: rand(0.5, 4),
-      s: 4,
-      su: rand(0, 2),
-      d: diskTotalGiB,
-      du: (diskTotalGiB * diskPct) / 100,
-      dp: diskPct,
-      dr: diskReadWalk[i] ?? 5,
-      dw: diskWriteWalk[i] ?? 3,
-      ns: ((netSendWalk[i] ?? 500) * KIBIBYTE) / MEBIBYTE,
-      nr: ((netRecvWalk[i] ?? 800) * KIBIBYTE) / MEBIBYTE,
-      b: [(netSendWalk[i] ?? 500) * KIBIBYTE * 0.7, (netRecvWalk[i] ?? 800) * KIBIBYTE * 0.7] as [number, number],
-    };
-  });
-}
-
-function generateContainerStatsSeries(count: number, profiles: typeof containerProfiles): BeszelContainerStats[][] {
-  const walks = profiles.map((p) => ({
-    profile: p,
-    cpuWalk: smoothWalk(p.cpuBase, 1.5, count, 0, 50),
-    memWalk: smoothWalk(p.memMiB, p.memMiB * 0.1, count, p.memMiB * 0.5, p.memMiB * 2),
-    netWalk: smoothWalk(p.netKiB, p.netKiB * 0.3, count, 0, p.netKiB * 4),
-  }));
-
-  return Array.from({ length: count }, (_, i) =>
-    walks.map(({ profile, cpuWalk, memWalk, netWalk }) => ({
-      n: profile.name,
-      c: cpuWalk[i] ?? profile.cpuBase,
-      m: memWalk[i] ?? profile.memMiB,
-      b: [(netWalk[i] ?? profile.netKiB) * KIBIBYTE * 0.4, (netWalk[i] ?? profile.netKiB) * KIBIBYTE * 0.6] as [
-        number,
-        number,
+function systemSample(sys: MockSystemDef, time: number): BeszelSystemStats {
+  const load = sys.baseCpu + wave(time, 13, sys.phase) * 7;
+  const offsets = Array.from({ length: sys.threads }, (_, index) => Math.sin(index * 1.4 + sys.phase) * 5);
+  const meanOffset = offsets.reduce((total, value) => total + value, 0) / offsets.length;
+  const cpub = offsets.map((offset) => rounded(Math.max(0, load + offset - meanOffset)));
+  const cpu = rounded(cpub.reduce((total, value) => total + value, 0) / cpub.length);
+  const memoryGiB = sys.mem / GIBIBYTE;
+  const mp = rounded(sys.baseMem + wave(time, 47, sys.phase + 1) * 2);
+  const networkVariation = sys.networkVariation ?? 0.18;
+  const diskIoVariation = sys.diskIoVariation ?? 0.22;
+  const publicSend = rounded(sys.networkMiB[0] * (1 + wave(time, 7, sys.phase) * networkVariation));
+  const publicRecv = rounded(sys.networkMiB[1] * (1 + wave(time, 9, sys.phase + 1) * networkVariation));
+  const diskRead = rounded(sys.diskIoMiB[0] * (1 + wave(time, 5, sys.phase) * diskIoVariation));
+  const diskWrite = rounded(sys.diskIoMiB[1] * (1 + wave(time, 8, sys.phase + 2) * diskIoVariation));
+  const temperature = rounded(36 + cpu * 0.38);
+  const stats: BeszelSystemStats = {
+    cpu,
+    cpum: rounded(cpu + 6),
+    cpub,
+    cpus: cpub.map((busy) => Math.round(1600 + busy * 45)),
+    la: [
+      rounded((cpu * sys.cores) / 100),
+      rounded((sys.baseCpu * sys.cores) / 100),
+      rounded((sys.baseCpu * sys.cores * 0.9) / 100),
+    ],
+    m: memoryGiB,
+    mu: (memoryGiB * mp) / 100,
+    mp,
+    mb: memoryGiB * 0.12,
+    s: 4,
+    su: 0.04,
+    d: sys.diskGiB,
+    du: (sys.diskGiB * sys.baseDisk) / 100,
+    dp: sys.baseDisk,
+    dr: diskRead,
+    dw: diskWrite,
+    dio: [diskRead * MEBIBYTE, diskWrite * MEBIBYTE],
+    ns: rounded(publicSend + 0.08),
+    nr: rounded(publicRecv + 0.12),
+    b: [publicSend * MEBIBYTE, publicRecv * MEBIBYTE],
+    ni: {
+      eth0: [
+        publicRecv * MEBIBYTE,
+        publicSend * MEBIBYTE,
+        sys.networkMiB[1] * 1.2 * MEBIBYTE,
+        sys.networkMiB[0] * 1.2 * MEBIBYTE,
       ],
-    })),
-  );
+    },
+    t: { cpu: temperature, nvme: rounded(32 + cpu * 0.15) },
+    efs: Object.fromEntries(
+      sys.filesystems.map((filesystem) => [
+        filesystem.path,
+        {
+          d: filesystem.capacityGiB,
+          du: (filesystem.capacityGiB * filesystem.usage) / 100,
+          r: diskRead,
+          w: diskWrite,
+          rb: diskRead * MEBIBYTE,
+          wb: diskWrite * MEBIBYTE,
+        },
+      ]),
+    ),
+  };
+  if (sys.gpu) {
+    stats.g = {
+      "intel-0": {
+        n: sys.gpu,
+        mu: 384,
+        mt: 2048,
+        u: rounded(18 + wave(time, 11, sys.phase) * 4),
+        p: 9,
+        pp: 15,
+        e: { video: rounded(26 + wave(time, 11, sys.phase) * 5) },
+      },
+    };
+  }
+  return stats;
+}
+
+function containerSample(sys: MockSystemDef, time: number): BeszelContainerStats[] {
+  return sys.containers.flatMap((profileIndex) => {
+    const profile = containerProfiles[profileIndex];
+    if (!profile) return [];
+    const activity = 1 + wave(time, 9, sys.phase + profileIndex) * 0.15;
+    const traffic = 1 + wave(time, 9, sys.phase + profileIndex) * (profile.networkVariation ?? 0.15);
+    const send = rounded(profile.sendMiB * traffic);
+    const recv = rounded(profile.recvMiB * traffic);
+    return [
+      {
+        n: profile.name,
+        c: rounded(profile.cpuBase * activity),
+        m: rounded(profile.memMiB * (1 + wave(time, 37, profileIndex) * 0.04)),
+        ns: send,
+        nr: recv,
+        b: [send * MEBIBYTE, recv * MEBIBYTE] as [number, number],
+      },
+    ];
+  });
 }
 
 function buildTimeSeries<T>(
@@ -199,48 +335,58 @@ function buildTimeSeries<T>(
   count: number,
   intervalMinutes: number,
   type: string,
-  dataPoints: T[],
-): (T & { id: string; system: string; type: string; created: string; updated: string })[] {
-  const now = Date.now();
-  const items = dataPoints.slice(0, count).map((data, i) => {
-    const ts = new Date(now - (count - i) * intervalMinutes * 60_000).toISOString();
-    return { id: `mock-stat-${i}`, system: systemId, type, created: ts, updated: ts, ...data };
+  sample: (time: number) => T,
+) {
+  const end = sampleTime();
+  return Array.from({ length: count }, (_, index) => {
+    const time = end - index * intervalMinutes * 60_000;
+    const timestamp = new Date(time).toISOString();
+    return {
+      id: `mock-stat-${systemId}-${type}-${time}`,
+      system: systemId,
+      type,
+      created: timestamp,
+      updated: timestamp,
+      stats: sample(time),
+    };
   });
-  return items.toReversed();
 }
-
-const statusByIndex: Record<number, "up" | "paused" | "down"> = { 2: "paused", 4: "down" };
 
 export class BeszelMockService {
   public async getSystemsAsync(): Promise<BeszelSystem[]> {
-    return mockSystems.map((sys, i) => ({
-      id: `mock-sys-${i + 1}`,
-      name: sys.name,
-      host: sys.host,
-      port: "45876",
-      status: statusByIndex[i] ?? "up",
-      info: {
-        h: sys.name,
-        cpu: clamp(sys.baseCpu + rand(-5, 10), 0, 100),
-        c: sys.cores,
-        ct: sys.cores * 2,
-        m: sys.cpu,
-        la: [sys.baseCpu / 20, sys.baseCpu / 25, sys.baseCpu / 30] as [number, number, number],
-        o: sys.os,
-        u: randInt(86400, 2_000_000),
-        mp: clamp(sys.baseMem + rand(-5, 5), 0, 100),
-        dp: clamp(sys.baseDisk + rand(-2, 2), 0, 100),
-        efs: i === 0 ? { "/mnt/sda": 86.9, "/mnt/sdb": 70.5, "/mnt/sdc": 42.7 } : undefined,
-        bb: rand(200, 3000) * KIBIBYTE,
-        v: "0.8.2",
-        g: i === 3 ? rand(15, 45) : 0,
-        dt: rand(32, 58),
-        sv: [randInt(8, 25), randInt(25, 40)] as [number, number],
-      },
-      users: [],
-      created: new Date().toISOString(),
-      updated: new Date().toISOString(),
-    }));
+    const now = sampleTime();
+    return mockSystems.map((sys, index) => {
+      const stats = systemSample(sys, now);
+      return {
+        id: `mock-sys-${index + 1}`,
+        name: sys.name,
+        host: sys.host,
+        port: "45876",
+        status: statusByIndex[index] ?? "up",
+        info: {
+          h: sys.name,
+          cpu: stats.cpu,
+          c: sys.cores,
+          ct: sys.threads,
+          m: sys.cpu,
+          la: stats.la,
+          o: sys.os,
+          u: Math.floor((now % DAY_MS) / 1000) + sys.uptimeDays * 86400,
+          mp: stats.mp,
+          dp: stats.dp,
+          efs: Object.fromEntries(sys.filesystems.map((filesystem) => [filesystem.path, filesystem.usage])),
+          bb: (stats.b?.[0] ?? 0) + (stats.b?.[1] ?? 0),
+          v: "0.8.2",
+          g: Object.values(stats.g ?? {}).reduce((total, gpu) => total + gpu.u, 0),
+          t: stats.t?.cpu,
+          dt: stats.t?.nvme,
+          sv: [18 + sys.containers.length, 20 + sys.containers.length] as [number, number],
+        },
+        users: [],
+        created: new Date(now - 45 * DAY_MS).toISOString(),
+        updated: new Date(now).toISOString(),
+      };
+    });
   }
 
   public async getSystemDetailsAsync(systemId: string): Promise<BeszelSystemDetails> {
@@ -251,14 +397,14 @@ export class BeszelMockService {
       hostname: sys.name,
       kernel: "6.8.0-40-generic",
       cores: sys.cores,
-      threads: sys.cores * 2,
+      threads: sys.threads,
       cpu: sys.cpu,
       os: 1,
       os_name: sys.os,
       arch: sys.arch,
       memory: sys.mem,
       podman: false,
-      updated: new Date().toISOString(),
+      updated: new Date(sampleTime()).toISOString(),
     };
   }
 
@@ -268,17 +414,7 @@ export class BeszelMockService {
     perPage: number,
   ): Promise<BeszelSystemStatsRecord[]> {
     const sys = resolveSystem(systemId);
-    const intervalMinutes = typeToMinutes[type] ?? 1;
-    const statsSeries = generateSystemStatsSeries(perPage, sys);
-    const result = buildTimeSeries(
-      systemId,
-      perPage,
-      intervalMinutes,
-      type,
-      statsSeries.map((stats) => ({ stats })),
-    );
-
-    return result;
+    return buildTimeSeries(systemId, perPage, typeToMinutes[type] ?? 1, type, (time) => systemSample(sys, time));
   }
 
   public async getContainerStatsAsync(
@@ -287,25 +423,12 @@ export class BeszelMockService {
     perPage: number,
   ): Promise<BeszelContainerStatsRecord[]> {
     const sys = resolveSystem(systemId);
-    const intervalMinutes = typeToMinutes[type] ?? 1;
-    const selectedProfiles = sys.containers
-      .map((i) => containerProfiles[i])
-      .filter(Boolean) as typeof containerProfiles;
-    const series = generateContainerStatsSeries(perPage, selectedProfiles);
-    const result = buildTimeSeries(
-      systemId,
-      perPage,
-      intervalMinutes,
-      type,
-      series.map((stats) => ({ stats })),
-    );
-
-    return result;
+    return buildTimeSeries(systemId, perPage, typeToMinutes[type] ?? 1, type, (time) => containerSample(sys, time));
   }
 
   public async getAlertsAsync(): Promise<BeszelAlert[]> {
     return [
-      { id: "mock-alert-1", user: "mock-user", system: "mock-sys-1", name: "CPU", triggered: true, value: 90, min: 5 },
+      { id: "mock-alert-1", user: "mock-user", system: "mock-sys-1", name: "CPU", triggered: false, value: 90, min: 5 },
       {
         id: "mock-alert-2",
         user: "mock-user",
@@ -329,7 +452,7 @@ export class BeszelMockService {
         user: "mock-user",
         system: "mock-sys-4",
         name: "Temperature",
-        triggered: true,
+        triggered: false,
         value: 75,
         min: 3,
       },
@@ -341,47 +464,35 @@ export class BeszelMockService {
     onMessage: (event: LiveStatsEvent) => void,
     signal: AbortSignal,
   ): Promise<void> {
+    if (signal.aborted) return;
     const sys = resolveSystem(systemId);
     const emit = () => {
       if (signal.aborted) return;
-      const [stats] = generateSystemStatsSeries(1, sys);
-      if (!stats) return;
-      const record: BeszelSystemStatsRecord = {
-        id: `mock-rt-${Date.now()}`,
-        system: systemId,
-        stats,
-        type: "1m",
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-      };
-      onMessage({ type: "system_stats", record });
+      const time = sampleTime();
+      const timestamp = new Date(time).toISOString();
+      const common = { system: systemId, type: "1m", created: timestamp, updated: timestamp };
+      onMessage({
+        type: "system_stats",
+        record: { ...common, id: `mock-rt-${systemId}-${time}`, stats: systemSample(sys, time) },
+      });
+      onMessage({
+        type: "container_stats",
+        record: { ...common, id: `mock-container-rt-${systemId}-${time}`, stats: containerSample(sys, time) },
+      });
     };
-    if (signal.aborted) return;
     await new Promise<void>((resolve) => {
       const interval = setInterval(emit, 1000);
-      signal.addEventListener(
-        "abort",
-        () => {
-          clearInterval(interval);
-          resolve();
-        },
-        { once: true },
-      );
+      const stop = () => {
+        clearInterval(interval);
+        resolve();
+      };
+      signal.addEventListener("abort", stop, { once: true });
+      if (signal.aborted) stop();
+      else emit();
     });
   }
 
-  public async getAlertHistoryAsync(_systemId?: string, perPage = 10): Promise<BeszelAlertHistory[]> {
-    const now = Date.now();
-    const names = ["CPU", "Memory", "Disk", "Temperature", "Bandwidth"];
-    return Array.from({ length: Math.min(perPage, 5) }, (_, i) => ({
-      id: `mock-history-${i}`,
-      alert: `mock-alert-${(i % 4) + 1}`,
-      user: "mock-user",
-      system: `mock-sys-${(i % 5) + 1}`,
-      name: names[i % names.length] ?? "CPU",
-      val: rand(60, 95),
-      created: new Date(now - (i + 1) * 3_600_000).toISOString(),
-      resolved: (i % 2 === 0 && new Date(now - i * 1_800_000).toISOString()) || null,
-    }));
+  public async getAlertHistoryAsync(_systemId?: string, _perPage = 10): Promise<BeszelAlertHistory[]> {
+    return [];
   }
 }

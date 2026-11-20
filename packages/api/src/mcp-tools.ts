@@ -114,6 +114,12 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
       const inputSchema = z.toJSONSchema(input, {
         io: "input",
         override: ({ zodSchema, jsonSchema }) => {
+          if (zodSchema["_zod"].def.type === "literal" && jsonSchema.const === "") {
+            // Preserve the blank sentinel without an empty-string constant for provider adapters.
+            delete jsonSchema.const;
+            jsonSchema.type = "string";
+            jsonSchema.maxLength = 0;
+          }
           if (zodSchema["_zod"].def.type !== "string") return;
           if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
             // trim/case normalization runs before these checks in tRPC. They cannot constrain raw JSON.

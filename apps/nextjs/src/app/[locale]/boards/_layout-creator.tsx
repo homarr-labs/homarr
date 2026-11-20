@@ -34,6 +34,7 @@ interface CreateBoardLayoutProps<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
   withTour?: boolean;
   withCustomCss?: boolean;
+  withBoardTabs?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
@@ -43,6 +44,7 @@ export const createBoardLayout = <TParams extends Params>({
   getInitialBoardAsync: getInitialBoard,
   withTour = false,
   withCustomCss = true,
+  withBoardTabs = false,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -117,6 +119,7 @@ export const createBoardLayout = <TParams extends Params>({
                   boardEditAction={headerBoardEditAction}
                   boardSettingsAction={headerBoardSettingsAction}
                   hasNavigation={false}
+                  withBoardTabs={withBoardTabs}
                 />
                 <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
               </ClientShell>

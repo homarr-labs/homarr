@@ -1,22 +1,27 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-export interface WidgetActivity {
+export interface WidgetActivity extends WidgetActivityFacts {
   status: "ready" | "unknown";
-  count: number;
   requestedRows: number;
   updatedAt: number;
   freshForMs: number;
 }
 
+export type WidgetRelevance = "playback" | "ongoing" | "background" | "quiet" | "unknown";
+
+export interface WidgetActivityFacts {
+  relevance: Exclude<WidgetRelevance, "unknown">;
+  count: number;
+}
+
 export type WidgetActivities = Readonly<Record<string, WidgetActivity | undefined>>;
 
 interface ActivityReporter {
-  report: (itemId: string, reporter: symbol, activity: WidgetActivity) => void;
-  remove: (itemId: string, reporter: symbol) => void;
-  watchedItemIds?: ReadonlySet<string>;
+  report: (itemId: string, activity: WidgetActivity | undefined) => void;
+  watchedItemIds: ReadonlySet<string>;
 }
 
 const noActivities: WidgetActivities = {};
@@ -27,10 +32,9 @@ const WidgetActivityReporterContext = createContext<ActivityReporter | null>(nul
 export const WidgetActivityProvider = ({
   children,
   watchedItemIds,
-}: PropsWithChildren<{ watchedItemIds?: ReadonlySet<string> }>) => {
+}: PropsWithChildren<{ watchedItemIds: ReadonlySet<string> }>) => {
   const [activities, setActivities] = useState<WidgetActivities>({});
-  const reporters = useRef(new Map<string, Map<symbol, WidgetActivity>>());
-  const publish = useCallback((itemId: string, activity: WidgetActivity | undefined) => {
+  const report = useCallback((itemId: string, activity: WidgetActivity | undefined) => {
     setActivities((previous) => {
       const existing = previous[itemId];
       if (!activity) {
@@ -41,6 +45,7 @@ export const WidgetActivityProvider = ({
       }
       if (
         existing?.status === activity.status &&
+        existing.relevance === activity.relevance &&
         existing.count === activity.count &&
         existing.requestedRows === activity.requestedRows &&
         existing.updatedAt === activity.updatedAt &&
@@ -51,27 +56,7 @@ export const WidgetActivityProvider = ({
       return { ...previous, [itemId]: activity };
     });
   }, []);
-  const report = useCallback(
-    (itemId: string, reporter: symbol, activity: WidgetActivity) => {
-      const instances = reporters.current.get(itemId) ?? new Map<symbol, WidgetActivity>();
-      instances.set(reporter, activity);
-      reporters.current.set(itemId, instances);
-      publish(itemId, activity);
-    },
-    [publish],
-  );
-  const remove = useCallback(
-    (itemId: string, reporter: symbol) => {
-      const instances = reporters.current.get(itemId);
-      if (!instances) return;
-      instances.delete(reporter);
-      if (instances.size === 0) reporters.current.delete(itemId);
-      const remaining = [...instances.values()].toSorted((left, right) => right.updatedAt - left.updatedAt)[0];
-      publish(itemId, remaining);
-    },
-    [publish],
-  );
-  const reporter = useMemo(() => ({ report, remove, watchedItemIds }), [report, remove, watchedItemIds]);
+  const reporter = useMemo(() => ({ report, watchedItemIds }), [report, watchedItemIds]);
 
   return (
     <WidgetActivityReporterContext value={reporter}>
@@ -82,6 +67,11 @@ export const WidgetActivityProvider = ({
 
 export const useWidgetActivities = (): WidgetActivities => useContext(WidgetActivitiesContext);
 
+export const useWidgetActivityWatched = (itemId?: string): boolean => {
+  const context = useContext(WidgetActivityReporterContext);
+  return Boolean(itemId && context?.watchedItemIds.has(itemId));
+};
+
 interface WidgetActivityQuery {
   isSuccess: boolean;
   isError: boolean;
@@ -89,10 +79,9 @@ interface WidgetActivityQuery {
   fetchStatus: string;
 }
 
-interface QueryActivityInput {
+interface QueryActivityInput extends WidgetActivityFacts {
   itemId?: string;
   query: WidgetActivityQuery;
-  count: number;
   recordsPerRow: number;
   complete: boolean;
   configured: boolean;
@@ -105,6 +94,7 @@ export const useReportWidgetActivity = ({
   itemId,
   query,
   count,
+  relevance,
   recordsPerRow,
   complete,
   configured,
@@ -112,10 +102,7 @@ export const useReportWidgetActivity = ({
   sourceUpdatedAt,
 }: QueryActivityInput) => {
   const context = useContext(WidgetActivityReporterContext);
-  const reporter = useRef(Symbol("widget-activity")).current;
-  const report = context?.report;
-  const remove = context?.remove;
-  const watched = Boolean(itemId && (!context?.watchedItemIds || context.watchedItemIds.has(itemId)));
+  const report = itemId && context?.watchedItemIds.has(itemId) ? context.report : undefined;
   const { isSuccess, isError, dataUpdatedAt, fetchStatus } = query;
   let updatedAt = dataUpdatedAt;
   if (sourceUpdatedAt !== undefined) updatedAt = Math.min(dataUpdatedAt, sourceUpdatedAt);
@@ -124,22 +111,27 @@ export const useReportWidgetActivity = ({
   const requestedRows = 1 + Math.ceil(count / recordsPerRow);
 
   useEffect(() => {
-    if (!itemId || !report || !watched) return;
-    report(itemId, reporter, { status, count, requestedRows, updatedAt, freshForMs });
-  }, [itemId, report, reporter, status, count, requestedRows, updatedAt, freshForMs, watched]);
+    if (!itemId || !report) return;
+    report(itemId, { status, count, relevance, requestedRows, updatedAt, freshForMs });
+  }, [itemId, report, status, count, relevance, requestedRows, updatedAt, freshForMs]);
 
   useEffect(() => {
-    if (!itemId || !remove || !watched) return;
-    return () => remove(itemId, reporter);
-  }, [itemId, remove, reporter, watched]);
+    if (!itemId || !report) return;
+    return () => report(itemId, undefined);
+  }, [itemId, report]);
+};
+
+export const getWidgetRelevance = (activity: WidgetActivity | undefined, now = Date.now()): WidgetRelevance => {
+  if (!activity || activity.status !== "ready" || activity.updatedAt <= 0) return "unknown";
+  if (now - activity.updatedAt > activity.freshForMs) return "unknown";
+  return activity.relevance;
 };
 
 export const getWidgetActivity = (
   activity: WidgetActivity | undefined,
   now = Date.now(),
 ): "active" | "quiet" | "unknown" => {
-  if (!activity || activity.status !== "ready" || activity.updatedAt <= 0) return "unknown";
-  if (now - activity.updatedAt > activity.freshForMs) return "unknown";
-  if (activity.count > 0) return "active";
-  return "quiet";
+  const relevance = getWidgetRelevance(activity, now);
+  if (relevance === "quiet" || relevance === "unknown") return relevance;
+  return "active";
 };

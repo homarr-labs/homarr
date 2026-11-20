@@ -13,6 +13,9 @@ export type StatsUnit =
   | "seconds"
   | "milliseconds"
   | "bytesPerSecond"
+  | "celsius"
+  | "watts"
+  | "kilowattHours"
   | "text";
 
 export interface StatsMetric {

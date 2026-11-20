@@ -1,9 +1,21 @@
-import { Accordion, CloseButton, ColorInput, NumberInput, Select, Stack, Switch, useMantineTheme } from "@mantine/core";
+import {
+  Accordion,
+  CloseButton,
+  ColorInput,
+  NumberInput,
+  SegmentedControl,
+  Select,
+  Stack,
+  Switch,
+  useMantineTheme,
+} from "@mantine/core";
 
+import { getWidgetName } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
 import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/validation/shared";
+import type { Item } from "~/app/[locale]/boards/_types";
 
 interface SmartOptionsProps {
   smart: SmartContainerOptions;
@@ -61,6 +73,7 @@ export const ContainerRotationSettings = ({ smart, setSmartOption }: SmartOption
         label={t("skipInactive")}
         description={t("skipInactiveDescription")}
         checked={smart.skipInactive}
+        disabled={smart.mode !== "timed"}
         onChange={(event) => setSmartOption("skipInactive", event.currentTarget.checked)}
       />
       <Switch
@@ -78,7 +91,8 @@ export const ContainerAppearanceSettings = ({
   form,
   smart,
   setSmartOption,
-}: SmartOptionsProps & { form: UseFormReturnType<ContainerSectionOptions> }) => {
+  activityItems,
+}: SmartOptionsProps & { form: UseFormReturnType<ContainerSectionOptions>; activityItems: Item[] }) => {
   const t = useI18n("section.container.smart");
   const tSection = useI18n("section");
   const translate = useI18n();
@@ -122,13 +136,15 @@ export const ContainerAppearanceSettings = ({
           />
         </>
       )}
-      <Switch
-        styles={editorSwitchStyles}
-        label={t("reclaimSpace")}
-        description={t("reclaimSpaceDescription")}
-        checked={smart.reclaimSpace}
-        onChange={(event) => setSmartOption("reclaimSpace", event.currentTarget.checked)}
-      />
+      {smart.enabled && (
+        <Switch
+          styles={editorSwitchStyles}
+          label={t("reclaimSpace")}
+          description={t("reclaimSpaceDescription")}
+          checked={smart.reclaimSpace}
+          onChange={(event) => setSmartOption("reclaimSpace", event.currentTarget.checked)}
+        />
+      )}
       <Switch
         styles={editorSwitchStyles}
         label={tSection("option.showLabel.label")}
@@ -140,6 +156,9 @@ export const ContainerAppearanceSettings = ({
         label={tSection("option.collapsible.label")}
         description={tSection("option.collapsible.description")}
         {...form.getInputProps("collapsible", { type: "checkbox" })}
+        disabled={
+          !smart.enabled && form.values.autoExpand.enabled && form.values.autoExpand.inactiveDisplay === "collapsed"
+        }
       />
       <Switch
         styles={editorSwitchStyles}
@@ -154,6 +173,53 @@ export const ContainerAppearanceSettings = ({
           description={tSection("option.scrollable.description")}
           {...form.getInputProps("scrollable", { type: "checkbox" })}
         />
+      )}
+      {!smart.enabled && (
+        <>
+          <Switch
+            styles={editorSwitchStyles}
+            label={tSection("option.autoExpand.label")}
+            description={tSection("option.autoExpand.description")}
+            disabled={activityItems.length === 0 && !form.values.autoExpand.enabled}
+            {...form.getInputProps("autoExpand.enabled", { type: "checkbox" })}
+            onChange={(event) => {
+              const enabled = event.currentTarget.checked;
+              form.setFieldValue("autoExpand.enabled", enabled);
+              if (enabled && form.values.autoExpand.inactiveDisplay === "collapsed")
+                form.setFieldValue("collapsible", true);
+            }}
+          />
+          {form.values.autoExpand.enabled && (
+            <>
+              <Select
+                label={tSection("container.option.autoExpand.item.label")}
+                placeholder={tSection("container.option.autoExpand.item.placeholder")}
+                data={activityItems.map((item) => ({
+                  value: item.id,
+                  label: item.advancedOptions.title?.trim() || getWidgetName(item.kind, translate),
+                }))}
+                {...form.getInputProps("autoExpand.itemId")}
+              />
+              <SegmentedControl
+                data={[
+                  { value: "collapsed", label: tSection("container.option.autoExpand.inactiveDisplay.collapsed") },
+                  { value: "hidden", label: tSection("container.option.autoExpand.inactiveDisplay.hidden") },
+                ]}
+                {...form.getInputProps("autoExpand.inactiveDisplay")}
+                onChange={(value) => {
+                  if (value !== "collapsed" && value !== "hidden") return;
+                  form.setFieldValue("autoExpand.inactiveDisplay", value);
+                  if (value === "collapsed") form.setFieldValue("collapsible", true);
+                }}
+              />
+              <Switch
+                label={tSection("container.option.autoExpand.fitToContent.label")}
+                description={tSection("container.option.autoExpand.fitToContent.description")}
+                {...form.getInputProps("autoExpand.fitToContent", { type: "checkbox" })}
+              />
+            </>
+          )}
+        </>
       )}
       <Accordion variant="contained">
         <Accordion.Item value="advanced">

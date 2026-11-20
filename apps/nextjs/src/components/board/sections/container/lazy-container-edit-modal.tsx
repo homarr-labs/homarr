@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { createModal } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
 
 import type { ContainerEditModal } from "./container-edit-modal";
 
@@ -35,5 +36,7 @@ export const LazyContainerEditModal = createModal<ModalProps["innerProps"]>((pro
   defaultTitle: (t) => t("section.container.smart.edit"),
   size: "100rem",
   keepMounted: true,
+  withCloseButton: false,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

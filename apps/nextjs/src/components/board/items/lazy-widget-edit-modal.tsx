@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense, use, useCallback, useMemo, useState } from "react";
-import { Center, Loader } from "@mantine/core";
+import { Box, Center, Loader } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
 import type { FallbackProps } from "react-error-boundary";
 
@@ -13,6 +13,7 @@ import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
 import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
@@ -30,6 +31,17 @@ const getPreviewDimensions = (size: WidgetEditModalSize) => ({
   width: getLogicalGridSize(size.width),
   height: getLogicalGridSize(size.height),
 });
+
+const createWidgetPreviewRuntime = (Wrapper: WidgetEditModalProps<WidgetKind>["previewWrapper"]) => {
+  if (!Wrapper) return WidgetPreviewRuntime;
+  return function ComposedWidgetPreviewRuntime({ children }: PropsWithChildren) {
+    return (
+      <WidgetPreviewRuntime>
+        <Wrapper>{children}</Wrapper>
+      </WidgetPreviewRuntime>
+    );
+  };
+};
 
 export const WidgetPreviewRuntime = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
@@ -50,6 +62,8 @@ export const WidgetPreviewRuntime = ({ children }: PropsWithChildren) => {
   if (!previewAssistant) return children;
   return <AssistantContext.Provider value={previewAssistant}>{children}</AssistantContext.Provider>;
 };
+
+export const PreviewRuntimeWrapper = WidgetPreviewRuntime;
 
 let widgetEditModalPromise: Promise<typeof WidgetModalsModule> | undefined;
 
@@ -122,6 +136,10 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const Component = WidgetEditModal.component;
   const utils = clientApi.useUtils();
   const [createdIntegrations, setCreatedIntegrations] = useState<IntegrationSelectOption[]>([]);
+  const previewWrapper = useMemo(
+    () => createWidgetPreviewRuntime(props.innerProps.previewWrapper),
+    [props.innerProps.previewWrapper],
+  );
 
   const supportedKinds = useMemo(() => {
     if (!("supportedIntegrations" in props.innerProps.definition)) return [];
@@ -159,7 +177,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   }, [props.innerProps.kind, props.innerProps.previewDimensions]);
   let previewResize = props.innerProps.previewResize;
   if (previewResize) {
-    previewResize = { ...previewResize, getDimensions: getPreviewDimensions };
+    previewResize = { ...previewResize, getDimensions: previewResize.getDimensions ?? getPreviewDimensions };
   }
 
   return (
@@ -172,7 +190,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         previewComponent: PreviewComponent,
         previewDimensions,
         previewResize,
-        previewWrapper: WidgetPreviewRuntime,
+        previewWrapper,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}
     />
@@ -182,15 +200,17 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
 const WidgetEditModalLoadBoundary = ({ children }: PropsWithChildren) => (
   <ErrorBoundary
     fallbackRender={({ error, resetErrorBoundary }) => (
-      <Center py="xl">
-        <WidgetError
-          error={error}
-          resetErrorBoundary={() => {
-            widgetEditModalPromise = undefined;
-            resetErrorBoundary();
-          }}
-        />
-      </Center>
+      <Box mih={0} flex={1} style={{ overflowY: "auto" }}>
+        <Center py="xl">
+          <WidgetError
+            error={error}
+            resetErrorBoundary={() => {
+              widgetEditModalPromise = undefined;
+              resetErrorBoundary();
+            }}
+          />
+        </Center>
+      </Box>
     )}
   >
     <Suspense
@@ -215,6 +235,7 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
     return t("item.edit.title");
   },
   size: "100rem",
+  styles: widgetEditorModalStyles,
   transitionProps: {
     transition: "pop",
     duration: 180,
@@ -240,5 +261,6 @@ export const LazyWidgetConfigurationModal = createModal<WidgetEditModalProps<Wid
     return t("item.edit.title");
   },
   size: modalSizeForm,
+  styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });

@@ -35,6 +35,8 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
+import { useDemoReadOnly } from "../../demo-read-only";
+import { getWidgetRefreshInterval } from "../../refresh-interval";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
@@ -67,7 +69,12 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
   const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
   const utils = clientApi.useUtils();
@@ -92,6 +99,7 @@ export default function DnsHoleControlsWidget({
     utils.widget.dnsHole.summary.setData(
       {
         integrationIds,
+        refreshInterval,
       },
       (prevData) => {
         if (!prevData) return [];
@@ -169,7 +177,7 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="green"
               bd={0}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               flex={1}
             >
               <IconPlayerPlay className="dns-hole-controls-enable-all-icon" size="var(--mantine-font-size-md)" />
@@ -188,7 +196,7 @@ export default function DnsHoleControlsWidget({
                   variant="light"
                   color="yellow"
                   bd={0}
-                  radius={board.itemRadius}
+                  radius={board.itemRadius ?? undefined}
                   flex={1}
                   onClick={onClick}
                 >
@@ -211,7 +219,7 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="red"
               bd={0}
-              radius={board.itemRadius}
+              radius={board.itemRadius ?? undefined}
               flex={1}
             >
               <IconPlayerStop className="dns-hole-controls-disable-all-icon" size="var(--mantine-font-size-md)" />
@@ -310,7 +318,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
         key={data.integration.id}
         p="sm"
         py={8}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
       >
         <Flex className="dns-hole-controls-item-container" gap="md" align="center" direction="row" w="100%">
           {layout === "md" && (
@@ -449,7 +457,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   disabled={!controlEnabled || !isEnabled}
                   color="yellow"
                   size={30}
-                  radius={board.itemRadius}
+                  radius={board.itemRadius ?? undefined}
                   bd={0}
                   ms={"auto"}
                   variant="subtle"

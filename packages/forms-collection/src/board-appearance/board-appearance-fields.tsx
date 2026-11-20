@@ -2,54 +2,69 @@
 
 import { useId } from "react";
 import type { ReactNode } from "react";
-import { ActionIcon, Fieldset, Group, Input, SimpleGrid, Slider, Stack } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
+import { ActionIcon, Fieldset, Group, Input, SimpleGrid, Slider, Stack, Select, Box } from "@mantine/core";
+import { IconArrowBackUp, IconX } from "@tabler/icons-react";
 
+import { cornerStyleValues } from "@homarr/definitions";
 import type { CornerStyle } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { BoardColorInput, CornerStylePicker } from "@homarr/ui";
+import { BoardColorInput } from "@homarr/ui";
 
 interface BoardAppearanceValues {
-  primaryColor: string;
-  secondaryColor: string;
+  primaryColor: string | null;
+  secondaryColor: string | null;
   iconColor: string | null;
   opacity: number;
-  itemRadius: CornerStyle;
+  itemRadius: CornerStyle | null;
 }
 
 interface BoardAppearanceFieldsProps {
   form: Pick<UseFormReturnType<BoardAppearanceValues>, "values" | "getInputProps" | "setFieldValue">;
-  primaryColorLocked?: boolean;
   palettePreview?: ReactNode;
   stacked?: boolean;
 }
 
 const percentageLabel = (value: number) => `${value}%`;
 
-export const BoardAppearanceFields = ({
-  form,
-  primaryColorLocked = false,
-  palettePreview,
-  stacked = false,
-}: BoardAppearanceFieldsProps) => {
+export const BoardAppearanceFields = ({ form, palettePreview, stacked = false }: BoardAppearanceFieldsProps) => {
   const t = useI18n("board.field");
   const opacityId = useId();
   const { error: opacityError, ...opacityInput } = form.getInputProps("opacity");
-  let primaryColorDescription;
-  if (primaryColorLocked) primaryColorDescription = t("primaryColor.locked");
+  const tCommon = useI18n("common");
+  const renderColorInput = (field: "primaryColor" | "secondaryColor") => (
+    <BoardColorInput
+      label={t(`${field}.label`)}
+      {...form.getInputProps(field)}
+      value={form.values[field] ?? ""}
+      placeholder={tCommon("customTheme.instanceDefault")}
+      onChange={(value) => form.setFieldValue(field, value || null)}
+      inputContainer={(input) => (
+        <Group gap="xs" wrap="nowrap">
+          <Box flex={1} miw={0}>
+            {input}
+          </Box>
+          <ActionIcon
+            variant="subtle"
+            size="input-sm"
+            disabled={form.values[field] === null}
+            aria-label={tCommon("customTheme.useInstanceDefault", { control: t(`${field}.label`) })}
+            title={tCommon("customTheme.instanceDefault")}
+            onClick={() => form.setFieldValue(field, null)}
+          >
+            <IconArrowBackUp size={16} />
+          </ActionIcon>
+        </Group>
+      )}
+    />
+  );
 
   return (
     <SimpleGrid cols={stacked ? 1 : { base: 1, lg: 2 }} spacing="md" verticalSpacing="sm">
       <Stack gap="xs">
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
-          <BoardColorInput
-            label={t("primaryColor.label")}
-            description={primaryColorDescription}
-            disabled={primaryColorLocked}
-            {...form.getInputProps("primaryColor")}
-          />
-          <BoardColorInput label={t("secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
+          {renderColorInput("primaryColor")}
+          {renderColorInput("secondaryColor")}
         </SimpleGrid>
         {palettePreview}
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
@@ -94,12 +109,20 @@ export const BoardAppearanceFields = ({
           </Group>
         </SimpleGrid>
       </Stack>
-      <CornerStylePicker
-        compact
+      <Select
         label={t("itemRadius.label")}
-        description={t("itemRadius.description")}
         {...form.getInputProps("itemRadius")}
-        value={form.values.itemRadius}
+        value={form.values.itemRadius ?? "instance"}
+        allowDeselect={false}
+        data={[
+          { value: "instance", label: tCommon("customTheme.instanceDefault") },
+          ...cornerStyleValues.map((value) => ({ value, label: tCommon(`cornerStyle.options.${value}`) })),
+        ]}
+        onChange={(value) => {
+          if (value === "instance") form.setFieldValue("itemRadius", null);
+          else if (cornerStyleValues.includes(value as CornerStyle))
+            form.setFieldValue("itemRadius", value as CornerStyle);
+        }}
       />
     </SimpleGrid>
   );

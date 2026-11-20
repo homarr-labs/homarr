@@ -61,6 +61,12 @@
 .toolbar[data-editing] {
   padding-inline-end: calc(54px * var(--board-canvas-ui-scale, 1));
 }
+:global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing] {
+  padding-inline-end: calc(84px * var(--board-canvas-ui-scale, 1));
+}
+:global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing] .edit {
+  display: none;
+}
 .navigation {
   min-width: 0;
   flex: 1;

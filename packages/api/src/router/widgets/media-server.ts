@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import { mediaServerRequestHandler } from "@homarr/request-handler/media-server";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
@@ -16,19 +17,20 @@ export const mediaServerRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaServer"))
-    .input(z.object({ showOnlyPlaying: z.boolean() }))
+    .input(z.object({ showOnlyPlaying: z.boolean(), refreshInterval: widgetRefreshIntervalSchema.default(10) }))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const { data } = await mediaServerRequestHandler
+          const { data, timestamp } = await mediaServerRequestHandler
             .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
-            .getDataAsync();
+            .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
             integrationId: integration.id,
             integrationName: integration.name,
             integrationKind: integration.kind,
             sessions: data,
+            updatedAt: timestamp,
             error: undefined,
           };
         },
