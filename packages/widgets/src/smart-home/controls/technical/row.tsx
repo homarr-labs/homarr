@@ -7,12 +7,21 @@ import {
   IconPlayerPlay,
   IconRobot,
   IconHome,
+  IconMinus,
   IconPalette,
+  IconPlus,
 } from "@tabler/icons-react";
 import { getLightCapabilities, supportsSmartHomeAction } from "@homarr/integrations/types";
 import type { KeyboardEvent } from "react";
 
-import { formatEntityState, getEntityIcon, getPrimaryAction, getStateColor, isUnavailable } from "../semantics";
+import {
+  formatEntityState,
+  getEntityIcon,
+  getPrimaryAction,
+  getStateColor,
+  isUnavailable,
+  stepNumber,
+} from "../semantics";
 import type { HaEntity } from "../types";
 import { DetailTrigger } from "../control-center/detail-trigger";
 import { useEntityDetailOpener } from "../control-center/details";
@@ -173,6 +182,29 @@ export function RowControl({ entity, run, level }: ControlProps) {
       return <AlarmControl entity={entity} run={run} level={level} />;
     case "input_select":
       return <SelectControl entity={entity} run={run} />;
+    case "number": {
+      const lower = stepNumber(entity, -1);
+      const higher = stepNumber(entity, 1);
+      return (
+        <div className={classes.cluster}>
+          <IconButton
+            label={`Decrease ${entity.name}`}
+            disabled={lower === null}
+            onClick={() => lower !== null && run.request({ type: "setValue", value: lower })}
+          >
+            <IconMinus size={14} />
+          </IconButton>
+          <span className={classes.pill}>{formatEntityState(entity)}</span>
+          <IconButton
+            label={`Increase ${entity.name}`}
+            disabled={higher === null}
+            onClick={() => higher !== null && run.request({ type: "setValue", value: higher })}
+          >
+            <IconPlus size={14} />
+          </IconButton>
+        </div>
+      );
+    }
     case "scene":
     case "script":
     case "button":
@@ -222,9 +254,11 @@ interface EntityRowProps {
   level: Level;
   showArea?: boolean;
   large?: boolean;
+  /** Replaces the usual "state · changed" line, e.g. with a device's readings. */
+  secondary?: string;
 }
 
-export function EntityRow({ entity, level, showArea = false, large = false }: EntityRowProps) {
+export function EntityRow({ entity, level, showArea = false, large = false, secondary }: EntityRowProps) {
   const run = useEntityRun(entity);
   const Icon = getEntityIcon(entity);
   const unavailable = isUnavailable(entity);
@@ -273,7 +307,7 @@ export function EntityRow({ entity, level, showArea = false, large = false }: En
           <span className={classes.name} title={entity.name}>
             {entity.name}
           </span>
-          <span className={classes.secondary}>{getSecondary(entity, showArea)}</span>
+          <span className={classes.secondary}>{secondary ?? getSecondary(entity, showArea)}</span>
         </div>
         <div className={classes.rowControl}>
           <RowControl entity={entity} run={run} level={level} />

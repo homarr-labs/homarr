@@ -13,7 +13,7 @@ import classes from "./styles.module.css";
 
 const darkInk = "#17181c";
 const darkOnColors = new Set(["yellow", "orange", "lime", "cyan", "teal"]);
-const untintedDomains = new Set(["sensor", "weather", "scene", "button", "input_select", "sun", "update"]);
+const untintedDomains = new Set(["sensor", "weather", "scene", "button", "input_select", "number", "sun", "update"]);
 
 export interface EntityTheme {
   palette: SmartHomeControlPalette;
