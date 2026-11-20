@@ -1,0 +1,24 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 19,43-45,193
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 3,22,25-26,45,85,152,156
+apps/nextjs/src/components/board/editor-tools.tsx
+  h_d6e478ca18e517 1-89
+apps/nextjs/src/components/board/in-place-editor/host.tsx
+  h_d6e478ca18e517 24
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 38,207,403-405
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 36,59,62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3aca20a02dd150af21e8dee7e31233cfedcd2c3f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
