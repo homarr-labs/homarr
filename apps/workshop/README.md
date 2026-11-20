@@ -124,7 +124,8 @@ maintenance window (from `apps/workshop`):
 
 ```sh
 docker compose stop workshop
-docker compose run --rm --no-deps --user pocketbase --entrypoint pocketbase workshop \
+docker compose run --rm --no-deps --user pocketbase --entrypoint pocketbase \
+  -v "$PWD/pb_rollout_migrations:/pb_rollout_migrations:ro" workshop \
   migrate up --dir=/pb_data --hooksDir=/pb_hooks --migrationsDir=/pb_rollout_migrations
 docker compose up -d workshop
 ```
