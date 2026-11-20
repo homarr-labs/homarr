@@ -1,0 +1,14 @@
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 9021,9200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c151e1e91a64763f3910243fa31da0e5340c932a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
