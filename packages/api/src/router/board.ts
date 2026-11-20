@@ -1788,12 +1788,57 @@ export const boardRouter = createTRPCRouter({
       const updatedItems = input.items.filter(({ id }) => storedItemIds.has(id));
       const storedItemsById = new Map(dbBoard.items.map((item) => [item.id, item]));
       const updatedSections = input.sections.filter(({ id }) => storedSectionIds.has(id));
+      const storedSectionsById = new Map(dbBoard.sections.map((section) => [section.id, section]));
+      const boardLayoutIds = new Set(dbBoard.layouts.map(({ id }) => id));
+      const removedItemLayouts = updatedItems.flatMap((item) =>
+        (storedItemsById.get(item.id)?.layouts ?? [])
+          .filter(
+            (layout) =>
+              boardLayoutIds.has(layout.layoutId) &&
+              storedSectionIds.has(layout.sectionId) &&
+              !item.layouts.some((submitted) => submitted.layoutId === layout.layoutId),
+          )
+          .map((layout) => ({ ...layout, itemId: item.id })),
+      );
+      const removedSectionLayouts = updatedSections.flatMap((section) => {
+        if (section.kind !== "container") return [];
+        const stored = storedSectionsById.get(section.id);
+        if (!stored || stored.kind !== "container") return [];
+        return stored.layouts
+          .filter(
+            (layout) =>
+              boardLayoutIds.has(layout.layoutId) &&
+              !section.layouts.some((submitted) => submitted.layoutId === layout.layoutId),
+          )
+          .map((layout) => ({ ...layout, sectionId: section.id }));
+      });
       const removedItems = dbBoard.items.filter(({ id }) => !submittedItemIds.has(id));
       const removedSections = dbBoard.sections.filter(({ id }) => !submittedSectionIds.has(id));
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
+            for (const layout of removedItemLayouts) {
+              await transaction
+                .delete(schema.itemLayouts)
+                .where(
+                  and(
+                    eq(schema.itemLayouts.itemId, layout.itemId),
+                    eq(schema.itemLayouts.sectionId, layout.sectionId),
+                    eq(schema.itemLayouts.layoutId, layout.layoutId),
+                  ),
+                );
+            }
+            for (const layout of removedSectionLayouts) {
+              await transaction
+                .delete(schema.sectionLayouts)
+                .where(
+                  and(
+                    eq(schema.sectionLayouts.sectionId, layout.sectionId),
+                    eq(schema.sectionLayouts.layoutId, layout.layoutId),
+                  ),
+                );
+            }
             if (addedSections.length > 0) {
               await transaction.insert(schema.sections).values(
                 addedSections.map((section) => ({
@@ -1933,6 +1978,14 @@ export const boardRouter = createTRPCRouter({
               if (section.kind !== "container") continue;
 
               for (const sectionLayout of section.layouts) {
+                const stored = storedSectionsById.get(section.id);
+                if (
+                  stored?.kind !== "container" ||
+                  !stored.layouts.some((layout) => layout.layoutId === sectionLayout.layoutId)
+                ) {
+                  await transaction.insert(schema.sectionLayouts).values({ ...sectionLayout, sectionId: section.id });
+                  continue;
+                }
                 await transaction
                   .update(schema.sectionLayouts)
                   .set({
@@ -1985,6 +2038,26 @@ export const boardRouter = createTRPCRouter({
         },
         handleSync(db) {
           db.transaction((transaction) => {
+            for (const layout of removedItemLayouts) {
+              transaction
+                .delete(itemLayouts)
+                .where(
+                  and(
+                    eq(itemLayouts.itemId, layout.itemId),
+                    eq(itemLayouts.sectionId, layout.sectionId),
+                    eq(itemLayouts.layoutId, layout.layoutId),
+                  ),
+                )
+                .run();
+            }
+            for (const layout of removedSectionLayouts) {
+              transaction
+                .delete(sectionLayouts)
+                .where(
+                  and(eq(sectionLayouts.sectionId, layout.sectionId), eq(sectionLayouts.layoutId, layout.layoutId)),
+                )
+                .run();
+            }
             if (addedSections.length > 0) {
               transaction
                 .insert(sections)
@@ -2134,6 +2207,17 @@ export const boardRouter = createTRPCRouter({
               if (section.kind !== "container") continue;
 
               for (const sectionLayout of section.layouts) {
+                const stored = storedSectionsById.get(section.id);
+                if (
+                  stored?.kind !== "container" ||
+                  !stored.layouts.some((layout) => layout.layoutId === sectionLayout.layoutId)
+                ) {
+                  transaction
+                    .insert(sectionLayouts)
+                    .values({ ...sectionLayout, sectionId: section.id })
+                    .run();
+                  continue;
+                }
                 transaction
                   .update(sectionLayouts)
                   .set({

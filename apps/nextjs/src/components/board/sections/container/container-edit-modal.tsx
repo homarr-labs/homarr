@@ -24,6 +24,7 @@ import { loadAllWidgetDefinitions, loadWidgetDefinition } from "@homarr/widgets/
 
 import type { Item } from "~/app/[locale]/boards/_types";
 import { getLogicalGridSize } from "~/components/board/layout";
+import { NoItemPlacementSpaceError } from "../../items/actions/create-item";
 import { ItemSelectModal } from "../../items/item-select-modal";
 import { LazyWidgetEditModal } from "../../items/lazy-widget-edit-modal";
 import {
@@ -197,8 +198,14 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       boardId: board.id,
       initialTargetSectionId: innerProps.containerId,
       onConfiguredItem: (input) => {
-        const item = createContainerEditorItem(board, items, input, innerProps.containerId);
-        if (!item) return;
+        let item: ReturnType<typeof createContainerEditorItem>;
+        try {
+          item = createContainerEditorItem(board, items, input, innerProps.containerId);
+        } catch (error) {
+          if (error instanceof NoItemPlacementSpaceError) return false;
+          throw error;
+        }
+        if (!item) return false;
         setNewItems((previous) => [...previous, item]);
         form.setFieldValue("smart", (previous) => {
           const options = previous ?? initialSmart;
@@ -212,6 +219,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
             }),
           };
         });
+        return true;
       },
     });
   };

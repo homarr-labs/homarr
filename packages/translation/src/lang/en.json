@@ -2510,7 +2510,8 @@
         },
         "error": {
           "title": "Unable to add item",
-          "message": "The item could not be added to this board"
+          "message": "The item could not be added to this board",
+          "noSpace": "The widget could not be placed in this container. Reduce its size or make room, then try again."
         }
       }
     },

@@ -67,7 +67,7 @@ export { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-conn
 
 interface ItemSelectPlacementProps {
   initialTargetSectionId?: string;
-  onConfiguredItem?: (item: CreateItemInput) => void;
+  onConfiguredItem?: (item: CreateItemInput) => boolean;
 }
 
 interface ItemSelectModalContentProps extends ItemSelectPlacementProps {
@@ -189,11 +189,17 @@ const ItemSelectModalContent = ({
   const { createItem, removeItem } = useItemActions();
   const saveConfiguredItem = (input: CreateItemInput, name: string) => {
     if (onConfiguredItem) {
-      onConfiguredItem(input);
-      return;
+      const staged = onConfiguredItem(input);
+      if (!staged) {
+        showErrorNotification({
+          title: t("item.create.notification.error.title"),
+          message: t("item.create.notification.error.noSpace"),
+        });
+      }
+      return staged;
     }
     const updatedBoard = createItem(input);
-    notifyCreated(updatedBoard, input.id ?? "", name);
+    return notifyCreated(updatedBoard, input.id ?? "", name);
   };
 
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
@@ -357,7 +363,7 @@ const ItemSelectModalContent = ({
             integrationIds: [],
           },
           onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }, selectedSize) => {
-            saveConfiguredItem(
+            return saveConfiguredItem(
               {
                 id: itemId,
                 kind: "customApi",
@@ -444,7 +450,7 @@ const ItemSelectModalContent = ({
               integrationIds: selectedIntegrationIds,
             },
             onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }, selectedSize) => {
-              saveConfiguredItem(
+              return saveConfiguredItem(
                 {
                   id: itemId,
                   kind,
@@ -684,11 +690,13 @@ const ItemSelectModalContent = ({
         )}
       </SimpleGrid>
 
-      {!isAdmin && filteredItems.length === 0 && (
-        <Center p="xl">
-          <Text c="dimmed">{t("common.noResults")}</Text>
-        </Center>
-      )}
+      {(!isAdmin || onConfiguredItem) &&
+        filteredItems.length === 0 &&
+        (!isAdmin || filteredCustomWidgets.length === 0) && (
+          <Center p="xl">
+            <Text c="dimmed">{t("common.noResults")}</Text>
+          </Center>
+        )}
     </Stack>
   );
 };

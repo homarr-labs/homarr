@@ -34,6 +34,7 @@ import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { useBoardPermissions } from "../permissions/client";
+import { useSmartContainerPreviewState } from "../sections/smart-container/smart-container-context";
 import { useItemActions } from "./item-actions";
 import { BoardItemContextMenu } from "./item-menu";
 import { ItemMenuDropdown } from "./item-menu-dropdown";
@@ -57,6 +58,9 @@ export const WidgetContextMenu = (props: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const settings = useSettings();
+  const preview = useSmartContainerPreviewState();
+
+  if (preview) return <>{props.children}</>;
 
   if (session && isEditMode) {
     return <BoardItemContextMenu {...props} />;

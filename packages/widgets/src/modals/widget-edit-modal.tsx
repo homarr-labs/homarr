@@ -73,7 +73,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   kind: TSort;
   definition: WidgetDefinition;
   value: WidgetEditModalState;
-  onSuccessfulEdit: (value: WidgetEditModalState, size?: WidgetEditModalSize) => void;
+  onSuccessfulEdit: (value: WidgetEditModalState, size?: WidgetEditModalSize) => void | boolean;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
@@ -464,7 +464,8 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           }
         }
 
-        innerProps.onSuccessfulEdit(normalizeWidgetEditorState(values), previewSize ?? undefined);
+        const saved = innerProps.onSuccessfulEdit(normalizeWidgetEditorState(values), previewSize ?? undefined);
+        if (saved === false) return;
         actions.closeModal();
       } finally {
         setIsSubmitting(false);

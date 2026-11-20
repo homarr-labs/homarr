@@ -117,13 +117,20 @@ const ReelSurface = ({
   const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
   const projection = (!isEditMode && focusedProjection) || liveProjection;
   const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
-  const showPeeks = options.appearance === "reel" && states.length > 2 && section.height >= 3;
+  const showPeeks = !collapsed && options.appearance === "reel" && states.length > 2 && section.height >= 3;
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);
   const t = useI18n("section.container.smart");
   const surfaceRef = useRef<HTMLElement>(null);
   const priorStateId = useRef(selectedStateId);
+  const { setHovered } = runtime;
+  useEffect(() => {
+    if (!collapsed) return;
+    setHovered(false);
+    setFocusedProjection(null);
+    setFocusedItemId(null);
+  }, [collapsed, setHovered]);
   useEffect(() => {
     if (priorStateId.current === selectedStateId) return;
     const direction = states.findIndex((state) => state.id === priorStateId.current) < selectedIndex ? 1 : -1;
@@ -164,8 +171,6 @@ const ReelSurface = ({
     focusedItemId,
     runtime: { ...runtime, selectState: preview?.onSelectState ?? runtime.selectState, previousState, nextState },
   };
-  if (collapsed) return <SmartContainerProjectionProvider value={value}>{children}</SmartContainerProjectionProvider>;
-
   return (
     <SmartContainerProjectionProvider value={value}>
       <Box
@@ -178,13 +183,19 @@ const ReelSurface = ({
         data-selected-state={selectedStateId}
         data-multiple-states={showPeeks || undefined}
         onPointerEnter={(event) => {
-          if (event.pointerType === "mouse") runtime.setHovered(true);
+          if (!collapsed && event.pointerType === "mouse") runtime.setHovered(true);
         }}
         onPointerLeave={(event) => {
           if (event.pointerType === "mouse") runtime.setHovered(false);
         }}
         onPointerDownCapture={(event) => {
-          if (!(event.target instanceof Element) || event.target.closest("[data-smart-resume]")) return;
+          if (
+            collapsed ||
+            isEditMode ||
+            !(event.target instanceof Element) ||
+            event.target.closest("[data-smart-resume], [data-board-container-label]")
+          )
+            return;
           if (
             !event.target.closest(
               'button, a[href], input, select, textarea, [contenteditable="true"], [role="button"], [role="slider"], [role="switch"], [role="menuitem"], [role="option"], [role="row"][tabindex]',
@@ -194,6 +205,12 @@ const ReelSurface = ({
           runtime.holdForFocus();
         }}
         onFocusCapture={(event) => {
+          if (
+            collapsed ||
+            isEditMode ||
+            (event.target instanceof Element && event.target.closest("[data-board-container-label]"))
+          )
+            return;
           runtime.holdForFocus();
           if (!(event.target instanceof Element) || !event.target.closest('[data-grid-item-type="item"]')) return;
           if (event.target.closest("[data-smart-compact-control]")) return;
@@ -236,18 +253,21 @@ const ReelSurface = ({
         )}
         <div className={classes.content}>
           {children}
-          {projection.itemIds.length === 0 && innerSections.length === 0 && (!isEditMode || items.length === 0) && (
-            <div className={classes.empty}>
-              <Text size="sm" c="dimmed">
-                {t("empty")}
-              </Text>
-              {isEditMode && (
-                <Button variant="light" onClick={openEditor}>
-                  {t("addWidget")}
-                </Button>
-              )}
-            </div>
-          )}
+          {!collapsed &&
+            projection.itemIds.length === 0 &&
+            innerSections.length === 0 &&
+            (!isEditMode || items.length === 0) && (
+              <div className={classes.empty}>
+                <Text size="sm" c="dimmed">
+                  {t("empty")}
+                </Text>
+                {isEditMode && (
+                  <Button variant="light" onClick={openEditor}>
+                    {t("addWidget")}
+                  </Button>
+                )}
+              </div>
+            )}
         </div>
         {showPeeks && next && (
           <UnstyledButton

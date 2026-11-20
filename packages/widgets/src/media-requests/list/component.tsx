@@ -6,9 +6,11 @@ import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { queryCacheDefaultRefetchIntervalMs } from "@homarr/api/query-cache";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { toValidDate } from "@homarr/common";
+import { mediaRequestListCacheTtlMs } from "@homarr/definitions";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
@@ -52,7 +54,11 @@ export default function MediaServerWidget({
   const activityWatched = useWidgetActivityWatched(itemId);
   const activityFacts = useMemo(() => {
     if (!activityWatched) return { relevance: "quiet" as const, count: 0 };
-    return getMediaRequestsActivityFacts(mediaRequestQuery.data?.requests ?? []);
+    const data = mediaRequestQuery.data;
+    const failedIds = new Set(data?.failedIntegrations.map(({ integrationId }) => integrationId));
+    return getMediaRequestsActivityFacts(
+      data?.requests.filter(({ integrationId }) => !failedIds.has(integrationId)) ?? [],
+    );
   }, [activityWatched, mediaRequestQuery.data]);
   useReportWidgetActivity({
     itemId,
@@ -62,6 +68,7 @@ export default function MediaServerWidget({
     complete: mediaRequestQuery.data?.failedIntegrations.length === 0,
     configured: integrationIds.length > 0,
     sourceUpdatedAt: mediaRequestQuery.data?.updatedAt?.getTime() ?? 0,
+    freshForMs: mediaRequestListCacheTtlMs + queryCacheDefaultRefetchIntervalMs + 5_000,
   });
   const queryError = getWidgetQueryError(mediaRequestQuery);
   let mediaRequestData = mediaRequestQuery.data;

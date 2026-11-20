@@ -202,7 +202,7 @@ export default function MediaServerWidget({
       currentStreamsData?.length === integrationIds.length && currentStreamsData.every((result) => !result.error),
     configured: integrationIds.length > 0,
     sourceUpdatedAt: currentStreamsData?.reduce(
-      (oldest, result) => Math.min(oldest, "updatedAt" in result ? result.updatedAt.getTime() : 0),
+      (oldest, result) => ("updatedAt" in result ? Math.min(oldest, result.updatedAt.getTime()) : oldest),
       Infinity,
     ),
     freshForMs: Math.max(35_000, refreshInterval * 1000 + 5_000),

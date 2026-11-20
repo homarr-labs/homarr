@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export interface WidgetActivity extends WidgetActivityFacts {
-  status: "ready" | "unknown";
+  status: "ready" | "partial" | "unknown";
   requestedRows: number;
   updatedAt: number;
   freshForMs: number;
@@ -107,7 +107,7 @@ export const useReportWidgetActivity = ({
   let updatedAt = dataUpdatedAt;
   if (sourceUpdatedAt !== undefined) updatedAt = Math.min(dataUpdatedAt, sourceUpdatedAt);
   let status: WidgetActivity["status"] = "unknown";
-  if (configured && complete && isSuccess && !isError && fetchStatus !== "paused") status = "ready";
+  if (configured && isSuccess && !isError && fetchStatus !== "paused") status = complete ? "ready" : "partial";
   const requestedRows = 1 + Math.ceil(count / recordsPerRow);
 
   useEffect(() => {
@@ -122,7 +122,8 @@ export const useReportWidgetActivity = ({
 };
 
 export const getWidgetRelevance = (activity: WidgetActivity | undefined, now = Date.now()): WidgetRelevance => {
-  if (!activity || activity.status !== "ready" || activity.updatedAt <= 0) return "unknown";
+  if (!activity || activity.status === "unknown" || activity.updatedAt <= 0) return "unknown";
+  if (activity.status === "partial" && activity.relevance === "quiet") return "unknown";
   if (now - activity.updatedAt > activity.freshForMs) return "unknown";
   return activity.relevance;
 };

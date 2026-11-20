@@ -79,7 +79,7 @@ export const mediaRequestsRouter = createTRPCRouter({
       return {
         requests,
         updatedAt: results.reduce<Date | null>((oldest, result) => {
-          if (!result.updatedAt) return oldest;
+          if (result.error || !result.updatedAt) return oldest;
           if (!oldest || result.updatedAt < oldest) return result.updatedAt;
           return oldest;
         }, null),

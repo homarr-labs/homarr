@@ -37,12 +37,7 @@ export const selectSmartContainerPolicy = (
   const matching = enabled.filter((state) => tier && state.relevance === tier);
   const priority = Math.max(...matching.map((state) => state.priority));
   const leaders = matching.filter((state) => state.priority === priority);
-  const preferred =
-    leaders.find((state) => state.id === currentId) ??
-    leaders[0] ??
-    fallback ??
-    (current?.relevance === "unknown" ? current : undefined) ??
-    enabled[0];
+  const preferred = leaders.find((state) => state.id === currentId) ?? leaders[0] ?? fallback ?? enabled[0];
   let rotationStates: readonly ResolvedSmartContainerState[] = [];
   let target = preferred;
   if (options.mode === "timed") {
