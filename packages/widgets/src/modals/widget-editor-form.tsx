@@ -352,6 +352,7 @@ export interface WidgetEditorFormProps {
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   onChange?: (draft: WidgetEditModalState) => void;
   onSubmit: (draft: WidgetEditModalState) => void;
+  onValidationError?: () => void;
 }
 
 export const WidgetEditorForm = ({
@@ -369,6 +370,7 @@ export const WidgetEditorForm = ({
   onOpenNewIntegration,
   onChange,
   onSubmit,
+  onValidationError,
 }: WidgetEditorFormProps) => {
   const form = useWidgetEditorForm({ definition, value, integrationSupport, settings });
   useBoardDraftChanges(boardId, () => form.isDirty());
@@ -380,7 +382,10 @@ export const WidgetEditorForm = ({
 
   const handleSubmit = form.onSubmit(
     (values) => onSubmit(normalizeWidgetEditorState(values)),
-    (errors, _values, event) => focusWidgetEditorError(form, errors, event),
+    (errors, _values, event) => {
+      onValidationError?.();
+      focusWidgetEditorError(form, errors, event);
+    },
   );
 
   return (
