@@ -1,0 +1,22 @@
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 708-712,769,771-791
+apps/docs/src/components/workshop/DetailSections.tsx
+  h_d6e478ca18e517 172-180
+apps/nextjs/src/components/custom-css/custom-css-editor.tsx
+  h_d6e478ca18e517 13-14,25-26,37-38
+apps/nextjs/src/components/theme/theme-editor.tsx
+  h_d6e478ca18e517 34,117,427,463-473,509,558-597,640-653
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2255
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cc369f682a7ac2fc5fe957dc9e41da41dc7fbcd2",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
