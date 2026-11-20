@@ -101,6 +101,21 @@ WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate bun run test:workshop-image
 PocketBase data lives in `/pb_data`. Normal start, stop, and down operations retain the named volume. Back up the
 database before migrations or image promotion, and test restores in a separate empty volume.
 
+The v2 branch consolidates the unreleased Workshop migrations. Volumes that ran an earlier v2 migration chain are
+unsupported and must be backed up and recreated. The following command permanently removes the local Workshop volume:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml down --volumes
+```
+
+Never run that reset against production.
+
+## Production
+
+The production image serves the documentation site and PocketBase from one origin. See the
+[Workshop operator guide](../docs/docs/advanced/development/workshop-operator.mdx) for environment variables, proxying, staging, backups,
+and promotion. Publish by immutable digest, validate that exact digest in staging, then promote it.
+
 ### Convert legacy CSS listings
 
 Start the upgraded Workshop once to add the theme type. Keep legacy CSS listings in place while releasing the updated
@@ -116,18 +131,3 @@ docker compose up -d workshop
 
 The conversion preserves listing IDs and copies CSS into the Default theme. Clients from before the theme release cannot
 import the converted listings. Restore the pre-conversion backup if you need to undo the conversion.
-
-The v2 branch consolidates the unreleased Workshop migrations. Volumes that ran an earlier v2 migration chain are
-unsupported and must be backed up and recreated. The following command permanently removes the local Workshop volume:
-
-```sh
-docker compose -f apps/workshop/docker-compose.yml down --volumes
-```
-
-Never run that reset against production.
-
-## Production
-
-The production image serves the documentation site and PocketBase from one origin. See the
-[Workshop operator guide](../docs/docs/advanced/development/workshop-operator.mdx) for environment variables, proxying, staging, backups,
-and promotion. Publish by immutable digest, validate that exact digest in staging, then promote it.
