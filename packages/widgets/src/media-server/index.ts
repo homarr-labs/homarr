@@ -5,6 +5,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
@@ -18,6 +19,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      ...createWidgetRefreshIntervalOptions(10),
       showOnlyPlaying: factory.switch({ defaultValue: true, withDescription: true }),
       showBitrate: factory.switch({ defaultValue: true, withDescription: true }),
       showLocation: factory.switch({ defaultValue: true, withDescription: true }),

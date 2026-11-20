@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { createSmartHomeEntityOptions } from "../_inputs/use-smart-home-entity-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-executeAutomation", {
   icon: IconBinaryTree,
@@ -12,7 +13,10 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
   createOptions() {
     return optionsBuilder.from((factory) => ({
       displayName: factory.text(),
-      automationId: factory.text(),
+      automationId: factory.integrationSelect({
+        searchable: true,
+        useOptions: createSmartHomeEntityOptions("automation"),
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));

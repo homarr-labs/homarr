@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Pilsēta / pasta indekss",
         "latitude": "Platums",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Paslēpt aprakstu"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rādīt plakāta attēlu"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Atvērt paziņojumu pakalpojumu",
       "deleteNotification": "Dzēst paziņojumu no Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Neizdevās dzēst paziņojumu",
       "deleteFailedMessage": "Paziņojumu nevarēja izdzēst. Lūdzu, mēģiniet vēlreiz."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Visas iebūvētās vadīklas jau atrodas jūsu galvenē.",
                 "add": "Pievienot {item}",
                 "boardShortcut": "Paneļa saīsne",
+                "widget": "",
                 "chooseBoard": "Izvēlēties paneli"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šī vadīkla saglabā tādu pašu izmēru kā aktīvajā galvenē.",
                 "searchDisplay": {
                   "input": "Meklēšanas josla",
@@ -7310,7 +7321,9 @@
                 "settings": "Jūsu iestatījumi",
                 "themeToggle": "Pārslēgt motīvu",
                 "user": "Konts",
-                "boardUnavailable": "Panelis nav pieejams"
+                "boardUnavailable": "Panelis nav pieejams",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

@@ -70,6 +70,7 @@ import {
   getDownloadColumnAccessors,
   getDownloadsStatsDisplay,
 } from "./helpers";
+import { useDemoReadOnly } from "../demo-read-only";
 import { resolveDownloadsQueryInput } from "./query-input";
 import { SetDownloadCategoryModal } from "./set-category-modal";
 
@@ -321,9 +322,11 @@ export default function DownloadClientsWidget({
     [allInteractAccess, integrationIds],
   );
 
-  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
-    resolveDownloadsQueryInput(integrationIds, options),
-  );
+  const demoReadOnly = useDemoReadOnly();
+  const downloadsQueryInput = resolveDownloadsQueryInput(integrationIds, options);
+  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(downloadsQueryInput, {
+    refetchInterval: demoReadOnly ? false : downloadsQueryInput.refreshInterval * 1000,
+  });
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;

@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Miasto / kod pocztowy",
         "latitude": "Szerokość geograficzna (Latitude)",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Ukryj opis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Pokaż obraz okładki"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Otwórz usługę powiadomień",
       "deleteNotification": "Usuń powiadomienie z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nie można usunąć powiadomienia",
       "deleteFailedMessage": "Nie można usunąć powiadomienia. Spróbuj ponownie."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Każda wbudowana kontrola jest już w nagłówku.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Skrót na tablicy",
+                "widget": "Widżet",
                 "chooseBoard": "Wybierz tablicę"
               },
               "configuration": {
+                "widgetKind": "Widżet",
+                "widgetOptions": "Opcje",
+                "boardOnly": "",
                 "description": "Ta kontrola pozostaje w takim samym rozmiarze jak w nagłówku żywy.",
                 "searchDisplay": {
                   "input": "Pasek wyszukiwania",
@@ -7310,7 +7321,9 @@
                 "settings": "Twoje ustawienia",
                 "themeToggle": "Przełącz motyw",
                 "user": "Konto",
-                "boardUnavailable": "Tablica niedostępna"
+                "boardUnavailable": "Tablica niedostępna",
+                "notifications": "Powiadomienia",
+                "widget": "Widżet"
               }
             },
             "item": {

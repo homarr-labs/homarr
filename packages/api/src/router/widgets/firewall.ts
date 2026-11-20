@@ -1,3 +1,5 @@
+import { z } from "zod/v4";
+
 import { mockWidgetData } from "@homarr/integrations";
 import {
   firewallCpuRequestHandler,
@@ -5,6 +7,7 @@ import {
   firewallMemoryRequestHandler,
   firewallVersionRequestHandler,
 } from "@homarr/request-handler/firewall";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
@@ -18,7 +21,7 @@ interface FirewallHandler<TData> {
   handler: (
     integration: FirewallIntegration,
     input: Record<string, never>,
-  ) => { getDataAsync: () => Promise<{ data: TData; timestamp: Date }> };
+  ) => { getDataAsync: (options: { maxAgeMs?: number }) => Promise<{ data: TData; timestamp: Date }> };
 }
 
 interface FirewallQueryResult<TData> {
@@ -33,39 +36,44 @@ interface FirewallQueryResult<TData> {
 }
 
 const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData, getMockData: () => TData) =>
-  publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
-    settleIntegrationQueries(
-      ctx.integrations,
-      async (integration): Promise<FirewallQueryResult<TData>> => {
-        if (integration.kind === "mock") {
+  publicProcedure
+    .concat(firewallMiddleware)
+    .input(z.object({ refreshInterval: widgetRefreshIntervalSchema.default(10) }))
+    .query(async ({ ctx, input }) =>
+      settleIntegrationQueries(
+        ctx.integrations,
+        async (integration): Promise<FirewallQueryResult<TData>> => {
+          if (integration.kind === "mock") {
+            return {
+              integration: {
+                id: integration.id,
+                name: integration.name,
+                kind: integration.kind,
+                updatedAt: new Date(mockWidgetData.timestamp),
+              },
+              summary: getMockData(),
+              error: undefined,
+            };
+          }
+          const { data, timestamp } = await handler
+            .handler({ ...integration, kind: "opnsense" }, {})
+            .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: new Date(mockWidgetData.timestamp),
-            },
-            summary: getMockData(),
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            summary: data,
             error: undefined,
           };
-        }
-        const { data, timestamp } = await handler.handler({ ...integration, kind: "opnsense" }, {}).getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          summary: data,
-          error: undefined,
-        };
-      },
-      {
-        fallback: (integration, error): FirewallQueryResult<TData> => ({
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date(0) },
-          summary: createFallback(),
-          error: toPublicIntegrationError(error),
-        }),
-        throwOnAllFailures: true,
-      },
-    ),
-  );
+        },
+        {
+          fallback: (integration, error): FirewallQueryResult<TData> => ({
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date(0) },
+            summary: createFallback(),
+            error: toPublicIntegrationError(error),
+          }),
+          throwOnAllFailures: true,
+        },
+      ),
+    );
 
 export const firewallRouter = createTRPCRouter({
   getFirewallCpuStatus: queryFirewall(

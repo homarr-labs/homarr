@@ -25,15 +25,18 @@ export const assistantDocsSearchToolDescription =
 type DocsPage = { title: string; path: string; summary: string };
 
 const getDocsPath = (value: string) => {
-  if (!value.startsWith("/docs/") || /%2f|%5c/iu.test(value)) return undefined;
+  if (!value.startsWith("/docs/") && !value.startsWith("/llms.mdx/docs/")) return undefined;
+  if (/%2f|%5c|\\/iu.test(value)) return undefined;
   try {
     const url = new URL(value, docsOrigin);
     if (
       url.origin !== docsOrigin ||
       url.search ||
       url.hash ||
-      !url.pathname.startsWith("/docs/") ||
-      !url.pathname.endsWith(".md") ||
+      !(
+        (url.pathname.startsWith("/docs/") && url.pathname.endsWith(".md")) ||
+        (url.pathname.startsWith("/llms.mdx/docs/") && url.pathname.endsWith("/content.md"))
+      ) ||
       url.pathname.split("/").some((part) => part === "tags" || part === "category")
     ) {
       return undefined;
@@ -105,9 +108,10 @@ const fetchDocsTextAsync = async (path: string, limit: number, signal?: AbortSig
 const parseIndex = (text: string): DocsPage[] => {
   const pages: DocsPage[] = [];
   for (const line of text.split("\n")) {
-    const link = /\[([^\]]{1,160})\]\(([^)\s]{1,500})\)/u.exec(line);
+    const links = [...line.matchAll(/\[([^\]]{1,160})\]\(([^)\s]{1,500})\)/gu)];
+    const link = links[0];
     if (!link?.[1] || !link[2]) continue;
-    const path = getDocsPath(link[2]);
+    const path = links.map((match) => getDocsPath(match[2] ?? "")).find((value) => value !== undefined);
     const title = link[1].replaceAll("[", "").replaceAll("]", "").replaceAll("\\", "").trim();
     if (!path || !title) continue;
     pages.push({ title, path, summary: line.slice(link.index + link[0].length).slice(0, 500) });
@@ -174,7 +178,13 @@ const getExcerpt = (markdown: string, tokens: readonly string[]) => {
 };
 
 const getCitationUrl = (path: string) => {
-  const pagePath = path.replace(/\.md$/u, "").replaceAll("(", "%28").replaceAll(")", "%29");
+  let pagePath = path;
+  if (path.startsWith("/llms.mdx/docs/")) {
+    pagePath = path.replace(/^\/llms\.mdx/u, "").replace(/\/content\.md$/u, "");
+  } else {
+    pagePath = path.replace(/\.md$/u, "");
+  }
+  pagePath = pagePath.replaceAll("(", "%28").replaceAll(")", "%29");
   return `${docsOrigin}${pagePath}/`;
 };
 

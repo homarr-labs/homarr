@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Oraș / Cod poștal",
         "latitude": "Latitudine",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Ascunde descrierea"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afișare imagine poster"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Deschide serviciul de notificare",
       "deleteNotification": "Șterge notificarea din Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nu s-a putut șterge notificarea",
       "deleteFailedMessage": "Notificarea nu a putut fi ștearsă. Încercați din nou."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Fiecare control încorporat este deja în antetul dvs.",
                 "add": "Adaugă {item}",
                 "boardShortcut": "Scurtătură pe secţiune",
+                "widget": "",
                 "chooseBoard": "Alege o secţiune"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opţiuni",
+                "boardOnly": "",
                 "description": "Acest control rămâne la fel de mare ca în headerul live.",
                 "searchDisplay": {
                   "input": "Bară de căutare",
@@ -7310,7 +7321,9 @@
                 "settings": "Setările dvs.",
                 "themeToggle": "Activează/dezactivează tema",
                 "user": "Cont",
-                "boardUnavailable": "Secţiune indisponibilă"
+                "boardUnavailable": "Secţiune indisponibilă",
+                "notifications": "Notificări",
+                "widget": ""
               }
             },
             "item": {

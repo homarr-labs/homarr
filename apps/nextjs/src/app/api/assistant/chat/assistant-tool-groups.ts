@@ -1,4 +1,8 @@
+import { getToolName, isToolUIPart } from "ai";
+import type { UIMessage } from "ai";
+
 import type { McpTool } from "@homarr/api/mcp";
+import { isRecord } from "@homarr/common";
 
 type AssistantMcpTool = Pick<McpTool, "name" | "pathInRouter">;
 
@@ -6,6 +10,24 @@ export interface AssistantMcpToolGroup<TTool extends AssistantMcpTool = Assistan
   id: string;
   tools: readonly TTool[];
 }
+
+export const getEnabledAssistantMcpToolGroupIds = (messages: readonly UIMessage[], availableIds: readonly string[]) => {
+  const enabledIds = new Set<string>();
+  for (const message of messages) {
+    if (message.role !== "assistant") continue;
+    for (const part of message.parts) {
+      if (!isToolUIPart(part) || part.state !== "output-available") continue;
+      if (getToolName(part) !== "homarr_enableToolGroups") continue;
+      let output = part.output;
+      if (isRecord(output) && output.type === "json") output = output.value;
+      if (!isRecord(output) || output.error || !Array.isArray(output.enabledGroups)) continue;
+      for (const groupId of output.enabledGroups) {
+        if (typeof groupId === "string" && availableIds.includes(groupId)) enabledIds.add(groupId);
+      }
+    }
+  }
+  return enabledIds;
+};
 
 export const createAssistantMcpToolGroups = <TTool extends AssistantMcpTool>(tools: readonly TTool[]) => {
   const toolsByGroup = new Map<string, TTool[]>();

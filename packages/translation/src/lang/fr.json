@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ville / Code Postal",
         "latitude": "Latitude",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Masquer la description"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afficher l'image de l'affiche"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Ouvrir le service de notification",
       "deleteNotification": "Supprimer la notification de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Impossible de supprimer la notification",
       "deleteFailedMessage": "La notification n'a pas pu être supprimée. Veuillez réessayer."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Chaque contrôle intégré est déjà dans votre en-tête.",
                 "add": "Ajouter {item}",
                 "boardShortcut": "Raccourci de la carte",
+                "widget": "",
                 "chooseBoard": "Choisir un tableau"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Options",
+                "boardOnly": "",
                 "description": "Ce contrôle reste la même taille que dans l'en-tête en direct.",
                 "searchDisplay": {
                   "input": "Barre de recherche",
@@ -7310,7 +7321,9 @@
                 "settings": "Vos paramètres",
                 "themeToggle": "Basculer le thème",
                 "user": "Compte client",
-                "boardUnavailable": "Tableau indisponible"
+                "boardUnavailable": "Tableau indisponible",
+                "notifications": "Notifications",
+                "widget": ""
               }
             },
             "item": {
