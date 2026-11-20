@@ -5211,10 +5211,11 @@
         "hideDescription": {
           "label": "Hide description"
         },
-        "hideBackgroundImage": {
-          "label": "Hide background image"
         "hideFeedTitle": {
           "label": "Hide feed title"
+        },
+        "hideBackgroundImage": {
+          "label": "Hide background image"
         },
         "showPosterImage": {
           "label": "Show poster image"

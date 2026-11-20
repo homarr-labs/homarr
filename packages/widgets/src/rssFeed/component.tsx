@@ -100,14 +100,10 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     isAdvanced,
     isDense,
     isTiny,
-    isRoomy,
     hideDescription: options.hideDescription,
-    hideBackgroundImage: options.hideBackgroundImage,
     showPosterImage: options.showPosterImage,
     hideFeedTitle: options.hideFeedTitle,
     descriptionLines,
-    thumbnailWidth: options.thumbnailWidth,
-    thumbnailHeight: options.thumbnailHeight,
   });
   const spacing = isRoomy ? "sm" : "xs";
   const isNarrow = width < 128 * 3;
@@ -153,8 +149,8 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt=""
-                      w={entryDisplay.thumbnailWidth}
-                      h={entryDisplay.thumbnailHeight}
+                      w={isRoomy ? 140 : isDense ? 64 : 96}
+                      h={isRoomy ? 96 : isDense ? 64 : 96}
                       radius="sm"
                       fit="cover"
                     />
@@ -209,8 +205,9 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt={feedEntry.title}
-                      w={entryDisplay.thumbnailWidth}
-                      h={entryDisplay.thumbnailHeight}
+                      w={options.thumbnailWidth}
+                      maw="50%"
+                      style={{ aspectRatio: `${options.thumbnailWidth} / ${options.thumbnailHeight}` }}
                       radius="sm"
                       fit="cover"
                     />
@@ -223,7 +220,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                       <Text dir={languageDir} c="dimmed" size="sm" lineClamp={options.textLinesClamp}>
                         {feedDescriptionToText(feedEntry.description)}
                       </Text>
-                    )}                   
+                    )}
                     <Group justify="space-between" wrap="nowrap" gap="sm">
                       {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
                       {!options.hideFeedTitle && feedEntry.feedTitle && (
@@ -265,37 +262,26 @@ interface RssEntryDisplayInput {
   isAdvanced: boolean;
   isDense: boolean;
   isTiny: boolean;
-  isRoomy: boolean;
   hideDescription: boolean;
-  hideBackgroundImage: boolean;
   hideFeedTitle: boolean;
   showPosterImage: boolean;
   descriptionLines: number;
-  thumbnailWidth: number;
-  thumbnailHeight: number;
 }
 
 export const getRssEntryDisplay = ({
   isAdvanced,
   isDense,
   isTiny,
-  isRoomy,
   hideDescription,
-  hideBackgroundImage,
   hideFeedTitle,
   showPosterImage,
   descriptionLines,
-  thumbnailWidth,
-  thumbnailHeight,
 }: RssEntryDisplayInput) => ({
   showDescription: isAdvanced || (!hideDescription && !isTiny),
-  hideBackgroundImage: !isAdvanced && hideBackgroundImage,
   showFeedTitle: !hideFeedTitle && (isAdvanced || !isTiny),
   showImage: isAdvanced || (showPosterImage && !isTiny),
   showSource: isAdvanced || !isDense,
   descriptionLineClamp: isAdvanced ? undefined : descriptionLines,
-  thumbnailWidth: isAdvanced ? (isRoomy ? 140 : isDense ? 64 : 96) : thumbnailWidth,
-  thumbnailHeight: isAdvanced ? (isRoomy ? 96 : isDense ? 64 : 96) : thumbnailHeight,
 });
 
 const InfoDisplay = ({ date, timestamp, source }: { date?: string; timestamp?: string; source?: string }) => (

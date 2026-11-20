@@ -73,18 +73,23 @@ export const rssFeedWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
+        name: "Hide background image",
+        description: "Hide the blurred image behind feed entries on the board",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Poster width",
-        description: "Change poster width",
-        values: "40-400",
-        defaultValue: "140",
+        description: "Poster width on the board. The poster scales down when it would take more than half the row.",
+        values: "40–400 px",
+        defaultValue: "140 px",
       },
       {
         name: "Poster height",
-        description: "Change poster height",
-        values: "40-400",
-        defaultValue: "140",
+        description: "Poster height on the board. The poster keeps its proportions when it scales down.",
+        values: "40–400 px",
+        defaultValue: "140 px",
       },
     ],
-    
   },
 };
