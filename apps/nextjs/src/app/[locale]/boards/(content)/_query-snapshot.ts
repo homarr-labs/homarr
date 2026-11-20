@@ -101,9 +101,9 @@ const getShareableQueries = (
   });
 };
 
-const getGenerationsAsync = async (ids: Set<string>) => {
+const getGenerationsAsync = async (ids: Set<string>, options?: { fresh: boolean }) => {
   const entries = await Promise.all(
-    [...ids].map(async (id) => [id, await getIntegrationCacheGenerationAsync(id)] as const),
+    [...ids].map(async (id) => [id, await getIntegrationCacheGenerationAsync(id, options)] as const),
   );
   if (entries.some(([, generation]) => !generation.isShared)) return null;
   return Object.fromEntries(entries.map(([id, generation]) => [id, generation.value]));
@@ -194,7 +194,7 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
         const shareable = getShareableQueries([...queries.values()], board, boardIntegrationIds, allowedIds);
         const [initialGenerations, generations] = await Promise.all([
           initialGenerationsPromise,
-          getGenerationsAsync(boardIntegrationIds),
+          getGenerationsAsync(boardIntegrationIds, { fresh: true }),
         ]);
         if (
           !initialGenerations ||

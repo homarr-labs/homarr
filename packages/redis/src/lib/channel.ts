@@ -519,6 +519,7 @@ const recoverIntegrationCacheOverflowAsync = async () => {
 
 export const getIntegrationCacheGenerationAsync = async (
   integrationId: string,
+  { fresh = false }: { fresh?: boolean } = {},
 ): Promise<IntegrationCacheGeneration> => {
   const cacheKey = integrationCacheGenerationKey(integrationId);
   const pendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
@@ -556,6 +557,7 @@ export const getIntegrationCacheGenerationAsync = async (
   const client = boundedCacheClient;
   return await getCachedGenerationAsync({
     cacheKey,
+    force: fresh,
     readAsync: async () => {
       if (!client) return null;
       const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(
