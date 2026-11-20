@@ -1,5 +1,6 @@
 import {
   IconActivity,
+  IconAdjustmentsHorizontal,
   IconAirConditioning,
   IconAlarmSmoke,
   IconArrowUpCircle,
@@ -181,6 +182,8 @@ export const getEntityIcon = (entity: HaEntity): TablerIcon => {
       return IconArrowUpCircle;
     case "input_select":
       return IconHome;
+    case "number":
+      return IconAdjustmentsHorizontal;
   }
 };
 
@@ -372,6 +375,7 @@ export const formatEntityState = (entity: HaEntity): string => {
   if (isUnavailable(entity)) return stateLabels[entity.state] ?? entity.state;
   const attributes = entity.attributes;
   switch (entity.domain) {
+    case "number":
     case "sensor": {
       if (attributes.stateLabel) return attributes.stateLabel;
       const value = Number(entity.state);
@@ -437,6 +441,19 @@ export const formatEntityState = (entity: HaEntity): string => {
     default:
       return stateLabels[entity.state] ?? entity.state;
   }
+};
+
+const decimalsOf = (value: number) => (String(value).split(".")[1] ?? "").length;
+
+/** The next value one step up or down, or null when the entity is at its limit or has no number to step from. */
+export const stepNumber = (entity: HaEntity, direction: 1 | -1): number | null => {
+  const current = Number(entity.state);
+  if (isUnavailable(entity) || entity.state === "" || Number.isNaN(current)) return null;
+  const { min, max, step = 1 } = entity.attributes;
+  const next = Number((current + direction * step).toFixed(decimalsOf(step)));
+  if (min !== undefined && next < min) return null;
+  if (max !== undefined && next > max) return null;
+  return next;
 };
 
 export const getPrimaryAction = (entity: HaEntity): HaAction | null => {

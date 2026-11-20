@@ -3478,8 +3478,28 @@
         },
         "excludedEntityIds": {
           "label": "Hidden entities",
-          "description": "Never shown inside room blocks",
+          "description": "Never shown inside room or device blocks",
           "placeholder": "Search entities"
+        },
+        "groupByDevice": {
+          "label": "Group by device",
+          "description": "Show one card or row per device with its readings"
+        },
+        "readingOrder": {
+          "label": "Device value order",
+          "description": "Which values a device tile shows first, and keeps when space runs out",
+          "option": {
+            "automatic": "Automatic (controls and key values first)",
+            "manual": "Manual (order of the selected entities)"
+          }
+        },
+        "showDeviceKeyValue": {
+          "label": "Show key value in header",
+          "description": "Repeat a device's main measurement next to its state, e.g. the power of a plug"
+        },
+        "showDeviceGraph": {
+          "label": "Show trend graph",
+          "description": "Draw the last 24 hours of a device's key measurement behind its values"
         },
         "showSummary": {
           "label": "Show summary"
@@ -3523,6 +3543,7 @@
         "button": "Buttons",
         "input_boolean": "Toggle helpers",
         "input_select": "Dropdown helpers",
+        "number": "Numbers",
         "person": "People",
         "binary_sensor": "Binary sensors",
         "sensor": "Sensors",
@@ -3534,6 +3555,13 @@
         "add": {
           "rooms": "Rooms",
           "entity": "Entity",
+          "device": "Device",
+          "deviceLabel": "Device to add",
+          "devicePlaceholder": "Search devices",
+          "noDevices": "No devices found",
+          "duplicateDevice": "This device is already a block",
+          "deviceName": "Name on the card",
+          "deviceEntities": "Show",
           "roomsLabel": "Rooms to add",
           "roomsPlaceholder": "Search rooms or floors",
           "entityLabel": "Entity to add",
@@ -3546,6 +3574,7 @@
         "kind": {
           "entity": "Entity",
           "room": "Room",
+          "device": "Device",
           "mergedRooms": "Merged rooms",
           "unknown": "Unknown block"
         },
@@ -3568,6 +3597,32 @@
           "offline": "offline"
         },
         "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
+      },
+      "number": {
+        "decrease": "Decrease {name}",
+        "increase": "Increase {name}"
+      },
+      "device": {
+        "device": "Device",
+        "onThisDevice": "On this device",
+        "showDetails": "{name}, {state}, show details",
+        "run": "Run {name}",
+        "step": "{name}: level {level} of {steps}",
+        "online": "Online",
+        "offline": "Offline since {time}",
+        "battery": "Battery {level}%",
+        "batteryLow": "Battery low ({level}%)",
+        "batteryWarning": "Battery low",
+        "slider": {
+          "brightness": "Brightness",
+          "speed": "Speed",
+          "position": "Position"
+        },
+        "toggle": "Toggle {name}",
+        "decrease": "Decrease {name}",
+        "increase": "Increase {name}",
+        "more": "{count} more",
+        "moreDetails": "{count} more, show device details"
       },
       "live": {
         "loading": "Loading smart home states",

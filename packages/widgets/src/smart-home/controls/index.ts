@@ -6,7 +6,13 @@ import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 import { BlockAddButton, BlockListItem, useBlockListData, useCatalogEntityOptions } from "./configuration";
 import type { SmartHomeBlockListItem } from "./configuration";
-import { haDomains, smartHomeControlPalettes, smartHomeControlSizes, smartHomePresentations } from "./types";
+import {
+  haDomains,
+  smartHomeControlPalettes,
+  smartHomeControlSizes,
+  smartHomePresentations,
+  smartHomeReadingOrders,
+} from "./types";
 
 const noBlocks: string[] = [];
 
@@ -48,6 +54,17 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
           useOptions: useCatalogEntityOptions,
           withDescription: true,
         }),
+        groupByDevice: factory.switch({ withDescription: true }),
+        readingOrder: factory.select({
+          options: smartHomeReadingOrders.map((value) => ({
+            value,
+            label: (t) => t(`widget.smartHome-controls.option.readingOrder.option.${value}`),
+          })),
+          defaultValue: "automatic",
+          withDescription: true,
+        }),
+        showDeviceGraph: factory.switch({ defaultValue: true, withDescription: true }),
+        showDeviceKeyValue: factory.switch({ withDescription: true }),
         showSummary: factory.switch({ defaultValue: true }),
         readOnly: factory.switch({ withDescription: true }),
         controlSize: factory.select({
@@ -67,6 +84,13 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
       }),
       {
         showSummary: { shouldHide: (options) => options.presentation !== "entities" },
+        readingOrder: { shouldHide: (options) => !options.groupByDevice },
+        showDeviceGraph: {
+          shouldHide: (options) => options.presentation !== "controlPanel" || !options.groupByDevice,
+        },
+        showDeviceKeyValue: {
+          shouldHide: (options) => options.presentation !== "controlPanel" || !options.groupByDevice,
+        },
         controlSize: {
           shouldHide: (options) => options.presentation !== "controlPanel",
         },
