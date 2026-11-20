@@ -39,6 +39,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
+import { useBoardEditorTools } from "~/components/board/editor-tools";
 import { AddInPlaceGridLayer } from "~/components/board/in-place-editor/grid-layer";
 import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
@@ -835,6 +836,7 @@ export default function GridEditor({
 }: GridEditorRenderProps) {
   const t = useI18n();
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
+  const hasInPlaceEditor = Boolean(useBoardEditorTools());
   const interactionStore = useBoardGridEditorInteractionStore();
   const gridRef = useRef<HTMLDivElement>(null);
   const [addInPlaceRowCount, setAddInPlaceRowCount] = useState(0);
@@ -963,16 +965,18 @@ export default function GridEditor({
         entryElements={entryElements}
         interactionStore={interactionStore}
       />
-      <AddInPlaceGridLayer
-        sectionId={sectionId}
-        columnCount={columnCount}
-        rowCount={rowCount}
-        maxRowCount={maxRowCount}
-        placements={placements}
-        rowProjection={rowProjection}
-        entryElements={entryElements}
-        onRowCountChange={setAddInPlaceRowCount}
-      />
+      {hasInPlaceEditor && (
+        <AddInPlaceGridLayer
+          sectionId={sectionId}
+          columnCount={columnCount}
+          rowCount={rowCount}
+          maxRowCount={maxRowCount}
+          placements={placements}
+          rowProjection={rowProjection}
+          entryElements={entryElements}
+          onRowCountChange={setAddInPlaceRowCount}
+        />
+      )}
       <span
         data-grid-runtime="homarr-dnd-kit-v1"
         data-editor-section-id={sectionId}

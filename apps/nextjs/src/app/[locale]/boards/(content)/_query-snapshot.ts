@@ -1,15 +1,15 @@
 import { createHash } from "node:crypto";
+import { setTimeout as delay } from "node:timers/promises";
 
 import { parse, stringify } from "superjson";
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { dehydrate, hydrate, QueryClient } from "@tanstack/react-query";
-import type { QueryKey } from "@tanstack/react-query";
+import { dehydrate, hydrate } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
-import { persistQueryClientRestore } from "@tanstack/react-query-persist-client";
 
 import type { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import {
   createGetSetChannel,
+  createLockChannel,
   getIntegrationCacheGenerationAsync,
   prepareIntegrationResponseCacheAsync,
 } from "@homarr/redis";
@@ -128,108 +128,89 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
   const initialGenerationsPromise = prepareIntegrationResponseCacheAsync()
     .then(async () => await getGenerationsAsync(boardIntegrationIds))
     .catch(() => null);
-  const channel = createGetSetChannel<string>(`${snapshotVersion}:${board.id}:${boardContentFingerprint}`, {
-    useBoundedCacheClient: true,
-  });
-  const redisPersister = createAsyncStoragePersister({
-    key: board.id,
-    throttleTime: 0,
-    serialize: stringify,
-    deserialize: parse,
-    storage: {
-      getItem: async () => await channel.getAsync(),
-      setItem: async (_key, value) => {
-        if (Buffer.byteLength(value) > maxSnapshotBytes) return;
-        await channel.setAsync(value, { ttlMs: snapshotMaxAgeMs });
-      },
-      removeItem: async () => await channel.removeAsync(),
-    },
-  });
-  const persister = {
-    ...redisPersister,
-    restoreClient: async () => {
-      const snapshot = (await redisPersister.restoreClient()) as BoardSnapshot | undefined;
-      if (!snapshot || !snapshot.generations) return undefined;
-      const generations = await initialGenerationsPromise;
-      if (!generations) return undefined;
-      const queries = getShareableQueries(snapshot.clientState.queries, board, boardIntegrationIds, allowedIds).filter(
-        (query) =>
-          getQueryIntegrationIds(query.queryKey, board)?.every((id) => generations[id] === snapshot.generations[id]),
-      );
-      return {
-        ...snapshot,
-        clientState: {
-          mutations: [],
-          queries: queries.map((query) => ({ ...query, state: { ...query.state, fetchStatus: "idle" as const } })),
-        },
-      };
-    },
-    persistClient: async (client: PersistedClient) => {
-      if (!canSeedBoardSnapshot) return;
-      const queries = getShareableQueries(client.clientState.queries, board, boardIntegrationIds, allowedIds);
-      if (queries.length === 0) return;
-      const ids = new Set(queries.flatMap((query) => getQueryIntegrationIds(query.queryKey, board) ?? []));
-      const [initialGenerations, generations] = await Promise.all([
-        initialGenerationsPromise,
-        getGenerationsAsync(ids),
-      ]);
-      if (!initialGenerations || !generations) return;
-      if ([...ids].some((id) => initialGenerations[id] !== generations[id])) return;
-      await redisPersister.persistClient({
-        ...client,
-        generations,
-        clientState: { mutations: [], queries },
-      } as BoardSnapshot);
-    },
+  const snapshotKey = `${snapshotVersion}:${board.id}:${boardContentFingerprint}`;
+  const cacheOptions = { useBoundedCacheClient: true };
+  const channel = createGetSetChannel<string>(snapshotKey, cacheOptions);
+  const lock = createLockChannel(`${snapshotKey}:lock`, cacheOptions);
+  const readQueriesAsync = async () => {
+    const serialized = await channel.getAsync();
+    if (!serialized) return [];
+    const snapshot = parse<BoardSnapshot>(serialized);
+    if (
+      snapshot.buster !== snapshotVersion ||
+      Date.now() - snapshot.timestamp > snapshotMaxAgeMs ||
+      !snapshot.generations
+    )
+      return [];
+    const generations = await initialGenerationsPromise;
+    if (!generations) return [];
+    return getShareableQueries(snapshot.clientState.queries, board, boardIntegrationIds, allowedIds).filter((query) =>
+      getQueryIntegrationIds(query.queryKey, board)?.every((id) => generations[id] === snapshot.generations[id]),
+    );
   };
-
-  let restoreInFlight: Promise<ReturnType<typeof dehydrate> | undefined> = Promise.resolve(undefined);
 
   return {
     restoreAsync: async (queryClient: QueryClient) => {
-      // A slow Redis read must not hold back the first uncached widget requests.
-      // Restore into an isolated client so a late result cannot overwrite them.
-      const restoredClient = new QueryClient();
-      const restore = persistQueryClientRestore({
-        queryClient: restoredClient,
-        persister,
-        maxAge: snapshotMaxAgeMs,
-        buster: snapshotVersion,
-      }).then(() => dehydrate(restoredClient));
-      restoreInFlight = restore.catch(() => undefined);
-
       let timeout: ReturnType<typeof setTimeout> | undefined;
       try {
-        const state = await Promise.race([
-          restore,
+        const queries = await Promise.race([
+          readQueriesAsync(),
           new Promise<null>((resolve) => {
             timeout = setTimeout(() => resolve(null), snapshotRestoreBudgetMs);
           }),
         ]);
-        if (state) hydrate(queryClient, state);
+        if (queries)
+          hydrate(queryClient, {
+            mutations: [],
+            queries: queries.map((query) => ({ ...query, state: { ...query.state, fetchStatus: "idle" } })),
+          });
       } finally {
         clearTimeout(timeout);
       }
     },
     saveAsync: async (queryClient: QueryClient) => {
-      // A late invalid/expired restore may remove its key; let it finish before saving.
-      const restored = await restoreInFlight;
+      if (!canSeedBoardSnapshot) return;
       const current = dehydrate(queryClient, {
         shouldDehydrateMutation: () => false,
         shouldDehydrateQuery: (query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success",
       });
-      const queries = new Map(current.queries.map((query) => [query.queryHash, query]));
-      for (const query of restored?.queries ?? []) {
-        const currentQuery = queries.get(query.queryHash);
-        if (!currentQuery || currentQuery.state.dataUpdatedAt < query.state.dataUpdatedAt) {
-          queries.set(query.queryHash, query);
-        }
+      if (current.queries.length === 0) return;
+      let token = await lock.acquireAsync(5);
+      for (const wait of [25, 50, 100]) {
+        if (token) break;
+        await delay(wait);
+        token = await lock.acquireAsync(5);
       }
-      await persister.persistClient({
-        timestamp: Date.now(),
-        buster: snapshotVersion,
-        clientState: { mutations: [], queries: [...queries.values()] },
-      });
+      if (!token) return;
+      try {
+        const latest = await readQueriesAsync();
+        const queries = new Map(current.queries.map((query) => [query.queryHash, query]));
+        for (const query of latest) {
+          const currentQuery = queries.get(query.queryHash);
+          if (!currentQuery || currentQuery.state.dataUpdatedAt < query.state.dataUpdatedAt) {
+            queries.set(query.queryHash, query);
+          }
+        }
+        const shareable = getShareableQueries([...queries.values()], board, boardIntegrationIds, allowedIds);
+        const ids = new Set(shareable.flatMap((query) => getQueryIntegrationIds(query.queryKey, board) ?? []));
+        const [initialGenerations, generations] = await Promise.all([
+          initialGenerationsPromise,
+          getGenerationsAsync(ids),
+        ]);
+        if (!initialGenerations || !generations || [...ids].some((id) => initialGenerations[id] !== generations[id]))
+          return;
+        const serialized = stringify({
+          timestamp: Date.now(),
+          buster: snapshotVersion,
+          generations,
+          clientState: { mutations: [], queries: shareable },
+        } satisfies BoardSnapshot);
+        if (shareable.length > 0 && Buffer.byteLength(serialized) <= maxSnapshotBytes) {
+          await lock.setIfOwnedAsync(token, snapshotKey, serialized, snapshotMaxAgeMs);
+        }
+      } finally {
+        await lock.releaseAsync(token);
+      }
     },
   };
 };
