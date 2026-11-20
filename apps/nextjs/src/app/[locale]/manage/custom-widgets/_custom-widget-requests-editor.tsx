@@ -9,6 +9,7 @@ import { isRecord, isSimpleCustomWidgetQuerySetup, parseJson } from "./_custom-w
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { QueryValuesEditor, RequestBodyEditor } from "./_custom-widget-request-value-editors";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
+import classes from "./_custom-widget-form.module.css";
 import { LazyOnceAccordion } from "./_lazy-once-accordion";
 
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
@@ -59,7 +60,8 @@ export function CustomWidgetRequestsEditor({
         return (
           <Fieldset
             key={id}
-            legend={compactSetup ? undefined : id || t("request", { count: index + 1 })}
+            legend={id || t("request", { count: index + 1 })}
+            classNames={compactSetup ? { legend: classes.visuallyHiddenLegend } : undefined}
             p={compactSetup ? 0 : undefined}
             style={compactSetup ? { border: 0 } : undefined}
           >

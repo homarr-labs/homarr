@@ -70,11 +70,15 @@ export function CustomWidgetSourceField({
   const t = useI18n("customWidget.workbench.sources");
   let legend = source.name;
   if (index === 0) legend = t("primary");
-  if (compact) legend = undefined;
   const tCommon = useI18n("common");
 
   return (
-    <Fieldset legend={legend} p={compact ? 0 : undefined} style={compact ? { border: 0 } : undefined}>
+    <Fieldset
+      legend={legend || tCommon("field.source")}
+      classNames={compact ? { legend: classes.visuallyHiddenLegend } : undefined}
+      p={compact ? 0 : undefined}
+      style={compact ? { border: 0 } : undefined}
+    >
       <Stack gap="sm" className={compact && source.type !== "integration" ? classes.compactSource : undefined}>
         <Group grow align="start" display={compact ? "none" : undefined}>
           <CustomWidgetIdentifierInput
