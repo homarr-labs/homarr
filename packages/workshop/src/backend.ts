@@ -50,7 +50,7 @@ export interface WorkshopListOptions {
   sort?: "top" | "newest" | "recent" | "discussed";
   search?: string;
   author?: string;
-  type?: WorkshopSubmissionType | "all";
+  type?: WorkshopSubmissionType | "all" | "appearance";
   includeOutdated?: boolean;
   signal?: AbortSignal;
 }
@@ -180,7 +180,9 @@ function filterListings(items: WorkshopSubmissionSummary[], options: WorkshopLis
   const search = options.search?.trim().toLocaleLowerCase();
   return sortListings(
     items.filter((item) => {
-      if (options.type && options.type !== "all" && item.type !== options.type) return false;
+      if (options.type === "appearance") {
+        if (item.type !== "customTheme" && item.type !== "customCss") return false;
+      } else if (options.type && options.type !== "all" && item.type !== options.type) return false;
       if (options.author && item.author !== options.author) return false;
       if (options.includeOutdated === false && item.outdated) return false;
       if (search && !`${item.title}\n${item.description}\n${item.authorName}`.toLocaleLowerCase().includes(search))
@@ -200,7 +202,11 @@ const listingSort = (sort: WorkshopListOptions["sort"]) => {
 
 function listingFilter(pocketBase: TypedWorkshopPocketBase, options: WorkshopListOptions) {
   const filters: string[] = [];
-  if (options.type && options.type !== "all") filters.push(pocketBase.filter("type = {:type}", { type: options.type }));
+  if (options.type === "appearance") {
+    filters.push('(type = "customTheme" || type = "customCss")');
+  } else if (options.type && options.type !== "all") {
+    filters.push(pocketBase.filter("type = {:type}", { type: options.type }));
+  }
   if (options.search?.trim()) {
     filters.push(
       pocketBase.filter("(title ~ {:search} || description ~ {:search} || authorName ~ {:search})", {
@@ -502,7 +508,7 @@ export class WorkshopBackend {
     data.set("widgetSchema", WORKSHOP_SCHEMA_BY_TYPE[parsed.type]);
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
-      const result = await this.pocketBase.collection("submissions").create(data);
+      const result = await this.pocketBase.collection("submissions").create(data, { signal: requestSignal() });
       return this.get(result.id);
     } catch (error) {
       throw workshopError(error, "Failed to publish submission");

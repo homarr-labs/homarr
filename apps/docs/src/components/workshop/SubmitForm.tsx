@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   IconAlertCircle,
   IconBraces,
-  IconBrandCss3,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -114,7 +113,11 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
         const json = parseJsonObject(text);
-        if (json && ("preset" in json || "theme" in json)) {
+        const isTheme =
+          json &&
+          !Object.hasOwn(json, "$schema") &&
+          ["preset", "theme", "light", "dark", "customCss"].some((key) => Object.hasOwn(json, key));
+        if (isTheme) {
           setType("customTheme");
           setContent(text);
         } else {
@@ -321,12 +324,6 @@ const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string;
     icon: IconPalette,
     label: "Custom Theme",
     desc: "A complete theme from Homarr’s theme editor: preset, settings, and optional CSS",
-  },
-  {
-    type: "customCss",
-    icon: IconBrandCss3,
-    label: "Custom CSS",
-    desc: "A standalone stylesheet for Homarr dashboards",
   },
 ];
 

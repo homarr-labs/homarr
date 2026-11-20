@@ -6,6 +6,7 @@ import { IconExternalLink, IconUpload } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 import type { CustomTheme } from "@homarr/validation/theme";
+import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
 
 import { getWorkshopWebUrl } from "./workshop-client";
 import { WorkshopCodeViewer } from "./workshop-code-viewer";
@@ -13,8 +14,10 @@ import { WorkshopAccountButton, useWorkshopSession } from "./workshop-session";
 
 export function WorkshopThemePublishButton({ theme }: { theme: CustomTheme | undefined }) {
   const t = useI18n("workshop.theme");
+  const actions = useI18n("common.action");
+  const session = useWorkshopSession();
+  const publish = useWorkshopCreateMutation(session.client);
   const [document, setDocument] = useState<CustomTheme | null>(null);
-  const [pending, setPending] = useState(false);
 
   return (
     <>
@@ -32,13 +35,14 @@ export function WorkshopThemePublishButton({ theme }: { theme: CustomTheme | und
       <Modal
         opened={document !== null}
         onClose={() => setDocument(null)}
-        closeOnEscape={!pending}
-        closeOnClickOutside={!pending}
-        withCloseButton={!pending}
+        closeOnEscape={!publish.isPending}
+        closeOnClickOutside={!publish.isPending}
+        withCloseButton={!publish.isPending}
         title={t("share")}
+        closeButtonProps={{ "aria-label": actions("close") }}
         size="lg"
       >
-        {document && <PublishThemeForm document={document} pending={pending} setPending={setPending} />}
+        {document && <PublishThemeForm document={document} session={session} publish={publish} />}
       </Modal>
     </>
   );
@@ -46,15 +50,14 @@ export function WorkshopThemePublishButton({ theme }: { theme: CustomTheme | und
 
 function PublishThemeForm({
   document,
-  pending,
-  setPending,
+  session,
+  publish,
 }: {
   document: CustomTheme;
-  pending: boolean;
-  setPending: (pending: boolean) => void;
+  session: ReturnType<typeof useWorkshopSession>;
+  publish: ReturnType<typeof useWorkshopCreateMutation>;
 }) {
   const t = useI18n("workshop");
-  const session = useWorkshopSession();
   const [error, setError] = useState<string>();
   const [publishedId, setPublishedId] = useState<string>();
   const content = JSON.stringify(document);
@@ -81,22 +84,21 @@ function PublishThemeForm({
       method="post"
       onSubmit={async (event) => {
         event.preventDefault();
-        if (pending || !session.user) return;
+        if (publish.isPending || !session.user) return;
         const fields = new FormData(event.currentTarget);
         setError(undefined);
-        setPending(true);
         try {
-          const result = await session.client.create({
-            type: "customTheme",
-            title: String(fields.get("title") ?? ""),
-            description: String(fields.get("description") ?? ""),
-            content,
+          const result = await publish.mutateAsync({
+            input: {
+              type: "customTheme",
+              title: String(fields.get("title") ?? ""),
+              description: String(fields.get("description") ?? ""),
+              content,
+            },
           });
           setPublishedId(result.id);
         } catch (cause) {
           setError(cause instanceof Error ? cause.message : t("publish.error"));
-        } finally {
-          setPending(false);
         }
       }}
     >
@@ -114,7 +116,7 @@ function PublishThemeForm({
             {error}
           </Alert>
         )}
-        <Button type="submit" loading={pending} disabled={!session.user}>
+        <Button type="submit" loading={publish.isPending} disabled={!session.user}>
           {t("publish.action")}
         </Button>
       </Stack>

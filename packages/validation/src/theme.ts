@@ -314,38 +314,76 @@ const presetColorNames = new Set([
   "presetSecondaryDark",
 ]);
 
-export const customThemeSchema = z
-  .strictObject({
-    preset: z.enum(themeIds),
-    theme: customMantineThemeSchema,
-    light: paletteSchema.optional(),
-    dark: paletteSchema.optional(),
-    customCss: themeCustomCssSchema.optional(),
-  })
-  .superRefine((value, context) => {
-    const primary = value.theme.primaryColor;
-    if (
-      primary &&
-      !Object.hasOwn(value.theme.colors ?? {}, primary) &&
-      !defaultColorNames.has(primary) &&
-      !(value.preset !== "default" && presetColorNames.has(primary))
-    ) {
-      context.addIssue({
-        code: "custom",
-        path: ["theme", "primaryColor"],
-        message: "Choose a color defined by Mantine or in colors",
-      });
-    }
-    const { customCss: _css, ...configuration } = value;
-    if (JSON.stringify(configuration).length > 32_768) {
-      context.addIssue({ code: "custom", message: "Theme configuration exceeds 32 KB" });
-    }
-    if (JSON.stringify(value).length > customThemeMaxLength) {
-      context.addIssue({ code: "custom", message: "Theme bundle exceeds 48 KB" });
-    }
-  });
+const themeDocument = z.strictObject({
+  preset: z.enum(themeIds),
+  theme: customMantineThemeSchema,
+  light: paletteSchema.optional(),
+  dark: paletteSchema.optional(),
+  customCss: themeCustomCssSchema.optional(),
+});
+
+const checkThemeSize = (value: Partial<z.infer<typeof themeDocument>>, context: z.RefinementCtx) => {
+  const { customCss: _css, ...configuration } = value;
+  if (JSON.stringify(configuration).length > 32_768) {
+    context.addIssue({ code: "custom", message: "Theme configuration exceeds 32 KB" });
+  }
+  if (JSON.stringify(value).length > customThemeMaxLength) {
+    context.addIssue({ code: "custom", message: "Theme bundle exceeds 48 KB" });
+  }
+};
+
+export const customThemePatchSchema = themeDocument.partial().superRefine(checkThemeSize);
+export type CustomThemePatch = z.infer<typeof customThemePatchSchema>;
+
+export const customThemeSchema = themeDocument.superRefine((value, context) => {
+  checkThemeSize(value, context);
+  const primary = value.theme.primaryColor;
+  if (
+    primary &&
+    !Object.hasOwn(value.theme.colors ?? {}, primary) &&
+    !defaultColorNames.has(primary) &&
+    !(value.preset !== "default" && presetColorNames.has(primary))
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["theme", "primaryColor"],
+      message: "Choose a color defined by Mantine or in colors",
+    });
+  }
+});
 
 export type CustomTheme = z.infer<typeof customThemeSchema>;
+
+const isThemeObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const mergeThemeFields = (local: unknown, incoming: unknown): unknown => {
+  if (incoming === undefined) return local;
+  if (!isThemeObject(incoming)) return incoming;
+  const current = isThemeObject(local) ? local : {};
+  return Object.fromEntries([
+    ...Object.entries(current),
+    ...Object.entries(incoming).map(([key, value]) => [
+      key,
+      mergeThemeFields(Object.hasOwn(current, key) ? current[key] : undefined, value),
+    ]),
+  ]);
+};
+
+export function mergeCustomThemePatch(
+  local: CustomTheme,
+  patch: CustomThemePatch,
+  options: { usePreset: boolean; useCss: boolean },
+) {
+  const { preset, customCss, ...overrides } = patch;
+  return customThemeSchema.safeParse(
+    mergeThemeFields(local, {
+      ...overrides,
+      preset: options.usePreset ? preset : undefined,
+      customCss: options.useCss ? customCss : undefined,
+    }),
+  );
+}
 
 export interface ThemeSelection {
   themeId: ThemeSelectionId;

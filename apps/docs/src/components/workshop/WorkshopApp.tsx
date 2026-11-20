@@ -72,7 +72,6 @@ const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
   { value: "customWidget", label: "Widgets", dot: typeDotColors.customWidget },
   { value: "customTheme", label: "Themes", dot: typeDotColors.customTheme },
-  { value: "customCss", label: "CSS", dot: typeDotColors.customCss },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },

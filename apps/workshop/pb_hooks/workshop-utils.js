@@ -9,6 +9,37 @@ const submissionSchemas = {
   customCss: "homarr-custom-css-v1",
   customTheme: "homarr-custom-theme-v1",
 };
+const themePresets = new Set([
+  "default",
+  "absolutely",
+  "ayu",
+  "cappuccin",
+  "dracula",
+  "everforest",
+  "github",
+  "gruvbox",
+  "linear",
+  "lobster",
+  "material",
+  "matrix",
+  "monokai",
+  "night-owl",
+  "nord",
+  "notion",
+  "og",
+  "one",
+  "oscurange",
+  "raycast",
+  "rose-pine",
+  "sentry",
+  "shadcn",
+  "solarized",
+  "temple",
+  "tokyo-night",
+  "vercel",
+  "vscode-plus",
+  "xcode",
+]);
 const isManifestMap = (value, max) =>
   isManifestObject(value) &&
   Object.keys(value).length <= max &&
@@ -92,8 +123,8 @@ const validateThemeManifest = (content) => {
   }
   if (
     !isManifestObject(theme) ||
-    !isManifestString(theme.preset, 48) ||
-    !isManifestObject(theme.theme) ||
+    (theme.preset !== undefined && !themePresets.has(theme.preset)) ||
+    (theme.theme !== undefined && !isManifestObject(theme.theme)) ||
     Object.keys(theme).some((key) => !["preset", "theme", "light", "dark", "customCss"].includes(key)) ||
     (theme.light !== undefined && !isManifestObject(theme.light)) ||
     (theme.dark !== undefined && !isManifestObject(theme.dark))

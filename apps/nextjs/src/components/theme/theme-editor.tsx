@@ -43,7 +43,12 @@ import { useI18n } from "@homarr/translation/client";
 import { ThemeSelect } from "@homarr/ui/theme-select";
 import { getThemePalette } from "@homarr/ui/themes";
 import type { CustomTheme } from "@homarr/validation/theme";
-import { customThemeMaxLength, customThemeSchema, resolveThemeSelection } from "@homarr/validation/theme";
+import {
+  customThemeMaxLength,
+  customThemeSchema,
+  mergeCustomThemePatch,
+  resolveThemeSelection,
+} from "@homarr/validation/theme";
 import type { ThemeControl } from "@homarr/validation/theme-controls";
 import {
   getThemeControlValue,
@@ -57,6 +62,8 @@ import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
 import { WorkshopCssImportButton, WorkshopThemeImportButton } from "~/components/workshop/workshop-css-import-button";
 import { WorkshopThemePublishButton } from "~/components/workshop/workshop-theme-publish-button";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
+import type { ThemeImportHandler } from "./theme-import-form";
+import { ThemeJsonTransfer } from "./theme-json-transfer";
 import type { ThemeSelection } from "~/theme/branding";
 import { createAppearanceTheme, resolveActiveTheme } from "~/theme/branding";
 import type { ThemePreviewMessage } from "./theme-preview-context";
@@ -81,6 +88,7 @@ export const ThemeEditor = ({
 }) => {
   const t = useI18n("common.customTheme");
   const common = useI18n("common");
+  const workshopTheme = useI18n("workshop.theme");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const query = clientApi.theme.get.useQuery(undefined, { initialData });
@@ -197,6 +205,16 @@ export const ThemeEditor = ({
     setEditingControl(null);
     const next = updateThemeDraft(document, changes);
     updateSelection({ themeId: "custom", customTheme: next });
+  };
+
+  const importTheme: ThemeImportHandler = (patch, options) => {
+    if (!parsed.success || jsonError) return t("editor.invalidJson");
+    const merged = mergeCustomThemePatch(parsed.data, patch, options);
+    if (!merged.success) return merged.error.issues[0]?.message ?? t("editor.invalidJson");
+    if (JSON.stringify(merged.data) === JSON.stringify(parsed.data)) return workshopTheme("noChanges");
+    setEditingControl(null);
+    if (options.useCss) setIncludeCustomCss(true);
+    updateSelection({ themeId: "custom", customTheme: merged.data });
   };
 
   const updateControl = (path: string, value: string | number | boolean | null) => {
@@ -453,12 +471,10 @@ export const ThemeEditor = ({
           </Button>
         </Group>
         <Group>
-          <WorkshopThemeImportButton
-            onImport={(customTheme) => {
-              setEditingControl(null);
-              setIncludeCustomCss(false);
-              updateSelection({ themeId: "custom", customTheme });
-            }}
+          <WorkshopThemeImportButton onImport={importTheme} />
+          <ThemeJsonTransfer
+            json={parsed.success && !jsonError ? JSON.stringify(parsed.data, null, 2) : undefined}
+            onImport={importTheme}
           />
           <WorkshopThemePublishButton theme={selection.themeId === "custom" && !jsonError ? parsed.data : undefined} />
         </Group>

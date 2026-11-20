@@ -219,6 +219,7 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
+  const [manualCopy, setManualCopy] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -514,6 +515,10 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);
     } catch {
+      if (submission.type === "customTheme") {
+        setManualCopy(true);
+        return;
+      }
       setCopyFailed(true);
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyFailedTimer.current = setTimeout(() => setCopyFailed(false), 2000);
@@ -797,6 +802,24 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
               </Button>
             </div>
           </section>
+          {manualCopy && submission.type === "customTheme" && (
+            <section>
+              <label className="block text-sm font-medium" htmlFor="workshop-copy-theme-json">
+                Clipboard access is unavailable. Select and copy the theme JSON below.
+              </label>
+              <textarea
+                id="workshop-copy-theme-json"
+                readOnly
+                value={submission.content}
+                rows={6}
+                className="mt-2 w-full rounded-md border bg-background p-3 font-mono text-sm"
+                onFocus={(event) => event.currentTarget.select()}
+                ref={(element) => {
+                  element?.focus();
+                }}
+              />
+            </section>
+          )}
           {widgetDefinition && (
             <section className="rounded-xl border border-border bg-card p-5">
               <h2 className="font-semibold">Widget details</h2>

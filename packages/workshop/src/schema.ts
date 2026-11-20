@@ -2,8 +2,8 @@ import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
 import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
-import type { CustomTheme } from "@homarr/validation/theme";
-import { customThemeSchema } from "@homarr/validation/theme";
+import type { CustomThemePatch } from "@homarr/validation/theme";
+import { customThemePatchSchema } from "@homarr/validation/theme";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
 export const WORKSHOP_API_URL = HOMARR_WEBSITE_URL;
@@ -238,9 +238,11 @@ export type WorkshopWidgetValidationResult =
   | { success: true; data: z.infer<typeof customWidgetImportSchema> }
   | { success: false; error: string };
 export type WorkshopValidationResult =
-  | { success: true; data: z.infer<typeof customWidgetImportSchema> | CustomTheme | string }
+  | { success: true; data: z.infer<typeof customWidgetImportSchema> | CustomThemePatch | string }
   | { success: false; error: string };
 
+export function validateWorkshopContent(type: "customWidget", content: string): WorkshopWidgetValidationResult;
+export function validateWorkshopContent(type: WorkshopSubmissionType, content: string): WorkshopValidationResult;
 export function validateWorkshopContent(type: WorkshopSubmissionType, content: string): WorkshopValidationResult {
   if (type === "customCss") {
     if (!content.trim()) return { success: false, error: "CSS cannot be empty" };
@@ -266,7 +268,7 @@ export function formatWorkshopContent(type: WorkshopSubmissionType, content: str
 
 export function validateWorkshopTheme(
   content: string,
-): { success: true; data: CustomTheme } | { success: false; error: string } {
+): { success: true; data: CustomThemePatch } | { success: false; error: string } {
   if (content.length > MAX_WORKSHOP_CONTENT_LENGTH) {
     return { success: false, error: "Theme JSON is too large" };
   }
@@ -276,7 +278,7 @@ export function validateWorkshopTheme(
   } catch {
     return { success: false, error: "Theme content is not valid JSON" };
   }
-  const result = customThemeSchema.safeParse(parsed);
+  const result = customThemePatchSchema.safeParse(parsed);
   if (result.success) return { success: true, data: result.data };
   return {
     success: false,
@@ -285,6 +287,18 @@ export function validateWorkshopTheme(
       .map((issue) => `${issue.path.join(".") || "theme"}: ${issue.message}`)
       .join("\n"),
   };
+}
+
+export function readWorkshopTheme(submission: WorkshopSubmissionDetail): ReturnType<typeof validateWorkshopTheme> {
+  if (submission.type === "customTheme" && submission.widgetSchema === WORKSHOP_THEME_SCHEMA) {
+    return validateWorkshopTheme(submission.content);
+  }
+  if (submission.type === "customCss" && submission.widgetSchema === WORKSHOP_CSS_SCHEMA) {
+    const validation = validateWorkshopContent("customCss", submission.content);
+    if (!validation.success) return validation;
+    return { success: true, data: { preset: "default", theme: {}, customCss: submission.content } };
+  }
+  return { success: false, error: "Unsupported Workshop theme format" };
 }
 
 export function validateWorkshopWidget(content: string): WorkshopWidgetValidationResult {

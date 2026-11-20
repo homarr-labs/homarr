@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import { useRef, useState } from "react";
 import type { ButtonProps } from "@mantine/core";
 import { ActionIcon, Button, Group, Loader, Modal, Pagination, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
@@ -10,18 +9,17 @@ import { IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react"
 import { modalSizeSelect, useConfirmModal } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import type { CustomTheme } from "@homarr/validation/theme";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
-import { WORKSHOP_SCHEMA_BY_TYPE, validateWorkshopContent, validateWorkshopTheme } from "@homarr/workshop/schema";
+import { readWorkshopTheme } from "@homarr/workshop/schema";
 
 import { NoResults } from "@homarr/ui";
+import type { ThemeImportHandler } from "~/components/theme/theme-import-form";
+import { ThemeImportForm } from "~/components/theme/theme-import-form";
 import { getWorkshopWebUrl } from "./workshop-client";
 import { useWorkshopSession } from "./workshop-session";
 import { WorkshopSubmissionGrid } from "./workshop-submission-grid";
 import { WorkshopVoteControl } from "./workshop-vote-control";
-
-const WorkshopCodeViewer = dynamic(() => import("./workshop-code-viewer").then((module) => module.WorkshopCodeViewer));
 
 /**
  * Picks a community CSS theme in a single surface: browse, confirm, done.
@@ -38,16 +36,17 @@ export function WorkshopCssImportButton({
   return <WorkshopAppearanceImportButton type="customCss" size={size} onImport={onImport} />;
 }
 
-export function WorkshopThemeImportButton({ onImport }: { onImport(theme: CustomTheme): void }) {
+export function WorkshopThemeImportButton({ onImport }: { onImport: ThemeImportHandler }) {
   return <WorkshopAppearanceImportButton type="customTheme" onImport={onImport} />;
 }
 
 type AppearanceImport =
   | { type: "customCss"; onImport(css: string): void }
-  | { type: "customTheme"; onImport(theme: CustomTheme): void };
+  | { type: "customTheme"; onImport: ThemeImportHandler };
 
 function WorkshopAppearanceImportButton(props: AppearanceImport & { size?: ButtonProps["size"] }) {
   const t = useI18n("workshop");
+  const actions = useI18n("common.action");
   const [opened, controls] = useDisclosure(false);
   const title = t(props.type === "customTheme" ? "theme.browse" : "importCss");
 
@@ -62,7 +61,14 @@ function WorkshopAppearanceImportButton(props: AppearanceImport & { size?: Butto
       >
         {title}
       </Button>
-      <Modal opened={opened} onClose={controls.close} title={title} size={modalSizeSelect} radius="md">
+      <Modal
+        opened={opened}
+        onClose={controls.close}
+        title={title}
+        closeButtonProps={{ "aria-label": actions("close") }}
+        size={modalSizeSelect}
+        radius="md"
+      >
         {opened && <WorkshopAppearancePicker {...props} onClose={controls.close} />}
       </Modal>
     </>
@@ -77,8 +83,7 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
   const [debouncedSearch] = useDebouncedValue(search, 250);
   const [page, setPage] = useState(1);
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const [review, setReview] = useState<{ item: WorkshopSubmissionSummary; theme: CustomTheme } | null>(null);
-  const reviewBack = useRef<HTMLButtonElement>(null);
+  const [review, setReview] = useState<{ title: string; json: string } | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const isTheme = props.type === "customTheme";
   const searchLabel = t(isTheme ? "theme.search" : "searchCss");
@@ -86,33 +91,24 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
   const query = useWorkshopQuery(session.client, {
     page,
     perPage: 8,
-    type: props.type,
+    type: "appearance",
     sort: "top",
     search: debouncedSearch,
   });
   const totalPages = query.data?.totalPages ?? 1;
 
-  useEffect(() => {
-    if (review) reviewBack.current?.focus();
-  }, [review]);
-
   const reviewSubmission = async (item: WorkshopSubmissionSummary) => {
     setPendingId(item.id);
     try {
       const submission = await session.client.get(item.id);
-      if (submission.type !== props.type || submission.widgetSchema !== WORKSHOP_SCHEMA_BY_TYPE[props.type]) {
-        throw new Error(t("loadError"));
-      }
+      const validation = readWorkshopTheme(submission);
+      if (!validation.success) throw new Error(validation.error);
       if (props.type === "customTheme") {
-        const validation = validateWorkshopTheme(submission.content);
-        if (!validation.success) throw new Error(validation.error);
-        setReview({ item: submission, theme: validation.data });
+        setReview({ title: submission.title, json: JSON.stringify(validation.data, null, 2) });
         return;
       }
-      const validation = validateWorkshopContent("customCss", submission.content);
-      if (!validation.success) throw new Error(validation.error);
-      const css = validation.data;
-      if (typeof css !== "string") throw new Error(t("loadError"));
+      const css = validation.data.customCss;
+      if (!css?.trim()) throw new Error(t("theme.noCss"));
       openConfirmModal({
         title: t("importCss"),
         children: t("importCssConfirm", { title: item.title }),
@@ -134,30 +130,20 @@ function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void })
   if (review && props.type === "customTheme") {
     return (
       <Stack gap="md">
-        <Text fw={600}>{review.item.title}</Text>
-        <Text size="sm">{t("theme.importConfirm")}</Text>
-        {review.theme.customCss && <Text size="sm">{t("theme.cssWarning")}</Text>}
-        <WorkshopCodeViewer value={JSON.stringify(review.theme)} language="json" height="240px" />
-        <Group justify="space-between">
-          <Button
-            ref={reviewBack}
-            variant="default"
-            onClick={() => {
-              setReview(null);
-              requestAnimationFrame(() => searchInput.current?.focus());
-            }}
-          >
-            {t("theme.backToThemes")}
-          </Button>
-          <Button
-            onClick={() => {
-              props.onImport(review.theme);
-              props.onClose();
-            }}
-          >
-            {t("theme.loadDraft")}
-          </Button>
-        </Group>
+        <Text fw={600}>{review.title}</Text>
+        <ThemeImportForm
+          value={review.json}
+          onImport={(patch, options) => {
+            const error = props.onImport(patch, options);
+            if (!error) props.onClose();
+            return error;
+          }}
+          onBack={() => {
+            setReview(null);
+            requestAnimationFrame(() => searchInput.current?.focus());
+          }}
+          backLabel={t("theme.backToThemes")}
+        />
       </Stack>
     );
   }
