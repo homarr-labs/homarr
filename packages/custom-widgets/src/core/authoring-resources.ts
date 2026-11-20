@@ -1,5 +1,10 @@
 import { customJsxAuthoringCatalog } from "./component-catalog";
-import { commonSafeProps } from "./component-props";
+import {
+  CUSTOM_WIDGET_COMMON_CHART_GUIDANCE,
+  CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE,
+  CUSTOM_WIDGET_SKILL_SOURCE_URL,
+} from "./ai-prompt";
+import type { CustomJsxPropDescriptor } from "./component-catalog-types";
 import { CUSTOM_WIDGET_SCHEMA } from "./custom-jsx-schema";
 import { customJsxTablerIconExamples } from "./tabler-icons";
 
@@ -42,18 +47,80 @@ const assistantCommonComponentNames = new Set([
   "Tabs",
 ]);
 
+const assistantSharedPropNames = new Set(
+  [
+    "m mx my mt mb ml mr ms me mis mie p px py pt pb pl pr ps pe pis pie",
+    "w h miw maw mih mah display flex opacity c bg bga bgp bgr bgsz bd bdrs ff fs fw fz lh lts ta td tt",
+    "hiddenFrom visibleFrom lightHidden darkHidden mod style radius shadow withBorder",
+    "id title role hidden tabIndex aria-label aria-labelledby aria-describedby",
+    "aria-hidden aria-live aria-busy aria-current aria-valuenow aria-valuemin aria-valuemax",
+  ].flatMap((names) => names.split(" ")),
+);
+const cssWideKeywords = new Set(['"-moz-initial"', '"inherit"', '"initial"', '"revert"', '"revert-layer"', '"unset"']);
+const maximumInlineTypeLength = 32;
+
+const isAssistantReferenceProp = (name: string) =>
+  name !== "attributes" && name !== "unstyled" && !name.endsWith("Props");
+
 const assistantReferenceComponents = customJsxAuthoringCatalog.components.filter(
   ({ name, safety, package: packageName }) =>
     safety !== "denied" && (assistantCommonComponentNames.has(name) || packageName === "@homarr/widgets"),
 );
-const assistantSharedPropNames = new Set<string>(commonSafeProps);
-const assistantSharedProps = customJsxAuthoringCatalog.globalProps.filter(({ name }) =>
+const assistantReferenceSharedProps = customJsxAuthoringCatalog.globalProps.filter(({ name }) =>
   assistantSharedPropNames.has(name),
 );
-const assistantReferenceTypeIds = new Set(
-  [...assistantSharedProps, ...assistantReferenceComponents.flatMap(({ props }) => props)].map(
-    ({ typeRef }) => typeRef,
-  ),
+const getAssistantReferenceType = (typeRef: number) => {
+  const members = (customJsxAuthoringCatalog.types[typeRef] ?? "unknown")
+    .split(" | ")
+    .filter((member) => !cssWideKeywords.has(member));
+  const booleanMembers = new Set(["false", "true", '"false"', '"true"']);
+  if (members.includes("false") && members.includes("true")) {
+    return ["boolean", ...members.filter((member) => !booleanMembers.has(member))].join(" | ");
+  }
+  return members.join(" | ");
+};
+const assistantReferenceTypes = new Map<number, string>();
+const getAssistantReferencePropType = (typeRef: number) => {
+  const type = getAssistantReferenceType(typeRef);
+  if (type.length <= maximumInlineTypeLength) return type;
+  assistantReferenceTypes.set(typeRef, type);
+  return typeRef;
+};
+const toAssistantReferenceProps = (props: readonly CustomJsxPropDescriptor[]) =>
+  Object.fromEntries(
+    props
+      .filter(({ name }) => isAssistantReferenceProp(name))
+      .map(({ name, typeRef }) => [name, getAssistantReferencePropType(typeRef)]),
+  );
+const groupAssistantReferenceProps = (props: readonly CustomJsxPropDescriptor[]) => {
+  const namesByType = new Map<string | number, string[]>();
+  for (const { name, typeRef } of props) {
+    const type = getAssistantReferencePropType(typeRef);
+    namesByType.set(type, [...(namesByType.get(type) ?? []), name]);
+  }
+  return Object.fromEntries([...namesByType].map(([type, names]) => [names.join(" "), type]));
+};
+const enabledComponentNames = new Set(
+  customJsxAuthoringCatalog.components.filter(({ safety }) => safety !== "denied").map(({ name }) => name),
+);
+const flatComponentAliases = new Set(
+  [...enabledComponentNames].filter((name) => name.includes(".")).map((name) => name.replaceAll(".", "")),
+);
+const assistantSharedProps = groupAssistantReferenceProps(assistantReferenceSharedProps);
+const assistantComponents = assistantReferenceComponents.map(
+  ({ name, description, props, blockedProps, bind, subcomponents, accessibilityRequirements }) => {
+    const required = props.filter((prop) => prop.required).map((prop) => prop.name);
+    return {
+      name,
+      ...(description ? { description } : {}),
+      props: toAssistantReferenceProps(props),
+      ...(required.length > 0 ? { required } : {}),
+      ...(blockedProps.length > 0 ? { blockedProps: blockedProps.map((prop) => prop.name) } : {}),
+      ...(bind ? { bind } : {}),
+      ...(subcomponents.length > 0 ? { subcomponents } : {}),
+      accessibilityRequirements,
+    };
+  },
 );
 
 export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
@@ -62,28 +129,15 @@ export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
   iconNaming:
     "All installed Tabler kebab-case names are supported; iconNames are examples. Filled icons end in -filled.",
   format:
-    "Props are [name, type ID, required]. Common shared props apply unless blocked. Type IDs resolve through types. Fetch other shared props with customWidget_getSharedProps; supported names remain available in the component catalog.",
-  types: Object.fromEntries([...assistantReferenceTypeIds].map((id) => [id, customJsxAuthoringCatalog.types[id]])),
-  registeredNames: customJsxAuthoringCatalog.components
-    .filter(({ safety }) => safety !== "denied")
-    .map(({ name }) => name),
-  sharedProps: assistantSharedProps.map(({ name, typeRef, required }) => [name, typeRef, required]),
-  components: assistantReferenceComponents.map(
-    ({ name, description, props, blockedProps, bind, subcomponents, accessibilityRequirements }) => ({
-      name,
-      description,
-      props: props.map(({ name: propName, typeRef, required }) => [propName, typeRef, required]),
-      blockedProps,
-      bind,
-      subcomponents,
-      accessibilityRequirements,
-    }),
-  ),
+    "props map each name to its type, or to a numeric ID resolved through types. sharedProps map space-separated names to one type and apply to every component unless blocked; other standard HTML, SVG and aria-* attributes, low-level *Props objects, attributes and unstyled are omitted. Dotted names also accept their flat alias (Tabs.Tab = TabsTab).",
+  types: Object.fromEntries(assistantReferenceTypes),
+  registeredNames: [...enabledComponentNames].filter((name) => !flatComponentAliases.has(name)),
+  sharedProps: assistantSharedProps,
+  components: assistantComponents,
 });
 
 export const CUSTOM_WIDGET_SKILLS_SH_URL = "https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
-  "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
+export { CUSTOM_WIDGET_SKILL_SOURCE_URL } from "./ai-prompt";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.9";
@@ -118,84 +172,51 @@ export function getCustomWidgetContextRequestKey(toolName: string, input: unknow
 export const CUSTOM_WIDGET_SKILL_REFERENCES = {
   "references/schema.md": `# Schema
 
-\`\`\`ts
-interface HomarrCustomWidgetV2 {
-  $schema: "${CUSTOM_WIDGET_SCHEMA}";
-  name: string;
-  description?: string;
-  iconUrl?: string;
-  sources: Record<string, CustomWidgetSource>;
-  requests: Record<string, CustomWidgetRequest>;
-  options?: Record<string, CustomWidgetOption>;
-  template: string;
-}
-\`\`\`
-
-\`sources.default\` is required. HTTP sources have \`baseUrl\`, optional \`name\`, and optional \`auth\` (default \`"none"\`). Base URLs
-have no credentials, query, or fragment. Use documented public URLs or \`https://your-service.example.com\` for missing
-self-hosted URLs; Homarr configures URLs and credentials separately.
+Import requires \`$schema\`, \`name\`, keyed \`sources\`/\`requests\`, and one JSX \`template\` string.
+Optional: \`description\`, valid URL \`iconUrl\`, keyed \`options\`. Key \`default\` is required in sources, not a source property.
 
 \`\`\`json
 {
-  "sources": {
-    "default": {
-      "baseUrl": "https://your-service.example.com/api/v1",
-      "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
-    }
-  },
-  "requests": {
-    "summary": { "path": "/summary" },
-    "search": {
-      "trigger": "manual",
-      "path": "/search",
-      "query": { "q": { "$param": "query" }, "page": { "$param": "page" } }
-    },
-    "create": {
-      "kind": "action",
-      "method": "POST",
-      "path": "/items",
-      "body": { "id": { "$param": "id" } },
-      "confirmation": "Create this item?",
-      "invalidates": ["summary"]
-    }
-  }
+  "$schema": "${CUSTOM_WIDGET_SCHEMA}",
+  "name": "Service summary",
+  "sources": { "default": { "baseUrl": "https://your-service.example.com/api", "auth": "bearer" } },
+  "requests": { "summary": { "path": "/summary", "trigger": "load" } },
+  "template": "<Text>{data.summary?.title}</Text>"
 }
 \`\`\`
 
-Auth: \`"none"\`, \`"bearer"\`, \`"basic"\`, \`{"type":"apiKeyHeader","name":"X-Api-Key"}\`, or
-\`{"type":"apiKeyQuery","name":"api_key"}\`. Values are credential-free declarations.
+Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`; paths append to its URL and exports omit \`integrationId\`.
 
-Multiple encrypted headers use \`{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}\`.
-Use at most 8 HTTP-token names, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Configure
-values separately in Homarr. Header name or slot changes require credential configuration again. Use \`bearer\` for
-Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+HTTP sources have optional \`name\`, required \`baseUrl\`, and credential-free \`auth\` forms:
+\`"none"\`, \`"bearer"\`, \`"basic"\`, \`{"type":"apiKeyHeader","name":"X-Api-Key"}\`,
+\`{"type":"apiKeyQuery","name":"api_key"}\`, or \`{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"}]}\`.
+\`{"type":"none"}\` is invalid. Headers auth sends up to 8 encrypted headers: unique names, distinct slots of at most
+57 characters; renaming either needs reconfiguration. Use \`bearer\` for Authorization; routing/proxy/cookie/hop-by-hop headers
+are reserved. Configure values only in Homarr's secure credential UI, never chat or definitions.
 
-Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover supported kinds
-and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
-saved URL; non-GET requests are actions. Portable exports omit integrationId.
+Requests default to source \`default\`, query/GET/load, inherited auth and view permission. Use \`load\` for initial/current
+display and \`manual\` for explicit interactions or invocation params. Actions default to modify permission.
+${CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE}
 
-Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
-explicit interactions use manual. Actions stay manual with modify permission; DELETE requires full permission and
-confirmation. Preserve confirmation, permission, and invalidates. Query responses are decoded JSON; application/x-ndjson is
-an array of decoded lines.
+JSON responses become their decoded value; \`application/x-ndjson\` becomes an array of decoded lines. Use real public
+API URLs and clear self-hosted placeholders; Homarr collects URL and credentials outside the manifest.
 
-Paths start with \`/\` and use \`{option:name}\`/\`{param:name}\`. Query/body bindings use \`{"$option":"name"}\`/\`{"$param":"name"}\`.
-\`$param\` is manual-only; \`$option\` may drive loads. Path/query values are primitive; JSON bodies may contain structured options.
+Paths start with \`/\`; use \`{option:name}\`/\`{param:name}\` in paths and \`{"$option":"name"}\`/\`{"$param":"name"}\` in query/body.
+\`$param\` is manual-only; \`$option\` may drive loads. Path/query values are primitive. Actions use \`kind:"action"\`,
+\`trigger:"manual"\`, method/body, permission, confirmation, and \`invalidates\` request IDs; never invent mutation endpoints.
 
-Every option has label, control, default. Optional fields: description, choices, choicesFrom, min, max, step, advanced, group.
-Static select choices are label/value objects; choicesFrom uses request, optional itemsPath, valuePath, and labelPath. Use a
-load request and preserve its response envelope. Structured options use control \`json\`.
+Options: required \`label\`/\`control\`/\`default\`; optional \`description\`/\`choices\`/\`choicesFrom\`/\`min\`/\`max\`/\`step\`/\`advanced\`/\`group\`.
+Controls: \`text\`, \`textarea\`, \`number\`, \`switch\`, \`select\`, \`multiSelect\`, \`slider\`, \`date\`, \`time\`, \`color\`, \`icon\`, \`url\`,
+\`duration\`, \`timeZone\`, \`json\`. \`choices\`/\`choicesFrom\` need \`select\` or \`multiSelect\`.
 `,
   "references/runtime.md": `# Runtime
 
-Load queries read \`data.requestId\` (the untouched decoded response body) and \`status.requestId\` (\`loading\`, \`ok\`, \`status\`,
-\`statusText\`, \`error\`). For request \`events\` returning \`{"events":[...]}\`, use \`data.events.events\`. Guard optional arrays and
-nested fields; \`status.events?.ok === false\` is an error. Keep sibling request states independent. Use one RefreshButton per
-load request outside its state branches.
+Load q with body B gives \`data.q === B\`; \`q=events\`/\`B={"events":[...]}\` gives \`data.events.events\`.
+Keep sibling states independent, guard optional arrays/nesting, and handle loading/error/empty/success.
+Status is \`{ loading, ok, status, statusText, error }\`; \`status.q?.ok === false\` means error.
+One RefreshButton per load stays outside its branches; \`requestId\`, never \`request\`. Omit it to refresh all loads.
 
-Manual queries set \`trigger: "manual"\` on both request and SubFetch. Results stay local to that SubFetch; its child receives
-\`(result, metadata)\` with the same response envelope. SubFetch owns loading/error/retry, and metadata has
-\`{ ok, status, statusText, loading: false }\`.
+Options are installation config (\`options.name\`). Temporary controls use literal \`bind\`, defaults and \`inputs.name\`:
 
 \`\`\`jsx
 <Stack>
@@ -213,28 +234,31 @@ Manual queries set \`trigger: "manual"\` on both request and SubFetch. Results s
 </Stack>
 \`\`\`
 
-SubFetch/ActionButton params match exactly the \`$param\`/\`{param:name}\` references in that request. Fixed values belong in
-request query/body. When a manual request ID, params, or definition changes, the prior result hides until triggered again.
-Inside a successful manual result, RefreshButton with the same requestId reruns its captured parameters.
+Manual queries set trigger manual on request and SubFetch. Their body stays local to the child \`(result, meta)\`, never global
+data/status. SubFetch owns loading/error/retry; meta has ok/status/statusText/loading=false. When ID, params or definition
+changes, the previous result hides until triggered again. RefreshButton inside success reruns captured params.
+SubFetch/ActionButton/ToggleSwitch require literal requestId. triggerContent/triggerAriaLabel is already a button: use
+non-interactive content. Actions run explicitly, publish local data/status until reload, and retain confirmation/permissions/invalidates.
 
-SubFetch, ActionButton, and ToggleSwitch need literal requestId. \`triggerContent\` plus \`triggerAriaLabel\` supplies a SubFetch
-launcher already wrapped in a button; use non-interactive Text/Card content. Actions never run automatically. After an
-explicit ActionButton/ToggleSwitch invocation, its response appears in that widget's \`data.requestId\`/\`status.requestId\` until
-reload. Guard the initial state. Preserve request confirmation, permission, and invalidations.
+Params match exactly the request's $param/{param:name}: string/number/boolean, never undefined/null.
+Fixed values belong in query/body. Omitted optional values need verified request variants; empty strings need API support.
+Validate nonblank optional inputs, show field errors and block invalid requests. Every control changes a request/selection.
+Switch/Checkbox use defaultChecked; dependent pagination uses defaultValue={1}/resetKey={inputs.query}.
 
-Installation options use \`options.name\`. Temporary controls use literal \`bind\` and \`defaultValue\` (\`defaultChecked\` for
-Switch/Checkbox); send \`inputs.name\` through manual params. Dependent pagination uses \`defaultValue={1}\` and
-\`resetKey={inputs.search}\`. Controls must affect a request or visible selection.
+Safe Date: toISOString/toLocaleString/toLocaleDateString/toLocaleTimeString/getTime/now. Guard timestamps; pass
+Date.toLocaleString(value, "en-US", documentedTimezone), otherwise omit timezone argument/label. UTC requires a UTC contract.
+Countdown milliseconds: Date.getTime(isoTimestamp) - Date.now(). No constructors, Date.parse or Intl.
+Numbers support \`n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })\`, percent/currency/unit/signDisplay.
+Guard scalar types and finite numbers, preserve 0/false, and use — for missing values. Convert numbers before relabeling units.
+Map cross-collection IDs to verified names or retain IDs. Follow documented rate semantics.
 
-Safe Date helpers: \`Date.toISOString\`, \`Date.toLocaleString\`, \`Date.toLocaleDateString\`, \`Date.toLocaleTimeString\`,
-\`Date.getTime\`, and \`Date.now\`. Guard missing timestamps. Use \`Date.toLocaleString(value, "en-US", documentedTimezone)\` when a
-timezone is specified; otherwise omit the timezone argument/label or preserve the source value. Label UTC only when the
-contract says UTC. Countdowns use \`Date.getTime(isoTimestamp) - Date.now()\` in milliseconds. Constructors and Date.parse are
-unavailable.
+Keep requested fields/collections reachable through summaries, tables/details, filters, pagination or a bounded ScrollArea; never silently slice rows.
+Label partial results/totals and verify pagination. Bounded response observations are not full schemas.
 
-Use registered component names; Icon aliases TablerIcon and accepts installed kebab-case names. Concise expression callbacks
-support collections and trusted slots; their parameters cannot shadow \`data\`, \`status\`, \`options\`, or \`inputs\`. Regex is
-limited to safe string operations. Numeric enums can use a literal label array with a fallback.
+${CUSTOM_WIDGET_COMMON_CHART_GUIDANCE}
+
+Use registered names, Icon/TablerIcon with installed kebab-case names, concise expression callbacks and bounded regex.
+Callback parameters cannot shadow data/status/options/inputs. Never invent IconFoo components or raw browser callbacks.
 `,
   "references/security.md": `# Security
 

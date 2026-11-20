@@ -11,14 +11,15 @@ import { FormErrorBoundary } from "../_form-error-boundary";
 export default async function NewCustomWidgetPage({
   searchParams,
 }: {
-  searchParams: Promise<{ name?: string | string[] }>;
+  searchParams: Promise<{ name?: string | string[]; mode?: string }>;
 }) {
   const session = await auth();
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
   const t = await getI18n("customWidget");
-  const { name } = await searchParams;
+  const { name, mode } = await searchParams;
+  const assisted = mode === "assisted";
   const initialValues = typeof name === "string" && name.trim() ? { name: name.trim() } : undefined;
 
   return (
@@ -33,7 +34,11 @@ export default async function NewCustomWidgetPage({
             </Text>
           </div>
           <FormErrorBoundary>
-            <CustomWidgetForm mode="create" initialValues={initialValues} />
+            <CustomWidgetForm
+              mode="create"
+              initialValues={initialValues}
+              initialAuthoringMode={assisted ? "assisted" : "advanced"}
+            />
           </FormErrorBoundary>
         </Stack>
       </Container>

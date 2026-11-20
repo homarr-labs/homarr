@@ -4,6 +4,7 @@ import type { InferSelectModel } from "drizzle-orm";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import {
+  collectCustomWidgetRequestReferences,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
@@ -75,7 +76,9 @@ export function mapCustomWidgetListItem(
   };
 }
 
-export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
+export function mapLegacyCustomWidgetListItem(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "url" | "authType" | "updatedAt">,
+) {
   return {
     id: definition.id,
     managementPath: "/manage/custom-widgets",
@@ -141,7 +144,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
         }),
       ),
       optionRequests: Object.entries(widget.requests).flatMap(([id, request]) =>
-        request.kind === "query" ? [{ id }] : [],
+        request.kind === "query"
+          ? [{ id, configurationKeys: [...collectCustomWidgetRequestReferences(request).options] }]
+          : [],
       ),
       updatedAt: definition.updatedAt,
       migrationRequired: false as const,
@@ -149,7 +154,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
   ];
 }
 
-export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
+export function mapLegacyAvailableCustomWidget(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "updatedAt">,
+) {
   return {
     id: definition.id,
     name: definition.name,
