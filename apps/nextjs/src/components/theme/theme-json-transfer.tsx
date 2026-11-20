@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Group, Modal, Stack, Text, Textarea } from "@mantine/core";
 import { useTimeout } from "@mantine/hooks";
 import { IconClipboard, IconCopy } from "@tabler/icons-react";
@@ -17,6 +17,7 @@ export function ThemeJsonTransfer({ json, onImport }: { json: string | undefined
   const [pasteText, setPasteText] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState("");
   const [pasteStatus, setPasteStatus] = useState("");
+  const pasteRead = useRef(0);
   const resetCopyStatus = useTimeout(() => setCopyStatus(""), 2_500);
 
   const copy = async () => {
@@ -33,15 +34,23 @@ export function ThemeJsonTransfer({ json, onImport }: { json: string | undefined
   };
 
   const paste = async () => {
+    const request = ++pasteRead.current;
     setPasteStatus("");
     setPasteText("");
     try {
       const text = await navigator.clipboard.readText();
-      if (text) setPasteText((current) => (current === "" ? text : current));
+      if (request !== pasteRead.current) return;
+      if (text) setPasteText(text);
       else setPasteStatus(t("clipboardEmpty"));
     } catch {
+      if (request !== pasteRead.current) return;
       setPasteStatus(t("manualPaste"));
     }
+  };
+
+  const closePaste = () => {
+    pasteRead.current += 1;
+    setPasteText(null);
   };
 
   return (
@@ -86,7 +95,7 @@ export function ThemeJsonTransfer({ json, onImport }: { json: string | undefined
       </Modal>
       <Modal
         opened={pasteText !== null}
-        onClose={() => setPasteText(null)}
+        onClose={closePaste}
         title={t("pasteJson")}
         closeButtonProps={{ "aria-label": actions("close") }}
         size="lg"
@@ -99,15 +108,16 @@ export function ThemeJsonTransfer({ json, onImport }: { json: string | undefined
             <ThemeImportForm
               value={pasteText}
               onChange={(value) => {
+                pasteRead.current += 1;
                 setPasteText(value);
                 setPasteStatus("");
               }}
               onImport={(patch, options) => {
                 const error = onImport(patch, options);
-                if (!error) setPasteText(null);
+                if (!error) closePaste();
                 return error;
               }}
-              onBack={() => setPasteText(null)}
+              onBack={closePaste}
             />
           </Stack>
         )}
