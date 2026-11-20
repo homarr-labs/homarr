@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { Accordion, Button, List, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -30,10 +31,13 @@ export function CustomWidgetSourcesEditor({
   const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
+  const [rowKeys, setRowKeys] = useState(new Map<string, string>());
+  const nextRowKey = useRef(0);
   const sources = parseSources(form.values.sources);
   const compactSetup = compact && isSimpleCustomWidgetQuerySetup(form.values);
   const applySourceEdit = (edit: CustomWidgetSourceDraftEdit) => {
-    const result = editCustomWidgetSource(form.getValues(), edit, Boolean(definitionId));
+    const values = form.getValues();
+    const result = editCustomWidgetSource(values, edit, Boolean(definitionId));
     if (!result.success) {
       form.setFieldError("sources", t(result.error));
       return;
@@ -42,6 +46,16 @@ export function CustomWidgetSourcesEditor({
       form.clearFieldError("sources");
     }
     const { patch } = result;
+    if (edit.type === "update" && edit.changes.id !== undefined && patch.sources !== undefined) {
+      const previousId = parseSources(values.sources)[edit.index]?.id;
+      const nextId = edit.changes.id;
+      if (previousId !== undefined && previousId !== nextId) {
+        const vacatedKey = `vacated:${nextRowKey.current++}`;
+        setRowKeys((current) =>
+          new Map(current).set(nextId, current.get(previousId) ?? `source:${previousId}`).set(previousId, vacatedKey),
+        );
+      }
+    }
     if (patch.sources !== undefined) form.setFieldValue("sources", patch.sources);
     if (patch.requests !== undefined) form.setFieldValue("requests", patch.requests);
     if (patch.secrets !== undefined) form.setFieldValue("secrets", patch.secrets);
@@ -129,7 +143,7 @@ export function CustomWidgetSourcesEditor({
       {sources.map((source, index) => {
         return (
           <CustomWidgetSourceField
-            key={source.id}
+            key={rowKeys.get(source.id) ?? `source:${source.id}`}
             compact={compactSetup}
             source={source}
             index={index}
