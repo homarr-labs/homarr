@@ -23,9 +23,8 @@ export const groupSettingsSchema = z.object({
   mobileHomeBoardId: z.string().nullable(),
 });
 
-export const groupSavePartialSettingsSchema = z.object({
+export const groupSavePartialSettingsSchema = groupSettingsSchema.partial().extend({
   id: z.string(),
-  settings: groupSettingsSchema.partial(),
 });
 
 export const groupSavePermissionsSchema = z.object({
@@ -38,3 +37,8 @@ export const groupSavePositionsSchema = z.object({
 });
 
 export const groupUserSchema = z.object({ groupId: z.string(), userId: z.string() });
+
+export const groupSaveMembersSchema = z.object({
+  groupId: z.string(),
+  userIds: z.array(z.string()),
+});

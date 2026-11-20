@@ -201,4 +201,43 @@ describe("board settings API", () => {
 
     await expect(actAsync()).rejects.toThrow("must reference public boards");
   });
+
+  test("saveSettings should keep unchanged home boards that are deleted or private", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const deletedBoardId = createId();
+    const privateBoardId = createId();
+    await db.insert(boards).values({ id: privateBoardId, name: "private", isPublic: false });
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: stringify({
+        ...defaultServerSettings.board,
+        homeBoardId: deletedBoardId,
+        mobileHomeBoardId: privateBoardId,
+      }),
+    });
+
+    await caller.saveSettings({
+      settingsKey: "board",
+      value: {
+        homeBoardId: deletedBoardId,
+        mobileHomeBoardId: privateBoardId,
+        enableStatusByDefault: false,
+        forceDisableStatus: false,
+      },
+    });
+    const changeToPrivateBoardAsync = async () => await caller.updateBoardSettings({ homeBoardId: privateBoardId });
+
+    await expect(caller.getBoardSettings()).resolves.toStrictEqual({
+      homeBoardId: deletedBoardId,
+      mobileHomeBoardId: privateBoardId,
+      enableStatusByDefault: false,
+      forceDisableStatus: false,
+    });
+    await expect(changeToPrivateBoardAsync()).rejects.toThrow("must reference public boards");
+  });
 });
