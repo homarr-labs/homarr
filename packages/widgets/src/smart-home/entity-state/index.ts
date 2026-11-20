@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { createSmartHomeEntityOptions } from "../_inputs/use-smart-home-entity-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
@@ -12,12 +13,11 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
   ...getWidgetIntegrationConfig("smartHome-entityState"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      entityId: factory.text({
-        defaultValue: "sun.sun",
+      entityId: factory.integrationSelect({
+        searchable: true,
+        useOptions: createSmartHomeEntityOptions(),
       }),
-      displayName: factory.text({
-        defaultValue: "Sun",
-      }),
+      displayName: factory.text(),
       entityUnit: factory.text(),
       clickable: factory.switch(),
     }));

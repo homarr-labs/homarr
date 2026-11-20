@@ -56,6 +56,7 @@ export function WorkshopAccountButton({ session }: { session: WorkshopSession })
   if (!session.user) {
     return (
       <Button
+        type="button"
         variant="default"
         leftSection={<IconBrandGithub size={16} />}
         loading={session.pending}
@@ -71,7 +72,7 @@ export function WorkshopAccountButton({ session }: { session: WorkshopSession })
       <Text size="sm" c="dimmed" lineClamp={1}>
         {session.user.name}
       </Text>
-      <Button variant="subtle" color="gray" size="compact-sm" onClick={session.signOut}>
+      <Button type="button" variant="subtle" color="gray" size="compact-sm" onClick={session.signOut}>
         {t("signOut")}
       </Button>
     </Group>

@@ -12,6 +12,8 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
@@ -64,16 +66,21 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     isAdvanced,
   }));
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
   const requestPagination = resolveQueuePagination(queuePagination, queuePageSize, isAdvanced, null);
   const input = {
     integrationId: integrationIds[0] ?? "",
     pageSize: queuePageSize,
     page: requestPagination.page,
+    refreshInterval,
   };
   useWidgetRuntimeQueries(widgetRuntimeRef, [
     getQueryKey(clientApi.widget.mediaTranscoding.getDataAsync, input, "query"),
   ]);
-  const transcodingQuery = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
+  const transcodingQuery = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input, {
+    refetchInterval: demoReadOnly ? false : refreshInterval * 1000,
+  });
   const transcodingData = getUsableWidgetQueryData(transcodingQuery);
 
   const [view, setView] = useState<View>(options.defaultView);

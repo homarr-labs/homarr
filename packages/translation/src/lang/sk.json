@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Posúvateľné",
         "description": "Ponechať tento kontajner v nastavenej veľkosti a namiesto jeho zväčšovania posúvať jeho obsah."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Farba okraja"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstrániť tento kontajner? Jeho obsah sa presunie do okolitého priestoru."
+      },
+      "editBar": {
+        "edit": "Upraviť"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Mesto / PSČ",
         "latitude": "Zemepisná šírka",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Priebeh sťahovania",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5166,6 +5209,9 @@
           "label": "Limit počtu príspevkov"
         },
         "hideDescription": {
+          "label": ""
+        },
+        "hideFeedTitle": {
           "label": ""
         },
         "showPosterImage": {
@@ -5544,6 +5590,7 @@
       },
       "openService": "Otvoriť službu oznámení",
       "deleteNotification": "Odstrániť oznámenie z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Oznámenie sa nepodarilo odstrániť",
       "deleteFailedMessage": "Oznámenie sa nepodarilo odstrániť. Skúste to znova."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Všetky vstavané ovládacie prvky už máte v hlavičke.",
                 "add": "Pridajte {item}",
                 "boardShortcut": "Skratka dosky",
+                "widget": "",
                 "chooseBoard": "Vybrať dosku"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Tento ovládací prvok zostáva rovnako veľký ako v aktívnej hlavičke.",
                 "searchDisplay": {
                   "input": "Panel vyhľadávania",
@@ -7270,7 +7321,9 @@
                 "settings": "Vaše nastavenia",
                 "themeToggle": "Prepnúť tému",
                 "user": "Účet",
-                "boardUnavailable": "Doska nie je k dispozícii"
+                "boardUnavailable": "Doska nie je k dispozícii",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

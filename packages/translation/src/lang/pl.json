@@ -2170,7 +2170,7 @@
         "luminanceThreshold": "Próg kontrastu",
         "jsonHint": "Edytuj lub wklej obiekt motywu Mantine. Pominięte ustawienia zostaną odziedziczone z początkowego motywu. JavaScript i zasoby zewnętrzne nie są obsługiwane.",
         "invalidJson": "Wprowadź poprawny kod JSON.",
-        "tooLong": "Rozmiar pakietu motywu przekracza 48 KB",
+        "tooLong": "Plik JSON motywu jest za duży",
         "copyJson": "Kopiuj JSON",
         "copied": "Skopiowano",
         "discardJson": "Odrzuć zmiany w JSON",
@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Przewijalny",
         "description": "Trzymaj ten pojemnik w ustawionym rozmiarze i przewiń jego zawartość zamiast rosnąć, aby pasować do nich."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Kolor obramowania"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Ukryty"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Usunąć ten pojemnik? Jego zawartość przeniesie się do otaczającego obszaru."
+      },
+      "editBar": {
+        "edit": "Edytuj"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Miasto / kod pocztowy",
         "latitude": "Szerokość geograficzna (Latitude)",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Pokaż lokalizację",
           "description": "Pokaż, czy strumień jest w sieci LAN, czy WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "Transkodowanie do {target}",
           "containerChanged": "{container} (remultipleksowanie)",
           "position": "{position} / {duration}",
+          "progress": "Postęp pobierania",
+          "endsAt": "",
+          "episode": "",
+          "album": "ID albumu",
           "unknown": "Nieznany format"
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopiuj nazwę",
         "copyId": "Kopiuj ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Wyczyść filtry"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtruj pobierane pliki"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Ukryj opis"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Pokaż obraz okładki"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Otwórz usługę powiadomień",
       "deleteNotification": "Usuń powiadomienie z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nie można usunąć powiadomienia",
       "deleteFailedMessage": "Nie można usunąć powiadomienia. Spróbuj ponownie."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Każda wbudowana kontrola jest już w nagłówku.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Skrót na tablicy",
+                "widget": "Widżet",
                 "chooseBoard": "Wybierz tablicę"
               },
               "configuration": {
+                "widgetKind": "Widżet",
+                "widgetOptions": "Opcje",
+                "boardOnly": "",
                 "description": "Ta kontrola pozostaje w takim samym rozmiarze jak w nagłówku żywy.",
                 "searchDisplay": {
                   "input": "Pasek wyszukiwania",
@@ -7270,7 +7321,9 @@
                 "settings": "Twoje ustawienia",
                 "themeToggle": "Przełącz motyw",
                 "user": "Konto",
-                "boardUnavailable": "Tablica niedostępna"
+                "boardUnavailable": "Tablica niedostępna",
+                "notifications": "Powiadomienia",
+                "widget": "Widżet"
               }
             },
             "item": {

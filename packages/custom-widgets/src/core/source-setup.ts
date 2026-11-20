@@ -1,3 +1,7 @@
+import { isHttpIntegrationKind } from "@homarr/definitions/integration";
+import type { HttpIntegrationKind } from "@homarr/definitions/integration";
+
+import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { getCustomWidgetSourceAuthType } from "./request-schema";
 import type { CustomWidgetSource, CustomWidgetAuthenticationHeader } from "./request-schema";
 import { getCustomWidgetSourceUrlIssue } from "./request-schema";
@@ -28,6 +32,14 @@ export interface CustomWidgetSourceSetup {
 }
 
 const placeholderHosts = new Set(["example.com", "example.org", "example.net"]);
+
+export function getCustomWidgetIntegrationKinds(sources: HomarrCustomWidgetV2["sources"]): HttpIntegrationKind[] {
+  const kinds = Object.values(sources).flatMap((source) => {
+    if (source.type !== "integration" || !isHttpIntegrationKind(source.integrationKind)) return [];
+    return [source.integrationKind];
+  });
+  return [...new Set(kinds)].slice(0, 8);
+}
 
 export function isCustomWidgetSourceUrlPlaceholder(baseUrl: string) {
   if (!URL.canParse(baseUrl)) return false;

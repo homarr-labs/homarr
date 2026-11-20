@@ -141,6 +141,14 @@ const integrationCreators = {
     return new StatsIntegration(input, plantitStatsProvider);
   },
 
+  yuvomi: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yuvomiStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/yuvomi"),
+    ]);
+    return new StatsIntegration(input, yuvomiStatsProvider);
+  },
+
   netdata: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { netdataStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
@@ -255,6 +263,7 @@ const integrationCreators = {
     (await import("../technitium/technitium-integration-factory")).createTechnitiumDnsIntegrationAsync(input),
   homeAssistant: async (input: IntegrationInput) =>
     new (await import("../homeassistant/homeassistant-integration")).HomeAssistantIntegration(input),
+  homey: async (input: IntegrationInput) => new (await import("../homey/homey-integration")).HomeyIntegration(input),
   jellyfin: async (input: IntegrationInput) =>
     new (await import("../jellyfin/jellyfin-integration")).JellyfinIntegration(input),
   plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),

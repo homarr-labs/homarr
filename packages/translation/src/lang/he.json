@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "ניתן לגלילה",
         "description": "שמירת המכל בגודל שהוגדר וגלילה בתוכן שלו במקום הגדלתו כדי להכיל את התוכן."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "צבע מסגרת"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "מוסתר"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "להסיר את המכל הזה? התוכן שלו יועבר לאזור המקיף אותו."
+      },
+      "editBar": {
+        "edit": "עריכה"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "עיר / מיקוד",
         "latitude": "קו רוחב",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "התקדמות ההורדה",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "הסתר תיאור"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "הצג תמונת פוסטר"
@@ -5544,6 +5590,7 @@
       },
       "openService": "פתח שירות התראות",
       "deleteNotification": "מחק התראה מ-Gotify",
+      "dismissNotification": "",
       "deleteFailed": "לא ניתן למחוק את ההתראה",
       "deleteFailedMessage": "לא ניתן למחוק את ההתראה. נסה שוב."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "כל הפקדים המובנים כבר נמצאים בכותרת שלך.",
                 "add": "הוסף {item}",
                 "boardShortcut": "קיצור דרך ללוח",
+                "widget": "",
                 "chooseBoard": "בחירת לוח"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "פקד זה נשאר באותו גודל כמו בכותרת הפעילה.",
                 "searchDisplay": {
                   "input": "סרגל חיפוש",
@@ -7270,7 +7321,9 @@
                 "settings": "ההגדרות שלך",
                 "themeToggle": "החלפת ערכת נושא",
                 "user": "חשבון",
-                "boardUnavailable": "הלוח אינו זמין"
+                "boardUnavailable": "הלוח אינו זמין",
+                "notifications": "התראות",
+                "widget": ""
               }
             },
             "item": {

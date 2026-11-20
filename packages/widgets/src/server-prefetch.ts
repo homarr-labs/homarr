@@ -14,6 +14,7 @@ import {
 } from "./beszel-system-stats/selection";
 import { resolveDownloadsQueryInput } from "./downloads/query-input";
 import { ALL_PHOTOS_ALBUM_ID } from "./immich/album-carousel/constants";
+import { getWidgetRefreshInterval } from "./refresh-interval";
 
 const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   queryClient: QueryClient,
@@ -62,6 +63,9 @@ export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) =
   ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
 ];
 
+const getBeszelSystemsQueryOptions = (integrationIds: string[]) =>
+  trpc.widget.beszel.getSystems.queryOptions({ integrationIds }, { meta: { rscWidgetPrefetch: true } });
+
 const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
@@ -73,21 +77,19 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     (key) => (options[key] ?? true) === true,
   );
   if (!selection) {
-    // An unset system or an ambiguous legacy ID needs discovery first. Stream
-    // its exact stats query from a separate boundary as soon as discovery ends.
-    return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
+    return queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds)).then(
       (systems) => {
         const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
         if (!selected) return;
-        prefetchQuery(queryClient, {
-          ...trpc.widget.beszel.getSystemStats.queryOptions({
+        prefetchQuery(
+          queryClient,
+          trpc.widget.beszel.getSystemStats.queryOptions({
             integrationIds: [selected.integrationId],
             systemId: selected.systemId,
             timePeriod,
             includeDocker,
           }),
-          meta: { streamedBeszelSelection: true },
-        });
+        );
       },
       () => undefined,
     );
@@ -98,12 +100,10 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     includeDocker,
   };
   const query = trpc.widget.beszel.getSystemStats.queryOptions(input);
-  // Register the dependent promise before dehydration. Resolve the selection on
-  // the server rather than waiting for a client discovery/render round trip.
   prefetchQuery(queryClient, {
     ...query,
     queryFn: async () => {
-      const systems = await queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+      const systems = await queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds));
       const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
       if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
         throw new Error("The selected Beszel system is no longer available");
@@ -142,13 +142,19 @@ export const prefetchInitialWidgetData = (
       case "dnsHoleSummary":
       case "dnsHoleControls":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
+          prefetchQuery(
+            queryClient,
+            trpc.widget.dnsHole.summary.queryOptions({
+              integrationIds,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
+            }),
+          );
         break;
       case "beszelSystemStats":
       case "beszelSystemTable":
       case "beszelSystemGrid":
         if (!integrationIds.length) break;
-        prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+        prefetchQuery(queryClient, getBeszelSystemsQueryOptions(integrationIds));
         if (item.kind === "beszelSystemStats") {
           const discovery = prefetchBeszelStats(queryClient, item);
           if (discovery) dependentQueries.push(discovery);
@@ -176,6 +182,7 @@ export const prefetchInitialWidgetData = (
             trpc.widget.mediaServer.getCurrentStreams.queryOptions({
               integrationIds,
               showOnlyPlaying: (options.showOnlyPlaying ?? true) === true,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
             }),
           );
         break;
@@ -228,13 +235,15 @@ export const prefetchInitialWidgetData = (
         break;
       }
       case "dockerContainers": {
-        let input: RouterInputs["docker"]["getContainers"];
+        const input: RouterInputs["docker"]["getContainers"] = {
+          refreshInterval: getWidgetRefreshInterval(options, 30),
+        };
         if (
           Array.isArray(options.endpointIds) &&
           options.endpointIds.length > 0 &&
           options.endpointIds.every((id) => typeof id === "string")
         )
-          input = { endpointIds: options.endpointIds };
+          input.endpointIds = options.endpointIds;
         prefetchQuery(queryClient, trpc.docker.getContainers.queryOptions(input));
         break;
       }

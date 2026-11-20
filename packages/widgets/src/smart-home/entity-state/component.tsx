@@ -39,7 +39,7 @@ export default function SmartHomeEntityStateWidget({
     data: entity,
     isPending: isEntityPending,
     error: entityError,
-  } = clientApi.widget.smartHome.entityDetails.useQuery(input);
+  } = clientApi.widget.smartHome.entityDetails.useQuery(input, { enabled: options.entityId.length > 0 });
   const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
 
   const utils = clientApi.useUtils();
@@ -82,7 +82,7 @@ export default function SmartHomeEntityStateWidget({
     [
       {
         id: options.entityId,
-        name: options.displayName,
+        name: options.displayName || options.entityId,
         icon: IconBinaryTree,
         interaction() {
           return {
@@ -98,6 +98,16 @@ export default function SmartHomeEntityStateWidget({
     [handleClick, handleSpotlightClick, isActionable, options.displayName, options.entityId],
   );
 
+  if (options.entityId.length === 0) {
+    return (
+      <Center h="100%" p="xs">
+        <Text size="sm" c="dimmed" ta="center">
+          {t("selectEntity")}
+        </Text>
+      </Center>
+    );
+  }
+
   if (entityError && entity === undefined) throw entityError;
 
   const isAdvanced = displayMode === "advanced";
@@ -107,10 +117,10 @@ export default function SmartHomeEntityStateWidget({
     { key: "deviceClass" as const, value: entity?.attributes.device_class },
     { key: "icon" as const, value: entity?.attributes.icon },
   ].filter(({ value }) => typeof value === "string" && value.length > 0);
+  const friendlyName =
+    typeof entity?.attributes.friendly_name === "string" ? entity.attributes.friendly_name : undefined;
   const displayName =
-    isAdvanced && typeof entity?.attributes.friendly_name === "string"
-      ? entity.attributes.friendly_name
-      : options.displayName;
+    isAdvanced && friendlyName ? friendlyName : options.displayName || friendlyName || options.entityId;
   const knownStates = {
     on: t("state.on"),
     off: t("state.off"),

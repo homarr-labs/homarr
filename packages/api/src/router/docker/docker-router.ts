@@ -14,6 +14,7 @@ import {
   hasDockerEndpointCapability,
   streamContainerLogsAsync,
 } from "@homarr/request-handler/docker";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -27,7 +28,7 @@ const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1)
 
 const normalizeGetContainersInput = (input: { endpointIds?: string[] } | undefined) => {
   if (!input?.endpointIds || input.endpointIds.length === 0) return {};
-  return input;
+  return { endpointIds: input.endpointIds };
 };
 
 export const dockerRouter = createTRPCRouter({
@@ -78,10 +79,20 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .input(z.object({ endpointIds: z.array(z.string().min(1)).max(100).optional() }).optional())
+    .input(
+      z
+        .object({
+          endpointIds: z.array(z.string().min(1)).max(100).optional(),
+          refreshInterval: widgetRefreshIntervalSchema.optional(),
+        })
+        .optional(),
+    )
     .query(async ({ input }) => {
       const innerHandler = dockerContainersRequestHandler.handler(normalizeGetContainersInput(input));
-      const result = await innerHandler.getDataAsync();
+      const refreshInterval = input?.refreshInterval;
+      const result = await innerHandler.getDataAsync({
+        maxAgeMs: refreshInterval === undefined ? undefined : refreshInterval * 1000,
+      });
 
       const { data, timestamp } = result;
 

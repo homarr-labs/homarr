@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Прокрутка",
         "description": "Сохранять заданный размер контейнера и прокручивать содержимое, а не растягивать контейнер под него."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Цвет границы"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Скрыто"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Удалить контейнер? Его содержимое перейдёт в окружающую область."
+      },
+      "editBar": {
+        "edit": "Редактировать"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Город / Почтовый индекс",
         "latitude": "Широта",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Показывать местоположение",
           "description": "Показывать, идёт поток в локальной сети (LAN) или во внешней (WAN)"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "Транскодирование в {target}",
           "containerChanged": "{container} (ремукс)",
           "position": "{position} / {duration}",
+          "progress": "Прогресс",
+          "endsAt": "",
+          "episode": "Серия",
+          "album": "Альбом",
           "unknown": "неизвестный формат"
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Копировать название",
         "copyId": "Копировать ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Сбросить фильтры"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фильтровать загрузки"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Скрывать описание"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Показывать постер"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Открыть сервис уведомлений",
       "deleteNotification": "Удалить уведомление из Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не удалось удалить уведомление",
       "deleteFailedMessage": "Не удалось удалить уведомление. Попробуйте ещё раз."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Все встроенные элементы уже есть в вашей шапке.",
                 "add": "Добавить {item}",
                 "boardShortcut": "Ярлык панели",
+                "widget": "Виджет",
                 "chooseBoard": "Выберите панель"
               },
               "configuration": {
+                "widgetKind": "Виджет",
+                "widgetOptions": "Опции",
+                "boardOnly": "",
                 "description": "В макете этот элемент того же размера, что и в настоящей шапке.",
                 "searchDisplay": {
                   "input": "Строка поиска",
@@ -7270,7 +7321,9 @@
                 "settings": "Ваши настройки",
                 "themeToggle": "Переключить тему",
                 "user": "Учётная запись",
-                "boardUnavailable": "Панель недоступна"
+                "boardUnavailable": "Панель недоступна",
+                "notifications": "Уведомления",
+                "widget": "Виджет"
               }
             },
             "item": {

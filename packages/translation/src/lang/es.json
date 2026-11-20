@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Desplazable",
         "description": "Mantenga este contenedor en su tamaño establecido y despliegue su contenido en lugar de crecer para ajustarse a ellos."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Color del borde"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Oculto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "¿Eliminar este contenedor? Su contenido se moverá a la zona circundante."
+      },
+      "editBar": {
+        "edit": "Editar"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ciudad / Código postal",
         "latitude": "Latitud",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Mostrar ubicación",
           "description": "Mostrar si la retransmisión está en su LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progreso de Descarga",
+          "endsAt": "",
+          "episode": "Episodio",
+          "album": "ID de álbum",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Copiar nombre",
         "copyId": "Copiar ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Limpiar filtros"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrar descargas"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Ocultar descripción"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Mostrar imagen del póster"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Abrir servicio de notificación",
       "deleteNotification": "Eliminar notificación de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "No se pudo eliminar la notificación",
       "deleteFailedMessage": "La notificación no pudo ser eliminada. Por favor, inténtalo de nuevo."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Cada control integrado ya está en el encabezado.",
                 "add": "Añadir {item}",
                 "boardShortcut": "Atajo del tablero",
+                "widget": "",
                 "chooseBoard": "Elige un tablero"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opciones",
+                "boardOnly": "",
                 "description": "Este control permanece del mismo tamaño que en la cabecera en vivo.",
                 "searchDisplay": {
                   "input": "Barra de búsqueda",
@@ -7270,7 +7321,9 @@
                 "settings": "Tus ajustes",
                 "themeToggle": "Cambiar tema",
                 "user": "Cuenta",
-                "boardUnavailable": "Tablero no disponible"
+                "boardUnavailable": "Tablero no disponible",
+                "notifications": "Notificaciones",
+                "widget": ""
               }
             },
             "item": {

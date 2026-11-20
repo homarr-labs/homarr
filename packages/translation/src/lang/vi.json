@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Có thể cuộn",
         "description": "Giữ vùng chứa này ở kích thước đã đặt và cuộn nội dung thay vì mở rộng để vừa với nội dung."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Màu viền"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Xóa vùng chứa này? Nội dung của vùng chứa sẽ chuyển vào khu vực xung quanh."
+      },
+      "editBar": {
+        "edit": "Sửa"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Thành phố / Mã bưu chính",
         "latitude": "Vĩ độ",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Hiển thị vị trí",
           "description": "Hiển thị luồng phát trên mạng LAN hay WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Tiến độ tải xuống",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Sao chép tên",
         "copyId": "Sao chép ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Xóa bộ lọc"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Lọc nội dung tải xuống"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Ẩn mô tả"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Hiển thị ảnh áp phích"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Mở dịch vụ thông báo",
       "deleteNotification": "Xóa thông báo khỏi Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Không thể xóa thông báo",
       "deleteFailedMessage": "Không thể xóa thông báo. Vui lòng thử lại."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Mọi điều khiển tích hợp đều đã có trong tiêu đề của bạn.",
                 "add": "Thêm {item}",
                 "boardShortcut": "Phím tắt bảng",
+                "widget": "",
                 "chooseBoard": "Chọn một bảng"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Điều khiển này giữ nguyên kích thước như trong tiêu đề trực tiếp.",
                 "searchDisplay": {
                   "input": "Thanh tìm kiếm",
@@ -7270,7 +7321,9 @@
                 "settings": "Cài đặt của bạn",
                 "themeToggle": "Chuyển đổi giao diện",
                 "user": "Tài khoản",
-                "boardUnavailable": "Bảng không khả dụng"
+                "boardUnavailable": "Bảng không khả dụng",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

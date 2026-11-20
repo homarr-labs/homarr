@@ -3,8 +3,7 @@ import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
-import type { QueryClient } from "@tanstack/react-query";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { defaultShouldDehydrateQuery, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { getQueryClient } from "@homarr/api/server";
 import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
@@ -42,25 +41,6 @@ const BoardWithIntegrations = async ({
     <ClientBoard />
   </IntegrationProvider>
 );
-
-const DeferredWidgetHydration = async ({
-  queryClient,
-  queries,
-}: {
-  queryClient: QueryClient;
-  queries: Promise<void>[];
-}) => {
-  await Promise.allSettled(queries);
-  return (
-    <HydrationBoundary
-      state={dehydrate(queryClient, {
-        shouldDehydrateQuery: (query) =>
-          query.meta?.streamedBeszelSelection === true &&
-          (query.state.status === "pending" || query.state.status === "success"),
-      })}
-    />
-  );
-};
 
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
@@ -154,14 +134,15 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <>
           <WidgetResourcePreload />
-          <HydrationBoundary state={dehydrate(queryClient)}>
+          <HydrationBoundary
+            state={dehydrate(queryClient, {
+              shouldDehydrateQuery: (query) =>
+                defaultShouldDehydrateQuery(query) ||
+                (query.meta?.rscWidgetPrefetch !== true && query.state.status === "pending"),
+            })}
+          >
             {restoredRefreshes.length > 0 && (
               <CachedWidgetRefresh queryHashes={restoredRefreshes.map(({ queryHash }) => queryHash)} />
-            )}
-            {dependentQueries.length > 0 && (
-              <Suspense fallback={null}>
-                <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
-              </Suspense>
             )}
             <Suspense fallback={null}>
               <BoardWithIntegrations integrationsPromise={integrationsPromise} />

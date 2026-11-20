@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Derulabil",
         "description": "Ţineţi acest container la dimensiunea setată şi derulaţi conţinutul său în loc să creşteţi pentru a se potrivi."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Culoare chenar"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Eliminați acest container? Conținutul său se va muta în zona înconjurătoare."
+      },
+      "editBar": {
+        "edit": "Editare"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Oraș / Cod poștal",
         "latitude": "Latitudine",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Arată locația",
           "description": "Arată dacă fluxul este pe LAN sau WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progresul",
+          "endsAt": "",
+          "episode": "Episod",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Copiază numele",
         "copyId": "Copiază ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Ștergeți filtrele"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Descărcări filtre"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Ascunde descrierea"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Afișare imagine poster"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Deschide serviciul de notificare",
       "deleteNotification": "Șterge notificarea din Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nu s-a putut șterge notificarea",
       "deleteFailedMessage": "Notificarea nu a putut fi ștearsă. Încercați din nou."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Fiecare control încorporat este deja în antetul dvs.",
                 "add": "Adaugă {item}",
                 "boardShortcut": "Scurtătură pe secţiune",
+                "widget": "",
                 "chooseBoard": "Alege o secţiune"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opţiuni",
+                "boardOnly": "",
                 "description": "Acest control rămâne la fel de mare ca în headerul live.",
                 "searchDisplay": {
                   "input": "Bară de căutare",
@@ -7270,7 +7321,9 @@
                 "settings": "Setările dvs.",
                 "themeToggle": "Activează/dezactivează tema",
                 "user": "Cont",
-                "boardUnavailable": "Secţiune indisponibilă"
+                "boardUnavailable": "Secţiune indisponibilă",
+                "notifications": "Notificări",
+                "widget": ""
               }
             },
             "item": {

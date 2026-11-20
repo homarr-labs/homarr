@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Rolável",
         "description": "Mantenha este contêiner em seu tamanho definido e role seu conteúdo em vez de crescer."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Cor da borda"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Oculto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Remover este container? Seu conteúdo se moverá para a área ao redor."
+      },
+      "editBar": {
+        "edit": "Editar"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Cidade / Código postal",
         "latitude": "Latitude",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Exibir localização",
           "description": "Exibir se a transmissão está na sua LAN ou WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progresso do download",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Copiar nome",
         "copyId": "Copiar ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Limpar filtros"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrar downloads"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Ocultar descrição"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Exibir imagem do pôster"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Abrir serviço de notificação",
       "deleteNotification": "Excluir notificação do Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Não foi possível excluir a notificação",
       "deleteFailedMessage": "A notificação não pode ser excluída. Por favor, tente novamente."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Cada controle interno já está no seu cabeçalho.",
                 "add": "Adicionar {item}",
                 "boardShortcut": "Atalho para tabuleiro",
+                "widget": "",
                 "chooseBoard": "Escolher um board"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opções",
+                "boardOnly": "",
                 "description": "Esse controle permanece com o mesmo tamanho que no cabeçalho vivo.",
                 "searchDisplay": {
                   "input": "Barra de pesquisa",
@@ -7270,7 +7321,9 @@
                 "settings": "Suas configurações",
                 "themeToggle": "Alternar tema",
                 "user": "conta",
-                "boardUnavailable": "Quadro indisponível"
+                "boardUnavailable": "Quadro indisponível",
+                "notifications": "Notificações",
+                "widget": ""
               }
             },
             "item": {

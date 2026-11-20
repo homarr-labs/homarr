@@ -65,7 +65,9 @@ export function resolveCustomJsxComponentName(name: string): string {
   return customJsxComponentByName.has(flat) ? flat : name;
 }
 
-const catalogComponentsByName = new Map(runtimeCatalog.components.map((component) => [component.name, component]));
+export const catalogComponentsByName = new Map(
+  runtimeCatalog.components.map((component) => [component.name, component]),
+);
 
 const multipleDateBindingComponents = new Set([
   "DatePicker",

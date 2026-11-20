@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Görgethető",
         "description": "A tároló maradjon a beállított méretű, és a tartalma görgethető legyen ahelyett, hogy a tartalomhoz igazodva növekedne."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Határszín"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Rejtett"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Eltávolítod ezt a tárolót? A tartalma a környező területre kerül."
+      },
+      "editBar": {
+        "edit": "Szerkesztés"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Város / Irányítószám",
         "latitude": "Szélesség",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Hely megjelenítése",
           "description": "Annak megjelenítése, hogy az adatfolyam a LAN-on vagy a WAN-on van-e"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Letöltési folyamat",
+          "endsAt": "",
+          "episode": "Epizód",
+          "album": "Album",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Név másolása",
         "copyId": "Azonosító másolása",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Szűrők törlése"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Letöltések szűrése"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Leírás elrejtése"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Plakátkép megjelenítése"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Értesítési szolgáltatás megnyitása",
       "deleteNotification": "Értesítés törlése a Gotifyból",
+      "dismissNotification": "",
       "deleteFailed": "Nem sikerült törölni az értesítést",
       "deleteFailedMessage": "Az értesítést nem sikerült törölni. Próbáld újra."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Minden beépített vezérlő már a fejlécben van.",
                 "add": "Hozzáad {item}",
                 "boardShortcut": "Tábla parancsikonja",
+                "widget": "",
                 "chooseBoard": "Tábla kiválasztása"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Beállítások",
+                "boardOnly": "",
                 "description": "Ez a vezérlő ugyanakkora marad, mint az élő fejlécben.",
                 "searchDisplay": {
                   "input": "Keresősáv",
@@ -7270,7 +7321,9 @@
                 "settings": "Saját beállítások",
                 "themeToggle": "Téma váltása",
                 "user": "Fiók",
-                "boardUnavailable": "A tábla nem érhető el"
+                "boardUnavailable": "A tábla nem érhető el",
+                "notifications": "Értesítések",
+                "widget": ""
               }
             },
             "item": {

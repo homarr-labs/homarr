@@ -1,3 +1,5 @@
+import { CUSTOM_JSX_CALLBACK_METHODS } from "./safe-language-policy";
+
 export interface AstNode {
   type: string;
   start?: number;
@@ -31,8 +33,6 @@ export const staticPropertyName = (node: AstNode | null): string | undefined => 
   return undefined;
 };
 
-const callbackCollectionMethods = new Set(["every", "filter", "find", "findIndex", "map", "reduce", "some", "sort"]);
-
 export function containsEscapingCallback(node: AstNode): boolean {
   if (node.type === "ArrowFunctionExpression") return true;
   if (node.type === "CallExpression") {
@@ -47,7 +47,7 @@ export function containsEscapingCallback(node: AstNode): boolean {
     const property = callee?.type === "MemberExpression" ? nodeOf(callee.property) : null;
     const method = property?.type === "Identifier" ? String(property.name) : staticPropertyName(property);
     return arguments_.some((argument) => {
-      if (argument.type !== "ArrowFunctionExpression" || !method || !callbackCollectionMethods.has(method)) {
+      if (argument.type !== "ArrowFunctionExpression" || !method || !CUSTOM_JSX_CALLBACK_METHODS.has(method)) {
         return containsEscapingCallback(argument);
       }
       const body = nodeOf(argument.body);

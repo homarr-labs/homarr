@@ -1,69 +1,38 @@
 # Schema
 
-```ts
-interface HomarrCustomWidgetV2 {
-  $schema: "homarr-custom-widget-v2";
-  name: string;
-  description?: string;
-  iconUrl?: string;
-  sources: Record<string, CustomWidgetSource>;
-  requests: Record<string, CustomWidgetRequest>;
-  options?: Record<string, CustomWidgetOption>;
-  template: string;
-}
-```
-
-`sources.default` is required. HTTP sources have `baseUrl`, optional `name`, and optional `auth` (default `"none"`). Base URLs
-have no credentials, query, or fragment. Use documented public URLs or `https://your-service.example.com` for missing
-self-hosted URLs; Homarr configures URLs and credentials separately.
+Import requires `$schema`, `name`, keyed `sources`/`requests`, and one JSX `template` string.
+Optional: `description`, valid URL `iconUrl`, keyed `options`. Key `default` is required in sources, not a source property.
 
 ```json
 {
-  "sources": {
-    "default": {
-      "baseUrl": "https://your-service.example.com/api/v1",
-      "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
-    }
-  },
-  "requests": {
-    "summary": { "path": "/summary" },
-    "search": {
-      "trigger": "manual",
-      "path": "/search",
-      "query": { "q": { "$param": "query" }, "page": { "$param": "page" } }
-    },
-    "create": {
-      "kind": "action",
-      "method": "POST",
-      "path": "/items",
-      "body": { "id": { "$param": "id" } },
-      "confirmation": "Create this item?",
-      "invalidates": ["summary"]
-    }
-  }
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Service summary",
+  "sources": { "default": { "baseUrl": "https://your-service.example.com/api", "auth": "bearer" } },
+  "requests": { "summary": { "path": "/summary", "trigger": "load" } },
+  "template": "<Text>{data.summary?.title}</Text>"
 }
 ```
 
-Auth: `"none"`, `"bearer"`, `"basic"`, `{"type":"apiKeyHeader","name":"X-Api-Key"}`, or
-`{"type":"apiKeyQuery","name":"api_key"}`. Values are credential-free declarations.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`; paths append to its URL and exports omit `integrationId`.
 
-Multiple encrypted headers use `{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}`.
-Use at most 8 HTTP-token names, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Configure
-values separately in Homarr. Header name or slot changes require credential configuration again. Use `bearer` for
-Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+HTTP sources have optional `name`, required `baseUrl`, and credential-free `auth` forms:
+`"none"`, `"bearer"`, `"basic"`, `{"type":"apiKeyHeader","name":"X-Api-Key"}`,
+`{"type":"apiKeyQuery","name":"api_key"}`, or `{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"}]}`.
+`{"type":"none"}` is invalid. Headers auth sends up to 8 encrypted headers: unique names, distinct slots of at most
+57 characters; renaming either needs reconfiguration. Use `bearer` for Authorization; routing/proxy/cookie/hop-by-hop headers
+are reserved. Configure values only in Homarr's secure credential UI, never chat or definitions.
 
-Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover supported kinds
-and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
-saved URL; non-GET requests are actions. Portable exports omit integrationId.
+Requests default to source `default`, query/GET/load, inherited auth and view permission. Use `load` for initial/current
+display and `manual` for explicit interactions or invocation params. Actions default to modify permission.
+HTTP read-only GET/POST/PUT/PATCH may be queries; semantics, not method, decide. Mutations: manual actions, modify permission, confirmation. Integration queries: GET only; non-GET integration requests are manual actions. DELETE: always action/full, confirmation.
 
-Requests default to source `default`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
-explicit interactions use manual. Actions stay manual with modify permission; DELETE requires full permission and
-confirmation. Preserve confirmation, permission, and invalidates. Query responses are decoded JSON; application/x-ndjson is
-an array of decoded lines.
+JSON responses become their decoded value; `application/x-ndjson` becomes an array of decoded lines. Use real public
+API URLs and clear self-hosted placeholders; Homarr collects URL and credentials outside the manifest.
 
-Paths start with `/` and use `{option:name}`/`{param:name}`. Query/body bindings use `{"$option":"name"}`/`{"$param":"name"}`.
-`$param` is manual-only; `$option` may drive loads. Path/query values are primitive; JSON bodies may contain structured options.
+Paths start with `/`; use `{option:name}`/`{param:name}` in paths and `{"$option":"name"}`/`{"$param":"name"}` in query/body.
+`$param` is manual-only; `$option` may drive loads. Path/query values are primitive. Actions use `kind:"action"`,
+`trigger:"manual"`, method/body, permission, confirmation, and `invalidates` request IDs; never invent mutation endpoints.
 
-Every option has label, control, default. Optional fields: description, choices, choicesFrom, min, max, step, advanced, group.
-Static select choices are label/value objects; choicesFrom uses request, optional itemsPath, valuePath, and labelPath. Use a
-load request and preserve its response envelope. Structured options use control `json`.
+Options: required `label`/`control`/`default`; optional `description`/`choices`/`choicesFrom`/`min`/`max`/`step`/`advanced`/`group`.
+Controls: `text`, `textarea`, `number`, `switch`, `select`, `multiSelect`, `slider`, `date`, `time`, `color`, `icon`, `url`,
+`duration`, `timeZone`, `json`. `choices`/`choicesFrom` need `select` or `multiSelect`.

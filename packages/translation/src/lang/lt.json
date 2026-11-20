@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Slenkamas",
         "description": "Išlaikyti nustatytą šio konteinerio dydį ir slinkti jo turinį, užuot didinus konteinerį pagal turinį."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Rėmelio spalva"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Pašalinti šį konteinerį? Jo turinys bus perkeltas į aplinkinę sritį."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Miestas / Pašto kodas",
         "latitude": "Platuma",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Rodyti vietą",
           "description": "Rodyti, ar srautas yra jūsų LAN, ar WAN tinkle"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Atsisiuntimo progresas",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopijuoti pavadinimą",
         "copyId": "Kopijuoti ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Išvalyti filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtruoti atsisiuntimus"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Slėpti aprašą"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Rodyti plakato vaizdą"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Atidaryti pranešimų paslaugą",
       "deleteNotification": "Ištrinti pranešimą iš Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nepavyko ištrinti pranešimo",
       "deleteFailedMessage": "Pranešimo ištrinti nepavyko. Bandykite dar kartą."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Visi integruoti valdikliai jau yra jūsų antraštėje.",
                 "add": "Pridėti {item}",
                 "boardShortcut": "Lentos nuoroda",
+                "widget": "",
                 "chooseBoard": "Pasirinkti lentą"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šis valdiklis išlaiko tokį patį dydį kaip veikiančioje antraštėje.",
                 "searchDisplay": {
                   "input": "Paieškos juosta",
@@ -7270,7 +7321,9 @@
                 "settings": "Jūsų nustatymai",
                 "themeToggle": "Perjungti temą",
                 "user": "Paskyra",
-                "boardUnavailable": "Lenta neprieinama"
+                "boardUnavailable": "Lenta neprieinama",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

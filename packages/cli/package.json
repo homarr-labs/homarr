@@ -15,7 +15,7 @@
     ".": "./index.ts"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:better-sqlite3 --external:cpu-features --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",

@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Keritav",
         "description": "Hoia seda konteinerit määratud suuruses ja selle sisu mahutamiseks laienemise asemel keri sisu."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Äärise värv"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Kas eemaldada see konteiner? Selle sisu liigub ümbritsevasse alasse."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Linn / postiindeks",
         "latitude": "Laiuskraad",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Kuva asukohta",
           "description": "Kuva, kas voog on sinu kohtvõrgus või laivõrgus"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Allalaadimise edenemine",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopeeri nimi",
         "copyId": "Kopeeri ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Tühjenda filtrid"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtreeri allalaadimisi"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Peida kirjeldus"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Näita postripilti"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Ava teavitusteenus",
       "deleteNotification": "Kustuta teavitus Gotifyst",
+      "dismissNotification": "",
       "deleteFailed": "Teavituse kustutamine nurjus",
       "deleteFailedMessage": "Teavitust ei saanud kustutada. Proovi uuesti."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Kõik sisseehitatud juhtelemendid on juba teie päises.",
                 "add": "Lisa {item}",
                 "boardShortcut": "Paneeli otsetee",
+                "widget": "",
                 "chooseBoard": "Vali paneel"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "See juhtelement jääb sama suureks nagu aktiivses päises.",
                 "searchDisplay": {
                   "input": "Otsinguriba",
@@ -7270,7 +7321,9 @@
                 "settings": "Sinu seaded",
                 "themeToggle": "Vaheta teemat",
                 "user": "Konto",
-                "boardUnavailable": "Paneel pole saadaval"
+                "boardUnavailable": "Paneel pole saadaval",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

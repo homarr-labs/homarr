@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Ritināms",
         "description": "Saglabāt šī konteinera iestatīto izmēru un ritināt tā saturu, nevis palielināt konteineru, lai saturs ietilptu."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Apmales krāsa"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Noņemt šo konteineru? Tā saturs tiks pārvietots apkārtējā apgabalā."
+      },
+      "editBar": {
+        "edit": "Rediģēt"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Pilsēta / pasta indekss",
         "latitude": "Platums",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Rādīt atrašanās vietu",
           "description": "Rādīt, vai straume atrodas jūsu LAN vai WAN tīklā"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Lejupielādes progress",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopēt nosaukumu",
         "copyId": "Kopēt ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Notīrīt filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrēt lejupielādes"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Paslēpt aprakstu"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Rādīt plakāta attēlu"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Atvērt paziņojumu pakalpojumu",
       "deleteNotification": "Dzēst paziņojumu no Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Neizdevās dzēst paziņojumu",
       "deleteFailedMessage": "Paziņojumu nevarēja izdzēst. Lūdzu, mēģiniet vēlreiz."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Visas iebūvētās vadīklas jau atrodas jūsu galvenē.",
                 "add": "Pievienot {item}",
                 "boardShortcut": "Paneļa saīsne",
+                "widget": "",
                 "chooseBoard": "Izvēlēties paneli"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šī vadīkla saglabā tādu pašu izmēru kā aktīvajā galvenē.",
                 "searchDisplay": {
                   "input": "Meklēšanas josla",
@@ -7270,7 +7321,9 @@
                 "settings": "Jūsu iestatījumi",
                 "themeToggle": "Pārslēgt motīvu",
                 "user": "Konts",
-                "boardUnavailable": "Panelis nav pieejams"
+                "boardUnavailable": "Panelis nav pieejams",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

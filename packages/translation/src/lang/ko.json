@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "스크롤 가능",
         "description": "이 컨테이너를 설정된 크기로 유지하고, 콘텐츠에 맞게 확장하는 대신 콘텐츠를 스크롤합니다."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "테두리 색상"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "숨김"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "이 컨테이너를 제거하시겠습니까? 콘텐츠가 주변 영역으로 이동합니다."
+      },
+      "editBar": {
+        "edit": "편집"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "도시 / 우편번호",
         "latitude": "위도",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "위치 표시",
           "description": "스트림이 LAN 또는 WAN에 있는지 표시합니다"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "다운로드 진행률",
+          "endsAt": "",
+          "episode": "",
+          "album": "앨범",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "이름 복사",
         "copyId": "ID 복사",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "필터 지우기"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "다운로드 필터"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "설명 숨기기"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "포스터 이미지 표시"
@@ -5544,6 +5590,7 @@
       },
       "openService": "알림 서비스 열기",
       "deleteNotification": "Gotify에서 알림 삭제",
+      "dismissNotification": "",
       "deleteFailed": "알림을 삭제할 수 없습니다",
       "deleteFailedMessage": "알림을 삭제할 수 없습니다. 다시 시도하십시오."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "모든 기본 제공 컨트롤이 이미 헤더에 있습니다.",
                 "add": "{item} 추가",
                 "boardShortcut": "보드 바로 가기",
+                "widget": "",
                 "chooseBoard": "보드 선택"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "옵션",
+                "boardOnly": "",
                 "description": "이 컨트롤은 실제 헤더에서와 동일한 크기로 유지됩니다.",
                 "searchDisplay": {
                   "input": "검색창",
@@ -7270,7 +7321,9 @@
                 "settings": "내 설정",
                 "themeToggle": "테마 전환",
                 "user": "계정",
-                "boardUnavailable": "보드를 사용할 수 없음"
+                "boardUnavailable": "보드를 사용할 수 없음",
+                "notifications": "알림",
+                "widget": ""
               }
             },
             "item": {

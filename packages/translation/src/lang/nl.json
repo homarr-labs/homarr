@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Schuifbaar",
         "description": "Houd deze container aan de ingestelde grootte en scroll zijn inhoud in plaats van te groeien."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Randkleur"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Verborgen"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Deze container verwijderen? De inhoud zal naar het omliggende gebied gaan."
+      },
+      "editBar": {
+        "edit": "Bewerken"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stad / postcode",
         "latitude": "Breedtegraad",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Downloadvoortgang",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Beschrijving verbergen"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Posterafbeelding weergeven"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Melding service openen",
       "deleteNotification": "Melding bij Gotify verwijderen",
+      "dismissNotification": "",
       "deleteFailed": "Kan melding niet verwijderen",
       "deleteFailedMessage": "De notificatie kon niet worden verwijderd. Probeer het opnieuw."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Elke ingebouwde controle staat al in je header.",
                 "add": "{item} toevoegen",
                 "boardShortcut": "Snelkoppeling op bord",
+                "widget": "",
                 "chooseBoard": "Kies een bord"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Instellingen",
+                "boardOnly": "",
                 "description": "Deze controle blijft even groot als in de live header.",
                 "searchDisplay": {
                   "input": "Zoek balk",
@@ -7270,7 +7321,9 @@
                 "settings": "Uw instellingen",
                 "themeToggle": "Thema aan/uit",
                 "user": "Rekening",
-                "boardUnavailable": "Bord niet beschikbaar"
+                "boardUnavailable": "Bord niet beschikbaar",
+                "notifications": "Meldingen",
+                "widget": ""
               }
             },
             "item": {

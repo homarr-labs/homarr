@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "可滚动",
         "description": "让此容器保持设定大小并滚动其内容，而不是自动撑大以容纳它们。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "边框颜色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "已隐藏"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "移除此容器？其中的内容将移入周围区域。"
+      },
+      "editBar": {
+        "edit": "编辑"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "城市/邮编",
         "latitude": "纬度",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "显示位置",
           "description": "显示流媒体是在局域网还是广域网"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "转码为 {target}",
           "containerChanged": "{container}（重封装）",
           "position": "",
+          "progress": "下载进度",
+          "endsAt": "",
+          "episode": "剧集",
+          "album": "相册",
           "unknown": "未知格式"
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "复制名称",
         "copyId": "复制 ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "清除筛选"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "筛选下载"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "隐藏描述"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "显示封面图"
@@ -5544,6 +5590,7 @@
       },
       "openService": "打开通知服务",
       "deleteNotification": "从 Gotify 删除通知",
+      "dismissNotification": "",
       "deleteFailed": "无法删除通知",
       "deleteFailedMessage": "无法删除通知。请重试。"
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "每个内置控件都已位于您的页眉中。",
                 "add": "添加 {item}",
                 "boardShortcut": "看板快捷方式",
+                "widget": "小部件",
                 "chooseBoard": "选择看板"
               },
               "configuration": {
+                "widgetKind": "小部件",
+                "widgetOptions": "选项",
+                "boardOnly": "",
                 "description": "此控件保持与实际页眉中相同的大小。",
                 "searchDisplay": {
                   "input": "搜索栏",
@@ -7270,7 +7321,9 @@
                 "settings": "您的设置",
                 "themeToggle": "切换主题",
                 "user": "账户",
-                "boardUnavailable": "看板不可用"
+                "boardUnavailable": "看板不可用",
+                "notifications": "通知",
+                "widget": "小部件"
               }
             },
             "item": {

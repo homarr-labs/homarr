@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Rullbar",
         "description": "Håll den här behållaren på sin fastställda storlek och bläddra dess innehåll i stället för att växa för att passa dem."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Färg på kantlinje"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Ta bort denna behållare? Dess innehåll kommer att flytta in i det omgivande området."
+      },
+      "editBar": {
+        "edit": "Redigera"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stad/postnummer",
         "latitude": "Latitud",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Visa plats",
           "description": "Visa om strömmen finns på ditt LAN eller WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Nedladdningsförlopp",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopiera namn",
         "copyId": "Kopiera ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Rensa filter"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrera nedladdningar"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Dölj beskrivning"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Visa affischbild"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Öppna meddelandetjänst",
       "deleteNotification": "Ta bort avisering från Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kunde inte ta bort avisering",
       "deleteFailedMessage": "Meddelandet kunde inte raderas. Försök igen."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Varje inbyggd kontroll finns redan i ditt huvud.",
                 "add": "Lägg till {item}",
                 "boardShortcut": "Genväg till tavlan",
+                "widget": "",
                 "chooseBoard": "Välj en tavla"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Alternativ",
+                "boardOnly": "",
                 "description": "Denna kontroll förblir samma storlek som den gör i live-huvudet.",
                 "searchDisplay": {
                   "input": "Sök i fältet",
@@ -7270,7 +7321,9 @@
                 "settings": "Dina inställningar",
                 "themeToggle": "Växla tema",
                 "user": "Konto",
-                "boardUnavailable": "Brädan är inte tillgänglig"
+                "boardUnavailable": "Brädan är inte tillgänglig",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

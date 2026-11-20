@@ -9,13 +9,15 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { CustomWidgetForm } from "../../_custom-widget-form";
 import { FormErrorBoundary } from "../../_form-error-boundary";
+import { CustomWidgetShareNudge } from "./_share-nudge";
 
 interface EditCustomWidgetPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ created?: string | string[] }>;
 }
 
 export default async function EditCustomWidgetPage(props: EditCustomWidgetPageProps) {
-  const [session, params] = await Promise.all([auth(), props.params]);
+  const [session, params, searchParams] = await Promise.all([auth(), props.params, props.searchParams]);
   if (!session) {
     redirect(createLoginUrl(`/manage/custom-widgets/edit/${params.id}`));
   }
@@ -30,6 +32,7 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
       <Container fluid>
         <Stack>
           <Title>{definition.name}</Title>
+          {searchParams.created === "1" && <CustomWidgetShareNudge definitionId={params.id} />}
           <FormErrorBoundary>
             <CustomWidgetForm
               mode="edit"

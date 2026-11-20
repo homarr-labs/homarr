@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "可捲動",
         "description": "讓此容器維持設定的大小，捲動其內容而不是隨內容增長。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "邊框顏色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "隱藏"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "要移除此容器嗎？其內容將移至周圍區域。"
+      },
+      "editBar": {
+        "edit": "編輯"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "城市 / 郵遞區號",
         "latitude": "緯度",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "顯示位置",
           "description": "顯示串流位於 LAN 或 WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "下載進度",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "複製名稱",
         "copyId": "複製 ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "清除篩選器"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "篩選下載項目"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "隱藏說明"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "顯示封面圖片"
@@ -5544,6 +5590,7 @@
       },
       "openService": "開啟通知服務",
       "deleteNotification": "從 Gotify 刪除通知",
+      "dismissNotification": "",
       "deleteFailed": "無法刪除通知",
       "deleteFailedMessage": "無法刪除通知。請再試一次。"
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "所有內建控制項都已在您的標頭中。",
                 "add": "新增 {item}",
                 "boardShortcut": "面板捷徑",
+                "widget": "",
                 "chooseBoard": "選擇面板"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "此控制項會維持與即時標頭中相同的大小。",
                 "searchDisplay": {
                   "input": "搜尋列",
@@ -7270,7 +7321,9 @@
                 "settings": "您的設定",
                 "themeToggle": "切換主題",
                 "user": "帳戶",
-                "boardUnavailable": "面板無法使用"
+                "boardUnavailable": "面板無法使用",
+                "notifications": "通知",
+                "widget": ""
               }
             },
             "item": {

@@ -23,5 +23,8 @@ export const formatStatsValue = (value: StatsValue | undefined, unit: StatsUnit,
   if (unit === "seconds") return `${formatted} s`;
   if (unit === "milliseconds") return `${formatted} ms`;
   if (unit === "grams") return `${formatted} g`;
+  if (unit === "celsius") return `${formatted} °C`;
+  if (unit === "watts") return `${formatted} W`;
+  if (unit === "kilowattHours") return `${formatted} kWh`;
   return formatted;
 };

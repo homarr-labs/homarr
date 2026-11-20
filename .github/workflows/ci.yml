@@ -393,6 +393,7 @@ jobs:
     name: Build amd64 preview image
     needs: fast-gate
     if: |
+      !cancelled() && needs.fast-gate.result == 'success' &&
       (
         (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
@@ -445,6 +446,7 @@ jobs:
     name: Build arm64 preview image
     needs: fast-gate
     if: |
+      !cancelled() && needs.fast-gate.result == 'success' &&
       (
         (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||

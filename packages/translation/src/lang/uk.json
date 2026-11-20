@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Прокручування",
         "description": "Підтримує цей контейнер у своєму встановленому розмірі і прокручує його вміст замість того, щоб відповідати йому."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Колір контура"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Приховати"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Видалити цей контейнер? Вміст буде переміщено в навколишню зону."
+      },
+      "editBar": {
+        "edit": "Редагувати"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Місто / Поштовий індекс",
         "latitude": "Широта",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Показати розташування",
           "description": "Показувати, чи перебуває потік у вашій локальній або глобальній мережі."
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Прогрес завантаження",
+          "endsAt": "",
+          "episode": "Епізод",
+          "album": "Альбом",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Копіювати назву",
         "copyId": "Копіювати ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Очистити фільтри"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фільтрувати завантаження"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Приховати опис"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Показати зображення постеру"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Відкрити службу сповіщень",
       "deleteNotification": "Видалити сповіщення з Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не вдалося видалити сповіщення",
       "deleteFailedMessage": "Сповіщення не вдалося видалити. Будь ласка, спробуйте ще раз."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Кожна вбудована система управління вже у вашому заголовку.",
                 "add": "Додати {item}",
                 "boardShortcut": "Ярлик дошки",
+                "widget": "Віджет",
                 "chooseBoard": "Виберіть дошку"
               },
               "configuration": {
+                "widgetKind": "Віджет",
+                "widgetOptions": "Опції",
+                "boardOnly": "",
                 "description": "Цей елемент керування залишається таким же розміром, як і в живому заголовку.",
                 "searchDisplay": {
                   "input": "Рядок пошуку",
@@ -7270,7 +7321,9 @@
                 "settings": "Ваші налаштування",
                 "themeToggle": "Перемкнути тему",
                 "user": "Обліковий запис",
-                "boardUnavailable": "Дошка недоступна"
+                "boardUnavailable": "Дошка недоступна",
+                "notifications": "Сповіщення",
+                "widget": "Віджет"
               }
             },
             "item": {

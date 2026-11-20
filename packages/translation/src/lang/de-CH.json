@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Bildlauf",
         "description": "Diesen Container auf seiner festgelegten Grösse halten und stattdessen einen Bildlauf für seinen Inhalt anzeigen, anstatt ihn an den Inhalt anzupassen."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Rahmenfarbe"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Diesen Container entfernen? Sein Inhalt wird in den umgebenden Bereich verschoben."
+      },
+      "editBar": {
+        "edit": "Bearbeiten"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stadt / Postleitzahl",
         "latitude": "Breitengrad",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Standort anzeigen",
           "description": "Anzeigen, ob der Stream über Ihr LAN oder WAN läuft"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Download Fortschritt",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Namen kopieren",
         "copyId": "ID kopieren",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Filter löschen"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Downloads filtern"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Beschreibung ausblenden"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Posterbild anzeigen"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Benachrichtigungsdienst öffnen",
       "deleteNotification": "Benachrichtigung aus Gotify löschen",
+      "dismissNotification": "",
       "deleteFailed": "Benachrichtigung konnte nicht gelöscht werden",
       "deleteFailedMessage": "Die Benachrichtigung konnte nicht gelöscht werden. Bitte versuche es erneut."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Jedes integrierte Steuerelement befindet sich bereits in Ihrem Header.",
                 "add": "{item} hinzufügen",
                 "boardShortcut": "Board-Verknüpfung",
+                "widget": "",
                 "chooseBoard": "Board auswählen"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Dieses Steuerelement behält dieselbe Grösse wie im aktiven Header.",
                 "searchDisplay": {
                   "input": "Suchleiste",
@@ -7270,7 +7321,9 @@
                 "settings": "Ihre Einstellungen",
                 "themeToggle": "Theme wechseln",
                 "user": "Konto",
-                "boardUnavailable": "Board nicht verfügbar"
+                "boardUnavailable": "Board nicht verfügbar",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

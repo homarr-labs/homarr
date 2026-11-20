@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Κύλιση",
         "description": "Κρατήστε αυτό το δοχείο στο καθορισμένο του μέγεθος και μετακινηθείτε τα περιεχόμενά του αντί να μεγαλώσετε για να τα χωρέσετε."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Χρώμα περιγράμματος"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Αφαιρέστε αυτό το εμπορευματοκιβώτιο? Το περιεχόμενό του θα κινηθεί στη γύρω περιοχή."
+      },
+      "editBar": {
+        "edit": "Επεξεργασία"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Πόλη / Ταχυδρομικός κώδικας",
         "latitude": "Γεωγραφικό πλάτος",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Εμφάνιση τοποθεσίας",
           "description": "Εμφάνιση αν η ροή βρίσκεται στο LAN ή στο WAN σας"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Πρόοδος λήψης",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Αντιγραφή ονόματος",
         "copyId": "Αντιγραφή αναγνωριστικού",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Εκκαθάριση φίλτρων"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Φιλτράρισμα λήψεων"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Απόκρυψη περιγραφής"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Εμφάνιση εικόνας αφίσας"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Άνοιγμα υπηρεσίας ειδοποιήσεων",
       "deleteNotification": "Διαγραφή ειδοποίησης από Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Αδυναμία διαγραφής ειδοποίησης",
       "deleteFailedMessage": "Δεν ήταν δυνατή η διαγραφή της ειδοποίησης. Παρακαλώ δοκιμάστε ξανά."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Κάθε ενσωματωμένο χειριστήριο είναι ήδη στην κεφαλίδα σας.",
                 "add": "Προσθήκη {item}",
                 "boardShortcut": "Συντόμευση σκακιέρας",
+                "widget": "",
                 "chooseBoard": "Επιλέξτε έναν πίνακα"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Επιλογές",
+                "boardOnly": "",
                 "description": "Αυτός ο έλεγχος παραμένει το ίδιο μέγεθος με το live header.",
                 "searchDisplay": {
                   "input": "Μπάρα αναζήτησης",
@@ -7270,7 +7321,9 @@
                 "settings": "Οι ρυθμίσεις σας",
                 "themeToggle": "Εναλλαγή θέματος",
                 "user": "Λογαριασμός",
-                "boardUnavailable": "Μη διαθέσιμη σκακιέρα"
+                "boardUnavailable": "Μη διαθέσιμη σκακιέρα",
+                "notifications": "Ειδοποιήσεις",
+                "widget": ""
               }
             },
             "item": {

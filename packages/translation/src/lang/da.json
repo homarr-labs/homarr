@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "",
         "description": "Hold denne beholder på sin indstillede størrelse og rul dens indhold i stedet for at vokse til at passe dem."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Kantfarve"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Skjult"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Fjern denne beholder? Indholdet vil bevæge sig ind i det omkringliggende område."
+      },
+      "editBar": {
+        "edit": "Rediger"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "By / Postnummer",
         "latitude": "Breddegrad",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Status på hentning",
+          "endsAt": "",
+          "episode": "",
+          "album": "Album ID",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Skjul beskrivelse"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Vis poster billede"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Åbn notifikationstjeneste",
       "deleteNotification": "Slet notifikation fra Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kunne ikke slette notifikation",
       "deleteFailedMessage": "Meddelelsen kunne ikke slettes. Prøv venligst igen."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Hver indbygget kontrol er allerede i din header.",
                 "add": "Tilføj {item}",
                 "boardShortcut": "Genvej til tavlen",
+                "widget": "",
                 "chooseBoard": "Vælg en tavle"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Indstillinger",
+                "boardOnly": "",
                 "description": "Denne kontrol forbliver den samme størrelse som den gør i den levende header.",
                 "searchDisplay": {
                   "input": "Søg i bjælke",
@@ -7270,7 +7321,9 @@
                 "settings": "Dine indstillinger",
                 "themeToggle": "Skift tema",
                 "user": "Konto",
-                "boardUnavailable": "Tavle utilgængelig"
+                "boardUnavailable": "Tavle utilgængelig",
+                "notifications": "Notifikationer",
+                "widget": ""
               }
             },
             "item": {

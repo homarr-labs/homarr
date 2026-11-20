@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUpload } from "@tabler/icons-react";
 
@@ -14,7 +15,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
-import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { MANAGE_ACTION_BUTTON_MIN_WIDTH } from "~/components/manage/manage-page.constants";
 
 export const ImportCustomWidgetButton = () => {
   const t = useI18n("customWidget");
@@ -76,14 +77,15 @@ export const ImportCustomWidgetButton = () => {
 
   return (
     <>
-      <MobileAffixButton
+      <Button
+        miw={MANAGE_ACTION_BUTTON_MIN_WIDTH}
         variant="default"
         leftSection={<IconUpload size={16} />}
         onClick={() => fileInputRef.current?.click()}
         title={t("action.pasteImportHint")}
       >
         {tCommon("action.import")}
-      </MobileAffixButton>
+      </Button>
       <input
         ref={fileInputRef}
         type="file"

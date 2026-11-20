@@ -31,6 +31,7 @@ import {
   IconArrowLeft,
   IconArrowsMaximize,
   IconArrowsMinimize,
+  IconCode,
   IconDeviceFloppy,
 } from "@tabler/icons-react";
 
@@ -43,7 +44,12 @@ import { useI18n } from "@homarr/translation/client";
 import { ThemeSelect } from "@homarr/ui/theme-select";
 import { getThemePalette } from "@homarr/ui/themes";
 import type { CustomTheme } from "@homarr/validation/theme";
-import { customThemeMaxLength, customThemeSchema, resolveThemeSelection } from "@homarr/validation/theme";
+import {
+  customThemeJsonMaxLength,
+  customThemeSchema,
+  mergeCustomThemePatch,
+  resolveThemeSelection,
+} from "@homarr/validation/theme";
 import type { ThemeControl } from "@homarr/validation/theme-controls";
 import {
   getThemeControlValue,
@@ -54,8 +60,11 @@ import {
 
 import { AdvancedSettings } from "~/components/manage/advanced-settings";
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
-import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
+import { WorkshopCssImportButton, WorkshopThemeImportButton } from "~/components/workshop/workshop-css-import-button";
+import { WorkshopThemePublishButton } from "~/components/workshop/workshop-theme-publish-button";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
+import type { ThemeImportHandler } from "./theme-import-form";
+import { ThemeJsonTransfer } from "./theme-json-transfer";
 import type { ThemeSelection } from "~/theme/branding";
 import { createAppearanceTheme, resolveActiveTheme } from "~/theme/branding";
 import type { ThemePreviewMessage } from "./theme-preview-context";
@@ -80,6 +89,7 @@ export const ThemeEditor = ({
 }) => {
   const t = useI18n("common.customTheme");
   const common = useI18n("common");
+  const workshopTheme = useI18n("workshop.theme");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const query = clientApi.theme.get.useQuery(undefined, { initialData });
@@ -104,6 +114,7 @@ export const ThemeEditor = ({
   const [boardName, setBoardName] = useState<string | null>(boards[0]?.name ?? null);
   const [includeCustomCss, setIncludeCustomCss] = useState(true);
   const [previewExpanded, setPreviewExpanded] = useState(false);
+  const [editCss, setEditCss] = useState(false);
   const draftRevision = useRef(0);
   const mutation = clientApi.theme.update.useMutation();
   const dirty = JSON.stringify(selection) !== JSON.stringify(saved);
@@ -198,6 +209,16 @@ export const ThemeEditor = ({
     updateSelection({ themeId: "custom", customTheme: next });
   };
 
+  const importTheme: ThemeImportHandler = (patch, options) => {
+    if (!parsed.success || jsonError) return t("editor.invalidJson");
+    const merged = mergeCustomThemePatch(parsed.data, patch, options);
+    if (!merged.success) return merged.error.issues[0]?.message ?? t("editor.invalidJson");
+    if (JSON.stringify(merged.data) === JSON.stringify(parsed.data)) return workshopTheme("noChanges");
+    setEditingControl(null);
+    if (options.useCss) setIncludeCustomCss(true);
+    updateSelection({ themeId: "custom", customTheme: merged.data });
+  };
+
   const updateControl = (path: string, value: string | number | boolean | null) => {
     const next = updateThemeDraft(document, [{ path, value }]);
     updateSelection({ themeId: "custom", customTheme: next });
@@ -223,7 +244,7 @@ export const ThemeEditor = ({
   const updateJson = (value: string) => {
     draftRevision.current += 1;
     setJsonText(value);
-    if (value.length > customThemeMaxLength) {
+    if (value.length > customThemeJsonMaxLength) {
       setJsonError(t("editor.tooLong"));
       return;
     }
@@ -314,20 +335,6 @@ export const ThemeEditor = ({
       updateControl(control.path, next || null);
     };
     let input;
-    if (control.path === "customCss") {
-      return (
-        <CustomCssEditor
-          key={control.path}
-          id="theme-custom-css"
-          label={label}
-          value={document.customCss ?? ""}
-          onChange={(css) => {
-            if (!disabled) updateControl("customCss", css);
-          }}
-          actions={<WorkshopCssImportButton size="compact-xs" onImport={(css) => updateControl("customCss", css)} />}
-        />
-      );
-    }
     if (control.type === "number") {
       let number: number | string = "";
       if (typeof value === "number") number = value;
@@ -417,6 +424,7 @@ export const ThemeEditor = ({
   };
 
   const visibleControls = themeControls.filter((control) => {
+    if (control.group === "css") return false;
     if (
       control.group === "colors" &&
       control.suffix &&
@@ -452,6 +460,25 @@ export const ThemeEditor = ({
           </Button>
         </Group>
         <Group>
+          <Button
+            variant={editCss && !previewExpanded ? "light" : "default"}
+            leftSection={<IconCode size={16} />}
+            aria-pressed={editCss && !previewExpanded}
+            onClick={() => {
+              setEditCss(!editCss || previewExpanded);
+              setPreviewExpanded(false);
+            }}
+          >
+            {t("studio.groups.css")}
+          </Button>
+          <WorkshopThemeImportButton onImport={importTheme} />
+          <ThemeJsonTransfer
+            json={parsed.success && !jsonError ? JSON.stringify(parsed.data, null, 2) : undefined}
+            onImport={importTheme}
+          />
+          <WorkshopThemePublishButton theme={selection.themeId === "custom" && !jsonError ? parsed.data : undefined} />
+        </Group>
+        <Group>
           <Button variant="default" disabled={!dirty && !jsonError} onClick={() => updateSelection(saved)}>
             {common("action.discard")}
           </Button>
@@ -479,7 +506,7 @@ export const ThemeEditor = ({
       >
         <Box
           id="theme-editor-controls"
-          hidden={previewExpanded}
+          hidden={previewExpanded || editCss}
           w={{ base: "100%", lg: 320 }}
           flex={{ lg: "0 0 20rem" }}
           miw={0}
@@ -528,44 +555,46 @@ export const ThemeEditor = ({
                     variant="default"
                     styles={{ control: { paddingInline: 0 }, content: { paddingInline: 0 } }}
                   >
-                    {themeControlGroups.map((group) => (
-                      <Accordion.Item key={group} value={group}>
-                        <Accordion.Control>{t(`studio.groups.${group}`)}</Accordion.Control>
-                        <Accordion.Panel>
-                          {panel === group && (
-                            <Stack gap="sm">
-                              {group === "surfaces" && (
-                                <Select
-                                  label={t("studio.component")}
-                                  data={[
-                                    ...new Set(
-                                      themeControls
-                                        .filter((item) => item.group === "surfaces")
-                                        .flatMap((item) => (item.component ? [item.component] : [])),
-                                    ),
-                                  ]}
-                                  value={component}
-                                  onChange={setComponent}
-                                  allowDeselect={false}
-                                />
-                              )}
-                              {group === "layout" && (
-                                <ThemeLayoutControls
-                                  advanced
-                                  document={document}
-                                  effective={effective}
-                                  disabled={Boolean(jsonError)}
-                                  onChange={updateControls}
-                                  renderControl={renderControl}
-                                />
-                              )}
-                              {group !== "layout" &&
-                                visibleControls.filter((item) => item.group === group).map(renderControl)}
-                            </Stack>
-                          )}
-                        </Accordion.Panel>
-                      </Accordion.Item>
-                    ))}
+                    {themeControlGroups
+                      .filter((group) => group !== "css")
+                      .map((group) => (
+                        <Accordion.Item key={group} value={group}>
+                          <Accordion.Control>{t(`studio.groups.${group}`)}</Accordion.Control>
+                          <Accordion.Panel>
+                            {panel === group && (
+                              <Stack gap="sm">
+                                {group === "surfaces" && (
+                                  <Select
+                                    label={t("studio.component")}
+                                    data={[
+                                      ...new Set(
+                                        themeControls
+                                          .filter((item) => item.group === "surfaces")
+                                          .flatMap((item) => (item.component ? [item.component] : [])),
+                                      ),
+                                    ]}
+                                    value={component}
+                                    onChange={setComponent}
+                                    allowDeselect={false}
+                                  />
+                                )}
+                                {group === "layout" && (
+                                  <ThemeLayoutControls
+                                    advanced
+                                    document={document}
+                                    effective={effective}
+                                    disabled={Boolean(jsonError)}
+                                    onChange={updateControls}
+                                    renderControl={renderControl}
+                                  />
+                                )}
+                                {group !== "layout" &&
+                                  visibleControls.filter((item) => item.group === group).map(renderControl)}
+                              </Stack>
+                            )}
+                          </Accordion.Panel>
+                        </Accordion.Item>
+                      ))}
                     <Accordion.Item value="json">
                       <Accordion.Control>{t("editor.json")}</Accordion.Control>
                       <Accordion.Panel>
@@ -608,6 +637,20 @@ export const ThemeEditor = ({
             </Stack>
           </ScrollArea.Autosize>
         </Box>
+        {editCss && !previewExpanded && (
+          <Box w={{ base: "100%", lg: "55%" }} miw={0} flex={{ lg: "0 0 55%" }}>
+            <CustomCssEditor
+              id="theme-custom-css"
+              label={t("studio.groups.css")}
+              description={t("studio.customCssHint")}
+              value={document.customCss ?? ""}
+              height="clamp(20rem, 52dvh, 42rem)"
+              readOnly={Boolean(jsonError)}
+              onChange={(css) => updateControl("customCss", css)}
+              actions={!jsonError && <WorkshopCssImportButton onImport={(css) => updateControl("customCss", css)} />}
+            />
+          </Box>
+        )}
         <Stack gap="sm" flex={1} miw={0} w="100%">
           <Group gap="sm" align="end">
             <Select

@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Z drsnim trakom",
         "description": "Ohrani nastavljeno velikost vsebnika in pomikaj njegovo vsebino, namesto da bi vsebnik zrasel, da bi jo vseboval."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Barva obrobe"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstranim ta vsebnik? Njegova vsebina bo premaknjena v okoliško območje."
+      },
+      "editBar": {
+        "edit": "Uredi"
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Mesto / poštna številka",
         "latitude": "Zemljepisna širina",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Prikaži lokacijo",
           "description": "Prikaži, ali je tok v vašem omrežju LAN ali WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Napredek prenosa",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Kopiraj ime",
         "copyId": "Kopiraj ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Počisti filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtriraj prenose"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Skrij opis"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Prikaži sliko plakata"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Odpri storitev obvestil",
       "deleteNotification": "Izbriši obvestilo iz Gotifyja",
+      "dismissNotification": "",
       "deleteFailed": "Obvestila ni mogoče izbrisati",
       "deleteFailedMessage": "Obvestila ni bilo mogoče izbrisati. Poskusite znova."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Vsi vgrajeni kontrolniki so že v vaši glavi.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Bližnjica do nadzorne plošče",
+                "widget": "",
                 "chooseBoard": "Izberite nadzorno ploščo"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Ta kontrolnik ostane enako velik kot v glavi v živo.",
                 "searchDisplay": {
                   "input": "Iskalna vrstica",
@@ -7270,7 +7321,9 @@
                 "settings": "Vaše nastavitve",
                 "themeToggle": "Preklopi temo",
                 "user": "Račun",
-                "boardUnavailable": "Nadzorna plošča ni na voljo"
+                "boardUnavailable": "Nadzorna plošča ni na voljo",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

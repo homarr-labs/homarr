@@ -171,7 +171,8 @@ describe("authenticated MCP prompt protocol", () => {
       prompts: [
         {
           name: "homarr-custom-widget-author",
-          description: "Author and iterate on one or more Homarr Custom JSX v2 widgets.",
+          description:
+            "Author and iterate on Homarr Custom JSX v2 widgets through external MCP tools, loading the skill and needed named references.",
           arguments: [
             { name: "request", description: "The widget the user wants.", required: false },
             { name: "documentationUrl", description: "External API documentation URL.", required: false },
@@ -185,7 +186,7 @@ describe("authenticated MCP prompt protocol", () => {
       arguments: { request: "Build a status card", documentationUrl: "https://docs.example.test/api" },
     });
     expect(rendered.body.result).toMatchObject({
-      description: "Current Homarr Custom Widget authoring workflow.",
+      description: "External MCP Custom Widget workflow; reference bodies must be loaded separately.",
       messages: [
         {
           role: "user",

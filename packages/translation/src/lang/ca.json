@@ -2301,6 +2301,10 @@
       "scrollable": {
         "label": "Desplaçable",
         "description": "Mantén aquest contenidor amb la mida establerta i desplaça'n el contingut en lloc d'ampliar-lo per encabir-lo."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2329,27 @@
         },
         "borderColor": {
           "label": "Color de la vora"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Voleu eliminar aquest contenidor? El contingut es mourà a l'àrea circumdant."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -4238,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ciutat / Codi postal",
         "latitude": "Latitud",
@@ -4369,6 +4393,10 @@
         "showLocation": {
           "label": "Mostra la ubicació",
           "description": "Mostra si la transmissió és a la vostra LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4429,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progrés de la descàrrega",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +4986,18 @@
       "contextMenu": {
         "copyName": "Copia el nom",
         "copyId": "Copia l'ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Esborra els filtres"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtra les baixades"
@@ -5167,6 +5210,9 @@
         },
         "hideDescription": {
           "label": "Amaga la descripció"
+        },
+        "hideFeedTitle": {
+          "label": ""
         },
         "showPosterImage": {
           "label": "Mostra la imatge del pòster"
@@ -5544,6 +5590,7 @@
       },
       "openService": "Obre el servei de notificacions",
       "deleteNotification": "Elimina la notificació de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "No s'ha pogut eliminar la notificació",
       "deleteFailedMessage": "No s'ha pogut eliminar la notificació. Torna-ho a provar."
     },
@@ -7239,9 +7286,13 @@
                 "allAdded": "Tots els controls integrats ja són a la teva capçalera.",
                 "add": "Afegeix {item}",
                 "boardShortcut": "Drecera del tauler",
+                "widget": "",
                 "chooseBoard": "Tria un tauler"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Aquest control manté la mateixa mida que té a la capçalera activa.",
                 "searchDisplay": {
                   "input": "Barra de cerca",
@@ -7270,7 +7321,9 @@
                 "settings": "La teva configuració",
                 "themeToggle": "Canvia el tema",
                 "user": "Compte",
-                "boardUnavailable": "Tauler no disponible"
+                "boardUnavailable": "Tauler no disponible",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
