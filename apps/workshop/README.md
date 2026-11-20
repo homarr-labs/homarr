@@ -119,8 +119,9 @@ and promotion. Publish by immutable digest, validate that exact digest in stagin
 ### Convert legacy CSS listings
 
 Start the upgraded Workshop once to add the theme type. Keep legacy CSS listings in place while releasing the updated
-Homarr client. Once the supported clients can import both formats, back up `pb_data` and run the conversion during a
-maintenance window (from `apps/workshop`):
+Homarr client. Once supported clients can import both formats, schedule a maintenance window. These commands apply only
+to deployments using this repository's `apps/workshop/docker-compose.yml` and the same Compose project name. Back up
+that project's `pb_data` volume before running the commands from `apps/workshop`:
 
 ```sh
 docker compose stop workshop
@@ -132,3 +133,7 @@ docker compose up -d workshop
 
 The conversion preserves listing IDs and copies CSS into the Default theme. Clients from before the theme release cannot
 import the converted listings. Restore the pre-conversion backup if you need to undo the conversion.
+
+For another deployment, stop the deployed Workshop, back up its actual `/pb_data` volume, and run the same `migrate up`
+command using the updated Workshop image with that volume mounted at `/pb_data`. Restart that Workshop only after the
+conversion succeeds.
