@@ -274,7 +274,7 @@ export const smartHomeRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List every Home Assistant entity (ID, name, domain, area, icon, device class, hidden flag), area and floor. Use it to find entity IDs and area IDs for smartHome_snapshot and smartHome_executeAction. REQUIRED: integrationId (Home Assistant integration ID from integration_all)",
+          "List the complete Home Assistant entity catalog, areas and floors. This can be large; prefer smartHome_searchCatalog for filtered, paginated discovery. REQUIRED: integrationId (Home Assistant integration ID from integration_all)",
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
@@ -282,6 +282,48 @@ export const smartHomeRouter = createTRPCRouter({
       const handler = smartHomeCatalogRequestHandler.handler(integration, {});
       const { data } = await handler.getDataAsync();
       return data;
+    }),
+  searchCatalog: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Search Home Assistant entities by name or ID with optional domains and areaIds filters (all supplied filters apply). Returns entities, live areas/floors, total matching entities and nextOffset. REQUIRED: integrationId from integration_all. Default limit 25, maximum 100; follow nextOffset until null. Use returned IDs for smartHome_snapshot, actions and widget blocks; never invent area IDs.",
+      },
+    })
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
+    .input(
+      z.object({
+        query: z.string().trim().max(255).default(""),
+        domains: z.array(z.string().min(1).max(64)).max(100).default([]),
+        areaIds: z.array(z.string().min(1).max(255)).max(50).default([]),
+        offset: z.number().int().min(0).max(1_000_000).default(0),
+        limit: z.number().int().min(1).max(100).default(25),
+      }),
+    )
+    .query(async ({ ctx: { integration }, input }) => {
+      const handler = smartHomeCatalogRequestHandler.handler(integration, {});
+      const { data } = await handler.getDataAsync();
+      const query = input.query.toLocaleLowerCase("en");
+      const matching = data.entities
+        .filter((entity) => {
+          if (input.domains.length > 0 && !input.domains.includes(entity.domain)) return false;
+          if (input.areaIds.length > 0 && (entity.areaId === null || !input.areaIds.includes(entity.areaId))) {
+            return false;
+          }
+          return (
+            entity.id.toLocaleLowerCase("en").includes(query) || entity.name.toLocaleLowerCase("en").includes(query)
+          );
+        })
+        .toSorted((left, right) => left.id.localeCompare(right.id, "en"));
+      let nextOffset: number | null = null;
+      if (input.offset + input.limit < matching.length) nextOffset = input.offset + input.limit;
+      return {
+        ...data,
+        entities: matching.slice(input.offset, input.offset + input.limit),
+        total: matching.length,
+        nextOffset,
+      };
     }),
   history: publicProcedure
     .meta({
