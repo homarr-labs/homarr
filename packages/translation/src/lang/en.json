@@ -5220,8 +5220,17 @@
         "hideFeedTitle": {
           "label": "Hide feed title"
         },
+        "hideBackgroundImage": {
+          "label": "Hide background image"
+        },
         "showPosterImage": {
           "label": "Show poster image"
+        },
+        "thumbnailWidth": {
+          "label": "Poster width"
+        },
+        "thumbnailHeight": {
+          "label": "Poster height"
         }
       },
       "error": {
