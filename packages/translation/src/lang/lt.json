@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Miestas / Pašto kodas",
         "latitude": "Platuma",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Slėpti aprašą"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rodyti plakato vaizdą"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Atidaryti pranešimų paslaugą",
       "deleteNotification": "Ištrinti pranešimą iš Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nepavyko ištrinti pranešimo",
       "deleteFailedMessage": "Pranešimo ištrinti nepavyko. Bandykite dar kartą."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Visi integruoti valdikliai jau yra jūsų antraštėje.",
                 "add": "Pridėti {item}",
                 "boardShortcut": "Lentos nuoroda",
+                "widget": "",
                 "chooseBoard": "Pasirinkti lentą"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šis valdiklis išlaiko tokį patį dydį kaip veikiančioje antraštėje.",
                 "searchDisplay": {
                   "input": "Paieškos juosta",
@@ -7310,7 +7321,9 @@
                 "settings": "Jūsų nustatymai",
                 "themeToggle": "Perjungti temą",
                 "user": "Paskyra",
-                "boardUnavailable": "Lenta neprieinama"
+                "boardUnavailable": "Lenta neprieinama",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

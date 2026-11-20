@@ -4259,6 +4259,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Cidade / CEP",
         "latitude": "Latitude",
@@ -5208,6 +5211,9 @@
         "hideDescription": {
           "label": "Ocultar descrição"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Exibir pôster"
         }
@@ -5584,6 +5590,7 @@
       },
       "openService": "Abrir serviço de notificação",
       "deleteNotification": "Excluir notificação do Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Não foi possível excluir a notificação",
       "deleteFailedMessage": "A notificação não pode ser excluída. Por favor, tente novamente."
     },
@@ -7279,9 +7286,13 @@
                 "allAdded": "Cada controle interno já está no seu cabeçalho.",
                 "add": "Adicionar {item}",
                 "boardShortcut": "Atalho para tabuleiro",
+                "widget": "",
                 "chooseBoard": "Escolher um board"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opções",
+                "boardOnly": "",
                 "description": "Esse controle permanece com o mesmo tamanho que no cabeçalho vivo.",
                 "searchDisplay": {
                   "input": "Barra de pesquisa",
@@ -7310,7 +7321,9 @@
                 "settings": "Suas configurações",
                 "themeToggle": "Alternar tema",
                 "user": "conta",
-                "boardUnavailable": "Quadro indisponível"
+                "boardUnavailable": "Quadro indisponível",
+                "notifications": "Notificações",
+                "widget": ""
               }
             },
             "item": {
