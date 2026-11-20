@@ -315,6 +315,13 @@ function DynamicOptionField({
     return isCustomWidgetChoiceValue(value) ? [{ value, label: String(label ?? value) }] : [];
   });
   const uniqueChoices = new Map(choices.map((choice) => [dynamicChoiceKey(choice.value), choice]));
+  const selectedKey = (value: string | number) => {
+    const key = dynamicChoiceKey(value);
+    if (typeof value !== "string" || uniqueChoices.has(key)) return key;
+    const numericKey = dynamicChoiceKey(Number(value));
+    if (String(Number(value)) === value && uniqueChoices.has(numericKey)) return numericKey;
+    return key;
+  };
   const data = [...uniqueChoices].map(([value, choice]) => ({ value, label: choice.label }));
   const error =
     query.error?.message ??
@@ -350,7 +357,7 @@ function DynamicOptionField({
       <MultiSelect
         {...input}
         {...common}
-        value={currentValues.map(dynamicChoiceKey)}
+        value={[...new Set(currentValues.map(selectedKey))]}
         renderPill={({ option: selected, value, onRemove, disabled }) => (
           <Pill onRemove={onRemove} withRemoveButton={!disabled} disabled={disabled}>
             {selected?.label || String(valuesByKey.get(value ?? "") ?? "")}
@@ -367,7 +374,7 @@ function DynamicOptionField({
       {...input}
       {...common}
       allowDeselect={false}
-      value={isCustomWidgetChoiceValue(input.value) ? dynamicChoiceKey(input.value) : null}
+      value={isCustomWidgetChoiceValue(input.value) ? selectedKey(input.value) : null}
       onChange={(key) => {
         if (key === null) return;
         const value = uniqueChoices.get(key)?.value;
