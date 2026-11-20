@@ -4,6 +4,42 @@ const rejectRequest = (message) => {
 
 const isManifestObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const isManifestString = (value, max) => typeof value === "string" && value.trim().length > 0 && value.length <= max;
+const submissionSchemas = {
+  customWidget: "homarr-custom-widget-v2",
+  customCss: "homarr-custom-css-v1",
+  customTheme: "homarr-custom-theme-v1",
+};
+const themePresets = new Set([
+  "default",
+  "absolutely",
+  "ayu",
+  "cappuccin",
+  "dracula",
+  "everforest",
+  "github",
+  "gruvbox",
+  "linear",
+  "lobster",
+  "material",
+  "matrix",
+  "monokai",
+  "night-owl",
+  "nord",
+  "notion",
+  "og",
+  "one",
+  "oscurange",
+  "raycast",
+  "rose-pine",
+  "sentry",
+  "shadcn",
+  "solarized",
+  "temple",
+  "tokyo-night",
+  "vercel",
+  "vscode-plus",
+  "xcode",
+]);
 const isManifestMap = (value, max) =>
   isManifestObject(value) &&
   Object.keys(value).length <= max &&
@@ -52,13 +88,15 @@ const validateSubmissionManifest = (record) => {
   const type = record.getString("type");
   const schema = record.getString("widgetSchema");
   const content = record.getString("content");
-  const supportedSchema =
-    type === "customWidget" ? "homarr-custom-widget-v2" : type === "customCss" ? "homarr-custom-css-v1" : null;
-  if (!supportedSchema || schema !== supportedSchema) {
+  if (!Object.prototype.hasOwnProperty.call(submissionSchemas, type) || schema !== submissionSchemas[type]) {
     rejectRequest("Unsupported Workshop submission schema for this type");
   }
   if (type === "customCss") {
     if (!isManifestString(content, 16_384)) rejectRequest("CSS must be nonempty and at most 16384 characters");
+    return;
+  }
+  if (type === "customTheme") {
+    validateThemeManifest(content);
     return;
   }
   if (content.length > 1_000_000) rejectRequest("Widget content must be at most 1000000 characters");
@@ -95,6 +133,38 @@ const validateSubmissionManifest = (record) => {
         : (source.type === undefined || source.type === "http") && isManifestHttpUrl(source.baseUrl);
     if (!validSource) rejectRequest("Widget manifest has an invalid source declaration");
   }
+};
+
+const paletteKeys = new Set(["body", "surface", "hover", "border", "text", "dimmed", "primary", "secondary"]);
+const isThemePalette = (value) =>
+  isManifestObject(value) &&
+  Object.entries(value).every(
+    ([key, color]) => paletteKeys.has(key) && typeof color === "string" && /^#[0-9a-f]{6}$/i.test(color),
+  );
+
+const validateThemeManifest = (content) => {
+  if (content.length > 160 * 1024) rejectRequest("Theme JSON is too large");
+  let theme;
+  try {
+    theme = JSON.parse(content);
+  } catch {
+    rejectRequest("Theme content must be valid JSON");
+  }
+  if (
+    !isManifestObject(theme) ||
+    (theme.preset !== undefined && !themePresets.has(theme.preset)) ||
+    (theme.theme !== undefined && !isManifestObject(theme.theme)) ||
+    Object.keys(theme).some((key) => !["preset", "theme", "light", "dark", "customCss"].includes(key)) ||
+    (theme.light !== undefined && !isThemePalette(theme.light)) ||
+    (theme.dark !== undefined && !isThemePalette(theme.dark))
+  ) {
+    rejectRequest("Theme content must be a portable Homarr theme document");
+  }
+  const { customCss, ...configuration } = theme;
+  if (customCss !== undefined && (typeof customCss !== "string" || customCss.length > 16_384)) {
+    rejectRequest("Theme CSS must be at most 16384 characters");
+  }
+  if (JSON.stringify(configuration).length > 32_768) rejectRequest("Theme configuration exceeds 32 KB");
 };
 
 const escapeHtml = (value) =>

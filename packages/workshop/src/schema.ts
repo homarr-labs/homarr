@@ -6,15 +6,20 @@ import {
 } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
+import type { CustomThemePatch } from "@homarr/validation/theme";
+import { customThemeCssMaxLength, customThemeJsonMaxLength, customThemePatchSchema } from "@homarr/validation/theme";
+
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
 export const WORKSHOP_API_URL = HOMARR_WEBSITE_URL;
 export const WORKSHOP_WEB_URL = `${HOMARR_WEBSITE_URL}/workshop`;
 export const WORKSHOP_CSS_SCHEMA = "homarr-custom-css-v1";
+export const WORKSHOP_THEME_SCHEMA = "homarr-custom-theme-v1";
 export const WORKSHOP_SCHEMA_BY_TYPE = {
   customWidget: CUSTOM_WIDGET_SCHEMA,
   customCss: WORKSHOP_CSS_SCHEMA,
+  customTheme: WORKSHOP_THEME_SCHEMA,
 } as const;
-export const MAX_WORKSHOP_CSS_LENGTH = 16_384;
+export const MAX_WORKSHOP_CSS_LENGTH = customThemeCssMaxLength;
 export const MAX_WORKSHOP_CONTENT_LENGTH = 1_000_000;
 export const MAX_WORKSHOP_SCREENSHOTS = 5;
 export const MAX_WORKSHOP_SCREENSHOT_BYTES = 5 * 1024 * 1024;
@@ -86,7 +91,7 @@ export const workshopReportCategorySchema = z.enum([
   "inappropriate",
   "other",
 ]);
-export const workshopSubmissionTypeSchema = z.enum(["customWidget", "customCss"]);
+export const workshopSubmissionTypeSchema = z.enum(["customWidget", "customCss", "customTheme"]);
 export type WorkshopSubmissionType = z.infer<typeof workshopSubmissionTypeSchema>;
 
 const workshopStringListSchema = z
@@ -135,8 +140,9 @@ export type WorkshopAssistantUsage = z.infer<typeof workshopAssistantUsageSchema
 const normalizeWorkshopSubmissionRecord = (value: unknown) => {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
   const record = value as Record<string, unknown>;
-  if (record.type === "customWidget" || record.type === "customCss") return value;
+  if (workshopSubmissionTypeSchema.safeParse(record.type).success) return value;
   if (record.widgetSchema === WORKSHOP_CSS_SCHEMA) return { ...record, type: "customCss" };
+  if (record.widgetSchema === WORKSHOP_THEME_SCHEMA) return { ...record, type: "customTheme" };
   if (typeof record.widgetSchema === "string" && record.widgetSchema.startsWith("homarr-custom-widget-"))
     return { ...record, type: "customWidget" };
   return value;
@@ -254,9 +260,11 @@ export type WorkshopWidgetValidationResult =
   | { success: true; data: z.infer<typeof customWidgetImportSchema> }
   | { success: false; error: string };
 export type WorkshopValidationResult =
-  | { success: true; data: z.infer<typeof customWidgetImportSchema> | string }
+  | { success: true; data: z.infer<typeof customWidgetImportSchema> | CustomThemePatch | string }
   | { success: false; error: string };
 
+export function validateWorkshopContent(type: "customWidget", content: string): WorkshopWidgetValidationResult;
+export function validateWorkshopContent(type: WorkshopSubmissionType, content: string): WorkshopValidationResult;
 export function validateWorkshopContent(type: WorkshopSubmissionType, content: string): WorkshopValidationResult {
   if (type === "customCss") {
     if (!content.trim()) return { success: false, error: "CSS cannot be empty" };
@@ -265,14 +273,54 @@ export function validateWorkshopContent(type: WorkshopSubmissionType, content: s
     return { success: true, data: content };
   }
 
+  if (type === "customTheme") return validateWorkshopTheme(content);
   return validateWorkshopWidget(content);
 }
 
 export function formatWorkshopContent(type: WorkshopSubmissionType, content: string): string {
+  if (type === "customTheme") {
+    const validation = validateWorkshopTheme(content);
+    return validation.success ? JSON.stringify(validation.data) : content;
+  }
   if (type !== "customWidget") return content;
   const validation = validateWorkshopWidget(content);
   if (!validation.success) return content;
   return JSON.stringify(validation.data, null, 2);
+}
+
+export function validateWorkshopTheme(
+  content: string,
+): { success: true; data: CustomThemePatch } | { success: false; error: string } {
+  if (content.length > customThemeJsonMaxLength) {
+    return { success: false, error: "Theme JSON is too large" };
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    return { success: false, error: "Theme content is not valid JSON" };
+  }
+  const result = customThemePatchSchema.safeParse(parsed);
+  if (result.success) return { success: true, data: result.data };
+  return {
+    success: false,
+    error: result.error.issues
+      .slice(0, 5)
+      .map((issue) => `${issue.path.join(".") || "theme"}: ${issue.message}`)
+      .join("\n"),
+  };
+}
+
+export function readWorkshopTheme(submission: WorkshopSubmissionDetail): ReturnType<typeof validateWorkshopTheme> {
+  if (submission.type === "customTheme" && submission.widgetSchema === WORKSHOP_THEME_SCHEMA) {
+    return validateWorkshopTheme(submission.content);
+  }
+  if (submission.type === "customCss" && submission.widgetSchema === WORKSHOP_CSS_SCHEMA) {
+    const validation = validateWorkshopContent("customCss", submission.content);
+    if (!validation.success) return validation;
+    return { success: true, data: { preset: "default", theme: {}, customCss: submission.content } };
+  }
+  return { success: false, error: "Unsupported Workshop theme format" };
 }
 
 export function validateWorkshopWidget(content: string): WorkshopWidgetValidationResult {

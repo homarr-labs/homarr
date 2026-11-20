@@ -1058,6 +1058,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@homarr/custom-widgets": "workspace:^0.1.0",
+        "@homarr/validation": "workspace:^0.1.0",
         "@tanstack/react-query": "catalog:",
         "pocketbase": "catalog:",
         "react": "catalog:",

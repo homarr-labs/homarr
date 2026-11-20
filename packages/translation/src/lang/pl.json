@@ -2170,7 +2170,7 @@
         "luminanceThreshold": "Próg kontrastu",
         "jsonHint": "Edytuj lub wklej obiekt motywu Mantine. Pominięte ustawienia zostaną odziedziczone z początkowego motywu. JavaScript i zasoby zewnętrzne nie są obsługiwane.",
         "invalidJson": "Wprowadź poprawny kod JSON.",
-        "tooLong": "Rozmiar pakietu motywu przekracza 48 KB",
+        "tooLong": "Plik JSON motywu jest za duży",
         "copyJson": "Kopiuj JSON",
         "copied": "Skopiowano",
         "discardJson": "Odrzuć zmiany w JSON",
