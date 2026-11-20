@@ -219,10 +219,6 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
-  const [manualCopy, setManualCopy] = useState(false);
-  const focusManualCopy = useCallback((element: HTMLTextAreaElement | null) => {
-    element?.focus();
-  }, []);
   const [editOpen, setEditOpen] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -518,10 +514,6 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);
     } catch {
-      if (submission.type === "customTheme") {
-        setManualCopy(true);
-        return;
-      }
       setCopyFailed(true);
       if (copyFailedTimer.current) clearTimeout(copyFailedTimer.current);
       copyFailedTimer.current = setTimeout(() => setCopyFailed(false), 2000);
@@ -713,7 +705,11 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
                 height="min(58vh, 640px)"
               />
             ) : (
-              <CodeBlock content={displayedContent} language={contentLanguages[submission.type]} />
+              <CodeBlock
+                content={displayedContent}
+                language={contentLanguages[submission.type]}
+                allowCopy={submission.type !== "customTheme"}
+              />
             )}
           </section>
 
@@ -770,30 +766,31 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
               )}
             </ol>
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              {submission.type !== "customCss" && (
+              {submission.type === "customWidget" && (
                 <Button size="sm" className="min-h-11 sm:min-h-8" onClick={() => downloadSubmissionJson(submission)}>
-                  <IconDownload size={14} />{" "}
-                  {submission.type === "customTheme" ? "Download theme JSON" : "Download widget JSON"}
+                  <IconDownload size={14} /> Download widget JSON
                 </Button>
               )}
-              <Button
-                variant={submission.type === "customCss" ? "default" : "outline"}
-                size="sm"
-                className="min-h-11 sm:min-h-8"
-                aria-live="polite"
-                onClick={() => void handleCopy()}
-              >
-                {copyFailed ? (
-                  <>
-                    <IconX size={14} className="text-destructive" /> Copy failed
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon size={14} className={copyIconClass} />
-                    {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
-                  </>
-                )}
-              </Button>
+              {submission.type !== "customTheme" && (
+                <Button
+                  variant={submission.type === "customCss" ? "default" : "outline"}
+                  size="sm"
+                  className="min-h-11 sm:min-h-8"
+                  aria-live="polite"
+                  onClick={() => void handleCopy()}
+                >
+                  {copyFailed ? (
+                    <>
+                      <IconX size={14} className="text-destructive" /> Copy failed
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon size={14} className={copyIconClass} />
+                      {copied ? "Copied" : submission.type === "customCss" ? "Copy CSS" : "Copy JSON"}
+                    </>
+                  )}
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
@@ -805,22 +802,6 @@ const MarketplaceDetail = ({ workshopUrl, submissionId }: { workshopUrl: string;
               </Button>
             </div>
           </section>
-          {manualCopy && submission.type === "customTheme" && (
-            <section>
-              <label className="block text-sm font-medium" htmlFor="workshop-copy-theme-json">
-                Clipboard access is unavailable. Select and copy the theme JSON below.
-              </label>
-              <textarea
-                id="workshop-copy-theme-json"
-                readOnly
-                value={submission.content}
-                rows={6}
-                className="mt-2 w-full rounded-md border bg-background p-3 font-mono text-sm"
-                onFocus={(event) => event.currentTarget.select()}
-                ref={focusManualCopy}
-              />
-            </section>
-          )}
           {widgetDefinition && (
             <section className="rounded-xl border border-border bg-card p-5">
               <h2 className="font-semibold">Widget details</h2>

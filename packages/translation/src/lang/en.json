@@ -2252,6 +2252,7 @@
         "tablet": "Tablet",
         "mobile": "Mobile",
         "includeCustomCss": "Theme CSS",
+        "customCssHint": "Edit CSS alongside the live preview. Changes apply to your instance only after you save.",
         "groups": {
           "layout": "Layout & spacing",
           "typography": "Typography",
