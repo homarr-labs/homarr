@@ -1,0 +1,40 @@
+GLOSSARY.md
+  h_d6e478ca18e517 59,62-65
+apps/docs/src/components/workshop/DetailPage.tsx
+  h_d6e478ca18e517 222,518-521,805-822
+apps/docs/src/components/workshop/SubmitForm.tsx
+  h_d6e478ca18e517 116-120
+apps/nextjs/src/components/theme/theme-editor.tsx
+  h_d6e478ca18e517 46-51,65-66,91,210-219,474-477
+apps/nextjs/src/components/theme/theme-import-form.tsx
+  h_d6e478ca18e517 1-101
+apps/nextjs/src/components/theme/theme-json-transfer.tsx
+  h_d6e478ca18e517 1-117
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  h_d6e478ca18e517 3,14,17-18,39,45,49,64-71,86,94,104-105,107,110-111,133-146
+apps/nextjs/src/components/workshop/workshop-theme-publish-button.tsx
+  h_d6e478ca18e517 9,17-19,38-40,42,45,53-54,57-58,87,91-97,119
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 12-42,126-127
+apps/workshop/pb_migrations/1795104100_workshop_convert_legacy_css.js
+  h_d6e478ca18e517 1-19
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1310,1315-1328
+packages/validation/src/theme.ts
+  h_d6e478ca18e517 317-353,357-387
+packages/workshop/src/backend.ts
+  h_d6e478ca18e517 53,183-185,205-209,511
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 5-6,241,244-245,271,281,292-303
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "858e655b508a2bde00dbfdfcf9aba342b55300a6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
