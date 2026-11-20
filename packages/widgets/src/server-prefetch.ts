@@ -74,21 +74,19 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     (key) => (options[key] ?? true) === true,
   );
   if (!selection) {
-    // An unset system or an ambiguous legacy ID needs discovery first. Stream
-    // its exact stats query from a separate boundary as soon as discovery ends.
     return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
       (systems) => {
         const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
         if (!selected) return;
-        prefetchQuery(queryClient, {
-          ...trpc.widget.beszel.getSystemStats.queryOptions({
+        prefetchQuery(
+          queryClient,
+          trpc.widget.beszel.getSystemStats.queryOptions({
             integrationIds: [selected.integrationId],
             systemId: selected.systemId,
             timePeriod,
             includeDocker,
           }),
-          meta: { streamedBeszelSelection: true },
-        });
+        );
       },
       () => undefined,
     );
@@ -99,8 +97,6 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     includeDocker,
   };
   const query = trpc.widget.beszel.getSystemStats.queryOptions(input);
-  // Register the dependent promise before dehydration. Resolve the selection on
-  // the server rather than waiting for a client discovery/render round trip.
   prefetchQuery(queryClient, {
     ...query,
     queryFn: async () => {
