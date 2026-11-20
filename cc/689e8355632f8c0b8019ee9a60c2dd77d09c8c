@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css
+  h_d6e478ca18e517 67-75
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx
+  h_d6e478ca18e517 12,63-64
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  h_d6e478ca18e517 76-81
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  h_d6e478ca18e517 318-324,360,377
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cc689e8355632f8c0b8019ee9a60c2dd77d09c8c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
