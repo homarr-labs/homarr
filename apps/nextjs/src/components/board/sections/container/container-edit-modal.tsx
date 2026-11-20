@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Box, Button, Stack, Switch, Tabs, TextInput } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -81,6 +81,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const [editedItems, setEditedItems] = useState<Map<string, Item>>(() => new Map());
   const [deletedIds, setDeletedIds] = useState<Set<string>>(() => new Set());
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
+  const editorActive = useRef(true);
   const [activityCapableKinds, setActivityCapableKinds] = useState<ReadonlySet<WidgetKind>>(() => new Set());
   useEffect(() => {
     let cancelled = false;
@@ -107,6 +108,29 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         ...newItems.map((item) => editedItems.get(item.id) ?? item),
       ].filter((item) => !deletedIds.has(item.id)),
     [board.items, newItems, editedItems, deletedIds],
+  );
+  const latestEditor = useRef({ items, currentLayoutId });
+  latestEditor.current = { items, currentLayoutId };
+  const { setCloseInterceptor } = actions;
+  useEffect(() => {
+    editorActive.current = true;
+    setCloseInterceptor?.(() => {
+      editorActive.current = false;
+      return true;
+    });
+    return () => {
+      editorActive.current = false;
+      setCloseInterceptor?.(null);
+    };
+  }, [setCloseInterceptor]);
+  const closeEditor = () => {
+    editorActive.current = false;
+    actions.closeModal();
+  };
+  const activityItems = items.filter(
+    (item) =>
+      activityCapableKinds.has(item.kind) &&
+      item.layouts.some((layout) => layout.layoutId === currentLayoutId && layout.sectionId === innerProps.containerId),
   );
   const setSmart = (value: SmartContainerOptions) => form.setFieldValue("smart", value);
   const setSmartOption = <K extends keyof SmartContainerOptions>(key: K, value: SmartContainerOptions[K]) =>
@@ -199,15 +223,24 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         loadWidgetDefinition(item.kind),
         utils.integration.all.ensureData(),
       ]);
-      const layout = item.layouts.find((entry) => entry.layoutId === currentLayoutId) ?? item.layouts[0];
+      if (!editorActive.current) return;
+      const currentItem = latestEditor.current.items.find((entry) => entry.id === item.id);
+      if (!currentItem || currentItem.kind !== item.kind) return;
+      const layout =
+        currentItem.layouts.find((entry) => entry.layoutId === latestEditor.current.currentLayoutId) ??
+        currentItem.layouts[0];
       openWidgetEditor(
         {
           kind: item.kind,
           allowResourceEditing: false,
           definition,
-          value: { options: item.options, integrationIds: item.integrationIds, advancedOptions: item.advancedOptions },
+          value: {
+            options: currentItem.options,
+            integrationIds: currentItem.integrationIds,
+            advancedOptions: currentItem.advancedOptions,
+          },
           onSuccessfulEdit: (value) =>
-            setEditedItems((previous) => new Map(previous).set(item.id, { ...item, ...value })),
+            setEditedItems((previous) => new Map(previous).set(item.id, { ...currentItem, ...value })),
           integrationData: integrationData.filter(
             (integration) =>
               integration.permissions.hasUseAccess &&
@@ -222,17 +255,18 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
             width: getLogicalGridSize(layout?.width ?? 2),
             height: getLogicalGridSize(layout?.height ?? 2),
           },
-          appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
+          appId: currentItem.kind === "app" ? (currentItem.options.appId as string | undefined) : undefined,
         },
         { title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(item.kind, titleT)}` },
       );
     } catch (error) {
+      if (!editorActive.current) return;
       showErrorNotification({
         title: translate("common.error"),
         message: error instanceof Error ? error.message : String(error),
       });
     } finally {
-      setLoadingItemId(null);
+      if (editorActive.current) setLoadingItemId(null);
     }
   };
   const deleteItem = (itemId: string) => {
@@ -298,7 +332,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         showErrorNotification({ title: translate("common.error"), message: t("concurrentChange") });
         return;
       }
-      actions.closeModal();
+      closeEditor();
     },
     () => {
       showErrorNotification({ title: translate("common.error"), message: t("invalidSettings") });
@@ -386,11 +420,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
                 form={form}
                 smart={smart}
                 setSmartOption={setSmartOption}
-                activityItems={items.filter(
-                  (item) =>
-                    item.layouts.some((layout) => layout.sectionId === innerProps.containerId) &&
-                    activityCapableKinds.has(item.kind),
-                )}
+                activityItems={activityItems}
               />
             </Tabs.Panel>
           </Tabs>
@@ -399,11 +429,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
             form={form}
             smart={smart}
             setSmartOption={setSmartOption}
-            activityItems={items.filter(
-              (item) =>
-                item.layouts.some((layout) => layout.sectionId === innerProps.containerId) &&
-                activityCapableKinds.has(item.kind),
-            )}
+            activityItems={activityItems}
           />
         )}
       </Stack>
@@ -436,7 +462,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         )}
       </Box>
       <WidgetEditFooter>
-        <ModalFormFooter onCancel={actions.closeModal} form={formId} />
+        <ModalFormFooter onCancel={closeEditor} form={formId} />
       </WidgetEditFooter>
     </Stack>
   );
