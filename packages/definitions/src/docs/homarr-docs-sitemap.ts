@@ -131,6 +131,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/gotify"
   | "/docs/integrations/healthchecks"
   | "/docs/integrations/home-assistant"
+  | "/docs/integrations/homey"
   | "/docs/integrations/homebox"
   | "/docs/integrations/ical"
   | "/docs/integrations/immich"

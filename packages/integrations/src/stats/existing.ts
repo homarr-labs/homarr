@@ -428,6 +428,29 @@ existingStatsProviders.homeAssistant = adapter(
   (client) => client.getEntityStatsAsync(),
   (data) => data,
 );
+existingStatsProviders.homey = adapter(
+  "homey",
+  [
+    metric("devices", "Devices"),
+    metric("unavailable", "Unavailable devices"),
+    metric("lightsOn", "Lights on"),
+    metric("flows", "Flows"),
+    metric("powerUsage", "Power usage", "watts"),
+    metric("powerGenerated", "Power generated", "watts"),
+    metric("energyToday", "Energy used today", "kilowattHours"),
+    metric("energyGeneratedToday", "Energy generated today", "kilowattHours"),
+    metric("batteriesLow", "Batteries low"),
+    metric("openContacts", "Open doors and windows"),
+    metric("activeAlarms", "Devices with active alarms"),
+    metric("uptime", "Homey uptime", "text"),
+    metric("cpuLoad", "Homey CPU load", "percent"),
+    metric("memoryUsage", "Homey memory usage", "percent"),
+    metric("temperature", "Homey temperature", "celsius"),
+    metric("version", "Homey version", "text"),
+  ],
+  (client) => client.getStatsAsync(),
+  (data) => data,
+);
 existingStatsProviders.anchor = adapter(
   "anchor",
   [metric("notes", "Retrieved notes")],

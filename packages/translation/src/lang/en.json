@@ -3361,6 +3361,7 @@
     "smartHome-entityState": {
       "name": "Entity State",
       "description": "Display the state of an entity and toggle it optionally",
+      "selectEntity": "Select an entity in the widget settings",
       "option": {
         "entityId": {
           "label": "Entity ID"
@@ -3396,8 +3397,8 @@
       }
     },
     "smartHome-controls": {
-      "name": "Home Assistant controls",
-      "description": "Monitor and control Home Assistant rooms and entities",
+      "name": "Smart home controls",
+      "description": "Monitor and control smart home rooms and entities",
       "option": {
         "presentation": {
           "label": "Style",
@@ -3512,14 +3513,14 @@
         "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
       },
       "live": {
-        "loading": "Loading Home Assistant states",
-        "error": "Could not load Home Assistant states",
+        "loading": "Loading smart home states",
+        "error": "Could not load smart home states",
         "retry": "Retry",
         "actionFailed": "Could not control {name}",
         "actionUnconfirmed": "{name} did not confirm the change",
-        "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "unconfirmed": "Not confirmed; showing latest smart home state",
         "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
-        "unknownError": "Home Assistant did not accept the action"
+        "unknownError": "The smart home server did not accept the action"
       },
       "inline": {
         "open": "Blocks ({count})",

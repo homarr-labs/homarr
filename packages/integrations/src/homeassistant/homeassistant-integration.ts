@@ -33,7 +33,7 @@ import type { CalendarEvent } from "../types";
 import { toServiceCall } from "./homeassistant-actions";
 import { HomeAssistantConnection } from "./homeassistant-connection";
 import { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "./homeassistant-errors";
-import { bucketHistory } from "./homeassistant-history";
+import { bucketHistory } from "../interfaces/smart-home/smart-home-history";
 import {
   createCatalog,
   createRegistryLookup,
