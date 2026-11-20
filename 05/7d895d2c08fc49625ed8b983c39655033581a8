@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  h_d6e478ca18e517 2,5-6,12,131-149,156-157,162-166,172,177-192,194-212
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  h_d6e478ca18e517 42,839,968-979
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "057d895d2c08fc49625ed8b983c39655033581a8",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
