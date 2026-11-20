@@ -1,7 +1,6 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import dynamic from "next/dynamic";
 import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
@@ -17,6 +16,7 @@ import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
 import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
+import { BoardEditorToolsProvider, BoardInPlaceEditorHost } from "~/components/board/editor-tools";
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
@@ -34,18 +34,15 @@ import { BoardBackgroundVideo } from "~/components/layout/background";
 import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
-import { usePreparedBoardTabs } from "~/components/board/tabs/use-prepared-board-tabs";
+import { useVisitedBoardTabs } from "~/components/board/tabs/use-visited-board-tabs";
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
 
-const InPlaceEditorHost = dynamic(
-  () => import("~/components/board/in-place-editor/host").then((module) => module.InPlaceEditorHost),
-  { ssr: false },
-);
-
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
-    <BoardSelectionProvider>{children}</BoardSelectionProvider>
+    <BoardSelectionProvider>
+      <BoardEditorToolsProvider>{children}</BoardEditorToolsProvider>
+    </BoardSelectionProvider>
   </GridEditorRegistryProvider>
 );
 
@@ -61,7 +58,7 @@ export const ClientBoard = () => {
   const theme = useMantineTheme();
   const { tabs, activeTab, selectTab } = useBoardTabs();
   const hasTabs = tabs.length > 1;
-  const preparedTabIds = usePreparedBoardTabs();
+  const visitedTabIds = useVisitedBoardTabs();
   const getTabLabel = useBoardTabLabel();
   useBoardTabHotkeys();
   useSyncBoardTabSearchParam();
@@ -159,7 +156,7 @@ export const ClientBoard = () => {
                           aria-labelledby={`board-tab-label-${tab.id}`}
                         >
                           <VisuallyHidden id={`board-tab-label-${tab.id}`}>{getTabLabel(tab)}</VisuallyHidden>
-                          {(tab.id === mainSection.id || preparedTabIds.has(tab.id)) && (
+                          {(tab.id === mainSection.id || visitedTabIds.has(tab.id)) && (
                             <BoardEmptySection
                               key={`${currentLayoutId}-${tab.id}`}
                               section={tab}
@@ -193,7 +190,7 @@ export const ClientBoard = () => {
             </BoardGridPortalHost>
           </BoardSectionCollapseProvider>
           <BoardSelectionToolbar />
-          <InPlaceEditorHost key={`${board.id}-${mainSection.id}`} />
+          <BoardInPlaceEditorHost key={`${board.id}-${mainSection.id}`} />
           <FloatingTip
             opened={isEditMode}
             showDelay={2_000}

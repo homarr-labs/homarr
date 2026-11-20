@@ -33,9 +33,9 @@ import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
+import { useBoardEditorTools } from "../editor-tools";
 import { useBoardPermissions } from "../permissions/client";
 import { useItemActions } from "./item-actions";
-import { BoardItemContextMenu } from "./item-menu";
 import { ItemMenuDropdown } from "./item-menu-dropdown";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 import { matchesWidgetItemQuery } from "./widget-query-scope";
@@ -56,9 +56,10 @@ interface WidgetContextMenuProps {
 export const WidgetContextMenu = (props: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
+  const BoardItemContextMenu = useBoardEditorTools()?.BoardItemContextMenu;
   const settings = useSettings();
 
-  if (session && isEditMode) {
+  if (session && isEditMode && BoardItemContextMenu) {
     return <BoardItemContextMenu {...props} />;
   }
 
