@@ -198,6 +198,9 @@ const coverCapabilities = [
   "garagedoor_closed",
 ];
 
+export const supportsHomeyCoverMotion = (capability: HomeyCapability | undefined, value: "up" | "down" | "idle") =>
+  capability?.setable === true && optionIds(capability)?.includes(value) !== false;
+
 const buildCover = (cap: DeviceCapabilities, device: HomeyDevice): PrimaryEntity | null => {
   const position = cap("windowcoverings_set");
   const motion = cap("windowcoverings_state");
@@ -207,24 +210,32 @@ const buildCover = (cap: DeviceCapabilities, device: HomeyDevice): PrimaryEntity
   if (!position && !motion && !closed && !garage) return null;
 
   const positionValue = percent(position);
-  let state = "open";
-  if (garage) state = boolean(garage) ? "closed" : "open";
-  else if (positionValue !== undefined) state = positionValue > 0 ? "open" : "closed";
-  else if (closed) state = boolean(closed) ? "closed" : "open";
-  else if (text(motion) === "down") state = "closed";
+  const isClosed = boolean(garage) ?? (positionValue === undefined ? boolean(closed) : positionValue <= 0);
+  const motionValue = text(motion);
+  let state = "unknown";
+  if (isClosed !== undefined) state = isClosed ? "closed" : "open";
+  else if (motionValue === "up") state = "opening";
+  else if (motionValue === "down") state = "closing";
+  else if (motionValue === "idle") state = "idle";
 
-  const canOpenClose = [position, motion, closed, garage].some((capability) => capability?.setable === true);
+  const canSetPosition = [position, closed, garage].some((capability) => capability?.setable === true);
   const features =
-    (canOpenClose ? 1 | 2 : 0) |
+    (canSetPosition || supportsHomeyCoverMotion(motion, "up") ? 1 : 0) |
+    (canSetPosition || supportsHomeyCoverMotion(motion, "down") ? 2 : 0) |
     (position?.setable ? 4 : 0) |
-    (motion?.setable && optionIds(motion)?.includes("idle") !== false ? 8 : 0) |
+    (supportsHomeyCoverMotion(motion, "idle") ? 8 : 0) |
     (tilt?.setable ? 128 : 0);
 
   return {
     domain: "cover",
     state,
     deviceClass: garage ? "garage" : (device.virtualClass ?? null),
-    attributes: { supportedFeatures: features, position: positionValue, tiltPosition: percent(tilt) },
+    attributes: {
+      supportedFeatures: features,
+      position: positionValue,
+      coverPositionUnknown: isClosed === undefined || undefined,
+      tiltPosition: percent(tilt),
+    },
     consumed: coverCapabilities,
   };
 };

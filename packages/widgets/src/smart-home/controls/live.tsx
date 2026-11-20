@@ -162,7 +162,7 @@ type IntentKey =
 
 interface Intent {
   keys: IntentKey[];
-  matches: (confirmed: SmartHomeEntity, base: number, contextId?: string) => boolean;
+  matches: ((confirmed: SmartHomeEntity, base: number, contextId?: string) => boolean) | null;
 }
 
 const near = (value: number | undefined, target: number, tolerance: number) =>
@@ -205,9 +205,13 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
       return { keys: ["state"], matches: stateIn(optimistic.state) };
     case "open":
     case "close":
-      return { keys: ["state", "position"], matches: stateIn(optimistic.state) };
-    case "stop":
-      return { keys: ["state", "position"], matches: changedSince };
+    case "stop": {
+      const keys: IntentKey[] = ["state", "position"];
+      // The hub can acknowledge a motion command without reporting its final position.
+      if (optimistic.attributes.coverPositionUnknown) return { keys, matches: null };
+      if (action.type === "stop") return { keys, matches: changedSince };
+      return { keys, matches: stateIn(optimistic.state) };
+    }
     case "setPosition":
       return {
         keys: ["state", "position"],
@@ -583,8 +587,8 @@ class SharedActionStore {
       confirmed &&
       sameTarget(next.command, previous.command) &&
       (!previous.requiresFresh || changedSince(confirmed, previous.base)) &&
-      previous.intent.matches(confirmed, previous.base, previous.contextId) &&
-      next.intent.matches(confirmed, previous.base)
+      previous.intent.matches?.(confirmed, previous.base, previous.contextId) &&
+      next.intent.matches?.(confirmed, previous.base)
     ) {
       // Reuse accepted tolerance evidence only when it does not depend on the prior receipt.
       confirmedBase = previous.base;
@@ -621,8 +625,9 @@ class SharedActionStore {
       const confirmation = observed || confirmed;
       return (
         step.status === "acknowledged" &&
-        (!step.requiresFresh || changedSince(confirmation, step.base)) &&
-        step.intent.matches(confirmation, step.base, step.contextId)
+        (!step.intent.matches ||
+          ((!step.requiresFresh || changedSince(confirmation, step.base)) &&
+            step.intent.matches(confirmation, step.base, step.contextId)))
       );
     });
     if (matched.length === 0) return false;
