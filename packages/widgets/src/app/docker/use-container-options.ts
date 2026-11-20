@@ -36,8 +36,8 @@ export const useDockerContainerOptions = (options: Record<string, unknown>) => {
   useEffect(() => {
     if (appId === initialAppId.current || !isSettled) return;
     initialAppId.current = appId;
-    form.setFieldValue("options.dockerContainer", isCertain ? suggestedOption : null);
-  }, [appId, form, isCertain, isSettled, suggestedOption]);
+    form.setFieldValue("options.dockerContainer", !app?.dockerContainer && isCertain ? suggestedOption : null);
+  }, [appId, app?.dockerContainer, form, isCertain, isSettled, suggestedOption]);
 
   return {
     isPending: isLoading,

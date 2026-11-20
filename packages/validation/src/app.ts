@@ -5,8 +5,31 @@ export const appHrefSchema = z
   .transform((value) => (value.length === 0 ? null : value))
   .nullable();
 
+export interface LinkedDockerContainer {
+  endpointId: string;
+  name: string;
+}
+
+// Docker names survive container recreation and cannot contain "@"; endpoint IDs may contain it.
+export const formatLinkedDockerContainer = ({ endpointId, name }: LinkedDockerContainer) => `${name}@${endpointId}`;
+
+export const parseLinkedDockerContainer = (value: string): LinkedDockerContainer | null => {
+  const separatorIndex = value.indexOf("@");
+  if (separatorIndex <= 0 || separatorIndex === value.length - 1) return null;
+  return { name: value.slice(0, separatorIndex), endpointId: value.slice(separatorIndex + 1) };
+};
+
+export const linkedDockerContainerSchema = z
+  .string()
+  .max(1280)
+  .refine((value) => {
+    const target = parseLinkedDockerContainer(value);
+    return target !== null && /^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(target.name) && target.endpointId.length <= 1024;
+  }, "Invalid Docker container link");
+
 export const appManageSchema = z.object({
   name: z.string().trim().min(1).max(64),
+  dockerContainer: linkedDockerContainerSchema.nullable().optional(),
   description: z
     .string()
     .trim()
@@ -41,4 +64,12 @@ export const normalizeAppWidgetOptions = (options: Record<string, unknown>): Rec
   else if (openInNewTab === false) openIn = "currentTab";
 
   return { ...remainingOptions, openIn };
+};
+
+export const getAppWithVisibleDockerLink = <TApp extends { dockerContainer?: string | null }>(
+  app: TApp,
+  canReadDockerLink: boolean,
+): TApp => {
+  if (canReadDockerLink || !app.dockerContainer) return app;
+  return { ...app, dockerContainer: null };
 };
