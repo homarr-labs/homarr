@@ -1,3 +1,53 @@
+<!-- Release notes generated using configuration in .github/release.yml at 3b75f5832ebe3873516546343200dd97cbe61aea -->
+
+## What's Changed
+### New
+* fix(app): restore dashboard app editing by @ajnart in https://github.com/homarr-labs/homarr/pull/7643
+### Fixed
+* fix(plex): avoid duplicate web paths in release links by @ajnart in https://github.com/homarr-labs/homarr/pull/7613
+* fix(assistant): preserve tools and support targeted board edits by @ajnart in https://github.com/homarr-labs/homarr/pull/7611
+* fix(docker): patch bundled nginx to 1.30.7 by @AnalyticETH in https://github.com/homarr-labs/homarr/pull/7639
+### Other changes
+* fix(workshop): align Go builder with module minimum by @ajnart in https://github.com/homarr-labs/homarr/pull/7607
+* fix(deps): patch runtime dependency advisories by @ajnart in https://github.com/homarr-labs/homarr/pull/7605
+* fix(deps): update bundled Redis to 8.8.4 by @ajnart in https://github.com/homarr-labs/homarr/pull/7606
+* feat(demo): organize demo widgets with native tabs by @ajnart in https://github.com/homarr-labs/homarr/pull/7577
+* fix(editor): restore nested item dialogs by @ajnart in https://github.com/homarr-labs/homarr/pull/7609
+* fix(rss-feed): prioritize published date over updated for atom and youtube feeds (#7544) by @TbhVishal in https://github.com/homarr-labs/homarr/pull/7545
+* feat(integrations): add Yuvomi integration for the stats widget by @ulsklyc in https://github.com/homarr-labs/homarr/pull/7493
+* feat(containers): hide idle containers and shrink them to fit by @Bergasha in https://github.com/homarr-labs/homarr/pull/7394
+* feat(downloads): add qBittorrent category selection to context menu by @heathlarsen in https://github.com/homarr-labs/homarr/pull/7370
+* fix(deps): patch Glob, Minimatch and Seroval by @ajnart in https://github.com/homarr-labs/homarr/pull/7641
+* fix(deps): update Next.js to 16.4.6 by @ajnart in https://github.com/homarr-labs/homarr/pull/7640
+* fix(ci): restore Homarr previews and stop publishing Workshop PR images by @ajnart in https://github.com/homarr-labs/homarr/pull/7644
+* fix(i18n): correct Spanish Uptime Kuma 'Down' status by @bfs2021 in https://github.com/homarr-labs/homarr/pull/7625
+* feat: 7543 display rss feed source name by @Pieeeeeeeeeeeee in https://github.com/homarr-labs/homarr/pull/7576
+* perf(widgets): render system resource charts as SVG sparklines by @spkesDE in https://github.com/homarr-labs/homarr/pull/7623
+* perf(widgets): render media releases in scroll-driven batches by @spkesDE in https://github.com/homarr-labs/homarr/pull/7624
+* feat: add header widgets and notification sources by @ajnart in https://github.com/homarr-labs/homarr/pull/7608
+* feat(widgets): add per-widget refresh interval settings by @spkesDE in https://github.com/homarr-labs/homarr/pull/7599
+* feat(widgets): add refresh interval settings to remaining polling widgets by @spkesDE in https://github.com/homarr-labs/homarr/pull/7631
+* fix(releases): remember expanded groups after reload by @ajnart in https://github.com/homarr-labs/homarr/pull/7570
+* fix: scope Board actions and enforce integration HTTP deadlines by @ajnart in https://github.com/homarr-labs/homarr/pull/7302
+* feat(integrations): add Homey integration by @spkesDE in https://github.com/homarr-labs/homarr/pull/7646
+* fix(homey): isolate flow failures and report cover motion by @ajnart in https://github.com/homarr-labs/homarr/pull/7650
+* feat(rss-feed): add customizable thumbnail size and background image … by @Pieeeeeeeeeeeee in https://github.com/homarr-labs/homarr/pull/7622
+* fix(widgets): align system resource chart groups by @spkesDE in https://github.com/homarr-labs/homarr/pull/7600
+* perf(boards): don’t wait for live widget data to finish the page response by @ajnart in https://github.com/homarr-labs/homarr/pull/7651
+* feat(custom-widgets): improve authoring, performance and Workshop sharing by @ajnart in https://github.com/homarr-labs/homarr/pull/7358
+* fix(custom-widgets): harden assistant authoring tool contracts by @ajnart in https://github.com/homarr-labs/homarr/pull/7413
+* feat(workshop): share and apply complete custom themes by @ajnart in https://github.com/homarr-labs/homarr/pull/7645
+
+## New Contributors
+* @TbhVishal made their first contribution in https://github.com/homarr-labs/homarr/pull/7545
+* @ulsklyc made their first contribution in https://github.com/homarr-labs/homarr/pull/7493
+* @bfs2021 made their first contribution in https://github.com/homarr-labs/homarr/pull/7625
+* @Pieeeeeeeeeeeee made their first contribution in https://github.com/homarr-labs/homarr/pull/7576
+* @spkesDE made their first contribution in https://github.com/homarr-labs/homarr/pull/7623
+* @AnalyticETH made their first contribution in https://github.com/homarr-labs/homarr/pull/7639
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.13.1...v2.14.0
+
 <!-- Release notes generated using configuration in .github/release.yml at 4abc7d39f3b3837e341d416601d1bd3bbfbff88a -->
 
 ## What's Changed
