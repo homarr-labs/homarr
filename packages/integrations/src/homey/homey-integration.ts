@@ -15,6 +15,7 @@ import type {
   SmartHomeAction,
   SmartHomeArea,
   SmartHomeCatalog,
+  SmartHomeCatalogDevice,
   SmartHomeEntity,
   SmartHomeEntityPatch,
   SmartHomeEntitySelection,
@@ -26,6 +27,7 @@ import { SMART_HOME_ENTITY_LIMIT, SmartHomeSelectionLimitError } from "../interf
 import type { HomeyEntityRecord } from "./homey-normalize";
 import {
   fromHvacMode,
+  getHomeyFanSpeedCapability,
   isFractionPercent,
   kelvinToHomeyTemperature,
   normalizeHomeyDevices,
@@ -33,6 +35,7 @@ import {
   normalizeHomeyZones,
   rgbToHueSaturation,
   supportsHomeyCoverMotion,
+  toHomeyFanSpeed,
 } from "./homey-normalize";
 import type { HomeyDevice, HomeyFlow } from "./homey-types";
 import {
@@ -115,11 +118,13 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
           domain: entity.domain,
           name: entity.name,
           areaId: entity.areaId,
+          deviceId: entity.device?.id ?? null,
           icon: entity.icon,
           deviceClass: entity.deviceClass,
           hidden,
         }))
         .toSorted((left, right) => left.name.localeCompare(right.name)),
+      devices: toCatalogDevices(records),
       areas,
       floors: [],
     };
@@ -402,17 +407,28 @@ const waitAsync = (ms: number, signal: AbortSignal) =>
     signal.addEventListener("abort", done, { once: true });
   });
 
+const toCatalogDevices = (records: HomeyEntityRecord[]): SmartHomeCatalogDevice[] => {
+  const devices = new Map<string, SmartHomeCatalogDevice>();
+  for (const { entity, hidden } of records) {
+    if (hidden || !entity.device || devices.has(entity.device.id)) continue;
+    devices.set(entity.device.id, { id: entity.device.id, name: entity.device.name, areaId: entity.areaId });
+  }
+  return [...devices.values()].toSorted((left, right) => left.name.localeCompare(right.name));
+};
+
 const selectRecords = (records: HomeyEntityRecord[], selection: SmartHomeEntitySelection) => {
   const byId = new Map(records.map((record) => [record.entity.id, record]));
   const requested = selection.entityIds ?? [];
   const explicit = requested.flatMap((id) => byId.get(id) ?? []);
   const domains = selection.domains && selection.domains.length > 0 ? new Set(selection.domains) : null;
   const areaIds = selection.areaIds && selection.areaIds.length > 0 ? new Set(selection.areaIds) : null;
+  const deviceIds = selection.deviceIds && selection.deviceIds.length > 0 ? new Set(selection.deviceIds) : null;
   const excludedIds = new Set(selection.excludedEntityIds ?? []);
-  const includeAll = requested.length === 0 && !areaIds;
+  const includeAll = requested.length === 0 && !areaIds && !deviceIds;
 
   const implicit = records.filter(({ entity, hidden }) => {
     if (hidden || excludedIds.has(entity.id)) return false;
+    if (deviceIds && entity.device && deviceIds.has(entity.device.id)) return true;
     if (domains && !domains.has(entity.domain)) return false;
     if (areaIds) return entity.areaId !== null && areaIds.has(entity.areaId);
     return includeAll;
@@ -474,12 +490,15 @@ const toCapabilityWrites = (record: HomeyEntityRecord, action: SmartHomeAction):
           return power(true);
         case "turnOff":
           return power(false);
-        case "setFanPercentage":
+        case "setFanPercentage": {
           if (action.value <= 0) return power(false);
+          const speed = getHomeyFanSpeedCapability(device.capabilitiesObj ?? {});
+          if (!speed) return null;
           return [
             ...(isOn ? [] : (power(true) ?? [])),
-            ...(write("fan_speed", Math.min(100, action.value) / 100) ?? []),
+            { capabilityId: speed.id, value: toHomeyFanSpeed(speed, action.value) },
           ];
+        }
         case "setOscillating":
           return write("oscillating", action.value);
         default:

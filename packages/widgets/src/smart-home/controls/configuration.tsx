@@ -3,9 +3,22 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
-import { ActionIcon, Badge, Button, Checkbox, Group, SegmentedControl, Stack, Text, ThemeIcon } from "@mantine/core";
-import { IconCube, IconHome, IconStack2, IconX } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Checkbox,
+  Group,
+  SegmentedControl,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  ThemeIcon,
+} from "@mantine/core";
+import { IconCube, IconDevices, IconHome, IconStack2, IconX } from "@tabler/icons-react";
 
+import type { SmartHomeCatalogEntity } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -31,6 +44,7 @@ const useFormBlockCatalog = () => useBlockCatalog(useFormContext().values.integr
 const livePrefix = "live:";
 const entityPrefix = "entity:";
 const areasPrefix = "areas:";
+const devicePrefix = "device:";
 
 const withSource = (body: string, source: string | null) => {
   if (source === null) return body;
@@ -42,6 +56,23 @@ export const createEntityBlockId = (entityId: string, source: string | null) =>
 
 export const createAreasBlockId = (areaIds: readonly string[], source: string | null) =>
   withSource(`${areasPrefix}${areaIds.join(",")}`, source);
+
+const labelSeparator = "?label=";
+
+/** A device block can carry its own name for the card, e.g. "Left blind" instead of the device's name. */
+export const createDeviceBlockId = (deviceId: string, source: string | null, label?: string | null) => {
+  const name = label?.trim();
+  const suffix = name ? `${labelSeparator}${encodeURIComponent(name)}` : "";
+  return withSource(`${devicePrefix}${deviceId}${suffix}`, source);
+};
+
+const decodeLabel = (value: string) => {
+  try {
+    return decodeURIComponent(value) || null;
+  } catch {
+    return null;
+  }
+};
 
 const splitSource = (id: string) => {
   if (!id.startsWith(livePrefix)) return { source: null, body: id };
@@ -64,6 +95,14 @@ export const parseBlockId = (id: string): SmartHomeBlock | null => {
     const areaIds = [...new Set(body.slice(areasPrefix.length).split(",").filter(Boolean))];
     if (areaIds.length === 0) return null;
     return { kind: "areas", id, source, areaIds };
+  }
+  if (body.startsWith(devicePrefix)) {
+    const rest = body.slice(devicePrefix.length);
+    const separator = rest.indexOf(labelSeparator);
+    const deviceId = separator === -1 ? rest : rest.slice(0, separator);
+    if (!deviceId) return null;
+    const label = separator === -1 ? null : decodeLabel(rest.slice(separator + labelSeparator.length));
+    return { kind: "device", id, source, deviceId, label };
   }
   return null;
 };
@@ -95,6 +134,18 @@ export const countCatalogBlocks = (
       const known = index.entitiesById.has(block.entityId) && !placed.has(block.entityId);
       placed.add(block.entityId);
       counts.set(block.id, Number(known));
+      continue;
+    }
+    if (block.kind === "device") {
+      const members = entities.filter(
+        (entity) =>
+          entity.deviceId === block.deviceId &&
+          !claimed.has(entity.id) &&
+          !excluded.has(entity.id) &&
+          !placed.has(entity.id),
+      );
+      members.forEach((entity) => placed.add(entity.id));
+      counts.set(block.id, members.length);
       continue;
     }
     const areaIds = new Set(block.areaIds);
@@ -176,6 +227,18 @@ export function BlockRow({ id, catalog, count, onRemove, removeLabel, rootAttrib
     if (count !== undefined) parts.push(t("entityCount", { count }));
     detail = parts.join(" · ");
     if (index && block.areaIds.some((areaId) => !index.areasById.has(areaId))) issue = "missing";
+  }
+
+  if (block?.kind === "device") {
+    const device = index?.catalog.devices?.find((candidate) => candidate.id === block.deviceId);
+    const area = index?.areasById.get(device?.areaId ?? "");
+    title = block.label ?? device?.name ?? block.deviceId;
+    Icon = IconDevices;
+    const parts = [t("kind.device"), area?.name ?? t("noArea")];
+    if (block.label && device) parts.splice(1, 0, device.name);
+    if (count !== undefined) parts.push(t("entityCount", { count }));
+    detail = parts.join(" · ");
+    if (index && !device) issue = "missing";
   }
 
   if (block && block.source !== catalog.integrationId) issue = "otherSource";
@@ -260,18 +323,128 @@ interface BlockAddButtonProps {
 
 export function BlockAddButton({ addItem, values }: BlockAddButtonProps) {
   const catalog = useFormBlockCatalog();
-  return <BlockAdder catalog={catalog} values={values} onAdd={(ids) => ids.forEach((id) => addItem({ id }))} />;
+  const form = useFormContext();
+  const onAdd = (ids: string[], hiddenEntityIds: string[] = []) => {
+    ids.forEach((id) => addItem({ id }));
+    if (hiddenEntityIds.length === 0) return;
+    const { options } = form.getValues();
+    const excluded = toStrings(options.excludedEntityIds);
+    form.setFieldValue("options", { ...options, excludedEntityIds: [...new Set([...excluded, ...hiddenEntityIds])] });
+  };
+  return <BlockAdder catalog={catalog} values={values} onAdd={onAdd} />;
 }
 
-type AddMode = "rooms" | "entity";
+type AddMode = "rooms" | "device" | "entity";
 
 interface BlockAdderProps {
   catalog: BlockCatalog;
   values: readonly string[];
-  onAdd: (ids: string[]) => void;
+  /** `hiddenEntityIds` are entities the user unticked while adding a device; they join the hidden entities. */
+  onAdd: (ids: string[], hiddenEntityIds?: string[]) => void;
 }
 
 const toAreaSetKey = (areaIds: readonly string[]) => areaIds.toSorted().join(",");
+
+/** Devices grouped by room, for the device picker. */
+const DEVICE_HINT_ENTITIES = 3;
+
+/** Removes the device name that entity names repeat: "Power · Living room" or "Living room Power". */
+const withoutDeviceName = (name: string, deviceName: string) =>
+  name.replace(` · ${deviceName}`, "").replace(`${deviceName} `, "").trim() || name;
+
+// Controls first, so the hint reads like what the device is: "Cover, Power, Energy +6".
+const hintRank = (entity: SmartHomeCatalogEntity) => {
+  const { domain } = toSmartHomeDomain(entity.domain);
+  return domain === "sensor" || domain === "binary_sensor" ? 1 : 0;
+};
+
+/** Devices grouped by room for the device picker, each with a hint so same-named devices can be told apart. */
+const useDeviceOptions = (catalog: BlockCatalog) => {
+  const t = useI18n("widget.smartHome-controls.block");
+  const index = catalog.state.status === "ready" ? catalog.state.index : null;
+  return useMemo(() => {
+    const hints = new Map<string, string>();
+    if (!index) return { data: [], hints };
+    const members = new Map<string, SmartHomeCatalogEntity[]>();
+    for (const entity of index.entities) {
+      if (!entity.deviceId || entity.hidden) continue;
+      members.set(entity.deviceId, [...(members.get(entity.deviceId) ?? []), entity]);
+    }
+    const groups = new Map<string, { value: string; label: string }[]>();
+    for (const device of index.catalog.devices ?? []) {
+      const group = index.areasById.get(device.areaId ?? "")?.name ?? t("noArea");
+      const items = groups.get(group) ?? [];
+      items.push({ value: device.id, label: device.name });
+      groups.set(group, items);
+      // The main entity usually carries just the device's name, which tells nothing new here.
+      const entities = (members.get(device.id) ?? [])
+        .filter((entity) => entity.name !== device.name)
+        .toSorted((left, right) => hintRank(left) - hintRank(right));
+      const names = entities
+        .slice(0, DEVICE_HINT_ENTITIES)
+        .map((entity) => withoutDeviceName(entity.name, device.name));
+      const more = entities.length - names.length;
+      const contents = more > 0 ? `${names.join(", ")} +${more}` : names.join(", ");
+      hints.set(device.id, [device.model, contents].filter(Boolean).join(" · "));
+    }
+    const data = [...groups.entries()]
+      .toSorted(([left], [right]) => left.localeCompare(right))
+      .map(([group, items]) => ({ group, items }));
+    return { data, hints };
+  }, [index, t]);
+};
+
+interface DeviceBlockSetupProps {
+  catalog: BlockCatalog;
+  deviceId: string;
+  onAdd: (label: string, hiddenEntityIds: string[]) => void;
+}
+
+/** After picking a device: an optional name for its card and which of its entities to show. */
+function DeviceBlockSetup({ catalog, deviceId, onAdd }: DeviceBlockSetupProps) {
+  const t = useI18n("widget.smartHome-controls.block");
+  const index = catalog.state.status === "ready" ? catalog.state.index : null;
+  const device = index?.catalog.devices?.find((candidate) => candidate.id === deviceId);
+  const entities = useMemo(
+    () => (index?.entities ?? []).filter((entity) => entity.deviceId === deviceId && !entity.hidden),
+    [index, deviceId],
+  );
+  const [label, setLabel] = useState("");
+  const [shown, setShown] = useState<string[]>(() => entities.map((entity) => entity.id));
+  const shortName = (name: string) => (device ? withoutDeviceName(name, device.name) : name);
+
+  return (
+    <Stack gap="xs">
+      <TextInput
+        label={t("add.deviceName")}
+        placeholder={device?.name}
+        value={label}
+        onChange={(event) => setLabel(event.currentTarget.value)}
+      />
+      <Checkbox.Group label={t("add.deviceEntities")} value={shown} onChange={setShown}>
+        <Stack gap={6} mt={4}>
+          {entities.map((entity) => (
+            <Checkbox key={entity.id} value={entity.id} label={shortName(entity.name)} />
+          ))}
+        </Stack>
+      </Checkbox.Group>
+      <Group justify="flex-end">
+        <Button
+          size="xs"
+          disabled={shown.length === 0}
+          onClick={() =>
+            onAdd(
+              label,
+              entities.filter((entity) => !shown.includes(entity.id)).map((entity) => entity.id),
+            )
+          }
+        >
+          {t("add.submit")}
+        </Button>
+      </Group>
+    </Stack>
+  );
+}
 
 export function BlockAdder(props: BlockAdderProps) {
   return <SourceBlockAdder key={props.catalog.integrationId} {...props} />;
@@ -283,7 +456,8 @@ function SourceBlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
   const [areaIds, setAreaIds] = useState<string[]>([]);
   const [merge, setMerge] = useState(true);
   const [entityPickerKey, setEntityPickerKey] = useState(0);
-  const [notice, setNotice] = useState<"duplicate" | "covered" | null>(null);
+  const [notice, setNotice] = useState<"duplicate" | "duplicateDevice" | "covered" | null>(null);
+  const [deviceId, setDeviceId] = useState<string | null>(null);
   const source = catalog.integrationId;
   const ready = catalog.state.status === "ready";
   const existing = parseSourceBlocks(values, source);
@@ -292,6 +466,20 @@ function SourceBlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
     existing.flatMap((block) => (block.kind === "areas" ? [toAreaSetKey(block.areaIds)] : [])),
   );
   const coveredAreaIds = new Set(existing.flatMap((block) => (block.kind === "areas" ? block.areaIds : [])));
+  const existingDeviceIds = new Set(existing.flatMap((block) => (block.kind === "device" ? [block.deviceId] : [])));
+  const deviceOptions = useDeviceOptions(catalog);
+
+  const chooseDevice = (id: string | null) => {
+    setDeviceId(id);
+    setNotice(id && existingDeviceIds.has(id) ? "duplicateDevice" : null);
+  };
+
+  const addDevice = (label: string, hiddenEntityIds: string[]) => {
+    if (!ready || !deviceId || existingDeviceIds.has(deviceId)) return;
+    setNotice(null);
+    onAdd([createDeviceBlockId(deviceId, source, label)], hiddenEntityIds);
+    setDeviceId(null);
+  };
 
   const addEntity = (entityId: string | null) => {
     if (!ready) return;
@@ -324,9 +512,39 @@ function SourceBlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
         onChange={setMode}
         data={[
           { value: "rooms", label: t("add.rooms") },
+          { value: "device", label: t("add.device") },
           { value: "entity", label: t("add.entity") },
         ]}
       />
+      {mode === "device" && (
+        <>
+          <Select
+            label={t("add.deviceLabel")}
+            placeholder={t("add.devicePlaceholder")}
+            data={deviceOptions.data}
+            renderOption={({ option }) => (
+              <Stack gap={0} miw={0}>
+                <Text size="sm" truncate>
+                  {option.label}
+                </Text>
+                <Text size="xs" c="dimmed" truncate>
+                  {deviceOptions.hints.get(option.value)}
+                </Text>
+              </Stack>
+            )}
+            value={deviceId}
+            onChange={chooseDevice}
+            searchable
+            clearable
+            disabled={!ready}
+            nothingFoundMessage={t("add.noDevices")}
+            comboboxProps={{ withinPortal: true }}
+          />
+          {deviceId && !existingDeviceIds.has(deviceId) && (
+            <DeviceBlockSetup key={deviceId} catalog={catalog} deviceId={deviceId} onAdd={addDevice} />
+          )}
+        </>
+      )}
       {mode === "entity" && (
         <SmartHomeEntitySelect
           key={entityPickerKey}
