@@ -1,0 +1,48 @@
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  h_d6e478ca18e517 26-32,143
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  h_d6e478ca18e517 70,192-199,202,366,453,693-699
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 37,61-63
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  h_d6e478ca18e517 27,201-208,222
+apps/nextjs/src/components/board/sections/grid/container-grid-sizing.ts
+  h_d6e478ca18e517 101,135-137
+apps/nextjs/src/components/board/sections/smart-container/smart-container-selection.ts
+  h_d6e478ca18e517 40
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.tsx
+  h_d6e478ca18e517 120,127-133,186,192-198,208-213,256-270
+apps/nextjs/src/components/board/sections/smart-container/use-smart-container-runtime.ts
+  h_d6e478ca18e517 37-39,43,45-46,89,91,95,97-108,133,135,140-141,146-154,213
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 1791-1814,1821-1841,1981-1988,2041-2060,2210-2220
+packages/api/src/router/widgets/media-requests.ts
+  h_d6e478ca18e517 82
+packages/definitions/src/widget.ts
+  h_d6e478ca18e517 73-74
+packages/request-handler/src/media-request-list.ts
+  h_d6e478ca18e517 4,44
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2513-2514
+packages/widgets/src/activity.tsx
+  h_d6e478ca18e517 7,110,125-126
+packages/widgets/src/errors/component.tsx
+  h_d6e478ca18e517 21-22,27,43,59
+packages/widgets/src/media-requests/list/component.tsx
+  h_d6e478ca18e517 9,13,57-61,71
+packages/widgets/src/media-server/component.tsx
+  h_d6e478ca18e517 205
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 76,467-468
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8d4cf95a273ee89220afb45c4507c326199ae4c5",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
