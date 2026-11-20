@@ -1,0 +1,14 @@
+apps/nextjs/src/components/theme/theme-json-transfer.tsx
+  h_d6e478ca18e517 3,20,37,42-43,46,51-55,98,111,117,120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dead0a43a8fb81f5fb706c03ad9c041bea61db2c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
