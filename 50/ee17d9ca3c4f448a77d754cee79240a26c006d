@@ -1,0 +1,24 @@
+apps/nextjs/src/components/theme/theme-editor.tsx
+  h_d6e478ca18e517 47,245
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 124
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 2205
+packages/translation/src/lang/pl.json
+  h_d6e478ca18e517 2173
+packages/validation/src/theme.ts
+  h_d6e478ca18e517 9-13,410
+packages/workshop/src/schema.ts
+  h_d6e478ca18e517 6,18,272
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "50ee17d9ca3c4f448a77d754cee79240a26c006d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
