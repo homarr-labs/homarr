@@ -192,12 +192,15 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
           }
         }
         const shareable = getShareableQueries([...queries.values()], board, boardIntegrationIds, allowedIds);
-        const ids = new Set(shareable.flatMap((query) => getQueryIntegrationIds(query.queryKey, board) ?? []));
         const [initialGenerations, generations] = await Promise.all([
           initialGenerationsPromise,
-          getGenerationsAsync(ids),
+          getGenerationsAsync(boardIntegrationIds),
         ]);
-        if (!initialGenerations || !generations || [...ids].some((id) => initialGenerations[id] !== generations[id]))
+        if (
+          !initialGenerations ||
+          !generations ||
+          [...boardIntegrationIds].some((id) => initialGenerations[id] !== generations[id])
+        )
           return;
         const serialized = stringify({
           timestamp: Date.now(),
