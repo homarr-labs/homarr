@@ -193,7 +193,18 @@ export function SmartHomeInlineEditor({
               </DndContext>
             </ScrollArea.Autosize>
             <Divider label={t("inline.add")} labelPosition="left" />
-            <BlockAdder catalog={catalog} values={blocks} onAdd={(ids) => setBlocks([...blocks, ...ids])} />
+            <BlockAdder
+              catalog={catalog}
+              values={blocks}
+              onAdd={(ids, hiddenEntityIds = []) =>
+                onChange({
+                  blocks: [...blocks, ...ids],
+                  ...(hiddenEntityIds.length > 0 && {
+                    excludedEntityIds: [...new Set([...filter.excludedEntityIds, ...hiddenEntityIds])],
+                  }),
+                })
+              }
+            />
           </Stack>
         </Popover.Dropdown>
       </Popover>

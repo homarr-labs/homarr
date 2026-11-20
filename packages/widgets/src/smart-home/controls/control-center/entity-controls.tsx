@@ -59,6 +59,7 @@ import {
   getForecastMessage,
   getPrimaryAction,
   requiresConfirmation,
+  stepNumber,
 } from "../semantics";
 import { useSmartHomeEntity, useSmartHomeInteractionBlock } from "../store";
 import type { HaAction, HaDomain, HaEntity } from "../types";
@@ -1496,6 +1497,53 @@ function SelectControl({ entity, width, height }: ControlProps) {
   );
 }
 
+function NumberControl({ entity, width, height }: ControlProps) {
+  const t = useI18n("widget.smartHome-controls.number");
+  const theme = useEntityTheme(entity);
+  const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
+  const { run, pending } = useRunner(entity);
+  const tier = getTier(width, height);
+  const Icon = theme.Icon;
+  const lower = stepNumber(entity, -1);
+  const higher = stepNumber(entity, 1);
+  const size = tier === "mini" ? "sm" : "md";
+
+  return (
+    <Tile theme={theme}>
+      <Head
+        name={entity.name}
+        state={tier === "mini" ? "" : formatEntityState(entity)}
+        leading={
+          <span className={classes.miniIconStatic} data-active data-pending={pending}>
+            <Icon size={18} stroke={1.8} />
+          </span>
+        }
+      />
+      <div className={classes.numberStepper}>
+        <RoundButton
+          size={size}
+          label={t("decrease", { name: entity.name })}
+          pending={pending}
+          disabled={disabled || lower === null}
+          onClick={() => lower !== null && void run({ type: "setValue", value: lower })}
+        >
+          <IconMinus size={18} stroke={2} />
+        </RoundButton>
+        <span className={classes.numberValue}>{formatEntityState(entity)}</span>
+        <RoundButton
+          size={size}
+          label={t("increase", { name: entity.name })}
+          pending={pending}
+          disabled={disabled || higher === null}
+          onClick={() => higher !== null && void run({ type: "setValue", value: higher })}
+        >
+          <IconPlus size={18} stroke={2} />
+        </RoundButton>
+      </div>
+    </Tile>
+  );
+}
+
 function InfoControl({ entity, width, height }: ControlProps) {
   const theme = useEntityTheme(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable);
@@ -1705,6 +1753,8 @@ function renderControl(props: ControlProps) {
       return <PersonControl {...props} />;
     case "input_select":
       return <SelectControl {...props} />;
+    case "number":
+      return <NumberControl {...props} />;
     case "scene":
     case "script":
     case "button":
