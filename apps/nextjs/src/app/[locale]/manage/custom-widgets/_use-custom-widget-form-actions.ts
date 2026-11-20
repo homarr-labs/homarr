@@ -290,7 +290,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       if (!isCurrent()) return;
       const errorData = isRecord(error) ? error.data : undefined;
       let setupIssues: CustomWidgetSaveIssue[] = [{ message: t("notification.previewError") }];
-      if (isRecord(errorData) && isRecord(errorData.zodError)) {
+      if (
+        isRecord(errorData) &&
+        (isRecord(errorData.zodError) || errorData.code === "BAD_REQUEST" || errorData.code === "NOT_FOUND")
+      ) {
         const extractedIssues = extractCustomWidgetSaveIssues(error);
         if (extractedIssues.length > 0) setupIssues = extractedIssues;
       }

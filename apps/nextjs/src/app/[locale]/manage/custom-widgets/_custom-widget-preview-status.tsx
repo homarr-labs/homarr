@@ -15,14 +15,19 @@ export function PreviewResult({
   title: string;
   description: string;
 }) {
-  if (outcome === "idle") return null;
   return (
-    <Alert color={outcome === "error" ? "red" : outcome === "success" ? "green" : "yellow"}>
-      <Text size="sm" fw={600}>
-        {title}
-      </Text>
-      <Text size="sm">{description}</Text>
-    </Alert>
+    <Box component="output" display="block" aria-atomic="true">
+      {outcome !== "idle" && (
+        <Alert role="presentation" color={outcome === "error" ? "red" : outcome === "success" ? "green" : "yellow"}>
+          <Text size="sm" fw={600}>
+            {title}
+          </Text>
+          <Text size="sm" style={{ whiteSpace: "pre-line", overflowWrap: "anywhere" }}>
+            {description}
+          </Text>
+        </Alert>
+      )}
+    </Box>
   );
 }
 
@@ -31,8 +36,7 @@ export function PreviewStatusDot({ outcome, label }: { outcome: PreviewOutcome; 
   return (
     <Tooltip label={label}>
       <Box
-        component="output"
-        aria-label={label}
+        aria-hidden="true"
         w={8}
         h={8}
         bg={`var(--mantine-color-${colors[outcome]}-6)`}

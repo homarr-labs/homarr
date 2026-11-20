@@ -147,13 +147,11 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
             ]}
           />
         </Group>
-        {Boolean(candidate || props.preview.setupIssues?.length) && (
-          <PreviewResult
-            outcome={props.preview.outcome}
-            title={previewResult.title}
-            description={previewResult.description}
-          />
-        )}
+        <PreviewResult
+          outcome={props.preview.outcome}
+          title={previewResult.title}
+          description={previewResult.description}
+        />
         <Tabs value={activeTab} onChange={setActiveTab} keepMounted={false}>
           <Tabs.List grow>
             {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
