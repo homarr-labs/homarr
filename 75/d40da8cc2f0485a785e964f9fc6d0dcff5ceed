@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  h_d6e478ca18e517 3,84,112-134,226-231,237-241,243,258,263,269,335,423,432,465
+apps/nextjs/src/components/board/sections/container/lazy-container-edit-modal.tsx
+  h_d6e478ca18e517 3-4,7,11,19-37,41,43,48-50,55-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "75d40da8cc2f0485a785e964f9fc6d0dcff5ceed",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
