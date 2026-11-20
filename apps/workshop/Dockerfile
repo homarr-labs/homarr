@@ -94,6 +94,7 @@ ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
 COPY --from=website /app/apps/docs/out /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
+COPY apps/workshop/pb_rollout_migrations /pb_rollout_migrations
 COPY apps/workshop/pb_hooks /pb_hooks
 RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public
 EXPOSE 8090

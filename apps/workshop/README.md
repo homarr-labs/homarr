@@ -101,6 +101,22 @@ WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate bun run test:workshop-image
 PocketBase data lives in `/pb_data`. Normal start, stop, and down operations retain the named volume. Back up the
 database before migrations or image promotion, and test restores in a separate empty volume.
 
+### Convert legacy CSS listings
+
+Start the upgraded Workshop once to add the theme type. Keep legacy CSS listings in place while releasing the updated
+Homarr client. Once the supported clients can import both formats, back up `pb_data` and run the conversion during a
+maintenance window (from `apps/workshop`):
+
+```sh
+docker compose stop workshop
+docker compose run --rm --no-deps --user pocketbase --entrypoint pocketbase workshop \
+  migrate up --dir=/pb_data --hooksDir=/pb_hooks --migrationsDir=/pb_rollout_migrations
+docker compose up -d workshop
+```
+
+The conversion preserves listing IDs and copies CSS into the Default theme. Clients from before the theme release cannot
+import the converted listings. Restore the pre-conversion backup if you need to undo the conversion.
+
 The v2 branch consolidates the unreleased Workshop migrations. Volumes that ran an earlier v2 migration chain are
 unsupported and must be backed up and recreated. The following command permanently removes the local Workshop volume:
 

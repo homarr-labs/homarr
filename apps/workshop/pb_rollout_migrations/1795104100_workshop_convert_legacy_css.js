@@ -1,5 +1,9 @@
 migrate(
   (app) => {
+    const types = app.findCollectionByNameOrId("submissions").fields.getByName("type");
+    if (!types.values.includes("customTheme")) {
+      throw new Error("Start the updated Workshop once before converting CSS listings");
+    }
     app
       .db()
       .newQuery(
