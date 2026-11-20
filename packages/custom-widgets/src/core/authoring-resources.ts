@@ -172,7 +172,7 @@ Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain 
 
 Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover supported kinds
 and matching full-access entries with integration tools. Bind the ID before preview; omit URL/auth. Paths append to the
-saved URL; non-GET requests are actions. Portable exports omit integrationId.
+saved URL; non-GET requests are actions. Portable exports omit integrationId. An integration source with \`optional: true\` may remain unlinked at install.
 
 Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
 explicit interactions use manual. Actions stay manual with modify permission; DELETE requires full permission and

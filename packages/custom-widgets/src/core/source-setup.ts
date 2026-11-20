@@ -17,6 +17,7 @@ export interface CustomWidgetSourceSetup {
   suggestedBaseUrl: string;
   baseUrl: string;
   integrationKind?: string;
+  optional?: boolean;
   integrationId?: string;
   authType: CustomWidgetAuthType;
   credentialFields: Array<{
@@ -42,7 +43,7 @@ export function isCustomWidgetSourceUrlPlaceholder(baseUrl: string) {
 }
 
 export function customWidgetSourceRequiresUrlConfirmation(source: CustomWidgetSource) {
-  if (source.type === "integration") return !source.integrationId;
+  if (source.type === "integration") return !source.integrationId && !source.optional;
   return isCustomWidgetSourceUrlPlaceholder(source.baseUrl);
 }
 
@@ -84,6 +85,7 @@ export function getCustomWidgetSourceSetups(
       suggestedBaseUrl: source.baseUrl ?? "",
       baseUrl: source.baseUrl ?? "",
       integrationKind: source.integrationKind,
+      optional: source.type === "integration" && source.optional === true,
       integrationId: source.integrationId,
       authType,
       credentialFields: requirements

@@ -85,7 +85,7 @@ export const secretProcedures = {
         enabled: true,
         effect: "destructive",
         description:
-          "Configure one custom widget source. For an integration source, provide integrationId from integration_all (matching integrationKind); omit URL and secrets. Requires administrator permission.",
+          "Configure one custom widget source. For an integration source, provide integrationId from integration_all (matching integrationKind); omit URL and secrets. To unlink an optional source, pass integrationId: null. Requires administrator permission.",
       },
     })
     .input(
@@ -94,7 +94,7 @@ export const secretProcedures = {
         sourceId: z.string(),
         baseUrl: z.string().optional(),
         networkScope: z.unknown().optional(),
-        integrationId: z.string().min(1).max(100).optional(),
+        integrationId: z.string().min(1).max(100).nullable().optional(),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
@@ -108,12 +108,17 @@ export const secretProcedures = {
       if (!current) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
       let configuration: unknown;
       if (current.type === "integration") {
-        if (!input.integrationId || input.baseUrl !== undefined || input.secrets.length > 0) {
+        if (
+          input.integrationId === undefined ||
+          (input.integrationId === null && !current.optional) ||
+          input.baseUrl !== undefined ||
+          input.secrets.length > 0
+        ) {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
         }
-        configuration = { ...current, integrationId: input.integrationId };
+        configuration = { ...current, integrationId: input.integrationId ?? undefined };
       } else {
-        if (input.integrationId)
+        if (input.integrationId !== undefined)
           throw new TRPCError({ code: "BAD_REQUEST", message: "HTTP sources cannot bind an integration" });
         configuration = {
           ...current,

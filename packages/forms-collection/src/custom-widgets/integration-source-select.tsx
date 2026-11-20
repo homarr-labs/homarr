@@ -30,10 +30,17 @@ interface IntegrationSourceSelectProps {
   kind: CustomWidgetIntegrationSource["integrationKind"];
   integrationId?: string;
   onChange(integrationId: string | undefined): void;
+  optional?: boolean;
   onKindChange?(kind: CustomWidgetIntegrationSource["integrationKind"]): void;
 }
 
-export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindChange }: IntegrationSourceSelectProps) {
+export function IntegrationSourceSelect({
+  kind,
+  integrationId,
+  optional,
+  onChange,
+  onKindChange,
+}: IntegrationSourceSelectProps) {
   const t = useI18n("customWidget.workbench.sources");
   const tIntegration = useI18n("integration");
   const tCommon = useI18n("common");
@@ -61,7 +68,7 @@ export function IntegrationSourceSelect({ kind, integrationId, onChange, onKindC
         />
       )}
       <Select
-        label={t("selectIntegration")}
+        label={t(optional ? "optionalIntegration" : "selectIntegration")}
         description={isHttpIntegrationKind(kind) ? integrationDefs[kind].name : kind}
         data={integrations.map(({ id, name }) => ({ value: id, label: name }))}
         value={integrationId ?? null}
@@ -91,6 +98,7 @@ export function SourceSetupPanel(props: CustomWidgetSourceSetupPanelProps) {
         return (
           <IntegrationSourceSelect
             kind={kind}
+            optional={setup.optional}
             integrationId={value.integrationId}
             onChange={(integrationId) => props.onChange(setup.sourceId, { ...value, integrationId })}
           />

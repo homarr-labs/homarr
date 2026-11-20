@@ -63,7 +63,7 @@ export function isCustomWidgetSourceSetupReady(
 ) {
   return setups.every((setup) => {
     const value = values[setup.sourceId];
-    if (setup.integrationKind) return Boolean(value?.integrationId);
+    if (setup.integrationKind) return setup.optional === true || Boolean(value?.integrationId);
     return Boolean(value && !getCustomWidgetSourceSetupIssue(value) && value.urlConfirmed);
   });
 }

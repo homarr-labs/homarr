@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Fieldset, Group, PasswordInput, Select, Stack, TextInput } from "@mantine/core";
+import { Button, Checkbox, Fieldset, Group, PasswordInput, Select, Stack, TextInput } from "@mantine/core";
 import { IconKey, IconTrash, IconPlus } from "@tabler/icons-react";
 
 import {
@@ -98,12 +98,19 @@ export function CustomWidgetSourceField({
           }}
         />
         {source.type === "integration" && (
-          <IntegrationSourceSelect
-            kind={source.integrationKind}
-            integrationId={source.integrationId}
-            onChange={(integrationId) => onUpdate(index, { integrationId })}
-            onKindChange={(integrationKind) => onUpdate(index, { integrationKind, integrationId: undefined })}
-          />
+          <>
+            <IntegrationSourceSelect
+              kind={source.integrationKind}
+              integrationId={source.integrationId}
+              onChange={(integrationId) => onUpdate(index, { integrationId })}
+              onKindChange={(integrationKind) => onUpdate(index, { integrationKind, integrationId: undefined })}
+            />
+            <Checkbox
+              label={t("optionalAtInstall")}
+              checked={source.optional === true}
+              onChange={(event) => onUpdate(index, { optional: event.currentTarget.checked || undefined })}
+            />
+          </>
         )}
         {source.type !== "integration" && (
           <CustomWidgetHttpSourceFields
