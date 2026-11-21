@@ -85,7 +85,57 @@ export NGINX_USER=''
 if [ "$(id -u)" = "0" ] && id www-data >/dev/null 2>&1; then
     NGINX_USER='user www-data;'
 fi
-envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+# Preserve ordinary compiled temp roots without reusing old worker-owned buckets.
+# nginx -V loses custom path whitespace/quoting; inherit its default if ambiguous.
+NGINX_BUILD_OPTIONS=$(nginx -V 2>&1) || exit 1
+NGINX_PROXY_TEMP_DIRECTIVE=$(printf '%s\n' "$NGINX_BUILD_OPTIONS" | awk '
+    /^configure arguments:/ {
+        lines++
+        args = substr($0, length("configure arguments:") + 1)
+        path = "proxy_temp"
+        valid = 1
+        safe = 1
+        while (length(args)) {
+            sub(/^[ \t]+/, "", args)
+            if (!length(args)) break
+            if (!match(args, /^--[-_a-zA-Z0-9]+(=|[ \t]|$)/)) { valid = 0; break }
+            has_value = substr(args, RLENGTH, 1) == "="
+            option = substr(args, 1, RLENGTH)
+            sub(/[= \t]$/, "", option)
+            args = substr(args, RLENGTH + 1)
+            value = ""
+            if (!has_value) {
+                if (option == "--http-proxy-temp-path") { valid = 0; break }
+                continue
+            }
+            if (substr(args, 1, 1) == "\047") {
+                # Packages use quoted compiler/linker flags; inherit other custom quoting.
+                if (option != "--with-cc-opt" && option != "--with-ld-opt") { valid = 0; break }
+                args = substr(args, 2)
+                closing = index(args, "\047")
+                if (!closing) { valid = 0; break }
+                value = "\047" substr(args, 1, closing)
+                args = substr(args, closing + 1)
+                if (length(args) && args !~ /^[ \t]/) { valid = 0; break }
+            } else {
+                match(args, /^[^ \t]*/)
+                value = substr(args, 1, RLENGTH)
+                args = substr(args, RLENGTH + 1)
+                if (index(value, "\047")) { valid = 0; break }
+            }
+            if (option == "--http-proxy-temp-path") {
+                path = value
+                if (!length(path)) path = "proxy_temp"
+                safe = path ~ /^[-_a-zA-Z0-9\/.]+$/
+            }
+        }
+    }
+    END {
+        if (lines == 1 && valid && safe) printf "proxy_temp_path \"%s\";", path
+    }
+') || exit 1
+export NGINX_PROXY_TEMP_DIRECTIVE
+envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET} ${NGINX_PROXY_TEMP_DIRECTIVE}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Native installs bypass the Docker entrypoint, and /run is cleared on reboot.
 mkdir -p /run/nginx || exit 1
 nginx -t -g 'pid /run/nginx/nginx.pid;' || exit 1
