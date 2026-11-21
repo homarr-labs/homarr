@@ -1,0 +1,14 @@
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  h_d6e478ca18e517 39,41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e80303f5c1d607913bd2341680e37da94c5664d6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
