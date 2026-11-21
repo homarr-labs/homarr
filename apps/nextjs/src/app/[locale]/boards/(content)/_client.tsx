@@ -1,6 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
@@ -14,8 +15,6 @@ import { FloatingTip } from "@homarr/ui";
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
-import { BoardEmptyState } from "~/components/board/board-empty-state";
-import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import { BoardEditorToolsProvider, BoardInPlaceEditorHost } from "~/components/board/editor-tools";
 import {
   getBoardLaneColumnCount,
@@ -37,6 +36,15 @@ import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
 import { useVisitedBoardTabs } from "~/components/board/tabs/use-visited-board-tabs";
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
+
+const BoardEmptyState = dynamic(
+  () => import("~/components/board/board-empty-state").then((module) => module.BoardEmptyState),
+  { ssr: false },
+);
+const BoardSetupChecklist = dynamic(
+  () => import("~/components/board/board-setup-checklist").then((module) => module.BoardSetupChecklist),
+  { ssr: false },
+);
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -117,8 +125,12 @@ export const ClientBoard = () => {
         >
           <BoardAppsSpotlightRegistrar />
           <BoardBackgroundVideo />
-          <BoardEmptyState />
-          <BoardSetupChecklist />
+          {isEditMode && (
+            <>
+              <BoardEmptyState />
+              <BoardSetupChecklist />
+            </>
+          )}
           <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
             <BoardGridPortalHost>

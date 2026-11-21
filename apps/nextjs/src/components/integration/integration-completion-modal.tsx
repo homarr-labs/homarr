@@ -10,15 +10,17 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, getWidgetKindsForIntegration, getWidgetName } from "@homarr/definitions";
-import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeForm, useLazyModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CreatedIntegrationResult } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
-import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import {
   getBoardRecipeDismissalKey,
   getBoardRecipeRecommendations,
 } from "~/components/board/items/board-recipe-recommendations";
+
+const loadItemSelectModal = () =>
+  import("~/components/board/items/item-select-modal").then((module) => module.ItemSelectModal);
 
 interface IntegrationCompletionModalProps {
   result: CreatedIntegrationResult;
@@ -31,7 +33,7 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const t = useI18n();
   const board = useOptionalBoard();
   const { data: session } = useSession();
-  const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
+  const { openModal: openItemSelectModal } = useLazyModalAction(loadItemSelectModal);
   const compatibleWidgets = getWidgetKindsForIntegration(innerProps.result.integration.kind);
   const boardMatchesContext = board !== null && board.id === innerProps.boardId;
   const canModifyBoard = boardMatchesContext && constructBoardPermissions(board, session).hasChangeAccess;
@@ -64,7 +66,7 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const addWidget = () => {
     if (!innerProps.boardId) return;
     actions.closeModal();
-    openItemSelectModal({
+    void openItemSelectModal({
       boardId: innerProps.boardId,
       initialIntegrationKind: innerProps.result.integration.kind,
     });
@@ -73,7 +75,7 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const addRecommendedWidget = (widgetKind: (typeof recommendations)[number]["widgetKind"]) => {
     if (!innerProps.boardId) return;
     actions.closeModal();
-    openItemSelectModal({ boardId: innerProps.boardId, initialWidgetKind: widgetKind });
+    void openItemSelectModal({ boardId: innerProps.boardId, initialWidgetKind: widgetKind });
   };
 
   return (
