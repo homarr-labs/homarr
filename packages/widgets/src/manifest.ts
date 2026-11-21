@@ -4,7 +4,7 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
-import { normalizeAppWidgetOptions } from "@homarr/validation/app";
+import { normalizeAppWidgetOptions } from "@homarr/validation/app-model";
 
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
 import { normalizeBeszelTableOptions } from "./beszel-system-table/display";
