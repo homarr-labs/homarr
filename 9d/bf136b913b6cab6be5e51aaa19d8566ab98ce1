@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/tabs/board-tabs.tsx
+  h_d6e478ca18e517 32,126,129
+apps/nextjs/src/components/board/tabs/preload-board-tab-widgets.ts
+  h_d6e478ca18e517 2,6,14-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9dbf136b913b6cab6be5e51aaa19d8566ab98ce1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
