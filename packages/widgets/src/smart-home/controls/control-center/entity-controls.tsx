@@ -712,12 +712,13 @@ function ClimateControl({ entity, width, height }: ControlProps) {
   const compact = tier === "wide" || height < CLIMATE_FULL_MIN_HEIGHT;
   const sideWidth = rowWidth(2, ROUND_SM, BUTTON_GAP);
   const availableWidth = width - TILE_PADDING * 2 - ROW_GAP - sideWidth - 2;
-  const stackedRange = range && compact && availableWidth < 120 && height >= HIT + 38;
+  const stackable = height >= HIT + 38;
+  const stacked = compact && stackable && availableWidth < (range ? 120 : HIT);
 
-  if (tier === "mini" || stackedRange) {
+  if (tier === "mini" || stacked) {
     return (
       <Tile theme={theme} className={classes.center}>
-        {dial(clamp(Math.min(width - 20, height - 38), 44, 140))}
+        {dial(clamp(Math.min(width - TILE_PADDING * 2 - 16, height - 38), 44, 140))}
         <span className={classes.name} title={entity.name}>
           {entity.name}
         </span>
@@ -726,8 +727,7 @@ function ClimateControl({ entity, width, height }: ControlProps) {
   }
 
   if (compact) {
-    let size = Math.min(height - TILE_PADDING * 2, clamp(availableWidth, HIT, 120));
-    if (range) size = Math.min(height - TILE_PADDING * 2, 120);
+    const size = Math.min(height - TILE_PADDING * 2, clamp(availableWidth, HIT, 120));
     return (
       <Tile theme={theme} className={classes.rowTile}>
         {dial(size)}
