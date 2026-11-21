@@ -1,0 +1,30 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 21-22,35,48,51,54-56,140-169,211-214
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 44,106,113,125-126,145-146,185-186,196-197,203-204,360-363
+apps/nextjs/src/components/board/items/widget-server-rendering.tsx
+  h_d6e478ca18e517 1-13
+packages/widgets/src/calendar/index.ts
+  h_d6e478ca18e517 13
+packages/widgets/src/clock/index.ts
+  h_d6e478ca18e517 34
+packages/widgets/src/countdown/index.ts
+  h_d6e478ca18e517 10
+packages/widgets/src/definition.ts
+  h_d6e478ca18e517 115
+packages/widgets/src/timer/index.ts
+  h_d6e478ca18e517 8
+packages/widgets/src/weather/index.ts
+  h_d6e478ca18e517 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "058809390176079b4a84f1922c36de5f2498551f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
