@@ -1,0 +1,18 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  h_d6e478ca18e517 19
+packages/modals-collection/package.json
+  h_d6e478ca18e517 17-18
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  h_d6e478ca18e517 9,446-450,454-458
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1c65aba3633eed90649a4d46b53b5f8aa0622bd5",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
