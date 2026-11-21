@@ -1,0 +1,40 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  h_d6e478ca18e517 34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  h_d6e478ca18e517 17
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx
+  h_d6e478ca18e517 17
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  h_d6e478ca18e517 15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/tasks/_components/tasks-table.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  h_d6e478ca18e517 13
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  h_d6e478ca18e517 17
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  h_d6e478ca18e517 10
+packages/ui/package.json
+  h_d6e478ca18e517 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "24a8735281826ea0f193c6d94f296a70bdfcdc5e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
