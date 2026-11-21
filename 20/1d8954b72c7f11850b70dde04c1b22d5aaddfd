@@ -1,0 +1,26 @@
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  h_d6e478ca18e517 35
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 17
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  h_d6e478ca18e517 10
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  h_d6e478ca18e517 11
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_general-settings-form.tsx
+  h_d6e478ca18e517 30
+packages/common/env-client.ts
+  h_d6e478ca18e517 1-3
+packages/common/package.json
+  h_d6e478ca18e517 20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "201d8954b72c7f11850b70dde04c1b22d5aaddfd",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
