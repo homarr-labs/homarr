@@ -1,0 +1,26 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  h_d6e478ca18e517 3,47,58-62
+apps/nextjs/src/components/assistant/assistant-launcher.tsx
+  h_d6e478ca18e517 15,28-29,179-191
+apps/nextjs/src/components/assistant/assistant-widget-lazy.tsx
+  h_d6e478ca18e517 3,12,17-19
+apps/nextjs/src/components/layout/header/docker-quick-access-modal.tsx
+  h_d6e478ca18e517 3,7-8,11-15
+apps/nextjs/src/components/layout/header/header-widget.tsx
+  h_d6e478ca18e517 3,30-31
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  h_d6e478ca18e517 4,12,38-42
+apps/nextjs/src/components/layout/header/whats-new-modal.tsx
+  h_d6e478ca18e517 3,13,81-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "29e5f04104d11d63ded7171c5441f16a109aa09a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
