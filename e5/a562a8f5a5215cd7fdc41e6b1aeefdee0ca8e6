@@ -1,0 +1,24 @@
+apps/nextjs/src/app/[locale]/_client-intl-provider.tsx
+  h_d6e478ca18e517 1-147
+apps/nextjs/src/app/[locale]/_messages.ts
+  h_d6e478ca18e517 1-64
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  h_d6e478ca18e517 14,28-29,66-69,81-89,112,140-141
+apps/nextjs/src/app/[locale]/layout.tsx
+  h_d6e478ca18e517 15,32,52-53,116-117,136-147,187-195
+apps/nextjs/src/app/api/translations/route.ts
+  h_d6e478ca18e517 1-9
+apps/nextjs/src/proxy.ts
+  h_d6e478ca18e517 47-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e5a562a8f5a5215cd7fdc41e6b1aeefdee0ca8e6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
