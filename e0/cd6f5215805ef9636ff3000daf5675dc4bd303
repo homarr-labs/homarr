@@ -1,0 +1,14 @@
+packages/widgets/src/custom-api/component.tsx
+  h_d6e478ca18e517 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e0cd6f5215805ef9636ff3000daf5675dc4bd303",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
