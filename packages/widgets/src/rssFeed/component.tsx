@@ -146,6 +146,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                   {feedEntry.enclosure !== undefined && entryDisplay.showImage && (
                     <Image
                       loading="lazy"
+                      decoding="async"
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt=""
@@ -196,12 +197,20 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
                 title={feedEntry.title}
               >
                 {feedEntry.enclosure !== undefined && !options.hideBackgroundImage && (
-                  <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="" />
+                  <Image
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                    className={classes.backgroundImage}
+                    src={feedEntry.enclosure}
+                    alt=""
+                  />
                 )}
                 <Group wrap="nowrap">
                   {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
                     <Image
                       loading="lazy"
+                      decoding="async"
                       className={classes.poster}
                       src={feedEntry.enclosure}
                       alt={feedEntry.title}

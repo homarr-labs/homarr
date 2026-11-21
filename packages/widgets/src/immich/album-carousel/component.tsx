@@ -172,6 +172,9 @@ function Carousel({
         <Image
           src={currentAsset.publicLink}
           alt={t("albumPhoto")}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className={classes.carouselImage}
           data-fit={advanced ? "contain" : "cover"}
         />
@@ -256,6 +259,7 @@ function Carousel({
                   src={asset.publicLink}
                   alt=""
                   loading="lazy"
+                  decoding="async"
                   w={64}
                   h={44}
                   radius="sm"
