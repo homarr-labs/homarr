@@ -1,0 +1,18 @@
+apps/nextjs/src/components/layout/header/configurable-header.tsx
+  h_d6e478ca18e517 16
+packages/validation/src/header-preferences-model.ts
+  h_d6e478ca18e517 1-17
+packages/validation/src/header-preferences.ts
+  h_d6e478ca18e517 6-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0bec40a288e4ab2abec6b8f6db87d7625527a752",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
