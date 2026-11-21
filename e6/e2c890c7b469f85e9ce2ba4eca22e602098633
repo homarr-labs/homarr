@@ -1,0 +1,22 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 21-22,110,158-162
+packages/widgets/package.json
+  h_d6e478ca18e517 28-29
+packages/widgets/src/component-references.ts
+  h_d6e478ca18e517 1-141
+packages/widgets/src/component-seed.tsx
+  h_d6e478ca18e517 1-18
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 59-65,81-83,106-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e6e2c890c7b469f85e9ce2ba4eca22e602098633",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
