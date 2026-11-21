@@ -890,6 +890,7 @@
       "deleteConfirm": "Sunteţi sigur că doriţi să ştergeţi \"{name}\"? Această acţiune nu poate fi anulată.",
       "duplicate": "",
       "aiPrompt": "Proiectare cu AI",
+      "createAssisted": "",
       "copyAiPrompt": "Copiază solicitarea AI",
       "enable": "Activare",
       "disable": "Dezactivează",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurare",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avansat",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Secţiuni widget personalizat",
       "widgetPreview": "Previzualizare widget",
       "generalInformation": "Informaţii generale",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Creează sau repară cu orice AI",
         "description": "Adaugă un URL de documente API mai întâi dacă ai unul. Pentru remedieri, execută previzualizarea, dacă este posibil. Copiază promptitudinea în orice AI; poate cere detalii lipsă. Lipiți aici ultimul său JSON.",
+        "assistedDescription": "",
         "request": "Ce ar trebui să facă acest widget?",
         "documentationUrl": "URL documentație API (opțional)",
         "paste": "Lipește",
+        "pasteResponse": "",
         "response": "Răspuns AI",
         "manualCopyDescription": "Accesul la Clipboard nu este disponibil. Selectați prompt de mai jos și copiați-l manual.",
         "manualPasteDescription": "Accesul la Clipboard nu este disponibil sau răspunsul copiat necesită corecţie. Lipiţi aici răspunsul AI-ului.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importă CSS din Workshop",
     "importCssConfirm": "Înlocuiţi personalizarea CSS curentă cu \"{title}\"? Nimic nu este salvat până nu salvaţi setările secţiunii.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Implicit",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descriere",
+      "published": ""
+    },
     "screenshotAlt": "{title} captură de ecran {count, number}",
     "screenshotViewer": "{title} vizualizator de captură ecran",
     "screenshotsLabel": "{title} capturi de ecran",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ascunde miniaturi de captură ecran",
     "closeScreenshotViewer": "Închideți vizualizatorul de captură ecran",
     "technicalDetails": "Detalii tehnice",
+    "integrations": "Integrări",
     "sourceCode": "Intrare atelier",
     "report": "Raport",
     "reportTitle": "Trimitere raport",
@@ -1332,6 +1382,12 @@
       "copyright": "Drepturi de autor",
       "inappropriate": "Nepotrivit",
       "other": "Altele"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publică în Atelier",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Editare integrare"
       },
       "app": {
-        "propagationNotice": "Modificările acestei aplicații se vor aplica în toate locurile unde este utilizată pe toate planșele."
+        "propagationNotice": "Modificările acestei aplicații se vor aplica în toate locurile unde este utilizată pe toate planșele.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Editare conexiune",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Statul Entității",
       "description": "Afișează starea unei entități și comută opțional",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Identificator entitate"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afișare imagine poster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

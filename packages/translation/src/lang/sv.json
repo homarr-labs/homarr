@@ -890,6 +890,7 @@
       "deleteConfirm": "Är du säker på att du vill ta bort \"{name}\"? Den här åtgärden kan inte ångras.",
       "duplicate": "Duplicera",
       "aiPrompt": "Designa med AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiera AI-prompt",
       "enable": "Aktivera",
       "disable": "Inaktivera",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurera",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avancerat",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Anpassade widgetsektioner",
       "widgetPreview": "Förhandsgranskning av widget",
       "generalInformation": "Allmän information",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Skapa eller fixa med någon AI",
         "description": "Lägg till en API-docs URL först om du har en. För korrigeringar, kör Förhandsgranska om möjligt. Kopiera prompten till någon AI; den kan be om saknade detaljer. Klistra in dess slutliga JSON här.",
+        "assistedDescription": "",
         "request": "Vad ska denna widget göra?",
         "documentationUrl": "API dokumentations-URL (valfritt)",
         "paste": "Klistra in",
+        "pasteResponse": "",
         "response": "AI svar",
         "manualCopyDescription": "Åtkomst till urklipp är inte tillgänglig. Välj prompten nedan och kopiera den manuellt.",
         "manualPasteDescription": "Åtkomst till urklipp är otillgänglig eller det kopierade svaret behöver korrigeras. Klistra in AI: s JSON svar här.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importera CSS från Workshop",
     "importCssConfirm": "Ersätt nuvarande anpassade CSS med \"{title}\"? Ingenting sparas tills du sparar foruminställningarna.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beskrivning",
+      "published": ""
+    },
     "screenshotAlt": "{title} skärmdump {count, number}",
     "screenshotViewer": "{title} skärmdump visare",
     "screenshotsLabel": "{title} skärmdumpar",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Dölj miniatyrer för skärmdump",
     "closeScreenshotViewer": "Stäng skärmdump viewer",
     "technicalDetails": "Tekniska detaljer",
+    "integrations": "Integrationer",
     "sourceCode": "Verkstad post",
     "report": "Rapportera",
     "reportTitle": "Rapportera inlämning",
@@ -1332,6 +1382,12 @@
       "copyright": "Upphovsrätt",
       "inappropriate": "Olämplig",
       "other": "Annat"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicera till Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Redigera integration"
       },
       "app": {
-        "propagationNotice": "Ändringar av denna app tillämpas överallt där den används på alla instrumentpaneler."
+        "propagationNotice": "Ändringar av denna app tillämpas överallt där den används på alla instrumentpaneler.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Redigera kontakt",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entitetstillstånd",
       "description": "Visa en entitets tillstånd och gör det valfritt möjligt att växla det",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID för entitet"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Visa affischbild"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

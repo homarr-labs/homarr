@@ -890,6 +890,7 @@
       "deleteConfirm": "Opravdu chcete odstranit „{name}“? Tuto akci nelze vrátit zpět.",
       "duplicate": "Duplikovat",
       "aiPrompt": "Návrh s AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopírovat výzvu AI",
       "enable": "Povolit",
       "disable": "Zakázat",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurace",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Rozšířené",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Vlastní sekce widgetů",
       "widgetPreview": "Náhled widgetu",
       "generalInformation": "Obecné informace",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Vytvořit nebo opravit s jakýmkoliv AI",
         "description": "Nejdříve přidejte API dokumentaci URL, pokud ji máte. Pro opravy spusťte náhled, pokud je to možné. Zkopírujte výzvu do jakéhokoli A; může požádat o chybějící podrobnosti. Sem vložte svůj finální JSON.",
+        "assistedDescription": "",
         "request": "Co by měl tento widget dělat?",
         "documentationUrl": "URL API dokumentace (volitelné)",
         "paste": "Vložit",
+        "pasteResponse": "",
         "response": "Odpověď AI",
         "manualCopyDescription": "Přístup ke schránce je nedostupný. Vyberte výzvu níže a zkopírujte ji ručně.",
         "manualPasteDescription": "Přístup do schránky není k dispozici nebo kopírovaná odpověď vyžaduje korekci. Sem vložte JSON odpověď.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importovat CSS z Workshopu",
     "importCssConfirm": "Nahradit aktuální vlastní CSS \"{title}\"? Nic není uloženo, dokud neuložíte nastavení tabule.",
+    "theme": {
+      "label": "Téma",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Výchozí",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Popis",
+      "published": ""
+    },
     "screenshotAlt": "Snímek obrazovky {title} {count, number}",
     "screenshotViewer": "{title} prohlížeč snímků obrazovky",
     "screenshotsLabel": "{title} snímky obrazovky",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skrýt miniatury snímku obrazovky",
     "closeScreenshotViewer": "Zavřít prohlížeč snímků obrazovky",
     "technicalDetails": "Technické podrobnosti",
+    "integrations": "Integrace",
     "sourceCode": "Vstup do dílny",
     "report": "Nahlásit",
     "reportTitle": "Odeslání zprávy",
@@ -1332,6 +1382,12 @@
       "copyright": "Autorská práva",
       "inappropriate": "Nevhodné",
       "other": "Ostatní"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publikovat do Workshopu",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Upravit integraci"
       },
       "app": {
-        "propagationNotice": "Změny této aplikace se projeví všude, kde je použita na všech plochách."
+        "propagationNotice": "Změny této aplikace se projeví všude, kde je použita na všech plochách.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Upravit připojení",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stav entity",
       "description": "Zobrazí stav entity a volitelně jej umožní přepínat",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID entity"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Zobrazit obrázek plakátu"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

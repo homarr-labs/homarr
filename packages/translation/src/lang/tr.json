@@ -890,6 +890,7 @@
       "deleteConfirm": "“{name}” adlı widget'ı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
       "duplicate": "Çoğalt",
       "aiPrompt": "Yapay zekâ ile tasarla",
+      "createAssisted": "",
       "copyAiPrompt": "Yapay zekâ istemini kopyala",
       "enable": "Etkinleştir",
       "disable": "Devre dışı bırak",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Yapılandır",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Özel widget bölümleri",
       "widgetPreview": "Widget önizlemesi",
       "generalInformation": "Genel bilgiler",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Herhangi bir yapay zekâ ile oluşturun veya düzeltin",
         "description": "Varsa önce bir API belgeleri URL'si ekleyin. Düzeltmeler için mümkünse Önizleme'yi çalıştırın. İstemi herhangi bir yapay zekâya kopyalayın; eksik ayrıntıları sorabilir. Son JSON'u buraya yapıştırın.",
+        "assistedDescription": "",
         "request": "Bu widget ne yapmalı?",
         "documentationUrl": "API belgeleri URL'si (isteğe bağlı)",
         "paste": "Yapıştır",
+        "pasteResponse": "",
         "response": "Yapay zekâ yanıtı",
         "manualCopyDescription": "Pano erişimi kullanılamıyor. Aşağıdaki istemi seçip elle kopyalayın.",
         "manualPasteDescription": "Pano erişimi kullanılamıyor veya kopyalanan yanıtın düzeltilmesi gerekiyor. Yapay zekânın JSON yanıtını buraya yapıştırın.",
@@ -1304,6 +1321,38 @@
     "useCss": "CSS'yi içe aktar",
     "importCss": "CSS'yi Workshop'tan içe aktar",
     "importCssConfirm": "Mevcut özel CSS \"{title}\" ile değiştirilsin mi? Pano ayarlarını kaydedene kadar hiçbir şey kaydedilmez.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Açıklama",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekran görüntüsü {count, number}",
     "screenshotViewer": "{title} ekran görüntüsü görüntüleyicisi",
     "screenshotsLabel": "{title} ekran görüntüleri",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ekran görüntüsü küçük resimlerini gizle",
     "closeScreenshotViewer": "Ekran görüntüsü görüntüleyicisini kapat",
     "technicalDetails": "Teknik ayrıntılar",
+    "integrations": "Entegrasyonlar",
     "sourceCode": "Workshop gönderisi",
     "report": "Bildir",
     "reportTitle": "Gönderiyi bildir",
@@ -1332,6 +1382,12 @@
       "copyright": "Telif hakkı",
       "inappropriate": "Uygunsuz",
       "other": "Diğer"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Workshop'a yayımla",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Entegrasyonu düzenle"
       },
       "app": {
-        "propagationNotice": "Bu uygulamada yapılan değişiklikler, tüm panolarda kullanıldığı her yerde uygulanacaktır."
+        "propagationNotice": "Bu uygulamada yapılan değişiklikler, tüm panolarda kullanıldığı her yerde uygulanacaktır.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Bağlantıyı düzenle",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Varlık Durumu",
       "description": "Bir varlığın durumunu görüntüleyin ve isteğe bağlı olarak değiştirin",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Varlık Kimliği"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afiş görselini göster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

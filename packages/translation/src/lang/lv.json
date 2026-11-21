@@ -890,6 +890,7 @@
       "deleteConfirm": "Vai tiešām vēlaties dzēst \"{name}\"? Šo darbību nevar atsaukt.",
       "duplicate": "Dublēt",
       "aiPrompt": "Veidot ar MI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopēt MI uzvedni",
       "enable": "Iespējot",
       "disable": "Atspējot",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurēt",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Pielāgotā logrīka sadaļas",
       "widgetPreview": "Logrīka priekšskatījums",
       "generalInformation": "Vispārīga informācija",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Izveidojiet vai labojiet ar jebkuru MI",
         "description": "Vispirms pievienojiet API dokumentācijas URL, ja tāds ir. Labojumu gadījumā, ja iespējams, palaidiet priekšskatījumu. Kopējiet uzvedni jebkurā MI; tas var lūgt trūkstošo informāciju. Ielīmējiet tā galīgo JSON šeit.",
+        "assistedDescription": "",
         "request": "Ko šim logrīkam vajadzētu darīt?",
         "documentationUrl": "API dokumentācijas URL (neobligāti)",
         "paste": "Ielīmēt",
+        "pasteResponse": "",
         "response": "MI atbilde",
         "manualCopyDescription": "Starpliktuves piekļuve nav pieejama. Atlasiet tālāk redzamo uzvedni un kopējiet to manuāli.",
         "manualPasteDescription": "Starpliktuves piekļuve nav pieejama vai nokopētā atbilde ir jālabo. Ielīmējiet MI JSON atbildi šeit.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importēt CSS",
     "importCss": "Importēt CSS no Workshop",
     "importCssConfirm": "Vai aizstāt pašreizējo pielāgoto CSS ar “{title}”? Nekas netiek saglabāts, kamēr nesaglabājat paneļa iestatījumus.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Apraksts",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekrānuzņēmums {count, number}",
     "screenshotViewer": "{title} ekrānuzņēmumu skatītājs",
     "screenshotsLabel": "{title} ekrānuzņēmumi",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Paslēpt ekrānuzņēmumu sīktēlus",
     "closeScreenshotViewer": "Aizvērt ekrānuzņēmumu skatītāju",
     "technicalDetails": "Tehniskā informācija",
+    "integrations": "Integrācijas",
     "sourceCode": "Workshop ieraksts",
     "report": "Ziņot",
     "reportTitle": "Ziņot par iesniegumu",
@@ -1332,6 +1382,12 @@
       "copyright": "Autortiesības",
       "inappropriate": "Nepiemērots",
       "other": "Cits"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicēt Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Rediģēt integrāciju"
       },
       "app": {
-        "propagationNotice": "Izmaiņas šajā lietotnē tiks piemērotas visur, kur tā tiek izmantota visos informācijas paneļos."
+        "propagationNotice": "Izmaiņas šajā lietotnē tiks piemērotas visur, kur tā tiek izmantota visos informācijas paneļos.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Rediģēt savienojumu",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Vienības stāvoklis",
       "description": "Parādīt vienības stāvokli un pēc izvēles to pārslēgt",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Vienības ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rādīt plakāta attēlu"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

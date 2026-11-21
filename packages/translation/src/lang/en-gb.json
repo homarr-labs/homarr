@@ -890,6 +890,7 @@
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
+      "createAssisted": "",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configure",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Custom widget sections",
       "widgetPreview": "Widget preview",
       "generalInformation": "General information",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Create or fix with any AI",
         "description": "Add an API docs URL first if you have one. For fixes, run Preview if possible. Copy the prompt into any AI; it can ask for missing details. Paste its final JSON here.",
+        "assistedDescription": "",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste",
+        "pasteResponse": "",
         "response": "AI response",
         "manualCopyDescription": "Clipboard access is unavailable. Select the prompt below and copy it manually.",
         "manualPasteDescription": "Clipboard access is unavailable or the copied response needs correction. Paste the AI's JSON response here.",
@@ -1304,6 +1321,38 @@
     "useCss": "Import CSS",
     "importCss": "Import CSS from Workshop",
     "importCssConfirm": "Replace the current custom CSS with \"{title}\"? Nothing is saved until you save the board settings.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Description",
+      "published": ""
+    },
     "screenshotAlt": "{title} screenshot {count, number}",
     "screenshotViewer": "{title} screenshot viewer",
     "screenshotsLabel": "{title} screenshots",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Hide screenshot thumbnails",
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
+    "integrations": "Integrations",
     "sourceCode": "Workshop entry",
     "report": "Report",
     "reportTitle": "Report submission",
@@ -1332,6 +1382,12 @@
       "copyright": "Copyright",
       "inappropriate": "Inappropriate",
       "other": "Other"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publish to Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobile",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Edit integration"
       },
       "app": {
-        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Edit connection",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entity State",
       "description": "Display the state of an entity and toggle it optionally",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Entity ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Show poster image"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

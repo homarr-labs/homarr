@@ -890,6 +890,7 @@
       "deleteConfirm": "¿Está seguro de que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
       "duplicate": "Duplicar",
       "aiPrompt": "Diseño con IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copiar prompt de IA",
       "enable": "Activar",
       "disable": "Desactivar",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurar",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avanzado",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Secciones de widget personalizadas",
       "widgetPreview": "Vista previa del widget",
       "generalInformation": "Información general",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Crear o arreglar con cualquier IA",
         "description": "Añade primero una URL de la API docs si tienes una. Para correcciones, ejecuta la vista previa si es posible. Copie el indicador en cualquier AI; puede pedir detalles faltantes. Pegue su JSON final aquí.",
+        "assistedDescription": "",
         "request": "¿Qué debería hacer este widget?",
         "documentationUrl": "URL de documentación API (opcional)",
         "paste": "Pegar",
+        "pasteResponse": "",
         "response": "Respuesta IA",
         "manualCopyDescription": "El acceso al portapapeles no está disponible. Seleccione el siguiente mensaje y cópielo manualmente.",
         "manualPasteDescription": "El acceso al portapapeles no está disponible o la respuesta copiada necesita corrección. Pegue la respuesta JSON de la IA aquí.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importar CSS del taller",
     "importCssConfirm": "Reemplazar el CSS personalizado actual con \"{title}\"? Nada se guarda hasta que guarde la configuración del foro.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Por defecto",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descripción",
+      "published": ""
+    },
     "screenshotAlt": "{title}, captura de pantalla {count, number}",
     "screenshotViewer": "Visor de captura de pantalla {title}",
     "screenshotsLabel": "Capturas de pantalla {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ocultar miniaturas de captura de pantalla",
     "closeScreenshotViewer": "Cerrar visor de captura de pantalla",
     "technicalDetails": "Detalles técnicos",
+    "integrations": "Integraciones",
     "sourceCode": "Entrada del taller",
     "report": "Reporte",
     "reportTitle": "Envío del informe",
@@ -1332,6 +1382,12 @@
       "copyright": "",
       "inappropriate": "Inapropiado",
       "other": "Otros"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicar en el taller",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Móvil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Editar integración"
       },
       "app": {
-        "propagationNotice": "Los cambios a esta aplicación se aplicarán en cualquier lugar donde se utilice en todos los tableros."
+        "propagationNotice": "Los cambios a esta aplicación se aplicarán en cualquier lugar donde se utilice en todos los tableros.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Editar conexión",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Estado de la entidad",
       "description": "Mostrar el estado de una entidad y cambiarlo opcionalmente",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de la entidad"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostrar imagen del póster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

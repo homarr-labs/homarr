@@ -890,6 +890,7 @@
       "deleteConfirm": "Segur que vols eliminar «{name}»? Aquesta acció no es pot desfer.",
       "duplicate": "Duplica",
       "aiPrompt": "Dissenya amb IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copia la indicació per a la IA",
       "enable": "Activa",
       "disable": "Desactiva",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configura",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Seccions dels ginys personalitzats",
       "widgetPreview": "Vista prèvia del giny",
       "generalInformation": "Informació general",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Crea o corregeix amb qualsevol IA",
         "description": "Afegiu primer una URL de documentació de l'API si en teniu una. Per a les correccions, executeu la vista prèvia si és possible. Copieu la sol·licitud a qualsevol IA; pot demanar els detalls que faltin. Enganxeu aquí el JSON final.",
+        "assistedDescription": "",
         "request": "Què hauria de fer aquest giny?",
         "documentationUrl": "URL de la documentació de l'API (opcional)",
         "paste": "Enganxa",
+        "pasteResponse": "",
         "response": "Resposta de la IA",
         "manualCopyDescription": "L'accés al porta-retalls no està disponible. Seleccioneu la sol·licitud següent i copieu-la manualment.",
         "manualPasteDescription": "L'accés al porta-retalls no està disponible o cal corregir la resposta copiada. Enganxeu aquí la resposta JSON de la IA.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importa CSS",
     "importCss": "Importa CSS del taller",
     "importCssConfirm": "Voleu reemplaçar el CSS personalitzat actual per «{title}»? No es desa res fins que no deseu la configuració del tauler.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descripció",
+      "published": ""
+    },
     "screenshotAlt": "Captura de pantalla de {title}, {count, number}",
     "screenshotViewer": "Visor de captures de pantalla de {title}",
     "screenshotsLabel": "Captures de pantalla de {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Amaga les miniatures de les captures de pantalla",
     "closeScreenshotViewer": "Tanca el visor de captures de pantalla",
     "technicalDetails": "Detalls tècnics",
+    "integrations": "Integracions",
     "sourceCode": "Entrada del taller",
     "report": "Informa",
     "reportTitle": "Informa de l'enviament",
@@ -1332,6 +1382,12 @@
       "copyright": "Drets d'autor",
       "inappropriate": "Inadequat",
       "other": "Altres"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publica al taller",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Edita la integració"
       },
       "app": {
-        "propagationNotice": "Els canvis d'aquesta aplicació s'aplicaran a tot arreu on s'utilitzi, en tots els taulers."
+        "propagationNotice": "Els canvis d'aquesta aplicació s'aplicaran a tot arreu on s'utilitzi, en tots els taulers.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Edita la connexió",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Estat de l'entitat",
       "description": "Mostra l'estat d'una entitat i, opcionalment, commuta-la",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de l'entitat"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostra la imatge del pòster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

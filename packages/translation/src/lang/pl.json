@@ -890,6 +890,7 @@
       "deleteConfirm": "Czy na pewno chcesz usunąć \"{name}\"? Tej akcji nie można cofnąć.",
       "duplicate": "Duplikuj",
       "aiPrompt": "Projekt z AI",
+      "createAssisted": "",
       "copyAiPrompt": "Skopiuj prompt AI",
       "enable": "Włącz",
       "disable": "Wyłącz",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Skonfiguruj",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Zaawansowane",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Niestandardowe sekcje widżetów",
       "widgetPreview": "Podgląd widżetu",
       "generalInformation": "Informacje ogólne",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Twórz lub naprawiaj dowolną SI",
         "description": "Najpierw dodaj adres URL dokumentacji API. Dla napraw, uruchom podgląd, jeśli to możliwe. Skopiuj szybkość do dowolnego AI; może poprosić o brakujące szczegóły. Wklej ostateczny JSON tutaj.",
+        "assistedDescription": "",
         "request": "Co powinien zrobić ten widżet?",
         "documentationUrl": "URL dokumentacji API (opcjonalnie)",
         "paste": "Wklej",
+        "pasteResponse": "",
         "response": "Odpowiedź SI",
         "manualCopyDescription": "Dostęp do schowka jest niedostępny. Wybierz poniższy wiersz i skopiuj go ręcznie.",
         "manualPasteDescription": "Dostęp do schowka jest niedostępny lub skopiowana odpowiedź wymaga korekty. Wklej tutaj odpowiedź AI JSON",
@@ -1304,6 +1321,38 @@
     "useCss": "Importuj CSS",
     "importCss": "Importuj CSS z Warsztatu",
     "importCssConfirm": "Zastąpić bieżący niestandardowy CSS \"{title}\"? Nic nie zostanie zapisane dopóki nie zapiszesz ustawień forum.",
+    "theme": {
+      "label": "Motyw",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "Niestandardowy CSS",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Domyślny",
+      "noCss": "",
+      "noChanges": "",
+      "json": "JSON motywu",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Opis",
+      "published": ""
+    },
     "screenshotAlt": "{title} zrzut ekranu {count, number}",
     "screenshotViewer": "Przeglądarka zrzutów ekranu {title}",
     "screenshotsLabel": "{title} zrzuty ekranu",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ukryj miniatury zrzutu ekranu",
     "closeScreenshotViewer": "Zamknij podgląd zrzutu ekranu",
     "technicalDetails": "Szczegóły techniczne",
+    "integrations": "Integracje",
     "sourceCode": "Wpis do warsztatu",
     "report": "Zgłoszenie",
     "reportTitle": "Zgłoś zgłoszenie",
@@ -1332,6 +1382,12 @@
       "copyright": "Prawa autorskie",
       "inappropriate": "Niewłaściwe",
       "other": "Inne"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Opublikuj w Warsztacie",
@@ -2170,7 +2226,7 @@
         "luminanceThreshold": "Próg kontrastu",
         "jsonHint": "Edytuj lub wklej obiekt motywu Mantine. Pominięte ustawienia zostaną odziedziczone z początkowego motywu. JavaScript i zasoby zewnętrzne nie są obsługiwane.",
         "invalidJson": "Wprowadź poprawny kod JSON.",
-        "tooLong": "Plik JSON motywu jest za duży",
+        "tooLong": "",
         "copyJson": "Kopiuj JSON",
         "copied": "Skopiowano",
         "discardJson": "Odrzuć zmiany w JSON",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobilny",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Edytuj integrację"
       },
       "app": {
-        "propagationNotice": "Zmiany w tej aplikacji będą zastosowane wszędzie tam, gdzie jest używana spośród wszystkich Tablic."
+        "propagationNotice": "Zmiany w tej aplikacji będą zastosowane wszędzie tam, gdzie jest używana spośród wszystkich Tablic.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Edytuj połączenie",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stan obiektu",
       "description": "Wyświetl stan obiektu i przełącz go opcjonalnie",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID obiektu"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Pokaż obraz okładki"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

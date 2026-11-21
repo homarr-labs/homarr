@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "עיצוב באמצעות AI",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "הגדרה",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "מקטעי יישומונים מותאמים אישית",
       "widgetPreview": "תצוגה מקדימה של היישומון",
       "generalInformation": "מידע כללי",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "יצירה או תיקון באמצעות כל AI",
         "description": "הוסיפו תחילה כתובת URL של תיעוד API, אם יש לכם כזו. לצורך תיקונים, הריצו תצוגה מקדימה אם אפשר. העתיקו את ההנחיה לכל AI; הוא יכול לבקש פרטים חסרים. הדביקו כאן את ה-JSON הסופי שלו.",
+        "assistedDescription": "",
         "request": "מה היישומון הזה צריך לעשות?",
         "documentationUrl": "כתובת URL של תיעוד API (אופציונלי)",
         "paste": "הדבקה",
+        "pasteResponse": "",
         "response": "תגובת AI",
         "manualCopyDescription": "הגישה ללוח נכשלה. בחרו את ההנחיה למטה והעתיקו אותה ידנית.",
         "manualPasteDescription": "הגישה ללוח אינה זמינה או שהתגובה שהועתקה דורשת תיקון. הדביקו כאן את תגובת ה-JSON של ה-AI.",
@@ -1304,6 +1321,38 @@
     "useCss": "ייבוא CSS",
     "importCss": "ייבוא CSS מהסדנה",
     "importCssConfirm": "להחליף את ה-CSS המותאם אישית הנוכחי ב-\"{title}\"? דבר לא יישמר עד שתשמרו את הגדרות הלוח.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "תיאור",
+      "published": ""
+    },
     "screenshotAlt": "צילום מסך של {title}, {count, number}",
     "screenshotViewer": "מציג צילומי מסך של {title}",
     "screenshotsLabel": "צילומי מסך של {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "הסתרת תמונות ממוזערות של צילומי מסך",
     "closeScreenshotViewer": "סגירת מציג צילומי המסך",
     "technicalDetails": "פרטים טכניים",
+    "integrations": "אינטגרציות",
     "sourceCode": "רשומה בסדנה",
     "report": "דיווח",
     "reportTitle": "דיווח על שליחה",
@@ -1332,6 +1382,12 @@
       "copyright": "זכויות יוצרים",
       "inappropriate": "לא הולם",
       "other": "אחר"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "פרסום בסדנה",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "מכשיר נייד",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "עריכת אינטגרציה"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "עריכת חיבור",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "מצב ישות",
       "description": "הצג את המצב של ישות והחלף אותו באופן אופציונלי",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "מזהה ישות"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "הצג תמונת פוסטר"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

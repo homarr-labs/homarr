@@ -890,6 +890,7 @@
       "deleteConfirm": "Haluatko varmasti poistaa \"{name}\"? Tätä toimintoa ei voi peruuttaa.",
       "duplicate": "Monista",
       "aiPrompt": "Suunnittelu tekoälyn kanssa",
+      "createAssisted": "",
       "copyAiPrompt": "Kopioi AI-kehoteprompt",
       "enable": "Ota käyttöön",
       "disable": "Poista käytöstä",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Määritä",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Lisäasetukset",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Mukautetut widgettien osat",
       "widgetPreview": "Widgetin esikatselu",
       "generalInformation": "Yleiset tiedot",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Luo tai korjaa millä tahansa tekoälyllä",
         "description": "Lisää API docs URL ensimmäiseksi, jos sinulla on yksi. Suorita korjauksia varten esikatselu, jos mahdollista. Kopioi kehotus mihin tahansa AI; se voi pyytää puuttuvia tietoja. Liitä lopullinen JSON tähän.",
+        "assistedDescription": "",
         "request": "Mitä tämän widgetin pitäisi tehdä?",
         "documentationUrl": "API-dokumentaation URL (valinnainen)",
         "paste": "Liitä",
+        "pasteResponse": "",
         "response": "tekoälyn vastaus",
         "manualCopyDescription": "Leikepöydän käyttö ei ole käytettävissä. Valitse alla oleva kehotus ja kopioi se manuaalisesti.",
         "manualPasteDescription": "Leikepöydän käyttö ei ole käytettävissä tai kopioitu vastaus tarvitsee korjausta. Liitä AI:n JSON vastaus tähän.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Tuo CSS Workshopista",
     "importCssConfirm": "Korvaa nykyinen mukautettu CSS \"{title}\"? Mitään ei tallenneta, ennen kuin tallennat taulun asetukset.",
+    "theme": {
+      "label": "Teema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Oletus",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Kuvaus",
+      "published": ""
+    },
     "screenshotAlt": "{title} kuvakaappaus {count, number}",
     "screenshotViewer": "{title} kuvakaappauksen katselin",
     "screenshotsLabel": "{title} kuvakaappausta",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Piilota kuvakaappaukset",
     "closeScreenshotViewer": "Sulje kuvakaappauksen katsoja",
     "technicalDetails": "Tekniset tiedot",
+    "integrations": "Integraatiot",
     "sourceCode": "Huoltopisteen merkintä",
     "report": "Raportoi",
     "reportTitle": "Raportin toimittaminen",
@@ -1332,6 +1382,12 @@
       "copyright": "Tekijänoikeus",
       "inappropriate": "Epäasianmukainen",
       "other": "Muut"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Julkaise työpajaan",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobiili",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Muokkaa integraatiota"
       },
       "app": {
-        "propagationNotice": "Sovellukseen tehtävät muutokset koskevat kaikkia paneeleita, joissa sitä käytetään kaikissa kojelautaissa."
+        "propagationNotice": "Sovellukseen tehtävät muutokset koskevat kaikkia paneeleita, joissa sitä käytetään kaikissa kojelautaissa.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Muokkaa yhteyttä",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "",
       "description": "",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": ""
@@ -5214,7 +5277,16 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
+          "label": ""
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
           "label": ""
         }
       },
