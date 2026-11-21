@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 602-603
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "741632040ddb0ba57eff62d1a3acd8bed0934f75",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
