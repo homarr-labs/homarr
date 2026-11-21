@@ -1,0 +1,21 @@
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_4d148b33737230::t_0d781f0219c56c 175-177,262
+packages/widgets/src/rssFeed/component.tsx
+  s_4d148b33737230::t_596afeeca7d493 149,200-207,213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6ac17a5170bba356887e13fcd1da5c9872ad179a",
+  "prompts": {},
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
