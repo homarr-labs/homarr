@@ -14,7 +14,7 @@ import { hasUnsavedBoardDrafts } from "@homarr/boards/draft-changes";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
+import { env } from "@homarr/common/env-client";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
