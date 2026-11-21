@@ -85,7 +85,19 @@ export NGINX_USER=''
 if [ "$(id -u)" = "0" ] && id www-data >/dev/null 2>&1; then
     NGINX_USER='user www-data;'
 fi
-envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+# Reuse nginx's compiled proxy temp root, but without the hashed level
+# directories. Stale hash buckets (e.g. /var/lib/nginx/proxy/2/00) can survive
+# worker user changes and then fail with "Permission denied" (#7633). Writing
+# directly into the temp root avoids them. Only emit the directive when the
+# compiled path can be extracted unambiguously and is safe to quote; otherwise
+# keep nginx's compiled default.
+NGINX_PROXY_TEMP_DIRECTIVE=''
+NGINX_PROXY_TEMP_PATH=$(nginx -V 2>&1 | tr ' ' '\n' | sed -n 's/^--http-proxy-temp-path=//p' | tail -n 1) || exit 1
+if [ -n "$NGINX_PROXY_TEMP_PATH" ] && printf '%s' "$NGINX_PROXY_TEMP_PATH" | grep -qE '^[-_a-zA-Z0-9/.]+$'; then
+    NGINX_PROXY_TEMP_DIRECTIVE="proxy_temp_path \"$NGINX_PROXY_TEMP_PATH\";"
+fi
+export NGINX_PROXY_TEMP_DIRECTIVE
+envsubst '${NGINX_USER} ${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET} ${NGINX_PROXY_TEMP_DIRECTIVE}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Native installs bypass the Docker entrypoint, and /run is cleared on reboot.
 mkdir -p /run/nginx || exit 1
 nginx -t -g 'pid /run/nginx/nginx.pid;' || exit 1
