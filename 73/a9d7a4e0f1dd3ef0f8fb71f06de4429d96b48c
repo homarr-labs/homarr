@@ -1,0 +1,28 @@
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 26,45-59,188-189,196-197
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 30
+apps/nextjs/src/components/board/items/widget-hover-overlay.tsx
+  h_d6e478ca18e517 14-28,48-49
+apps/nextjs/src/components/board/sections/auto-expand/use-widget-activity-signal.ts
+  h_d6e478ca18e517 10,42-51,53-62,64-68,70-78,80,82-107
+apps/nextjs/src/components/board/tabs/preload-board-tab-widgets.ts
+  h_d6e478ca18e517 7-12
+packages/widgets/package.json
+  h_d6e478ca18e517 28
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 11-12
+packages/widgets/src/option-normalizer.ts
+  h_d6e478ca18e517 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "73a9d7a4e0f1dd3ef0f8fb71f06de4429d96b48c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
