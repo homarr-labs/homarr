@@ -40,7 +40,7 @@ import { useTimeAgo } from "@homarr/common";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
-import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
+import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection/docker";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";

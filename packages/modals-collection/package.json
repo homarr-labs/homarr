@@ -12,7 +12,9 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./apps": "./src/apps/index.ts",
+    "./docker": "./src/docker/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
