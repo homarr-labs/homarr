@@ -1,0 +1,30 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 21-27,38,52-53,56-57,60,82,135-139,150-157,180-229,233,240-241
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 44,180,183-200,214,324-327,333,444,484,486
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 48,62
+apps/nextjs/src/components/board/items/widget-server-rendering.tsx
+  h_d6e478ca18e517 3-6,8-9,11-13,16-35
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 33
+packages/widgets/src/definition.ts
+  h_d6e478ca18e517 120
+packages/widgets/src/immich/server-stats/index.ts
+  h_d6e478ca18e517 5,12-13
+packages/widgets/src/indexer-manager/index.ts
+  h_d6e478ca18e517 5,17
+packages/widgets/src/media-releases/index.ts
+  h_d6e478ca18e517 5,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a0bffacd686eacc97e5516e3b950ca140dd4dce7",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
