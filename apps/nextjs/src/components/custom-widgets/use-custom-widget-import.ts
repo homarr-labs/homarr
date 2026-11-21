@@ -65,7 +65,12 @@ export function useCustomWidgetImport({ widget, legacyId, workshop, onImported }
       ),
     };
   }, [values, widget]);
-  const review = useMemo(() => getImportReview(configuredWidget), [configuredWidget]);
+  // Keep source fields mounted while a URL is temporarily invalid during editing.
+  const review = useMemo(
+    () => getImportReview(configuredWidget) ?? getImportReview(widget),
+    [configuredWidget, widget],
+  );
+  const ready = isCustomWidgetSourceSetupReady(setups, values);
 
   // A widget must only ever be imported once per visit: the mutation creates a new
   // record every call, so a second click would silently duplicate it.
@@ -111,7 +116,7 @@ export function useCustomWidgetImport({ widget, legacyId, workshop, onImported }
     importMutation.isPending || migrateMutation.isPending || workshopMutation.isPending || checkingWorkshop;
 
   const importWidget = async () => {
-    if (!configuredWidget || pending || succeeded) return;
+    if (!configuredWidget || !ready || pending || succeeded) return;
     const secrets = Object.entries(values).flatMap(([sourceId, value]) =>
       Object.entries(value.secrets).flatMap(([kind, secret]) =>
         secret?.trim() ? [{ sourceId, kind: kind as CustomWidgetSecretKind, value: secret }] : [],
@@ -166,7 +171,7 @@ export function useCustomWidgetImport({ widget, legacyId, workshop, onImported }
     values,
     setValue: (sourceId: string, value: CustomWidgetSourceSetupValue) =>
       setValues((current) => ({ ...current, [sourceId]: value })),
-    ready: isCustomWidgetSourceSetupReady(setups, values),
+    ready,
     pending,
     /** True once the import went through; callers keep the action locked while navigating away. */
     succeeded,
