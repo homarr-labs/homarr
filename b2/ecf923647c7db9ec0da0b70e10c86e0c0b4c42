@@ -1,0 +1,18 @@
+packages/modals-collection/package.json
+  h_d6e478ca18e517 15-16
+packages/widgets/src/_inputs/widget-app-input.tsx
+  h_d6e478ca18e517 12
+packages/widgets/src/docker/component.tsx
+  h_d6e478ca18e517 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2ecf923647c7db9ec0da0b70e10c86e0c0b4c42",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
