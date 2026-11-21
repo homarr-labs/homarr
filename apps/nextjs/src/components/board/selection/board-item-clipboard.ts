@@ -5,25 +5,6 @@ import type { Item } from "~/app/[locale]/boards/_types";
 
 const clipboardPrefix = "homarr-board-items:v1\n";
 
-const clipboardPayloadSchema = z.object({
-  version: z.literal(1),
-  items: z
-    .array(
-      z.object({
-        kind: z.enum(widgetKinds),
-        options: z.record(z.string(), z.unknown()),
-        integrationIds: z.array(z.string()),
-        advancedOptions: itemAdvancedOptionsSchema,
-        size: z.object({
-          width: z.number().int().min(1).max(64),
-          height: z.number().int().min(1).max(64),
-        }),
-      }),
-    )
-    .min(1)
-    .max(100),
-});
-
 export interface BoardItemClipboardPayload {
   version: 1;
   items: {
