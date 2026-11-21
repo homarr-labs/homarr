@@ -13,7 +13,7 @@ import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { HeaderItem, HeaderTabsDisplay } from "@homarr/validation/user";
-import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
+import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/header-preferences-model"
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 import { BoardSwitcher } from "~/components/board/board-switcher";
