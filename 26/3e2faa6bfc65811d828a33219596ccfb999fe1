@@ -1,0 +1,14 @@
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 59,75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "263e2faa6bfc65811d828a33219596ccfb999fe1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
