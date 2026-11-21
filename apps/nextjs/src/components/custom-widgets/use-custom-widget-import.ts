@@ -65,12 +65,10 @@ export function useCustomWidgetImport({ widget, legacyId, workshop, onImported }
       ),
     };
   }, [values, widget]);
-  // Keep source fields mounted while a URL is temporarily invalid during editing.
-  const review = useMemo(
-    () => getImportReview(configuredWidget) ?? getImportReview(widget),
-    [configuredWidget, widget],
-  );
-  const ready = isCustomWidgetSourceSetupReady(setups, values);
+  const configuredReview = useMemo(() => getImportReview(configuredWidget), [configuredWidget]);
+  const originalReview = useMemo(() => getImportReview(widget), [widget]);
+  const review = configuredReview ?? originalReview;
+  const ready = configuredReview !== null && isCustomWidgetSourceSetupReady(setups, values);
 
   // A widget must only ever be imported once per visit: the mutation creates a new
   // record every call, so a second click would silently duplicate it.
