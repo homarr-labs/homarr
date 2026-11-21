@@ -1,0 +1,18 @@
+packages/validation/src/app-model.ts
+  h_d6e478ca18e517 1-11
+packages/validation/src/app.ts
+  h_d6e478ca18e517 3-4
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "77ee363ca016243f23bdfc5f3ce617b5de0955d3",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
