@@ -1,0 +1,16 @@
+apps/nextjs/src/components/layout/header/header-widget-editor.ts
+  h_d6e478ca18e517 3,19-25,30-31,33-78,80-93,95
+apps/nextjs/src/components/layout/header/header-widget.tsx
+  h_d6e478ca18e517 3-4,20,31-35,47-51,78-79,81-84,90-101,103-161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "009a934da089ea4eb6e86defdf51da9aadb6c960",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
