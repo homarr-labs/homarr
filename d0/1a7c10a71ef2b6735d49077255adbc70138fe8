@@ -1,0 +1,18 @@
+apps/nextjs/src/components/board/selection/board-item-clipboard-validation.ts
+  h_d6e478ca18e517 1-30
+apps/nextjs/src/components/board/selection/board-item-clipboard.ts
+  h_d6e478ca18e517 2,27-36,61,65-66
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 136-137,178,193-195,200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d01a7c10a71ef2b6735d49077255adbc70138fe8",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
