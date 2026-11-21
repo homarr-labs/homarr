@@ -1,0 +1,41 @@
+---
+title: "pfSense"
+description: "Open-source firewall and router platform."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { pfsenseIntegration } from ".";
+import { firewallWidget } from "../../widgets/firewall";
+
+<IntegrationHeader integration={pfsenseIntegration} categories={["Firewall"]} />
+
+### Widgets and capabilities
+
+<IntegrationCapabilites items={[{ widget: firewallWidget }]} />
+
+### Adding the integration
+
+pfSense has no built-in API. Install the [pfSense REST API package](https://pfrest.org) (v2) first.
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      tabLabel: "API key",
+      credentials: ["apiKey"],
+      steps: [
+        "Under System → REST API → Settings, select Key under Authentication Methods.",
+        "Under System → User Manager, create and save a user, then edit it and add these privileges: REST API - /api/v2/system/version GET, REST API - /api/v2/status/system GET and REST API - /api/v2/status/interfaces GET. To create its key from the web interface, also give it WebCfg - System: RESTAPI Keys and WebCfg - System: RESTAPI Key for now.",
+        "Log in as that user and create a key under System → REST API → Keys, then remove the two WebCfg privileges again.",
+        "Copy the key into Homarr.",
+      ],
+    },
+  ]}
+/>

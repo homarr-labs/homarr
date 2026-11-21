@@ -745,6 +745,16 @@ export const integrationDefs = {
     defaultPort: 443,
     apiKeySettingsPath: "/system_usermanager.php",
   },
+  pfsense: {
+    httpAuth: { type: "apiKeyHeader", name: "x-api-key" },
+    name: "pfSense",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pfsense.svg",
+    category: ["firewall"],
+    documentationSlug: "pfsense",
+    defaultPort: 443,
+    apiKeySettingsPath: "/system_restapi_key.php",
+  },
   ntfy: {
     httpAuth: {
       type: "modes",
