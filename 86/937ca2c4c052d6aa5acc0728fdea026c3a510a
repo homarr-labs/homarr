@@ -1,0 +1,14 @@
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  h_d6e478ca18e517 2,36-54,252-255
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "86937ca2c4c052d6aa5acc0728fdea026c3a510a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
