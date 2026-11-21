@@ -23,6 +23,13 @@ export interface CreateItemInput {
   position?: { layoutId: string; x: number; y: number };
 }
 
+export class NoItemPlacementSpaceError extends Error {
+  constructor() {
+    super("Your board is full");
+    this.name = "NoItemPlacementSpaceError";
+  }
+}
+
 export const createItemCallback =
   ({
     id,
@@ -133,7 +140,7 @@ const createItemLayouts = (
       (boardLayout ? getFirstEmptyPosition(elements, columnCount, undefined, size) : { xOffset: 0, yOffset: 0 });
 
     if (!emptyPosition) {
-      throw new Error("Your board is full");
+      throw new NoItemPlacementSpaceError();
     }
 
     return [

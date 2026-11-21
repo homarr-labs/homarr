@@ -40,11 +40,14 @@ import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetError } from "../errors/component";
+import { useReportWidgetActivity, useWidgetActivityWatched } from "../activity";
 import { useDemoReadOnly } from "../demo-read-only";
 import { getWidgetRefreshInterval } from "../refresh-interval";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { getWidgetQueryError } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import classes from "./component.module.css";
+import { getMediaServerActivityFacts } from "./activity";
 
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
@@ -170,6 +173,7 @@ function StreamTableHeader({
 }
 
 export default function MediaServerWidget({
+  itemId,
   options,
   integrationIds,
   width,
@@ -182,7 +186,27 @@ export default function MediaServerWidget({
     { integrationIds, showOnlyPlaying: options.showOnlyPlaying, refreshInterval },
     { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
   );
-  const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
+  const queryError = getWidgetQueryError(currentStreamsQuery);
+  const currentStreamsData = queryError ? undefined : currentStreamsQuery.data;
+  const activityWatched = useWidgetActivityWatched(itemId);
+  const activityFacts = useMemo(() => {
+    if (!activityWatched) return { relevance: "quiet" as const, count: 0 };
+    return getMediaServerActivityFacts(currentStreamsData?.flatMap((result) => result.sessions) ?? []);
+  }, [activityWatched, currentStreamsData]);
+  useReportWidgetActivity({
+    itemId,
+    query: currentStreamsQuery,
+    recordsPerRow: 2,
+    ...activityFacts,
+    complete:
+      currentStreamsData?.length === integrationIds.length && currentStreamsData.every((result) => !result.error),
+    configured: integrationIds.length > 0,
+    sourceUpdatedAt: currentStreamsData?.reduce(
+      (oldest, result) => ("updatedAt" in result ? Math.min(oldest, result.updatedAt.getTime()) : oldest),
+      Infinity,
+    ),
+    freshForMs: Math.max(35_000, refreshInterval * 1000 + 5_000),
+  });
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
   const isRefreshFailing = currentStreamsQuery.isError;
   const integrationResults = useMemo(
@@ -260,6 +284,9 @@ export default function MediaServerWidget({
   }
   const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
   const hasFailedIntegrations = integrationResults.some(({ error }) => Boolean(error));
+
+  if (queryError)
+    return <WidgetError error={queryError} resetErrorBoundary={() => void currentStreamsQuery.refetch()} />;
 
   return (
     <Stack className={classes.root} gap={0} h="100%" display="flex">

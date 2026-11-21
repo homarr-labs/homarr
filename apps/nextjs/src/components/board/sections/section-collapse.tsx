@@ -72,7 +72,12 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
     }[] = [];
     const layout = getBoardLayoutData(board, currentLayoutId);
     for (const section of board.sections) {
-      if (section.kind !== "container" || !section.options.autoExpand.enabled || !section.options.autoExpand.itemId) {
+      if (
+        section.kind !== "container" ||
+        section.options.smart?.enabled ||
+        !section.options.autoExpand.enabled ||
+        !section.options.autoExpand.itemId
+      ) {
         continue;
       }
       if (!section.layouts.some((candidate) => candidate.layoutId === currentLayoutId)) continue;

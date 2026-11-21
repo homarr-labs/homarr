@@ -1,13 +1,16 @@
 "use client";
 
+import { useMemo } from "react";
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { queryCacheDefaultRefetchIntervalMs } from "@homarr/api/query-cache";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { toValidDate } from "@homarr/common";
+import { mediaRequestListCacheTtlMs } from "@homarr/definitions";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
@@ -15,16 +18,20 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { getWidgetQueryError, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
+import { WidgetError } from "../../errors/component";
+import { useReportWidgetActivity, useWidgetActivityWatched } from "../../activity";
+import { getMediaRequestsActivityFacts } from "./activity";
 import { MediaRequestsEmptyState } from "../empty-state";
 import classes from "./component.module.css";
 import searchClasses from "../search-button.module.css";
 
 export default function MediaServerWidget({
+  itemId,
   integrationIds,
   isEditMode,
   options,
@@ -44,7 +51,30 @@ export default function MediaServerWidget({
         : ["pending", "approved", "declined", "failed", "completed"],
     recentDays: options.recentDays,
   });
-  const mediaRequestData = getUsableWidgetQueryData(mediaRequestQuery);
+  const activityWatched = useWidgetActivityWatched(itemId);
+  const activityFacts = useMemo(() => {
+    if (!activityWatched) return { relevance: "quiet" as const, count: 0 };
+    const data = mediaRequestQuery.data;
+    const failedIds = new Set(data?.failedIntegrations.map(({ integrationId }) => integrationId));
+    return getMediaRequestsActivityFacts(
+      data?.requests.filter(({ integrationId }) => !failedIds.has(integrationId)) ?? [],
+    );
+  }, [activityWatched, mediaRequestQuery.data]);
+  useReportWidgetActivity({
+    itemId,
+    query: mediaRequestQuery,
+    recordsPerRow: 2,
+    ...activityFacts,
+    complete: mediaRequestQuery.data?.failedIntegrations.length === 0,
+    configured: integrationIds.length > 0,
+    sourceUpdatedAt: mediaRequestQuery.data?.updatedAt?.getTime() ?? 0,
+    freshForMs: mediaRequestListCacheTtlMs + queryCacheDefaultRefetchIntervalMs + 5_000,
+  });
+  const queryError = getWidgetQueryError(mediaRequestQuery);
+  let mediaRequestData = mediaRequestQuery.data;
+  if (queryError) mediaRequestData = undefined;
+
+  if (queryError) return <WidgetError error={queryError} resetErrorBoundary={() => void mediaRequestQuery.refetch()} />;
 
   if (isInitialWidgetQueryPending(mediaRequestQuery)) return <WidgetQueryLoadingState />;
   if (!mediaRequestData) return <WidgetEmptyState />;

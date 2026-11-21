@@ -48,6 +48,8 @@ import { useBoardGridPortalHost } from "./grid-portal-host";
 import { CONTAINER_CARD_INSET, getContainerGridMetrics, getContainerGridMinimumHeights } from "./container-grid-sizing";
 import { createGridRowProjection } from "./grid-row-projection";
 import classes from "./section-grid.module.css";
+import { useSmartContainerLayout, useSmartContainerProjection } from "../smart-container/smart-container-context";
+import { getSmartContainerChromeHeight } from "../smart-container/constants";
 
 const GridContentScaleContext = createContext(1);
 const GridRowScaleContext = createContext(1);
@@ -84,6 +86,10 @@ export const SectionGrid = ({
   className,
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
+  const smartContext = useSmartContainerProjection();
+  const { rows: smartRows, setRows: setSmartRows } = useSmartContainerLayout();
+  let smartProjection: typeof smartContext = null;
+  if (smartContext?.sectionId === section.id) smartProjection = smartContext;
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
@@ -117,7 +123,8 @@ export const SectionGrid = ({
       getCollapsedDisplayLayout(
         [...items, ...innerSections].map((item): SectionGridPlacement => {
           const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
-          const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
+          const isNonScrollableContainer =
+            item.type === "section" && !item.options.scrollable && !item.options.smart?.enabled;
           const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
           return {
             id: item.id,
@@ -176,6 +183,7 @@ export const SectionGrid = ({
         .filter(
           (inner) =>
             inner.options.autoExpand.enabled &&
+            !inner.options.smart?.enabled &&
             inner.options.autoExpand.fitToContent &&
             autoExpandedSectionIds.has(inner.id),
         )
@@ -206,8 +214,19 @@ export const SectionGrid = ({
     [collapsedRowsPerPixel, fitSectionIds, placements],
   );
   const collapsedPlacements = useMemo(() => {
-    if (directCollapsedIds.size === 0 && hiddenInactiveIds.size === 0 && fittedRowCountById.size === 0) {
-      return placements;
+    let projected = placements;
+    if (smartProjection && !isEditMode) {
+      const firstNestedRow = Math.min(
+        ...placements.filter((placement) => placement.type === "section").map((placement) => placement.y),
+      );
+      const nestedOffset = Math.max(0, smartProjection.projection.rowCount - firstNestedRow);
+      projected = placements
+        .filter((placement) => placement.type === "section" || smartProjection.projection.placements.has(placement.id))
+        .map((placement) => {
+          const statePlacement = smartProjection.projection.placements.get(placement.id);
+          if (statePlacement) return { ...placement, ...statePlacement };
+          return { ...placement, y: placement.y + nestedOffset };
+        });
     }
 
     const collapsedRowCountById = new Map<string, number>();
@@ -222,9 +241,19 @@ export const SectionGrid = ({
     }
     for (const id of hiddenInactiveIds) collapsedRowCountById.set(id, 0);
     for (const [id, rowCount] of fittedRowCountById) collapsedRowCountById.set(id, rowCount);
-    return getCollapsedDisplayLayout(placements, {
+    const resizedIds = new Set([...directCollapsedIds, ...hiddenInactiveIds, ...fittedRowCountById.keys()]);
+    if (!isEditMode) {
+      for (const placement of projected) {
+        const rows = smartRows.get(placement.id);
+        if (rows === undefined || resizedIds.has(placement.id) || rows === placement.h) continue;
+        resizedIds.add(placement.id);
+        collapsedRowCountById.set(placement.id, rows);
+      }
+    }
+    if (resizedIds.size === 0) return projected;
+    return getCollapsedDisplayLayout(projected, {
       columnCount,
-      collapsedItemIds: new Set([...directCollapsedIds, ...hiddenInactiveIds, ...fittedRowCountById.keys()]),
+      collapsedItemIds: resizedIds,
       collapsedRowCountById,
     });
   }, [
@@ -238,6 +267,9 @@ export const SectionGrid = ({
     placements,
     collapsedRowsPerPixel,
     railPlacement,
+    smartProjection,
+    smartRows,
+    isEditMode,
   ]);
 
   const displayHeights = useMemo(
@@ -248,11 +280,15 @@ export const SectionGrid = ({
             (child) =>
               !directCollapsedIds.has(child.id) &&
               !hiddenInactiveIds.has(child.id) &&
-              !fittedRowCountById.has(child.id),
+              !fittedRowCountById.has(child.id) &&
+              !smartRows.has(child.id),
           )
-          .map((child) => [child.id, minimumDisplayHeights.get(child.id) ?? child.height]),
+          .map((child) => [
+            child.id,
+            child.options.smart?.enabled ? child.height : (minimumDisplayHeights.get(child.id) ?? child.height),
+          ]),
       ),
-    [innerSections, minimumDisplayHeights, directCollapsedIds, hiddenInactiveIds, fittedRowCountById],
+    [innerSections, minimumDisplayHeights, directCollapsedIds, hiddenInactiveIds, fittedRowCountById, smartRows],
   );
   const rowProjection = useMemo(
     () => createGridRowProjection(collapsedPlacements, displayHeights),
@@ -278,8 +314,26 @@ export const SectionGrid = ({
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty" && isEditMode, canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(collapsedPlacements));
+  const savedSmartRows = smartProjection?.savedRows;
+  const reclaimSmartSpace =
+    !isEditMode &&
+    !collapsedSectionIds.has(section.id) &&
+    section.kind === "container" &&
+    section.options.smart?.reclaimSpace;
+  useEffect(() => {
+    if (savedSmartRows === undefined) return;
+    return () => setSmartRows(section.id, null);
+  }, [savedSmartRows, section.id, setSmartRows]);
+  useEffect(() => {
+    if (savedSmartRows === undefined) return;
+    let displayRows: number | null = null;
+    if (reclaimSmartSpace)
+      displayRows = Math.max(Math.min(3, savedSmartRows), Math.min(savedSmartRows, contentRowCount));
+    setSmartRows(section.id, displayRows);
+  }, [savedSmartRows, section.id, setSmartRows, reclaimSmartSpace, contentRowCount]);
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
+  if (smartProjection && !isEditMode) rowCount = contentRowCount;
   if (isRail) {
     rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
@@ -288,7 +342,8 @@ export const SectionGrid = ({
   }
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
-  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
+  const isScrollableContainer =
+    section.kind === "container" && (section.options.scrollable || Boolean(smartProjection));
   const parentScale = canvasScale * parentContentScale;
   const effectiveCanvasScale = Number.isFinite(parentScale) && parentScale > 0 ? parentScale : 1;
   const fullGridWidth = getLogicalGridSize(columnCount);
@@ -314,7 +369,11 @@ export const SectionGrid = ({
     const allocatedHeight =
       getLogicalGridSize(fittedViewportRowCount ?? viewportRowCountOverride ?? Math.max(requestedRowCount, 1)) *
       parentRowScale;
-    viewportHeight = Math.max(1, allocatedHeight - metrics.overhead);
+    const smartChrome = smartProjection
+      ? (getSmartContainerChromeHeight(section.options.smart, requestedRowCount) * calculateBoardUiScale(canvasScale)) /
+        parentContentScale
+      : 0;
+    viewportHeight = Math.max(1, allocatedHeight - metrics.overhead - smartChrome);
     if (fittedViewportRowCount === undefined && parentRowScale === 1 && !isScrollableContainer) {
       viewportHeight = Math.max(
         viewportHeight,
@@ -328,7 +387,10 @@ export const SectionGrid = ({
     }
   }
   const fullGridHeight = getLogicalGridSize(rowProjection.getDisplayRow(rowCount));
-  if (section.kind === "container" && (fittedViewportRowCount !== undefined || parentRowScale !== 1)) {
+  if (smartProjection && !isEditMode) {
+    const visibleRows = Math.min(rowCount, Math.max(1, viewportRowCountOverride ?? requestedRowCount));
+    rowScale = Math.min(1, viewportHeight / (getLogicalGridSize(visibleRows) * containerContentScale));
+  } else if (section.kind === "container" && (fittedViewportRowCount !== undefined || parentRowScale !== 1)) {
     rowScale = Math.max(0.01, viewportHeight / (fullGridHeight * containerContentScale));
   }
   const maxRowCount = section.kind === "container" ? rowCount : null;

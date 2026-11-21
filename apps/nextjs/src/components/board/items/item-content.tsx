@@ -37,6 +37,7 @@ import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
 import { useBoardEditorTools } from "../editor-tools";
 import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
+import { useSmartContainerPreviewState } from "../sections/smart-container/smart-container-context";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
@@ -499,10 +500,9 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
+  const isContainerPreview = Boolean(useSmartContainerPreviewState());
   const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
   const { removeItem, updateItemOptions } = useItemActions();
-  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
-    updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
@@ -546,18 +546,20 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
               Component={Component}
               options={options as never}
               integrationIds={item.integrationIds}
-              isEditMode={isEditMode}
-              boardId={board.id}
-              itemId={item.id}
-              removeItem={() => removeItem({ itemId: item.id })}
-              setOptions={(partialNewOptions) =>
-                updateOptions({
+              isEditMode={isEditMode || (isContainerPreview && item.kind === "customApi")}
+              boardId={isContainerPreview ? undefined : board.id}
+              itemId={isContainerPreview && item.kind === "assistant" ? undefined : item.id}
+              removeItem={isContainerPreview ? undefined : () => removeItem({ itemId: item.id })}
+              setOptions={(partialNewOptions) => {
+                if (isContainerPreview) return;
+                updateItemOptions({
+                  itemId: item.id,
                   newOptions: {
                     ...options,
                     ...partialNewOptions.newOptions,
                   },
-                })
-              }
+                });
+              }}
               {...dimensions}
             />
           </div>

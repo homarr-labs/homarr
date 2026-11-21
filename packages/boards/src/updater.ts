@@ -6,6 +6,7 @@ import { getMutationKey, getQueryKey } from "@trpc/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { reconcileSmartContainerStates } from "@homarr/validation/smart-container";
 
 import { useRequiredBoard } from "./context";
 
@@ -42,7 +43,9 @@ const useBoardUpdater = ({ id, name }: BoardIdentity) => {
         const updatedBoard = updater(previous);
         if (updatedBoard.id !== id || updatedBoard.name !== name) return undefined;
         didUpdate = true;
-        return updatedBoard;
+        const sections = reconcileSmartContainerStates(updatedBoard.sections, updatedBoard.items);
+        if (sections === updatedBoard.sections) return updatedBoard;
+        return { ...updatedBoard, sections };
       });
 
       // Read the stored snapshot: structural sharing can replace the updater's object.

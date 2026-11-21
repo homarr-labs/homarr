@@ -6,6 +6,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
+import { hasMediaServerAutoExpandActivity } from "./activity";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
@@ -30,14 +31,6 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
       }),
     }));
   },
-  activitySignal: (data) =>
-    Array.isArray(data) &&
-    data.some(
-      (pair) =>
-        typeof pair === "object" &&
-        pair !== null &&
-        (("error" in pair && Boolean(pair.error)) ||
-          ("sessions" in pair && Array.isArray(pair.sessions) && pair.sessions.length > 0)),
-    ),
+  activitySignal: hasMediaServerAutoExpandActivity,
   ...getWidgetIntegrationConfig("mediaServer"),
 }).withDynamicImport(() => import("./component"));

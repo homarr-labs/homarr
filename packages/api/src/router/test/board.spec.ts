@@ -25,6 +25,7 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
+import { containerSectionOptionsDefaults } from "@homarr/validation/shared";
 
 import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
@@ -1410,6 +1411,7 @@ describe("saveBoard should save full board", () => {
       collapsible: false,
       showOpenAll: false,
       scrollable: false,
+      autoExpand: containerSectionOptionsDefaults.autoExpand,
     });
     expect(
       await db.query.sectionLayouts.findFirst({

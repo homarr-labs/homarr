@@ -378,6 +378,7 @@
         "@homarr/api": "workspace:^0.1.0",
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
+        "@homarr/validation": "workspace:^0.1.0",
         "@tanstack/react-query": "catalog:",
         "@trpc/react-query": "catalog:",
         "react": "catalog:",

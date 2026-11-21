@@ -1,5 +1,5 @@
 import type { PointerEvent, MouseEvent } from "react";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext, useId, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
@@ -18,6 +18,7 @@ import { useAutoExpandTargetSectionIds, useIsAutoExpanded, useSectionCollapse } 
 import { useSectionContext } from "./section-context";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
+import { SmartContainerSurface, SmartContainerToolbar } from "./smart-container/smart-container-surface";
 
 const BoardContainerEditBar = dynamic(
   () => import("./container/container-menu").then((module) => module.BoardContainerEditBar),
@@ -46,6 +47,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   const t = useI18n("section.container");
   const tSection = useI18n("section");
   const options = section.options;
+  const isSmart = Boolean(options.smart?.enabled && options.smart.states.length > 0);
   const hasAutoExpandTarget = useAutoExpandTargetSectionIds().has(section.id);
   const usesHiddenAutoExpand = hasAutoExpandTarget && options.autoExpand.inactiveDisplay === "hidden";
   const showCollapseToggle = options.collapsible && !usesHiddenAutoExpand;
@@ -62,6 +64,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   const isHiddenInactive = usesHiddenAutoExpand && !isAutoExpanded && !isEditMode;
   const effectivelyCollapsed = isVisuallyCollapsed || isHiddenInactive;
   const fitsContent =
+    !isSmart &&
     options.autoExpand.enabled &&
     options.autoExpand.fitToContent &&
     isAutoExpanded &&
@@ -70,7 +73,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   const bodyRef = useRef<HTMLDivElement>(null);
   useFitContentReporter({ sectionId: section.id, itemId: options.autoExpand.itemId, bodyRef, enabled: fitsContent });
   const label = options.title.trim() || t("untitled");
-  const contentId = `board-container-${section.id}-content`;
+  const contentId = useId();
   const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
   const labelLeft = 8;
   const labelRight = options.showOpenAll && !isEditMode ? 40 : 8;
@@ -110,7 +113,7 @@ export const BoardContainerSection = ({ section }: Props) => {
     },
   };
 
-  return (
+  const content = (
     <Box
       className="board-grid-item-content"
       data-grid-item-content
@@ -131,6 +134,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         w="100%"
         h="100%"
         data-board-container-collapsed={effectivelyCollapsed ? "true" : "false"}
+        data-smart-edit-bar-in-toolbar={isSmart && !hasHeader && isEditMode ? "true" : undefined}
         styles={{
           root: {
             overflow: "visible",
@@ -182,6 +186,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           </Button>
         )}
         {!isEditMode &&
+          !isSmart &&
           !isVisuallyCollapsed &&
           !showCollapseToggle &&
           !isHiddenInactive &&
@@ -234,6 +239,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           aria-hidden={effectivelyCollapsed}
           inert={effectivelyCollapsed}
         >
+          {isSmart && !effectivelyCollapsed && <SmartContainerToolbar section={section} />}
           <ContainerDepthContext value={containerDepth + 1}>
             <SectionGrid
               section={section}
@@ -241,16 +247,33 @@ export const BoardContainerSection = ({ section }: Props) => {
               containerInlineInsetCount={containerInlineInsetCount}
               containerBlockInsetCount={containerBlockInsetCount}
               requestedRowCount={section.height}
-              viewportRowCountOverride={isVisuallyCollapsed ? section.height : isHiddenInactive ? 0 : undefined}
+              viewportRowCountOverride={
+                isVisuallyCollapsed
+                  ? section.height
+                  : isHiddenInactive
+                    ? 0
+                    : isSmart && !isEditMode
+                      ? parent.displayPlacementById?.get(section.id)?.h
+                      : undefined
+              }
               fittedViewportRowCount={fitsContent ? parent.displayPlacementById?.get(section.id)?.h : undefined}
               label={label}
             />
           </ContainerDepthContext>
         </Box>
         {isEditMode && (
-          <BoardContainerEditBar section={section} placement={hasHeader ? "header" : "border"} depth={containerDepth} />
+          <BoardContainerEditBar
+            section={section}
+            placement={hasHeader || isSmart ? "header" : "border"}
+            depth={containerDepth}
+          />
         )}
       </Card>
     </Box>
+  );
+  return (
+    <SmartContainerSurface section={section} collapsed={isVisuallyCollapsed}>
+      {content}
+    </SmartContainerSurface>
   );
 };
