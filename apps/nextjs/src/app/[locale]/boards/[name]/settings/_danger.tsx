@@ -14,7 +14,7 @@ import { boardRenameSchema } from "@homarr/validation/board";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 
-export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {
+export const DangerZoneSettingsContent = ({ isInstanceHomeBoard }: { isInstanceHomeBoard: boolean }) => {
   const board = useRequiredBoard();
   const t = useI18n("board.setting");
   const tCommonAction = useI18n("common.action");
@@ -127,7 +127,7 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
           )
         }
       />
-      {!hideVisibility && (
+      {(!isInstanceHomeBoard || !board.isPublic) && (
         <DangerZoneItem
           label={t("section.dangerZone.action.visibility.label")}
           description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
