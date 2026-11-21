@@ -890,6 +890,7 @@
       "deleteConfirm": "Tem certeza de que deseja excluir \"{name}\"? Esta ação não pode ser desfeita.",
       "duplicate": "Duplicar",
       "aiPrompt": "Projete com IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copiar prompt de IA",
       "enable": "Habilitado",
       "disable": "Desabilitado",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurar",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avançado",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Seções de widget personalizadas",
       "widgetPreview": "Visualização do widget",
       "generalInformation": "Informação Geral",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Criar ou corrigir com qualquer IA",
         "description": "Adicione primeiro um URL de documentação de API se tiver uma. Para correções, execute a visualização se possível. Copie o prompt para qualquer IA; ele pode pedir detalhes ausentes. Cole seu JSON final aqui.",
+        "assistedDescription": "",
         "request": "O que este widget deve fazer?",
         "documentationUrl": "URL da documentação da API (opcional)",
         "paste": "Colar",
+        "pasteResponse": "",
         "response": "Resposta IA",
         "manualCopyDescription": "Acesso à área de transferência não está disponível. Selecione o prompt abaixo e copie-o manualmente.",
         "manualPasteDescription": "O acesso à área de transferência está indisponível ou a resposta copiada precisa de correção. Cole a resposta JSON da IA aqui.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importar CSS da Oficina",
     "importCssConfirm": "Substituir o atual CSS personalizado com \"{title}\"? Nada é salvo até que você salve as configurações do painel.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Padrão",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descrição",
+      "published": ""
+    },
     "screenshotAlt": "{title} captura de tela {count, number}",
     "screenshotViewer": "{title} visualizador de capturas",
     "screenshotsLabel": "{title} capturas de tela",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ocultar miniaturas de imagem",
     "closeScreenshotViewer": "Fechar visualizador de captura",
     "technicalDetails": "Detalhes técnicos",
+    "integrations": "Integrações",
     "sourceCode": "Entrada de oficina",
     "report": "Denunciar",
     "reportTitle": "Denunciar submissão",
@@ -1332,6 +1382,12 @@
       "copyright": "Direitos autorais",
       "inappropriate": "Inapropriado",
       "other": "Outras"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicar na Oficina",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Dispositivos móveis",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Editar integração"
       },
       "app": {
-        "propagationNotice": "As alterações deste aplicativo serão aplicadas em todos os lugares em que for usado em todos os painéis."
+        "propagationNotice": "As alterações deste aplicativo serão aplicadas em todos os lugares em que for usado em todos os painéis.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Editar conexão",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Estado da Entidade",
       "description": "Exibe o estado de uma entidade e permite alterná-lo opcionalmente",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID da entidade"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Exibir pôster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

@@ -890,6 +890,7 @@
       "deleteConfirm": "Biztosan törölni szeretnéd \"{name}\" widgetet? Ez a művelet nem vonható vissza.",
       "duplicate": "Duplikálás",
       "aiPrompt": "Tervezés MI-vel",
+      "createAssisted": "",
       "copyAiPrompt": "AI-utasítás másolása",
       "enable": "Engedélyezés",
       "disable": "Letiltás",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurálás",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Egyéni widgetszakaszok",
       "widgetPreview": "Widget előnézete",
       "generalInformation": "Általános információk",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Létrehozás vagy javítás bármely MI-vel",
         "description": "Először adjon meg egy API-dokumentációs URL-t, ha rendelkezik ilyennel. Javításokhoz lehetőség szerint futtassa az előnézetet. Másolja a kérést bármely MI-be; az hiányzó részleteket kérhet. Illessze be a végső JSON-t ide.",
+        "assistedDescription": "",
         "request": "Mit kell tennie ennek a widgetnek?",
         "documentationUrl": "API-dokumentáció URL-címe (opcionális)",
         "paste": "Beillesztés",
+        "pasteResponse": "",
         "response": "MI-válasz",
         "manualCopyDescription": "A vágólaphoz való hozzáférés nem érhető el. Jelölje ki az alábbi kérést, és másolja ki manuálisan.",
         "manualPasteDescription": "A vágólaphoz való hozzáférés nem érhető el, vagy a másolt választ javítani kell. Illessze be ide az MI JSON-válaszát.",
@@ -1304,6 +1321,38 @@
     "useCss": "CSS importálása",
     "importCss": "CSS importálása a Műhelyből",
     "importCssConfirm": "Lecseréled a jelenlegi egyéni CSS-t erre: \"{title}\"? Semmi sem kerül mentésre a táblabeállítások mentéséig.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Leírás",
+      "published": ""
+    },
     "screenshotAlt": "{title} képernyőképe {count, number}",
     "screenshotViewer": "{title} képernyőképnézegetője",
     "screenshotsLabel": "{title} képernyőképei",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Képernyőkép-bélyegképek elrejtése",
     "closeScreenshotViewer": "Képernyőképnézegető bezárása",
     "technicalDetails": "Technikai részletek",
+    "integrations": "Integrációk",
     "sourceCode": "Műhelybejegyzés",
     "report": "Jelentés",
     "reportTitle": "Beküldés jelentése",
@@ -1332,6 +1382,12 @@
       "copyright": "Szerzői jog",
       "inappropriate": "Nem megfelelő",
       "other": "Egyéb"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Közzététel a Műhelyben",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Integráció szerkesztése"
       },
       "app": {
-        "propagationNotice": "Az alkalmazás módosításai mindenhol érvénybe lépnek, ahol használva van az összes irányítópulton."
+        "propagationNotice": "Az alkalmazás módosításai mindenhol érvénybe lépnek, ahol használva van az összes irányítópulton.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Kapcsolat szerkesztése",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Egység állapota",
       "description": "Egy elem állapotának megjelenítése és opcionális be- és kikapcsolása",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Egység azonosító"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Plakátkép megjelenítése"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

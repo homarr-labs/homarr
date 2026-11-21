@@ -890,6 +890,7 @@
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
       "duplicate": "Dupliquer",
       "aiPrompt": "Design avec IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copier le prompt IA",
       "enable": "Activer",
       "disable": "Désactiver",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurer",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avancé",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Sections de widget personnalisées",
       "widgetPreview": "Aperçu du widget",
       "generalInformation": "Informations générales",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Créer ou réparer avec une IA",
         "description": "Ajoutez d'abord une URL API docs si vous en avez une. Pour les correctifs, exécutez si possible. Copiez l'invite dans n'importe quelle AI; il peut demander des détails manquants. Collez son JSON final ici.",
+        "assistedDescription": "",
         "request": "Que doit faire ce widget ?",
         "documentationUrl": "URL de la documentation de l'API (facultatif)",
         "paste": "Coller",
+        "pasteResponse": "",
         "response": "Réponse IA",
         "manualCopyDescription": "L'accès au presse-papier n'est pas disponible. Sélectionnez l'invite ci-dessous et copiez-le manuellement.",
         "manualPasteDescription": "L'accès au presse-papiers n'est pas disponible ou la réponse copiée a besoin de correction. Collez la réponse JSON de l'IA ici.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importer CSS depuis un atelier",
     "importCssConfirm": "Remplacer le CSS personnalisé actuel par \"{title}\" ? Rien n'est sauvegardé tant que vous n'enregistrez pas les paramètres du forum.",
+    "theme": {
+      "label": "Thème",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Par défaut",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Description",
+      "published": ""
+    },
     "screenshotAlt": "Capture d'écran {title} {count, number}",
     "screenshotViewer": "Visionneuse de capture d'écran {title}",
     "screenshotsLabel": "Captures d'écran {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Masquer les vignettes de la capture d'écran",
     "closeScreenshotViewer": "Fermer la visionneuse de capture d'écran",
     "technicalDetails": "Détails techniques",
+    "integrations": "Intégrations",
     "sourceCode": "Entrée d'atelier",
     "report": "Rapporter",
     "reportTitle": "Signaler la soumission",
@@ -1332,6 +1382,12 @@
       "copyright": "Droit d'auteur",
       "inappropriate": "Inapproprié",
       "other": "Autre"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publier dans l'atelier",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobile",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Modifier l'intégration"
       },
       "app": {
-        "propagationNotice": "Les modifications apportées à cette application seront appliquées partout où elle est utilisée sur tous les tableaux de bord."
+        "propagationNotice": "Les modifications apportées à cette application seront appliquées partout où elle est utilisée sur tous les tableaux de bord.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Modifier la connexion",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "État de l'entité",
       "description": "Affichez l'état d'une entité et optionnellement activez la",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de l’entité"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afficher l'image de l'affiche"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

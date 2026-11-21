@@ -890,6 +890,7 @@
       "deleteConfirm": "确定要删除“{name}”吗？此操作不可撤销。",
       "duplicate": "复制",
       "aiPrompt": "使用 AI 设计",
+      "createAssisted": "",
       "copyAiPrompt": "复制 AI 提示词",
       "enable": "启用",
       "disable": "禁用",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "配置",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "高级",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "自定义小部件部分",
       "widgetPreview": "小部件预览",
       "generalInformation": "基本信息",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "用任意 AI 创建或修复",
         "description": "如有 API 文档 URL 请先添加。若要修复，请尽量先运行预览。将提示词复制到任意 AI（它可以追问缺失的细节），再把返回的最终 JSON 粘贴到这里。",
+        "assistedDescription": "",
         "request": "这个小部件应该做什么？",
         "documentationUrl": "API 文档 URL (可选)",
         "paste": "粘贴",
+        "pasteResponse": "",
         "response": "AI 响应",
         "manualCopyDescription": "剪贴板不可用。请选中下方提示词手动复制。",
         "manualPasteDescription": "剪贴板不可用，或复制的响应需要修正。请在此粘贴 AI 返回的 JSON。",
@@ -1304,6 +1321,38 @@
     "useCss": "导入 CSS",
     "importCss": "从工坊导入 CSS",
     "importCssConfirm": "要将当前自定义 CSS 替换为“{title}”吗？在保存看板设置之前不会保存任何更改。",
+    "theme": {
+      "label": "主题",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "自定义 CSS",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "默认值",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "描述",
+      "published": ""
+    },
     "screenshotAlt": "{title} 截图 {count, number}",
     "screenshotViewer": "{title} 截图查看器",
     "screenshotsLabel": "{title} 截图",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "隐藏截图缩略图",
     "closeScreenshotViewer": "关闭截图查看器",
     "technicalDetails": "技术细节",
+    "integrations": "集成",
     "sourceCode": "工坊条目",
     "report": "举报",
     "reportTitle": "举报提交项",
@@ -1332,6 +1382,12 @@
       "copyright": "版权",
       "inappropriate": "不适当的",
       "other": "其它"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "发布到工坊",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "移动端",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "编辑集成"
       },
       "app": {
-        "propagationNotice": "对此应用的更改将应用于所有看板中使用该应用的位置。"
+        "propagationNotice": "对此应用的更改将应用于所有看板中使用该应用的位置。",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "编辑连接",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "实体状态",
       "description": "显示实体状态并可选切换",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "实体 ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "显示封面图"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

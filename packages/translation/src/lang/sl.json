@@ -890,6 +890,7 @@
       "deleteConfirm": "Ali ste prepričani, da želite izbrisati »{name}«? Tega dejanja ni mogoče razveljaviti.",
       "duplicate": "Podvoji",
       "aiPrompt": "Oblikuj z UI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiraj poziv AI",
       "enable": "Omogoči",
       "disable": "Onemogoči",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfiguriraj",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Razdelki prilagojenega gradnika",
       "widgetPreview": "Predogled gradnika",
       "generalInformation": "Splošne informacije",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Ustvarite ali popravite s katerim koli UI",
         "description": "Najprej dodajte URL dokumentacije API, če ga imate. Za popravke po možnosti zaženite predogled. Poziv kopirajte v kateri koli UI; ta lahko zahteva manjkajoče podrobnosti. Končni JSON prilepite sem.",
+        "assistedDescription": "",
         "request": "Kaj naj ta gradnik počne?",
         "documentationUrl": "URL dokumentacije API (izbirno)",
         "paste": "Prilepi",
+        "pasteResponse": "",
         "response": "Odgovor UI",
         "manualCopyDescription": "Dostop do odložišča ni na voljo. Izberite spodnji poziv in ga ročno kopirajte.",
         "manualPasteDescription": "Dostop do odložišča ni na voljo ali pa je treba kopirani odgovor popraviti. Sem prilepite odgovor UI v obliki JSON.",
@@ -1304,6 +1321,38 @@
     "useCss": "Uvozi CSS",
     "importCss": "Uvozi CSS iz delavnice",
     "importCssConfirm": "Zamenjam trenutni CSS z »{title}«? Nič ni shranjeno, dokler ne shranite nastavitev nadzorne plošče.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Opis",
+      "published": ""
+    },
     "screenshotAlt": "Posnetek zaslona {title}, {count, number}",
     "screenshotViewer": "Pregledovalnik posnetkov zaslona {title}",
     "screenshotsLabel": "Posnetki zaslona {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skrij sličice posnetkov zaslona",
     "closeScreenshotViewer": "Zapri pregledovalnik posnetkov zaslona",
     "technicalDetails": "Tehnične podrobnosti",
+    "integrations": "",
     "sourceCode": "Vnos v delavnici",
     "report": "Prijavi",
     "reportTitle": "Prijavi prispevek",
@@ -1332,6 +1382,12 @@
       "copyright": "Avtorske pravice",
       "inappropriate": "Neprimerno",
       "other": "Drugo"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Objavi v delavnici",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Uredi integracijo"
       },
       "app": {
-        "propagationNotice": "Spremembe te aplikacije bodo uporabljene povsod, kjer se uporablja na vseh nadzornih ploščah."
+        "propagationNotice": "Spremembe te aplikacije bodo uporabljene povsod, kjer se uporablja na vseh nadzornih ploščah.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Uredi povezavo",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stanje entitete",
       "description": "Prikažite stanje entitete in jo po želji preklopite",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID subjekta"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Prikaži sliko plakata"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

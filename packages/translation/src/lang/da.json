@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "Design med AI",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurer",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avanceret",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Brugerdefinerede widget sektioner",
       "widgetPreview": "Uddrag af widget",
       "generalInformation": "Generelle oplysninger",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Opret eller rettelse med enhver AI",
         "description": "Tilføj en API docs URL først, hvis du har en. For rettelser, kør Forhåndsvisning om muligt. Kopiér prompten til enhver AI; den kan bede om manglende detaljer. Indsæt dens endelige JSON her.",
+        "assistedDescription": "",
         "request": "Hvad skal denne widget gøre?",
         "documentationUrl": "API dokumentation URL (valgfri)",
         "paste": "Indsæt",
+        "pasteResponse": "",
         "response": "AI svar",
         "manualCopyDescription": "Udklipsholder adgang er ikke tilgængelig. Vælg prompten nedenfor og kopier den manuelt.",
         "manualPasteDescription": "Adgang til udklipsholder er utilgængelig, eller det kopierede svar skal korrigeres. Indsæt AI's JSON svar her.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importer CSS fra Workshop",
     "importCssConfirm": "Erstat den aktuelle brugerdefinerede CSS med \"{title}\"? Intet gemmes før du gemmer tavlens indstillinger.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beskriveslse",
+      "published": ""
+    },
     "screenshotAlt": "{title} skærmbillede {count, number}",
     "screenshotViewer": "{title} screenshot fremviser",
     "screenshotsLabel": "{title} skærmbilleder",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skjul skærmbillede miniaturer",
     "closeScreenshotViewer": "Luk screenshot fremviser",
     "technicalDetails": "Tekniske detaljer",
+    "integrations": "Integrationer",
     "sourceCode": "Værkstedspost",
     "report": "Rapport",
     "reportTitle": "Indsendelse af rapport",
@@ -1332,6 +1382,12 @@
       "copyright": "Ophavsret",
       "inappropriate": "Upassende",
       "other": "Andet"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Udgiv til værksted",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Rediger integration"
       },
       "app": {
-        "propagationNotice": "Ændringer til denne app vil blive anvendt overalt, hvor den bruges på tværs af alle dashboards."
+        "propagationNotice": "Ændringer til denne app vil blive anvendt overalt, hvor den bruges på tværs af alle dashboards.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Rediger forbindelse",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entitets tilstand",
       "description": "Vis en entitets tilstand og skift den eventuelt",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Entitets ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Vis poster billede"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

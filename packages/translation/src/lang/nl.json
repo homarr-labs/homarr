@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "Ontwerp met AI",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configureren",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Geavanceerd",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Aangepaste widget secties",
       "widgetPreview": "Widget voorbeeld",
       "generalInformation": "Algemene informatie",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Maak of repareer met een AI",
         "description": "Voeg eerst een URL van een API documentatie toe als u die hebt. Voor fixes, voer indien mogelijk een voorbeeld uit. Kopieer de prompt in een AI; het kan om ontbrekende gegevens vragen. Plak de laatste JSON hier.",
+        "assistedDescription": "",
         "request": "Wat moet deze widget doen?",
         "documentationUrl": "API documentatie-URL (optioneel)",
         "paste": "Plakken",
+        "pasteResponse": "",
         "response": "AI antwoord",
         "manualCopyDescription": "Toegang tot klembord is niet beschikbaar. Selecteer de onderstaande prompt en kopieer deze handmatig.",
         "manualPasteDescription": "Clipboard toegang is niet beschikbaar of het gekopieerde antwoord moet worden gecorrigeerd. Plak de JSON reactie van de AI's JSON hier.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "CSS importeren uit Workshop",
     "importCssConfirm": "Vervang de huidige aangepaste CSS met \"{title}\"? Niets opgeslagen totdat u de board instellingen opslaat.",
+    "theme": {
+      "label": "Thema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standaard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beschrijving",
+      "published": ""
+    },
     "screenshotAlt": "{title} schermafbeelding {count, number}",
     "screenshotViewer": "{title} schermafbeelding bekijken",
     "screenshotsLabel": "{title} schermafbeeldingen",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Verberg schermafbeelding miniaturen",
     "closeScreenshotViewer": "Schermafbeelding weergeven sluiten",
     "technicalDetails": "Technische details",
+    "integrations": "Integraties",
     "sourceCode": "Werkplaats invoer",
     "report": "Rapporteren",
     "reportTitle": "Rapport indienen",
@@ -1332,6 +1382,12 @@
       "copyright": "Auteursrecht",
       "inappropriate": "Ongepast",
       "other": "Andere"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publiceer naar de Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobiel",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Integratie bewerken"
       },
       "app": {
-        "propagationNotice": "Wijzigingen aan deze app worden overal toegepast waar deze wordt gebruikt op alle dashboards."
+        "propagationNotice": "Wijzigingen aan deze app worden overal toegepast waar deze wordt gebruikt op alle dashboards.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Contact bewerken",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entiteitsstatus",
       "description": "Status van een entiteit weergeven en optioneel omschakelen",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Entiteits-ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Posterafbeelding weergeven"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

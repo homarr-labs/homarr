@@ -890,6 +890,7 @@
       "deleteConfirm": "Kas oled kindel, et soovid „{name}“ kustutada? Seda toimingut ei saa tagasi võtta.",
       "duplicate": "Dubleeri",
       "aiPrompt": "Kujunda tehisintellekti abil",
+      "createAssisted": "",
       "copyAiPrompt": "Kopeeri tehisintellekti viip",
       "enable": "Luba",
       "disable": "Keela",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Seadista",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Kohandatud vidina jaotised",
       "widgetPreview": "Vidina eelvaade",
       "generalInformation": "Üldteave",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Loo või paranda mis tahes AI abil",
         "description": "Kui sul on API dokumentatsiooni URL, lisa see esmalt. Paranduste puhul käivita võimaluse korral eelvaade. Kopeeri viip mis tahes AI-sse; see võib küsida puuduvaid üksikasju. Kleebi selle lõplik JSON siia.",
+        "assistedDescription": "",
         "request": "Mida see vidin tegema peaks?",
         "documentationUrl": "API dokumentatsiooni URL (valikuline)",
         "paste": "Kleebi",
+        "pasteResponse": "",
         "response": "AI vastus",
         "manualCopyDescription": "Lõikelaua kasutamine pole saadaval. Vali allolev viip ja kopeeri see käsitsi.",
         "manualPasteDescription": "Lõikelaua kasutamine pole saadaval või kopeeritud vastus vajab parandamist. Kleebi AI JSON-vastus siia.",
@@ -1304,6 +1321,38 @@
     "useCss": "Impordi CSS",
     "importCss": "Impordi CSS töötoast",
     "importCssConfirm": "Kas asendada praegune kohandatud CSS failiga „{title}“? Midagi ei salvestata enne paneeli seadete salvestamist.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Kirjeldus",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekraanipilt {count, number}",
     "screenshotViewer": "{title} ekraanipiltide vaatur",
     "screenshotsLabel": "{title} ekraanipildid",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Peida ekraanipiltide pisipildid",
     "closeScreenshotViewer": "Sulge ekraanipiltide vaatur",
     "technicalDetails": "Tehnilised üksikasjad",
+    "integrations": "Integratsioonid",
     "sourceCode": "Töötoa kirje",
     "report": "Raporteeri",
     "reportTitle": "Raporteeri esildisest",
@@ -1332,6 +1382,12 @@
       "copyright": "Autoriõigus",
       "inappropriate": "Sobimatu",
       "other": "Muu"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Avalda töötoas",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobiilne",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Muuda integratsiooni"
       },
       "app": {
-        "propagationNotice": "Selle äpi muudatused rakenduvad kõigil juhtpaneelidel."
+        "propagationNotice": "Selle äpi muudatused rakenduvad kõigil juhtpaneelidel.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Muuda ühendust",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Olemi olek",
       "description": "Kuva olemi olek ja lülita seda valikuliselt",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Olemi ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Näita postripilti"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

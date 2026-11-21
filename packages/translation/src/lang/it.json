@@ -890,6 +890,7 @@
       "deleteConfirm": "Sei sicuro di voler eliminare \"{name}\"? Questa azione non può essere annullata.",
       "duplicate": "Duplica",
       "aiPrompt": "Design con IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copia prompt IA",
       "enable": "Abilita",
       "disable": "Disabilita",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configura",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avanzate",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Sezioni widget personalizzate",
       "widgetPreview": "Anteprima widget",
       "generalInformation": "Informazioni generali",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Crea o correggi con qualsiasi IA",
         "description": "Aggiungi prima un URL di API docs se ne hai uno. Per le correzioni, esegui l'Anteprima se possibile. Copia il prompt in qualsiasi AI; può chiedere i dettagli mancanti. Incolla il suo JSON finale qui.",
+        "assistedDescription": "",
         "request": "Cosa dovrebbe fare questo widget?",
         "documentationUrl": "URL documentazione API (opzionale)",
         "paste": "Incolla",
+        "pasteResponse": "",
         "response": "Risposta AI",
         "manualCopyDescription": "Accesso agli appunti non disponibile. Selezionare il prompt qui sotto e copiarlo manualmente.",
         "manualPasteDescription": "L'accesso agli appunti non è disponibile o la risposta copiata necessita di correzione. Incolla la risposta JSON dell'IA qui.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importa CSS",
     "importCss": "Importa CSS da Workshop",
     "importCssConfirm": "Sostituire l'attuale CSS personalizzato con \"{title}\"? Niente viene salvato finché non si salvano le impostazioni della scheda.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "CSS personalizzato",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Predefinito",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descrizione",
+      "published": ""
+    },
     "screenshotAlt": "{title} screenshot {count, number}",
     "screenshotViewer": "Visualizzatore di screenshot di {title}",
     "screenshotsLabel": "Screenshot di {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Nascondi miniature screenshot",
     "closeScreenshotViewer": "Chiudi visualizzatore screenshot",
     "technicalDetails": "Dettagli tecnici",
+    "integrations": "Integrazioni",
     "sourceCode": "Ingresso officina",
     "report": "Segnala",
     "reportTitle": "Invia report",
@@ -1332,6 +1382,12 @@
       "copyright": "Copyright",
       "inappropriate": "Inappropriato",
       "other": "Altro"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Pubblica in Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobile",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Modifica integrazione"
       },
       "app": {
-        "propagationNotice": "Le modifiche apportate a questa app verranno applicate ovunque venga utilizzata in tutte le dashboard."
+        "propagationNotice": "Le modifiche apportate a questa app verranno applicate ovunque venga utilizzata in tutte le dashboard.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Modifica connessione",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stato Entità",
       "description": "Visualizza lo stato di un'entità e attivalo facoltativamente",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID entità"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostra immagine poster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

@@ -890,6 +890,7 @@
       "deleteConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
       "duplicate": "복사",
       "aiPrompt": "AI로 디자인",
+      "createAssisted": "",
       "copyAiPrompt": "AI 프롬프트 복사",
       "enable": "활성화",
       "disable": "비활성화",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "구성",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "사용자 지정 위젯 섹션",
       "widgetPreview": "위젯 미리보기",
       "generalInformation": "일반 정보",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "모든 AI로 생성 또는 수정",
         "description": "API 문서 URL이 있다면 먼저 추가하세요. 수정하려면 가능하면 미리보기를 실행하세요. 프롬프트를 원하는 AI에 복사하면 누락된 세부 정보를 요청할 수 있습니다. 최종 JSON을 여기에 붙여넣으세요.",
+        "assistedDescription": "",
         "request": "이 위젯은 무엇을 해야 하나요?",
         "documentationUrl": "API 문서 URL(선택 사항)",
         "paste": "붙여넣기",
+        "pasteResponse": "",
         "response": "AI 응답",
         "manualCopyDescription": "클립보드에 액세스할 수 없습니다. 아래 프롬프트를 선택하고 수동으로 복사하세요.",
         "manualPasteDescription": "클립보드에 액세스할 수 없거나 복사한 응답을 수정해야 합니다. AI의 JSON 응답을 여기에 붙여넣으세요.",
@@ -1304,6 +1321,38 @@
     "useCss": "CSS 가져오기",
     "importCss": "워크숍에서 CSS 가져오기",
     "importCssConfirm": "현재 사용자 지정 CSS를 \"{title}\"로 바꾸시겠습니까? 보드 설정을 저장하기 전에는 아무것도 저장되지 않습니다.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "설명",
+      "published": ""
+    },
     "screenshotAlt": "{title} 스크린샷 {count, number}",
     "screenshotViewer": "{title} 스크린샷 뷰어",
     "screenshotsLabel": "{title} 스크린샷",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "스크린샷 썸네일 숨기기",
     "closeScreenshotViewer": "스크린샷 뷰어 닫기",
     "technicalDetails": "기술 세부 정보",
+    "integrations": "통합",
     "sourceCode": "워크숍 항목",
     "report": "신고",
     "reportTitle": "제출 항목 신고",
@@ -1332,6 +1382,12 @@
       "copyright": "저작권",
       "inappropriate": "부적절함",
       "other": "기타"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "워크숍에 게시",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "모바일",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "통합 편집"
       },
       "app": {
-        "propagationNotice": "이 앱의 변경 사항은 전체 대시보드에 적용됩니다."
+        "propagationNotice": "이 앱의 변경 사항은 전체 대시보드에 적용됩니다.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "연결 편집",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "엔티티 상태",
       "description": "엔티티의 상태를 표시하고 선택적으로 토글합니다",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "엔티티 ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "포스터 이미지 표시"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
