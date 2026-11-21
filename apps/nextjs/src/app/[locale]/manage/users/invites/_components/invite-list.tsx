@@ -14,7 +14,7 @@ import { clientApi } from "@homarr/api/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmActionIcon } from "@homarr/ui";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { InviteCreateButton } from "./invite-create-button";

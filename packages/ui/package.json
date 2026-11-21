@@ -19,6 +19,7 @@
     "./theme-select": "./src/themes/theme-select.tsx",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
+    "./hooks/use-translated-mantine-react-table": "./src/hooks/use-translated-mantine-react-table.ts",
     "./icons": "./src/icons/index.ts",
     "./markdown": "./src/markdown/index.ts"
   },

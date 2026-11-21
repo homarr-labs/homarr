@@ -13,7 +13,7 @@ import type { TaskStatus } from "@homarr/cron-job-status";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 import { IconPowerOff } from "@homarr/ui/icons";
 
 const cronExpressions = [

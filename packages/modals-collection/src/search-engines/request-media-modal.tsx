@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 
 interface RequestMediaModalProps {
   integrationId: string;
