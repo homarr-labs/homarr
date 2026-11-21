@@ -6,7 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory, getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { RequestMediaModal } from "@homarr/modals-collection";
+import { RequestMediaModal } from "@homarr/modals-collection/search-engines";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
@@ -443,23 +443,19 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       const isLoading = enginesQuery.isLoading || isWaitingForDdgResults;
       const isError = enginesQuery.isError || (ddgQuery.isError && ddgQueryEnabled && bangToken.length > 0);
 
-      const engineOptions = engineData.map(
-        (engine): ExternalOption => ({
-          key: `engine-${engine.short}`,
-          kind: "engine",
-          engine,
-        }),
-      );
+      const engineOptions = engineData.map((engine): ExternalOption => ({
+        key: `engine-${engine.short}`,
+        kind: "engine",
+        engine,
+      }));
 
       const ddgOptions = ddgData
         .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
-        .map(
-          (bang): ExternalOption => ({
-            key: `ddg-${bang.t}`,
-            kind: "ddg",
-            bang,
-          }),
-        );
+        .map((bang): ExternalOption => ({
+          key: `ddg-${bang.t}`,
+          kind: "ddg",
+          bang,
+        }));
 
       const searchActions: ExternalOption[] = [];
       if (locked && bangToken.length > 0) {
