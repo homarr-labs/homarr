@@ -1,0 +1,14 @@
+packages/ui/src/components/user-avatar.tsx
+  h_d6e478ca18e517 3,22-44,52-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d5a431ed7096270de2e2612f25e4aea52f13eee6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
