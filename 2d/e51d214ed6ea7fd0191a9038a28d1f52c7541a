@@ -1,0 +1,16 @@
+deployments/prebuilt-debian/package.json
+  h_d6e478ca18e517 9
+package.json
+  h_d6e478ca18e517 438
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2de51d214ed6ea7fd0191a9038a28d1f52c7541a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
