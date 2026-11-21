@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/lazy-widget-manifest.ts
+  h_d6e478ca18e517 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "16b9fdbfd7cf5f4d981c14b1036b463c46e6ea50",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
