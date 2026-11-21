@@ -1,0 +1,19 @@
+packages/modals/index.ts
+  s_4d148b33737230::t_224cd8365130ba 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "715610bd12d56085d41e0b552fae09aefed5a95f",
+  "prompts": {},
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
