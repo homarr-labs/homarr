@@ -133,8 +133,8 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   }, [board.items, currentLayoutId, selectedItemIds, tCommon, tSelection]);
 
   const pasteItemsFromText = useCallback(
-    (value: string) => {
-      const payload = parseBoardItemClipboard(value);
+    async (value: string) => {
+      const payload = await parseBoardItemClipboard(value);
       if (!payload) {
         showErrorNotification({ title: tCommon("error"), message: tSelection("pasteInvalid") });
         return;
@@ -175,7 +175,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
 
   const pasteItems = useCallback(async () => {
     try {
-      pasteItemsFromText(await navigator.clipboard.readText());
+      await pasteItemsFromText(await navigator.clipboard.readText());
     } catch {
       showErrorNotification({ title: tCommon("error"), message: tSelection("pasteError") });
     }
@@ -190,12 +190,14 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       const value = event.clipboardData?.getData("text/plain") ?? "";
       if (!isBoardItemClipboardText(value)) return;
       event.preventDefault();
-      pasteItemsFromText(value);
+      void pasteItemsFromText(value).catch(() => {
+        showErrorNotification({ title: tCommon("error"), message: tSelection("pasteInvalid") });
+      });
     };
 
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [isEditMode, pasteItemsFromText]);
+  }, [isEditMode, pasteItemsFromText, tCommon, tSelection]);
 
   const removeSelectedItems = useCallback(() => {
     if (selectedItemIds.size === 0) return;
