@@ -890,6 +890,7 @@
       "deleteConfirm": "Ar tikrai norite ištrinti „{name}“? Šio veiksmo neįmanoma atšaukti.",
       "duplicate": "Dubliuoti",
       "aiPrompt": "Kurti naudojant DI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopijuoti DI užklausą",
       "enable": "Įjungti",
       "disable": "Išjungti",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigūruoti",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Pasirinktinių valdiklių skyriai",
       "widgetPreview": "Valdiklio peržiūra",
       "generalInformation": "Bendroji informacija",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Kurti arba taisyti naudojant bet kurį DI",
         "description": "Pirmiausia pridėkite API dokumentacijos URL, jei jį turite. Jei įmanoma, paleiskite peržiūrą. Nukopijuokite raginimą į bet kurį DI; jis gali paprašyti trūkstamos informacijos. Čia įklijuokite galutinį JSON.",
+        "assistedDescription": "",
         "request": "Ką turėtų daryti šis valdiklis?",
         "documentationUrl": "API dokumentacijos URL (pasirinktinai)",
         "paste": "Įklijuoti",
+        "pasteResponse": "",
         "response": "DI atsakymas",
         "manualCopyDescription": "Iškarpinė nepasiekiama. Pasirinkite toliau pateiktą raginimą ir nukopijuokite jį rankiniu būdu.",
         "manualPasteDescription": "Iškarpinė nepasiekiama arba nukopijuotą atsakymą reikia pataisyti. Įklijuokite DI JSON atsakymą čia.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importuoti CSS",
     "importCss": "Importuoti CSS iš dirbtuvių",
     "importCssConfirm": "Pakeisti dabartinį pasirinktinį CSS į „{title}“? Nieko neišsaugoma, kol neišsaugote lentos nustatymų.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Aprašymas",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekrano kopija {count, number}",
     "screenshotViewer": "„{title}“ ekrano kopijų peržiūros priemonė",
     "screenshotsLabel": "„{title}“ ekrano kopijos",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Slėpti ekrano kopijų miniatiūras",
     "closeScreenshotViewer": "Uždaryti ekrano kopijų peržiūros priemonę",
     "technicalDetails": "Techninė informacija",
+    "integrations": "",
     "sourceCode": "Dirbtuvių įrašas",
     "report": "Pranešti",
     "reportTitle": "Pranešti apie pateiktą elementą",
@@ -1332,6 +1382,12 @@
       "copyright": "Autorių teisės",
       "inappropriate": "Netinkamas",
       "other": "Kita"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Skelbti dirbtuvėse",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Redaguoti integraciją"
       },
       "app": {
-        "propagationNotice": "Šios programėlės pakeitimai bus taikomi visur, kur ji naudojama visose lentose."
+        "propagationNotice": "Šios programėlės pakeitimai bus taikomi visur, kur ji naudojama visose lentose.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Redaguoti ryšį",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Objekto būsena",
       "description": "Rodyti objekto būseną ir pasirinktinai jį perjungti",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Subjekto ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rodyti plakato vaizdą"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

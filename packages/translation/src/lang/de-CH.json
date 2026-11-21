@@ -890,6 +890,7 @@
       "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "duplicate": "Duplizieren",
       "aiPrompt": "Mit KI entwerfen",
+      "createAssisted": "",
       "copyAiPrompt": "KI-Prompt kopieren",
       "enable": "Aktivieren",
       "disable": "Deaktivieren",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurieren",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Bereiche für benutzerdefinierte Widgets",
       "widgetPreview": "Widget-Vorschau",
       "generalInformation": "Allgemeine Informationen",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Mit beliebiger KI erstellen oder reparieren",
         "description": "Fügen Sie zuerst eine URL zur API-Dokumentation hinzu, falls vorhanden. Führen Sie bei Reparaturen nach Möglichkeit die Vorschau aus. Kopieren Sie die Eingabeaufforderung in eine beliebige KI; diese kann nach fehlenden Details fragen. Fügen Sie die abschliessende JSON-Datei hier ein.",
+        "assistedDescription": "",
         "request": "Was soll dieses Widget tun?",
         "documentationUrl": "URL der API-Dokumentation (optional)",
         "paste": "Einfügen",
+        "pasteResponse": "",
         "response": "KI-Antwort",
         "manualCopyDescription": "Der Zugriff auf die Zwischenablage ist nicht verfügbar. Wählen Sie die Eingabeaufforderung unten aus und kopieren Sie sie manuell.",
         "manualPasteDescription": "Der Zugriff auf die Zwischenablage ist nicht verfügbar oder die kopierte Antwort muss korrigiert werden. Fügen Sie die JSON-Antwort der KI hier ein.",
@@ -1304,6 +1321,38 @@
     "useCss": "CSS importieren",
     "importCss": "CSS aus dem Workshop importieren",
     "importCssConfirm": "Aktuelles benutzerdefiniertes CSS durch «{title}» ersetzen? Nichts wird gespeichert, bis du die Board-Einstellungen speicherst.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beschreibung",
+      "published": ""
+    },
     "screenshotAlt": "Screenshot von {title} {count, number}",
     "screenshotViewer": "Screenshot-Viewer für {title}",
     "screenshotsLabel": "Screenshots von {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Screenshot-Miniaturansichten ausblenden",
     "closeScreenshotViewer": "Screenshot-Viewer schliessen",
     "technicalDetails": "Technische Details",
+    "integrations": "Integratione",
     "sourceCode": "Workshop-Eintrag",
     "report": "Melden",
     "reportTitle": "Beitrag melden",
@@ -1332,6 +1382,12 @@
       "copyright": "Urheberrechtsverletzung",
       "inappropriate": "Unangemessen",
       "other": "Andere"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Im Workshop veröffentlichen",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "Integration bearbeiten"
       },
       "app": {
-        "propagationNotice": "Änderungen an dieser App werden überall übernommen, wo sie in allen Dashboards verwendet wird."
+        "propagationNotice": "Änderungen an dieser App werden überall übernommen, wo sie in allen Dashboards verwendet wird.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Verbindung bearbeiten",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Zustand der Entität",
       "description": "Zeigt den Status einer Entität an und schaltet ihn optional ein",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Eintrag-ID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Posterbild anzeigen"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "AIによるデザイン",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "設定",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "高度な設定",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "カスタム ウィジェットセクション",
       "widgetPreview": "ウィジェットのプレビュー",
       "generalInformation": "一般情報",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "任意のAIで作成または修正する",
         "description": "API ドキュメントの URL を最初に追加します。修正については、可能な場合はプレビューを実行してください。 プロンプトを任意のAIにコピーします。詳細を確認することができます。最後のJSONをここに貼り付けてください。",
+        "assistedDescription": "",
         "request": "このウィジェットは何をすべきですか?",
         "documentationUrl": "API ドキュメント URL (オプション)",
         "paste": "貼り付け",
+        "pasteResponse": "",
         "response": "AI応答",
         "manualCopyDescription": "クリップボードへのアクセスは利用できません。以下のプロンプトを選択し、手動でコピーしてください。",
         "manualPasteDescription": "クリップボードへのアクセスが利用できないか、コピーされた応答に修正が必要です。ここにAIのJSON応答を貼り付けます。",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "ワークショップからCSSをインポート",
     "importCssConfirm": "現在のカスタム CSS を \"{title}\" に置き換えますか？ボードの設定を保存するまで何も保存されません。",
+    "theme": {
+      "label": "テーマ",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "デフォルト",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "説明",
+      "published": ""
+    },
     "screenshotAlt": "{title}のスクリーンショット {count, number}",
     "screenshotViewer": "{title} スクリーンショットビューアー",
     "screenshotsLabel": "{title} スクリーン ショット",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "スクリーンショットのサムネイルを非表示",
     "closeScreenshotViewer": "スクリーンショットビューアを閉じる",
     "technicalDetails": "技術的な詳細",
+    "integrations": "連携機能",
     "sourceCode": "ワークショップのエントリ",
     "report": "レポート",
     "reportTitle": "提出を報告",
@@ -1332,6 +1382,12 @@
       "copyright": "著作権",
       "inappropriate": "不適切です",
       "other": "その他"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "ワークショップに公開",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "モバイル",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2491,7 +2548,12 @@
         "integration": "連携を編集"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "コネクションを編集",
@@ -3356,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "エンティティ状態",
       "description": "エンティティの状態を表示し、オプションで切り替えます",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "エンティティID"
@@ -5214,8 +5277,17 @@
         "hideFeedTitle": {
           "label": ""
         },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "ポスターの画像を表示"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {

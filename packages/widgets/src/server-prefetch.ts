@@ -2,8 +2,9 @@ import { setImmediate } from "node:timers/promises";
 
 import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-query";
 
-import type { RouterInputs, RouterOutputs } from "@homarr/api";
+import type { RouterInputs } from "@homarr/api";
 import { api, trpc } from "@homarr/api/server";
+import type { SectionItem } from "@homarr/boards/layout-data";
 import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
@@ -38,35 +39,13 @@ const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   });
 };
 
-type Board = RouterOutputs["board"]["getHomeBoard"];
-type Item = Board["items"][number];
 type BeszelStatsInput = RouterInputs["widget"]["beszel"]["getSystemStats"];
 const mediaRequestStatuses = ["pending", "approved", "declined", "failed", "completed"] as const;
-
-const isInitiallyVisible = (board: Board, item: Item, layoutId: string) => {
-  const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-  if (!layout) return false;
-  let sectionId: string | undefined = layout.sectionId;
-  const visited = new Set<string>();
-  while (sectionId && !visited.has(sectionId)) {
-    visited.add(sectionId);
-    const section = board.sections.find((candidate) => candidate.id === sectionId);
-    if (!section) return false;
-    if (section.kind !== "empty" && section.collapsed) return false;
-    if (section.kind !== "container") break;
-    sectionId = section.layouts.find((candidate) => candidate.layoutId === layoutId)?.parentSectionId;
-  }
-  return true;
-};
-
-export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) => [
-  ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
-];
 
 const getBeszelSystemsQueryOptions = (integrationIds: string[]) =>
   trpc.widget.beszel.getSystems.queryOptions({ integrationIds }, { meta: { rscWidgetPrefetch: true } });
 
-const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
+const prefetchBeszelStats = (queryClient: QueryClient, item: SectionItem) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
   const selection = resolveStoredBeszelQuerySelection(storedValue, integrationIds);
@@ -126,15 +105,13 @@ const getUnambiguousCalendarMonth = () => {
 
 export const prefetchInitialWidgetData = (
   queryClient: QueryClient,
-  board: Board,
-  layoutId: string,
+  visibleItems: readonly SectionItem[],
   isAuthenticated: boolean,
 ) => {
   const dependentQueries: Promise<void>[] = [];
   const calendarMonth = getUnambiguousCalendarMonth();
   if (isAuthenticated) prefetchQuery(queryClient, trpc.integration.all.queryOptions());
-  for (const item of board.items) {
-    if (!isInitiallyVisible(board, item, layoutId)) continue;
+  for (const item of visibleItems) {
     const { integrationIds, options } = item;
     // These are the consumers' exact inputs, including order and defaults. Calls
     // go through the API middleware and share its request-scoped auth/context.

@@ -21,14 +21,7 @@ import { CreateAppForm } from "./create-app";
 import { DimLayer } from "./dim-layer";
 import { handleAreaShortcut, useAreaKeyboard } from "./keyboard";
 import { InPlaceEditorPanel } from "./panel/panel";
-import {
-  addInPlaceActions,
-  getAddInPlaceState,
-  getTargetKind,
-  setCommitBridge,
-  useAddInPlaceSession,
-  useAddInPlaceStep,
-} from "./store";
+import { addInPlaceActions, getTargetKind, setCommitBridge, useAddInPlaceSession, useAddInPlaceStep } from "./store";
 
 const useBoundCatalog = (search: string) => {
   const session = useAddInPlaceSession();
@@ -62,29 +55,9 @@ export const InPlaceEditorHost = () => {
   const isMobile = useIsMobile();
   const anchorRect = useAreaAnchorRect();
   const onKeyDown = useAreaKeyboard();
-  const wasEditMode = useRef(isEditMode);
-  const previousLayoutId = useRef(layoutId);
-  const lifecycleRef = useRef(0);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const returnLocationRef = useRef<{ sectionId: string; x: number; y: number; itemId?: string } | null>(null);
   const active = isEditMode && step !== "idle";
-
-  useLayoutEffect(() => {
-    if (previousLayoutId.current !== layoutId) addInPlaceActions.cancel();
-    previousLayoutId.current = layoutId;
-  }, [layoutId]);
-
-  useEffect(() => {
-    const generation = ++lifecycleRef.current;
-    return () => {
-      const leavingSession = getAddInPlaceState().session;
-      queueMicrotask(() => {
-        if (lifecycleRef.current === generation && getAddInPlaceState().session === leavingSession) {
-          addInPlaceActions.cancel();
-        }
-      });
-    };
-  }, []);
 
   useEffect(() => {
     if (!active) return;
@@ -180,11 +153,6 @@ export const InPlaceEditorHost = () => {
     });
     return () => setCommitBridge(null);
   }, [createItem, layoutId, t]);
-
-  useEffect(() => {
-    if (wasEditMode.current && !isEditMode) addInPlaceActions.cancel();
-    wasEditMode.current = isEditMode;
-  }, [isEditMode]);
 
   useEffect(() => {
     if (step === "createApp" && !canCreateApp) addInPlaceActions.back();
