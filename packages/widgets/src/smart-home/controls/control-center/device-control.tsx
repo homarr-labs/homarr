@@ -165,14 +165,25 @@ interface StepSliderProps {
   onSelect: (percentage: number) => void;
   /** Adds an "off" segment before the speeds, for places without a separate power button. */
   onTurnOff?: () => void;
+  /** Side by side (the default), or stacked with the lowest speed at the bottom, for a tall pill. */
+  axis?: "horizontal" | "vertical";
 }
 
 /** One segment per fan speed; tapping a segment sets exactly that speed. */
-export function StepSlider({ steps, value, label, disabled, pending, onSelect, onTurnOff }: StepSliderProps) {
+export function StepSlider({
+  steps,
+  value,
+  label,
+  disabled,
+  pending,
+  onSelect,
+  onTurnOff,
+  axis = "horizontal",
+}: StepSliderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const level = Math.round((value / 100) * steps);
   return (
-    <div className={classes.deviceSteps} data-pending={pending}>
+    <div className={classes.deviceSteps} data-pending={pending} data-axis={axis}>
       {onTurnOff ? (
         <button
           type="button"

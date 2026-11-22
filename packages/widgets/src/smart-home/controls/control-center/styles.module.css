@@ -2397,6 +2397,28 @@ button.deviceRowMain:hover {
   color: var(--secondary-ink);
 }
 
+/* Stacked for a tall pill: the "off" segment at the bottom, the highest speed on top, rounded at both ends. */
+.deviceSteps[data-axis="vertical"] {
+  flex-direction: column-reverse;
+}
+
+.deviceSteps[data-axis="vertical"] .deviceStep {
+  min-width: auto;
+  min-height: 0;
+}
+
+.deviceSteps[data-axis="vertical"] .deviceStep:first-child {
+  border-radius: 4px 4px 999px 999px;
+}
+
+.deviceSteps[data-axis="vertical"] .deviceStep:last-child {
+  border-radius: 999px 999px 4px 4px;
+}
+
+.deviceSteps[data-axis="vertical"] .deviceStep:only-child {
+  border-radius: 999px;
+}
+
 .deviceStepOff[data-off="true"] {
   color: var(--ink);
   background: var(--track-strong);

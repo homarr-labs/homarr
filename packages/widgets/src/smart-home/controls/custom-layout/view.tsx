@@ -299,8 +299,24 @@ function PillElement(props: ElementProps) {
   const { run, pending } = useRunner(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
   const slider = getSliderSpec(entity);
-  // Fans with fixed speeds have no free pill; their steps stay a bar.
-  if (!slider || slider.steps) return <BarSliderElement {...props} />;
+  if (!slider) return <BarSliderElement {...props} />;
+  // Fans with fixed speeds get their steps stacked into the pill, with "off" at the bottom.
+  if (slider.steps) {
+    return (
+      <div className={classes.pillElement} style={accentVars(theme.accent, theme.onAccent)}>
+        <StepSlider
+          axis="vertical"
+          steps={slider.steps}
+          value={slider.value}
+          label={`${label} ${t(`slider.${slider.label}`)}`}
+          disabled={disabled}
+          pending={pending}
+          onSelect={(value) => void run(slider.toAction(value))}
+          onTurnOff={getTurnOff(entity, run)}
+        />
+      </div>
+    );
+  }
   const toggle = getHeaderAction(entity);
   return (
     <div className={classes.pillElement} style={accentVars(theme.accent, theme.onAccent)}>
