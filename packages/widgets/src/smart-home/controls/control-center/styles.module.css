@@ -597,7 +597,7 @@ button.tile:not(:disabled):active {
 /* The grip at the fill's edge: hidden at rest, it shows where to pull once the pointer is on the slider. */
 .pillFill::after {
   position: absolute;
-  top: 7px;
+  top: 11px;
   left: 50%;
   width: 18px;
   height: 3px;
@@ -613,7 +613,7 @@ button.tile:not(:disabled):active {
 
 .pill[data-axis="horizontal"] .pillFill::after {
   top: 50%;
-  right: 7px;
+  right: 11px;
   left: auto;
   width: 3px;
   height: 18px;
