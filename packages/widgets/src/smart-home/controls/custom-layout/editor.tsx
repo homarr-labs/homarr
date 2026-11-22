@@ -845,9 +845,15 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   const onDragMove = ({ active, delta }: DragMoveEvent) => settle(String(active.id), delta);
 
   const onDragEnd = ({ active, delta }: DragEndEvent) => {
-    settle(String(active.id), delta);
+    const id = String(active.id);
+    settle(id, delta);
+    // An element dropped on another card selects that card, so its settings show the element.
+    const owner = transaction.current?.preview.grids.find(
+      (grid) => grid.ownerPlacementId && grid.placements.some((placement) => placement.id === id),
+    )?.ownerPlacementId;
     stopTracking();
     finish();
+    if (owner) setSelectedId(owner);
   };
 
   /** Corner resize for cards (cells of the widget grid) and elements (cells of their card's grid). */
