@@ -1,9 +1,8 @@
-import tablerPackage from "@tabler/icons-react/package.json";
+import { customJsxTablerIconSpriteBasePath, getTablerSpriteSymbol } from "@homarr/custom-widgets/tabler-icons";
 
 // The same sprite custom widgets use (prepared by apps/nextjs/scripts/prepare-tabler-icons.mjs). Drawing icons from
 // it keeps bundles free of the icon set: only a name is stored.
-export const spriteBasePath = `/tabler-icons/${tablerPackage.version}`;
-const FILLED_SUFFIX = "-filled";
+export const spriteBasePath = customJsxTablerIconSpriteBasePath;
 
 interface SpriteIconProps {
   name: string;
@@ -12,11 +11,9 @@ interface SpriteIconProps {
   className?: string;
 }
 
-/** A Tabler icon by name, e.g. "bolt" or "star-filled". */
+/** A Tabler icon by name, e.g. "bolt" or "star-filled"; legacy names resolve like they do in custom widgets. */
 export function SpriteIcon({ name, size, stroke = 1.8, className }: SpriteIconProps) {
-  const filled = name.endsWith(FILLED_SUFFIX);
-  const sprite = filled ? "filled" : "outline";
-  const symbol = filled ? `tabler-filled-${name.slice(0, -FILLED_SUFFIX.length)}` : `tabler-${name}`;
+  const { sprite, symbol } = getTablerSpriteSymbol(name);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

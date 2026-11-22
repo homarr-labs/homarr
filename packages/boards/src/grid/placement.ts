@@ -60,8 +60,9 @@ export const findFreeGridSlot = (
   wanted: { w: number; h: number },
   minimum: { w: number; h: number } = wanted,
 ): GridCoordinates | null => {
-  for (let h = Math.min(wanted.h, rows); h >= Math.min(minimum.h, rows); h--) {
-    for (let w = Math.min(wanted.w, columns); w >= Math.min(minimum.w, columns); w--) {
+  // Below the minimum nothing fits: a grid smaller than that has no slot at all.
+  for (let h = Math.min(wanted.h, rows); h >= minimum.h; h--) {
+    for (let w = Math.min(wanted.w, columns); w >= minimum.w; w--) {
       for (let y = 0; y <= rows - h; y++) {
         for (let x = 0; x <= columns - w; x++) {
           const candidate = { id: "", x, y, w, h };

@@ -11,6 +11,10 @@ export const SMART_HOME_LAYOUT_ROWS = 12;
 export const SMART_HOME_LAYOUT_MAX_CARDS = 40;
 export const SMART_HOME_LAYOUT_MAX_ELEMENTS = 40;
 export const SMART_HOME_LAYOUT_MAX_TEMPLATES = 20;
+/** Comparison values in rules and conditions. */
+export const SMART_HOME_COMPARISON_MAX = 64;
+/** The largest factor a value can be multiplied by. */
+export const SMART_HOME_FACTOR_MAX = 1_000_000;
 /** Card titles and element labels; longer text would make the stored layout invalid. */
 export const SMART_HOME_LAYOUT_MAX_TEXT = 80;
 export const SMART_HOME_ELEMENT_MAX_RULES = 6;
@@ -138,7 +142,7 @@ const colorSchema = z.union([
 
 const comparisonSchema = z.object({
   op: z.enum(smartHomeCompareOperators),
-  value: z.string().max(64),
+  value: z.string().max(SMART_HOME_COMPARISON_MAX),
 });
 
 const ruleSchema = comparisonSchema.extend({ color: colorSchema });
@@ -179,7 +183,7 @@ const elementOptionsSchema = z.object({
   decimals: z.number().int().min(0).max(3).optional(),
   unit: z.string().max(12).optional(),
   /** Multiplies numeric values, e.g. 0.001 to show W as kW. */
-  factor: z.number().positive().max(1_000_000).optional(),
+  factor: z.number().positive().max(SMART_HOME_FACTOR_MAX).optional(),
   // Position on the card's own grid; elements without one stack automatically.
   x: z
     .number()
@@ -279,6 +283,17 @@ const fitCard = (card: SmartHomeLayoutCard): SmartHomeLayoutCard => ({
   h: Math.min(card.h, SMART_HOME_LAYOUT_ROWS - card.y),
 });
 
+/** The first element of each id; a second one with the same id would take the first one's place on the card. */
+const uniqueElements = <TElement extends { id: string }>(elements: readonly TElement[]) => {
+  const seen = new Set<string>();
+  return elements.filter((element) => !seen.has(element.id) && Boolean(seen.add(element.id)));
+};
+
+const withUniqueElements = (card: SmartHomeLayoutCard): SmartHomeLayoutCard => ({
+  ...card,
+  elements: uniqueElements(card.elements),
+});
+
 /** Keeps every valid card (and every valid element in it) of a stored list; drops the rest one by one. */
 const salvageCards = (value: unknown) => {
   if (!Array.isArray(value)) return [];
@@ -286,9 +301,10 @@ const salvageCards = (value: unknown) => {
     .flatMap((card: unknown) => {
       if (typeof card !== "object" || card === null) return [];
       const elements = "elements" in card && Array.isArray(card.elements) ? card.elements : [];
+      const valid = elements.flatMap((element: unknown) => elementSchema.safeParse(element).data ?? []);
       const result = cardSchema.safeParse({
         ...card,
-        elements: elements.flatMap((element: unknown) => elementSchema.safeParse(element).data ?? []),
+        elements: uniqueElements(valid).slice(0, SMART_HOME_LAYOUT_MAX_ELEMENTS),
       });
       return result.data ? [fitCard(result.data)] : [];
     })
@@ -304,8 +320,8 @@ export const parseSmartHomeLayout = (value: unknown): SmartHomeLayout => {
   if (parsed.success) {
     return {
       ...parsed.data,
-      cards: parsed.data.cards.map(fitCard),
-      narrowCards: parsed.data.narrowCards?.map(fitCard),
+      cards: parsed.data.cards.map((card) => fitCard(withUniqueElements(card))),
+      narrowCards: parsed.data.narrowCards?.map((card) => fitCard(withUniqueElements(card))),
     };
   }
   if (typeof value !== "object" || value === null || !("cards" in value)) return emptySmartHomeLayout;

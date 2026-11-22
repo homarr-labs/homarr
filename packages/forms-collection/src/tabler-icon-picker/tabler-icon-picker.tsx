@@ -101,7 +101,15 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
 
   return (
     <Input.Wrapper label={label}>
-      <Popover opened={opened} onChange={setOpened} position="bottom-start" width={344} shadow="md" trapFocus>
+      <Popover
+        opened={opened}
+        onChange={setOpened}
+        position="bottom-start"
+        width={344}
+        shadow="md"
+        trapFocus
+        returnFocus
+      >
         <Popover.Target>
           <ActionIcon
             variant="default"

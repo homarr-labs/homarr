@@ -39,6 +39,7 @@ import { EntityRow } from "./technical/row";
 import technicalClasses from "./technical/styles.module.css";
 import { EntityTile, StatCells } from "./technical/tile";
 import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./control-center/details";
+import { Measured } from "./control-center/hooks";
 import type { DetailApi } from "./control-center/hooks";
 import { DeviceControl } from "./control-center/device-control";
 import controlCenterClasses from "./control-center/styles.module.css";
@@ -527,7 +528,10 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
     >
       {shown.map((item) => (
         <div key={item.id} className={classes.cell}>
-          <PanelItemControl item={item} width={layout.width} height={layout.height} compact={compactDevices} />
+          {/* Cells stretch to fill the panel; the control lays itself out for the size it really gets. */}
+          <Measured>
+            {(width, height) => <PanelItemControl item={item} width={width} height={height} compact={compactDevices} />}
+          </Measured>
         </div>
       ))}
       {overflowing && <div className={classes.overflowCell}>{navigation}</div>}

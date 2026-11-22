@@ -39,7 +39,9 @@ import {
   isNamedLayoutColor,
   labelledElementViews,
   SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES,
+  SMART_HOME_COMPARISON_MAX,
   SMART_HOME_ELEMENT_MAX_RULES,
+  SMART_HOME_FACTOR_MAX,
   SMART_HOME_LAYOUT_MAX_TEXT,
   smartHomeAggregates,
   smartHomeCompareOperators,
@@ -186,6 +188,8 @@ function ColorSwatchPicker({
             format="hex"
             fullWidth
             value={custom ?? DEFAULT_CUSTOM_COLOR}
+            saturationLabel={t("colorSaturation")}
+            hueLabel={t("colorHue")}
             onChangeEnd={(hex) => onChange(hex.toLowerCase() as `#${string}`)}
           />
         </Stack>
@@ -226,6 +230,7 @@ function RulesEditor({
             miw={0}
             aria-label={t("ruleValue")}
             placeholder={t("ruleValue")}
+            maxLength={SMART_HOME_COMPARISON_MAX}
             value={rule.value}
             onChange={(event) => update(index, { ...rule, value: event.currentTarget.value })}
           />
@@ -372,9 +377,15 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             label={t("factor")}
             placeholder="1"
             min={0}
+            max={SMART_HOME_FACTOR_MAX}
+            clampBehavior="strict"
             decimalScale={6}
             value={element.factor ?? ""}
-            onChange={(value) => set({ factor: typeof value === "number" && value > 0 ? value : undefined })}
+            onChange={(value) =>
+              set({
+                factor: typeof value === "number" && value > 0 && value <= SMART_HOME_FACTOR_MAX ? value : undefined,
+              })
+            }
           />
           <TextInput
             size="sm"
@@ -463,6 +474,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
                   flex={1}
                   aria-label={t("ruleValue")}
                   placeholder={t("conditionValue")}
+                  maxLength={SMART_HOME_COMPARISON_MAX}
                   value={condition.value}
                   onChange={(event) => set({ condition: { ...condition, value: event.currentTarget.value } })}
                 />

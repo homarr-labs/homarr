@@ -1,6 +1,10 @@
 import { memo } from "react";
 
-import { customJsxTablerIconNames, customJsxTablerIconSpriteBasePath } from "@homarr/custom-widgets/tabler-icons";
+import {
+  customJsxTablerIconNames,
+  customJsxTablerIconSpriteBasePath,
+  getTablerSpriteSymbol,
+} from "@homarr/custom-widgets/tabler-icons";
 
 export const SAFE_TABLER_ICON_NAMES = customJsxTablerIconNames;
 const supportedIconNames: ReadonlySet<string> = new Set(SAFE_TABLER_ICON_NAMES);
@@ -11,16 +15,7 @@ function isValidIconProp(value: unknown): value is string | number {
 
 export const SafeTablerIcon = memo(function SafeTablerIcon(props: Record<string, unknown>) {
   if (typeof props.name !== "string" || !supportedIconNames.has(props.name)) return null;
-  let name = props.name;
-  // Preserve Homarr's legacy pulse alias (previously IconHeartbeat) for existing saved widgets.
-  if (name === "pulse") name = "heartbeat";
-
-  let sprite = "outline";
-  let symbol = `tabler-${name}`;
-  if (name.endsWith("-filled")) {
-    sprite = "filled";
-    symbol = `tabler-filled-${name.slice(0, -"-filled".length)}`;
-  }
+  const { sprite, symbol } = getTablerSpriteSymbol(props.name);
 
   let size: string | number = 24;
   let color = "currentColor";

@@ -473,8 +473,9 @@ function ValueElement({ entity, element, label }: ElementProps) {
 
 /** One value over several entities; it subscribes to exactly those entities. */
 function GroupElement(props: ElementProps) {
+  // Each entity once, even when the list repeats the element's own entity.
   const ids = useMemo(
-    () => [props.entity.id, ...(props.element.entityIds ?? [])],
+    () => [...new Set([props.entity.id, ...(props.element.entityIds ?? [])])],
     [props.entity.id, props.element.entityIds],
   );
   return (
@@ -513,7 +514,7 @@ const GRAPH_SAMPLES = 48;
 
 function GraphElement(props: ElementProps) {
   const ids = useMemo(
-    () => [props.entity.id, ...(props.element.entityIds ?? [])],
+    () => [...new Set([props.entity.id, ...(props.element.entityIds ?? [])])],
     [props.entity.id, props.element.entityIds],
   );
   return (
@@ -781,11 +782,14 @@ function CardBody({ card, source, placements, columns, stacked, collapsedRows }:
     ).join(" ");
   }
   return (
-    <div className={classes.cardBody} style={style}>
+    <div className={classes.cardBody} style={style} data-stacked={stacked}>
       {placements.map((placement) => {
         const element = elements.get(placement.id);
+        // An element stored below the card's last row (an old or hand-written layout) is shown in the last rows.
+        const top = rows === null ? placement.y : Math.min(placement.y, rows - 1);
+        const shown = rows === null ? placement : { ...placement, y: top, h: Math.min(placement.h, rows - top) };
         return element ? (
-          <div key={element.id} className={classes.elementCell} style={placementStyle(placement)}>
+          <div key={element.id} className={classes.elementCell} style={placementStyle(shown)}>
             <LayoutElement element={element} source={source} />
           </div>
         ) : null;

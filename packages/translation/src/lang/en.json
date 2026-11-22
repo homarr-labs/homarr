@@ -3743,6 +3743,8 @@
           "copyWide": "Copy wide layout",
           "color": "Color",
           "noColor": "No color",
+          "colorSaturation": "Saturation",
+          "colorHue": "Hue",
           "customColor": "Custom",
           "colors": {
             "red": "Red",

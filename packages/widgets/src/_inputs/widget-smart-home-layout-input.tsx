@@ -14,19 +14,25 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-// The widget's content sits inside the item's padding.
+// The widget's content sits inside the item's padding, below the title when it has one.
 const ITEM_INSET = 8;
+const TITLE_HEIGHT = 28;
 
 /**
  * The widget's content size: from the edit dialog's preview (also for a widget not placed yet, and after changing
  * its size there), otherwise measured on the board.
  */
-const getContentSize = (preview: { width: number; height: number } | null, itemId: string | undefined) => {
-  if (preview) return { width: preview.width - ITEM_INSET, height: preview.height - ITEM_INSET };
+const getContentSize = (
+  preview: { width: number; height: number } | null,
+  itemId: string | undefined,
+  hasTitle: boolean,
+) => {
+  const titleHeight = hasTitle ? TITLE_HEIGHT : 0;
+  if (preview) return { width: preview.width - ITEM_INSET, height: preview.height - ITEM_INSET - titleHeight };
   if (!itemId || typeof document === "undefined") return undefined;
   const item = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
   if (!item || item.clientWidth === 0) return undefined;
-  return { width: item.clientWidth - ITEM_INSET, height: item.clientHeight - ITEM_INSET };
+  return { width: item.clientWidth - ITEM_INSET, height: item.clientHeight - ITEM_INSET - titleHeight };
 };
 
 /** The custom layout itself is edited in its own dialog; the settings only show a summary and the entry point. */
@@ -62,7 +68,11 @@ export const WidgetSmartHomeLayoutInput = ({ property, kind, itemId }: CommonWid
             integrationId,
             layout,
             onSave: (next) => form.setFieldValue("options", { ...form.getValues().options, [property]: next }),
-            previewSize: getContentSize(previewSize, itemId),
+            previewSize: getContentSize(
+              previewSize,
+              itemId,
+              typeof form.values.options.title === "string" && form.values.options.title.trim() !== "",
+            ),
             palette: form.values.options.palette as SmartHomeControlPalette | undefined,
           });
         }}

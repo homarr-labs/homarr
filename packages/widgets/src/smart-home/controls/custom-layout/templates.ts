@@ -12,6 +12,10 @@ import type {
   SmartHomeLayoutTemplateElement,
 } from "./schema";
 
+// Names are kept as long as the template schema allows; saving and matching use the same cut.
+const MAX_MATCH_NAME = 120;
+const matchName = (entity: SmartHomeCatalogEntity) => getShortName(entity).slice(0, MAX_MATCH_NAME);
+
 /**
  * Saves a card for reuse. Each element keeps its options and remembers what kind of entity it showed (domain,
  * device class, short name) instead of the entity. Links to other entities (extra lines, combined values, a
@@ -39,7 +43,9 @@ export const cardToTemplate = (
     readOnly: card.readOnly,
     elements: card.elements.flatMap((element): SmartHomeLayoutTemplateElement[] => {
       const { id: _id, source: _source, entityId, entityIds: _entityIds, condition, ...options } = element;
-      const kept = { ...options, condition: condition ? { op: condition.op, value: condition.value } : undefined };
+      // A condition on another entity of this device cannot be carried over; one on the element's own entity can.
+      const ownCondition = condition && (!condition.entityId || condition.entityId === entityId);
+      const kept = { ...options, condition: ownCondition ? { ...condition, entityId: undefined } : undefined };
       if (staticElementViews.has(element.view)) return [{ ...kept, match: { domain: "" } }];
       const entity = entitiesById.get(entityId);
       if (!entity) return [];
@@ -47,7 +53,7 @@ export const cardToTemplate = (
         {
           ...kept,
           binding: bindingOf(entity.id),
-          match: { domain: entity.domain, deviceClass: entity.deviceClass ?? undefined, name: getShortName(entity) },
+          match: { domain: entity.domain, deviceClass: entity.deviceClass ?? undefined, name: matchName(entity) },
         },
       ];
     }),
@@ -66,8 +72,8 @@ const findMatch = (
   const candidates = entities.filter((entity) => entity.domain === match.domain && !used.has(entity.id));
   const sameClass = (entity: SmartHomeCatalogEntity) => (entity.deviceClass ?? undefined) === match.deviceClass;
   return (
-    candidates.find((entity) => getShortName(entity) === match.name && sameClass(entity)) ??
-    candidates.find((entity) => getShortName(entity) === match.name) ??
+    candidates.find((entity) => matchName(entity) === match.name && sameClass(entity)) ??
+    candidates.find((entity) => matchName(entity) === match.name) ??
     (match.deviceClass ? candidates.find(sameClass) : undefined) ??
     (match.domain === "sensor" || match.domain === "binary_sensor" ? undefined : candidates[0])
   );

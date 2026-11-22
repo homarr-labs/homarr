@@ -190,6 +190,17 @@ const stateKey = (state: TransactionalGridState) =>
 const elementLimitGuard: GridMoveGuard = ({ sourceGrid, targetGrid }) =>
   sourceGrid.id === targetGrid.id || targetGrid.placements.length < SMART_HOME_LAYOUT_MAX_ELEMENTS;
 
+/** Whether two grid states place everything alike, whatever the order. */
+const sameGridState = (first: TransactionalGridState, second: TransactionalGridState) => {
+  const key = (state: TransactionalGridState) =>
+    JSON.stringify(
+      state.grids
+        .map((grid) => [grid.id, grid.placements.map(({ id, x, y, w, h }) => `${id}:${x},${y},${w},${h}`).toSorted()])
+        .toSorted(),
+    );
+  return key(first) === key(second);
+};
+
 const cardCellSize = (body: Element, card: SmartHomeLayoutCard) => {
   const rect = body.getBoundingClientRect();
   return {
@@ -547,9 +558,10 @@ export default function SmartHomeLayoutEditor({
   const t = useI18n("widget.smartHome-controls.layout.editor");
   const tCommon = useI18n();
   const catalog = useSmartHomeCatalog(integrationId);
+  // Elements stored outside their card (old or hand-written layouts) move back into free space.
   const history = useUndoable<EditorDraft>({
-    cards: layout.cards,
-    narrowCards: layout.narrowCards,
+    cards: layout.cards.map((card) => fitElementsIntoCard(card) ?? card),
+    narrowCards: layout.narrowCards?.map((card) => fitElementsIntoCard(card) ?? card),
     templates: layout.templates,
   });
   const { update: updateDraft } = history;
@@ -649,7 +661,10 @@ export default function SmartHomeLayoutEditor({
     const current = transaction.current;
     transaction.current = null;
     setPreview(null);
-    if (current) setCards((existing) => applyGridState(existing, current.preview));
+    // Pressing a handle without moving it changes nothing, so it is no edit (and keeps Redo).
+    if (current && !sameGridState(current.snapshot, current.preview)) {
+      setCards((existing) => applyGridState(existing, current.preview));
+    }
   };
 
   // The pointer as the browser reports it; dnd-kit's own delta comes from React state and can trail a quick drop.
@@ -793,6 +808,8 @@ export default function SmartHomeLayoutEditor({
   ) => {
     event.stopPropagation();
     event.preventDefault();
+    // One gesture at a time: a second finger on another handle waits until the first one is done.
+    if (transaction.current) return;
     const start = beginGridTransaction(toGridState(cards, options.withCardGrids, layoutRows), { activeId: id });
     transaction.current = start;
     const origin = { x: event.clientX, y: event.clientY };

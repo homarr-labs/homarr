@@ -43,6 +43,11 @@
   overflow: hidden;
 }
 
+/* Stacked for a narrow widget, the elements can need more rows than the card is high: they scroll. */
+.cardBody[data-stacked="true"] {
+  overflow-y: auto;
+}
+
 /* One element on the card grid; the element fills it or centers in it. The cell is a size container, so element
    content (numbers, sliders, chips) scales with the space the user gives the element. */
 .elementCell {
