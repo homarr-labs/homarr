@@ -3773,7 +3773,7 @@
             "168": "7 days"
           },
           "graphLines": "More lines",
-          "showMinMax": "Show minimum and maximum",
+          "showMinMax": "Show minimum, average and maximum",
           "cameraLive": "Live view",
           "cameraLiveHint": "Streams while the camera is on screen, when the integration supports it (Home Assistant, Homey); otherwise the snapshot shows",
           "sectionFormat": "Number format",

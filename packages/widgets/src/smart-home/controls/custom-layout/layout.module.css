@@ -207,6 +207,81 @@
   position: relative;
   flex: 1;
   min-height: 0;
+  touch-action: pan-y;
+}
+
+/* Scrubbing: a guide at the pointer, a dot on each line and the values at that time. */
+.graphGuide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  pointer-events: none;
+  background: var(--secondary-ink);
+  opacity: 0.6;
+}
+
+.graphDot {
+  position: absolute;
+  width: 0.55em;
+  height: 0.55em;
+  pointer-events: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+}
+
+.graphReadout {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0.25em 0.55em;
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.62);
+  border-radius: 0.5em;
+}
+
+.graphReadoutRow {
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+}
+
+/* Compared lines: a dot in the line's color, its name and its current value. */
+.graphLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1em 0.9em;
+  font-size: 0.85em;
+  color: var(--secondary-ink);
+}
+
+.graphLegendItem {
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+  min-width: 0;
+}
+
+.graphLegendDot {
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+}
+
+.graphLegendValue {
+  flex: none;
+  font-weight: var(--el-weight-medium);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .graphArea svg {

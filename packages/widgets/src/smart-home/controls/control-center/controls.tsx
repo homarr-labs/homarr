@@ -645,19 +645,29 @@ export function KeyButton({ label, hold, active, disabled, compact, onConfirm, c
 interface SparklineProps {
   values: (number | null)[];
   color: string;
+  /** A shared scale for lines that are compared; by default the line spans its own range. */
+  domain?: readonly [number, number];
 }
 
-export function Sparkline({ values, color }: SparklineProps) {
+// The line's vertical extent inside the 40-unit high drawing: 6 units of room above, the baseline at 36.
+const SPARK_TOP = 6;
+const SPARK_BOTTOM = 36;
+
+/** Where a value sits in a sparkline, as a fraction of its height from the top. */
+export const getSparklineY = (value: number, [min, max]: readonly [number, number]) =>
+  (SPARK_BOTTOM - ((value - min) / (max - min || 1)) * (SPARK_BOTTOM - SPARK_TOP)) / 40;
+
+export function Sparkline({ values, color, domain }: SparklineProps) {
   const id = useId().replace(/:/g, "");
   const numeric = getHistoryValues(values);
   if (numeric.length === 0) return null;
-  const min = Math.min(...numeric);
-  const max = Math.max(...numeric);
+  const min = domain?.[0] ?? Math.min(...numeric);
+  const max = domain?.[1] ?? Math.max(...numeric);
   const range = max - min || 1;
   const segments = getHistorySegments(values).map((segment) =>
     segment.map(({ value, index }) => {
       const x = (index / Math.max(values.length - 1, 1)) * 100;
-      const y = 36 - ((value - min) / range) * 30;
+      const y = SPARK_BOTTOM - ((value - min) / range) * (SPARK_BOTTOM - SPARK_TOP);
       return { x: x.toFixed(2), y: y.toFixed(2) };
     }),
   );

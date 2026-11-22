@@ -30,7 +30,7 @@ import {
   useSmartHomeInteractionBlock,
 } from "../store";
 import type { HaEntity } from "../types";
-import { PillSlider, Sparkline } from "../control-center/controls";
+import { getSparklineY, PillSlider, Sparkline } from "../control-center/controls";
 import {
   densities,
   DeviceHeader,
@@ -603,21 +603,97 @@ function GroupValue({ entity, element, label, ids }: ElementProps & { ids: reado
 const SERIES_COLORS = ["orange", "teal", "pink", "violet", "yellow", "green"] as const;
 const GRAPH_SAMPLES = 48;
 
-function GraphElement({ entity, element, label, source }: ElementProps) {
+function GraphElement(props: ElementProps) {
+  const ids = useMemo(
+    () => [props.entity.id, ...(props.element.entityIds ?? [])],
+    [props.entity.id, props.element.entityIds],
+  );
+  return (
+    <SmartHomeEntitiesProvider entityIds={ids}>
+      <GraphView {...props} ids={ids} />
+    </SmartHomeEntitiesProvider>
+  );
+}
+
+interface GraphLine {
+  id: string;
+  entity: HaEntity | undefined;
+  values: (number | null)[];
+  times: number[];
+  color: string;
+  domain: readonly [number, number];
+}
+
+/** A line's current value from its entity, for the legend. */
+const currentValue = (line: GraphLine) => {
+  const value = line.entity ? Number.parseFloat(line.entity.state) : Number.NaN;
+  return Number.isFinite(value) ? value : null;
+};
+
+const graphTimeFormat = (hours: number) =>
+  new Intl.DateTimeFormat(
+    undefined,
+    hours > 24 ? { weekday: "short", hour: "2-digit", minute: "2-digit" } : { hour: "2-digit", minute: "2-digit" },
+  );
+
+/**
+ * A history graph: the entity's line and any compared lines. Lines with the same unit share one scale, so their
+ * proportions hold. Moving across the graph shows the time and every line's value at that point.
+ */
+function GraphView({ entity, element, label, source, ids }: ElementProps & { ids: readonly string[] }) {
   const theme = useEntityTheme(entity);
+  const map = useSmartHomeEntities();
   const own = hasOwnGraphHistory(element);
-  const ids = useMemo(() => [entity.id, ...(element.entityIds ?? [])], [entity.id, element.entityIds]);
+  const hours = element.range ?? 24;
   // A graph with its own window or several lines loads its history itself; the others use the shared 24 hours.
   const history = clientApi.widget.smartHome.history.useQuery(
-    { integrationId: source ?? "", entityIds: ids, hours: element.range ?? 24, samples: GRAPH_SAMPLES },
+    { integrationId: source ?? "", entityIds: [...ids], hours, samples: GRAPH_SAMPLES },
     { enabled: own && source !== null, staleTime: 300_000, refetchInterval: 300_000, refetchOnWindowFocus: false },
   );
-  const series = own
-    ? ids.map((id) => history.data?.find((entry) => entry.entityId === id)?.points.map((point) => point.value) ?? [])
-    : [entity.history ?? []];
-  const primary = series[0] ?? [];
-  const numbers = primary.filter((value): value is number => typeof value === "number");
+  const [hover, setHover] = useState<number | null>(null);
   const color = getRuleColor(entity.state, element.rules);
+
+  const lines = useMemo((): GraphLine[] => {
+    const now = Date.now();
+    const raw = ids.map((id, index) => {
+      const points = own ? (history.data?.find((entry) => entry.entityId === id)?.points ?? []) : null;
+      const values = points ? points.map((point) => point.value) : index === 0 ? (entity.history ?? []) : [];
+      // The shared history is evenly spaced over the last 24 hours.
+      const step = (24 * 3_600_000) / Math.max(values.length - 1, 1);
+      const times = points
+        ? points.map((point) => point.time)
+        : values.map((_, at) => now - (values.length - 1 - at) * step);
+      const lineEntity = index === 0 ? entity : map[id];
+      const lineColor =
+        index === 0
+          ? (color ?? theme.accent)
+          : layoutColor(SERIES_COLORS[(index - 1) % SERIES_COLORS.length] ?? "orange");
+      return { id, entity: lineEntity, values, times, color: lineColor };
+    });
+    // One scale per unit: values that can be compared keep their proportions.
+    const ranges = new Map<string, [number, number]>();
+    for (const line of raw) {
+      const key = line.entity?.unit ?? "";
+      for (const value of line.values) {
+        if (value === null) continue;
+        const range = ranges.get(key);
+        ranges.set(key, range ? [Math.min(range[0], value), Math.max(range[1], value)] : [value, value]);
+      }
+    }
+    return raw.map((line) => ({ ...line, domain: ranges.get(line.entity?.unit ?? "") ?? [0, 1] }));
+  }, [ids, own, history.data, entity, map, color, theme.accent]);
+
+  const primary = lines[0];
+  const numbers = (primary?.values ?? []).filter((value): value is number => typeof value === "number");
+  const average = numbers.length > 0 ? numbers.reduce((sum, value) => sum + value, 0) / numbers.length : null;
+  const format = (line: GraphLine, value: number | null) =>
+    formatLayoutNumber(value, line.entity?.unit ?? null, line === primary ? element : {});
+  const timeFormat = graphTimeFormat(own ? hours : 24);
+  const pointAt = (line: GraphLine) =>
+    hover === null || line.values.length < 2 ? null : Math.round(hover * (line.values.length - 1));
+  const primaryPoint = primary ? pointAt(primary) : null;
+  const hoverTime = primary && primaryPoint !== null ? primary.times[primaryPoint] : undefined;
+
   return (
     <div className={classes.graphElement}>
       <div className={classes.elementHead}>
@@ -626,26 +702,82 @@ function GraphElement({ entity, element, label, source }: ElementProps) {
           {formatElementState(entity, element)}
         </span>
       </div>
-      <div className={classes.graphArea} aria-hidden>
-        {series.map((values, index) =>
-          values.length > 1 ? (
-            <div key={ids[index]} className={classes.graphLine}>
-              <Sparkline
-                values={values}
-                color={
-                  index === 0
-                    ? (color ?? theme.accent)
-                    : layoutColor(SERIES_COLORS[(index - 1) % SERIES_COLORS.length] ?? "orange")
-                }
-              />
+      {lines.length > 1 ? (
+        <div className={classes.graphLegend}>
+          {lines.map((line) => (
+            <span key={line.id} className={classes.graphLegendItem}>
+              <span className={classes.graphLegendDot} style={{ background: line.color }} aria-hidden />
+              <span className={classes.labelText}>
+                {line === primary ? label : (line.entity?.device?.name ?? line.entity?.name ?? line.id)}
+              </span>
+              <span className={classes.graphLegendValue}>{format(line, currentValue(line))}</span>
+            </span>
+          ))}
+        </div>
+      ) : null}
+      <div
+        className={classes.graphArea}
+        onPointerMove={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          if (rect.width > 0) setHover(Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)));
+        }}
+        onPointerLeave={() => setHover(null)}
+      >
+        {lines.map((line) =>
+          line.values.length > 1 ? (
+            <div key={line.id} className={classes.graphLine} aria-hidden>
+              <Sparkline values={line.values} color={line.color} domain={line.domain} />
             </div>
           ) : null,
         )}
+        {hover !== null && primary && primary.values.length > 1 ? (
+          <>
+            <span className={classes.graphGuide} style={{ left: `${hover * 100}%` }} aria-hidden />
+            {lines.map((line) => {
+              const at = pointAt(line);
+              const value = at === null ? null : (line.values[at] ?? null);
+              if (at === null || value === null) return null;
+              return (
+                <span
+                  key={line.id}
+                  className={classes.graphDot}
+                  style={{
+                    left: `${(at / (line.values.length - 1)) * 100}%`,
+                    top: `${getSparklineY(value, line.domain) * 100}%`,
+                    background: line.color,
+                  }}
+                  aria-hidden
+                />
+              );
+            })}
+            <span
+              className={classes.graphReadout}
+              style={
+                hover > 0.5 ? { right: `calc(${(1 - hover) * 100}% + 8px)` } : { left: `calc(${hover * 100}% + 8px)` }
+              }
+            >
+              {hoverTime === undefined ? null : <span>{timeFormat.format(hoverTime)}</span>}
+              {lines.map((line) => {
+                const at = pointAt(line);
+                const value = at === null ? null : (line.values[at] ?? null);
+                return (
+                  <span key={line.id} className={classes.graphReadoutRow}>
+                    {lines.length > 1 ? (
+                      <span className={classes.graphLegendDot} style={{ background: line.color }} aria-hidden />
+                    ) : null}
+                    <strong>{format(line, value)}</strong>
+                  </span>
+                );
+              })}
+            </span>
+          </>
+        ) : null}
       </div>
-      {element.showMinMax && numbers.length > 0 ? (
+      {element.showMinMax && numbers.length > 0 && primary ? (
         <div className={classes.graphRange}>
-          <span>↓ {formatLayoutNumber(Math.min(...numbers), entity.unit, element)}</span>
-          <span>↑ {formatLayoutNumber(Math.max(...numbers), entity.unit, element)}</span>
+          <span>↓ {format(primary, Math.min(...numbers))}</span>
+          <span>Ø {format(primary, average)}</span>
+          <span>↑ {format(primary, Math.max(...numbers))}</span>
         </div>
       ) : null}
     </div>
