@@ -32,7 +32,7 @@ export const SafeTablerIcon = memo(function SafeTablerIcon(props: Record<string,
       viewBox="0 0 24 24"
       color={color}
       strokeWidth={stroke}
-      className={`tabler-icon tabler-icon-${name}`}
+      className={`tabler-icon tabler-icon-${props.name}`}
       aria-hidden="true"
       focusable="false"
     >

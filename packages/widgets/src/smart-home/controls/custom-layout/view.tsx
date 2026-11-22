@@ -57,7 +57,7 @@ import {
 } from "../control-center/hooks";
 import controlClasses from "../control-center/styles.module.css";
 import { accentVars, useEntityTheme } from "../control-center/theme";
-import { getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
+import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
 import { deriveLayout, getLayoutColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
 import {
@@ -801,11 +801,8 @@ function CardBody({ card, source, placements, columns, stacked, collapsedRows }:
     <div className={classes.cardBody} style={style} data-stacked={stacked}>
       {placements.map((placement) => {
         const element = elements.get(placement.id);
-        // An element stored below the card's last row (an old or hand-written layout) is shown in the last rows.
-        const top = rows === null ? placement.y : Math.min(placement.y, rows - 1);
-        const shown = rows === null ? placement : { ...placement, y: top, h: Math.min(placement.h, rows - top) };
         return element ? (
-          <div key={element.id} className={classes.elementCell} style={placementStyle(shown)}>
+          <div key={element.id} className={classes.elementCell} style={placementStyle(placement)}>
             <LayoutElement element={element} source={source} />
           </div>
         ) : null;
@@ -847,11 +844,15 @@ function CollapsingCardBody(props: CardBodyProps & { collapsible: readonly Smart
 }
 
 const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: LayoutCardProps) {
-  // A card laid out wider than it is shown (narrow widget) stacks its elements instead of squeezing them.
-  const stacked = w !== card.w;
+  // Elements stored outside the card (an old or hand-written layout) move into its free space, as in the editor.
+  const fitted = useMemo(() => fitElementsIntoCard(card), [card]);
+  const shownCard = fitted ?? card;
+  // A card laid out wider than it is shown (narrow widget) stacks its elements instead of squeezing them. So does a
+  // card whose elements do not fit it at all: it scrolls rather than placing elements on top of each other.
+  const stacked = w !== card.w || fitted === null;
   const placements = useMemo(
-    () => (stacked ? stackElementPlacements(card, w) : getElementPlacements(card)),
-    [card, stacked, w],
+    () => (stacked ? stackElementPlacements(shownCard, w) : getElementPlacements(shownCard)),
+    [shownCard, stacked, w],
   );
   const collapsible = useMemo(
     () => card.elements.filter((element) => element.condition?.collapse && element.source === source),
@@ -861,7 +862,7 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
     () => [...new Set(collapsible.map((element) => element.condition?.entityId ?? element.entityId))],
     [collapsible],
   );
-  const bodyProps = { card, source, placements, columns: w, stacked };
+  const bodyProps = { card: shownCard, source, placements, columns: w, stacked };
   const body =
     collapsible.length > 0 && !stacked ? (
       <SmartHomeEntitiesProvider entityIds={watched}>

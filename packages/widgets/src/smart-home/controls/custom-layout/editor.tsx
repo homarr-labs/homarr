@@ -190,16 +190,16 @@ const stateKey = (state: TransactionalGridState) =>
 const elementLimitGuard: GridMoveGuard = ({ sourceGrid, targetGrid }) =>
   sourceGrid.id === targetGrid.id || targetGrid.placements.length < SMART_HOME_LAYOUT_MAX_ELEMENTS;
 
+const orderFreeKey = (state: TransactionalGridState) =>
+  JSON.stringify(
+    state.grids
+      .map((grid) => [grid.id, grid.placements.map(({ id, x, y, w, h }) => `${id}:${x},${y},${w},${h}`).toSorted()])
+      .toSorted(),
+  );
+
 /** Whether two grid states place everything alike, whatever the order. */
-const sameGridState = (first: TransactionalGridState, second: TransactionalGridState) => {
-  const key = (state: TransactionalGridState) =>
-    JSON.stringify(
-      state.grids
-        .map((grid) => [grid.id, grid.placements.map(({ id, x, y, w, h }) => `${id}:${x},${y},${w},${h}`).toSorted()])
-        .toSorted(),
-    );
-  return key(first) === key(second);
-};
+const sameGridState = (first: TransactionalGridState, second: TransactionalGridState) =>
+  orderFreeKey(first) === orderFreeKey(second);
 
 const cardCellSize = (body: Element, card: SmartHomeLayoutCard) => {
   const rect = body.getBoundingClientRect();
@@ -578,10 +578,17 @@ export default function SmartHomeLayoutEditor({
       }),
     [updateDraft, variant],
   );
+  // No undo while a drag or resize is running: the gesture would end on the old arrangement and undo the undo.
+  const undo = () => {
+    if (!transaction.current) history.undo();
+  };
+  const redo = () => {
+    if (!transaction.current) history.redo();
+  };
   useHotkeys([
-    ["mod+Z", history.undo],
-    ["mod+shift+Z", history.redo],
-    ["mod+Y", history.redo],
+    ["mod+Z", undo],
+    ["mod+shift+Z", redo],
+    ["mod+Y", redo],
   ]);
   const [selectedId, setSelectedId] = useState<string | null>(layout.cards[0]?.id ?? null);
   const [importText, setImportText] = useState("");
@@ -1092,7 +1099,7 @@ export default function SmartHomeLayoutEditor({
               variant="default"
               size="input-sm"
               disabled={!history.canUndo}
-              onClick={history.undo}
+              onClick={undo}
               aria-label={t("undo")}
             >
               <IconArrowBackUp size={16} />
@@ -1103,7 +1110,7 @@ export default function SmartHomeLayoutEditor({
               variant="default"
               size="input-sm"
               disabled={!history.canRedo}
-              onClick={history.redo}
+              onClick={redo}
               aria-label={t("redo")}
             >
               <IconArrowForwardUp size={16} />
