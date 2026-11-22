@@ -574,6 +574,8 @@ button.tile:not(:disabled):active {
   right: 0;
   bottom: 0;
   left: 0;
+  /* A fill too short for its grip hides it instead of drawing it on the empty track. */
+  overflow: hidden;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 82%, #fff), var(--accent));
   transition:
     height 0.5s var(--ease),
@@ -592,25 +594,52 @@ button.tile:not(:disabled):active {
   transition: none;
 }
 
+/* The grip at the fill's edge: hidden at rest, it shows where to pull once the pointer is on the slider. */
 .pillFill::after {
   position: absolute;
-  top: 8px;
+  top: 7px;
   left: 50%;
-  width: 26px;
-  height: 4px;
+  width: 18px;
+  height: 3px;
   content: "";
   background: var(--on-accent);
-  border-radius: 2px;
-  opacity: 0.4;
-  transform: translateX(-50%);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.4);
+  transition:
+    opacity 0.2s,
+    transform 0.2s var(--ease);
 }
 
 .pill[data-axis="horizontal"] .pillFill::after {
   top: 50%;
-  right: 8px;
+  right: 7px;
   left: auto;
-  width: 4px;
-  height: 40%;
+  width: 3px;
+  height: 18px;
+  max-height: 40%;
+  transform: translateY(-50%) scaleY(0.4);
+}
+
+@media (hover: hover) {
+  .pill:not([data-disabled="true"]):hover .pillFill::after {
+    opacity: 0.7;
+    transform: translateX(-50%);
+  }
+
+  .pill[data-axis="horizontal"]:not([data-disabled="true"]):hover .pillFill::after {
+    transform: translateY(-50%);
+  }
+}
+
+.pill:focus-visible .pillFill::after,
+.pill[data-dragging="true"] .pillFill::after {
+  opacity: 0.7;
+  transform: translateX(-50%);
+}
+
+.pill[data-axis="horizontal"]:focus-visible .pillFill::after,
+.pill[data-axis="horizontal"][data-dragging="true"] .pillFill::after {
   transform: translateY(-50%);
 }
 
@@ -644,7 +673,7 @@ button.tile:not(:disabled):active {
 }
 
 .fillSlider[data-high="false"] .pillFill::after {
-  opacity: 0;
+  display: none;
 }
 
 .miniOverlay {
