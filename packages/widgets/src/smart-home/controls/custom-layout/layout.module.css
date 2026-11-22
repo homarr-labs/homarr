@@ -239,9 +239,14 @@
   opacity: 0.6;
 }
 
+/* Spans the card's whole grid, so it does not wrap inside a single column. */
 .emptyCard {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  place-self: center;
   font-size: 1em;
   color: var(--secondary-ink);
+  text-align: center;
 }
 
 .emptyLayout {

@@ -6,6 +6,7 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
+import { useWidgetPreviewSize } from "../modals/preview-size-context";
 import { SmartHomeLayoutEditorModal } from "../smart-home/controls/custom-layout/editor-modal";
 import { parseSmartHomeLayout } from "../smart-home/controls/custom-layout/schema";
 import type { SmartHomeControlPalette } from "../smart-home/controls/types";
@@ -13,20 +14,29 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-/** The custom layout itself is edited in its own dialog; the settings only show a summary and the entry point. */
-// The settings panel does not know the widget's pixel size; the item on the board does.
-const measureItem = (itemId: string | undefined) => {
+// The widget's content sits inside the item's padding.
+const ITEM_INSET = 8;
+
+/**
+ * The widget's content size: from the edit dialog's preview (also for a widget not placed yet, and after changing
+ * its size there), otherwise measured on the board.
+ */
+const getContentSize = (preview: { width: number; height: number } | null, itemId: string | undefined) => {
+  if (preview) return { width: preview.width - ITEM_INSET, height: preview.height - ITEM_INSET };
   if (!itemId || typeof document === "undefined") return undefined;
   const item = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
   if (!item || item.clientWidth === 0) return undefined;
-  return { width: item.clientWidth - 8, height: item.clientHeight - 8 };
+  return { width: item.clientWidth - ITEM_INSET, height: item.clientHeight - ITEM_INSET };
 };
+
+/** The custom layout itself is edited in its own dialog; the settings only show a summary and the entry point. */
 
 export const WidgetSmartHomeLayoutInput = ({ property, kind, itemId }: CommonWidgetInputProps<"smartHomeLayout">) => {
   const t = useI18n("widget.smartHome-controls.layout");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const { openModal } = useModalAction(SmartHomeLayoutEditorModal);
+  const previewSize = useWidgetPreviewSize();
   const layout = parseSmartHomeLayout(form.values.options[property]);
   const integrationId = form.values.integrationIds[0] ?? null;
   const elements = layout.cards.reduce((count, card) => count + card.elements.length, 0);
@@ -52,7 +62,7 @@ export const WidgetSmartHomeLayoutInput = ({ property, kind, itemId }: CommonWid
             integrationId,
             layout,
             onSave: (next) => form.setFieldValue("options", { ...form.getValues().options, [property]: next }),
-            previewSize: measureItem(itemId),
+            previewSize: getContentSize(previewSize, itemId),
             palette: form.values.options.palette as SmartHomeControlPalette | undefined,
           });
         }}
