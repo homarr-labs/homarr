@@ -1,0 +1,18 @@
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_danger.tsx
+  h_d6e478ca18e517 17,130
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  h_d6e478ca18e517 88,91-96,222
+apps/nextjs/src/app/[locale]/boards/[name]/settings/page.tsx
+  h_d6e478ca18e517 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7925eae136a4a93782cf03a3f055faac2e6f25e7",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
