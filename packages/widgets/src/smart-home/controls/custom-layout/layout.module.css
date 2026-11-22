@@ -369,6 +369,14 @@
   font-weight: var(--el-weight-strong);
 }
 
+.headingElement[data-align="center"] {
+  justify-content: center;
+}
+
+.headingElement[data-align="end"] {
+  justify-content: flex-end;
+}
+
 .dividerElement {
   width: 100%;
   margin: 0;

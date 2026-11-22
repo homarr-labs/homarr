@@ -180,6 +180,8 @@ const elementOptionsSchema = z.object({
   hide: z.array(z.enum(smartHomeElementParts)).max(smartHomeElementParts.length).optional(),
   /** Camera: false shows only the snapshot, even when the camera can stream. */
   live: z.boolean().optional(),
+  /** Heading: where its text sits in the element; at the start when not set. */
+  align: z.enum(["start", "center", "end"]).optional(),
   decimals: z.number().int().min(0).max(3).optional(),
   unit: z.string().max(12).optional(),
   /** Multiplies numeric values, e.g. 0.001 to show W as kW. */

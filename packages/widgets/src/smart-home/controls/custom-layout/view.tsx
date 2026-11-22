@@ -675,7 +675,7 @@ function MissingElement({ element }: { element: SmartHomeLayoutElement }) {
 function StaticElement({ element }: { element: SmartHomeLayoutElement }) {
   if (element.view === "heading") {
     return (
-      <div className={classes.headingElement}>
+      <div className={classes.headingElement} data-align={element.align ?? "start"}>
         {element.icon ? <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} /> : null}
         <span className={classes.labelText}>{element.label}</span>
       </div>

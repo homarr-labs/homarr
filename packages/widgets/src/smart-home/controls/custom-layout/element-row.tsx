@@ -19,7 +19,16 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconAlertTriangle, IconCopy, IconPlus, IconTrash, IconX } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconAlignCenter,
+  IconAlignLeft,
+  IconAlignRight,
+  IconCopy,
+  IconPlus,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 
 import type { SmartHomeCatalogEntity } from "@homarr/integrations/types";
 import { TablerIconPicker } from "@homarr/forms-collection/tabler-icon-picker";
@@ -570,6 +579,20 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             onChange={(event) => set({ label: event.currentTarget.value || undefined })}
           />
         </Group>
+      )}
+      {element.view === "heading" && (
+        <SegmentedControl
+          size="xs"
+          fullWidth
+          aria-label={t("align")}
+          value={element.align ?? "start"}
+          onChange={(value) => set({ align: value === "start" ? undefined : (value as "center" | "end") })}
+          data={[
+            { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
+            { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },
+            { value: "end", label: <IconAlignRight size={16} aria-label={t("alignEnd")} /> },
+          ]}
+        />
       )}
       {element.view === "camera" && (
         <Switch

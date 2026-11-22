@@ -3799,7 +3799,11 @@
           "conditionValue": "Value, e.g. on or 25",
           "conditionCollapse": "Free its space while hidden",
           "conditionCollapseHint": "Rows with only hidden elements shrink away; the card's other rows grow into them",
-          "headingText": "Text"
+          "headingText": "Text",
+          "align": "Alignment",
+          "alignStart": "Left",
+          "alignCenter": "Center",
+          "alignEnd": "Right"
         }
       },
       "device": {
