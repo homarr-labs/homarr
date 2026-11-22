@@ -14,6 +14,12 @@
 }
 
 /* Scrubbing: a guide at the pointer, a dot on each line and the values at that point. */
+.overlay {
+  position: fixed;
+  z-index: var(--mantine-z-index-popover);
+  pointer-events: none;
+}
+
 .guide {
   position: absolute;
   top: 0;
