@@ -732,7 +732,7 @@ export const cardBodyStyle = (columns: number, rows: number | null): CSSProperti
   ...(rows === null ? { gridAutoRows: STACKED_ROW_HEIGHT } : { gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }),
 });
 
-/** The card's accent as CSS: a colored top edge and a light wash. */
+/** The card's accent as CSS: a thin colored line along its top edge. */
 export const cardAccentStyle = (card: Pick<SmartHomeLayoutCard, "accent">): CSSProperties | undefined =>
   card.accent ? ({ "--card-accent": layoutColor(card.accent) } as CSSProperties) : undefined;
 
