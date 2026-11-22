@@ -1,0 +1,19 @@
+---
+title: Metric graph
+description: Graph up to four values from your integrations over time.
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { metricGraphWidget } from ".";
+
+<WidgetHeader widget={metricGraphWidget} categories={["Statistics", "Smart home"]} />
+
+Pick up to four values, such as a Homey or Home Assistant sensor or any numeric [Statistics](/docs/widgets/stats) metric, and follow them over time.
+
+## Where the history comes from
+
+- **Homey and Home Assistant sensors** use the history stored by Homey Insights or the Home Assistant recorder, so their graphs are filled right away.
+- **Statistics metrics** are recorded by Homarr while a board with this widget is open. A new graph starts empty and fills up at the refresh interval. Periods without an open board have no recorded values, and the graph connects the values around them.
+
+Recorded history covers at most the last 24 hours at a 30-second interval. It is stored in Redis and is discarded when the integration's URL or credentials change.

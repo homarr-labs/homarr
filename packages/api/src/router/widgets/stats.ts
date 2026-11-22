@@ -21,6 +21,7 @@ export const statsRouter = createTRPCRouter({
     .concat(access)
     .query(({ ctx }) => ({
       name: ctx.integration.name,
+      kind: ctx.integration.kind,
       iconUrl: integrationDefs[ctx.integration.kind].iconUrl,
       metrics: getStatsMetrics(ctx.integration.kind),
     })),

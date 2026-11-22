@@ -18,6 +18,7 @@ import {
   IconCalendarStats,
   IconChartAreaLine,
   IconChartBar,
+  IconChartLine,
   IconClock,
   IconClockPlay,
   IconCloud,
@@ -65,6 +66,7 @@ import type { WidgetKind } from "@homarr/definitions";
 
 export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   stats: IconChartBar,
+  metricGraph: IconChartLine,
   clock: IconClock,
   weather: IconCloud,
   airQuality: IconWind,

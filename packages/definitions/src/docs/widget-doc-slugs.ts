@@ -2,6 +2,7 @@ import type { WidgetKind } from "../widget";
 
 export const widgetDocSlugs = {
   stats: "stats",
+  metricGraph: "metric-graph",
   clock: "clock",
   weather: "weather",
   airQuality: "air-quality",
