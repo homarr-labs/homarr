@@ -34,7 +34,26 @@ const PaletteContext = createContext<SmartHomeControlPalette>("boring");
 export const PaletteProvider = PaletteContext.Provider;
 export const usePalette = () => useContext(PaletteContext);
 
-export const getTheme = (entity: HaEntity, palette: SmartHomeControlPalette): EntityTheme => {
+/** One color for everything that is on, instead of the primary color (a custom layout card's own color). */
+export interface OwnAccent {
+  accent: string;
+  onAccent: string;
+}
+const OwnAccentContext = createContext<OwnAccent | null>(null);
+export const OwnAccentProvider = OwnAccentContext.Provider;
+
+/** Text on a color: dark on light colors, white on the others. Takes a Mantine color name or `#rrggbb`. */
+export const getOnAccent = (color: string) => {
+  if (!color.startsWith("#")) return darkOnColors.has(color) ? darkInk : "#fff";
+  const channel = (start: number) => Number.parseInt(color.slice(start, start + 2), 16);
+  return luminance([channel(1), channel(3), channel(5)]) > 0.55 ? darkInk : "#fff";
+};
+
+export const getTheme = (
+  entity: HaEntity,
+  palette: SmartHomeControlPalette,
+  ownAccent: OwnAccent | null = null,
+): EntityTheme => {
   const active = isEntityActive(entity);
   const unavailable = isUnavailable(entity);
   const rgb = entity.domain === "light" && entity.state === "on" ? entity.attributes.rgbColor : undefined;
@@ -44,8 +63,8 @@ export const getTheme = (entity: HaEntity, palette: SmartHomeControlPalette): En
   if (palette === "boring") {
     return {
       ...shared,
-      accent: "var(--mantine-primary-color-filled)",
-      onAccent: "var(--mantine-primary-color-contrast)",
+      accent: ownAccent?.accent ?? "var(--mantine-primary-color-filled)",
+      onAccent: ownAccent?.onAccent ?? "var(--mantine-primary-color-contrast)",
       swatch: lightColor,
       tinted: false,
     };
@@ -62,7 +81,7 @@ export const getTheme = (entity: HaEntity, palette: SmartHomeControlPalette): En
   };
 };
 
-export const useEntityTheme = (entity: HaEntity) => getTheme(entity, usePalette());
+export const useEntityTheme = (entity: HaEntity) => getTheme(entity, usePalette(), useContext(OwnAccentContext));
 
 export const accentVars = (accent: string, onAccent: string) =>
   ({ "--accent": accent, "--on-accent": onAccent }) as CSSProperties;

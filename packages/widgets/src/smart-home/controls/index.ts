@@ -115,7 +115,8 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
           shouldHide: (options) => options.layoutMode === "custom" || options.presentation !== "controlPanel",
         },
         palette: {
-          shouldHide: (options) => options.layoutMode !== "custom" && options.presentation !== "controlPanel",
+          // A custom layout sets colors per card.
+          shouldHide: (options) => options.layoutMode === "custom" || options.presentation !== "controlPanel",
         },
       },
     );

@@ -55,7 +55,6 @@ import { createEntityBlockId } from "../configuration";
 import { haDomains } from "../types";
 import type { HaDomain } from "../types";
 import controlClasses from "../control-center/styles.module.css";
-import { PaletteProvider } from "../control-center/theme";
 import { SmartHomeLiveProvider } from "../live";
 import { SmartHomeInteractionProvider } from "../store";
 import {
@@ -89,10 +88,25 @@ import {
   SMART_HOME_LAYOUT_ROWS,
   SMART_HOME_LAYOUT_VERSION,
 } from "./schema";
-import type { SmartHomeLayout, SmartHomeLayoutCard, SmartHomeLayoutElement, SmartHomeLayoutTemplate } from "./schema";
+import type {
+  SmartHomeCardColors,
+  SmartHomeLayout,
+  SmartHomeLayoutCard,
+  SmartHomeLayoutElement,
+  SmartHomeLayoutTemplate,
+} from "./schema";
 import { cardFromTemplate, cardToTemplate, duplicateCard } from "./templates";
 import { useUndoable } from "./use-undoable";
-import { cardAccentStyle, cardBodyStyle, CardTint, LayoutElement, NARROW_WIDGET_WIDTH, placementStyle } from "./view";
+import {
+  CardColors,
+  cardBodyStyle,
+  CardTint,
+  DEFAULT_CARD_ACCENT,
+  getCardPalette,
+  LayoutElement,
+  NARROW_WIDGET_WIDTH,
+  placementStyle,
+} from "./view";
 
 const GRID_ID = "smart-home-layout";
 // Only guards against a negative size; above it the canvas matches the widget exactly.
@@ -281,43 +295,41 @@ function CanvasCard({
       data-dragging={isDragging}
       style={placementStyle(placement)}
     >
-      <section
-        className={`${controlClasses.device} ${layoutClasses.card}`}
-        style={cardAccentStyle(card)}
-        data-accent={card.accent !== undefined}
-      >
-        {card.tint ? <CardTint card={card} source={source} /> : null}
-        <div
-          ref={setActivatorNodeRef}
-          {...attributes}
-          {...listeners}
-          className={classes.cardHandle}
-          aria-label={t("moveCard", { name: card.title ?? t("untitledCard") })}
-          onFocus={() => onSelect(card.id)}
-        >
-          <IconGripHorizontal size={14} aria-hidden />
-        </div>
-        {card.title ? <h4 className={layoutClasses.cardTitle}>{card.title}</h4> : null}
-        <div
-          className={layoutClasses.cardBody}
-          data-card-body={card.id}
-          style={cardBodyStyle(placement.w, Math.max(1, placement.h - getCardTitleRows(card)))}
-        >
-          {elementPlacements.map((elementPlacement) => {
-            const element = elements.get(elementPlacement.id);
-            return element ? (
-              <CanvasElement
-                key={element.id}
-                element={element}
-                placement={elementPlacement}
-                source={source}
-                onSelect={() => onSelect(card.id)}
-                onResizeStart={onElementResizeStart}
-              />
-            ) : null;
-          })}
-          {elementPlacements.length === 0 && <span className={layoutClasses.emptyCard}>{tLayout("emptyCard")}</span>}
-        </div>
+      <section className={`${controlClasses.device} ${layoutClasses.card}`} data-palette={getCardPalette(card)}>
+        <CardColors card={card}>
+          {card.tint ? <CardTint card={card} source={source} /> : null}
+          <div
+            ref={setActivatorNodeRef}
+            {...attributes}
+            {...listeners}
+            className={classes.cardHandle}
+            aria-label={t("moveCard", { name: card.title ?? t("untitledCard") })}
+            onFocus={() => onSelect(card.id)}
+          >
+            <IconGripHorizontal size={14} aria-hidden />
+          </div>
+          {card.title ? <h4 className={layoutClasses.cardTitle}>{card.title}</h4> : null}
+          <div
+            className={layoutClasses.cardBody}
+            data-card-body={card.id}
+            style={cardBodyStyle(placement.w, Math.max(1, placement.h - getCardTitleRows(card)))}
+          >
+            {elementPlacements.map((elementPlacement) => {
+              const element = elements.get(elementPlacement.id);
+              return element ? (
+                <CanvasElement
+                  key={element.id}
+                  element={element}
+                  placement={elementPlacement}
+                  source={source}
+                  onSelect={() => onSelect(card.id)}
+                  onResizeStart={onElementResizeStart}
+                />
+              ) : null;
+            })}
+            {elementPlacements.length === 0 && <span className={layoutClasses.emptyCard}>{tLayout("emptyCard")}</span>}
+          </div>
+        </CardColors>
       </section>
       <button
         type="button"
@@ -420,12 +432,32 @@ function CardProperties({
             label: t("sectionStyle"),
             content: (
               <Stack gap="xs">
-                <ColorSelect
-                  label={t("accent")}
-                  clearable
-                  value={card.accent}
-                  onChange={(accent) => onChange({ ...card, accent })}
-                />
+                <Stack gap={4}>
+                  <Text size="sm" fw={500}>
+                    {t("cardColors")}
+                  </Text>
+                  <SegmentedControl
+                    size="xs"
+                    fullWidth
+                    aria-label={t("cardColors")}
+                    value={card.colors ?? "neutral"}
+                    onChange={(value) =>
+                      onChange({ ...card, colors: value === "neutral" ? undefined : (value as SmartHomeCardColors) })
+                    }
+                    data={[
+                      { value: "neutral", label: t("colorsNeutral") },
+                      { value: "state", label: t("colorsState") },
+                      { value: "accent", label: t("colorsAccent") },
+                    ]}
+                  />
+                </Stack>
+                {card.colors === "accent" ? (
+                  <ColorSelect
+                    label={t("accent")}
+                    value={card.accent ?? DEFAULT_CARD_ACCENT}
+                    onChange={(accent) => onChange({ ...card, accent })}
+                  />
+                ) : null}
                 <Switch
                   label={t("tint")}
                   description={t("tintHint")}
@@ -547,14 +579,7 @@ interface EditorProps extends SmartHomeLayoutEditorProps {
   onClose: () => void;
 }
 
-export default function SmartHomeLayoutEditor({
-  integrationId,
-  layout,
-  onSave,
-  onClose,
-  previewSize,
-  palette = "boring",
-}: EditorProps) {
+export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, onClose, previewSize }: EditorProps) {
   const t = useI18n("widget.smartHome-controls.layout.editor");
   const tCommon = useI18n();
   const catalog = useSmartHomeCatalog(integrationId);
@@ -1181,7 +1206,7 @@ export default function SmartHomeLayoutEditor({
       </Group>
 
       <div className={classes.editor}>
-        <div className={`${controlClasses.root} ${classes.canvasScroll}`} data-palette={palette}>
+        <div className={`${controlClasses.root} ${classes.canvasScroll}`}>
           {variant === "narrow" ? (
             <Group className={classes.canvasHint} gap="xs" justify="space-between" wrap="nowrap">
               <span>{t("narrowHint", { width: NARROW_WIDGET_WIDTH })}</span>
@@ -1198,78 +1223,76 @@ export default function SmartHomeLayoutEditor({
               </div>
             )
           )}
-          <PaletteProvider value={palette}>
-            <SmartHomeInteractionProvider blocked="editing">
-              <SmartHomeLiveProvider
-                integrationId={integrationId}
-                blockIds={blockIds}
-                roomDomains={[]}
-                excludedEntityIds={[]}
-                historyEntityIds={graphIds}
+          <SmartHomeInteractionProvider blocked="editing">
+            <SmartHomeLiveProvider
+              integrationId={integrationId}
+              blockIds={blockIds}
+              roomDomains={[]}
+              excludedEntityIds={[]}
+              historyEntityIds={graphIds}
+            >
+              <DndContext
+                sensors={sensors}
+                onDragStart={onDragStart}
+                onDragMove={onDragMove}
+                onDragEnd={onDragEnd}
+                onDragCancel={cancel}
               >
-                <DndContext
-                  sensors={sensors}
-                  onDragStart={onDragStart}
-                  onDragMove={onDragMove}
-                  onDragEnd={onDragEnd}
-                  onDragCancel={cancel}
+                <div
+                  ref={canvasRef}
+                  className={classes.canvas}
+                  data-empty={cards.length === 0}
+                  style={{
+                    maxWidth: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
+                    // Explicit, because the canvas is a size container and so does not grow with its rows.
+                    height: canvasHeight + CANVAS_PADDING * 2,
+                    gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${layoutRows}, ${rowHeight}px)`,
+                    gap: LAYOUT_GAP,
+                  }}
                 >
-                  <div
-                    ref={canvasRef}
-                    className={classes.canvas}
-                    data-empty={cards.length === 0}
-                    style={{
-                      maxWidth: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
-                      // Explicit, because the canvas is a size container and so does not grow with its rows.
-                      height: canvasHeight + CANVAS_PADDING * 2,
-                      gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,
-                      gridTemplateRows: `repeat(${layoutRows}, ${rowHeight}px)`,
-                      gap: LAYOUT_GAP,
-                    }}
-                  >
-                    {/* The widget's grid, cell by cell: shows how big the widget is and where cards snap to. */}
-                    {gridCells.map(({ key, column, row }) => (
-                      <div
-                        key={key}
-                        className={classes.canvasCell}
-                        style={{ gridColumn: column, gridRow: row }}
-                        aria-hidden
-                      />
-                    ))}
-                    {cards.map((card) => (
-                      <CanvasCard
-                        key={card.id}
-                        card={card}
-                        placement={cardPlacement(card)}
-                        elementPlacements={elementPlacements(card)}
-                        elements={elements}
-                        source={integrationId}
-                        selected={card.id === selectedId}
-                        onSelect={setSelectedId}
-                        onResizeStart={onCardResizeStart}
-                        onElementResizeStart={onElementResizeStart}
-                      />
-                    ))}
-                    {cards.length === 0 && (
-                      <Stack className={classes.canvasEmpty} gap="sm" align="center">
-                        <Text size="sm" c="dimmed" ta="center">
-                          {t("canvasEmpty")}
-                        </Text>
-                        <Button
-                          size="sm"
-                          variant="light"
-                          leftSection={<IconPlus size={16} />}
-                          onClick={() => addCards(createCard(cards, []))}
-                        >
-                          {t("addCard")}
-                        </Button>
-                      </Stack>
-                    )}
-                  </div>
-                </DndContext>
-              </SmartHomeLiveProvider>
-            </SmartHomeInteractionProvider>
-          </PaletteProvider>
+                  {/* The widget's grid, cell by cell: shows how big the widget is and where cards snap to. */}
+                  {gridCells.map(({ key, column, row }) => (
+                    <div
+                      key={key}
+                      className={classes.canvasCell}
+                      style={{ gridColumn: column, gridRow: row }}
+                      aria-hidden
+                    />
+                  ))}
+                  {cards.map((card) => (
+                    <CanvasCard
+                      key={card.id}
+                      card={card}
+                      placement={cardPlacement(card)}
+                      elementPlacements={elementPlacements(card)}
+                      elements={elements}
+                      source={integrationId}
+                      selected={card.id === selectedId}
+                      onSelect={setSelectedId}
+                      onResizeStart={onCardResizeStart}
+                      onElementResizeStart={onElementResizeStart}
+                    />
+                  ))}
+                  {cards.length === 0 && (
+                    <Stack className={classes.canvasEmpty} gap="sm" align="center">
+                      <Text size="sm" c="dimmed" ta="center">
+                        {t("canvasEmpty")}
+                      </Text>
+                      <Button
+                        size="sm"
+                        variant="light"
+                        leftSection={<IconPlus size={16} />}
+                        onClick={() => addCards(createCard(cards, []))}
+                      >
+                        {t("addCard")}
+                      </Button>
+                    </Stack>
+                  )}
+                </div>
+              </DndContext>
+            </SmartHomeLiveProvider>
+          </SmartHomeInteractionProvider>
         </div>
 
         <div className={classes.panel}>

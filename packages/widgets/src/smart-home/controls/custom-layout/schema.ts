@@ -119,6 +119,9 @@ const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 export const isNamedLayoutColor = (color: string): color is SmartHomeLayoutNamedColor =>
   (smartHomeLayoutColors as readonly string[]).includes(color);
 
+export const smartHomeCardColors = ["state", "accent"] as const;
+export type SmartHomeCardColors = (typeof smartHomeCardColors)[number];
+
 export const smartHomeCompareOperators = ["gt", "lt", "eq", "ne"] as const;
 export type SmartHomeCompareOperator = (typeof smartHomeCompareOperators)[number];
 
@@ -226,6 +229,8 @@ const cardSchema = z.object({
   w: z.number().int().min(1).max(SMART_HOME_LAYOUT_COLUMNS),
   h: z.number().int().min(1).max(SMART_HOME_LAYOUT_ROWS),
   title: z.string().max(SMART_HOME_LAYOUT_MAX_TEXT).optional(),
+  /** How the card colors what is on: the primary color (unset), each entity's own color, or the card's accent. */
+  colors: z.enum(smartHomeCardColors).optional(),
   accent: colorSchema.optional(),
   /** Tints the card in its first entity's color while that entity is on. */
   tint: z.boolean().optional(),
@@ -254,6 +259,7 @@ const templateSchema = z.object({
   name: z.string().min(1).max(80),
   w: z.number().int().min(1).max(SMART_HOME_LAYOUT_COLUMNS),
   h: z.number().int().min(1).max(SMART_HOME_LAYOUT_ROWS),
+  colors: z.enum(smartHomeCardColors).optional(),
   accent: colorSchema.optional(),
   tint: z.boolean().optional(),
   readOnly: z.boolean().optional(),

@@ -8,25 +8,17 @@ import { useI18n } from "@homarr/translation/client";
 
 import classes from "../configuration.module.css";
 import { SmartHomeLayoutEditorModal } from "./editor-modal";
-import type { SmartHomeControlPalette } from "../types";
 import type { SmartHomeLayout } from "./schema";
 
 interface CustomLayoutEditButtonProps {
   integrationId: string | null;
   previewSize: { width: number; height: number };
-  palette: SmartHomeControlPalette;
   layout: SmartHomeLayout;
   onChange: (layout: SmartHomeLayout) => void;
 }
 
 /** In board edit mode a custom layout opens its editor directly from the widget, like the block editor does. */
-export function CustomLayoutEditButton({
-  integrationId,
-  previewSize,
-  palette,
-  layout,
-  onChange,
-}: CustomLayoutEditButtonProps) {
+export function CustomLayoutEditButton({ integrationId, previewSize, layout, onChange }: CustomLayoutEditButtonProps) {
   const t = useI18n("widget.smartHome-controls.layout");
   const { openModal } = useModalAction(SmartHomeLayoutEditorModal);
   return (
@@ -37,7 +29,7 @@ export function CustomLayoutEditButton({
         leftSection={<IconLayoutGrid size={14} />}
         disabled={!integrationId}
         title={integrationId ? undefined : t("needsIntegration")}
-        onClick={() => integrationId && openModal({ integrationId, layout, onSave: onChange, previewSize, palette })}
+        onClick={() => integrationId && openModal({ integrationId, layout, onSave: onChange, previewSize })}
       >
         {t("edit")}
       </Button>

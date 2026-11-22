@@ -56,7 +56,7 @@ import {
   useShowsPart,
 } from "../control-center/hooks";
 import controlClasses from "../control-center/styles.module.css";
-import { accentVars, useEntityTheme } from "../control-center/theme";
+import { accentVars, getOnAccent, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
 import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
 import { deriveLayout, getLayoutColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
@@ -749,9 +749,29 @@ export const cardBodyStyle = (columns: number, rows: number | null): CSSProperti
   ...(rows === null ? { gridAutoRows: STACKED_ROW_HEIGHT } : { gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }),
 });
 
-/** The card's accent as CSS: a thin colored line along its top edge. */
-export const cardAccentStyle = (card: Pick<SmartHomeLayoutCard, "accent">): CSSProperties | undefined =>
-  card.accent ? ({ "--card-accent": layoutColor(card.accent) } as CSSProperties) : undefined;
+// A card set to its own color without picking one yet.
+export const DEFAULT_CARD_ACCENT = "blue";
+
+/** The palette a card's controls use: each entity's own color, or one color for all (primary or the card's). */
+export const getCardPalette = (card: Pick<SmartHomeLayoutCard, "colors">) =>
+  card.colors === "state" ? "colorful" : "boring";
+
+/**
+ * The card's colors for everything inside it. The palette is also set on the card's element (`data-palette`),
+ * where the control styles read it.
+ */
+export function CardColors({ card, children }: { card: SmartHomeLayoutCard; children: ReactNode }) {
+  const color = card.colors === "accent" ? (card.accent ?? DEFAULT_CARD_ACCENT) : null;
+  const ownAccent = useMemo(
+    () => (color ? { accent: layoutColor(color), onAccent: getOnAccent(color) } : null),
+    [color],
+  );
+  return (
+    <PaletteProvider value={getCardPalette(card)}>
+      <OwnAccentProvider value={ownAccent}>{children}</OwnAccentProvider>
+    </PaletteProvider>
+  );
+}
 
 /** While the card's first entity is on, the card takes on its color. Only this layer re-renders for it. */
 export function CardTint({ card, source }: { card: SmartHomeLayoutCard; source: string | null }) {
@@ -874,13 +894,15 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
   return (
     <section
       className={`${controlClasses.device} ${classes.card}`}
-      style={{ ...placementStyle({ x, y, w, h }), ...cardAccentStyle(card) }}
-      data-accent={card.accent !== undefined}
+      style={placementStyle({ x, y, w, h })}
+      data-palette={getCardPalette(card)}
       aria-label={card.title}
     >
-      {card.tint ? <CardTint card={card} source={source} /> : null}
-      {card.title ? <h4 className={classes.cardTitle}>{card.title}</h4> : null}
-      {card.readOnly ? <ReadOnlyScope>{body}</ReadOnlyScope> : body}
+      <CardColors card={card}>
+        {card.tint ? <CardTint card={card} source={source} /> : null}
+        {card.title ? <h4 className={classes.cardTitle}>{card.title}</h4> : null}
+        {card.readOnly ? <ReadOnlyScope>{body}</ReadOnlyScope> : body}
+      </CardColors>
     </section>
   );
 });

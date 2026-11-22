@@ -9,7 +9,6 @@ import { useI18n } from "@homarr/translation/client";
 import { useWidgetPreviewSize } from "../modals/preview-size-context";
 import { SmartHomeLayoutEditorModal } from "../smart-home/controls/custom-layout/editor-modal";
 import { parseSmartHomeLayout } from "../smart-home/controls/custom-layout/schema";
-import type { SmartHomeControlPalette } from "../smart-home/controls/types";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -73,7 +72,6 @@ export const WidgetSmartHomeLayoutInput = ({ property, kind, itemId }: CommonWid
               itemId,
               typeof form.values.options.title === "string" && form.values.options.title.trim() !== "",
             ),
-            palette: form.values.options.palette as SmartHomeControlPalette | undefined,
           });
         }}
       >

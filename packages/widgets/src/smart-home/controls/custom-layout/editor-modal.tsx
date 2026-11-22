@@ -5,7 +5,6 @@ import { Center, Loader } from "@mantine/core";
 
 import { createModal } from "@homarr/modals";
 
-import type { SmartHomeControlPalette } from "../types";
 import type { SmartHomeLayout } from "./schema";
 
 export interface SmartHomeLayoutEditorProps {
@@ -14,8 +13,6 @@ export interface SmartHomeLayoutEditorProps {
   onSave: (layout: SmartHomeLayout) => void;
   /** The widget's content size, so the canvas shows the layout exactly as wide and marks where it ends. */
   previewSize?: { width: number; height: number };
-  /** The widget's color palette, so the preview has the colors the widget shows. */
-  palette?: SmartHomeControlPalette;
 }
 
 // Drag and drop, templates and entity pickers load only when someone opens the editor.

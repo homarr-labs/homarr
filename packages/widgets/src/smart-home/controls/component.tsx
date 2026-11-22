@@ -547,7 +547,8 @@ function ControlPanelRoot({
 }: {
   isEditMode: boolean;
   single: boolean;
-  palette: SmartHomeControlPalette;
+  /** Null when the content sets its own palette (custom layout cards). */
+  palette: SmartHomeControlPalette | null;
   children: ReactNode;
 }) {
   const [opened, setOpened] = useState<{ id: string; readOnly: boolean } | null>(null);
@@ -565,13 +566,13 @@ function ControlPanelRoot({
   );
 
   return (
-    <PaletteProvider value={palette}>
+    <PaletteProvider value={palette ?? "boring"}>
       <DetailProvider value={detail}>
         <div
           className={controlCenterClasses.root}
           data-edit={isEditMode}
           data-preset={single ? "entity" : undefined}
-          data-palette={palette}
+          data-palette={palette ?? undefined}
           inert={isEditMode}
         >
           {children}
@@ -682,7 +683,8 @@ const CUSTOM_LAYOUT_TITLE_HEIGHT = 28;
 function CustomPreview({ configuration, width, height, isEditMode }: PreviewProps) {
   const title = configuration.title.trim();
   return (
-    <ControlPanelRoot isEditMode={isEditMode} single={false} palette={configuration.palette}>
+    // Each card picks its own colors, so the widget sets none.
+    <ControlPanelRoot isEditMode={isEditMode} single={false} palette={null}>
       <div className={classes.stack} style={{ height: Math.max(0, height - CUSTOM_LAYOUT_INSET) }}>
         {title && (
           <h3 className={classes.title} title={title}>
@@ -755,7 +757,6 @@ function ConfigurableContent({
               height:
                 props.height - CUSTOM_LAYOUT_INSET - (configuration.title.trim() ? CUSTOM_LAYOUT_TITLE_HEIGHT : 0),
             }}
-            palette={configuration.palette}
             layout={customLayout}
             onChange={(next) => onChange({ customLayout: next })}
           />
