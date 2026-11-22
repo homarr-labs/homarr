@@ -1,3 +1,4 @@
+import { inflateRawSync } from "node:zlib";
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 
@@ -9,7 +10,13 @@ import {
   SmartHomeEntityNotFoundError,
 } from "@homarr/integrations/home-assistant/errors";
 import { SmartHomeSelectionLimitError } from "@homarr/integrations/types";
-import type { SmartHomeAction, SmartHomeEntity, SmartHomeEntityPatch } from "@homarr/integrations/types";
+import type {
+  SmartHomeAction,
+  SmartHomeCameraStream,
+  SmartHomeEntity,
+  SmartHomeEntityPatch,
+  SmartHomeWebRtcMessage,
+} from "@homarr/integrations/types";
 import {
   smartHomeCatalogRequestHandler,
   smartHomeForecastRequestHandler,
@@ -248,7 +255,101 @@ const executeActionAsync = async (integration: SmartHomeIntegrationContext, inpu
   return { entityId: input.entityId, action: action.type, contextId: receipt?.contextId };
 };
 
+const supportsCameraStream = (
+  instance: object,
+): instance is { getCameraStreamAsync(entityId: string, prefer?: "hls"): Promise<SmartHomeCameraStream | null> } =>
+  "getCameraStreamAsync" in instance && typeof instance.getCameraStreamAsync === "function";
+
+const MAX_OFFER_BYTES = 64_000;
+
+/** The browser's SDP offer, sent deflated and base64url-encoded; anything else is a bad request. */
+const inflateOffer = (encoded: string) => {
+  try {
+    const sdp = inflateRawSync(Buffer.from(encoded, "base64url"), { maxOutputLength: MAX_OFFER_BYTES }).toString();
+    if (!sdp.startsWith("v=0")) throw new Error("Not an SDP offer");
+    return sdp;
+  } catch {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid WebRTC offer" });
+  }
+};
+
+type WebRtcSessionIntegration = {
+  openCameraWebRtcSessionAsync(
+    entityId: string,
+    offerSdp: string,
+    onMessage: (message: SmartHomeWebRtcMessage) => void,
+    signal: AbortSignal,
+  ): Promise<void>;
+};
+
+const supportsCameraWebRtc = (instance: object): instance is WebRtcSessionIntegration =>
+  "openCameraWebRtcSessionAsync" in instance && typeof instance.openCameraWebRtcSessionAsync === "function";
+
 export const smartHomeRouter = createTRPCRouter({
+  /**
+   * A camera's WebRTC session: the browser's offer goes in, the answer and any extra ICE candidates come out. The
+   * session lasts as long as the subscription, so the stream ends when the browser stops watching.
+   */
+  cameraWebRtc: publicProcedure
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-controls"))
+    // The offer travels in the URL (server-sent events), deflated so it stays well below proxies' URL limits.
+    .input(z.object({ entityId: entityIdSchema, offer: z.string().min(1).max(24_000) }))
+    .subscription(async function* ({ ctx: { integration }, input, signal }) {
+      const offer = inflateOffer(input.offer);
+      const instance = await createIntegrationAsync(integration);
+      if (!supportsCameraWebRtc(instance)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This integration cannot stream cameras over WebRTC" });
+      }
+      const controller = new AbortController();
+      signal?.addEventListener("abort", () => controller.abort(), { once: true });
+      const messages: SmartHomeWebRtcMessage[] = [];
+      let wake: (() => void) | null = null;
+      const notify = () => {
+        wake?.();
+        wake = null;
+      };
+      const session = instance
+        .openCameraWebRtcSessionAsync(
+          input.entityId,
+          offer,
+          (message) => {
+            messages.push(message);
+            notify();
+          },
+          controller.signal,
+        )
+        .catch((error: unknown) => {
+          messages.push({ type: "error", message: error instanceof Error ? error.message : "WebRTC session failed" });
+        })
+        .finally(() => {
+          controller.abort();
+          notify();
+        });
+      try {
+        while (!controller.signal.aborted || messages.length > 0) {
+          const message = messages.shift();
+          if (message) {
+            yield message;
+            continue;
+          }
+          await new Promise<void>((resolve) => {
+            wake = resolve;
+          });
+        }
+      } finally {
+        controller.abort();
+        await session;
+      }
+    }),
+  /** A live stream for one camera entity, or null when the integration or camera cannot stream. */
+  cameraStream: publicProcedure
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-controls"))
+    .input(z.object({ entityId: entityIdSchema, prefer: z.literal("hls").optional() }))
+    .query(async ({ ctx: { integration }, input }) => {
+      const instance = await createIntegrationAsync(integration);
+      if (!supportsCameraStream(instance)) return null;
+      return await instance.getCameraStreamAsync(input.entityId, input.prefer);
+    }),
   snapshot: publicProcedure
     .meta({
       mcp: {

@@ -29,6 +29,25 @@ export const homeyDeviceSchema = z.object({
   capabilitiesObj: z.record(z.string(), homeyCapabilitySchema).nullish(),
   available: z.boolean().optional(),
   hidden: z.boolean().optional(),
+  // Camera pictures and live videos. Unexpected shapes are dropped instead of failing the whole device.
+  images: z
+    .array(
+      z.object({
+        type: z.string().nullish(),
+        imageObj: z.object({ id: z.string(), url: z.string().nullish(), lastUpdated: z.number().nullish() }).nullish(),
+      }),
+    )
+    .nullish()
+    .catch(null),
+  videos: z
+    .array(
+      z.object({
+        type: z.string().nullish(),
+        videoObj: z.object({ id: z.string(), type: z.string().nullish() }).nullish(),
+      }),
+    )
+    .nullish()
+    .catch(null),
 });
 
 export type HomeyDevice = z.infer<typeof homeyDeviceSchema>;

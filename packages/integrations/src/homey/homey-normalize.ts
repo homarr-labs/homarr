@@ -23,7 +23,16 @@ export type HomeyPrimaryRole =
 export type HomeyEntityTarget =
   | { kind: "device"; role: HomeyPrimaryRole; device: HomeyDevice }
   | { kind: "capability"; device: HomeyDevice; capabilityId: string }
-  | { kind: "flow"; flow: HomeyFlow };
+  | { kind: "flow"; flow: HomeyFlow }
+  | {
+      kind: "camera";
+      device: HomeyDevice;
+      /** Homey's snapshot image, e.g. /api/image/<id>; needs the integration's token. */
+      imageUrl: string | null;
+      imageUpdated: number;
+      /** The WebRTC video to negotiate a live view with. */
+      videoId: string | null;
+    };
 
 export interface HomeyEntityRecord {
   entity: SmartHomeEntity;
@@ -78,6 +87,45 @@ const slug = (value: string) =>
 
 const number = (capability: HomeyCapability | undefined) =>
   typeof capability?.value === "number" && Number.isFinite(capability.value) ? capability.value : undefined;
+// Homey's media times are seconds, but some apps (Alexa) report milliseconds: no track runs for six hours.
+const MAX_TRACK_SECONDS = 6 * 60 * 60;
+const updatedAt = (capability: HomeyCapability | undefined) => {
+  const value = capability?.lastUpdated;
+  const time = typeof value === "string" ? Date.parse(value) : value;
+  return typeof time === "number" && Number.isFinite(time) ? time : undefined;
+};
+
+/**
+ * Duration and position of the current track. Players without a position (the Alexa app) still tell when the track
+ * started and when playback last paused or resumed: as long as it has played straight through since the track
+ * started, or paused once since, the position follows from those times. Otherwise it stays unknown.
+ */
+const mediaTiming = (cap: DeviceCapabilities) => {
+  const durationValue = number(cap("speaker_duration"));
+  const scale = durationValue !== undefined && durationValue > MAX_TRACK_SECONDS ? 1000 : 1;
+  const mediaDuration = durationValue === undefined ? undefined : durationValue / scale;
+  const positionValue = number(cap("speaker_position"));
+  if (positionValue !== undefined) {
+    return {
+      mediaDuration,
+      mediaPosition: positionValue / scale,
+      mediaPositionUpdatedAt: updatedAt(cap("speaker_position")),
+    };
+  }
+  const trackStarted = updatedAt(cap("speaker_track"));
+  const playing = cap("speaker_playing");
+  const playingChanged = updatedAt(playing);
+  if (mediaDuration === undefined || trackStarted === undefined || playingChanged === undefined) {
+    return { mediaDuration };
+  }
+  if (boolean(playing) === true && playingChanged <= trackStarted) {
+    return { mediaDuration, mediaPosition: 0, mediaPositionUpdatedAt: trackStarted };
+  }
+  if (boolean(playing) === false && playingChanged > trackStarted) {
+    return { mediaDuration, mediaPosition: (playingChanged - trackStarted) / 1000 };
+  }
+  return { mediaDuration };
+};
 const boolean = (capability: HomeyCapability | undefined) =>
   typeof capability?.value === "boolean" ? capability.value : undefined;
 const text = (capability: HomeyCapability | undefined) =>
@@ -393,8 +441,7 @@ const buildMediaPlayer = (cap: DeviceCapabilities, device: HomeyDevice): Primary
       mediaAlbum: text(cap("speaker_album")),
       volume: number(volume),
       isMuted: boolean(cap("volume_mute")),
-      mediaDuration: number(cap("speaker_duration")),
-      mediaPosition: number(cap("speaker_position")),
+      ...mediaTiming(cap),
       shuffle: boolean(cap("speaker_shuffle")),
       repeat: repeatModes[text(cap("speaker_repeat")) ?? ""],
       mediaSource: text(cap("media_input")),
@@ -768,8 +815,46 @@ export const normalizeHomeyDevices = (devices: HomeyDevice[]): HomeyEntityRecord
         },
       });
     }
+    const camera = toCameraRecord(device, used);
+    if (camera) records.push(camera);
   }
   return records;
+};
+
+/**
+ * Cameras (Ring, doorbells, ...) report their picture and live video next to their capabilities, whatever device
+ * class the app uses. Each gets a camera entity, so it can be shown as a camera and streamed.
+ */
+const toCameraRecord = (device: HomeyDevice, used: Set<string>): HomeyEntityRecord | null => {
+  const image = device.images?.find((candidate) => candidate.type === "camera" && candidate.imageObj?.url);
+  const video = device.videos?.find((candidate) => candidate.type === "camera" && candidate.videoObj?.id);
+  if (!image && !video) return null;
+  const updated = image?.imageObj?.lastUpdated ?? 0;
+  return {
+    hidden: device.hidden === true,
+    target: {
+      kind: "camera",
+      device,
+      imageUrl: image?.imageObj?.url ?? null,
+      imageUpdated: updated,
+      videoId: video?.videoObj?.id ?? null,
+    },
+    entity: {
+      id: uniqueId(used, `camera.${slug(device.id)}`),
+      domain: "camera",
+      name: device.name,
+      areaId: device.zone ?? null,
+      device: { id: device.id, name: device.name, entityName: null },
+      state: device.available === false ? "unavailable" : "idle",
+      icon: null,
+      deviceClass: null,
+      stateClass: null,
+      unit: null,
+      lastChanged: updated,
+      lastUpdated: updated,
+      attributes: {},
+    },
+  };
 };
 
 export const normalizeHomeyFlows = (flows: HomeyFlow[]): HomeyEntityRecord[] =>
