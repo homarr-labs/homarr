@@ -1,8 +1,7 @@
 import { z } from "zod/v4";
 
 import { env } from "@homarr/common/env";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchOpenMeteoJsonAsync } from "@homarr/request-handler/open-meteo";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -42,9 +41,7 @@ export const locationRouter = createTRPCRouter({
 
       const url = new URL("https://geocoding-api.open-meteo.com/v1/search");
       url.searchParams.set("name", input.query);
-      const res = await withTimeoutAsync(async (signal) => {
-        return await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
-      });
-      return (await res.json()) as z.infer<typeof locationSearchCityOutput>;
+      const json = await fetchOpenMeteoJsonAsync(url, AbortSignal.timeout(10_000));
+      return json as z.infer<typeof locationSearchCityOutput>;
     }),
 });
