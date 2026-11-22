@@ -190,6 +190,7 @@
 
 .widgetPanel[data-board-widget] .messages {
   display: flex;
+  max-inline-size: none;
   min-height: 0;
   flex: 0 0 auto;
   flex-direction: column;
@@ -643,7 +644,7 @@
 .messages {
   width: 100%;
   min-width: 0;
-  max-width: 44rem;
+  max-inline-size: 44rem;
   box-sizing: border-box;
   margin-inline: auto;
   padding: 0.75rem 1rem 1.5rem;
