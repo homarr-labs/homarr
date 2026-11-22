@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { Portal } from "@mantine/core";
 
 import classes from "./history-graph.module.css";
 import { getSparklineY, Sparkline } from "./sparkline";
@@ -79,7 +80,9 @@ export function HistoryGraph({
   connectNulls = false,
   className,
 }: HistoryGraphProps) {
-  const [hover, setHover] = useState<number | null>(null);
+  // Where the pointer is (0 to 1 across the graph) and where the graph is on screen, for the overlay.
+  const [pointer, setPointer] = useState<{ at: number; rect: DOMRect } | null>(null);
+  const hover = pointer?.at ?? null;
   const domains = useMemo(() => getHistoryDomains(lines), [lines]);
   const domainOf = (line: HistoryGraphLine) => domains.get(line.unit ?? "") ?? ([0, 1] as const);
   const drawn = lines.filter((line) => line.values.length > 1);
@@ -90,45 +93,58 @@ export function HistoryGraph({
   const hoverTime = primary && primaryPoint !== null ? primary.times?.[primaryPoint] : undefined;
 
   let overlay: ReactNode = null;
-  if (scrub && hover !== null && primary) {
+  if (scrub && pointer && hover !== null && primary) {
+    // Above everything and outside the graph's container, so the values are never cut off at a card's edge.
     overlay = (
-      <>
-        <span className={classes.guide} style={{ left: `${hover * 100}%` }} aria-hidden />
-        {drawn.map((line) => {
-          const at = pointAt(line);
-          const value = at === null ? null : (line.values[at] ?? null);
-          if (at === null || !isNumber(value)) return null;
-          return (
-            <span
-              key={line.id}
-              className={classes.dot}
-              style={{
-                left: `${(at / (line.values.length - 1)) * 100}%`,
-                top: `${getSparklineY(value, domainOf(line)) * 100}%`,
-                background: line.color,
-              }}
-              aria-hidden
-            />
-          );
-        })}
-        <span
-          className={classes.readout}
-          style={hover > 0.5 ? { right: `calc(${(1 - hover) * 100}% + 8px)` } : { left: `calc(${hover * 100}% + 8px)` }}
+      <Portal>
+        <div
+          className={classes.overlay}
+          style={{
+            left: pointer.rect.left,
+            top: pointer.rect.top,
+            width: pointer.rect.width,
+            height: pointer.rect.height,
+          }}
         >
-          {hoverTime === undefined || !formatTime ? null : <span>{formatTime(hoverTime)}</span>}
+          <span className={classes.guide} style={{ left: `${hover * 100}%` }} aria-hidden />
           {drawn.map((line) => {
             const at = pointAt(line);
+            const value = at === null ? null : (line.values[at] ?? null);
+            if (at === null || !isNumber(value)) return null;
             return (
-              <span key={line.id} className={classes.readoutRow}>
-                {drawn.length > 1 ? (
-                  <span className={classes.swatch} style={{ background: line.color }} aria-hidden />
-                ) : null}
-                <strong>{formatValue(line, at === null ? null : (line.values[at] ?? null))}</strong>
-              </span>
+              <span
+                key={line.id}
+                className={classes.dot}
+                style={{
+                  left: `${(at / (line.values.length - 1)) * 100}%`,
+                  top: `${getSparklineY(value, domainOf(line)) * 100}%`,
+                  background: line.color,
+                }}
+                aria-hidden
+              />
             );
           })}
-        </span>
-      </>
+          <span
+            className={classes.readout}
+            style={
+              hover > 0.5 ? { right: `calc(${(1 - hover) * 100}% + 8px)` } : { left: `calc(${hover * 100}% + 8px)` }
+            }
+          >
+            {hoverTime === undefined || !formatTime ? null : <span>{formatTime(hoverTime)}</span>}
+            {drawn.map((line) => {
+              const at = pointAt(line);
+              return (
+                <span key={line.id} className={classes.readoutRow}>
+                  {drawn.length > 1 ? (
+                    <span className={classes.swatch} style={{ background: line.color }} aria-hidden />
+                  ) : null}
+                  <strong>{formatValue(line, at === null ? null : (line.values[at] ?? null))}</strong>
+                </span>
+              );
+            })}
+          </span>
+        </div>
+      </Portal>
     );
   }
 
@@ -139,11 +155,12 @@ export function HistoryGraph({
         scrub
           ? (event) => {
               const rect = event.currentTarget.getBoundingClientRect();
-              if (rect.width > 0) setHover(Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)));
+              if (rect.width > 0)
+                setPointer({ at: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)), rect });
             }
           : undefined
       }
-      onPointerLeave={scrub ? () => setHover(null) : undefined}
+      onPointerLeave={scrub ? () => setPointer(null) : undefined}
       data-scrub={scrub}
     >
       {drawn.map((line) => (
