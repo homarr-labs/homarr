@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Button, Group, Text } from "@mantine/core";
+import { useCallbackRef } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -21,6 +22,7 @@ import { getCrossTabMoveSnapshots } from "~/components/board/items/actions/move-
 import { commitSectionGridsCallback } from "~/components/board/sections/grid/use-grid-layout-actions";
 import { moveItemsToTabCallback } from "~/components/board/tabs/tab-actions";
 import { playPopSound, playTrashSound } from "../audio/board-sounds";
+import type { BoardItemClipboardPayload } from "./board-item-clipboard";
 import {
   isBoardItemClipboardText,
   parseBoardItemClipboard,
@@ -132,6 +134,38 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     }
   }, [board.items, currentLayoutId, selectedItemIds, tCommon, tSelection]);
 
+  const applyPastedItems = useCallbackRef((payload: BoardItemClipboardPayload) => {
+    const pastedIds = payload.items.map(() => createId());
+    let didPasteAll = false;
+    persistBoard((previous) => {
+      let next = previous;
+      try {
+        payload.items.forEach((item, index) => {
+          const id = pastedIds[index];
+          if (!id) throw new Error("Missing pasted item ID");
+          next = createItemCallback({ ...item, id, targetSectionId: activeTabId })(next);
+        });
+      } catch {
+        return previous;
+      }
+
+      didPasteAll = next.items.length === previous.items.length + payload.items.length;
+      return didPasteAll ? next : previous;
+    });
+
+    if (!didPasteAll) {
+      showErrorNotification({ title: tCommon("error"), message: tSelection("pasteUnavailable") });
+      return;
+    }
+
+    setSelectedItemIds(new Set(pastedIds));
+    playPopSound();
+    showSuccessNotification({
+      title: tCommon("success"),
+      message: tSelection("pasted", { count: pastedIds.length }),
+    });
+  });
+
   const pasteItemsFromText = useCallback(
     async (value: string) => {
       const payload = await parseBoardItemClipboard(value);
@@ -140,37 +174,9 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         return;
       }
 
-      const pastedIds = payload.items.map(() => createId());
-      let didPasteAll = false;
-      persistBoard((previous) => {
-        let next = previous;
-        try {
-          payload.items.forEach((item, index) => {
-            const id = pastedIds[index];
-            if (!id) throw new Error("Missing pasted item ID");
-            next = createItemCallback({ ...item, id, targetSectionId: activeTabId })(next);
-          });
-        } catch {
-          return previous;
-        }
-
-        didPasteAll = next.items.length === previous.items.length + payload.items.length;
-        return didPasteAll ? next : previous;
-      });
-
-      if (!didPasteAll) {
-        showErrorNotification({ title: tCommon("error"), message: tSelection("pasteUnavailable") });
-        return;
-      }
-
-      setSelectedItemIds(new Set(pastedIds));
-      playPopSound();
-      showSuccessNotification({
-        title: tCommon("success"),
-        message: tSelection("pasted", { count: pastedIds.length }),
-      });
+      applyPastedItems(payload);
     },
-    [activeTabId, persistBoard, tCommon, tSelection],
+    [applyPastedItems, tCommon, tSelection],
   );
 
   const pasteItems = useCallback(async () => {

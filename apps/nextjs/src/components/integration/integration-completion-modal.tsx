@@ -8,9 +8,10 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { getIntegrationName, getWidgetKindsForIntegration, getWidgetName } from "@homarr/definitions";
 import { createModal, modalSizeForm, useLazyModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CreatedIntegrationResult } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
@@ -63,20 +64,24 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
     : [];
   const showRecommendations = canModifyBoard && !recommendationsDismissed && recommendations.length > 0;
 
-  const addWidget = () => {
+  const openItemSelection = async (
+    selection: { initialIntegrationKind: IntegrationKind } | { initialWidgetKind: WidgetKind },
+  ) => {
     if (!innerProps.boardId) return;
+    try {
+      await loadItemSelectModal();
+    } catch {
+      showErrorNotification({ title: tCommon("error"), message: tCommon("action.tryAgain") });
+      return;
+    }
     actions.closeModal();
-    void openItemSelectModal({
-      boardId: innerProps.boardId,
-      initialIntegrationKind: innerProps.result.integration.kind,
-    });
+    await openItemSelectModal({ boardId: innerProps.boardId, ...selection });
   };
 
-  const addRecommendedWidget = (widgetKind: (typeof recommendations)[number]["widgetKind"]) => {
-    if (!innerProps.boardId) return;
-    actions.closeModal();
-    void openItemSelectModal({ boardId: innerProps.boardId, initialWidgetKind: widgetKind });
-  };
+  const addWidget = () => void openItemSelection({ initialIntegrationKind: innerProps.result.integration.kind });
+
+  const addRecommendedWidget = (widgetKind: (typeof recommendations)[number]["widgetKind"]) =>
+    void openItemSelection({ initialWidgetKind: widgetKind });
 
   return (
     <Stack gap="lg">

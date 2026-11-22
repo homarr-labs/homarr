@@ -69,8 +69,8 @@ export const RequestMediaSeasonsTable = ({ seasons, requestedSeasons, onSelectio
   });
   const rowSelection = table.getState().rowSelection;
   const selectedSeasonNumbers = useMemo(
-    () => table.getSelectedRowModel().rows.map(({ original }) => original.seasonNumber),
-    [rowSelection, table],
+    () => seasons.filter((_, index) => rowSelection[index]).map(({ seasonNumber }) => seasonNumber),
+    [rowSelection, seasons],
   );
 
   useEffect(() => {
