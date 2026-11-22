@@ -17,6 +17,7 @@ export {
   prepareIntegrationResponseCacheAsync,
   createSubPubChannel,
   createChannelEventHistoryOld,
+  createBoundedListChannel,
   createGetSetChannel,
   getIntegrationSessionStoreKey,
   createLockChannel,

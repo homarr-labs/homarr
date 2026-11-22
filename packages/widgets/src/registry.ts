@@ -1,4 +1,5 @@
 import type * as stats from "./stats";
+import type * as metricGraph from "./metric-graph";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 
 import type * as airQuality from "./air-quality";
@@ -115,6 +116,7 @@ export const widgetModuleLoaders = {
   "immich-serverStats": () => import("./immich/server-stats"),
   "immich-albumCarousel": () => import("./immich/album-carousel"),
   stats: () => import("./stats"),
+  metricGraph: () => import("./metric-graph"),
   paperlessNgx: () => import("./paperless-ngx"),
   "thingport-libraryStats": () => import("./thingport/library-stats"),
   "thingport-models": () => import("./thingport/models"),
@@ -185,6 +187,7 @@ export type WidgetImports = {
   "immich-serverStats": typeof immichServerStats;
   "immich-albumCarousel": typeof immichAlbumCarousel;
   stats: typeof stats;
+  metricGraph: typeof metricGraph;
   paperlessNgx: typeof paperlessNgx;
   "thingport-libraryStats": typeof thingportLibraryStats;
   "thingport-models": typeof thingportModels;
@@ -262,6 +265,7 @@ export const widgetComponentLoaders = {
   "immich-serverStats": () => import("./immich/server-stats/component"),
   "immich-albumCarousel": () => import("./immich/album-carousel/component"),
   stats: () => import("./stats/component"),
+  metricGraph: () => import("./metric-graph/component"),
   paperlessNgx: () => import("./paperless-ngx/component"),
   "thingport-libraryStats": () => import("./thingport/library-stats/component"),
   "thingport-models": () => import("./thingport/models/component"),

@@ -14,6 +14,10 @@ export interface ExistingStatsProvider {
 }
 
 const metric = (key: string, label: string, unit: StatsUnit = "count"): StatsMetric => ({ key, label, unit });
+const average = (values: (number | null)[]) => {
+  const known = values.filter((value): value is number => value !== null);
+  return known.length > 0 ? known.reduce((sum, value) => sum + value, 0) / known.length : null;
+};
 
 const adapter = <TKind extends IntegrationKind, TData>(
   kind: TKind,
@@ -178,15 +182,26 @@ for (const kind of ["dashDot", "glances", "openmediavault", "synology", "truenas
       metric("cpu", "CPU", "percent"),
       metric("memoryUsed", "Memory used", "bytes"),
       metric("memoryAvailable", "Memory available", "bytes"),
+      metric("memoryPercent", "Memory", "percent"),
+      metric("networkDown", "Network download", "bytesPerSecond"),
+      metric("networkUp", "Network upload", "bytesPerSecond"),
+      metric("cpuTemp", "CPU temperature", "celsius"),
       metric("uptime", "Uptime", "seconds"),
     ],
     (client) => client.getSystemInfoAsync(),
-    (data) => ({
-      cpu: data.cpuUtilization,
-      memoryUsed: data.memUsedInBytes,
-      memoryAvailable: data.memAvailableInBytes,
-      uptime: data.uptime,
-    }),
+    (data) => {
+      const memoryTotal = data.memUsedInBytes + data.memAvailableInBytes;
+      return {
+        cpu: data.cpuUtilization,
+        memoryUsed: data.memUsedInBytes,
+        memoryAvailable: data.memAvailableInBytes,
+        memoryPercent: memoryTotal > 0 ? (data.memUsedInBytes / memoryTotal) * 100 : null,
+        networkDown: data.network?.down ?? null,
+        networkUp: data.network?.up ?? null,
+        cpuTemp: data.cpuTemp ?? null,
+        uptime: data.uptime,
+      };
+    },
   );
 }
 for (const kind of ["jellyseerr", "seerr", "overseerr"] as const) {
@@ -245,9 +260,12 @@ for (const kind of ["sonarr", "sportarr", "radarr"] as const) {
 for (const kind of ["plex", "jellyfin", "emby"] as const) {
   existingStatsProviders[kind] = adapter(
     kind,
-    [metric("sessions", "Playback sessions")],
+    [metric("sessions", "Playback sessions"), metric("bitrate", "Total bitrate (kbit/s)")],
     (client) => client.getCurrentSessionsAsync({ showOnlyPlaying: false }),
-    (data) => ({ sessions: data.length }),
+    (data) => ({
+      sessions: data.length,
+      bitrate: data.reduce((sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0), 0),
+    }),
   );
 }
 for (const kind of ["ntfy", "gotify"] as const) {
@@ -304,13 +322,26 @@ existingStatsProviders.unifiController = adapter(
 );
 existingStatsProviders.peaNut = adapter(
   "peaNut",
-  [metric("devices", "UPS devices"), metric("onBattery", "On battery"), metric("lowBattery", "Low battery")],
+  [
+    metric("devices", "UPS devices"),
+    metric("onBattery", "On battery"),
+    metric("lowBattery", "Low battery"),
+    metric("batteryCharge", "Battery charge", "percent"),
+    metric("load", "Load", "percent"),
+    metric("power", "Power", "watts"),
+  ],
   (client) => client.getUpsSummariesAsync(),
-  (data) => ({
-    devices: data.length,
-    onBattery: data.filter((item) => item.status === "onBattery").length,
-    lowBattery: data.filter((item) => item.status === "lowBattery").length,
-  }),
+  (data) => {
+    const powers = data.map((item) => item.power).filter((value): value is number => value !== null);
+    return {
+      devices: data.length,
+      onBattery: data.filter((item) => item.status === "onBattery").length,
+      lowBattery: data.filter((item) => item.status === "lowBattery").length,
+      batteryCharge: average(data.map((item) => item.batteryCharge)),
+      load: average(data.map((item) => item.load)),
+      power: powers.length > 0 ? powers.reduce((sum, value) => sum + value, 0) : null,
+    };
+  },
 );
 existingStatsProviders.uptimeKuma = adapter(
   "uptimeKuma",
@@ -377,9 +408,12 @@ existingStatsProviders.umami = adapter(
 );
 existingStatsProviders.opnsense = adapter(
   "opnsense",
-  [metric("cpu", "CPU", "percent")],
-  (client) => client.getFirewallCpuAsync(),
-  (data) => ({ cpu: data.total }),
+  [metric("cpu", "CPU", "percent"), metric("memoryPercent", "Memory", "percent")],
+  async (client) => {
+    const [cpu, memory] = await Promise.all([client.getFirewallCpuAsync(), client.getFirewallMemoryAsync()]);
+    return { cpu: cpu.total, memoryPercent: memory.percent };
+  },
+  (data) => data,
 );
 existingStatsProviders.archiveTeamWarrior = adapter(
   "archiveTeamWarrior",

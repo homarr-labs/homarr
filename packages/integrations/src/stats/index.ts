@@ -33,3 +33,5 @@ export const fetchStatsAsync = async (input: IntegrationInput & { kind: Integrat
     legacyPending.delete(input.id);
   }
 };
+
+export { bucketHistory } from "../interfaces/smart-home/smart-home-history";

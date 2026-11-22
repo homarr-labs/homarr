@@ -2,11 +2,12 @@ import { z } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { fetchStatsAsync, getStatsMetrics } from "@homarr/integrations/stats";
+import { bucketHistory, fetchStatsAsync, getStatsMetrics } from "@homarr/integrations/stats";
 import type { StatsValue } from "@homarr/integrations/stats";
 import { createGetSetChannel, createLockChannel, getIntegrationCacheGenerationAsync } from "@homarr/redis";
 
 import { getIntegrationCacheIdentity } from "./lib/integration-request-handler";
+import { appendStatsHistoryAsync, readStatsHistoryAsync } from "./stats-history";
 
 const logger = createLogger({ module: "integrationStats" });
 
@@ -109,20 +110,26 @@ export const getStatsSnapshotAsync = async (integration: Input) => {
 
 const pauseAsync = () => new Promise<void>((resolve) => setTimeout(resolve, 250));
 
-export const refreshStatsAsync = async (integration: Input, force: boolean) => {
+/**
+ * @param mode `true` refreshes now, `false` keeps snapshots for one hour and
+ * `{ maxAgeMs }` refreshes snapshots older than the given age.
+ */
+export const refreshStatsAsync = async (integration: Input, mode: boolean | { maxAgeMs: number }) => {
   const key = integration.id;
   const pending = running.get(key);
   if (pending) return await pending;
   if (running.size >= MAX_PENDING) throw new Error("Statistics refresh queue is full");
-  const work = runRefreshAsync(integration, force).finally(() => running.delete(key));
+  const force = mode === true;
+  const freshMs = typeof mode === "object" ? Math.min(mode.maxAgeMs, FRESH_MS) : FRESH_MS;
+  const work = runRefreshAsync(integration, force, freshMs).finally(() => running.delete(key));
   running.set(key, work);
   return await work;
 };
 
-const runRefreshAsync = async (integration: Input, force: boolean) => {
+const runRefreshAsync = async (integration: Input, force: boolean, freshMs: number) => {
   const initial = await resolveAsync(integration);
   if (!force && initial.snapshot.retryAt > Date.now()) return;
-  if (!force && initial.snapshot.updatedAt !== null && Date.now() - initial.snapshot.updatedAt < FRESH_MS) return;
+  if (!force && initial.snapshot.updatedAt !== null && Date.now() - initial.snapshot.updatedAt < freshMs) return;
   const lock = createLockChannel(`integration-stats:lock:${integration.id}`, cacheOptions);
   const token = await lock.acquireAsync(120);
   // Another process owns this source. The caller keeps its snapshot and checks again later.
@@ -161,7 +168,7 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
     // Recheck after queuing: credentials or another refresh may have changed the snapshot.
     const current = await resolveAsync(integration);
     if (current.identity !== initial.identity || current.generation !== initial.generation) return;
-    if (!force && current.snapshot.updatedAt !== null && Date.now() - current.snapshot.updatedAt < FRESH_MS) return;
+    if (!force && current.snapshot.updatedAt !== null && Date.now() - current.snapshot.updatedAt < freshMs) return;
     deadline = setTimeout(() => controller.abort(), 60_000);
     deadline.unref?.();
     try {
@@ -177,8 +184,11 @@ const runRefreshAsync = async (integration: Input, force: boolean) => {
         error: false,
       });
       const latest = await resolveAsync(integration);
-      if (owned && latest.identity === initial.identity && latest.generation === initial.generation)
-        await lock.setPersistentIfOwnedAsync(token, initial.name, snapshot);
+      if (owned && latest.identity === initial.identity && latest.generation === initial.generation) {
+        const written = await lock.setPersistentIfOwnedAsync(token, initial.name, snapshot);
+        if (written && snapshot.updatedAt !== null)
+          await appendStatsHistoryAsync(integration.id, initial.identity, values, snapshot.updatedAt);
+      }
     } catch {
       // Promise.all can reject before sibling provider requests finish.
       controller.abort();
@@ -216,4 +226,59 @@ const fetchBeforeAbortAsync = async (integration: Input, signal: AbortSignal) =>
   } finally {
     if (onAbort) signal.removeEventListener("abort", onAbort);
   }
+};
+
+interface SeriesOptions {
+  metrics: string[];
+  start: number;
+  end: number;
+  samples: number;
+}
+
+// Deterministic wave around the seeded value so demo graphs move without a live source.
+const createDemoPoints = (value: number, metric: string, { start, end, samples }: Omit<SeriesOptions, "metrics">) => {
+  const seed = [...metric].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const step = (end - start) / (samples - 1);
+  return Array.from({ length: samples }, (_, index) => {
+    const time = Math.round(start + step * index);
+    const wave = Math.sin(time / 600_000 + seed) * 0.06 + Math.sin(time / 170_000 + seed * 3) * 0.03;
+    return { time, value: Math.round(value * (1 + wave) * 100) / 100 };
+  });
+};
+
+/**
+ * Sampled history of numeric statistics recorded by earlier refreshes.
+ */
+export const getStatsSeriesAsync = async (integration: Input, { metrics, start, end, samples }: SeriesOptions) => {
+  const demo = getDemoStatsValues(integration);
+  if (demo) {
+    return metrics.map((metric) => {
+      const value = demo[metric];
+      return {
+        metric,
+        points: typeof value === "number" ? createDemoPoints(value, metric, { start, end, samples }) : [],
+      };
+    });
+  }
+
+  const { identity } = await resolveAsync(integration);
+  const items = await readStatsHistoryAsync(integration.id, identity, start);
+  // History is only recorded while a board polls it. Leave those periods empty instead of
+  // repeating the last value across them.
+  const maxGapMs = Math.max(((end - start) / (samples - 1)) * 2, 5 * 60_000);
+  return metrics.map((metric) => {
+    const states = items.flatMap((item) => {
+      const value = item.values[metric];
+      return value === undefined ? [] : [{ state: String(value), time: item.time }];
+    });
+    let cursor = -1;
+    const points = bucketHistory(states, { start, end, samples }).map((point) => {
+      while (cursor + 1 < states.length && (states[cursor + 1]?.time ?? Number.POSITIVE_INFINITY) <= point.time)
+        cursor++;
+      const lastTime = states[cursor]?.time;
+      if (lastTime === undefined || point.time - lastTime > maxGapMs) return { time: point.time, value: null };
+      return point;
+    });
+    return { metric, points };
+  });
 };
