@@ -202,6 +202,28 @@ export interface SmartHomeHistorySeries {
   points: SmartHomeHistoryPoint[];
 }
 
+/**
+ * A live camera stream the browser can play. HLS URLs from Home Assistant carry their own short-lived access token;
+ * WebRTC (Homey) is negotiated through Homarr, which passes the browser's offer on and returns the answer. No other
+ * credential reaches the browser either way.
+ */
+export interface SmartHomeIceServer {
+  urls: string | string[];
+  username?: string;
+  credential?: string;
+}
+
+export type SmartHomeCameraStream =
+  | { kind: "hls"; url: string }
+  /** The browser negotiates a WebRTC session through Homarr; ICE servers the integration recommends, if any. */
+  | { kind: "webrtc"; iceServers?: SmartHomeIceServer[] };
+
+/** What a camera's WebRTC session reports back while it is set up: the answer, extra candidates, or why it failed. */
+export type SmartHomeWebRtcMessage =
+  | { type: "answer"; sdp: string }
+  | { type: "candidate"; candidate: string; sdpMid?: string | null; sdpMLineIndex?: number | null }
+  | { type: "error"; message: string };
+
 export interface SmartHomeEntityPatch {
   changed: SmartHomeEntity[];
   removed: string[];

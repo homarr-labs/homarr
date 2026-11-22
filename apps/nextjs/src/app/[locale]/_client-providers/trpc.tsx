@@ -198,7 +198,9 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
         splitLink({
           condition: ({ type }) => type === "subscription",
           true: splitLink({
-            condition: ({ path }) => path === "widget.beszel.subscribeSystemStats",
+            // Served by the Next.js server itself: camera sessions run where the integrations' connections live.
+            condition: ({ path }) =>
+              path === "widget.beszel.subscribeSystemStats" || path === "widget.smartHome.cameraWebRtc",
             true: httpSubscriptionLink({
               url: getTrpcUrl(),
               transformer: superjson,
