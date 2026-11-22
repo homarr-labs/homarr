@@ -7,6 +7,8 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { statsEntriesSchema } from "./stats/config";
 import type { StatsEntry } from "./stats/config";
+import { emptySmartHomeLayout, smartHomeLayoutSchema } from "./smart-home/controls/custom-layout/schema";
+import type { SmartHomeLayout } from "./smart-home/controls/custom-layout/schema";
 import { metricGraphEntriesSchema } from "./metric-graph/config";
 import type { MetricGraphEntry } from "./metric-graph/config";
 
@@ -354,6 +356,13 @@ const optionsFactory = {
     type: "statsEntries" as const,
     validate: statsEntriesSchema,
     defaultValue: [] as StatsEntry[],
+    withDescription: false,
+    skipContextMenu: true,
+  }),
+  smartHomeLayout: () => ({
+    type: "smartHomeLayout" as const,
+    validate: smartHomeLayoutSchema,
+    defaultValue: emptySmartHomeLayout as SmartHomeLayout,
     withDescription: false,
     skipContextMenu: true,
   }),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Box, Button, Group, Loader, Pagination } from "@mantine/core";
 import { IconAlertTriangle, IconBulb, IconGauge, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
@@ -11,7 +11,9 @@ import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../../definition";
-import { parseBlockId, parseSourceBlocks } from "./configuration";
+import { createEntityBlockId, parseBlockId, parseSourceBlocks } from "./configuration";
+import { CustomLayoutEditButton } from "./custom-layout/inline-button";
+import { getLayoutEntityIds, getLayoutGraphEntityIds, parseSmartHomeLayout } from "./custom-layout/schema";
 import classes from "./configuration.module.css";
 import { getDeviceEntityLabel, getReadingRank, toPanelItems } from "./device-groups";
 import type { DevicePanelItem, PanelItem } from "./device-groups";
@@ -512,12 +514,14 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
     return <EntitiesPresentation entities={entities} configuration={configuration} width={width} height={height} />;
   }
 
+  // Cards always fill the panel, so the space they leave never ends up as a wider margin than a single card has.
+  // Compact cards stay compact through their density and because more of them fit side by side.
   return (
     <Box
       className={classes.grid}
       style={{
-        gridTemplateColumns: `repeat(${layout.columns}, ${layout.width}px)`,
-        gridTemplateRows: `repeat(${layout.rows}, ${layout.height}px)`,
+        gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
       }}
     >
       {shown.map((item) => (
@@ -611,9 +615,9 @@ function ConfiguredPreview({ configuration, width, height, isEditMode }: Preview
   const title = configuration.title.trim();
   const single = entities.length === 1;
   const panel = configuration.presentation === "controlPanel";
-  const inset = panel && !single ? 8 : 0;
-  const bodyHeight = height - inset - Number(Boolean(title)) * TITLE_HEIGHT;
-  const props = { entities, configuration, width: width - inset, height: Math.max(0, bodyHeight) };
+  // One card or several, the panel keeps the same inset to the widget's edge: the root's padding, nothing more.
+  const bodyHeight = height - Number(Boolean(title)) * TITLE_HEIGHT;
+  const props = { entities, configuration, width, height: Math.max(0, bodyHeight) };
   const content = (
     <div className={classes.stack}>
       {title && (
@@ -650,14 +654,65 @@ const useInteractionBlock = (configuration: SmartHomeConfiguration, isEditMode: 
   return null;
 };
 
+// Only widgets in custom mode load the layout renderer.
+const CustomLayoutView = lazy(() => import("./custom-layout/view"));
+const noValues: string[] = [];
+// The control center root insets its content (both sides together), and the widget title takes a fixed row
+// (`.title` in configuration.module.css).
+const CUSTOM_LAYOUT_INSET = 8;
+const CUSTOM_LAYOUT_TITLE_HEIGHT = 28;
+
+function CustomPreview({ configuration, width, height, isEditMode }: PreviewProps) {
+  const title = configuration.title.trim();
+  return (
+    <ControlPanelRoot isEditMode={isEditMode} single={false} palette={configuration.palette}>
+      <div className={classes.stack} style={{ height: Math.max(0, height - CUSTOM_LAYOUT_INSET) }}>
+        {title && (
+          <h3 className={classes.title} title={title}>
+            {title}
+          </h3>
+        )}
+        <div className={classes.content}>
+          <Suspense fallback={null}>
+            <CustomLayoutView
+              layout={configuration.customLayout}
+              source={configuration.integrationId}
+              width={width - CUSTOM_LAYOUT_INSET}
+            />
+          </Suspense>
+        </div>
+      </div>
+    </ControlPanelRoot>
+  );
+}
+
 function ConfigurableContent({
   configuration,
   onChange,
   ...props
 }: PreviewProps & { onChange: (patch: SmartHomeOptionsPatch) => void }) {
   const blocked = useInteractionBlock(configuration, props.isEditMode);
-  const { integrationId } = configuration;
-  const preview = <ConfiguredPreview {...props} configuration={configuration} />;
+  const { integrationId, customLayout } = configuration;
+  const custom = configuration.layoutMode === "custom";
+  // A custom layout subscribes to exactly the entities it shows, each once, and to history only for its graphs.
+  const layoutBlockIds = useMemo(
+    () =>
+      custom
+        ? getLayoutEntityIds(customLayout, integrationId).map((entityId) =>
+            createEntityBlockId(entityId, integrationId),
+          )
+        : null,
+    [custom, customLayout, integrationId],
+  );
+  const graphEntityIds = useMemo(
+    () => (custom ? getLayoutGraphEntityIds(customLayout, integrationId) : undefined),
+    [custom, customLayout, integrationId],
+  );
+  const preview = custom ? (
+    <CustomPreview {...props} configuration={configuration} />
+  ) : (
+    <ConfiguredPreview {...props} configuration={configuration} />
+  );
 
   return (
     <SmartHomeInteractionProvider blocked={blocked}>
@@ -666,14 +721,29 @@ function ConfigurableContent({
           <SmartHomeLiveProvider
             key={integrationId}
             integrationId={integrationId}
-            blockIds={configuration.blockIds}
-            roomDomains={configuration.roomDomains}
-            excludedEntityIds={configuration.excludedEntityIds}
+            blockIds={layoutBlockIds ?? configuration.blockIds}
+            roomDomains={custom ? noValues : configuration.roomDomains}
+            excludedEntityIds={custom ? noValues : configuration.excludedEntityIds}
+            historyEntityIds={graphEntityIds}
           >
             <LiveState>{preview}</LiveState>
           </SmartHomeLiveProvider>
         )}
-        {props.isEditMode && (
+        {props.isEditMode && custom && (
+          <CustomLayoutEditButton
+            integrationId={integrationId}
+            // Same size the custom view gets: inside the control center root, below the optional title.
+            previewSize={{
+              width: props.width - CUSTOM_LAYOUT_INSET,
+              height:
+                props.height - CUSTOM_LAYOUT_INSET - (configuration.title.trim() ? CUSTOM_LAYOUT_TITLE_HEIGHT : 0),
+            }}
+            palette={configuration.palette}
+            layout={customLayout}
+            onChange={(next) => onChange({ customLayout: next })}
+          />
+        )}
+        {props.isEditMode && !custom && (
           <SmartHomeInlineEditor
             integrationId={integrationId}
             blocks={configuration.blockIds}
@@ -700,6 +770,8 @@ export default function SmartHomeControlsWidget({
   const advanced = displayMode === "advanced";
   const uiScale = advanced ? 1 : calculateBoardUiScale(displayScale);
   const integrationId = integrationIds[0] ?? null;
+  // Parsed once per stored value, so live updates never re-validate the layout.
+  const customLayout = useMemo(() => parseSmartHomeLayout(options.customLayout), [options.customLayout]);
   const configuration = useMemo<SmartHomeConfiguration>(
     () => ({
       advanced,
@@ -716,6 +788,8 @@ export default function SmartHomeControlsWidget({
       readingOrder: options.readingOrder,
       showDeviceGraph: options.showDeviceGraph,
       showDeviceKeyValue: options.showDeviceKeyValue,
+      layoutMode: options.layoutMode,
+      customLayout,
       readOnly: options.readOnly,
     }),
     [
@@ -733,6 +807,8 @@ export default function SmartHomeControlsWidget({
       options.readingOrder,
       options.showDeviceGraph,
       options.showDeviceKeyValue,
+      options.layoutMode,
+      customLayout,
       options.readOnly,
     ],
   );
