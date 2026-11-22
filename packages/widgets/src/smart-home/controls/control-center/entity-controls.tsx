@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
-import { Box, Group, Modal } from "@mantine/core";
+import type { ReactNode, SyntheticEvent } from "react";
+import { ActionIcon, Box, Group, Modal, Popover, Slider, Text } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
 import {
   IconAirConditioning,
@@ -91,7 +91,9 @@ import {
   TileEntityContext,
   useCodeGate,
   useDeviceControlDisabled,
+  useLoadableImage,
   useRunner,
+  useShowsPart,
 } from "./hooks";
 import classes from "./styles.module.css";
 import { Head, Tile, useEntityTheme } from "./theme";
@@ -153,11 +155,33 @@ interface SliderControlProps extends ControlProps {
 }
 
 const TILE_PADDING = 12;
+// Round button sizes (styles.module.css) and the gap of the big media transport row.
+const transportButtons = {
+  roomy: { side: 44, main: 72 },
+  compact: { side: 40, main: 52 },
+  tight: { side: 32, main: 52 },
+} as const;
+const TRANSPORT_GAP = 16;
+const TRANSPORT_GAP_MIN = 6;
+// Heights of the media tile's rows, to decide which optional rows fit.
+const MEDIA_HEAD_HEIGHT = 58;
+const MEDIA_ROW_GAP = 8;
+const PROGRESS_ROW_HEIGHT = 22;
+const MINI_TITLE_HEIGHT = 20;
+const MINI_GAP = 6;
+const MINI_ART_MIN = 36;
+const MINI_ART_MAX = 64;
+const MINI_ART_MIN_WIDTH = 110;
+const MINI_PROGRESS_MIN_WIDTH = 120;
+const VOLUME_BESIDE_TITLE_MIN_WIDTH = 300;
+// The cover-first layout: title and artist below the cover take this height.
+const HERO_TITLE_HEIGHT = 40;
+const HERO_ART_MIN = 120;
+const HERO_ART_MAX = 300;
 const PILL_GAP = 14;
 const ROW_GAP = 12;
 const HIT = 44;
 const SLIDER_TRACK = 36;
-const VOLUME_TRACK = 30;
 const ROUND_SM = 40;
 const BUTTON_GAP = 8;
 const HEAD_HEIGHT = 48;
@@ -675,6 +699,10 @@ function ClimateControl({ entity, width, height }: ControlProps) {
     set(clamp(Math.round((target + direction * step) * 100) / 100, min, max));
   };
   const actionLabel = attributes.hvacAction ? attributes.hvacAction.replace(/^\w/, (c) => c.toUpperCase()) : "";
+  const showsPower = useShowsPart("power");
+  const showsCurrent = useShowsPart("currentTemperature");
+  const showsStepper = useShowsPart("stepper");
+  const showsModes = useShowsPart("modes");
   const primary = getPrimaryAction(entity);
   const power = primary ? () => void run(primary) : undefined;
   const center = (size: number, shown: string) => (
@@ -683,7 +711,7 @@ function ClimateControl({ entity, width, height }: ControlProps) {
       <span className={classes.dialTemp} style={{ fontSize: Math.max(13, size * Math.min(0.25, 1.15 / shown.length)) }}>
         {shown}
       </span>
-      {size >= 104 && attributes.currentTemperature !== undefined ? (
+      {showsCurrent && size >= 104 && attributes.currentTemperature !== undefined ? (
         <span className={classes.dialLabel}>Now {formatNumber(attributes.currentTemperature)}°</span>
       ) : null}
     </>
@@ -738,7 +766,7 @@ function ClimateControl({ entity, width, height }: ControlProps) {
         {dial(size)}
         <div className={classes.climateInfo}>
           <Head name={entity.name} state={state} />
-          {!range && target !== undefined && height >= WIDE_STEPPER_MIN_HEIGHT ? (
+          {showsStepper && !range && target !== undefined && height >= WIDE_STEPPER_MIN_HEIGHT ? (
             <div className={classes.stepper}>
               <RoundButton size="sm" label="Decrease temperature" disabled={fixed} onClick={() => bump(-1)}>
                 <IconMinus size={16} />
@@ -754,12 +782,13 @@ function ClimateControl({ entity, width, height }: ControlProps) {
   }
 
   const showModes =
+    showsModes &&
     modes.length > 1 &&
     height >= CLIMATE_MODES_MIN_HEIGHT &&
     width - TILE_PADDING * 2 >= rowWidth(modes.length, ROUND_SM, BUTTON_GAP);
   const chipsHeight = showModes ? ROUND_SM + BUTTON_GAP : 0;
   const available = height - TILE_PADDING * 2 - HEAD_HEIGHT - chipsHeight - BUTTON_GAP - 2;
-  const flank = target !== undefined && width >= 184;
+  const flank = showsStepper && target !== undefined && width >= 184;
   const size = Math.max(40, Math.min(available, width - TILE_PADDING * 2 - 2 - Number(flank) * 80, 250));
 
   return (
@@ -768,16 +797,18 @@ function ClimateControl({ entity, width, height }: ControlProps) {
         name={entity.name}
         state={state}
         trailing={
-          <RoundButton
-            size="sm"
-            label={`Toggle ${entity.name}`}
-            active={!off}
-            pending={pending}
-            onClick={power}
-            disabled={theme.unavailable || !primary || pending}
-          >
-            <IconPower size={17} stroke={2} />
-          </RoundButton>
+          showsPower ? (
+            <RoundButton
+              size="sm"
+              label={`Toggle ${entity.name}`}
+              active={!off}
+              pending={pending}
+              onClick={power}
+              disabled={theme.unavailable || !primary || pending}
+            >
+              <IconPower size={17} stroke={2} />
+            </RoundButton>
+          ) : undefined
         }
       />
       <div className={classes.dialStage}>
@@ -850,16 +881,27 @@ function MediaControl({ entity, width, height }: ControlProps) {
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);
   const attributes = entity.attributes;
+  const artwork = useLoadableImage(attributes.artworkUrl);
   const playing = entity.state === "playing";
   const idle = !(playing || entity.state === "paused");
   const volume = Math.round((attributes.volume ?? 0) * 100);
   const duration = attributes.mediaDuration ?? 0;
   const canPlayPause = supportsSmartHomeAction(entity, { type: "mediaPlayPause" });
-  const canPrevious = supportsSmartHomeAction(entity, { type: "mediaPrevious" });
-  const canNext = supportsSmartHomeAction(entity, { type: "mediaNext" });
-  const canSetVolume = supportsSmartHomeAction(entity, { type: "setVolume", value: 0 });
+  // Parts the layout element switched off are treated like ones the player does not have.
+  const showsCover = useShowsPart("cover");
+  const showsArtist = useShowsPart("artist");
+  const showsProgress = useShowsPart("progress");
+  const showsSkip = useShowsPart("skip");
+  const showsVolume = useShowsPart("volume");
+  const canPrevious = showsSkip && supportsSmartHomeAction(entity, { type: "mediaPrevious" });
+  const canNext = showsSkip && supportsSmartHomeAction(entity, { type: "mediaNext" });
+  const canSetVolume = showsVolume && supportsSmartHomeAction(entity, { type: "setVolume", value: 0 });
   const title = idle ? entity.name : (attributes.mediaTitle ?? entity.name);
-  const subtitle = idle ? formatEntityState(entity) : (attributes.mediaArtist ?? attributes.mediaSource ?? "");
+  const subtitle = idle
+    ? formatEntityState(entity)
+    : showsArtist
+      ? (attributes.mediaArtist ?? attributes.mediaSource ?? "")
+      : "";
   const Icon = theme.Icon;
   const toggle = () => void run({ type: "mediaPlayPause" });
   const playGlyph = playing ? (
@@ -868,42 +910,119 @@ function MediaControl({ entity, width, height }: ControlProps) {
     <IconPlayerPlay size={26} fill="currentColor" />
   );
 
-  const art = (size: number) => (
-    <div className={classes.art} style={{ width: size, height: size }} data-playing={playing}>
-      {attributes.artworkUrl ? (
-        <img src={attributes.artworkUrl} alt="" className={classes.artImage} draggable={false} />
+  // A control laid over the cover (the volume, where the title needs the row's width) appears on hover.
+  const art = (size: number, overlay?: ReactNode, hero = false) => (
+    <div className={classes.art} style={{ width: size, height: size }} data-playing={playing} data-hero={hero}>
+      {artwork.src ? (
+        <img src={artwork.src} alt="" className={classes.artImage} draggable={false} onError={artwork.onError} />
       ) : (
         <Icon size={size * 0.45} stroke={1.5} />
       )}
+      {overlay ? <div className={classes.artOverlay}>{overlay}</div> : null}
     </div>
   );
 
   const background = (
     <>
-      {attributes.artworkUrl ? (
-        <img src={attributes.artworkUrl} alt="" className={classes.mediaBg} draggable={false} data-idle={idle} />
+      {artwork.src ? (
+        <img
+          src={artwork.src}
+          alt=""
+          className={classes.mediaBg}
+          draggable={false}
+          data-idle={idle}
+          onError={artwork.onError}
+        />
       ) : null}
       <div className={classes.mediaShade} />
     </>
   );
 
+  const volumeButton = (onCover: boolean) =>
+    canSetVolume && attributes.volume !== undefined ? (
+      <VolumeButton
+        entity={entity}
+        volume={volume}
+        onCover={onCover}
+        disabled={theme.unavailable}
+        onCommit={(value) => void run({ type: "setVolume", value: value / 100 })}
+      />
+    ) : null;
+
   if (tier === "mini") {
+    // A narrow tile stacks what fits: cover beside title and artist (a now-playing row that costs no extra height),
+    // with volume behind an icon there, and previous/next beside play when there is room.
+    const miniWidth = width - TILE_PADDING * 2;
+    const miniHeight = height - TILE_PADDING * 2;
+    const miniMain = transportButtons.compact.main;
+    const miniSide =
+      miniWidth >= miniMain + 2 * (transportButtons.compact.side + TRANSPORT_GAP_MIN)
+        ? "sm"
+        : miniWidth >= miniMain + 2 * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
+          ? "xs"
+          : null;
+    const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH;
+    const miniSubtitle = !idle && subtitle !== "";
+    const headHeight = miniArt || miniSubtitle ? MINI_ART_MIN : MINI_TITLE_HEIGHT;
+    // The time bar takes a row when the player reports where it is and the tile has the height.
+    const miniProgress =
+      showsProgress &&
+      duration > 0 &&
+      attributes.mediaPosition !== undefined &&
+      !idle &&
+      // Elapsed and total time need room side by side; narrower, they would run into each other.
+      miniWidth >= MINI_PROGRESS_MIN_WIDTH &&
+      miniHeight >= headHeight + MINI_GAP + PROGRESS_ROW_HEIGHT + MINI_GAP + miniMain;
+    // Spare height grows the cover, up to a size that still leaves room for the title beside it.
+    const spare = miniHeight - (miniMain + MINI_GAP + (miniProgress ? PROGRESS_ROW_HEIGHT + MINI_GAP : 0));
+    const miniArtSize = Math.max(MINI_ART_MIN, Math.min(spare, MINI_ART_MAX, Math.floor(miniWidth * 0.4)));
+    const skipIcon = miniSide === "xs" ? 15 : 17;
     return (
       <Tile theme={theme} media className={classes.mediaTile}>
         {background}
         <div className={classes.mediaMini}>
-          <RoundButton
-            size="lg"
-            label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
-            pending={pending}
-            disabled={theme.unavailable || !canPlayPause}
-            onClick={toggle}
-          >
-            {playGlyph}
-          </RoundButton>
-          <span className={classes.name} title={title} data-entity-name={title === entity.name}>
-            {title}
-          </span>
+          <div className={classes.mediaMiniHead} data-art={miniArt}>
+            {miniArt ? art(miniArtSize, volumeButton(true)) : null}
+            <div className={classes.mediaMiniText}>
+              <span className={classes.name} title={title} data-entity-name={title === entity.name}>
+                {title}
+              </span>
+              {miniSubtitle ? <span className={classes.state}>{subtitle}</span> : null}
+            </div>
+            {miniArt ? null : volumeButton(false)}
+          </div>
+          {miniProgress && <MediaProgress entity={entity} />}
+          <div className={classes.transport}>
+            {canPrevious && miniSide ? (
+              <RoundButton
+                size={miniSide}
+                label={`Previous track on ${entity.name}`}
+                disabled={theme.unavailable}
+                onClick={() => void run({ type: "mediaPrevious" })}
+              >
+                <IconPlayerSkipBack size={skipIcon} fill="currentColor" />
+              </RoundButton>
+            ) : null}
+            <RoundButton
+              size="lg"
+              label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
+              pending={pending}
+              disabled={theme.unavailable || !canPlayPause}
+              onClick={toggle}
+            >
+              {playGlyph}
+            </RoundButton>
+            {canNext && miniSide ? (
+              <RoundButton
+                size={miniSide}
+                label={`Next track on ${entity.name}`}
+                disabled={theme.unavailable}
+                onClick={() => void run({ type: "mediaNext" })}
+              >
+                <IconPlayerSkipForward size={skipIcon} fill="currentColor" />
+              </RoundButton>
+            ) : null}
+          </div>
         </div>
       </Tile>
     );
@@ -914,7 +1033,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
       <Tile theme={theme} media className={classes.mediaTile}>
         {background}
         <div className={classes.mediaRow}>
-          {width >= 260 ? art(Math.min(height - 24, 56)) : null}
+          {showsCover && width >= 260 ? art(Math.min(height - 24, 56)) : null}
           <div className={classes.headText}>
             <span className={classes.name} title={title} data-entity-name={title === entity.name}>
               {title}
@@ -922,7 +1041,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.state}>{subtitle}</span>
           </div>
           <div className={classes.transport}>
-            {width >= 360 && canPrevious ? (
+            {width >= 300 && canPrevious ? (
               <RoundButton
                 size="sm"
                 label={`Previous track on ${entity.name}`}
@@ -941,7 +1060,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             >
               {playGlyph}
             </RoundButton>
-            {width >= 360 && canNext ? (
+            {width >= 300 && canNext ? (
               <RoundButton
                 size="sm"
                 label={`Next track on ${entity.name}`}
@@ -951,41 +1070,100 @@ function MediaControl({ entity, width, height }: ControlProps) {
                 <IconPlayerSkipForward size={17} fill="currentColor" />
               </RoundButton>
             ) : null}
+            {width >= 240 ? volumeButton(false) : null}
           </div>
         </div>
       </Tile>
     );
   }
 
-  const hero = height >= 320;
-  const showProgress = height >= 205 && duration > 0 && !idle;
-  const showVolume = height >= 228 && canSetVolume && attributes.volume !== undefined;
-  const roomyTransport = height >= (showVolume ? 248 : 180);
-  const artSize = hero ? Math.min(width - 48, 130) : 58;
+  // Height the tile needs besides its optional rows: padding, the title row and compact play controls.
+  const baseHeight = TILE_PADDING * 2 + MEDIA_HEAD_HEIGHT + MEDIA_ROW_GAP + transportButtons.compact.main;
+  // Volume is more useful than the progress bar, so it gets the room first.
+  // Progress only with both ends known: without a position from the player, a bar would show made-up time.
+  const showProgress =
+    showsProgress &&
+    duration > 0 &&
+    attributes.mediaPosition !== undefined &&
+    !idle &&
+    height >= baseHeight + MEDIA_ROW_GAP + PROGRESS_ROW_HEIGHT;
+  // The transport row must fit the tile's width: big buttons only with room for them. Previous/next stay as long as
+  // possible: the spacing shrinks first, then the buttons beside play get smaller.
+  const transportWidth = width - TILE_PADDING * 2;
+  const roomyTransport =
+    height >= (showProgress ? 210 : 180) &&
+    transportWidth >= transportButtons.roomy.main + 2 * (transportButtons.roomy.side + TRANSPORT_GAP);
+  const main = roomyTransport ? transportButtons.roomy.main : transportButtons.compact.main;
+  const fitsSide = (side: number) => transportWidth >= main + 2 * (side + TRANSPORT_GAP_MIN);
+  const sideSize = roomyTransport
+    ? "md"
+    : fitsSide(transportButtons.compact.side)
+      ? "sm"
+      : fitsSide(transportButtons.tight.side)
+        ? "xs"
+        : null;
+  const side = roomyTransport
+    ? transportButtons.roomy.side
+    : sideSize === "sm"
+      ? transportButtons.compact.side
+      : transportButtons.tight.side;
+  const skipIconSize = sideSize === "xs" ? 15 : 20;
+  const transportGap = Math.max(
+    TRANSPORT_GAP_MIN,
+    Math.min(TRANSPORT_GAP, Math.floor((transportWidth - main - 2 * side) / 2)),
+  );
+  // With room to spare, the cover leads: large and centered above the title, as big as the free height allows.
+  const heroReserve =
+    TILE_PADDING * 2 +
+    HERO_TITLE_HEIGHT +
+    main +
+    MEDIA_ROW_GAP * (showProgress ? 3 : 2) +
+    (showProgress ? PROGRESS_ROW_HEIGHT : 0);
+  const heroArtSize = Math.floor(Math.min(width - TILE_PADDING * 2, height - heroReserve, HERO_ART_MAX));
+  const hero = showsCover && heroArtSize >= HERO_ART_MIN;
+  const artSize = MEDIA_HEAD_HEIGHT;
+  // Beside a small cover the title needs the row's width: the volume then sits on the cover instead.
+  const volumeOnCover = showsCover && !hero && width < VOLUME_BESIDE_TITLE_MIN_WIDTH;
 
   return (
     <Tile theme={theme} media className={classes.mediaTile}>
       {background}
       <div className={classes.mediaFull} data-hero={hero}>
-        <div className={classes.mediaTop} data-hero={hero}>
-          {art(artSize)}
-          <div className={classes.headText}>
+        {hero ? (
+          <div className={classes.heroArt}>
+            {artwork.src ? (
+              <img
+                src={artwork.src}
+                alt=""
+                className={classes.heroGlow}
+                style={{ width: heroArtSize, height: heroArtSize }}
+                draggable={false}
+                aria-hidden
+              />
+            ) : null}
+            {art(heroArtSize, undefined, true)}
+          </div>
+        ) : null}
+        <div className={classes.mediaTop}>
+          {showsCover && !hero ? art(artSize, volumeOnCover ? volumeButton(true) : undefined) : null}
+          <div className={classes.headText} data-hero={hero}>
             <span className={classes.name} title={title} data-entity-name={title === entity.name}>
               {title}
             </span>
             <span className={classes.state}>{subtitle}</span>
           </div>
+          {volumeOnCover ? null : volumeButton(false)}
         </div>
         {showProgress && <MediaProgress entity={entity} />}
-        <div className={classes.transportBig}>
-          {canPrevious && (
+        <div className={classes.transportBig} style={{ gap: transportGap }}>
+          {canPrevious && sideSize && (
             <RoundButton
-              size={roomyTransport ? "md" : "sm"}
+              size={sideSize}
               label={`Previous track on ${entity.name}`}
               disabled={theme.unavailable}
               onClick={() => void run({ type: "mediaPrevious" })}
             >
-              <IconPlayerSkipBack size={20} fill="currentColor" />
+              <IconPlayerSkipBack size={skipIconSize} fill="currentColor" />
             </RoundButton>
           )}
           <RoundButton
@@ -997,37 +1175,87 @@ function MediaControl({ entity, width, height }: ControlProps) {
           >
             {playGlyph}
           </RoundButton>
-          {canNext && (
+          {canNext && sideSize && (
             <RoundButton
-              size={roomyTransport ? "md" : "sm"}
+              size={sideSize}
               label={`Next track on ${entity.name}`}
               disabled={theme.unavailable}
               onClick={() => void run({ type: "mediaNext" })}
             >
-              <IconPlayerSkipForward size={20} fill="currentColor" />
+              <IconPlayerSkipForward size={skipIconSize} fill="currentColor" />
             </RoundButton>
           )}
         </div>
-        {showVolume ? (
-          <div className={classes.volume}>
-            {volume === 0 ? <IconVolumeOff size={16} /> : <IconVolume size={16} />}
-            <div className={classes.volumeSlider}>
-              <PillSlider
-                axis="horizontal"
-                value={volume}
-                label={`${entity.name} volume`}
-                valueText={(value) => `${value}%`}
-                pending={pending}
-                disabled={theme.unavailable}
-                track={VOLUME_TRACK}
-                onCommit={(value) => void run({ type: "setVolume", value: value / 100 })}
-              />
-            </div>
-            <span className={classes.volumeValue}>{volume}%</span>
-          </div>
-        ) : null}
       </div>
     </Tile>
+  );
+}
+
+const stopEvent = (event: SyntheticEvent) => event.stopPropagation();
+
+/**
+ * Volume behind an icon: a tap opens a slider above it, so the tile keeps its height for the track and controls.
+ * The slider sits in a portal and does not let its taps reach the tile.
+ */
+function VolumeButton({
+  entity,
+  volume,
+  onCover,
+  disabled,
+  onCommit,
+}: {
+  entity: HaEntity;
+  volume: number;
+  /** Laid over the cover: smaller, on a dark backdrop. */
+  onCover: boolean;
+  disabled: boolean;
+  onCommit: (value: number) => void;
+}) {
+  const [opened, setOpened] = useState(false);
+  const [draft, setDraft] = useState<number | null>(null);
+  const shown = draft ?? volume;
+  return (
+    <Popover opened={opened} onChange={setOpened} position="top" withArrow shadow="md" trapFocus={false}>
+      <Popover.Target>
+        <ActionIcon
+          className={classes.volumeButton}
+          variant="subtle"
+          color="gray"
+          radius="xl"
+          size={onCover ? "md" : "lg"}
+          data-on-cover={onCover}
+          disabled={disabled}
+          aria-label={`${entity.name} volume`}
+          onPointerDown={stopEvent}
+          onClick={(event) => {
+            event.stopPropagation();
+            setOpened((open) => !open);
+          }}
+        >
+          {volume === 0 ? <IconVolumeOff size={onCover ? 15 : 18} /> : <IconVolume size={onCover ? 15 : 18} />}
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown onClick={stopEvent} onPointerDown={stopEvent}>
+        <Group gap="sm" wrap="nowrap" w={210}>
+          <Slider
+            flex={1}
+            min={0}
+            max={100}
+            value={shown}
+            label={null}
+            aria-label={`${entity.name} volume`}
+            onChange={setDraft}
+            onChangeEnd={(value) => {
+              setDraft(null);
+              onCommit(value);
+            }}
+          />
+          <Text size="sm" w={40} ta="right" style={{ fontVariantNumeric: "tabular-nums" }}>
+            {shown}%
+          </Text>
+        </Group>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
 
@@ -1040,7 +1268,8 @@ function CameraControl({ entity, width, height }: ControlProps) {
   const theme = useEntityTheme(entity);
   const editing = useSmartHomeInteractionBlock() === "editing";
   const camera = useCameraLive({ integrationId: useSmartHomeIntegrationId(), entity, enabled: !editing });
-  const image = camera.frame ?? entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl;
+  const snapshot = useLoadableImage(entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl);
+  const image = camera.frame ?? snapshot.src;
   const recording = entity.state === "recording" || entity.state === "streaming";
   const Icon = theme.Icon;
   const tier = getTier(width, height);
@@ -1051,7 +1280,13 @@ function CameraControl({ entity, width, height }: ControlProps) {
     <Tile theme={theme} bare className={classes.cameraTile}>
       <div ref={camera.ref} className={classes.cameraMedia}>
         {image ? (
-          <img src={image} alt={`${entity.name} snapshot`} className={classes.cameraImage} draggable={false} />
+          <img
+            src={image}
+            alt={`${entity.name} snapshot`}
+            className={classes.cameraImage}
+            draggable={false}
+            onError={camera.frame ? undefined : snapshot.onError}
+          />
         ) : camera.status ? null : (
           <div className={classes.cameraEmpty}>
             <Icon size={32} stroke={1.4} />

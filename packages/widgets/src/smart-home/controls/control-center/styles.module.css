@@ -339,6 +339,50 @@
   padding: 0;
 }
 
+/* A full tile placed inside another card (custom layout): the card is its frame, so the tile has no surface,
+   border or shadow of its own, in every state. It keeps its padding: its controls are laid out for it. */
+.embeddedTile .tile,
+.embeddedTile .tile[data-active="true"],
+.embeddedTile .tile[data-unavailable="true"],
+.embeddedTile .tile[data-media="true"] {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+/* A media tile normally becomes an artwork poster with white text; inside a card it takes the card's colors. */
+.embeddedTile .tile[data-media="true"] {
+  --track: light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.12));
+  --tile-border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
+  --ink: var(--mantine-color-text);
+  --secondary-ink: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+
+  color: var(--ink);
+}
+
+.embeddedTile .mediaBg,
+.embeddedTile .mediaShade {
+  display: none;
+}
+
+/* The cover placeholder and the big play button follow the card too: a track-colored square, an accent button. */
+.embeddedTile .art {
+  background: var(--track);
+  box-shadow: none;
+}
+
+.embeddedTile .mediaTile .round[data-size="lg"],
+.embeddedTile .mediaTile .round[data-size="xl"] {
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: none;
+}
+
+.embeddedTile {
+  height: 100%;
+}
+
 button.tile {
   cursor: pointer;
 }
@@ -1295,6 +1339,68 @@ button.tile:not(:disabled):active {
   max-width: 100%;
 }
 
+.mediaMiniHead {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-width: 0;
+}
+
+.mediaMiniText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Beside the cover the text reads from the left, like a now-playing row. */
+.mediaMiniHead[data-art="true"] .mediaMiniText {
+  flex: 1;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.mediaMiniText .state {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Volume behind an icon at the end of the title row; in the poster layout it sits in the corner. */
+.volumeButton {
+  flex: none;
+  color: var(--secondary-ink);
+}
+
+.artOverlay {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  transition: opacity 0.15s;
+}
+
+.volumeButton[data-on-cover="true"] {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* With a mouse the volume on the cover shows on hover (or while its slider is open); touch screens always show it. */
+@media (hover: hover) {
+  .artOverlay {
+    opacity: 0;
+  }
+
+  .art:hover .artOverlay,
+  .artOverlay:focus-within,
+  .artOverlay:has([aria-expanded="true"]) {
+    opacity: 1;
+  }
+}
+
 .mediaRow {
   display: flex;
   gap: 12px;
@@ -1328,11 +1434,6 @@ button.tile:not(:disabled):active {
   display: flex;
   gap: 12px;
   align-items: center;
-}
-
-.mediaTop[data-hero="true"] {
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .progress {
@@ -1369,25 +1470,6 @@ button.tile:not(:disabled):active {
   align-items: center;
   justify-content: center;
   min-height: 0;
-}
-
-.volume {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.volumeSlider {
-  flex: 1;
-  height: var(--e-hit);
-}
-
-.volumeValue {
-  min-width: 32px;
-  font-size: 11px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--secondary-ink);
 }
 
 .cameraTile {
@@ -2107,6 +2189,16 @@ button.deviceRowMain:hover {
   opacity: 0.6;
 }
 
+.deviceRunButton[data-done="true"] {
+  color: #fff;
+  background: var(--mantine-color-teal-filled);
+}
+
+.deviceRunButton[data-failed="true"] {
+  color: var(--mantine-color-red-6);
+  box-shadow: inset 0 0 0 1.5px var(--mantine-color-red-6);
+}
+
 .deviceSwitch:disabled,
 .deviceRunButton:disabled,
 .deviceSelect:disabled {
@@ -2297,6 +2389,21 @@ button.deviceRowMain:hover {
   background: var(--accent);
 }
 
+/* The "off" segment before the speeds: a little wider than a speed, with a power icon; marked while the fan is off. */
+.deviceStepOff {
+  display: grid;
+  flex: 1.4 1 0;
+  place-items: center;
+  color: var(--secondary-ink);
+}
+
+.deviceStepOff[data-off="true"] {
+  color: var(--ink);
+  background: var(--track-strong);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .deviceStep:not(:disabled):hover {
   background: color-mix(in srgb, var(--accent) 55%, var(--track-strong));
 }
@@ -2365,4 +2472,39 @@ button.deviceRowMain:hover {
 
 .deviceDetailSpark .spark {
   height: 100%;
+}
+
+.deviceHeader[data-bare="true"],
+.deviceHero[data-bare="true"] {
+  padding: 0;
+}
+
+/* Cover-first layout: the cover large and centered, with a soft glow in its own colors behind it. */
+.heroArt {
+  position: relative;
+  display: flex;
+  flex: none;
+  justify-content: center;
+}
+
+.heroGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  object-fit: cover;
+  pointer-events: none;
+  filter: blur(28px) saturate(1.5);
+  opacity: 0.55;
+  transform: translate(-50%, -46%) scale(1.02);
+}
+
+.art[data-hero="true"],
+.embeddedTile .art[data-hero="true"] {
+  z-index: 1;
+  border-radius: calc(var(--e-radius-inner) * 1.4);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+}
+
+.headText[data-hero="true"] .name {
+  font-size: 1.1em;
 }
