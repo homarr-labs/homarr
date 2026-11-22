@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_4d148b33737230::t_b1586081edb37f 1,32,48,54,67-68,72,82-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3d48e8a1a1382e53b92a29ff9af35e23e5d79d84",
+  "prompts": {},
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
