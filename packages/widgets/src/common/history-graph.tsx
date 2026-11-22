@@ -16,6 +16,8 @@ export interface HistoryGraphLine {
   color: string;
   /** Lines with the same unit share one scale, so their proportions hold; different units each get their own. */
   unit?: string | null;
+  /** A fixed scale for this line (for example 0 to 100 for percentages) instead of the one shared by its unit. */
+  domain?: readonly [number, number];
 }
 
 interface HistoryGraphProps {
@@ -27,6 +29,8 @@ interface HistoryGraphProps {
   scrub?: boolean;
   /** Whether a gap in the data stays a gap (the default) or is bridged. */
   connectNulls?: boolean;
+  /** Filled areas below the lines (the default) or lines only. */
+  variant?: "line" | "area";
   className?: string;
 }
 
@@ -77,11 +81,12 @@ export function HistoryGraph({
   formatTime,
   scrub = true,
   connectNulls = false,
+  variant = "area",
   className,
 }: HistoryGraphProps) {
   const [hover, setHover] = useState<number | null>(null);
   const domains = useMemo(() => getHistoryDomains(lines), [lines]);
-  const domainOf = (line: HistoryGraphLine) => domains.get(line.unit ?? "") ?? ([0, 1] as const);
+  const domainOf = (line: HistoryGraphLine) => line.domain ?? domains.get(line.unit ?? "") ?? ([0, 1] as const);
   const drawn = lines.filter((line) => line.values.length > 1);
   const primary = drawn[0];
   const pointAt = (line: HistoryGraphLine) =>
@@ -151,7 +156,7 @@ export function HistoryGraph({
           <Sparkline
             series={[{ values: line.values, color: line.color }]}
             yDomain={domainOf(line)}
-            variant="area"
+            variant={variant}
             fillOpacity={0.4}
             connectNulls={connectNulls}
           />

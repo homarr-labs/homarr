@@ -79,10 +79,6 @@ export const getSeriesDomain = (values: readonly number[], unit: string | null):
   return [min - padding, max + padding];
 };
 
-/** Rescales a series into 0–100 so values with different units can share one graph. */
-export const normalizeValues = (values: readonly (number | null)[], [min, max]: readonly [number, number]) =>
-  values.map((value) => (value === null ? null : ((value - min) / (max - min || 1)) * 100));
-
 /** Samples each series at the same moments so a combined graph lines its values up in time. */
 export const alignToGrid = (points: readonly MetricPoint[], grid: readonly number[]) => {
   let cursor = 0;

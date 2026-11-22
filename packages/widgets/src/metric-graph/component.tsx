@@ -15,19 +15,13 @@ import { WidgetEmptyState } from "../common/empty-state";
 import { useDemoReadOnly } from "../demo-read-only";
 import { getWidgetRefreshInterval } from "../refresh-interval";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
+import { HistoryGraph } from "../common/history-graph";
+import type { HistoryGraphLine } from "../common/history-graph";
 import { ChartLayout } from "../system-resources/chart-layout";
 import { CommonChart } from "../system-resources/chart/common-chart";
 import { getEntrySeriesKey, metricGraphEntriesSchema, metricGraphTimeRanges } from "./config";
 import type { MetricGraphEntry, MetricGraphTimeRange } from "./config";
-import {
-  alignToGrid,
-  fillEdges,
-  formatMetricValue,
-  getMedian,
-  getSeriesDomain,
-  isPercentUnit,
-  normalizeValues,
-} from "./format";
+import { alignToGrid, fillEdges, formatMetricValue, getMedian, getSeriesDomain, isPercentUnit } from "./format";
 import type { MetricSeries } from "./format";
 
 const SAMPLES = 60;
@@ -229,12 +223,16 @@ const MetricCard = ({
   );
 };
 
+/**
+ * All values in one graph (see `HistoryGraph`): values with the same unit share one scale, so 260 W and 60 W keep
+ * their proportions; different units get their own range. The legend shows each value and its median; while the
+ * pointer is over the graph, the graph's own readout shows the values at that point instead.
+ */
 const CombinedGraph = ({
   items,
   minutes,
   labelDisplayMode,
   chartType,
-  advanced,
   fallbackLabel,
   medianLabel,
 }: ChartProps & { items: ResolvedEntry[]; minutes: number }) => {
@@ -249,24 +247,26 @@ const CombinedGraph = ({
     unit: item.series?.unit ?? null,
     raw: alignToGrid(item.series?.points ?? [], grid),
   }));
-  // Values with the same unit share one scale so 260 W and 60 W keep their proportions.
-  // Only different units get their own range, since they cannot be compared.
   const valuesByUnit = new Map<string, number[]>();
   for (const { unit, raw } of aligned) {
     const values = valuesByUnit.get(unit ?? "") ?? [];
     values.push(...raw.filter((value): value is number => value !== null));
     valuesByUnit.set(unit ?? "", values);
   }
-  const lines = aligned.map((line) => {
-    const domain = getSeriesDomain(valuesByUnit.get(line.unit ?? "") ?? [], line.unit);
-    return { ...line, normalized: normalizeValues(fillEdges(line.raw), domain) };
-  });
-  const hasData = lines.some((line) => line.raw.some((value) => value !== null));
-  const data = hasData
-    ? grid.map((_, index) => Object.fromEntries(lines.map((line) => [line.item.entry.id, line.normalized[index]])))
-    : [];
+  const lines = aligned.map(
+    ({ item, unit, raw }): HistoryGraphLine => ({
+      id: item.entry.id,
+      values: fillEdges(raw),
+      times: grid,
+      color: `var(--mantine-color-${item.entry.color}-5)`,
+      unit,
+      // The widget's own scale per unit, so percentages keep their 0 to 100 range.
+      domain: getSeriesDomain(valuesByUnit.get(unit ?? "") ?? [], unit),
+    }),
+  );
+  const hasData = aligned.some((line) => line.raw.some((value) => value !== null));
 
-  const legendLines = lines.map((line) => ({
+  const legendLines = aligned.map((line) => ({
     id: line.item.entry.id,
     color: line.item.entry.color,
     title: getTitle(line.item, fallbackLabel),
@@ -277,28 +277,18 @@ const CombinedGraph = ({
   }));
   // "Show only icon" keeps the colored dots and values but drops the names.
   const showNames = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
-  const tooltipLabel = (index: number) => (
-    <Stack gap={2}>
-      {grid[index] !== undefined && <Text size="xs">{timeFormatter.format(grid[index])}</Text>}
-      <LegendRows lines={legendLines} index={index} showNames />
-    </Stack>
-  );
 
   return (
     <Box ref={hoverRef} pos="relative" h="100%">
-      <CommonChart
-        data={data}
-        series={lines.map((line) => ({ name: line.item.entry.id, color: `${line.item.entry.color}.5` }))}
-        title={null}
-        icon={IconChartLine}
-        // The legend below replaces the single-line card title, which cannot fit several values.
-        labelDisplayMode="hidden"
-        yDomain={[0, 100]}
-        chartType={chartType}
-        advanced={advanced}
-        tooltipLabel={tooltipLabel}
-        plain
-      />
+      {hasData ? (
+        <HistoryGraph
+          lines={lines}
+          variant={chartType}
+          connectNulls
+          formatValue={(line, value) => formatMetricValue(value, line.unit ?? null)}
+          formatTime={(time) => timeFormatter.format(time)}
+        />
+      ) : null}
       {labelDisplayMode !== "hidden" && !hovered && (
         <Stack
           pos="absolute"
