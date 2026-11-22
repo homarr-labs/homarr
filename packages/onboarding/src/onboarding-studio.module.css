@@ -67,7 +67,7 @@
   padding-block: clamp(1rem, 3vw, 2.5rem) calc(6rem + env(safe-area-inset-bottom));
 }
 
-.topbar {
+.topbar.topbar {
   min-height: 3rem;
   gap: var(--mantine-spacing-sm);
 }
@@ -143,21 +143,21 @@
   text-align: center;
 }
 
-.heroTitle {
+.heroTitle.heroTitle {
   font-size: 3.5rem;
   line-height: 1.05;
   letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
-.studio {
+.studio.studio {
   background: var(--studio-surface);
   backdrop-filter: blur(18px);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
   box-shadow: var(--mantine-shadow-sm);
 }
 
-.studio {
+.studio.studio {
   overflow: clip;
 }
 
@@ -200,7 +200,7 @@
   width: 100%;
 }
 
-.authFooter {
+.authFooter.authFooter {
   max-width: 32rem;
   text-wrap: balance;
 }
@@ -225,7 +225,7 @@
   pointer-events: none;
 }
 
-.timelineButton {
+.timelineButton.timelineButton {
   width: calc(100% + 2.75rem);
   min-height: 2.75rem;
   margin-inline-start: -2.75rem;
@@ -252,7 +252,7 @@
   padding: clamp(1rem, 3vw, 2rem);
 }
 
-.sectionCard {
+.sectionCard.sectionCard {
   background: var(--studio-surface);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
 }
@@ -279,7 +279,7 @@
   background: color-mix(in srgb, var(--mantine-primary-color-light) 62%, var(--mantine-color-body));
 }
 
-.discoveryChoice:focus-visible {
+.discoveryChoice.discoveryChoice:focus-visible {
   outline: 3px solid var(--mantine-primary-color-light-color);
   outline-offset: 2px;
 }
@@ -347,7 +347,7 @@
   border: 1px solid var(--mantine-color-default-border);
 }
 
-.stickyActions {
+.stickyActions.stickyActions {
   position: sticky;
   z-index: 2;
   bottom: 0;
@@ -358,7 +358,7 @@
   backdrop-filter: blur(16px);
 }
 
-.nextCard {
+.nextCard.nextCard {
   --next-card-accent: var(--studio-glow-color);
   color: inherit;
   text-decoration: none;
@@ -374,7 +374,7 @@
   background: color-mix(in srgb, var(--next-card-accent) 14%, transparent);
 }
 
-.finishPrimaryAction {
+.finishPrimaryAction.finishPrimaryAction {
   color: var(--mantine-color-white);
   background: linear-gradient(135deg, var(--studio-glow-color), var(--studio-secondary-glow-color));
   text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
@@ -422,7 +422,7 @@
   box-shadow: var(--mantine-shadow-xs);
 }
 
-.floatingControl {
+.floatingControl.floatingControl {
   position: relative;
   z-index: 1;
   flex: 1 0 auto;
@@ -438,7 +438,7 @@
   color: var(--mantine-color-text);
 }
 
-.floatingControl:focus-visible {
+.floatingControl.floatingControl:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: -2px;
 }
@@ -484,7 +484,7 @@
     width: min(100% - 1rem, 76rem);
   }
 
-  .heroTitle {
+  .heroTitle.heroTitle {
     font-size: 2.75rem;
   }
 
@@ -508,12 +508,12 @@
     display: none;
   }
 
-  .timelineButton {
+  .timelineButton.timelineButton {
     min-height: 2rem;
     padding-inline-start: 2.75rem;
   }
 
-  .stickyActions {
+  .stickyActions.stickyActions {
     margin: auto -1rem -1rem;
     padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
   }
@@ -538,7 +538,7 @@
     padding-top: 0.75rem;
   }
 
-  .topbar {
+  .topbar.topbar {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -555,11 +555,11 @@
     padding-block: 2rem 3rem;
   }
 
-  .stickyActions {
+  .stickyActions.stickyActions {
     gap: var(--mantine-spacing-xs);
   }
 
-  .backAction {
+  .backAction.backAction {
     flex: 0 0 2.75rem;
     width: 2.75rem;
     padding-inline: 0;

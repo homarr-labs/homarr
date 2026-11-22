@@ -1,4 +1,4 @@
-.settingsButton {
+.settingsButton.settingsButton {
   position: absolute;
   top: calc(var(--mantine-spacing-sm) / 2);
   right: calc(var(--mantine-spacing-sm) / 2);
@@ -29,7 +29,7 @@
   user-select: none !important;
 }
 
-.advancedFocusTrigger {
+.advancedFocusTrigger.advancedFocusTrigger {
   position: absolute;
   top: var(--mantine-spacing-xs);
   left: 50%;
@@ -45,13 +45,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .settingsButton {
+  .settingsButton.settingsButton {
     transition: none;
   }
 }
 
 @media (max-width: 768px) {
-  .settingsButton {
+  .settingsButton.settingsButton {
     width: calc(44px * var(--board-canvas-inverse-scale, 1));
     min-width: 0;
     max-width: calc(100% - var(--mantine-spacing-sm) / 2);
@@ -64,12 +64,12 @@
     pointer-events: auto;
   }
 
-  .settingsButton:hover,
-  .settingsButton:active {
+  .settingsButton.settingsButton:hover,
+  .settingsButton.settingsButton:active {
     background: transparent;
   }
 
-  .settingsButtonIcon {
+  .settingsButton.settingsButton .settingsButtonIcon {
     flex: none;
     width: 24px;
     height: 24px;
@@ -79,8 +79,8 @@
     zoom: var(--board-canvas-inverse-scale, 1);
   }
 
-  .settingsButton:hover .settingsButtonIcon,
-  .settingsButton:active .settingsButtonIcon {
+  .settingsButton.settingsButton:hover .settingsButtonIcon,
+  .settingsButton.settingsButton:active .settingsButtonIcon {
     background: var(--ai-hover);
   }
 }
