@@ -14,6 +14,11 @@ interface SparklineProps {
   variant?: "line" | "area";
   fillOpacity?: number;
   strokeWidth?: number;
+  /**
+   * Whether a missing value is bridged by joining its neighbours (the default) or leaves a gap, for data where a
+   * gap means something, such as a device that was unavailable.
+   */
+  connectNulls?: boolean;
 }
 
 interface Point {
@@ -22,6 +27,13 @@ interface Point {
 }
 
 const VIEWBOX_SIZE = 100;
+
+/**
+ * Where a value sits in a sparkline drawn with this domain, as a fraction of its height from the top. Lets overlays
+ * (a hover dot, a marker) line up with the drawn line.
+ */
+export const getSparklineY = (value: number, [min, max]: readonly [number, number]) =>
+  1 - (value - min) / (max - min || 1);
 
 /**
  * Lightweight SVG replacement for small Recharts line and area charts. It renders one path per series
@@ -35,6 +47,7 @@ export const Sparkline = ({
   variant = "line",
   fillOpacity = 0.3,
   strokeWidth = 2,
+  connectNulls = true,
 }: SparklineProps) => {
   const theme = useMantineTheme();
   const idPrefix = useId().replace(/[^\w-]/g, "");
@@ -56,10 +69,10 @@ export const Sparkline = ({
       aria-hidden
     >
       {series.map((item, seriesIndex) => {
-        const points = toPoints(item.values, min, range);
-        if (points.length === 0) return null;
+        const segments = toSegments(item.values, min, range, connectNulls);
+        if (segments.length === 0) return null;
         const color = getThemeColor(item.color, theme);
-        const line = createMonotonePath(points);
+        const line = segments.map(createMonotonePath).join(" ");
         const gradientId = `${idPrefix}-${seriesIndex}`;
 
         return (
@@ -73,7 +86,12 @@ export const Sparkline = ({
                   </linearGradient>
                 </defs>
                 <path
-                  d={`${line} L${format(points.at(-1)?.x ?? 0)},${VIEWBOX_SIZE} L${format(points[0]?.x ?? 0)},${VIEWBOX_SIZE} Z`}
+                  d={segments
+                    .map(
+                      (points) =>
+                        `${createMonotonePath(points)} L${format(points.at(-1)?.x ?? 0)},${VIEWBOX_SIZE} L${format(points[0]?.x ?? 0)},${VIEWBOX_SIZE} Z`,
+                    )
+                    .join(" ")}
                   fill={`url(#${gradientId})`}
                   stroke="none"
                 />
@@ -109,18 +127,29 @@ const resolveDomain = (values: number[], domain: SparklineProps["yDomain"]): [nu
   return max > min ? [min, max] : [min, min + 1];
 };
 
-// Missing values are skipped and their neighbours connected, matching Mantine charts' `connectNulls` default.
-const toPoints = (values: SparklineSeries["values"], min: number, range: number) => {
+/**
+ * The drawn runs of points. Missing values are skipped and their neighbours connected, matching Mantine charts'
+ * `connectNulls` default; without it, each run between missing values is drawn on its own.
+ */
+const toSegments = (values: SparklineSeries["values"], min: number, range: number, connectNulls: boolean) => {
   const lastIndex = Math.max(values.length - 1, 1);
-  const points: Point[] = [];
+  const segments: Point[][] = [];
+  let current: Point[] = [];
   for (const [index, value] of values.entries()) {
-    if (!isFiniteNumber(value)) continue;
-    points.push({
+    if (!isFiniteNumber(value)) {
+      if (!connectNulls && current.length > 0) {
+        segments.push(current);
+        current = [];
+      }
+      continue;
+    }
+    current.push({
       x: (index / lastIndex) * VIEWBOX_SIZE,
       y: VIEWBOX_SIZE - ((value - min) / range) * VIEWBOX_SIZE,
     });
   }
-  return points;
+  if (current.length > 0) segments.push(current);
+  return segments;
 };
 
 const format = (value: number) => Number(value.toFixed(2)).toString();

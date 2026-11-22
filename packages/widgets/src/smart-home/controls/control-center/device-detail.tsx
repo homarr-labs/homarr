@@ -10,7 +10,7 @@ import { formatEntityState, formatRelativeTime } from "../semantics";
 import { useSmartHomeAreas, useSmartHomeInteractionBlock } from "../store";
 import { isSensorLike } from "../technical/meta";
 import type { HaEntity } from "../types";
-import { Sparkline } from "./controls";
+import { EntityHistoryGraph } from "./history-graph";
 import { EntityControl } from "./entity-controls";
 import { getHistoryValues } from "./history";
 import { DetailProvider, Measured } from "./hooks";
@@ -33,7 +33,7 @@ function MeasurementRow({ entity }: { entity: HaEntity }) {
       <Icon size={16} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
       <span className={classes.deviceReadingName}>{getDeviceEntityLabel(entity)}</span>
       <span className={classes.deviceDetailSpark} aria-hidden>
-        {trend ? <Sparkline values={history} color={theme.accent} /> : null}
+        {trend ? <EntityHistoryGraph entity={entity} color={theme.accent} scrub={false} /> : null}
       </span>
       <span className={classes.deviceReadingValue}>{formatEntityState(entity)}</span>
     </li>

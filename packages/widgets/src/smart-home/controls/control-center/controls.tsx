@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from "react";
 import { UnstyledButton } from "@mantine/core";
 
-import { getHistorySegments, getHistoryValues } from "./history";
 import { clamp, useDeviceControlDisabled, useHold } from "./hooks";
 import classes from "./styles.module.css";
 
@@ -639,53 +638,5 @@ export function KeyButton({ label, hold, active, disabled, compact, onConfirm, c
       {holding ? <span className={classes.keyHold} onAnimationEnd={onHoldEnd} /> : null}
       {children}
     </UnstyledButton>
-  );
-}
-
-interface SparklineProps {
-  values: (number | null)[];
-  color: string;
-}
-
-export function Sparkline({ values, color }: SparklineProps) {
-  const id = useId().replace(/:/g, "");
-  const numeric = getHistoryValues(values);
-  if (numeric.length === 0) return null;
-  const min = Math.min(...numeric);
-  const max = Math.max(...numeric);
-  const range = max - min || 1;
-  const segments = getHistorySegments(values).map((segment) =>
-    segment.map(({ value, index }) => {
-      const x = (index / Math.max(values.length - 1, 1)) * 100;
-      const y = 36 - ((value - min) / range) * 30;
-      return { x: x.toFixed(2), y: y.toFixed(2) };
-    }),
-  );
-  const line = segments.map((points) => `M${points.map(({ x, y }) => `${x},${y}`).join(" L")}`).join(" ");
-  const area = segments
-    .map(
-      (points) => `M${points.map(({ x, y }) => `${x},${y}`).join(" L")} L${points.at(-1)?.x},40 L${points[0]?.x},40 Z`,
-    )
-    .join(" ");
-
-  return (
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className={classes.spark} aria-hidden>
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={color} stopOpacity="0.4" />
-          <stop offset="1" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={area} fill={`url(#${id})`} />
-      <path
-        d={line}
-        fill="none"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
   );
 }

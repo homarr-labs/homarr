@@ -38,7 +38,8 @@ import { isSensorLike } from "../technical/meta";
 import { useSmartHomeEntityError } from "../store";
 import type { HaAction, HaEntity } from "../types";
 import { needsCode } from "./capabilities";
-import { PillSlider, RoundButton, Sparkline } from "./controls";
+import { PillSlider, RoundButton } from "./controls";
+import { EntityHistoryGraph } from "./history-graph";
 import { getHistoryValues } from "./history";
 import { DeviceDetail } from "./device-detail";
 import { useDetailsEnabled, useDeviceControlDisabled, useEntityDetailOpener, useRunner } from "./hooks";
@@ -808,7 +809,7 @@ function ReadingsGraph({ entity, height }: { entity: HaEntity; height: number })
   const theme = useEntityTheme(entity);
   return (
     <div className={classes.deviceGraph} style={{ height }} aria-hidden>
-      <Sparkline values={entity.history ?? []} color={theme.accent} />
+      <EntityHistoryGraph entity={entity} color={theme.accent} />
     </div>
   );
 }
