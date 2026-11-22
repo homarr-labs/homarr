@@ -194,6 +194,7 @@
   flex: 0 0 auto;
   flex-direction: column;
   padding: var(--assistant-widget-spacing-sm) var(--assistant-widget-spacing-md);
+  font-size: var(--mantine-font-size-md);
 }
 
 .widgetPanel[data-board-widget] .viewport {
