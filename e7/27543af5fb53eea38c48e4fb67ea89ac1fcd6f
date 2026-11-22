@@ -1,0 +1,19 @@
+.agents/skills/codebase-context/references/architecture.md
+  s_4d148b33737230::t_b7f7dbfbbf59f9 87-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e727543af5fb53eea38c48e4fb67ea89ac1fcd6f",
+  "prompts": {},
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
