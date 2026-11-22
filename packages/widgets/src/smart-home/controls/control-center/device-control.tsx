@@ -258,10 +258,23 @@ interface DeviceHeaderProps {
   onOpen: (() => void) | null;
   /** Without its own padding, for use inside another card such as a custom layout card. */
   bare?: boolean;
+  /** Another icon than the entity's own, drawn at the given size. */
+  renderIcon?: (size: number) => ReactNode;
+  /** Only the state below the button, no name (the name still labels the controls). */
+  hideName?: boolean;
 }
 
 /** The same header on every device card: action button, device name, which part it controls and its state. */
-export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open, bare }: DeviceHeaderProps) {
+export function DeviceHeader({
+  device,
+  slider,
+  sliderStyle,
+  density,
+  onOpen: open,
+  bare,
+  renderIcon,
+  hideName,
+}: DeviceHeaderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const { primary } = device;
   const theme = useEntityTheme(primary);
@@ -270,6 +283,7 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
   const disabled = useDeviceControlDisabled(theme.unavailable || primary.readOnly === true);
   const action = getHeaderAction(primary);
   const Icon = theme.Icon;
+  const icon = (size: number, stroke: number) => renderIcon?.(size) ?? <Icon size={size} stroke={stroke} />;
   const offline = isDeviceOffline(device);
   const keyReading = device.showKeyValue && !offline ? getKeyReading(device) : null;
   const state = offline ? t("offline", { time: formatRelativeTime(primary.lastChanged) }) : formatEntityState(primary);
@@ -278,9 +292,11 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
     .join(" · ");
   const text = (
     <>
-      <span className={classes.name} title={device.name}>
-        {device.name}
-      </span>
+      {hideName ? null : (
+        <span className={classes.name} title={device.name}>
+          {device.name}
+        </span>
+      )}
       <span className={classes.state}>{subtitle}</span>
     </>
   );
@@ -314,11 +330,7 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
             onPreview={setPreview}
             onCommit={(value) => void run(slider.toAction(value))}
           >
-            {() => (
-              <div className={classes.bigPillIcon}>
-                <Icon size={26} stroke={1.6} />
-              </div>
-            )}
+            {() => <div className={classes.bigPillIcon}>{icon(26, 1.6)}</div>}
           </PillSlider>
         </div>
         <div className={classes.deviceHeroSide}>
@@ -358,7 +370,7 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
           disabled={disabled || !action}
           onClick={action ? () => void run(action) : undefined}
         >
-          <Icon size={density.icon} stroke={1.8} />
+          {icon(density.icon, 1.8)}
         </RoundButton>
         {nameBlock}
         <DeviceStatus device={device} />
@@ -505,7 +517,16 @@ function ReadingAction({ entity, control, label }: { entity: HaEntity; control: 
   );
 }
 
-export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity; label?: string }) {
+interface ReadingRowProps {
+  entity: HaEntity;
+  label?: string;
+  /** Another icon than the entity's own. */
+  icon?: ReactNode;
+  /** Only the icon and the value; the name still labels the row. */
+  hideLabel?: boolean;
+}
+
+export function ReadingRow({ entity, label: labelOverride, icon, hideLabel }: ReadingRowProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
@@ -516,8 +537,9 @@ export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity;
   const highlighted = theme.active && (entity.domain === "binary_sensor" || !isSensorLike(entity));
   const text = (
     <>
-      <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
-      <span className={classes.deviceReadingName}>{label}</span>
+      {icon ?? <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />}
+      {/* Kept when hidden, so the value stays on the right. */}
+      <span className={classes.deviceReadingName}>{hideLabel ? null : label}</span>
       {control ? null : <span className={classes.deviceReadingValue}>{state}</span>}
     </>
   );

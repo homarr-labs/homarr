@@ -69,7 +69,13 @@ import {
   getRuleColor,
   layoutColor,
 } from "./rules";
-import { hasOwnGraphHistory, SMART_HOME_LAYOUT_COLUMNS, SMART_HOME_LAYOUT_ROWS, staticElementViews } from "./schema";
+import {
+  fullTileDomains,
+  hasOwnGraphHistory,
+  SMART_HOME_LAYOUT_COLUMNS,
+  SMART_HOME_LAYOUT_ROWS,
+  staticElementViews,
+} from "./schema";
 import type { SmartHomeLayout, SmartHomeLayoutCard, SmartHomeLayoutElement } from "./schema";
 import type { GridPlacement } from "@homarr/boards/grid";
 
@@ -147,23 +153,12 @@ const getTurnOff = (entity: HaEntity, run: ReturnType<typeof useRunner>["run"]) 
 const PILL_MIN_WIDTH = 220;
 const PILL_MIN_HEIGHT = 140;
 
-// Entities a header with one button cannot serve: they get their full control center tile (dial, player, ...).
-const fullTileDomains = new Set([
-  "climate",
-  "water_heater",
-  "humidifier",
-  "media_player",
-  "vacuum",
-  "alarm_control_panel",
-  "camera",
-]);
-
 /**
  * The large control. Thermostats, players and similar get their full control center tile, which fills the element.
  * Everything else gets the device card header, centered in the element: with its slider (compact, bar or fan steps,
  * or the pill beside the name when there is room) or, for switches, plugs and locks, just the button and name.
  */
-function TileElement({ entity, label }: ElementProps) {
+function TileElement({ entity, element, label }: ElementProps) {
   const open = useEntityDetailOpener(entity.id);
   const { ref, width, height } = useElementSize();
   const item = useMemo(
@@ -194,6 +189,7 @@ function TileElement({ entity, label }: ElementProps) {
   const comfortableHeight = densities.comfortable.header + (slider ? densities.comfortable.sliderRow : 0);
   // Before the first measurement the element is assumed to have room, so it does not flash the compact header.
   const compact = height > 0 && height < comfortableHeight;
+  const icon = element.icon;
   return (
     <div ref={ref} className={classes.tileElement} data-centered>
       <DeviceHeader
@@ -203,6 +199,8 @@ function TileElement({ entity, label }: ElementProps) {
         density={compact ? densities.compact : densities.comfortable}
         onOpen={open}
         bare
+        renderIcon={icon ? (size) => <SpriteIcon name={icon} size={size} /> : undefined}
+        hideName={element.hideLabel}
       />
     </div>
   );
@@ -446,8 +444,19 @@ function ChipElement({ entity }: ElementProps) {
   );
 }
 
-function RowElement({ entity, label }: ElementProps) {
-  return <ReadingRow entity={entity} label={label} />;
+function RowElement({ entity, element, label }: ElementProps) {
+  return (
+    <ReadingRow
+      entity={entity}
+      label={label}
+      icon={
+        element.icon ? (
+          <SpriteIcon name={element.icon} size={15} className={controlClasses.deviceReadingIcon} />
+        ) : undefined
+      }
+      hideLabel={element.hideLabel}
+    />
+  );
 }
 
 // A typical reading such as "306,3 W" or "-65 RSSI".

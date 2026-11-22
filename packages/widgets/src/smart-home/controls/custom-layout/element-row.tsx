@@ -43,6 +43,7 @@ import { getAllowedViews, getDefaultView } from "./presets";
 import { layoutColor } from "./rules";
 import {
   controlElementViews,
+  fullTileDomains,
   getElementParts,
   iconElementViews,
   isNamedLayoutColor,
@@ -415,6 +416,8 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
   }
   // What the element shows: each part its view and entity offer can be switched off.
   const parts = isStatic ? [] : getElementParts(element.view, entity?.domain);
+  // A full tile (thermostat, player, ...) draws its own name and icon.
+  const fullTile = element.view === "tile" && entity !== undefined && fullTileDomains.has(entity.domain);
   if (parts.length > 0) {
     const hidden = new Set(element.hide ?? []);
     const togglePart = (part: SmartHomeElementPart, shown: boolean) => {
@@ -559,7 +562,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
       />
       {element.view !== "divider" && element.view !== "spacer" && (
         <Group gap="xs" wrap="nowrap" align="flex-end">
-          {iconElementViews.has(element.view) && (
+          {iconElementViews.has(element.view) && !fullTile && (
             <TablerIconPicker
               label={t("icon")}
               resetLabel={t("iconReset")}
@@ -602,7 +605,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
           onChange={(event) => set({ live: event.currentTarget.checked ? undefined : false })}
         />
       )}
-      {labelledElementViews.has(element.view) && (
+      {labelledElementViews.has(element.view) && !fullTile && (
         <Switch
           label={t("showLabel")}
           checked={element.hideLabel !== true}

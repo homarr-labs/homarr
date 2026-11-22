@@ -49,13 +49,29 @@ export type SmartHomeElementView = (typeof smartHomeElementViews)[number];
 export const staticElementViews = new Set<SmartHomeElementView>(["heading", "divider", "spacer"]);
 /** Views with a label (icon and text); the text can be hidden. */
 export const labelledElementViews = new Set<SmartHomeElementView>([
+  "button",
   "camera",
   "control",
+  "row",
+  "tile",
   "value",
   "group",
   "graph",
   "status",
   "battery",
+]);
+/**
+ * Entities a tile shows as their full control center tile (dial, player, ...), named and drawn by that tile, unless
+ * they have a slider and so get the device card header like other devices.
+ */
+export const fullTileDomains = new Set([
+  "climate",
+  "water_heater",
+  "humidifier",
+  "media_player",
+  "vacuum",
+  "alarm_control_panel",
+  "camera",
 ]);
 /** Views that show an icon the user can replace: every labelled view, plus the ones built around an icon. */
 export const iconElementViews = new Set<SmartHomeElementView>([...labelledElementViews, "pill", "button", "heading"]);
