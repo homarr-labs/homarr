@@ -11,6 +11,8 @@ export const SMART_HOME_LAYOUT_ROWS = 12;
 export const SMART_HOME_LAYOUT_MAX_CARDS = 40;
 export const SMART_HOME_LAYOUT_MAX_ELEMENTS = 40;
 export const SMART_HOME_LAYOUT_MAX_TEMPLATES = 20;
+/** Card titles and element labels; longer text would make the stored layout invalid. */
+export const SMART_HOME_LAYOUT_MAX_TEXT = 80;
 export const SMART_HOME_ELEMENT_MAX_RULES = 6;
 export const SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES = 12;
 export const SMART_HOME_CARD_MIN = { w: 2, h: 2 } as const;
@@ -151,7 +153,7 @@ const conditionSchema = comparisonSchema.extend({
 /** Everything about an element except where it is and which entity it shows. */
 const elementOptionsSchema = z.object({
   view: z.enum(smartHomeElementViews),
-  label: z.string().max(80).optional(),
+  label: z.string().max(SMART_HOME_LAYOUT_MAX_TEXT).optional(),
   hideLabel: z.boolean().optional(),
   icon: iconNameSchema.optional(),
   /** Shows the entity without letting anyone control it from here. */
@@ -217,7 +219,7 @@ const cardSchema = z.object({
     .max(SMART_HOME_LAYOUT_ROWS - 1),
   w: z.number().int().min(1).max(SMART_HOME_LAYOUT_COLUMNS),
   h: z.number().int().min(1).max(SMART_HOME_LAYOUT_ROWS),
-  title: z.string().max(80).optional(),
+  title: z.string().max(SMART_HOME_LAYOUT_MAX_TEXT).optional(),
   accent: colorSchema.optional(),
   /** Tints the card in its first entity's color while that entity is on. */
   tint: z.boolean().optional(),
@@ -237,6 +239,8 @@ const templateElementSchema = elementOptionsSchema.extend({
     /** The entity's name without the device, e.g. "Power". */
     name: z.string().max(120).optional(),
   }),
+  /** Elements that showed the same entity share a key, so they show the same entity again. */
+  binding: z.string().max(16).optional(),
 });
 
 const templateSchema = z.object({
@@ -246,6 +250,7 @@ const templateSchema = z.object({
   h: z.number().int().min(1).max(SMART_HOME_LAYOUT_ROWS),
   accent: colorSchema.optional(),
   tint: z.boolean().optional(),
+  readOnly: z.boolean().optional(),
   elements: z.array(templateElementSchema).max(SMART_HOME_LAYOUT_MAX_ELEMENTS),
 });
 

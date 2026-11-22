@@ -2,8 +2,9 @@ import { createId } from "@homarr/common";
 import type { SmartHomeCatalogEntity } from "@homarr/integrations/types";
 
 import { toSmartHomeDomain } from "../types";
-import { getCardMinSize } from "./card-grid";
+import { fitElementsIntoCard, getCardMinSize } from "./card-grid";
 import { findFreeSlot } from "./responsive";
+import { SMART_HOME_LAYOUT_MAX_TEXT } from "./schema";
 import type { SmartHomeElementView, SmartHomeLayoutCard, SmartHomeLayoutElement } from "./schema";
 
 export const smartHomeLayoutPresets = ["plug", "fan", "climate", "overview"] as const;
@@ -124,7 +125,16 @@ export const createCard = (
   elements: SmartHomeLayoutElement[],
   title?: string,
 ): SmartHomeLayoutCard | null => {
-  const draft = { id: createId(), x: 0, y: 0, w: NEW_CARD_WIDTH, h: 1, title, elements };
+  const draft = {
+    id: createId(),
+    x: 0,
+    y: 0,
+    w: NEW_CARD_WIDTH,
+    h: 1,
+    title: title?.slice(0, SMART_HOME_LAYOUT_MAX_TEXT),
+    elements,
+  };
   const slot = findFreeSlot(existing, NEW_CARD_WIDTH, getCardMinSize(draft).h);
-  return slot ? { ...draft, x: slot.x, y: slot.y, w: slot.w, h: slot.h } : null;
+  // A smaller slot than the contents need only works if the elements can share it.
+  return slot ? fitElementsIntoCard({ ...draft, x: slot.x, y: slot.y, w: slot.w, h: slot.h }) : null;
 };

@@ -40,6 +40,7 @@ import {
   labelledElementViews,
   SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES,
   SMART_HOME_ELEMENT_MAX_RULES,
+  SMART_HOME_LAYOUT_MAX_TEXT,
   smartHomeAggregates,
   smartHomeCompareOperators,
   smartHomeGraphRanges,
@@ -552,6 +553,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             label={element.view === "heading" ? t("headingText") : t("elementLabel")}
             placeholder={isStatic ? "" : title}
             value={element.label ?? ""}
+            maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
             disabled={element.hideLabel === true}
             onChange={(event) => set({ label: event.currentTarget.value || undefined })}
           />

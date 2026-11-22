@@ -39,6 +39,7 @@ import { EntityRow } from "./technical/row";
 import technicalClasses from "./technical/styles.module.css";
 import { EntityTile, StatCells } from "./technical/tile";
 import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./control-center/details";
+import type { DetailApi } from "./control-center/hooks";
 import { DeviceControl } from "./control-center/device-control";
 import controlCenterClasses from "./control-center/styles.module.css";
 
@@ -545,11 +546,19 @@ function ControlPanelRoot({
   palette: SmartHomeControlPalette;
   children: ReactNode;
 }) {
-  const [detailId, setDetailId] = useState<string | null>(null);
-  const detail = useMemo(() => {
+  const [opened, setOpened] = useState<{ id: string; readOnly: boolean } | null>(null);
+  const detail = useMemo((): DetailApi | null => {
     if (isEditMode) return null;
-    return { open: setDetailId };
+    return { open: (id, options) => setOpened({ id, readOnly: options?.readOnly === true }) };
   }, [isEditMode]);
+  const entityDetail = (
+    <EntityDetail
+      entityId={detail && (opened?.id ?? null)}
+      onClose={() => setOpened(null)}
+      // A related entity opened from the detail keeps its restrictions.
+      onOpen={(id) => setOpened((current) => ({ id, readOnly: current?.readOnly ?? false }))}
+    />
+  );
 
   return (
     <PaletteProvider value={palette}>
@@ -563,7 +572,11 @@ function ControlPanelRoot({
         >
           {children}
         </div>
-        <EntityDetail entityId={detail && detailId} onClose={() => setDetailId(null)} onOpen={setDetailId} />
+        {opened?.readOnly ? (
+          <SmartHomeInteractionProvider blocked="readOnly">{entityDetail}</SmartHomeInteractionProvider>
+        ) : (
+          entityDetail
+        )}
       </DetailProvider>
     </PaletteProvider>
   );

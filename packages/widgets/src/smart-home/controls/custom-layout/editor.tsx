@@ -43,8 +43,10 @@ import {
   previewGridResize,
   resolvePinnedGridCollisions,
 } from "@homarr/boards/grid";
+import type { GridMoveGuard } from "@homarr/boards/grid";
 import type { GridPlacement, GridTransaction, TransactionalGridState } from "@homarr/boards/grid";
 import { createId } from "@homarr/common";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import { SmartHomeEntitySelect, useSmartHomeCatalog } from "../../_inputs";
@@ -57,12 +59,15 @@ import { PaletteProvider } from "../control-center/theme";
 import { SmartHomeLiveProvider } from "../live";
 import { SmartHomeInteractionProvider } from "../store";
 import {
+  elementsFitCard,
+  fitElementsIntoCard,
   getCardInnerRows,
   getCardMinSize,
   getCardTitleRows,
   getElementMinRows,
   getElementPlacements,
   getInnerGridId,
+  isValidArrangement,
 } from "./card-grid";
 import type { SmartHomeLayoutEditorProps } from "./editor-modal";
 import classes from "./editor.module.css";
@@ -80,6 +85,7 @@ import {
   SMART_HOME_LAYOUT_MAX_CARDS,
   SMART_HOME_LAYOUT_MAX_ELEMENTS,
   SMART_HOME_LAYOUT_MAX_TEMPLATES,
+  SMART_HOME_LAYOUT_MAX_TEXT,
   SMART_HOME_LAYOUT_ROWS,
   SMART_HOME_LAYOUT_VERSION,
 } from "./schema";
@@ -180,6 +186,10 @@ const stateKey = (state: TransactionalGridState) =>
   state.grids.map((grid) => grid.placements.map(({ id, x, y, w, h }) => `${id}${x},${y},${w},${h}`).join()).join("|");
 
 /** The size of one cell of a card's grid on screen. */
+// An element moved in from another card counts against the target's limit; moves within a card do not.
+const elementLimitGuard: GridMoveGuard = ({ sourceGrid, targetGrid }) =>
+  sourceGrid.id === targetGrid.id || targetGrid.placements.length < SMART_HOME_LAYOUT_MAX_ELEMENTS;
+
 const cardCellSize = (body: Element, card: SmartHomeLayoutCard) => {
   const rect = body.getBoundingClientRect();
   return {
@@ -385,6 +395,7 @@ function CardProperties({
         label={t("cardTitle")}
         placeholder={t("untitledCard")}
         value={card.title ?? ""}
+        maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
         onChange={(event) => {
           const next = { ...card, title: event.currentTarget.value || undefined };
           // A new title takes a row, so the card grows instead of squeezing its elements.
@@ -693,10 +704,32 @@ export default function SmartHomeLayoutEditor({
     const card = cards.find((candidate) => candidate.id === target?.dataset.cardBody);
     if (!target || !card) return;
     const cell = cardCellSize(target, card);
+    const result = previewGridMove(
+      current,
+      {
+        targetGridId: getInnerGridId(card.id),
+        x: Math.floor((point.x - cell.rect.left) / cell.width) - grabbed.column,
+        y: Math.floor((point.y - cell.rect.top) / cell.height) - grabbed.row,
+      },
+      { guards: [elementLimitGuard] },
+    );
+    if (result.accepted) showPreview(result.transaction);
+  };
+
+  /** Arrow keys move an element within its own card, one cell per step. */
+  const previewElementKeyboardMove = (id: string, delta: { x: number; y: number }) => {
+    const current = transaction.current;
+    const owner = cards.find((card) => card.elements.some((element) => element.id === id));
+    if (!current || !owner) return;
+    const body = canvasNode.current?.querySelector(`[data-card-body="${CSS.escape(owner.id)}"]`);
+    const gridId = getInnerGridId(owner.id);
+    const start = findGrid(current.snapshot, gridId)?.placements.find((placement) => placement.id === id);
+    if (!body || !start) return;
+    const cell = cardCellSize(body, owner);
     const result = previewGridMove(current, {
-      targetGridId: getInnerGridId(card.id),
-      x: Math.floor((point.x - cell.rect.left) / cell.width) - grabbed.column,
-      y: Math.floor((point.y - cell.rect.top) / cell.height) - grabbed.row,
+      targetGridId: gridId,
+      x: start.x + Math.round(delta.x / cell.width),
+      y: start.y + Math.round(delta.y / cell.height),
     });
     if (result.accepted) showPreview(result.transaction);
   };
@@ -739,6 +772,8 @@ export default function SmartHomeLayoutEditor({
       );
     } else if (tracked) {
       previewElementMove(tracked.last);
+    } else {
+      previewElementKeyboardMove(id, delta);
     }
   };
 
@@ -820,24 +855,41 @@ export default function SmartHomeLayoutEditor({
     });
   };
 
+  const notApplied = (message: string) => showErrorNotification({ title: t("notApplied"), message });
+
   const updateCard = (next: SmartHomeLayoutCard) => {
-    setCards((existing) => {
-      const sized = existing.find((card) => card.id === next.id);
-      const replaced = existing.map((card) => (card.id === next.id ? next : card));
-      if (!sized || (sized.w === next.w && sized.h === next.h)) return replaced;
-      // A size change pushes overlapping cards down, exactly like a resize gesture, but never out of the widget.
-      // When there is no room, the card keeps its size and its elements share the space it has.
-      const kept = existing.map((card) => (card.id === next.id ? { ...next, w: sized.w, h: sized.h } : card));
-      const fittedHeight = Math.min(next.h, SMART_HOME_LAYOUT_ROWS - next.y);
-      const resolved = resolvePinnedGridCollisions(
-        replaced.map(({ id, x, y, w, h }) => ({ id, x, y, w, h })),
-        { id: next.id, x: next.x, y: next.y, w: next.w, h: fittedHeight },
-        SMART_HOME_LAYOUT_COLUMNS,
-      );
-      if (resolved.some((placement) => placement.y + placement.h > SMART_HOME_LAYOUT_ROWS)) return kept;
-      return applyGridState(replaced, {
-        grids: [{ id: GRID_ID, columnCount: SMART_HOME_LAYOUT_COLUMNS, placements: resolved }],
-      });
+    const placed = placeCardEdit(cards, next);
+    const edited = placed.find((card) => card.id === next.id);
+    if (!edited || elementsFitCard(edited)) {
+      setCards(() => placed);
+      return;
+    }
+    // Elements outside the card's final size move into free space; without any, the edit is not applied.
+    const fitted = fitElementsIntoCard(edited);
+    if (!fitted) {
+      notApplied(t("cardTooSmall"));
+      return;
+    }
+    setCards(() => placed.map((card) => (card.id === fitted.id ? fitted : card)));
+  };
+
+  /** The cards after an edit of one of them; a size change pushes overlapping cards down, as a resize would. */
+  const placeCardEdit = (existing: readonly SmartHomeLayoutCard[], next: SmartHomeLayoutCard) => {
+    const sized = existing.find((card) => card.id === next.id);
+    const replaced = existing.map((card) => (card.id === next.id ? next : card));
+    if (!sized || (sized.w === next.w && sized.h === next.h)) return replaced;
+    // A size change pushes overlapping cards down, exactly like a resize gesture, but never out of the widget.
+    // When there is no room, the card keeps its size and its elements share the space it has.
+    const kept = existing.map((card) => (card.id === next.id ? { ...next, w: sized.w, h: sized.h } : card));
+    const fittedHeight = Math.min(next.h, SMART_HOME_LAYOUT_ROWS - next.y);
+    const resolved = resolvePinnedGridCollisions(
+      replaced.map(({ id, x, y, w, h }) => ({ id, x, y, w, h })),
+      { id: next.id, x: next.x, y: next.y, w: next.w, h: fittedHeight },
+      SMART_HOME_LAYOUT_COLUMNS,
+    );
+    if (resolved.some((placement) => placement.y + placement.h > SMART_HOME_LAYOUT_ROWS)) return kept;
+    return applyGridState(replaced, {
+      grids: [{ id: GRID_ID, columnCount: SMART_HOME_LAYOUT_COLUMNS, placements: resolved }],
     });
   };
 
@@ -847,7 +899,10 @@ export default function SmartHomeLayoutEditor({
     findFreeSlot(cards, SMART_HOME_CARD_MIN.w, SMART_HOME_CARD_MIN.h) === null;
 
   const addCards = (created: SmartHomeLayoutCard | null) => {
-    if (!created || cards.length >= SMART_HOME_LAYOUT_MAX_CARDS) return;
+    if (!created || cards.length >= SMART_HOME_LAYOUT_MAX_CARDS) {
+      notApplied(t("noRoom"));
+      return;
+    }
     setCards((existing) => [...existing, created]);
     setSelectedId(created.id);
   };
@@ -911,6 +966,12 @@ export default function SmartHomeLayoutEditor({
       return;
     }
     if (parsed.cards.length === 0 && !parsed.narrowCards?.length && !parsed.templates?.length) {
+      setImportError(true);
+      return;
+    }
+    // Cards on top of each other, or elements outside their card, cannot be edited; such a layout is refused.
+    const arrangements = [parsed.cards, ...(parsed.narrowCards ? [parsed.narrowCards] : [])];
+    if (!arrangements.every((list) => isValidArrangement(list, SMART_HOME_LAYOUT_COLUMNS, SMART_HOME_LAYOUT_ROWS))) {
       setImportError(true);
       return;
     }
@@ -1196,10 +1257,7 @@ export default function SmartHomeLayoutEditor({
               source={integrationId}
               onChange={updateCard}
               onDuplicate={() => {
-                const copy = duplicateCard(selected, cards);
-                if (!copy || cards.length >= SMART_HOME_LAYOUT_MAX_CARDS) return;
-                setCards((existing) => [...existing, copy]);
-                setSelectedId(copy.id);
+                addCards(duplicateCard(selected, cards));
               }}
               onSaveTemplate={(name) => saveTemplate(selected, name)}
               onRemove={() => {

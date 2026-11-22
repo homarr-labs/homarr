@@ -118,3 +118,46 @@ export const getCardMinSize = (card: SmartHomeLayoutCard) => {
     ),
   };
 };
+
+/** Whether every element sits inside the card's own grid. */
+export const elementsFitCard = (card: SmartHomeLayoutCard) => {
+  const rows = getCardInnerRows(card);
+  return getElementPlacements(card).every(
+    (placement) => placement.x + placement.w <= card.w && placement.y + placement.h <= rows,
+  );
+};
+
+/**
+ * The card with every element inside its own grid: elements that are outside lose their position and take free
+ * space instead (see `getElementPlacements`), the others keep theirs. Null when they still do not fit, for example
+ * when a card with many elements has to become smaller.
+ */
+export const fitElementsIntoCard = (card: SmartHomeLayoutCard): SmartHomeLayoutCard | null => {
+  if (elementsFitCard(card)) return card;
+  const rows = getCardInnerRows(card);
+  const placements = new Map(getElementPlacements(card).map((placement) => [placement.id, placement]));
+  const reflowed = {
+    ...card,
+    elements: card.elements.map((element) => {
+      const placement = placements.get(element.id);
+      if (placement && placement.x + placement.w <= card.w && placement.y + placement.h <= rows) return element;
+      const { x: _x, y: _y, w: _w, h: _h, ...rest } = element;
+      return rest;
+    }),
+  };
+  return elementsFitCard(reflowed) ? reflowed : null;
+};
+
+const overlapsAny = (placements: readonly GridPlacement[]) =>
+  placements.some((placement, index) =>
+    placements.slice(index + 1).some((other) => doGridPlacementsOverlap(placement, other)),
+  );
+
+/**
+ * Whether cards can be edited as they are: inside the widget, not on top of each other, and each with its elements
+ * inside it and apart. Anything else (an imported layout written by hand) would break the editor's grid.
+ */
+export const isValidArrangement = (cards: readonly SmartHomeLayoutCard[], columns: number, rows: number) =>
+  cards.every((card) => card.x + card.w <= columns && card.y + card.h <= rows) &&
+  !overlapsAny(cards) &&
+  cards.every((card) => elementsFitCard(card) && !overlapsAny(getElementPlacements(card)));

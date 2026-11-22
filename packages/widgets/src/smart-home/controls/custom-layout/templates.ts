@@ -1,9 +1,10 @@
 import { createId } from "@homarr/common";
 import type { SmartHomeCatalogEntity } from "@homarr/integrations/types";
 
+import { fitElementsIntoCard } from "./card-grid";
 import { getShortName } from "./names";
 import { findFreeSlot } from "./responsive";
-import { staticElementViews } from "./schema";
+import { SMART_HOME_LAYOUT_MAX_TEXT, staticElementViews } from "./schema";
 import type {
   SmartHomeLayoutCard,
   SmartHomeLayoutElement,
@@ -20,27 +21,38 @@ export const cardToTemplate = (
   card: SmartHomeLayoutCard,
   name: string,
   entitiesById: ReadonlyMap<string, SmartHomeCatalogEntity>,
-): SmartHomeLayoutTemplate => ({
-  id: createId(),
-  name,
-  w: card.w,
-  h: card.h,
-  accent: card.accent,
-  tint: card.tint,
-  elements: card.elements.flatMap((element): SmartHomeLayoutTemplateElement[] => {
-    const { id: _id, source: _source, entityId, entityIds: _entityIds, condition, ...options } = element;
-    const kept = { ...options, condition: condition ? { op: condition.op, value: condition.value } : undefined };
-    if (staticElementViews.has(element.view)) return [{ ...kept, match: { domain: "" } }];
-    const entity = entitiesById.get(entityId);
-    if (!entity) return [];
-    return [
-      {
-        ...kept,
-        match: { domain: entity.domain, deviceClass: entity.deviceClass ?? undefined, name: getShortName(entity) },
-      },
-    ];
-  }),
-});
+): SmartHomeLayoutTemplate => {
+  // Views of the same entity (a value and a graph of one sensor) share a key, so they stay together.
+  const bindings = new Map<string, string>();
+  const bindingOf = (entityId: string) => {
+    const binding = bindings.get(entityId) ?? `e${bindings.size}`;
+    bindings.set(entityId, binding);
+    return binding;
+  };
+  return {
+    id: createId(),
+    name,
+    w: card.w,
+    h: card.h,
+    accent: card.accent,
+    tint: card.tint,
+    readOnly: card.readOnly,
+    elements: card.elements.flatMap((element): SmartHomeLayoutTemplateElement[] => {
+      const { id: _id, source: _source, entityId, entityIds: _entityIds, condition, ...options } = element;
+      const kept = { ...options, condition: condition ? { op: condition.op, value: condition.value } : undefined };
+      if (staticElementViews.has(element.view)) return [{ ...kept, match: { domain: "" } }];
+      const entity = entitiesById.get(entityId);
+      if (!entity) return [];
+      return [
+        {
+          ...kept,
+          binding: bindingOf(entity.id),
+          match: { domain: entity.domain, deviceClass: entity.deviceClass ?? undefined, name: getShortName(entity) },
+        },
+      ];
+    }),
+  };
+};
 
 /**
  * Finds the device's entity for a template element: the same name first, then the same device class, and for
@@ -61,7 +73,10 @@ const findMatch = (
   );
 };
 
-/** A new card from a template for the given device, in the first free spot; null when the widget is full. */
+/**
+ * A new card from a template for the given device, in the first free spot. Null when the widget is full, or when
+ * the only free spot is too small for the template's elements.
+ */
 export const cardFromTemplate = (
   template: SmartHomeLayoutTemplate,
   deviceEntities: readonly SmartHomeCatalogEntity[],
@@ -72,31 +87,38 @@ export const cardFromTemplate = (
   const slot = findFreeSlot(existing, template.w, template.h);
   if (!slot) return null;
   const used = new Set<string>();
-  const elements = template.elements.flatMap(({ match, ...options }): SmartHomeLayoutElement[] => {
+  // Each binding (one original entity) is matched once; its other views show the same entity.
+  const bound = new Map<string, SmartHomeCatalogEntity | null>();
+  const elements = template.elements.flatMap(({ match, binding, ...options }): SmartHomeLayoutElement[] => {
     if (staticElementViews.has(options.view)) return [{ ...options, id: createId(), source, entityId: "" }];
-    const entity = findMatch(match, deviceEntities, used);
+    let entity = binding !== undefined && bound.has(binding) ? (bound.get(binding) ?? undefined) : undefined;
+    if (binding === undefined || !bound.has(binding)) {
+      entity = findMatch(match, deviceEntities, used);
+      if (binding !== undefined) bound.set(binding, entity ?? null);
+      if (entity) used.add(entity.id);
+    }
     if (!entity) return [];
-    used.add(entity.id);
     return [{ ...options, id: createId(), source, entityId: entity.id }];
   });
-  return {
+  return fitElementsIntoCard({
     ...slot,
     id: createId(),
-    title,
+    title: title?.slice(0, SMART_HOME_LAYOUT_MAX_TEXT),
     accent: template.accent,
     tint: template.tint,
+    readOnly: template.readOnly,
     elements,
-  };
+  });
 };
 
-/** A copy of a card with new ids, in the first free spot; null when the widget is full. */
+/** A copy of a card with new ids, in the first free spot; null when the widget is full or the spot too small. */
 export const duplicateCard = (card: SmartHomeLayoutCard, existing: readonly SmartHomeLayoutCard[]) => {
   const slot = findFreeSlot(existing, card.w, card.h);
   if (!slot) return null;
-  return {
+  return fitElementsIntoCard({
     ...card,
     ...slot,
     id: createId(),
     elements: card.elements.map((element) => ({ ...element, id: createId() })),
-  } satisfies SmartHomeLayoutCard;
+  });
 };
