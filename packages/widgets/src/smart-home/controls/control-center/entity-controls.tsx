@@ -168,6 +168,7 @@ const MINI_GAP = 6;
 const MINI_ART_MIN = 36;
 const MINI_ART_MAX = 64;
 const MINI_ART_MIN_WIDTH = 110;
+const MINI_PROGRESS_MIN_WIDTH = 120;
 const VOLUME_BESIDE_TITLE_MIN_WIDTH = 300;
 // The cover-first layout: title and artist below the cover take this height.
 const HERO_TITLE_HEIGHT = 40;
@@ -965,6 +966,8 @@ function MediaControl({ entity, width, height }: ControlProps) {
       duration > 0 &&
       attributes.mediaPosition !== undefined &&
       !idle &&
+      // Elapsed and total time need room side by side; narrower, they would run into each other.
+      miniWidth >= MINI_PROGRESS_MIN_WIDTH &&
       miniHeight >= headHeight + MINI_GAP + PROGRESS_ROW_HEIGHT + MINI_GAP + miniMain;
     // Spare height grows the cover, up to a size that still leaves room for the title beside it.
     const spare = miniHeight - (miniMain + MINI_GAP + (miniProgress ? PROGRESS_ROW_HEIGHT + MINI_GAP : 0));
