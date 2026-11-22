@@ -135,6 +135,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   }, [board.items, currentLayoutId, selectedItemIds, tCommon, tSelection]);
 
   const applyPastedItems = useCallbackRef((payload: BoardItemClipboardPayload) => {
+    if (!isEditMode) return;
     const pastedIds = payload.items.map(() => createId());
     let didPasteAll = false;
     persistBoard((previous) => {
