@@ -97,13 +97,24 @@ const hasUnavailableToolError = (error: unknown, seen = new Set<object>()): bool
   );
 };
 
-export const getAssistantStreamErrorMessage = (error: unknown) => {
+export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider = false) => {
+  if (isHomarrProvider && RetryError.isInstance(error)) error = error.lastError;
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
   // Workshop has already bounded/redacted this message. Preserve its actual
   // upstream status and detail instead of guessing a cause from the proxy status.
   const upstreamMessage = getWorkshopUpstreamError(error);
+  if (isHomarrProvider && statusCode === 402) {
+    return "The Homarr Assistant has run out of shared credits. Please try again later.";
+  }
+  if (
+    isHomarrProvider &&
+    statusCode === 502 &&
+    (!upstreamMessage || upstreamMessage.startsWith("Upstream model service returned HTTP 502."))
+  ) {
+    return "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.";
+  }
   if (upstreamMessage) return upstreamMessage;
 
   if (hasUnavailableToolError(error)) {
