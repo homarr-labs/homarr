@@ -1,0 +1,19 @@
+/* A live video filling its parent, cropped like a snapshot. */
+.videoHost {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoHost :global(.video-js),
+.video {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.videoHost video {
+  object-fit: cover;
+}

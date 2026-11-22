@@ -21,6 +21,7 @@ import {
   IconDroplet,
   IconFlame,
   IconHome,
+  IconLoader2,
   IconLock,
   IconLockOpen,
   IconLockPassword,
@@ -61,6 +62,8 @@ import {
   requiresConfirmation,
   stepNumber,
 } from "../semantics";
+import { useCameraLive } from "../camera-live";
+import { useSmartHomeIntegrationId } from "../live";
 import { useSmartHomeEntity, useSmartHomeInteractionBlock } from "../store";
 import type { HaAction, HaDomain, HaEntity } from "../types";
 import { Dial, HoldButton, KeyButton, PillSlider, RoundButton } from "./controls";
@@ -1028,26 +1031,43 @@ function MediaControl({ entity, width, height }: ControlProps) {
   );
 }
 
+/**
+ * A camera: its snapshot, and while the tile is on screen a live view over it (see `useCameraLive`), with a badge
+ * that tells whether it is live or still connecting.
+ */
 function CameraControl({ entity, width, height }: ControlProps) {
+  const t = useI18n("widget.smartHome-controls.camera");
   const theme = useEntityTheme(entity);
-  const image = entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl;
-  const live = entity.state === "recording" || entity.state === "streaming";
+  const editing = useSmartHomeInteractionBlock() === "editing";
+  const camera = useCameraLive({ integrationId: useSmartHomeIntegrationId(), entity, enabled: !editing });
+  const image = camera.frame ?? entity.attributes.snapshotUrl ?? entity.attributes.pictureUrl;
+  const recording = entity.state === "recording" || entity.state === "streaming";
   const Icon = theme.Icon;
   const tier = getTier(width, height);
+  let badge = recording ? "LIVE" : "IDLE";
+  if (camera.status) badge = t(camera.status);
 
   return (
     <Tile theme={theme} bare className={classes.cameraTile}>
-      {image ? (
-        <img src={image} alt={`${entity.name} snapshot`} className={classes.cameraImage} draggable={false} />
-      ) : (
-        <div className={classes.cameraEmpty}>
-          <Icon size={32} stroke={1.4} />
-        </div>
-      )}
+      <div ref={camera.ref} className={classes.cameraMedia}>
+        {image ? (
+          <img src={image} alt={`${entity.name} snapshot`} className={classes.cameraImage} draggable={false} />
+        ) : camera.status ? null : (
+          <div className={classes.cameraEmpty}>
+            <Icon size={32} stroke={1.4} />
+          </div>
+        )}
+        {camera.player}
+        {camera.status === "connecting" || camera.status === "reconnecting" ? (
+          <div className={classes.cameraConnecting} aria-hidden>
+            <IconLoader2 size={28} stroke={1.8} className={classes.spinning} />
+          </div>
+        ) : null}
+      </div>
       <div className={classes.cameraShade} />
-      <span className={classes.liveBadge} data-live={live}>
+      <span className={classes.liveBadge} data-live={camera.status === "live" || (!camera.status && recording)}>
         <span className={classes.liveDot} />
-        {live ? "LIVE" : "IDLE"}
+        {badge}
       </span>
       <div className={classes.cameraFoot}>
         <span className={classes.name} title={entity.name}>

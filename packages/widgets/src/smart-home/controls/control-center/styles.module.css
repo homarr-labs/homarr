@@ -1409,6 +1409,32 @@ button.tile:not(:disabled):active {
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* The picture and, over it, the live view; both fill the tile. */
+.cameraMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.cameraConnecting {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.spinning {
+  animation: spin 0.9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinning {
+    animation: none;
+  }
+}
+
 .cameraShade {
   position: absolute;
   inset: 0;
