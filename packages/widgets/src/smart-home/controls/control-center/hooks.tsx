@@ -12,6 +12,25 @@ import classes from "./styles.module.css";
 
 export type Tier = "mini" | "wide" | "full";
 
+// Parts of a control its layout element switched off (cover, mode buttons, ...); nothing is hidden by default.
+const HiddenPartsContext = createContext<ReadonlySet<string> | null>(null);
+export const HiddenPartsProvider = HiddenPartsContext.Provider;
+
+/** Whether a control shows an optional part; the layout editor lets users switch parts off per element. */
+export const useShowsPart = (part: string) => useContext(HiddenPartsContext)?.has(part) !== true;
+
+/**
+ * An image address that is dropped once it fails to load (a camera without a snapshot, a track without art), so the
+ * placeholder shows instead of a broken image. A new address is tried again.
+ */
+export function useLoadableImage(src: string | undefined) {
+  const [failed, setFailed] = useState<string | null>(null);
+  return {
+    src: src && src !== failed ? src : undefined,
+    onError: () => setFailed(src ?? null),
+  };
+}
+
 export const getTier = (width: number, height: number): Tier => {
   if (width < 165) return "mini";
   if (height < 150) return "wide";

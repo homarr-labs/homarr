@@ -945,18 +945,20 @@ interface LiveSnapshotProps {
   integrationId: string;
   selection: LiveSelection;
   source: LiveSmartHomeSource;
+  historyEntityIds?: readonly string[];
   children: ReactNode;
 }
 
-function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapshotProps) {
+function LiveSnapshot({ integrationId, selection, source, historyEntityIds, children }: LiveSnapshotProps) {
   const t = useI18n("widget.smartHome-controls.live");
   const utils = clientApi.useUtils();
   const { mutateAsync } = clientApi.widget.smartHome.executeAction.useMutation();
   const { mutateAsync: mutateProtectedAsync, reset: resetProtected } =
     clientApi.widget.smartHome.executeProtectedAction.useMutation({ gcTime: 0 });
   const snapshot = useSmartHomeSnapshot(integrationId, selection, { live: true });
+  // Without an explicit list every measured sensor gets a trend; a custom layout asks only for its graphs.
   const historyKey = (snapshot.data?.entities ?? [])
-    .filter(isHistoryCandidate)
+    .filter((entity) => (historyEntityIds ? historyEntityIds.includes(entity.id) : isHistoryCandidate(entity)))
     .map((entity) => entity.id)
     .toSorted()
     .slice(0, HISTORY_LIMIT)
@@ -1034,6 +1036,8 @@ interface SmartHomeLiveProviderProps {
   blockIds: readonly string[];
   roomDomains: readonly string[];
   excludedEntityIds: readonly string[];
+  /** Limits history to these entities; omitted, every measured sensor gets history. */
+  historyEntityIds?: readonly string[];
   children: ReactNode;
 }
 
@@ -1042,6 +1046,7 @@ export function SmartHomeLiveProvider({
   blockIds,
   roomDomains,
   excludedEntityIds,
+  historyEntityIds,
   children,
 }: SmartHomeLiveProviderProps) {
   const t = useI18n("widget.smartHome-controls.live");
@@ -1082,7 +1087,12 @@ export function SmartHomeLiveProvider({
   return (
     <SmartHomeSourceProvider source={source}>
       {hasSelection && selection && (
-        <LiveSnapshot integrationId={integrationId} selection={selection} source={source}>
+        <LiveSnapshot
+          integrationId={integrationId}
+          selection={selection}
+          source={source}
+          historyEntityIds={historyEntityIds}
+        >
           {children}
         </LiveSnapshot>
       )}

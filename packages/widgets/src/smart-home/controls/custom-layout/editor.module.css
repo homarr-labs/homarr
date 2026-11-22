@@ -1,0 +1,272 @@
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--mantine-spacing-md);
+  height: min(70vh, 760px);
+}
+
+@media (max-width: 900px) {
+  .editor {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+}
+
+.canvasScroll {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 320px;
+  overflow: auto;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  zoom: 1;
+}
+
+.canvas {
+  position: relative;
+  /* Like the widget's grid, so text in the preview scales exactly as on the board. */
+  container-type: size;
+  display: grid;
+  flex: none;
+  width: 100%;
+  /* The preview has the widget's size; centered both ways, it reads like the widget on the board. Auto margins
+     drop to zero when the preview is larger than the area, so it scrolls instead of being cut off at the top. */
+  margin: auto;
+  padding: 8px;
+  /* The widget's outline: everything inside is what the board shows. */
+  outline: 1px dashed light-dark(rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.16));
+  outline-offset: -1px;
+  border-radius: var(--mantine-radius-md);
+}
+
+/* One cell of the widget's grid; cards cover the cells they take. */
+.canvasCell {
+  pointer-events: none;
+  background: light-dark(rgba(0, 0, 0, 0.025), rgba(255, 255, 255, 0.025));
+  border-radius: 4px;
+}
+
+.canvas[data-empty="true"] .canvasCell {
+  background: light-dark(rgba(0, 0, 0, 0.045), rgba(255, 255, 255, 0.045));
+}
+
+.canvasCard {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--e-radius);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s;
+}
+
+.canvasCard[data-selected="true"] {
+  outline-color: var(--mantine-primary-color-filled);
+}
+
+.canvasCard[data-dragging="true"] {
+  z-index: 2;
+  opacity: 0.9;
+}
+
+/* Grip along the card's top edge: the only place that moves the card. */
+.cardHandle {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  width: 40px;
+  height: 14px;
+  place-items: center;
+  color: var(--mantine-color-dimmed);
+  cursor: grab;
+  touch-action: none;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+/* A small grip centered on the card's top edge; it stands out only while pointed at or focused. */
+.cardHandle:hover,
+.cardHandle:focus-visible {
+  color: var(--mantine-color-text);
+  background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
+}
+
+.cardHandle:active {
+  cursor: grabbing;
+}
+
+.canvasElement {
+  position: relative;
+  cursor: grab;
+  border-radius: 6px;
+  outline: 1px dashed transparent;
+  touch-action: none;
+}
+
+.canvasElement:hover,
+.canvasElement:focus-visible {
+  outline-color: var(--mantine-color-dimmed);
+}
+
+.canvasElement[data-dragging="true"] {
+  z-index: 3;
+  cursor: grabbing;
+  outline-color: var(--mantine-primary-color-filled);
+}
+
+.elementPreview {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.elementResize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 55%, var(--mantine-color-dimmed) 55%);
+  border: 0;
+  border-radius: 0 0 6px 0;
+  opacity: 0;
+  touch-action: none;
+}
+
+.canvasElement:hover .elementResize,
+.canvasElement:focus-within .elementResize {
+  opacity: 1;
+}
+
+/* The card's resize grip sits on the card's outer corner, half outside it: a round knob, so it never lands on
+   an element's own corner grip (a small triangle inside the card) when an element fills the card's corner. */
+.resizeHandle {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  z-index: 3;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  cursor: nwse-resize;
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: 50%;
+  opacity: 0;
+  touch-action: none;
+  transition: opacity 0.15s;
+}
+
+/* Like the element handles, the card's resize grip only shows while the card is pointed at or focused. */
+.canvasCard:hover > .resizeHandle,
+.canvasCard:focus-within > .resizeHandle,
+.resizeHandle:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  /* Touch has no hover: keep the grip visible on the selected card. */
+  .canvasCard[data-selected="true"] > .resizeHandle {
+    opacity: 1;
+  }
+}
+
+.canvasEmpty {
+  z-index: 1;
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  place-self: center;
+  max-width: 320px;
+}
+
+.panel {
+  min-width: 0;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.elementRow {
+  padding: 12px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.canvasHint {
+  flex: none;
+  padding: 6px 10px 0;
+  font-size: 12px;
+  color: var(--mantine-color-dimmed);
+}
+
+/* Folded option sections in the card and element panels: a little tighter than Mantine's default. */
+.optionContent {
+  padding: 0 var(--mantine-spacing-sm) var(--mantine-spacing-sm);
+}
+
+/* Color rules: a compact operator switch, the value, and the color as a swatch. */
+.operatorLabel {
+  min-width: 18px;
+  padding-inline: 6px;
+  font-size: 14px;
+}
+
+.swatchButton {
+  display: grid;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  place-items: center;
+}
+
+.swatchButton:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 24px);
+  gap: 8px;
+  justify-content: space-between;
+}
+
+/* "No color": an empty ring with a slash. */
+.swatchNone {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    135deg,
+    transparent calc(50% - 1px),
+    var(--mantine-color-red-6) calc(50% - 1px),
+    var(--mantine-color-red-6) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 50%;
+}
+
+.swatchOption .swatchNone {
+  width: 24px;
+  height: 24px;
+}
+
+.swatchOption {
+  cursor: pointer;
+}
+
+.swatchOption[aria-pressed="true"] {
+  outline: 2px solid var(--mantine-color-text);
+  outline-offset: 2px;
+}

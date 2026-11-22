@@ -6,6 +6,7 @@ import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 import { BlockAddButton, BlockListItem, useBlockListData, useCatalogEntityOptions } from "./configuration";
 import type { SmartHomeBlockListItem } from "./configuration";
+import { smartHomeLayoutModes } from "./custom-layout/schema";
 import {
   haDomains,
   smartHomeControlPalettes,
@@ -25,6 +26,14 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        layoutMode: factory.select({
+          options: smartHomeLayoutModes.map((value) => ({
+            value,
+            label: (t) => t(`widget.smartHome-controls.option.layoutMode.option.${value}`),
+          })),
+          defaultValue: "automatic",
+        }),
+        customLayout: factory.smartHomeLayout(),
         presentation: factory.select({
           options: smartHomePresentations.map((value) => ({
             value,
@@ -83,19 +92,30 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
         }),
       }),
       {
-        showSummary: { shouldHide: (options) => options.presentation !== "entities" },
-        readingOrder: { shouldHide: (options) => !options.groupByDevice },
+        // Each mode only shows its own settings; switching modes keeps the other mode's values.
+        customLayout: { shouldHide: (options) => options.layoutMode !== "custom" },
+        presentation: { shouldHide: (options) => options.layoutMode === "custom" },
+        blocks: { shouldHide: (options) => options.layoutMode === "custom" },
+        roomDomains: { shouldHide: (options) => options.layoutMode === "custom" },
+        excludedEntityIds: { shouldHide: (options) => options.layoutMode === "custom" },
+        groupByDevice: { shouldHide: (options) => options.layoutMode === "custom" },
+        showSummary: {
+          shouldHide: (options) => options.layoutMode === "custom" || options.presentation !== "entities",
+        },
+        readingOrder: { shouldHide: (options) => options.layoutMode === "custom" || !options.groupByDevice },
         showDeviceGraph: {
-          shouldHide: (options) => options.presentation !== "controlPanel" || !options.groupByDevice,
+          shouldHide: (options) =>
+            options.layoutMode === "custom" || options.presentation !== "controlPanel" || !options.groupByDevice,
         },
         showDeviceKeyValue: {
-          shouldHide: (options) => options.presentation !== "controlPanel" || !options.groupByDevice,
+          shouldHide: (options) =>
+            options.layoutMode === "custom" || options.presentation !== "controlPanel" || !options.groupByDevice,
         },
         controlSize: {
-          shouldHide: (options) => options.presentation !== "controlPanel",
+          shouldHide: (options) => options.layoutMode === "custom" || options.presentation !== "controlPanel",
         },
         palette: {
-          shouldHide: (options) => options.presentation !== "controlPanel",
+          shouldHide: (options) => options.layoutMode !== "custom" && options.presentation !== "controlPanel",
         },
       },
     );

@@ -7,6 +7,8 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { statsEntriesSchema } from "./stats/config";
 import type { StatsEntry } from "./stats/config";
+import { emptySmartHomeLayout, smartHomeLayoutSchema } from "./smart-home/controls/custom-layout/schema";
+import type { SmartHomeLayout } from "./smart-home/controls/custom-layout/schema";
 
 import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
@@ -352,6 +354,13 @@ const optionsFactory = {
     type: "statsEntries" as const,
     validate: statsEntriesSchema,
     defaultValue: [] as StatsEntry[],
+    withDescription: false,
+    skipContextMenu: true,
+  }),
+  smartHomeLayout: () => ({
+    type: "smartHomeLayout" as const,
+    validate: smartHomeLayoutSchema,
+    defaultValue: emptySmartHomeLayout as SmartHomeLayout,
     withDescription: false,
     skipContextMenu: true,
   }),
