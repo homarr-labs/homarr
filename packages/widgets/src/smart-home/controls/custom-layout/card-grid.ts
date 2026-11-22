@@ -119,6 +119,57 @@ export const getCardMinSize = (card: SmartHomeLayoutCard) => {
   };
 };
 
+const scaleEdge = (edge: number, from: number, to: number) => Math.round((edge * to) / from);
+
+/**
+ * The element placements of the card at another size. Every edge moves in proportion to the card, so elements keep
+ * their share of it and neighbors stay neighbors without overlapping. Null when an element would become smaller
+ * than it can be.
+ */
+export const scaleElementPlacements = (card: SmartHomeLayoutCard, w: number, h: number): GridPlacement[] | null => {
+  const placements = getElementPlacements(card);
+  const fromRows = getCardInnerRows(card);
+  const toRows = getCardInnerRows({ ...card, h });
+  if (w === card.w && toRows === fromRows) return placements;
+  const minRows = new Map(card.elements.map((element) => [element.id, getElementMinRows(element)]));
+  const scaled = placements.map((placement) => {
+    const x = scaleEdge(placement.x, card.w, w);
+    const y = scaleEdge(placement.y, fromRows, toRows);
+    return {
+      id: placement.id,
+      x,
+      y,
+      w: scaleEdge(placement.x + placement.w, card.w, w) - x,
+      h: scaleEdge(placement.y + placement.h, fromRows, toRows) - y,
+    };
+  });
+  return scaled.every((placement) => placement.w >= 1 && placement.h >= (minRows.get(placement.id) ?? 1))
+    ? scaled
+    : null;
+};
+
+/** The card at another size, its elements scaled with it (see `scaleElementPlacements`). */
+export const resizeCardWithElements = (card: SmartHomeLayoutCard, w: number, h: number): SmartHomeLayoutCard => {
+  const scaled = new Map(scaleElementPlacements(card, w, h)?.map((placement) => [placement.id, placement]));
+  return {
+    ...card,
+    w,
+    h,
+    elements: card.elements.map((element) => {
+      const placement = scaled.get(element.id);
+      return placement ? { ...element, x: placement.x, y: placement.y, w: placement.w, h: placement.h } : element;
+    }),
+  };
+};
+
+/** How small a card can be resized: its elements shrink with it until one reaches its own minimum. */
+export const getCardScaledMinSize = (card: SmartHomeLayoutCard) => {
+  let { w, h } = card;
+  while (w > SMART_HOME_CARD_MIN.w && scaleElementPlacements(card, w - 1, card.h)) w--;
+  while (h > SMART_HOME_CARD_MIN.h && scaleElementPlacements(card, card.w, h - 1)) h--;
+  return { w, h };
+};
+
 /** Whether every element sits inside the card's own grid. */
 export const elementsFitCard = (card: SmartHomeLayoutCard) => {
   const rows = getCardInnerRows(card);

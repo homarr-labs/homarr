@@ -65,8 +65,11 @@ import {
   getCardTitleRows,
   getElementMinRows,
   getElementPlacements,
+  getCardScaledMinSize,
   getInnerGridId,
   isValidArrangement,
+  resizeCardWithElements,
+  scaleElementPlacements,
 } from "./card-grid";
 import type { SmartHomeLayoutEditorProps } from "./editor-modal";
 import classes from "./editor.module.css";
@@ -670,8 +673,14 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   );
   const cardPlacement = (card: SmartHomeLayoutCard): GridPlacement =>
     findGrid(preview, GRID_ID)?.placements.find((placement) => placement.id === card.id) ?? card;
-  const elementPlacements = (card: SmartHomeLayoutCard) =>
-    findGrid(preview, getInnerGridId(card.id))?.placements ?? getElementPlacements(card);
+  const elementPlacements = (card: SmartHomeLayoutCard) => {
+    const inner = findGrid(preview, getInnerGridId(card.id))?.placements;
+    if (inner) return inner;
+    // While a card is resized, its elements scale with it.
+    const shown = cardPlacement(card);
+    const scaled = shown.w !== card.w || shown.h !== card.h ? scaleElementPlacements(card, shown.w, shown.h) : null;
+    return scaled ?? getElementPlacements(card);
+  };
   const selected = cards.find((card) => card.id === selectedId) ?? null;
   const index = catalog.status === "ready" ? catalog.index : null;
   const deviceOptions = useMemo(
@@ -695,7 +704,16 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     setPreview(null);
     // Pressing a handle without moving it changes nothing, so it is no edit (and keeps Redo).
     if (current && !sameGridState(current.snapshot, current.preview)) {
-      setCards((existing) => applyGridState(existing, current.preview));
+      setCards((existing) => {
+        const next = applyGridState(existing, current.preview);
+        // An element gesture places the elements itself; a card that changed size scales its elements with it.
+        if (current.snapshot.grids.length > 1) return next;
+        return next.map((card) => {
+          const before = existing.find((candidate) => candidate.id === card.id);
+          if (!before || (before.w === card.w && before.h === card.h)) return card;
+          return { ...resizeCardWithElements(before, card.w, card.h), x: card.x, y: card.y };
+        });
+      });
     }
   };
 
@@ -880,8 +898,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     const card = cards.find((candidate) => candidate.id === cardId);
     if (!card) return;
     setSelectedId(cardId);
-    // A card cannot shrink below its elements.
-    const min = getCardMinSize(card);
+    // Elements shrink with the card until one of them reaches its minimum; there the card stops.
+    const min = getCardScaledMinSize(card);
     startResize(cardId, event, {
       withCardGrids: false,
       cell: { width: pitchX, height: pitchY },
