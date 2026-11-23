@@ -3,6 +3,8 @@ import { getThemeColor, useMantineTheme } from "@mantine/core";
 
 export interface SparklineSeries {
   values: readonly (number | null | undefined)[];
+  /** Where each value sits across the graph, 0 to 1 (by its time). Without them the values are evenly spaced. */
+  positions?: readonly number[];
   /** Mantine color, for example `blue.5`. */
   color: string;
 }
@@ -69,7 +71,7 @@ export const Sparkline = ({
       aria-hidden
     >
       {series.map((item, seriesIndex) => {
-        const segments = toSegments(item.values, min, range, connectNulls);
+        const segments = toSegments(item, min, range, connectNulls);
         if (segments.length === 0) return null;
         const color = getThemeColor(item.color, theme);
         const line = segments.map(createMonotonePath).join(" ");
@@ -131,7 +133,12 @@ const resolveDomain = (values: number[], domain: SparklineProps["yDomain"]): [nu
  * The drawn runs of points. Missing values are skipped and their neighbours connected, matching Mantine charts'
  * `connectNulls` default; without it, each run between missing values is drawn on its own.
  */
-const toSegments = (values: SparklineSeries["values"], min: number, range: number, connectNulls: boolean) => {
+const toSegments = (
+  { values, positions }: Pick<SparklineSeries, "values" | "positions">,
+  min: number,
+  range: number,
+  connectNulls: boolean,
+) => {
   const lastIndex = Math.max(values.length - 1, 1);
   const segments: Point[][] = [];
   let current: Point[] = [];
@@ -144,7 +151,7 @@ const toSegments = (values: SparklineSeries["values"], min: number, range: numbe
       continue;
     }
     current.push({
-      x: (index / lastIndex) * VIEWBOX_SIZE,
+      x: (positions?.[index] ?? index / lastIndex) * VIEWBOX_SIZE,
       y: VIEWBOX_SIZE - ((value - min) / range) * VIEWBOX_SIZE,
     });
   }

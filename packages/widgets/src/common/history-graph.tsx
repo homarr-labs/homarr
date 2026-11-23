@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { ReactNode } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { Portal } from "@mantine/core";
 
 import classes from "./history-graph.module.css";
@@ -28,6 +28,8 @@ interface HistoryGraphProps {
   scrub?: boolean;
   /** Whether a gap in the data stays a gap (the default) or is bridged. */
   connectNulls?: boolean;
+  /** Names the graph for assistive technology; with scrubbing, the arrow keys step through its points. */
+  label?: string;
   className?: string;
 }
 
@@ -57,6 +59,37 @@ export const getHistoryDomains = (lines: readonly HistoryGraphLine[]) => {
   return domains;
 };
 
+const hasTimes = (line: HistoryGraphLine): line is HistoryGraphLine & { times: readonly number[] } =>
+  line.times !== undefined && line.times.length === line.values.length && line.values.length > 1;
+
+/**
+ * Where each value of each line sits across the graph, 0 to 1. Lines with times share one time axis, so series
+ * sampled at different intervals line up; lines without times are spread evenly.
+ */
+export const getHistoryPositions = (lines: readonly HistoryGraphLine[]) => {
+  const timed = lines.filter(hasTimes);
+  const start = Math.min(...timed.map((line) => line.times[0] ?? Infinity));
+  const end = Math.max(...timed.map((line) => line.times.at(-1) ?? -Infinity));
+  const span = end - start;
+  return new Map(
+    lines.map((line) => [
+      line.id,
+      hasTimes(line) && span > 0
+        ? line.times.map((time) => (time - start) / span)
+        : line.values.map((_, index) => index / Math.max(line.values.length - 1, 1)),
+    ]),
+  );
+};
+
+/** The index of the position closest to a point across the graph. */
+const nearestIndex = (positions: readonly number[], at: number) => {
+  let best = 0;
+  for (const [index, position] of positions.entries()) {
+    if (Math.abs(position - at) < Math.abs((positions[best] ?? 0) - at)) best = index;
+  }
+  return best;
+};
+
 /** Lowest, average and highest value of a series, or null when it has none. */
 export const getHistoryStats = (values: readonly (number | null)[]) => {
   const numbers = values.filter(isNumber);
@@ -78,19 +111,60 @@ export function HistoryGraph({
   formatTime,
   scrub = true,
   connectNulls = false,
+  label,
   className,
 }: HistoryGraphProps) {
+  const ref = useRef<HTMLDivElement>(null);
   // Where the pointer is (0 to 1 across the graph) and where the graph is on screen, for the overlay.
   const [pointer, setPointer] = useState<{ at: number; rect: DOMRect } | null>(null);
-  const hover = pointer?.at ?? null;
   const domains = useMemo(() => getHistoryDomains(lines), [lines]);
+  const positions = useMemo(() => getHistoryPositions(lines), [lines]);
   const domainOf = (line: HistoryGraphLine) => domains.get(line.unit ?? "") ?? ([0, 1] as const);
+  const positionsOf = (line: HistoryGraphLine) => positions.get(line.id) ?? [];
   const drawn = lines.filter((line) => line.values.length > 1);
   const primary = drawn[0];
-  const pointAt = (line: HistoryGraphLine) =>
-    hover === null || line.values.length < 2 ? null : Math.round(hover * (line.values.length - 1));
-  const primaryPoint = primary ? pointAt(primary) : null;
+  // The guide snaps to the first line's nearest sample; every line shows its own sample closest to that time.
+  const primaryPoint = primary && pointer ? nearestIndex(positionsOf(primary), pointer.at) : null;
+  const hover = primary && primaryPoint !== null ? (positionsOf(primary)[primaryPoint] ?? null) : null;
   const hoverTime = primary && primaryPoint !== null ? primary.times?.[primaryPoint] : undefined;
+  const pointAt = (line: HistoryGraphLine) => (hover === null ? null : nearestIndex(positionsOf(line), hover));
+  const readout =
+    hover === null
+      ? null
+      : [
+          hoverTime === undefined || !formatTime ? null : formatTime(hoverTime),
+          ...drawn.map((line) => {
+            const at = pointAt(line);
+            return formatValue(line, at === null ? null : (line.values[at] ?? null));
+          }),
+        ]
+          .filter(Boolean)
+          .join(", ");
+
+  const show = (at: number) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (rect && rect.width > 0) setPointer({ at: Math.min(1, Math.max(0, at)), rect });
+  };
+
+  // Arrow keys step through the first line's samples; Home and End jump to its ends.
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!primary) return;
+    const own = positionsOf(primary);
+    const current = primaryPoint ?? own.length - 1;
+    const next =
+      event.key === "ArrowLeft" || event.key === "ArrowDown"
+        ? current - 1
+        : event.key === "ArrowRight" || event.key === "ArrowUp"
+          ? current + 1
+          : event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? own.length - 1
+              : null;
+    if (next === null) return;
+    event.preventDefault();
+    show(own[Math.min(own.length - 1, Math.max(0, next))] ?? 0);
+  };
 
   let overlay: ReactNode = null;
   if (scrub && pointer && hover !== null && primary) {
@@ -116,7 +190,7 @@ export function HistoryGraph({
                 key={line.id}
                 className={classes.dot}
                 style={{
-                  left: `${(at / (line.values.length - 1)) * 100}%`,
+                  left: `${(positionsOf(line)[at] ?? 0) * 100}%`,
                   top: `${getSparklineY(value, domainOf(line)) * 100}%`,
                   background: line.color,
                 }}
@@ -148,15 +222,32 @@ export function HistoryGraph({
     );
   }
 
+  const keyboard = scrub && primary !== undefined;
+  const last = primary ? positionsOf(primary).length - 1 : 0;
+  // With scrubbing the graph is a slider through its points; without, a picture.
+  const accessibility = keyboard
+    ? {
+        role: "slider",
+        tabIndex: 0,
+        "aria-valuemin": 0,
+        "aria-valuemax": last,
+        "aria-valuenow": primaryPoint ?? last,
+        "aria-valuetext": readout ?? undefined,
+        onKeyDown,
+        onBlur: () => setPointer(null),
+      }
+    : { role: "img" };
   return (
     <div
+      ref={ref}
       className={className ? `${classes.root} ${className}` : classes.root}
+      {...accessibility}
+      aria-label={label}
       onPointerMove={
         scrub
           ? (event) => {
               const rect = event.currentTarget.getBoundingClientRect();
-              if (rect.width > 0)
-                setPointer({ at: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)), rect });
+              if (rect.width > 0) show((event.clientX - rect.left) / rect.width);
             }
           : undefined
       }
@@ -166,7 +257,7 @@ export function HistoryGraph({
       {drawn.map((line) => (
         <div key={line.id} className={classes.line} aria-hidden>
           <Sparkline
-            series={[{ values: line.values, color: line.color }]}
+            series={[{ values: line.values, positions: positionsOf(line), color: line.color }]}
             yDomain={domainOf(line)}
             variant="area"
             fillOpacity={0.4}

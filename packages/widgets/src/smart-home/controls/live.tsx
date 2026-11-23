@@ -113,7 +113,12 @@ const toAreaKey = (integrationId: string, areaId: string | null) => {
   return createAreaKey(integrationId, areaId);
 };
 
-const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, history: HaEntity["history"]): HaEntity => {
+interface EntityHistory {
+  values: NonNullable<HaEntity["history"]>;
+  times: number[];
+}
+
+const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, history: EntityHistory | null): HaEntity => {
   const { domain, readOnly } = toSmartHomeDomain(entity.domain);
   return {
     id: entity.id,
@@ -126,7 +131,8 @@ const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, histo
     unit: entity.unit,
     lastChanged: entity.lastChanged,
     attributes: toAttributes(entity.domain, entity.attributes),
-    history,
+    history: history?.values ?? null,
+    historyTimes: history?.times ?? null,
     sourceDomain: entity.domain,
     sourceAreaId: entity.areaId,
     device: entity.device ?? null,
@@ -688,7 +694,7 @@ const getActionStore = (integrationId: string) => {
 
 interface CachedEntity {
   source: SmartHomeEntity;
-  history: HaEntity["history"] | undefined;
+  history: EntityHistory | undefined;
   forecast: EntityForecast | undefined;
   value: HaEntity;
 }
@@ -700,7 +706,7 @@ interface EntityForecast {
 
 class LiveSmartHomeSource implements SmartHomeEntitySource {
   private confirmed = new Map<string, SmartHomeEntity>();
-  private history = new Map<string, NonNullable<HaEntity["history"]>>();
+  private history = new Map<string, EntityHistory>();
   private forecasts = new Map<string, EntityForecast>();
   private cache = new Map<string, CachedEntity>();
   private listeners = new Set<() => void>();
@@ -776,7 +782,10 @@ class LiveSmartHomeSource implements SmartHomeEntitySource {
     this.history = new Map(
       series
         .filter((entry) => entry.points.length > 1)
-        .map((entry) => [entry.entityId, entry.points.map((point) => point.value)]),
+        .map((entry) => [
+          entry.entityId,
+          { values: entry.points.map((point) => point.value), times: entry.points.map((point) => point.time) },
+        ]),
     );
     this.publish();
   }
