@@ -54,7 +54,7 @@
     "shiki": "catalog:",
     "sonner": "catalog:",
     "swiper": "^14.4.0",
-    "tailwind-merge": "^3.7.0",
+    "tailwind-merge": "^3.7.1",
     "tailwindcss": "^4.3.5",
     "three": "catalog:"
   },
