@@ -79,15 +79,28 @@ export const getSeriesDomain = (values: readonly number[], unit: string | null):
   return [min - padding, max + padding];
 };
 
-/** Samples each series at the same moments so a combined graph lines its values up in time. */
+/**
+ * Samples each series at the same moments so a combined graph lines its values up in time: each moment takes the
+ * last value recorded since the one before. A moment without a recorded value stays empty (null), so the median and
+ * the readout never show a value that was not measured; the graph bridges such gaps only in how it draws the line.
+ */
 export const alignToGrid = (points: readonly MetricPoint[], grid: readonly number[]) => {
   let cursor = 0;
-  let current: number | null = null;
-  return grid.map((time) => {
+  const step = (grid[1] ?? 0) - (grid[0] ?? 0);
+  return grid.map((time, index) => {
+    const from = index === 0 ? time - step : (grid[index - 1] ?? time);
+    let value: number | null = null;
     while (cursor < points.length && (points[cursor]?.time ?? Number.POSITIVE_INFINITY) <= time) {
-      current = points[cursor]?.value ?? current;
+      const point = points[cursor];
+      if (point && point.time > from && point.value !== null) value = point.value;
       cursor++;
     }
-    return current;
+    return value;
   });
 };
+
+// Units that mean the same: a stats source reports "watts", a smart home sensor "W".
+const equivalentUnits: Record<string, string> = { watts: "W", celsius: "°C", percent: "%" };
+
+/** The scale a unit belongs to: equivalent units share one, so 260 watts and 60 W keep their proportions. */
+export const getScaleKey = (unit: string | null) => (unit === null ? "" : (equivalentUnits[unit] ?? unit));

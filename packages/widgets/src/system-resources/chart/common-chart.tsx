@@ -23,8 +23,11 @@ export const CommonChart = ({
   chartType = "line",
   advanced = false,
   plain = false,
+  positions,
 }: {
   data: Record<string, any>[];
+  /** Where each row sits across the chart, 0 to 1 (by its time). Without them the rows are evenly spaced. */
+  positions?: readonly number[];
   series: { name: string; color: string }[];
   title: ReactNode;
   icon: TablerIcon;
@@ -76,7 +79,13 @@ export const CommonChart = ({
     const rect = event.currentTarget.getBoundingClientRect();
     if (rect.width === 0) return;
     const ratio = (event.clientX - rect.left) / rect.width;
-    const index = Math.round(ratio * (data.length - 1));
+    const index = positions
+      ? positions.reduce(
+          (best, position, candidate) =>
+            Math.abs(position - ratio) < Math.abs((positions[best] ?? 0) - ratio) ? candidate : best,
+          0,
+        )
+      : Math.round(ratio * (data.length - 1));
     setHoveredIndex(Math.min(data.length - 1, Math.max(0, index)));
   };
 
@@ -168,6 +177,7 @@ export const CommonChart = ({
               series={series.map(({ name, color }) => ({
                 color,
                 values: data.map((row) => row[name] as number | null | undefined),
+                positions,
               }))}
               yDomain={yDomain}
               variant={chartType}

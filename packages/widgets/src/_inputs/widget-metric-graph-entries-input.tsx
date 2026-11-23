@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActionIcon,
   Button,
@@ -60,6 +60,14 @@ export const WidgetMetricGraphEntriesInput = ({ property }: CommonWidgetInputPro
           .map((metric) => ({ value: metric.key, label: metric.label }));
 
   const save = (next: MetricGraphEntry[]) => form.setFieldValue(`options.${property}`, next);
+  // Unlinking an integration removes its values, so the saved widget keeps no entries it cannot show.
+  const linkedKey = ids.join(",");
+  useEffect(() => {
+    const kept = entries.filter((entry) => ids.includes(entry.integrationId));
+    if (kept.length !== entries.length) save(kept);
+    // Runs when the linked integrations change; the entries are read fresh then.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedKey]);
   const update = (id: string, patch: Partial<Pick<MetricGraphEntry, "label" | "color">>) =>
     save(entries.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)));
   const move = (index: number, delta: number) => {

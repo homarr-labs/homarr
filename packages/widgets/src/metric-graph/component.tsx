@@ -21,7 +21,15 @@ import { ChartLayout } from "../system-resources/chart-layout";
 import { CommonChart } from "../system-resources/chart/common-chart";
 import { getEntrySeriesKey, metricGraphEntriesSchema, metricGraphTimeRanges } from "./config";
 import type { MetricGraphEntry, MetricGraphTimeRange } from "./config";
-import { alignToGrid, fillEdges, formatMetricValue, getMedian, getSeriesDomain, isPercentUnit } from "./format";
+import {
+  alignToGrid,
+  fillEdges,
+  formatMetricValue,
+  getMedian,
+  getScaleKey,
+  getSeriesDomain,
+  isPercentUnit,
+} from "./format";
 import type { MetricSeries } from "./format";
 
 const SAMPLES = 60;
@@ -50,6 +58,7 @@ const getIcon = (unit: string | null): TablerIcon => {
 
 export default function MetricGraphWidget({
   options,
+  integrationIds,
   widgetRuntimeRef,
   displayMode,
 }: WidgetComponentProps<"metricGraph">) {
@@ -58,7 +67,14 @@ export default function MetricGraphWidget({
   const advanced = displayMode === "advanced";
   const refreshInterval = getWidgetRefreshInterval(options, 30);
   const minutes = metricGraphTimeRanges[options.timeRange as MetricGraphTimeRange] ?? 60;
-  const entries = useMemo(() => metricGraphEntriesSchema.safeParse(options.entries).data ?? [], [options.entries]);
+  // Values of an integration that was unlinked from the widget are neither shown nor polled.
+  const entries = useMemo(
+    () =>
+      (metricGraphEntriesSchema.safeParse(options.entries).data ?? []).filter((entry) =>
+        integrationIds.includes(entry.integrationId),
+      ),
+    [options.entries, integrationIds],
+  );
 
   // One request per integration and source, never per value.
   const groups = useMemo(() => {
@@ -191,6 +207,10 @@ const MetricCard = ({
 }: ChartProps & { item: ResolvedEntry; plain: boolean }) => {
   const { entry, series } = item;
   const points = series?.points ?? [];
+  // Where each point sits by its time: a native history plus a live value at "now" is not evenly spaced.
+  const first = points[0]?.time ?? 0;
+  const span = (points.at(-1)?.time ?? first) - first;
+  const positions = span > 0 ? points.map((point) => (point.time - first) / span) : undefined;
   const unit = series?.unit ?? null;
   const values = points.map((point) => point.value);
   const domain = getSeriesDomain(
@@ -205,6 +225,7 @@ const MetricCard = ({
   return (
     <CommonChart
       data={fillEdges(values).map((value) => ({ value }))}
+      positions={positions}
       series={[{ name: "value", color: `${entry.color}.5` }]}
       title={getTitle(item, fallbackLabel)}
       icon={getIcon(unit)}
@@ -247,21 +268,22 @@ const CombinedGraph = ({
     unit: item.series?.unit ?? null,
     raw: alignToGrid(item.series?.points ?? [], grid),
   }));
-  const valuesByUnit = new Map<string, number[]>();
+  const valuesByScale = new Map<string, number[]>();
   for (const { unit, raw } of aligned) {
-    const values = valuesByUnit.get(unit ?? "") ?? [];
+    const values = valuesByScale.get(getScaleKey(unit)) ?? [];
     values.push(...raw.filter((value): value is number => value !== null));
-    valuesByUnit.set(unit ?? "", values);
+    valuesByScale.set(getScaleKey(unit), values);
   }
   const lines = aligned.map(
     ({ item, unit, raw }): HistoryGraphLine => ({
       id: item.entry.id,
-      values: fillEdges(raw),
+      // Gaps stay empty, so the readout shows "—" where nothing was recorded; the graph bridges them when drawing.
+      values: raw,
       times: grid,
       color: `var(--mantine-color-${item.entry.color}-5)`,
       unit,
       // The widget's own scale per unit, so percentages keep their 0 to 100 range.
-      domain: getSeriesDomain(valuesByUnit.get(unit ?? "") ?? [], unit),
+      domain: getSeriesDomain(valuesByScale.get(getScaleKey(unit)) ?? [], unit),
     }),
   );
   const hasData = aligned.some((line) => line.raw.some((value) => value !== null));
