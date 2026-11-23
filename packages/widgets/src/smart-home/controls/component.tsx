@@ -388,7 +388,21 @@ function EntitiesPresentation({ entities, configuration, width, height }: Presen
 
   const active = configuration.showSummary && summary.find(({ chip }) => chip.key === filter);
   const visible = active ? active.entities : entities;
-  const rows = toPanelItems(visible, configuration.groupByDevice, configuration.readingOrder, false, deviceLabels);
+  // A filter keeps whole devices: a plug that is on stays together with its power reading.
+  const matching = active ? new Set(active.entities.map((entity) => entity.id)) : null;
+  const rows = toPanelItems(
+    entities,
+    configuration.groupByDevice,
+    configuration.readingOrder,
+    false,
+    deviceLabels,
+  ).filter(
+    (item) =>
+      !matching ||
+      (item.kind === "entity"
+        ? matching.has(item.entity.id)
+        : matching.has(item.primary.id) || item.readings.some((reading) => matching.has(reading.id))),
+  );
   const chips = configuration.showSummary && summary.length > 0;
   const { columns, capacity, overflowing } = getTechnicalPageLayout(width, height, rows.length, chips);
   const pages = Math.max(1, Math.ceil(rows.length / Math.max(1, capacity)));

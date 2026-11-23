@@ -5,8 +5,10 @@ import { createBoundedListChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "integrationStatsHistory" });
 
-// 24 hours at the default 30 second graph refresh interval.
-const MAX_ITEMS = 2880;
+// One sample per 30 seconds, whatever the widgets' refresh interval, so the list always covers 24 hours: a fast
+// graph cannot shorten the history a slower graph of the same integration shows.
+const BUCKET_MS = 30_000;
+const MAX_ITEMS = (24 * 3_600_000) / BUCKET_MS;
 const itemSchema = z.object({
   identity: z.string(),
   time: z.number(),
@@ -32,7 +34,11 @@ export const appendStatsHistoryAsync = async (
   }
   if (Object.keys(numeric).length === 0) return;
   try {
-    await getChannel(integrationId).pushAsync({ identity, time, values: numeric });
+    const channel = getChannel(integrationId);
+    const latest = itemSchema.safeParse(await channel.getLatestAsync());
+    const bucket = (at: number) => Math.floor(at / BUCKET_MS);
+    if (latest.success && latest.data.identity === identity && bucket(latest.data.time) === bucket(time)) return;
+    await channel.pushAsync({ identity, time, values: numeric });
   } catch (error) {
     logger.warn("Failed to record statistics history", { integrationId, error });
   }

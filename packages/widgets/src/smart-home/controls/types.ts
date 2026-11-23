@@ -131,6 +131,8 @@ export interface HaEntity {
   lastChanged: number;
   attributes: HaAttributes;
   history: (number | null)[] | null;
+  /** When each history value was taken, in milliseconds, as the history response says. */
+  historyTimes?: number[] | null;
   sourceDomain?: string;
   sourceAreaId?: string | null;
   device?: HaDevice | null;

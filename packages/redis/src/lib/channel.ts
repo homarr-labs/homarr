@@ -145,6 +145,13 @@ export const createBoundedListChannel = <TItem>(
         .exec();
     },
     /**
+     * Get the newest item, or null when the list is empty
+     */
+    getLatestAsync: async () => {
+      const item = await (await requireReadyRedisConnectionAsync(client)).lindex(name, 0);
+      return item === null ? null : superjson.parse<TItem>(item);
+    },
+    /**
      * Get all items, newest first
      */
     getAllAsync: async () => {
