@@ -87,8 +87,8 @@ const slug = (value: string) =>
 
 const number = (capability: HomeyCapability | undefined) =>
   typeof capability?.value === "number" && Number.isFinite(capability.value) ? capability.value : undefined;
-// Homey's media times are seconds, but some apps (Alexa) report milliseconds: no track runs for six hours.
-const MAX_TRACK_SECONDS = 6 * 60 * 60;
+// Homey's media times are seconds. Apps that report milliseconds without saying so (Alexa) are known by name.
+const MILLISECOND_MEDIA_APPS = new Set(["homey:app:com.amazon.alexa"]);
 const updatedAt = (capability: HomeyCapability | undefined) => {
   const value = capability?.lastUpdated;
   const time = typeof value === "string" ? Date.parse(value) : value;
@@ -100,9 +100,12 @@ const updatedAt = (capability: HomeyCapability | undefined) => {
  * started and when playback last paused or resumed: as long as it has played straight through since the track
  * started, or paused once since, the position follows from those times. Otherwise it stays unknown.
  */
-const mediaTiming = (cap: DeviceCapabilities) => {
+const mediaTiming = (cap: DeviceCapabilities, device: HomeyDevice) => {
   const durationValue = number(cap("speaker_duration"));
-  const scale = durationValue !== undefined && durationValue > MAX_TRACK_SECONDS ? 1000 : 1;
+  // The unit the capability declares; without one, the app's known unit (an eight-hour audiobook stays eight hours).
+  const units = cap("speaker_duration")?.units ?? cap("speaker_position")?.units;
+  const milliseconds = units ? units === "ms" : MILLISECOND_MEDIA_APPS.has(device.driverUri ?? "");
+  const scale = milliseconds ? 1000 : 1;
   const mediaDuration = durationValue === undefined ? undefined : durationValue / scale;
   const positionValue = number(cap("speaker_position"));
   if (positionValue !== undefined) {
@@ -367,28 +370,45 @@ const speedRange = (capability: HomeyCapability) => {
   return { min, max: max > min ? max : min + 1 };
 };
 
+/** The step between speed levels: the declared one, or whole levels for a range wider than one. */
+const speedStep = (capability: HomeyCapability) => {
+  const { min, max } = speedRange(capability);
+  return capability.step ?? (max - min > 1 ? 1 : undefined);
+};
+
+/**
+ * Where 0 % lies. Zero on the slider means "off"; a range that starts above zero (1 to 3) keeps its lowest speed
+ * as a running speed above 0 %, a range from zero starts at its own zero.
+ */
+const speedOrigin = (capability: HomeyCapability) => Math.min(0, speedRange(capability).min);
+
 const fanSpeedPercent = (capability: HomeyCapability | undefined) => {
   const value = number(capability);
   if (!capability || value === undefined) return undefined;
-  const { min, max } = speedRange(capability);
-  return Math.round(((value - min) / (max - min)) * 100);
+  const { max } = speedRange(capability);
+  const origin = speedOrigin(capability);
+  return Math.round(((value - origin) / (max - origin)) * 100);
 };
 
 /** The slider distance between two speed levels, e.g. 8.33 % for a fan with twelve levels. */
 const fanSpeedStepPercent = (capability: HomeyCapability | undefined) => {
-  if (!capability?.step) return undefined;
-  const { min, max } = speedRange(capability);
-  return (capability.step / (max - min)) * 100;
+  if (!capability) return undefined;
+  const step = speedStep(capability);
+  if (!step) return undefined;
+  const { max } = speedRange(capability);
+  return (step / (max - speedOrigin(capability))) * 100;
 };
 
-/** Converts a 0–100 slider value back to the capability's own range, snapped to its step. */
+/** Converts a 0–100 slider value back to the capability's own range, snapped to its step (the same step as above). */
 export const toHomeyFanSpeed = (capability: HomeyCapability, percentage: number) => {
   const { min, max } = speedRange(capability);
-  const raw = min + (Math.min(100, Math.max(0, percentage)) / 100) * (max - min);
-  const step = capability.step ?? (max - min > 1 ? 1 : undefined);
-  if (!step) return raw;
-  // Any speed above zero should still turn the fan, so round up from the lowest step.
-  return Math.min(max, Math.max(min + step, Math.round((raw - min) / step) * step + min));
+  const origin = speedOrigin(capability);
+  const raw = origin + (Math.min(100, Math.max(0, percentage)) / 100) * (max - origin);
+  const step = speedStep(capability);
+  if (!step) return Math.max(min, raw);
+  // Any request still turns the fan: a range from zero rounds up to its first step, one above zero to its minimum.
+  const lowest = min > 0 ? min : min + step;
+  return Math.min(max, Math.max(lowest, Math.round((raw - min) / step) * step + min));
 };
 
 const buildFan = (cap: DeviceCapabilities, capabilities: Record<string, HomeyCapability>): PrimaryEntity | null => {
@@ -441,7 +461,7 @@ const buildMediaPlayer = (cap: DeviceCapabilities, device: HomeyDevice): Primary
       mediaAlbum: text(cap("speaker_album")),
       volume: number(volume),
       isMuted: boolean(cap("volume_mute")),
-      ...mediaTiming(cap),
+      ...mediaTiming(cap, device),
       shuffle: boolean(cap("speaker_shuffle")),
       repeat: repeatModes[text(cap("speaker_repeat")) ?? ""],
       mediaSource: text(cap("media_input")),

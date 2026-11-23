@@ -199,11 +199,16 @@ export class HomeyIntegration
     const { entity } = record;
     const picture = entity.state === "unavailable" ? null : getRecordPicture(record);
     if (!picture) return entity;
-    const source = new URL(picture.url, this.integration.url);
-    // A new picture gets a new address, so the proxy's cache never serves an old snapshot.
-    source.searchParams.set("homarr", picture.version);
-    const pictureUrl = await new ImageProxy()
-      .createImageAsync(source.toString(), this.getAuthHeaders())
+    // A picture that cannot be read (a malformed address included) drops only itself, never the snapshot.
+    const pictureUrl = await Promise.resolve()
+      .then(() => {
+        const source = new URL(picture.url, this.integration.url);
+        // A new picture gets a new address, so the proxy's cache never serves an old snapshot.
+        source.searchParams.set("homarr", picture.version);
+        // The Homey token only goes to Homey: a picture hosted elsewhere is fetched without it.
+        const ownOrigin = source.origin === new URL(this.integration.url).origin;
+        return new ImageProxy().createImageAsync(source.toString(), ownOrigin ? this.getAuthHeaders() : undefined);
+      })
       .catch(() => undefined);
     return pictureUrl ? { ...entity, attributes: { ...entity.attributes, pictureUrl } } : entity;
   }
@@ -226,14 +231,16 @@ export class HomeyIntegration
     onMessage: (message: SmartHomeWebRtcMessage) => void,
     signal: AbortSignal,
   ): Promise<void> {
-    const answer = await this.exchangeCameraOfferAsync(entityId, offerSdp);
+    const answer = await this.exchangeCameraOfferAsync(entityId, offerSdp, signal);
     onMessage({ type: "answer", sdp: answer });
     await untilAborted(signal);
   }
 
   /** Passes the browser's WebRTC offer to Homey's video manager and returns the camera's answer. */
-  private async exchangeCameraOfferAsync(entityId: string, offerSdp: string): Promise<string> {
-    const record = (await this.getRecordsAsync()).find((candidate) => candidate.entity.id === entityId);
+  private async exchangeCameraOfferAsync(entityId: string, offerSdp: string, signal: AbortSignal): Promise<string> {
+    const record = (await this.getRecordsAsync(signal)).find((candidate) => candidate.entity.id === entityId);
+    // A browser that left during the lookup opens no video session on Homey.
+    signal.throwIfAborted();
     if (record?.target.kind !== "camera" || !record.target.videoId) throw new SmartHomeEntityNotFoundError(entityId);
     const response = await fetchWithTrustedCertificatesAsync(
       this.url(`/api/manager/videos/video/${encodeURIComponent(record.target.videoId)}/offer`),
@@ -241,6 +248,7 @@ export class HomeyIntegration
         method: "POST",
         headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify({ offer: offerSdp }),
+        signal,
       },
     );
     if (!response.ok) throw new ResponseError(response);
@@ -355,13 +363,13 @@ export class HomeyIntegration
     };
   }
 
-  private async getRecordsAsync(): Promise<HomeyEntityRecord[]> {
-    const [devices, flows] = await Promise.all([this.getDevicesAsync(), this.getFlowsAsync()]);
+  private async getRecordsAsync(signal?: AbortSignal): Promise<HomeyEntityRecord[]> {
+    const [devices, flows] = await Promise.all([this.getDevicesAsync(signal), this.getFlowsAsync(signal)]);
     return [...normalizeHomeyDevices(devices), ...normalizeHomeyFlows(flows)];
   }
 
-  private async getDevicesAsync(): Promise<HomeyDevice[]> {
-    return Object.values(homeyDevicesSchema.parse(await this.getJsonAsync("/api/manager/devices/device/")));
+  private async getDevicesAsync(signal?: AbortSignal): Promise<HomeyDevice[]> {
+    return Object.values(homeyDevicesSchema.parse(await this.getJsonAsync("/api/manager/devices/device/", signal)));
   }
 
   private async getAreasAsync(): Promise<SmartHomeArea[]> {
@@ -370,9 +378,9 @@ export class HomeyIntegration
   }
 
   /** Flows are optional: API keys without the flow scope still expose devices. */
-  private async getFlowsAsync(): Promise<HomeyFlow[]> {
+  private async getFlowsAsync(signal?: AbortSignal): Promise<HomeyFlow[]> {
     const load = async (path: "/api/manager/flow/flow/" | "/api/manager/flow/advancedflow/", advanced: boolean) => {
-      const flows = homeyFlowsSchema.safeParse(await this.getOptionalJsonAsync(path));
+      const flows = homeyFlowsSchema.safeParse(await this.getOptionalJsonAsync(path, undefined, signal));
       if (!flows.success) return [];
       return Object.values(flows.data).map((flow) => ({ ...flow, advanced }));
     };
@@ -406,25 +414,33 @@ export class HomeyIntegration
     );
   }
 
-  private async getOptionalJsonAsync(path: `/api/${string}`, queryParams?: Record<string, string>): Promise<unknown> {
+  private async getOptionalJsonAsync(
+    path: `/api/${string}`,
+    queryParams?: Record<string, string>,
+    signal?: AbortSignal,
+  ): Promise<unknown> {
     try {
-      const response = await this.getAsync(path, queryParams);
+      const response = await this.getAsync(path, queryParams, signal);
       return response.ok ? await response.json() : null;
     } catch (error) {
       getHttpRequestSignal()?.throwIfAborted();
+      signal?.throwIfAborted();
       if (error instanceof Error && error.name === "AbortError") throw error;
       return null;
     }
   }
 
-  private async getJsonAsync(path: `/api/${string}`): Promise<unknown> {
-    const response = await this.getAsync(path);
+  private async getJsonAsync(path: `/api/${string}`, signal?: AbortSignal): Promise<unknown> {
+    const response = await this.getAsync(path, undefined, signal);
     if (!response.ok) throw new ResponseError(response);
     return await response.json();
   }
 
-  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string>) {
-    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), { headers: this.getAuthHeaders() });
+  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string>, signal?: AbortSignal) {
+    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
+      headers: this.getAuthHeaders(),
+      ...(signal ? { signal } : {}),
+    });
   }
 
   private async sendAsync(method: "POST" | "PUT", path: `/api/${string}`, body: unknown) {

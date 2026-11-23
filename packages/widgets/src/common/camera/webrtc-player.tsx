@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import classes from "./camera.module.css";
+import { captureFrame } from "./capture-frame";
 
 /** What the far end sends back for the browser's offer: the answer, later ICE candidates, or an error. */
 export type WebRtcSignal =
@@ -58,21 +59,6 @@ const DISCONNECT_GRACE_MS = 5000;
 const STALL_CHECK_MS = 5000;
 // Ring and other battery cameras take a few seconds to wake up; a view without a frame after this has failed.
 const FIRST_FRAME_TIMEOUT_MS = 25_000;
-
-/** The current picture as a small JPEG, so the element can keep showing it while it reconnects. */
-const captureFrame = (element: HTMLVideoElement | null) => {
-  if (!element || element.videoWidth === 0) return undefined;
-  try {
-    const scale = Math.min(1, 640 / element.videoWidth);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(element.videoWidth * scale);
-    canvas.height = Math.round(element.videoHeight * scale);
-    canvas.getContext("2d")?.drawImage(element, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/jpeg", 0.7);
-  } catch {
-    return undefined;
-  }
-};
 
 // Waiting for all local candidates keeps the offer complete; on a LAN this takes well under a second.
 const ICE_GATHERING_TIMEOUT_MS = 2500;

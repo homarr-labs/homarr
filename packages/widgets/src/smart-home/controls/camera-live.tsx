@@ -100,6 +100,8 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
     setPrefer(undefined);
     setRestarting(null);
     drops.current = 0;
+    // A new view starts without a drop to recover from: failing before its first frame falls back instead.
+    playingSince.current = null;
     setPlaying(false);
     window.clearTimeout(restartTimer.current);
   }, [wantsLive]);
@@ -120,10 +122,10 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
           key={attempt}
           url={url}
           onPlaying={startPlaying}
-          onError={() => {
-            // A stream that played (or a restart of one) comes back with the same backoff as WebRTC; one that never
-            // played is given up until the camera is back on screen.
-            if (playingSince.current !== null || restarting) scheduleRestart();
+          onError={(frame) => {
+            // A stream that played (or a restart of one) comes back with the same backoff as WebRTC, its last picture
+            // kept meanwhile; one that never played is given up until the camera is back on screen.
+            if (playingSince.current !== null || restarting) scheduleRestart(frame);
             else {
               setPlaying(false);
               setFailedKey(streamKey);
