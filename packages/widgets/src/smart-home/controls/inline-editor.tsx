@@ -35,7 +35,7 @@ import { IconGripVertical, IconLayoutGridAdd } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
-import { BlockAdder, BlockRow, countCatalogBlocks, useBlockCatalog } from "./configuration";
+import { applyDeviceVisibility, BlockAdder, BlockRow, countCatalogBlocks, useBlockCatalog } from "./configuration";
 import type { BlockContentFilter, BlockCatalog } from "./configuration";
 import classes from "./configuration.module.css";
 import type { SmartHomeOptionsPatch, SmartHomePresentation } from "./types";
@@ -196,11 +196,11 @@ export function SmartHomeInlineEditor({
             <BlockAdder
               catalog={catalog}
               values={blocks}
-              onAdd={(ids, hiddenEntityIds = []) =>
+              onAdd={(ids, visibility) =>
                 onChange({
                   blocks: [...blocks, ...ids],
-                  ...(hiddenEntityIds.length > 0 && {
-                    excludedEntityIds: [...new Set([...filter.excludedEntityIds, ...hiddenEntityIds])],
+                  ...(visibility && {
+                    excludedEntityIds: applyDeviceVisibility(filter.excludedEntityIds, visibility),
                   }),
                 })
               }
