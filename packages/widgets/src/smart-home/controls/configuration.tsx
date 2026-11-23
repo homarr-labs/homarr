@@ -324,12 +324,12 @@ interface BlockAddButtonProps {
 export function BlockAddButton({ addItem, values }: BlockAddButtonProps) {
   const catalog = useFormBlockCatalog();
   const form = useFormContext();
-  const onAdd = (ids: string[], hiddenEntityIds: string[] = []) => {
+  const onAdd = (ids: string[], visibility?: DeviceEntityVisibility) => {
     ids.forEach((id) => addItem({ id }));
-    if (hiddenEntityIds.length === 0) return;
+    if (!visibility) return;
     const { options } = form.getValues();
     const excluded = toStrings(options.excludedEntityIds);
-    form.setFieldValue("options", { ...options, excludedEntityIds: [...new Set([...excluded, ...hiddenEntityIds])] });
+    form.setFieldValue("options", { ...options, excludedEntityIds: applyDeviceVisibility(excluded, visibility) });
   };
   return <BlockAdder catalog={catalog} values={values} onAdd={onAdd} />;
 }
@@ -339,8 +339,8 @@ type AddMode = "rooms" | "device" | "entity";
 interface BlockAdderProps {
   catalog: BlockCatalog;
   values: readonly string[];
-  /** `hiddenEntityIds` are entities the user unticked while adding a device; they join the hidden entities. */
-  onAdd: (ids: string[], hiddenEntityIds?: string[]) => void;
+  /** `visibility`: the entities the user ticked and unticked while adding a device. */
+  onAdd: (ids: string[], visibility?: DeviceEntityVisibility) => void;
 }
 
 const toAreaSetKey = (areaIds: readonly string[]) => areaIds.toSorted().join(",");
@@ -394,10 +394,21 @@ const useDeviceOptions = (catalog: BlockCatalog) => {
   }, [index, t]);
 };
 
+/** Which of a device's entities the user ticked (shown) and unticked (hidden) while adding it. */
+export interface DeviceEntityVisibility {
+  shown: string[];
+  hidden: string[];
+}
+
+/** The hidden entities after adding a device: unticked ones join them, ticked ones leave them; others stay. */
+export const applyDeviceVisibility = (excluded: readonly string[], { shown, hidden }: DeviceEntityVisibility) => [
+  ...new Set([...excluded.filter((id) => !shown.includes(id)), ...hidden]),
+];
+
 interface DeviceBlockSetupProps {
   catalog: BlockCatalog;
   deviceId: string;
-  onAdd: (label: string, hiddenEntityIds: string[]) => void;
+  onAdd: (label: string, visibility: DeviceEntityVisibility) => void;
 }
 
 /** After picking a device: an optional name for its card and which of its entities to show. */
@@ -433,10 +444,10 @@ function DeviceBlockSetup({ catalog, deviceId, onAdd }: DeviceBlockSetupProps) {
           size="xs"
           disabled={shown.length === 0}
           onClick={() =>
-            onAdd(
-              label,
-              entities.filter((entity) => !shown.includes(entity.id)).map((entity) => entity.id),
-            )
+            onAdd(label, {
+              shown,
+              hidden: entities.filter((entity) => !shown.includes(entity.id)).map((entity) => entity.id),
+            })
           }
         >
           {t("add.submit")}
@@ -474,10 +485,10 @@ function SourceBlockAdder({ catalog, values, onAdd }: BlockAdderProps) {
     setNotice(id && existingDeviceIds.has(id) ? "duplicateDevice" : null);
   };
 
-  const addDevice = (label: string, hiddenEntityIds: string[]) => {
+  const addDevice = (label: string, visibility: DeviceEntityVisibility) => {
     if (!ready || !deviceId || existingDeviceIds.has(deviceId)) return;
     setNotice(null);
-    onAdd([createDeviceBlockId(deviceId, source, label)], hiddenEntityIds);
+    onAdd([createDeviceBlockId(deviceId, source, label)], visibility);
     setDeviceId(null);
   };
 
