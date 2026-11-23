@@ -87,8 +87,8 @@ const slug = (value: string) =>
 
 const number = (capability: HomeyCapability | undefined) =>
   typeof capability?.value === "number" && Number.isFinite(capability.value) ? capability.value : undefined;
-// Homey's media times are seconds, but some apps (Alexa) report milliseconds: no track runs for six hours.
-const MAX_TRACK_SECONDS = 6 * 60 * 60;
+// Homey's media times are seconds. Apps that report milliseconds without saying so (Alexa) are known by name.
+const MILLISECOND_MEDIA_APPS = new Set(["homey:app:com.amazon.alexa"]);
 const updatedAt = (capability: HomeyCapability | undefined) => {
   const value = capability?.lastUpdated;
   const time = typeof value === "string" ? Date.parse(value) : value;
@@ -100,9 +100,12 @@ const updatedAt = (capability: HomeyCapability | undefined) => {
  * started and when playback last paused or resumed: as long as it has played straight through since the track
  * started, or paused once since, the position follows from those times. Otherwise it stays unknown.
  */
-const mediaTiming = (cap: DeviceCapabilities) => {
+const mediaTiming = (cap: DeviceCapabilities, device: HomeyDevice) => {
   const durationValue = number(cap("speaker_duration"));
-  const scale = durationValue !== undefined && durationValue > MAX_TRACK_SECONDS ? 1000 : 1;
+  // The unit the capability declares; without one, the app's known unit (an eight-hour audiobook stays eight hours).
+  const units = cap("speaker_duration")?.units ?? cap("speaker_position")?.units;
+  const milliseconds = units ? units === "ms" : MILLISECOND_MEDIA_APPS.has(device.driverUri ?? "");
+  const scale = milliseconds ? 1000 : 1;
   const mediaDuration = durationValue === undefined ? undefined : durationValue / scale;
   const positionValue = number(cap("speaker_position"));
   if (positionValue !== undefined) {
@@ -458,7 +461,7 @@ const buildMediaPlayer = (cap: DeviceCapabilities, device: HomeyDevice): Primary
       mediaAlbum: text(cap("speaker_album")),
       volume: number(volume),
       isMuted: boolean(cap("volume_mute")),
-      ...mediaTiming(cap),
+      ...mediaTiming(cap, device),
       shuffle: boolean(cap("speaker_shuffle")),
       repeat: repeatModes[text(cap("speaker_repeat")) ?? ""],
       mediaSource: text(cap("media_input")),

@@ -26,6 +26,8 @@ export const homeyDeviceSchema = z.object({
   zone: z.string().nullish(),
   class: z.string(),
   virtualClass: z.string().nullish(),
+  // The app the device comes from, e.g. `homey:app:com.amazon.alexa`.
+  driverUri: z.string().nullish(),
   capabilitiesObj: z.record(z.string(), homeyCapabilitySchema).nullish(),
   available: z.boolean().optional(),
   hidden: z.boolean().optional(),
