@@ -164,6 +164,13 @@ const transportButtons = {
 } as const;
 const TRANSPORT_GAP = 16;
 const TRANSPORT_GAP_MIN = 6;
+// The wide (one row) media tile: gaps of `.mediaRow` and `.transport`, the play and volume button sizes, and the
+// least width that keeps a title and artist readable.
+const WIDE_ROW_GAP = 12;
+const WIDE_BUTTON_GAP = 6;
+const WIDE_PLAY_SIZE = 52;
+const WIDE_VOLUME_SIZE = 34;
+const WIDE_TITLE_MIN = 96;
 // Heights of the media tile's rows, to decide which optional rows fit.
 const MEDIA_HEAD_HEIGHT = 58;
 const MEDIA_ROW_GAP = 8;
@@ -957,10 +964,12 @@ function MediaControl({ entity, width, height }: ControlProps) {
     const miniWidth = width - TILE_PADDING * 2;
     const miniHeight = height - TILE_PADDING * 2;
     const miniMain = transportButtons.compact.main;
+    // Only the skip buttons the player supports need room: play and one skip fit where two would not.
+    const miniSkips = Number(canPrevious) + Number(canNext);
     const miniSide =
-      miniWidth >= miniMain + 2 * (transportButtons.compact.side + TRANSPORT_GAP_MIN)
+      miniWidth >= miniMain + miniSkips * (transportButtons.compact.side + TRANSPORT_GAP_MIN)
         ? "sm"
-        : miniWidth >= miniMain + 2 * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
+        : miniWidth >= miniMain + miniSkips * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
           ? "xs"
           : null;
     // The cover needs its own height besides the playback row; a short tile drops it rather than clip the buttons.
@@ -1032,11 +1041,32 @@ function MediaControl({ entity, width, height }: ControlProps) {
   }
 
   if (tier === "wide") {
+    // One width budget for the row: the title keeps room to be read. What does not fit goes in this order: the
+    // volume moves onto the cover (or goes when there is none), then the skip buttons, then the cover.
+    const rowWidth = width - TILE_PADDING * 2;
+    const artSize = Math.min(height - 24, 56);
+    const skips = Number(canPrevious) + Number(canNext);
+    let withArt = showsCover;
+    let withSkips = skips > 0;
+    let volumePlace: "row" | "cover" | null = canSetVolume && attributes.volume !== undefined ? "row" : null;
+    const titleRoom = () =>
+      rowWidth -
+      (withArt ? artSize + WIDE_ROW_GAP : 0) -
+      WIDE_ROW_GAP -
+      WIDE_PLAY_SIZE -
+      (withSkips ? skips * (transportButtons.compact.side + WIDE_BUTTON_GAP) : 0) -
+      (volumePlace === "row" ? WIDE_VOLUME_SIZE + WIDE_BUTTON_GAP : 0);
+    if (titleRoom() < WIDE_TITLE_MIN && volumePlace === "row") volumePlace = withArt ? "cover" : null;
+    if (titleRoom() < WIDE_TITLE_MIN) withSkips = false;
+    if (titleRoom() < WIDE_TITLE_MIN) {
+      withArt = false;
+      if (volumePlace === "cover") volumePlace = null;
+    }
     return (
       <Tile theme={theme} media className={classes.mediaTile}>
         {background}
         <div className={classes.mediaRow}>
-          {showsCover && width >= 260 ? art(Math.min(height - 24, 56)) : null}
+          {withArt ? art(artSize, volumePlace === "cover" ? volumeButton(true) : undefined) : null}
           <div className={classes.headText}>
             <span className={classes.name} title={title} data-entity-name={title === entity.name}>
               {title}
@@ -1044,7 +1074,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.state}>{subtitle}</span>
           </div>
           <div className={classes.transport}>
-            {width >= 300 && canPrevious ? (
+            {withSkips && canPrevious ? (
               <RoundButton
                 size="sm"
                 label={tMedia("previous", { name: entity.name })}
@@ -1063,7 +1093,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             >
               {playGlyph}
             </RoundButton>
-            {width >= 300 && canNext ? (
+            {withSkips && canNext ? (
               <RoundButton
                 size="sm"
                 label={tMedia("next", { name: entity.name })}
@@ -1073,7 +1103,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
                 <IconPlayerSkipForward size={17} fill="currentColor" />
               </RoundButton>
             ) : null}
-            {width >= 240 ? volumeButton(false) : null}
+            {volumePlace === "row" ? volumeButton(false) : null}
           </div>
         </div>
       </Tile>
