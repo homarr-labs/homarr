@@ -26,6 +26,19 @@ const getPageVisibility = () => typeof document === "undefined" || document.visi
 
 const usePageVisible = () => useSyncExternalStore(subscribeToVisibility, getPageVisibility, () => true);
 
+const sameDevice = (first: SmartHomeEntity["device"], second: SmartHomeEntity["device"]) =>
+  first?.id === second?.id &&
+  first?.name === second?.name &&
+  first?.entityName === second?.entityName &&
+  first?.model === second?.model;
+
+/** Whether two versions of an entity agree on what the smart home's registry says about it (not its state). */
+const sameRegistry = (first: SmartHomeEntity, second: SmartHomeEntity) =>
+  first.name === second.name &&
+  first.areaId === second.areaId &&
+  first.icon === second.icon &&
+  sameDevice(first.device, second.device);
+
 export const mergeSmartHomePatch = (
   snapshot: SmartHomeSnapshot | undefined,
   patch: SmartHomeEntityPatch,
@@ -44,9 +57,10 @@ export const mergeSmartHomePatch = (
     changed.delete(entity.id);
     if (next.lastUpdated < entity.lastUpdated) return [entity];
     if (next.lastUpdated === entity.lastUpdated) {
-      if (next.name === entity.name && next.areaId === entity.areaId && next.icon === entity.icon) return [entity];
+      // A registry change (renamed, moved to another room or device) keeps the state time.
+      if (sameRegistry(next, entity)) return [entity];
       touched = true;
-      return [{ ...entity, name: next.name, areaId: next.areaId, icon: next.icon }];
+      return [{ ...entity, name: next.name, areaId: next.areaId, icon: next.icon, device: next.device }];
     }
     touched = true;
     return [next];
@@ -104,10 +118,7 @@ export const useSmartHomeSnapshot = (
         entity &&
         !query.isFetching &&
         (seen.lastUpdated < entity.lastUpdated ||
-          (seen.lastUpdated === entity.lastUpdated &&
-            seen.name === entity.name &&
-            seen.areaId === entity.areaId &&
-            seen.icon === entity.icon))
+          (seen.lastUpdated === entity.lastUpdated && sameRegistry(seen, entity)))
       )
         patched.current.delete(id);
       if (!entity && !query.isFetching && seen.lastUpdated < data.updatedAt) patched.current.delete(id);

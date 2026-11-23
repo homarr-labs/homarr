@@ -2312,6 +2312,21 @@ button.deviceRowMain:hover {
   grid-column: span 2;
 }
 
+/* A control that needs a code gets the code field above it, and a row more for it. */
+.deviceDetailCell[data-code="true"] {
+  display: flex;
+  flex-direction: column;
+  grid-row: span 2;
+}
+
+.deviceDetailCell[data-code="true"][data-main="true"] {
+  grid-row: span 3;
+}
+
+.deviceDetailCell[data-code="true"] > .measured {
+  flex: 1;
+}
+
 .deviceDetailReadings {
   display: grid;
   padding: 0;
