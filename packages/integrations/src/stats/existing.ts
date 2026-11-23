@@ -410,8 +410,12 @@ existingStatsProviders.opnsense = adapter(
   "opnsense",
   [metric("cpu", "CPU", "percent"), metric("memoryPercent", "Memory", "percent")],
   async (client) => {
-    const [cpu, memory] = await Promise.all([client.getFirewallCpuAsync(), client.getFirewallMemoryAsync()]);
-    return { cpu: cpu.total, memoryPercent: memory.percent };
+    // Memory comes from its own endpoint; when it fails, CPU is still reported (as before memory was added).
+    const [cpu, memory] = await Promise.all([
+      client.getFirewallCpuAsync(),
+      client.getFirewallMemoryAsync().catch(() => null),
+    ]);
+    return { cpu: cpu.total, memoryPercent: memory?.percent ?? null };
   },
   (data) => data,
 );

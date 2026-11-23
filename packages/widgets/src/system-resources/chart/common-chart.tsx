@@ -24,10 +24,13 @@ export const CommonChart = ({
   advanced = false,
   plain = false,
   positions,
+  showValueWithoutHistory = false,
 }: {
   data: Record<string, any>[];
   /** Where each row sits across the chart, 0 to 1 (by its time). Without them the rows are evenly spaced. */
   positions?: readonly number[];
+  /** Shows the last value also in compact mode while there is no history to draw. */
+  showValueWithoutHistory?: boolean;
   series: { name: string; color: string }[];
   title: ReactNode;
   icon: TablerIcon;
@@ -163,7 +166,7 @@ export const CommonChart = ({
                   {title}
                 </Text>
               )}
-              {advanced && lastValue && (
+              {(advanced || showValueWithoutHistory) && lastValue && (
                 <Text size={height > 100 ? "md" : "xs"} fw={600} ta="center">
                   {lastValue}
                 </Text>
