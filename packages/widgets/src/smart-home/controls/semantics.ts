@@ -398,7 +398,9 @@ export const formatEntityState = (entity: HaEntity): string => {
       if (attributes.stateLabel) return attributes.stateLabel;
       const value = Number(entity.state);
       if (Number.isNaN(value)) return entity.state;
-      return `${formatNumber(value)}${entity.unit === "%" ? "" : " "}${entity.unit ?? ""}`.trim();
+      // A number entity shows as many digits as its step has (0.01 shows two), so every step is visible.
+      const digits = entity.domain === "number" && attributes.step ? Math.max(1, decimalsOf(attributes.step)) : 1;
+      return `${formatNumber(value, digits)}${entity.unit === "%" ? "" : " "}${entity.unit ?? ""}`.trim();
     }
     case "binary_sensor": {
       const labels = binaryLabels[entity.deviceClass ?? ""];
@@ -468,7 +470,8 @@ export const stepNumber = (entity: HaEntity, direction: 1 | -1): number | null =
   const current = Number(entity.state);
   if (isUnavailable(entity) || entity.state === "" || Number.isNaN(current)) return null;
   const { min, max, step = 1 } = entity.attributes;
-  const next = Number((current + direction * step).toFixed(decimalsOf(step)));
+  // Rounded to the finer of the value's and the step's digits: 0.5 + 1 stays 1.5.
+  const next = Number((current + direction * step).toFixed(Math.max(decimalsOf(step), decimalsOf(current))));
   if (min !== undefined && next < min) return null;
   if (max !== undefined && next > max) return null;
   return next;
