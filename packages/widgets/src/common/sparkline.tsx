@@ -171,7 +171,9 @@ const endTangent = (from: Point, to: Point, neighbourTangent: number) =>
 const createMonotonePath = (points: Point[]) => {
   const [first] = points;
   if (!first) return "";
-  if (points.length < 3) {
+  // Points that share an x (samples at the same moment) have no slope between them: such a run is drawn straight.
+  const coincident = points.some((point, index) => index > 0 && point.x <= (points[index - 1]?.x ?? -Infinity));
+  if (points.length < 3 || coincident) {
     return points.map((point, index) => `${index === 0 ? "M" : "L"}${format(point.x)},${format(point.y)}`).join(" ");
   }
 

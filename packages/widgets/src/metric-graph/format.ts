@@ -26,6 +26,7 @@ const statsUnits = new Set<string>([
   "bytesPerSecond",
   "celsius",
   "watts",
+  "kilowattHours",
 ]);
 const isStatsUnit = (unit: string): unit is StatsUnit => statsUnits.has(unit);
 
@@ -81,8 +82,9 @@ export const getSeriesDomain = (values: readonly number[], unit: string | null):
 
 /**
  * Samples each series at the same moments so a combined graph lines its values up in time: each moment takes the
- * last value recorded since the one before. A moment without a recorded value stays empty (null), so the median and
- * the readout never show a value that was not measured; the graph bridges such gaps only in how it draws the line.
+ * last point recorded since the one before, a null point included (a sensor that became unavailable, or a gap in
+ * the statistics history). A moment without any point stays empty (null) too, so the median and the readout never
+ * show a value that was not measured; the graph bridges empty moments only in how it draws the line.
  */
 export const alignToGrid = (points: readonly MetricPoint[], grid: readonly number[]) => {
   let cursor = 0;
@@ -92,7 +94,7 @@ export const alignToGrid = (points: readonly MetricPoint[], grid: readonly numbe
     let value: number | null = null;
     while (cursor < points.length && (points[cursor]?.time ?? Number.POSITIVE_INFINITY) <= time) {
       const point = points[cursor];
-      if (point && point.time > from && point.value !== null) value = point.value;
+      if (point && point.time > from) value = point.value;
       cursor++;
     }
     return value;

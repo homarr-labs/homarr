@@ -77,8 +77,13 @@ export const WidgetMetricGraphEntriesInput = ({ property }: CommonWidgetInputPro
     next.splice(index + delta, 0, item);
     save(next);
   };
+  const canAdd =
+    integrationId !== null &&
+    ids.includes(integrationId) &&
+    value !== null &&
+    entries.length < MAX_METRIC_GRAPH_ENTRIES;
   const add = () => {
-    if (!integrationId || !value) return;
+    if (!canAdd) return;
     const usedColors = new Set(entries.map((entry) => entry.color));
     const color = metricGraphColors.find((item) => !usedColors.has(item)) ?? "blue";
     const base = { id: createId(), integrationId, label: "", color };
@@ -128,12 +133,7 @@ export const WidgetMetricGraphEntriesInput = ({ property }: CommonWidgetInputPro
         data={valueOptions}
         nothingFoundMessage={t("noMetrics")}
       />
-      <Button
-        size="xs"
-        leftSection={<IconPlus size={14} />}
-        disabled={!integrationId || !value || entries.length >= MAX_METRIC_GRAPH_ENTRIES}
-        onClick={add}
-      >
+      <Button size="xs" leftSection={<IconPlus size={14} />} disabled={!canAdd} onClick={add}>
         {t("add")}
       </Button>
       {entries.map((entry, index) => (

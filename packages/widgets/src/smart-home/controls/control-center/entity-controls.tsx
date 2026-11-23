@@ -878,6 +878,7 @@ function MediaProgress({ entity }: { entity: HaEntity }) {
 }
 
 function MediaControl({ entity, width, height }: ControlProps) {
+  const tMedia = useI18n("widget.smartHome-controls.device.media");
   const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const tier = getTier(width, height);
@@ -998,7 +999,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             {canPrevious && miniSide ? (
               <RoundButton
                 size={miniSide}
-                label={`Previous track on ${entity.name}`}
+                label={tMedia("previous", { name: entity.name })}
                 disabled={theme.unavailable}
                 onClick={() => void run({ type: "mediaPrevious" })}
               >
@@ -1007,7 +1008,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             ) : null}
             <RoundButton
               size="lg"
-              label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
+              label={tMedia(playing ? "pause" : "play", { name: entity.name })}
               pending={pending}
               disabled={theme.unavailable || !canPlayPause}
               onClick={toggle}
@@ -1017,7 +1018,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             {canNext && miniSide ? (
               <RoundButton
                 size={miniSide}
-                label={`Next track on ${entity.name}`}
+                label={tMedia("next", { name: entity.name })}
                 disabled={theme.unavailable}
                 onClick={() => void run({ type: "mediaNext" })}
               >
@@ -1046,7 +1047,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             {width >= 300 && canPrevious ? (
               <RoundButton
                 size="sm"
-                label={`Previous track on ${entity.name}`}
+                label={tMedia("previous", { name: entity.name })}
                 disabled={theme.unavailable}
                 onClick={() => void run({ type: "mediaPrevious" })}
               >
@@ -1055,7 +1056,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             ) : null}
             <RoundButton
               size="lg"
-              label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
+              label={tMedia(playing ? "pause" : "play", { name: entity.name })}
               pending={pending}
               disabled={theme.unavailable || !canPlayPause}
               onClick={toggle}
@@ -1065,7 +1066,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             {width >= 300 && canNext ? (
               <RoundButton
                 size="sm"
-                label={`Next track on ${entity.name}`}
+                label={tMedia("next", { name: entity.name })}
                 disabled={theme.unavailable}
                 onClick={() => void run({ type: "mediaNext" })}
               >
@@ -1161,7 +1162,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
           {canPrevious && sideSize && (
             <RoundButton
               size={sideSize}
-              label={`Previous track on ${entity.name}`}
+              label={tMedia("previous", { name: entity.name })}
               disabled={theme.unavailable}
               onClick={() => void run({ type: "mediaPrevious" })}
             >
@@ -1170,7 +1171,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
           )}
           <RoundButton
             size={roomyTransport ? "xl" : "lg"}
-            label={playing ? `Pause ${entity.name}` : `Play ${entity.name}`}
+            label={tMedia(playing ? "pause" : "play", { name: entity.name })}
             pending={pending}
             disabled={theme.unavailable || !canPlayPause}
             onClick={toggle}
@@ -1180,7 +1181,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
           {canNext && sideSize && (
             <RoundButton
               size={sideSize}
-              label={`Next track on ${entity.name}`}
+              label={tMedia("next", { name: entity.name })}
               disabled={theme.unavailable}
               onClick={() => void run({ type: "mediaNext" })}
             >
@@ -1213,6 +1214,7 @@ function VolumeButton({
   disabled: boolean;
   onCommit: (value: number) => void;
 }) {
+  const tMedia = useI18n("widget.smartHome-controls.device.media");
   const [opened, setOpened] = useState(false);
   const [draft, setDraft] = useState<number | null>(null);
   // Inside a dialog (the entity's details) the slider opens within it, so it stays in the dialog's focus scope.
@@ -1240,7 +1242,7 @@ function VolumeButton({
           size={onCover ? "md" : "lg"}
           data-on-cover={onCover}
           disabled={blocked}
-          aria-label={`${entity.name} volume`}
+          aria-label={tMedia("volume", { name: entity.name })}
           aria-expanded={opened && !blocked}
           onPointerDown={stopEvent}
           onClick={(event) => {
@@ -1267,7 +1269,7 @@ function VolumeButton({
             max={100}
             value={shown}
             label={null}
-            thumbLabel={`${entity.name} volume`}
+            thumbLabel={tMedia("volume", { name: entity.name })}
             onChange={setDraft}
             onChangeEnd={(value) => {
               setDraft(null);

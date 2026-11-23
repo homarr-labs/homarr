@@ -193,8 +193,15 @@ interface ChartProps {
 const getTitle = ({ entry, series }: ResolvedEntry, fallbackLabel: string) =>
   entry.label || series?.name || (series ? getEntrySeriesKey(entry) : fallbackLabel);
 
-const getCurrent = (series: MetricSeries | undefined) =>
-  series?.current ?? series?.points.findLast((point) => point.value !== null)?.value ?? null;
+/**
+ * The value shown as current. A smart home sensor reports its own (null while it is unavailable, which stays null);
+ * a statistics value falls back to the last recorded one until its source answers again.
+ */
+const getCurrent = ({ entry, series }: Pick<ResolvedEntry, "entry" | "series">) => {
+  if (!series) return null;
+  if (entry.source === "smartHome") return series.current;
+  return series.current ?? series.points.findLast((point) => point.value !== null)?.value ?? null;
+};
 
 const MetricCard = ({
   item,
@@ -218,7 +225,7 @@ const MetricCard = ({
     unit,
   );
   const median = getMedian(values);
-  let lastValue = formatMetricValue(getCurrent(series), unit);
+  let lastValue = formatMetricValue(getCurrent(item), unit);
   if (median !== null) lastValue += ` (${medianLabel(formatMetricValue(median, unit))})`;
   if (item.failed && !series) lastValue = fallbackLabel;
 
@@ -231,6 +238,8 @@ const MetricCard = ({
       icon={getIcon(unit)}
       labelDisplayMode={labelDisplayMode}
       lastValue={lastValue}
+      // Without a history to draw (it failed, or only the live value is known), the current value still shows.
+      showValueWithoutHistory
       yDomain={domain}
       chartType={chartType}
       advanced={advanced}
@@ -292,7 +301,7 @@ const CombinedGraph = ({
     id: line.item.entry.id,
     color: line.item.entry.color,
     title: getTitle(line.item, fallbackLabel),
-    current: getCurrent(line.item.series),
+    current: getCurrent(line.item),
     median: getMedian(line.raw),
     unit: line.unit,
     raw: line.raw,

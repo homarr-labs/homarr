@@ -112,7 +112,7 @@ export const metricGraphRouter = createTRPCRouter({
           const current = entity ? toNumber(entity.state) : null;
           const points: SmartHomeHistoryPoint[] = (
             history.find((item) => item.entityId === entityId)?.points ?? []
-          ).filter((point) => point.time >= start);
+          ).filter((point) => point.time >= start && point.time <= end);
           // History is cached for minutes; the live state keeps the line moving at the refresh interval.
           if (current !== null) points.push({ time: end, value: current });
           return {
