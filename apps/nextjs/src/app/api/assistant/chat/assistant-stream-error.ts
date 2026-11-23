@@ -97,6 +97,15 @@ const hasUnavailableToolError = (error: unknown, seen = new Set<object>()): bool
   );
 };
 
+const genericWorkshopGatewayMessages = new Set([
+  "Upstream model service returned HTTP 502.",
+  "Upstream model service returned HTTP 502. Bad Gateway",
+  "Upstream model service returned HTTP 502. Bad Gateway.",
+  "Upstream model service returned HTTP 502. No readable error details were returned.",
+  "Upstream model service returned HTTP 502. The response was not a structured JSON error.",
+  "Upstream model service returned HTTP 502. No error message was returned.",
+]);
+
 export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider = false) => {
   if (isHomarrProvider && RetryError.isInstance(error)) error = error.lastError;
   const statusCode = getStatusCode(error);
@@ -111,7 +120,7 @@ export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider 
   if (
     isHomarrProvider &&
     statusCode === 502 &&
-    (!upstreamMessage || upstreamMessage.startsWith("Upstream model service returned HTTP 502."))
+    (!upstreamMessage || genericWorkshopGatewayMessages.has(upstreamMessage))
   ) {
     return "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.";
   }
