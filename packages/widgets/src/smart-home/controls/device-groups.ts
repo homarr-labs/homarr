@@ -195,7 +195,9 @@ export const toPanelItems = (
   const emitted = new Set<string>();
   return entities.flatMap((entity): PanelItem[] => {
     const group = entity.device ? members.get(entity.device.id) : undefined;
-    if (!entity.device || !group || group.length < 2) return [{ kind: "entity", id: entity.id, entity }];
+    // A lone entity stands on its own, unless the user added its device under a name of their own.
+    if (!entity.device || !group || (group.length < 2 && !deviceLabels.has(entity.device.id)))
+      return [{ kind: "entity", id: entity.id, entity }];
     if (emitted.has(entity.device.id)) return [];
     emitted.add(entity.device.id);
     const [primary = entity] = group.toSorted(comparePrimary);

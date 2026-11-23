@@ -367,28 +367,45 @@ const speedRange = (capability: HomeyCapability) => {
   return { min, max: max > min ? max : min + 1 };
 };
 
+/** The step between speed levels: the declared one, or whole levels for a range wider than one. */
+const speedStep = (capability: HomeyCapability) => {
+  const { min, max } = speedRange(capability);
+  return capability.step ?? (max - min > 1 ? 1 : undefined);
+};
+
+/**
+ * Where 0 % lies. Zero on the slider means "off"; a range that starts above zero (1 to 3) keeps its lowest speed
+ * as a running speed above 0 %, a range from zero starts at its own zero.
+ */
+const speedOrigin = (capability: HomeyCapability) => Math.min(0, speedRange(capability).min);
+
 const fanSpeedPercent = (capability: HomeyCapability | undefined) => {
   const value = number(capability);
   if (!capability || value === undefined) return undefined;
-  const { min, max } = speedRange(capability);
-  return Math.round(((value - min) / (max - min)) * 100);
+  const { max } = speedRange(capability);
+  const origin = speedOrigin(capability);
+  return Math.round(((value - origin) / (max - origin)) * 100);
 };
 
 /** The slider distance between two speed levels, e.g. 8.33 % for a fan with twelve levels. */
 const fanSpeedStepPercent = (capability: HomeyCapability | undefined) => {
-  if (!capability?.step) return undefined;
-  const { min, max } = speedRange(capability);
-  return (capability.step / (max - min)) * 100;
+  if (!capability) return undefined;
+  const step = speedStep(capability);
+  if (!step) return undefined;
+  const { max } = speedRange(capability);
+  return (step / (max - speedOrigin(capability))) * 100;
 };
 
-/** Converts a 0–100 slider value back to the capability's own range, snapped to its step. */
+/** Converts a 0–100 slider value back to the capability's own range, snapped to its step (the same step as above). */
 export const toHomeyFanSpeed = (capability: HomeyCapability, percentage: number) => {
   const { min, max } = speedRange(capability);
-  const raw = min + (Math.min(100, Math.max(0, percentage)) / 100) * (max - min);
-  const step = capability.step ?? (max - min > 1 ? 1 : undefined);
-  if (!step) return raw;
-  // Any speed above zero should still turn the fan, so round up from the lowest step.
-  return Math.min(max, Math.max(min + step, Math.round((raw - min) / step) * step + min));
+  const origin = speedOrigin(capability);
+  const raw = origin + (Math.min(100, Math.max(0, percentage)) / 100) * (max - origin);
+  const step = speedStep(capability);
+  if (!step) return Math.max(min, raw);
+  // Any request still turns the fan: a range from zero rounds up to its first step, one above zero to its minimum.
+  const lowest = min > 0 ? min : min + step;
+  return Math.min(max, Math.max(lowest, Math.round((raw - min) / step) * step + min));
 };
 
 const buildFan = (cap: DeviceCapabilities, capabilities: Record<string, HomeyCapability>): PrimaryEntity | null => {

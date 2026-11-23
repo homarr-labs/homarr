@@ -503,7 +503,7 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
   }
   const size = configuration.advanced ? "compact" : configuration.controlSize;
   // The focus view prefers small tiles but should still fill its large dialog.
-  const layout = getControlPanelLayout(width, height, items.length, size, configuration.advanced);
+  const layout = getControlPanelLayout(width, height, items.length, size, configuration.advanced || size !== "compact");
   const overflowing = layout.capacity < items.length;
   const capacity = Math.max(0, layout.capacity - Number(overflowing));
   const pages = Math.max(1, Math.ceil(items.length / Math.max(1, capacity)));
