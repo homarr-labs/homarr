@@ -10,6 +10,8 @@ import { formatEntityState, formatRelativeTime } from "../semantics";
 import { useSmartHomeAreas, useSmartHomeInteractionBlock } from "../store";
 import { isSensorLike } from "../technical/meta";
 import type { HaEntity } from "../types";
+import { entityNeedsCode } from "./capabilities";
+import { CodePrompt } from "./code-prompt";
 import { Sparkline } from "./controls";
 import { EntityControl } from "./entity-controls";
 import { getHistoryValues } from "./history";
@@ -84,12 +86,26 @@ export function DeviceDetail({ device, opened, onClose }: DeviceDetailProps) {
             {controls.length > 0 && (
               <div className={classes.deviceDetailGrid}>
                 {controls.map((entity) => (
-                  <div key={entity.id} className={classes.deviceDetailCell} data-main={entity === device.primary}>
-                    <Measured>
-                      {(width, height) => (
-                        <EntityControl entity={asShown(entity, device)} width={width} height={height} details={false} />
-                      )}
-                    </Measured>
+                  <div
+                    key={entity.id}
+                    className={classes.deviceDetailCell}
+                    data-main={entity === device.primary}
+                    data-code={entityNeedsCode(entity)}
+                  >
+                    {/* Locks and alarms that need a code ask for it here, as their own details do; closing the
+                        dialog clears it. */}
+                    <CodePrompt entity={entity}>
+                      <Measured>
+                        {(width, height) => (
+                          <EntityControl
+                            entity={asShown(entity, device)}
+                            width={width}
+                            height={height}
+                            details={false}
+                          />
+                        )}
+                      </Measured>
+                    </CodePrompt>
                   </div>
                 ))}
               </div>
