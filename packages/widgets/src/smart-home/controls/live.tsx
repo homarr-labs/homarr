@@ -970,9 +970,15 @@ function LiveSnapshot({ integrationId, selection, source, historyEntityIds, chil
     clientApi.widget.smartHome.executeProtectedAction.useMutation({ gcTime: 0 });
   const snapshot = useSmartHomeSnapshot(integrationId, selection, { live: true });
   // Without an explicit list every measured sensor gets a trend; a custom layout asks only for its graphs.
-  const historyKey = (snapshot.data?.entities ?? [])
-    .filter((entity) => (historyEntityIds ? historyEntityIds.includes(entity.id) : isHistoryCandidate(entity)))
-    .map((entity) => entity.id)
+  const loaded = snapshot.data?.entities ?? [];
+  const loadedIds = new Set(loaded.map((entity) => entity.id));
+  const historyKey = (
+    historyEntityIds
+      ? historyEntityIds.filter((id) => loadedIds.has(id))
+      : loaded.filter(isHistoryCandidate).map((entity) => entity.id)
+  )
+    // The limit applies in the given order (a layout's reading order), before the ids are sorted into a stable key.
+    .slice(0, HISTORY_LIMIT)
     .toSorted()
     .slice(0, HISTORY_LIMIT)
     .join(",");

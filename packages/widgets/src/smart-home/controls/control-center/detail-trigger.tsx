@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { UnstyledButton, VisuallyHidden } from "@mantine/core";
 
+import { useSmartHomeInteractionBlock } from "../store";
 import { DetailContext, DetailEntityContext, useDetailsEnabled } from "./hooks";
 import classes from "./styles.module.css";
 
@@ -24,6 +25,8 @@ interface DetailTriggerProps {
 export function DetailTrigger({ entityId, name, children }: DetailTriggerProps) {
   const detail = useContext(DetailContext);
   const enabled = useDetailsEnabled();
+  // A read-only card or element stays read-only in the details it opens, like every other way into them.
+  const readOnly = useSmartHomeInteractionBlock() === "readOnly";
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export function DetailTrigger({ entityId, name, children }: DetailTriggerProps) 
     let origin: { x: number; y: number } | null = null;
     let fired = false;
 
-    const open = () => detail.open(entityId);
+    const open = () => detail.open(entityId, { readOnly });
     const cancel = () => {
       window.clearTimeout(timer);
       origin = null;
@@ -94,7 +97,7 @@ export function DetailTrigger({ entityId, name, children }: DetailTriggerProps) 
       host.removeEventListener("pointercancel", cancel, true);
       host.removeEventListener("click", onClick, true);
     };
-  }, [detail, enabled, entityId]);
+  }, [detail, enabled, entityId, readOnly]);
 
   if (!enabled || !detail) return children;
 
@@ -105,7 +108,7 @@ export function DetailTrigger({ entityId, name, children }: DetailTriggerProps) 
           component={UnstyledButton}
           className={classes.detailShortcut}
           aria-haspopup="dialog"
-          onClick={() => detail.open(entityId)}
+          onClick={() => detail.open(entityId, { readOnly })}
         >
           {name}, show details
         </VisuallyHidden>

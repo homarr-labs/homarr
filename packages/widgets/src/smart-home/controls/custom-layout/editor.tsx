@@ -81,6 +81,7 @@ import { findFreeSlot, LAYOUT_GAP } from "./responsive";
 import {
   getLayoutEntityIds,
   getLayoutGraphEntityIds,
+  NARROW_WIDGET_WIDTH,
   parseSmartHomeLayout,
   SMART_HOME_CARD_MIN,
   SMART_HOME_LAYOUT_COLUMNS,
@@ -107,7 +108,6 @@ import {
   DEFAULT_CARD_ACCENT,
   getCardPalette,
   LayoutElement,
-  NARROW_WIDGET_WIDTH,
   placementStyle,
 } from "./view";
 
@@ -972,7 +972,13 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     findFreeSlot(cards, SMART_HOME_CARD_MIN.w, SMART_HOME_CARD_MIN.h) === null;
 
   const addCards = (created: SmartHomeLayoutCard | null) => {
-    if (!created || cards.length >= SMART_HOME_LAYOUT_MAX_CARDS) {
+    // A new card, copy or template obeys the same grid rules as an import: inside the widget, nothing on top of
+    // anything and every id once.
+    if (
+      !created ||
+      cards.length >= SMART_HOME_LAYOUT_MAX_CARDS ||
+      !isValidArrangement([...cards, created], SMART_HOME_LAYOUT_COLUMNS, SMART_HOME_LAYOUT_ROWS)
+    ) {
       notApplied(t("noRoom"));
       return;
     }
@@ -1267,7 +1273,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                   className={classes.canvas}
                   data-empty={cards.length === 0}
                   style={{
-                    maxWidth: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
+                    // Exactly the widget's width: a larger widget scrolls here rather than being previewed narrower.
+                    width: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
                     // Explicit, because the canvas is a size container and so does not grow with its rows.
                     height: canvasHeight + CANVAS_PADDING * 2,
                     gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,

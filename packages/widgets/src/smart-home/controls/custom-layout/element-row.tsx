@@ -379,8 +379,16 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             min={0}
             max={3}
             allowDecimal={false}
+            allowNegative={false}
+            clampBehavior="strict"
             value={element.decimals ?? ""}
-            onChange={(value) => set({ decimals: typeof value === "number" ? value : undefined })}
+            // A value outside 0 to 3 is never applied, not even for a moment while it is typed.
+            onChange={(value) =>
+              set({
+                decimals:
+                  typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 3 ? value : undefined,
+              })
+            }
           />
           <NumberInput
             size="sm"

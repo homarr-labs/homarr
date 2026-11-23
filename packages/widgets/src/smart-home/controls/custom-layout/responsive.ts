@@ -11,6 +11,10 @@ export const LAYOUT_GAP = 8;
 const MIN_COLUMN_WIDTH = 6;
 const MIN_CARD_WIDTH = 140;
 
+/** Columns for a narrow widget that stacks its cards: as many as fit side by side at a readable card width. */
+export const getStackColumns = (width: number) =>
+  Math.min(SMART_HOME_LAYOUT_COLUMNS, Math.max(1, Math.floor((width + LAYOUT_GAP) / (MIN_CARD_WIDTH + LAYOUT_GAP))));
+
 /** Columns for the widget's actual width (not the viewport), at most the stored 12. */
 export const getLayoutColumns = (width: number) =>
   Math.min(SMART_HOME_LAYOUT_COLUMNS, Math.max(1, Math.floor((width + LAYOUT_GAP) / (MIN_COLUMN_WIDTH + LAYOUT_GAP))));

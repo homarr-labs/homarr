@@ -64,7 +64,7 @@ import {
 } from "../semantics";
 import { useCameraLive } from "../camera-live";
 import { useSmartHomeIntegrationId } from "../live";
-import { useSmartHomeEntity, useSmartHomeInteractionBlock } from "../store";
+import { SmartHomeInteractionProvider, useSmartHomeEntity, useSmartHomeInteractionBlock } from "../store";
 import type { HaAction, HaDomain, HaEntity } from "../types";
 import { Dial, HoldButton, KeyButton, PillSlider, RoundButton } from "./controls";
 import { EntityHistoryGraph } from "./history-graph";
@@ -95,6 +95,7 @@ import {
   useRunner,
   useShowsPart,
 } from "./hooks";
+import type { DetailApi } from "./hooks";
 import classes from "./styles.module.css";
 import { Head, Tile, useEntityTheme } from "./theme";
 import type { EntityTheme } from "./theme";
@@ -1914,12 +1915,27 @@ export function EntityControl({ entity, width, height, details = true }: EntityC
 }
 
 function StandaloneDetail({ children }: { children: ReactNode }) {
-  const [detailId, setDetailId] = useState<string | null>(null);
-  const api = useMemo(() => ({ open: setDetailId }), []);
+  const [opened, setOpened] = useState<{ id: string; readOnly: boolean } | null>(null);
+  const api = useMemo(
+    (): DetailApi => ({ open: (id, options) => setOpened({ id, readOnly: options?.readOnly === true }) }),
+    [],
+  );
+  const detail = (
+    <EntityDetail
+      entityId={opened?.id ?? null}
+      onClose={() => setOpened(null)}
+      // A related entity opened from the detail keeps its restrictions.
+      onOpen={(id) => setOpened((current) => ({ id, readOnly: current?.readOnly ?? false }))}
+    />
+  );
   return (
     <DetailProvider value={api}>
       {children}
-      <EntityDetail entityId={detailId} onClose={() => setDetailId(null)} onOpen={setDetailId} />
+      {opened?.readOnly ? (
+        <SmartHomeInteractionProvider blocked="readOnly">{detail}</SmartHomeInteractionProvider>
+      ) : (
+        detail
+      )}
     </DetailProvider>
   );
 }

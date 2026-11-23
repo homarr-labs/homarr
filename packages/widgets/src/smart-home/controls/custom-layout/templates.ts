@@ -1,7 +1,7 @@
 import { createId } from "@homarr/common";
 import type { SmartHomeCatalogEntity } from "@homarr/integrations/types";
 
-import { fitElementsIntoCard } from "./card-grid";
+import { fitElementsIntoCard, resizeCardWithElements, scaleElementPlacements } from "./card-grid";
 import { getShortName } from "./names";
 import { findFreeSlot } from "./responsive";
 import { SMART_HOME_LAYOUT_MAX_TEXT, staticElementViews } from "./schema";
@@ -107,8 +107,11 @@ export const cardFromTemplate = (
     if (!entity) return [];
     return [{ ...options, id: createId(), source, entityId: entity.id }];
   });
-  return fitElementsIntoCard({
-    ...slot,
+  return intoSlot(slot, {
+    x: slot.x,
+    y: slot.y,
+    w: template.w,
+    h: template.h,
     id: createId(),
     title: title?.slice(0, SMART_HOME_LAYOUT_MAX_TEXT),
     colors: template.colors,
@@ -123,10 +126,20 @@ export const cardFromTemplate = (
 export const duplicateCard = (card: SmartHomeLayoutCard, existing: readonly SmartHomeLayoutCard[]) => {
   const slot = findFreeSlot(existing, card.w, card.h);
   if (!slot) return null;
-  return fitElementsIntoCard({
+  return intoSlot(slot, {
     ...card,
-    ...slot,
     id: createId(),
     elements: card.elements.map((element) => ({ ...element, id: createId() })),
   });
+};
+
+/**
+ * The card in its slot. A smaller slot (the widget has less room left) scales the elements with the card, as a resize
+ * would, instead of clamping them onto each other; when they cannot shrink that far, they move into free space.
+ */
+const intoSlot = (slot: { x: number; y: number; w: number; h: number }, card: SmartHomeLayoutCard) => {
+  const placed = { ...card, x: slot.x, y: slot.y };
+  if (slot.w === card.w && slot.h === card.h) return fitElementsIntoCard(placed);
+  if (scaleElementPlacements(placed, slot.w, slot.h)) return resizeCardWithElements(placed, slot.w, slot.h);
+  return fitElementsIntoCard({ ...placed, w: slot.w, h: slot.h });
 };

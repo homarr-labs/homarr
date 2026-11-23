@@ -199,6 +199,12 @@ export const fitElementsIntoCard = (card: SmartHomeLayoutCard): SmartHomeLayoutC
   return elementsFitCard(reflowed) ? reflowed : null;
 };
 
+/** Every card and element id once within one arrangement; Wide and Narrow may share them. */
+const hasUniqueIds = (cards: readonly SmartHomeLayoutCard[]) => {
+  const ids = cards.flatMap((card) => [card.id, ...card.elements.map((element) => element.id)]);
+  return new Set(ids).size === ids.length;
+};
+
 const overlapsAny = (placements: readonly GridPlacement[]) =>
   placements.some((placement, index) =>
     placements.slice(index + 1).some((other) => doGridPlacementsOverlap(placement, other)),
@@ -209,6 +215,7 @@ const overlapsAny = (placements: readonly GridPlacement[]) =>
  * inside it and apart. Anything else (an imported layout written by hand) would break the editor's grid.
  */
 export const isValidArrangement = (cards: readonly SmartHomeLayoutCard[], columns: number, rows: number) =>
+  hasUniqueIds(cards) &&
   cards.every((card) => card.x + card.w <= columns && card.y + card.h <= rows) &&
   !overlapsAny(cards) &&
   cards.every((card) => elementsFitCard(card) && !overlapsAny(getElementPlacements(card)));

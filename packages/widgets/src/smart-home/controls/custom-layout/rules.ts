@@ -59,8 +59,9 @@ export const formatLayoutNumber = (value: number | null, unit: string | null, fo
     format.decimals === undefined
       ? formatNumber(scaled)
       : new Intl.NumberFormat(undefined, {
-          minimumFractionDigits: format.decimals,
-          maximumFractionDigits: format.decimals,
+          // A hand-written layout cannot make the formatter throw.
+          minimumFractionDigits: Math.min(3, Math.max(0, Math.trunc(format.decimals))),
+          maximumFractionDigits: Math.min(3, Math.max(0, Math.trunc(format.decimals))),
         }).format(scaled);
   if (!shownUnit) return text;
   return shownUnit === "%" ? `${text}%` : `${text} ${shownUnit}`;

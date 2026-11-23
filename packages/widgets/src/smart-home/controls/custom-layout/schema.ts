@@ -364,30 +364,61 @@ export const parseSmartHomeLayout = (value: unknown): SmartHomeLayout => {
 
 const allCards = (layout: SmartHomeLayout) => [...layout.cards, ...(layout.narrowCards ?? [])];
 
+/** Below this width a layout with its own narrow arrangement uses that one; without one, its cards stack. */
+export const NARROW_WIDGET_WIDTH = 400;
+
+/** The cards a widget of this width shows: the narrow arrangement when there is one and the widget is narrow. */
+export const getShownCards = (layout: SmartHomeLayout, width: number) =>
+  width < NARROW_WIDGET_WIDTH && layout.narrowCards?.length ? layout.narrowCards : layout.cards;
+
+// The live selection's limit (entities per widget) and the shared history's (entities per request).
+export const SMART_HOME_LAYOUT_MAX_LIVE_ENTITIES = 200;
+export const SMART_HOME_LAYOUT_MAX_SHARED_HISTORY = 20;
+
+const inReadingOrder = (cards: readonly SmartHomeLayoutCard[]) =>
+  cards.toSorted((left, right) => left.y - right.y || left.x - right.x);
+
 /** Every entity an element needs: its own, the extra ones of a group or graph and the one its condition reads. */
 export const getElementEntityIds = (element: SmartHomeLayoutElement) =>
   [element.entityId, ...(element.entityIds ?? []), element.condition?.entityId ?? ""].filter(Boolean);
 
-/** Every entity the layout shows, once, so the live subscription asks for each entity a single time. */
-export const getLayoutEntityIds = (layout: SmartHomeLayout, source: string | null) => [
-  ...new Set(
-    allCards(layout).flatMap((card) =>
-      card.elements.filter((element) => element.source === source).flatMap(getElementEntityIds),
+/**
+ * Every entity the cards show, once, so the live subscription asks for each entity a single time. Without cards, the
+ * layout's both arrangements (the editor shows either). Above the live selection's limit, the first entities in
+ * reading order stay live and the rest show as missing, instead of the whole widget losing its data.
+ */
+export const getLayoutEntityIds = (
+  layout: SmartHomeLayout,
+  source: string | null,
+  cards: readonly SmartHomeLayoutCard[] = allCards(layout),
+) =>
+  [
+    ...new Set(
+      inReadingOrder(cards).flatMap((card) =>
+        card.elements.filter((element) => element.source === source).flatMap(getElementEntityIds),
+      ),
     ),
-  ),
-];
+  ].slice(0, SMART_HOME_LAYOUT_MAX_LIVE_ENTITIES);
 
 /** A graph with its own window or several lines loads its history itself; the others share the default one. */
 export const hasOwnGraphHistory = (element: SmartHomeLayoutElement) =>
   element.view === "graph" && ((element.range ?? 24) !== 24 || (element.entityIds?.length ?? 0) > 0);
 
-/** Only entities shown in a default graph need the shared history. */
-export const getLayoutGraphEntityIds = (layout: SmartHomeLayout, source: string | null) => [
-  ...new Set(
-    allCards(layout).flatMap((card) =>
-      card.elements
-        .filter((element) => element.source === source && element.view === "graph" && !hasOwnGraphHistory(element))
-        .map((element) => element.entityId),
+/**
+ * Only entities shown in a default graph need the shared history, in reading order of the given cards (by default
+ * both arrangements), at most as many as one history request takes.
+ */
+export const getLayoutGraphEntityIds = (
+  layout: SmartHomeLayout,
+  source: string | null,
+  cards: readonly SmartHomeLayoutCard[] = allCards(layout),
+) =>
+  [
+    ...new Set(
+      inReadingOrder(cards).flatMap((card) =>
+        card.elements
+          .filter((element) => element.source === source && element.view === "graph" && !hasOwnGraphHistory(element))
+          .map((element) => element.entityId),
+      ),
     ),
-  ),
-];
+  ].slice(0, SMART_HOME_LAYOUT_MAX_SHARED_HISTORY);

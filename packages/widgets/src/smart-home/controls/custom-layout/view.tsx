@@ -58,7 +58,7 @@ import controlClasses from "../control-center/styles.module.css";
 import { accentVars, getOnAccent, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
 import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
-import { deriveLayout, getLayoutColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
+import { deriveLayout, getLayoutColumns, getStackColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
 import {
   aggregateEntities,
   compareState,
@@ -70,7 +70,9 @@ import {
 } from "./rules";
 import {
   fullTileDomains,
+  getShownCards,
   hasOwnGraphHistory,
+  NARROW_WIDGET_WIDTH,
   SMART_HOME_LAYOUT_COLUMNS,
   SMART_HOME_LAYOUT_ROWS,
   staticElementViews,
@@ -920,13 +922,6 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
   );
 });
 
-/** Below this width a layout with its own narrow arrangement uses that one. */
-export const NARROW_WIDGET_WIDTH = 400;
-
-/** The cards a widget of this width shows: the narrow arrangement when there is one and the widget is narrow. */
-export const getShownCards = (layout: SmartHomeLayout, width: number) =>
-  width < NARROW_WIDGET_WIDTH && layout.narrowCards?.length ? layout.narrowCards : layout.cards;
-
 interface CustomLayoutViewProps {
   layout: SmartHomeLayout;
   source: string | null;
@@ -938,8 +933,14 @@ export function CustomLayoutView({ layout, source, width }: CustomLayoutViewProp
   const t = useI18n("widget.smartHome-controls.layout");
   const editing = useSmartHomeInteractionBlock() === "editing";
   const shownCards = getShownCards(layout, width);
-  // A narrow arrangement is made for this width, so it keeps all 12 columns instead of stacking.
-  const columns = shownCards === layout.cards ? getLayoutColumns(width) : SMART_HOME_LAYOUT_COLUMNS;
+  // A narrow arrangement is made for this width, so it keeps all 12 columns. Without one, a narrow widget stacks the
+  // wide cards, as the editor says.
+  const columns =
+    shownCards !== layout.cards
+      ? SMART_HOME_LAYOUT_COLUMNS
+      : width < NARROW_WIDGET_WIDTH
+        ? getStackColumns(width)
+        : getLayoutColumns(width);
   // Depends only on the stored layout and the column count, so live updates never recompute placements.
   const placements = useMemo(() => deriveLayout(shownCards, columns, width), [shownCards, columns, width]);
   const cards = useMemo(() => new Map(shownCards.map((card) => [card.id, card])), [shownCards]);
