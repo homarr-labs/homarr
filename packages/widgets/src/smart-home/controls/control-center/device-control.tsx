@@ -834,7 +834,8 @@ function ReadingsGraph({ entity, height }: { entity: HaEntity; height: number })
   const theme = useEntityTheme(entity);
   return (
     <div className={classes.deviceGraph} style={{ height }} aria-hidden>
-      <EntityHistoryGraph entity={entity} color={theme.accent} />
+      {/* A faint backdrop behind the card's controls: its details have the graph to scrub. */}
+      <EntityHistoryGraph entity={entity} color={theme.accent} scrub={false} />
     </div>
   );
 }

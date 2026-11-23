@@ -28,7 +28,9 @@ function SmartHomeWebRtcSignaling({
   onError,
 }: WebRtcSignalHandlers & { integrationId: string; entityId: string; offer: string }) {
   clientApi.widget.smartHome.cameraWebRtc.useSubscription(offer ? { integrationId, entityId, offer } : skipToken, {
-    onData: onSignal,
+    onData: (message) => {
+      if (message.type !== "keepalive") onSignal(message);
+    },
     onError,
   });
   return null;
@@ -111,15 +113,21 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
   };
 
   let player: ReactNode = null;
-  if (live && kind === "hls" && url) {
+  if (live && kind === "hls" && url && !restarting?.waiting) {
     player = (
       <Suspense fallback={null}>
         <HlsPlayer
+          key={attempt}
           url={url}
           onPlaying={startPlaying}
           onError={() => {
-            setPlaying(false);
-            setFailedKey(streamKey);
+            // A stream that played (or a restart of one) comes back with the same backoff as WebRTC; one that never
+            // played is given up until the camera is back on screen.
+            if (playingSince.current !== null || restarting) scheduleRestart();
+            else {
+              setPlaying(false);
+              setFailedKey(streamKey);
+            }
           }}
         />
       </Suspense>

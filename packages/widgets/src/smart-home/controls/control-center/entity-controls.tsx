@@ -961,7 +961,8 @@ function MediaControl({ entity, width, height }: ControlProps) {
         : miniWidth >= miniMain + 2 * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
           ? "xs"
           : null;
-    const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH;
+    // The cover needs its own height besides the playback row; a short tile drops it rather than clip the buttons.
+    const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH && miniHeight >= MINI_ART_MIN + MINI_GAP + miniMain;
     const miniSubtitle = !idle && subtitle !== "";
     const headHeight = miniArt || miniSubtitle ? MINI_ART_MIN : MINI_TITLE_HEIGHT;
     // The time bar takes a row when the player reports where it is and the tile has the height.
@@ -1213,9 +1214,22 @@ function VolumeButton({
 }) {
   const [opened, setOpened] = useState(false);
   const [draft, setDraft] = useState<number | null>(null);
+  // Inside a dialog (the entity's details) the slider opens within it, so it stays in the dialog's focus scope.
+  const [dialog, setDialog] = useState<HTMLElement | null>(null);
+  // A read-only view shows the volume but offers no slider that could not apply.
+  const blocked = useDeviceControlDisabled(disabled || entity.readOnly === true);
   const shown = draft ?? volume;
   return (
-    <Popover opened={opened} onChange={setOpened} position="top" withArrow shadow="md" trapFocus={false}>
+    <Popover
+      opened={opened && !blocked}
+      onChange={setOpened}
+      position="top"
+      withArrow
+      shadow="md"
+      trapFocus
+      returnFocus
+      portalProps={dialog ? { target: dialog } : undefined}
+    >
       <Popover.Target>
         <ActionIcon
           className={classes.volumeButton}
@@ -1224,11 +1238,13 @@ function VolumeButton({
           radius="xl"
           size={onCover ? "md" : "lg"}
           data-on-cover={onCover}
-          disabled={disabled}
+          disabled={blocked}
           aria-label={`${entity.name} volume`}
+          aria-expanded={opened && !blocked}
           onPointerDown={stopEvent}
           onClick={(event) => {
             event.stopPropagation();
+            setDialog(event.currentTarget.closest<HTMLElement>('[role="dialog"]'));
             setOpened((open) => !open);
           }}
         >
@@ -1236,14 +1252,21 @@ function VolumeButton({
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown onClick={stopEvent} onPointerDown={stopEvent}>
-        <Group gap="sm" wrap="nowrap" w={210}>
+        <Group
+          gap="sm"
+          wrap="nowrap"
+          w={210}
+          // Escape on the slider closes only the slider, not the details it opened from: Mantine's modal skips keys
+          // from elements marked like this (the slider cannot pass the mark to its thumb itself).
+          ref={(node) => node?.querySelector('[role="slider"]')?.setAttribute("data-mantine-stop-propagation", "true")}
+        >
           <Slider
             flex={1}
             min={0}
             max={100}
             value={shown}
             label={null}
-            aria-label={`${entity.name} volume`}
+            thumbLabel={`${entity.name} volume`}
             onChange={setDraft}
             onChangeEnd={(value) => {
               setDraft(null);

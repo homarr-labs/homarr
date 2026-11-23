@@ -9,7 +9,27 @@ import classes from "./camera.module.css";
 export type WebRtcSignal =
   | { type: "answer"; sdp: string }
   | { type: "candidate"; candidate: string; sdpMid?: string | null; sdpMLineIndex?: number | null }
-  | { type: "error"; message: string };
+  | { type: "error"; message: string }
+  // Keeps the signaling connection open while nothing else is sent; it carries nothing.
+  | { type: "keepalive" };
+
+/**
+ * go2rtc (Home Assistant's camera streams) can send a candidate without a media id, which the browser rejects. Like
+ * Home Assistant's own frontend, such a candidate belongs to the first media section.
+ */
+const toIceCandidate = (message: Extract<WebRtcSignal, { type: "candidate" }>): RTCIceCandidateInit => {
+  const sdpMid = message.sdpMid ?? null;
+  const sdpMLineIndex = message.sdpMLineIndex ?? null;
+  return {
+    candidate: message.candidate,
+    sdpMid,
+    sdpMLineIndex: sdpMid === null && sdpMLineIndex === null ? 0 : sdpMLineIndex,
+  };
+};
+
+// One candidate the browser cannot use leaves the others; only the connection itself failing ends the view.
+const addCandidate = (peer: RTCPeerConnection, candidate: RTCIceCandidateInit) =>
+  peer.addIceCandidate(candidate).catch(() => undefined);
 
 export interface WebRtcSignalHandlers {
   onSignal: (signal: WebRtcSignal) => void;
@@ -181,14 +201,10 @@ export default function WebRtcPlayer({ iceServers, signaling, onError, onPlaying
       } else if (message.type === "answer") {
         await peer.setRemoteDescription({ type: "answer", sdp: message.sdp });
         answered.current = true;
-        for (const candidate of waiting.current.splice(0)) await peer.addIceCandidate(candidate);
-      } else {
-        const candidate = {
-          candidate: message.candidate,
-          sdpMid: message.sdpMid,
-          sdpMLineIndex: message.sdpMLineIndex,
-        };
-        if (answered.current) await peer.addIceCandidate(candidate);
+        for (const candidate of waiting.current.splice(0)) await addCandidate(peer, candidate);
+      } else if (message.type === "candidate") {
+        const candidate = toIceCandidate(message);
+        if (answered.current) await addCandidate(peer, candidate);
         else waiting.current.push(candidate);
       }
     } catch {

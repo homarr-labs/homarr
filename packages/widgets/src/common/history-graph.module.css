@@ -8,6 +8,12 @@
   touch-action: pan-y;
 }
 
+.root:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
 .line {
   position: absolute;
   inset: 0;

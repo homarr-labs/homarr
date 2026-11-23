@@ -282,6 +282,8 @@ type WebRtcSessionIntegration = {
   ): Promise<void>;
 };
 
+const WEBRTC_KEEPALIVE_MS = 20_000;
+
 const supportsCameraWebRtc = (instance: object): instance is WebRtcSessionIntegration =>
   "openCameraWebRtcSessionAsync" in instance && typeof instance.openCameraWebRtcSessionAsync === "function";
 
@@ -295,14 +297,17 @@ export const smartHomeRouter = createTRPCRouter({
     // The offer travels in the URL (server-sent events), deflated so it stays well below proxies' URL limits.
     .input(z.object({ entityId: entityIdSchema, offer: z.string().min(1).max(24_000) }))
     .subscription(async function* ({ ctx: { integration }, input, signal }) {
+      // Listening from the start, so a browser that leaves during setup still ends the session it would open.
+      const controller = new AbortController();
+      if (signal?.aborted) controller.abort();
+      signal?.addEventListener("abort", () => controller.abort(), { once: true });
       const offer = inflateOffer(input.offer);
       const instance = await createIntegrationAsync(integration);
       if (!supportsCameraWebRtc(instance)) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "This integration cannot stream cameras over WebRTC" });
       }
-      const controller = new AbortController();
-      signal?.addEventListener("abort", () => controller.abort(), { once: true });
-      const messages: SmartHomeWebRtcMessage[] = [];
+      if (controller.signal.aborted) return;
+      const messages: (SmartHomeWebRtcMessage | { type: "keepalive" })[] = [];
       let wake: (() => void) | null = null;
       const notify = () => {
         wake?.();
@@ -332,9 +337,15 @@ export const smartHomeRouter = createTRPCRouter({
             yield message;
             continue;
           }
+          // A quiet connection would be closed by proxies (the bundled one after a minute): it gets a keepalive.
+          const timer = setTimeout(() => {
+            messages.push({ type: "keepalive" });
+            notify();
+          }, WEBRTC_KEEPALIVE_MS);
           await new Promise<void>((resolve) => {
             wake = resolve;
           });
+          clearTimeout(timer);
         }
       } finally {
         controller.abort();
