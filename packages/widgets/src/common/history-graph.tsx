@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
-import { Portal } from "@mantine/core";
+import { getThemeColor, Portal, useMantineTheme } from "@mantine/core";
 
 import classes from "./history-graph.module.css";
 import { getSparklineY, Sparkline } from "./sparkline";
@@ -120,8 +120,25 @@ export function HistoryGraph({
   className,
 }: HistoryGraphProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const theme = useMantineTheme();
   // Where the pointer is (0 to 1 across the graph) and where the graph is on screen, for the overlay.
   const [pointer, setPointer] = useState<{ at: number; rect: DOMRect } | null>(null);
+  // The overlay sits on the page, not in the graph: when the page scrolls or resizes, it follows the graph.
+  const shownAt = pointer?.at ?? null;
+  useEffect(() => {
+    if (shownAt === null) return;
+    const follow = () => {
+      const rect = ref.current?.getBoundingClientRect();
+      if (!rect || rect.width === 0) setPointer(null);
+      else setPointer((current) => (current ? { at: current.at, rect } : current));
+    };
+    window.addEventListener("scroll", follow, { capture: true, passive: true });
+    window.addEventListener("resize", follow, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", follow, { capture: true });
+      window.removeEventListener("resize", follow);
+    };
+  }, [shownAt]);
   const domains = useMemo(() => getHistoryDomains(lines), [lines]);
   const positions = useMemo(() => getHistoryPositions(lines), [lines]);
   const domainOf = (line: HistoryGraphLine) => line.domain ?? domains.get(line.unit ?? "") ?? ([0, 1] as const);
@@ -197,7 +214,7 @@ export function HistoryGraph({
                 style={{
                   left: `${(positionsOf(line)[at] ?? 0) * 100}%`,
                   top: `${getSparklineY(value, domainOf(line)) * 100}%`,
-                  background: line.color,
+                  background: getThemeColor(line.color, theme),
                 }}
                 aria-hidden
               />
@@ -215,7 +232,11 @@ export function HistoryGraph({
               return (
                 <span key={line.id} className={classes.readoutRow}>
                   {drawn.length > 1 ? (
-                    <span className={classes.swatch} style={{ background: line.color }} aria-hidden />
+                    <span
+                      className={classes.swatch}
+                      style={{ background: getThemeColor(line.color, theme) }}
+                      aria-hidden
+                    />
                   ) : null}
                   <strong>{formatValue(line, at === null ? null : (line.values[at] ?? null))}</strong>
                 </span>
@@ -282,11 +303,13 @@ interface HistoryLegendProps {
 
 /** Which line is which: a dot in each line's color, its name and its current value. */
 export function HistoryLegend({ items, className }: HistoryLegendProps) {
+  const theme = useMantineTheme();
   return (
     <div className={className ? `${classes.legend} ${className}` : classes.legend}>
       {items.map((item) => (
         <span key={item.id} className={classes.legendItem}>
-          <span className={classes.swatch} style={{ background: item.color }} aria-hidden />
+          {/* A Mantine color such as `blue.5` resolves like the graph's lines; CSS colors pass through. */}
+          <span className={classes.swatch} style={{ background: getThemeColor(item.color, theme) }} aria-hidden />
           <span className={classes.legendLabel}>{item.label}</span>
           <span className={classes.legendValue}>{item.value}</span>
         </span>

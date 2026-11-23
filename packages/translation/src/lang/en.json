@@ -3625,6 +3625,13 @@
           "position": "Position"
         },
         "toggle": "Toggle {name}",
+        "media": {
+          "previous": "Previous track on {name}",
+          "next": "Next track on {name}",
+          "play": "Play {name}",
+          "pause": "Pause {name}",
+          "volume": "{name} volume"
+        },
         "decrease": "Decrease {name}",
         "increase": "Increase {name}",
         "more": "{count} more",
