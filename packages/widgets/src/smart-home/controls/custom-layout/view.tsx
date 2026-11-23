@@ -46,7 +46,6 @@ import {
 } from "../control-center/device-control";
 import type { SliderStyle } from "../control-center/device-control";
 import { EntityControl } from "../control-center/entity-controls";
-import { getHistoryTimes } from "../control-center/history-graph";
 import {
   HiddenPartsProvider,
   useDeviceControlDisabled,
@@ -590,7 +589,12 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
           id,
           entity: lineEntity,
           values,
-          times: points ? points.map((point) => point.time) : getHistoryTimes(values.length),
+          // The sample times from the history response, own or shared.
+          times: points
+            ? points.map((point) => point.time)
+            : index === 0
+              ? (entity.historyTimes ?? undefined)
+              : undefined,
           unit: lineEntity?.unit ?? null,
           color:
             index === 0
