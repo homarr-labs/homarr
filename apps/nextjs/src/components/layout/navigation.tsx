@@ -15,7 +15,13 @@ interface MainNavigationProps {
 
 export const MainNavigation = ({ headerSection, footerSection, afterLinks, links }: MainNavigationProps) => {
   return (
-    <AppShellNavbar p="md">
+    <AppShellNavbar
+      p="md"
+      style={{
+        paddingInlineStart: "max(var(--mantine-spacing-md), env(safe-area-inset-left, 0px))",
+        paddingBottom: "max(var(--mantine-spacing-md), env(safe-area-inset-bottom, 0px))",
+      }}
+    >
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
       <AppShellSection
         grow

@@ -1,0 +1,25 @@
+/* Add safe-area insets without changing the desktop layout: each env() is 0px outside standalone display. */
+.main:global(.mantine-AppShell-main) {
+  padding-inline-start: calc(
+    var(--app-shell-navbar-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-left, 0px)
+  );
+  padding-inline-end: calc(
+    var(--app-shell-aside-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-right, 0px)
+  );
+  padding-bottom: calc(
+    var(--app-shell-footer-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-bottom, 0px)
+  );
+}
+
+.mainWithoutHeader:global(.mantine-AppShell-main) {
+  padding-inline-start: calc(
+    var(--app-shell-navbar-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-left, 0px)
+  );
+  padding-inline-end: calc(
+    var(--app-shell-aside-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-right, 0px)
+  );
+  padding-top: calc(var(--app-shell-header-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(
+    var(--app-shell-footer-offset, 0rem) + var(--app-shell-padding) + env(safe-area-inset-bottom, 0px)
+  );
+}

@@ -1,4 +1,5 @@
-import { getBrandingAppearance, getThemeCustomCss } from "~/theme/branding";
+import { getThemeCustomCss } from "~/theme/branding";
+import { pwaPageBackground, pwaViewportThemeColor } from "~/theme/pwa-chrome";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 
@@ -95,9 +96,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-export const generateViewport = async (): Promise<Viewport> => {
-  const serverSettings = await getRscServerSettingsAsync();
-  return { themeColor: getBrandingAppearance(serverSettings.branding).primaryColor };
+export const generateViewport = (): Viewport => {
+  return { themeColor: [...pwaViewportThemeColor], viewportFit: "cover" };
 };
 
 export default async function Layout(props: {
@@ -193,7 +193,12 @@ export default async function Layout(props: {
       dir={direction}
       className={[fontSans.variable, fontGeist.variable, fontGeistMono.variable].join(" ")}
       style={{
-        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
+        backgroundColor:
+          colorScheme === "dark"
+            ? pwaPageBackground.dark
+            : colorScheme === "auto"
+              ? undefined
+              : pwaPageBackground.light,
       }}
       suppressHydrationWarning
     >
