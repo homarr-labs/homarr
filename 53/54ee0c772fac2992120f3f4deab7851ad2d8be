@@ -1,0 +1,76 @@
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_560cd7a81b1b64::t_ff404669c5ccaf 20,173,193-195,205,303
+apps/nextjs/src/components/board/items/actions/duplicate-item.ts
+  s_560cd7a81b1b64::t_ff404669c5ccaf 4,44
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_8147c75b6bbf04::t_89bd2f5790f2c1 4,18-49
+packages/validation/src/smart-container.ts
+  s_8147c75b6bbf04::t_2bb67577677650 148-149
+  s_560cd7a81b1b64::t_ff404669c5ccaf 70-72,93,127-147
+apps/nextjs/src/components/board/sections/smart-container/use-smart-container-runtime.ts
+  s_9898269a6e4c5a::t_a343a5bbd15060 37-45,49-55,106-107,148-158,182,186-189,204
+apps/nextjs/src/components/board/sections/grid/use-grid-layout-actions.ts
+  s_9f569eb084c663::t_4dfe37fcdd22f2 6-10,101-113
+packages/validation/src/board.ts
+  s_560cd7a81b1b64::t_ff404669c5ccaf 16,149,163,172
+  s_8147c75b6bbf04::t_f989860adc8e45 173-175
+apps/nextjs/src/components/board/sections/container/container-editor-draft.ts
+  s_560cd7a81b1b64::t_ff404669c5ccaf 143,154-161,163-168
+  s_8147c75b6bbf04::t_3cc41e85fbc779 5,122-142,147-148,150,169-170
+packages/api/src/router/test/board.spec.ts
+  s_8147c75b6bbf04::t_f55049adf7427c 1111-1184
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.tsx
+  s_8147c75b6bbf04::t_3644d6d75a7801 388-389,430-453
+apps/nextjs/src/components/board/items/actions/move-item-to-section.ts
+  s_560cd7a81b1b64::t_ff404669c5ccaf 1-2,18-26
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_560cd7a81b1b64::t_ff404669c5ccaf 8,35-38,51-54
+packages/api/src/router/board.ts
+  s_560cd7a81b1b64::t_139df0094e9e1f 1739,1744,1754-1791,1797
+  s_560cd7a81b1b64::t_ff404669c5ccaf 86
+  s_8147c75b6bbf04::t_b7715c98504724 1792-1796,1805-1809,1835,1845,2558
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_560cd7a81b1b64::t_139df0094e9e1f 161,200
+apps/docs/public/api/open-api-schema.json
+  s_560cd7a81b1b64::t_139df0094e9e1f 2676,2702-2704
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5354ee0c772fac2992120f3f4deab7851ad2d8be",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8147c75b6bbf04": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21249-5917-7e41-876e-d7d7c01aa82c",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9898269a6e4c5a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21249-2014-7023-b843-e50cc1e4f882",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9f569eb084c663": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21247-bb1a-7e80-8fca-e9f54928ee50",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
