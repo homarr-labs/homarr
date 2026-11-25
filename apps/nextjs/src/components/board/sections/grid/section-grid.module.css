@@ -124,3 +124,8 @@
   white-space: nowrap;
   border: 0;
 }
+.staticItem[data-smart-state-active="true"]:not([data-board-item-selected="true"]) {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+  border-radius: var(--board-item-radius, var(--mantine-radius-md));
+}

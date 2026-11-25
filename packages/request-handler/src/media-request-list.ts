@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
+import { mediaRequestListCacheTtlMs } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { MediaRequest, MediaRequestStatus } from "@homarr/integrations/types";
 
@@ -40,6 +41,6 @@ export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
       return true;
     });
   },
-  cacheTtlMs: 60_000,
+  cacheTtlMs: mediaRequestListCacheTtlMs,
   fallbackToStaleOnError: true,
 });

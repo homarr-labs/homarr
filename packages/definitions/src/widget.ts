@@ -70,6 +70,8 @@ export const widgetKinds = [
 
 export type WidgetKind = (typeof widgetKinds)[number];
 
+export const mediaRequestListCacheTtlMs = 60_000;
+
 export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
   clock: { width: 2, height: 1 },
   weather: { width: 2, height: 1 },

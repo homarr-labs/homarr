@@ -98,7 +98,7 @@ export const getContainerGridMinimumHeights = (
       ...innerSections.map((child) => {
         const minimum = logicalMinimums.get(child.id);
         let height = child.height;
-        if (!child.options.scrollable) height = Math.max(height, minimum?.height ?? 1);
+        if (!child.options.scrollable && !child.options.smart?.enabled) height = Math.max(height, minimum?.height ?? 1);
         const resolved = { ...child, height };
         heights.set(child.id, resolve(resolved, parentContentScale * metrics.contentScale));
         return resolved;
@@ -132,7 +132,9 @@ export const getContainerGridMinimumHeights = (
       new Map([...heights].filter(([id]) => !collapsedIds.has(id))),
     );
     let height = 1;
-    if (!section.options.scrollable) {
+    if (section.options.smart?.enabled) {
+      height = Math.max(1, section.height);
+    } else if (!section.options.scrollable) {
       const rowCount = Math.max(1, section.height, getLayoutRowCount(collapsedPlacements));
       height = Math.max(
         height,

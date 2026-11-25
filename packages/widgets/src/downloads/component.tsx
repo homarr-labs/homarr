@@ -57,8 +57,10 @@ import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetError } from "../errors/component";
+import { useReportWidgetActivity, useWidgetActivityWatched } from "../activity";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { getWidgetQueryError, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { formatLocalizedDateTime } from "../common/locale";
@@ -72,6 +74,7 @@ import {
 } from "./helpers";
 import { useDemoReadOnly } from "../demo-read-only";
 import { resolveDownloadsQueryInput } from "./query-input";
+import { getDownloadsActivityFacts } from "./activity";
 import { SetDownloadCategoryModal } from "./set-category-modal";
 
 dayjs.extend(relativeTime);
@@ -327,7 +330,8 @@ export default function DownloadClientsWidget({
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(downloadsQueryInput, {
     refetchInterval: demoReadOnly ? false : downloadsQueryInput.refreshInterval * 1000,
   });
-  const currentItems = getUsableWidgetQueryData(downloadsQuery);
+  const queryError = getWidgetQueryError(downloadsQuery);
+  const currentItems = queryError ? undefined : downloadsQuery.data;
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;
 
@@ -425,6 +429,29 @@ export default function DownloadClientsWidget({
   ]);
 
   const data = useMemo(() => filterDownloadItemsByStatus(eligibleData, statusFilter), [eligibleData, statusFilter]);
+  const activityWatched = useWidgetActivityWatched(itemId);
+  const activityFacts = useMemo(() => {
+    if (!activityWatched) return { relevance: "quiet" as const, count: 0 };
+    return getDownloadsActivityFacts(
+      availableItems.filter(({ integration }) => integrationIds.includes(integration.id)).map((pair) => pair.data),
+      (item) =>
+        matchesCategoryFilter(item.category, options.categoryFilter, options.filterIsWhitelist) &&
+        showCompletedItem(item, options),
+    );
+  }, [activityWatched, availableItems, integrationIds, options]);
+  useReportWidgetActivity({
+    itemId,
+    query: downloadsQuery,
+    recordsPerRow: 3,
+    ...activityFacts,
+    complete: currentItems?.length === integrationIds.length && currentItems.every((result) => !result.error),
+    configured: integrationIds.length > 0,
+    sourceUpdatedAt: availableItems.reduce(
+      (oldest, result) => Math.min(oldest, result.integration.updatedAt.getTime()),
+      Infinity,
+    ),
+    freshForMs: Math.max(35_000, downloadsQueryInput.refreshInterval * 1000 + 5_000),
+  });
 
   const sortedData = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof ExtendedDownloadClientItem;
@@ -774,6 +801,8 @@ export default function DownloadClientsWidget({
     }
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
+
+  if (queryError) return <WidgetError error={queryError} resetErrorBoundary={() => void downloadsQuery.refetch()} />;
 
   if (!isAdvanced && options.columns.length === 0) {
     return (

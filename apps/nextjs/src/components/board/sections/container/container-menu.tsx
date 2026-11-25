@@ -11,7 +11,7 @@ import { InlineConfirmMenuItem } from "@homarr/ui";
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useContainerActions } from "./container-actions";
-import { ContainerEditModal } from "./container-edit-modal";
+import { LazyContainerEditModal } from "./lazy-container-edit-modal";
 import classes from "./container-menu.module.css";
 
 interface ContainerEditBarProps {
@@ -23,9 +23,9 @@ interface ContainerEditBarProps {
 export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEditBarProps) => {
   const tContainer = useI18n("section.container");
   const tItem = useI18n("item");
-  const { openModal } = useModalAction(ContainerEditModal);
+  const { openModal } = useModalAction(LazyContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
-  const { updateContainer, removeContainer } = useContainerActions();
+  const { removeContainer } = useContainerActions();
   const [isEditMode] = useEditMode();
 
   if (!isEditMode) return null;
@@ -34,9 +34,8 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
 
   const openEditModal = () => {
     openModal({
-      sectionId: section.id,
+      containerId: section.id,
       value: section.options,
-      onSuccessfulEdit: (newOptions) => updateContainer({ containerId: section.id, newOptions }),
     });
   };
 

@@ -23,6 +23,14 @@ _Avoid_: Column, gutter
 A grouping of items inside a layout; a root section anchors a lane, while a container section can be nested inside another section.
 _Avoid_: Group (that means people), category
 
+**Smart Container**:
+A container section that can show one named state at a time. A state groups items the editor wants to see together.
+_Avoid_: Reel (a navigation style)
+
+**Relevance**:
+How useful an item's current activity is when choosing a Smart Container state. A single playing stream can be more relevant than many seeding downloads.
+_Avoid_: Size (how much space the item needs), priority (the editor's preference between equally relevant states)
+
 **Column**:
 The horizontal grid unit used to size and position items and container sections within a lane or section; unallocated empty spacing is a gap, not a column or lane.
 _Avoid_: Slot
