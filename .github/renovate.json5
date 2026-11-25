@@ -15,6 +15,12 @@
       matchPackageNames: ["^@homarr/"],
       enabled: false,
     },
+    // The Custom Widget catalog uses the TypeScript 6 compiler API. Revisit when 7.1 ships and the generator is migrated.
+    // https://github.com/microsoft/TypeScript/issues/63703
+    {
+      matchDepNames: ["typescript-compiler-api"],
+      allowedVersions: "<7",
+    },
     // Reenable once bug with undici v8 is fixed (https://github.com/homarr-labs/homarr/issues/5467)
     {
       matchPackageNames: ["undici"],
