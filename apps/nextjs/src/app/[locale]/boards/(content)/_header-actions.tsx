@@ -28,6 +28,7 @@ import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
 import type { Board } from "../_types";
 import { registerBoardDirtyLeaveGuard } from "./board-dirty-leave-guard";
+import { loadBoardSetupPanelsAsync } from "./board-setup-panels-loader";
 import type * as EditActionsModule from "./_edit-actions";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
@@ -136,6 +137,8 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [utils, board.name, close]);
 
   const prepareEditorAsync = useCallback(async () => {
+    // Start optional panels alongside the editor and let their boundary handle failures.
+    void loadBoardSetupPanelsAsync().catch(() => undefined);
     if (editorLoadState === "ready") return;
 
     setEditorLoadState("loading");

@@ -36,10 +36,9 @@ import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
 import { useVisitedBoardTabs } from "~/components/board/tabs/use-visited-board-tabs";
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
+import { loadBoardSetupPanelsAsync } from "./board-setup-panels-loader";
 
-const BoardSetupPanels = createRetryableLazyContent(() =>
-  import("~/components/board/board-setup-checklist").then((module) => module.BoardSetupPanels),
-);
+const BoardSetupPanels = createRetryableLazyContent(loadBoardSetupPanelsAsync);
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
