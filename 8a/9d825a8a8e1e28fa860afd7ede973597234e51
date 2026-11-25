@@ -1,0 +1,19 @@
+.github/renovate.json5
+  s_be039516611af5::t_21e9604e3aad82 18-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8a9d825a8a8e1e28fa860afd7ede973597234e51",
+  "prompts": {},
+  "sessions": {
+    "s_be039516611af5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21250-c638-7d43-9424-12307e9f9cbb",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
