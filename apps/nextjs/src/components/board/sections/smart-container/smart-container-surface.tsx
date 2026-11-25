@@ -278,7 +278,7 @@ const ReelSurface = ({
               <div className={classes.empty} data-narrow={section.width === 1 || undefined}>
                 {(!isEditMode || section.width > 1) && (
                   <Text size="sm" c="dimmed">
-                    {t("empty")}
+                    {section.width === 1 ? t("emptyShort") : t("empty")}
                   </Text>
                 )}
                 {isEditMode && (
@@ -365,7 +365,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           <IconChevronLeft style={iconSizes.md} />
         </ActionIcon>
         {!hasMultipleStates ? (
-          <Text size="sm" fw={650} truncate title={stateName}>
+          <Text size="sm" fw={650} lineClamp={2} title={stateName}>
             {stateName}
           </Text>
         ) : (

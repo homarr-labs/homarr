@@ -574,7 +574,7 @@ export const SectionGrid = ({
           size="xs"
           c="dimmed"
           ta="center"
-          h={scrollHintHeight}
+          style={{ height: scrollHintHeight }}
           className={classes.scrollHint}
           truncate
         >

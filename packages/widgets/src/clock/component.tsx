@@ -13,7 +13,13 @@ import { getResolvedLocalTimeZone, isTimeZoneSupported } from "./world-clock";
 
 dayjs.extend(advancedFormat);
 
-export default function ClockWidget({ options, width, height, displayMode }: WidgetComponentProps<"clock">) {
+export default function ClockWidget({
+  options,
+  width,
+  height,
+  displayMode,
+  displayScale = 1,
+}: WidgetComponentProps<"clock">) {
   const isAdvanced = displayMode === "advanced";
   const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat);
   const time = useCurrentTime({ showSeconds });
@@ -38,7 +44,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
   }
 
   const resolvedTimeFormat = resolveClockTimeFormat(options.customTimeFormat, options.is24HourFormat);
-  const minimumAxis = Math.min(width, height * 1.5);
+  const minimumAxis = Math.min(width, height * 1.5) * displayScale;
   let sizing: "xs" | "sm" | "md" = "md";
   if (minimumAxis < 128) sizing = "xs";
   else if (minimumAxis < 196) sizing = "sm";

@@ -65,7 +65,7 @@
   padding-inline-end: calc(84px * var(--board-canvas-ui-scale, 1));
 }
 :global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing][data-narrow] {
-  padding-inline-end: calc(52px * var(--board-canvas-ui-scale, 1));
+  padding-inline-end: calc(44px * var(--board-canvas-ui-scale, 1));
 }
 :global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing] .edit {
   display: none;
