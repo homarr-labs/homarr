@@ -18,7 +18,8 @@ export const MainNavigation = ({ headerSection, footerSection, afterLinks, links
     <AppShellNavbar
       p="md"
       style={{
-        paddingInlineStart: "max(var(--mantine-spacing-md), env(safe-area-inset-left, 0px))",
+        paddingTop: "max(var(--mantine-spacing-md), var(--homarr-navbar-safe-area-top, 0px))",
+        paddingInlineStart: "max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-start))",
         paddingBottom: "max(var(--mantine-spacing-md), env(safe-area-inset-bottom, 0px))",
       }}
     >

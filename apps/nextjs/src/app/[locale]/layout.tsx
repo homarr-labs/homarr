@@ -12,6 +12,7 @@ import "flag-icons/css/flag-icons.min.css";
 import "mantine-datatable/styles.css";
 import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
+import "~/styles/safe-area.scss";
 
 import { notFound } from "next/navigation";
 import { ColorSchemeScript } from "@mantine/core";
