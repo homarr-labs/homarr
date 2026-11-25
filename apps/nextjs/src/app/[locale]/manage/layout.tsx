@@ -107,6 +107,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: tEntities("customWidgets"),
+      prefetch: false,
       hidden: !session?.user.permissions.includes("admin"),
     },
     {
