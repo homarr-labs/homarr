@@ -109,7 +109,7 @@ export const InviteListComponent = ({ title, initialInvites }: InviteListCompone
   return (
     <ManagePageLayout title={title} primaryAction={<InviteCreateButton onClick={toggleCreate} />}>
       <Collapse expanded={isCreateOpen}>
-        <Card withBorder>
+        <Card>
           <InviteCreateForm key={formKey} onClose={closeCreate} />
         </Card>
       </Collapse>

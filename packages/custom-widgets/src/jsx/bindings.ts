@@ -7,79 +7,53 @@ export const CUSTOM_JSX_DATA_LIMITS = Object.freeze({
   stringLength: 200_000,
 });
 
-interface SanitizeTask {
-  value: unknown;
-  depth: number;
-  assign(value: unknown): void;
-}
-
 function sanitizeData(value: unknown): unknown {
-  let result: unknown;
   let nodes = 0;
   const seen = new WeakSet<object>();
-  const tasks: SanitizeTask[] = [{ value, depth: 0, assign: (sanitized) => (result = sanitized) }];
-
-  while (tasks.length > 0) {
-    const task = tasks.pop();
-    if (!task) break;
+  const sanitize = (current: unknown, depth: number): unknown => {
     if (++nodes > CUSTOM_JSX_DATA_LIMITS.nodes) {
       throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
     }
-    if (task.depth > CUSTOM_JSX_DATA_LIMITS.depth) {
+    if (depth > CUSTOM_JSX_DATA_LIMITS.depth) {
       throw new SafeJsxBudgetError(`Response data exceeded the depth limit (${CUSTOM_JSX_DATA_LIMITS.depth})`);
     }
-    if (typeof task.value === "string" && task.value.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
+    if (typeof current === "string" && current.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
       throw new SafeJsxBudgetError(
         `Response data exceeded the string length limit (${CUSTOM_JSX_DATA_LIMITS.stringLength})`,
       );
     }
-    if (task.value === null || typeof task.value !== "object") {
-      task.assign(task.value);
-      continue;
-    }
-    if (seen.has(task.value)) throw new SafeJsxError("Response data must not contain circular or repeated objects");
-    seen.add(task.value);
+    if (current === null || typeof current !== "object") return current;
+    if (seen.has(current)) throw new SafeJsxError("Response data must not contain circular or repeated objects");
+    seen.add(current);
 
-    if (Array.isArray(task.value)) {
-      if (task.value.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
+    if (Array.isArray(current)) {
+      if (current.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
         throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
       }
-      const safe = Array.from<unknown>({ length: task.value.length });
-      task.assign(safe);
-      for (let index = task.value.length - 1; index >= 0; index -= 1) {
-        if (!Object.hasOwn(task.value, index)) continue;
-        tasks.push({
-          value: task.value[index],
-          depth: task.depth + 1,
-          assign: (sanitized) => (safe[index] = sanitized),
-        });
+      const safe = Array.from<unknown>({ length: current.length });
+      for (let index = 0; index < current.length; index += 1) {
+        if (Object.hasOwn(current, index)) safe[index] = sanitize(current[index], depth + 1);
       }
-      continue;
+      return safe;
     }
 
-    const entries = Object.entries(task.value);
-    if (entries.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
+    const keys = Object.keys(current);
+    if (keys.length > CUSTOM_JSX_DATA_LIMITS.nodes - nodes) {
       throw new SafeJsxBudgetError(`Response data exceeded the node limit (${CUSTOM_JSX_DATA_LIMITS.nodes})`);
     }
     const safe: Record<string, unknown> = Object.create(null);
-    task.assign(safe);
-    for (let index = entries.length - 1; index >= 0; index -= 1) {
-      const [key, child] = entries[index] as [string, unknown];
+    for (const key of keys) {
       if (["constructor", "__proto__", "prototype"].includes(key)) continue;
       if (key.length > CUSTOM_JSX_DATA_LIMITS.stringLength) {
         throw new SafeJsxBudgetError(
           `Response data exceeded the string length limit (${CUSTOM_JSX_DATA_LIMITS.stringLength})`,
         );
       }
-      tasks.push({
-        value: child,
-        depth: task.depth + 1,
-        assign: (sanitized) => (safe[key] = sanitized),
-      });
+      safe[key] = sanitize((current as Record<string, unknown>)[key], depth + 1);
     }
-  }
-
-  return result;
+    return safe;
+  };
+  return sanitize(value, 0);
 }
 
 const safeMath = Object.freeze(
@@ -96,10 +70,32 @@ const safeMath = Object.freeze(
   }),
 );
 
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
+const MAX_DATE_TIME_FORMATTERS = 16;
+
 const formatLocaleDateTime = (value: string | number, locale = "en-US", timeZone?: string) => {
+  // Explicit zones are stable even if the host's default time zone changes.
+  let key: string | undefined;
+  if (typeof locale === "string" && typeof timeZone === "string" && timeZone) {
+    key = JSON.stringify([locale, timeZone]);
+    const cached = dateTimeFormatters.get(key);
+    if (cached) {
+      dateTimeFormatters.delete(key);
+      dateTimeFormatters.set(key, cached);
+      return cached.format(new Date(value));
+    }
+  }
   const options: Intl.DateTimeFormatOptions = { dateStyle: "medium", timeStyle: "short" };
   if (timeZone) options.timeZone = timeZone;
-  return new Intl.DateTimeFormat(locale, options).format(new Date(value));
+  const formatter = new Intl.DateTimeFormat(locale, options);
+  if (key !== undefined) {
+    if (dateTimeFormatters.size >= MAX_DATE_TIME_FORMATTERS) {
+      const oldestKey = dateTimeFormatters.keys().next().value;
+      if (oldestKey !== undefined) dateTimeFormatters.delete(oldestKey);
+    }
+    dateTimeFormatters.set(key, formatter);
+  }
+  return formatter.format(new Date(value));
 };
 
 const safeDate = Object.freeze(
@@ -109,11 +105,11 @@ const safeDate = Object.freeze(
       value === undefined ? Date.now() : new Date(value).getTime(),
     ),
     toISOString: createSafeCallable((value: string | number) => new Date(value).toISOString()),
-    toLocaleDateString: createSafeCallable((value: string | number, locale?: string) =>
-      new Date(value).toLocaleDateString(locale ?? "en-US"),
+    toLocaleDateString: createSafeCallable((value: string | number, locale?: string, timeZone?: string) =>
+      new Date(value).toLocaleDateString(locale ?? "en-US", timeZone ? { timeZone } : undefined),
     ),
-    toLocaleTimeString: createSafeCallable((value: string | number, locale?: string) =>
-      new Date(value).toLocaleTimeString(locale ?? "en-US"),
+    toLocaleTimeString: createSafeCallable((value: string | number, locale?: string, timeZone?: string) =>
+      new Date(value).toLocaleTimeString(locale ?? "en-US", timeZone ? { timeZone } : undefined),
     ),
     toLocaleString: createSafeCallable(formatLocaleDateTime),
     getTime: createSafeCallable((value: string | number) => new Date(value).getTime()),
@@ -122,6 +118,25 @@ const safeDate = Object.freeze(
     getDay: createSafeCallable((value: string | number) => new Date(value).getUTCDay()),
   }),
 );
+
+function boundedArrayFrom(value: ArrayLike<unknown> | Iterable<unknown>): unknown[] {
+  if (value == null) return Array.from(value);
+  const source = Object(value) as ArrayLike<unknown> & Iterable<unknown>;
+  const iterator = source[Symbol.iterator];
+  if (iterator == null) {
+    // Unary + preserves Array.from's ToNumber errors for Symbol and BigInt lengths.
+    const length = Math.min(2_000, +source.length);
+    return Array.from({ length }, (_, index) => source[index]);
+  }
+  if (typeof iterator !== "function") throw new TypeError("Found non-callable @@iterator");
+  const iterable = { [Symbol.iterator]: () => Reflect.apply(iterator, value, []) as Iterator<unknown> };
+  const result: unknown[] = [];
+  for (const item of iterable) {
+    result.push(item);
+    if (result.length === 2_000) break;
+  }
+  return result;
+}
 
 export function createCustomJsxBindings(apiData: unknown) {
   const safeJson = Object.freeze(
@@ -134,7 +149,7 @@ export function createCustomJsxBindings(apiData: unknown) {
   const safeArray = Object.freeze(
     Object.assign(Object.create(null) as Record<string, unknown>, {
       isArray: createSafeCallable(Array.isArray),
-      from: createSafeCallable((value: ArrayLike<unknown> | Iterable<unknown>) => Array.from(value).slice(0, 2_000)),
+      from: createSafeCallable(boundedArrayFrom),
     }),
   );
   const safeObject = Object.freeze(

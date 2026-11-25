@@ -64,7 +64,7 @@ export function analyzeCustomWidgetAiDiagnostics(values: CustomWidgetFormValues)
   const parsedRequests = parseJson(values.requests);
   const requestIds = isRecord(parsedRequests) ? Object.keys(parsedRequests) : [];
   return createAiDiagnostics(
-    buildDefinition(values),
+    buildDefinition(values, true),
     analyzeRequestManifest(values.requests),
     analyzeJsxTemplate(values.template, { requestIds }),
   );
@@ -72,7 +72,11 @@ export function analyzeCustomWidgetAiDiagnostics(values: CustomWidgetFormValues)
 
 export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
   const analysisValues = useDeferredValue(values);
-  const candidate = useMemo(() => buildDefinition(analysisValues), [analysisValues]);
+  const candidate = useMemo(() => buildDefinition(analysisValues, true), [analysisValues]);
+  const saveCandidateValid = useMemo(
+    () => candidate.success || buildDefinition(analysisValues).success,
+    [analysisValues, candidate.success],
+  );
   const parsedOptions = useMemo(
     () => customWidgetOptionsSchema.safeParse(parseJson(analysisValues.options)),
     [analysisValues.options],
@@ -91,8 +95,11 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     [analysisValues.options, analysisValues.sources, requestIdsSignature],
   );
   const templateDiagnostics = useMemo(
-    () => analyzeJsxTemplate(analysisValues.template, { requestIds }),
-    [analysisValues.template, requestIds],
+    () =>
+      analyzeJsxTemplate(analysisValues.template, {
+        requestIds: requestIdsSignature ? requestIdsSignature.split("\0") : [],
+      }),
+    [analysisValues.template, requestIdsSignature],
   );
   const requestDiagnostics = useMemo(() => analyzeRequestManifest(analysisValues.requests), [analysisValues.requests]);
   const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");
@@ -122,6 +129,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     () => ({
       candidate,
       candidateValid: candidate.success,
+      saveCandidateValid,
       parsedOptions,
       jsxCompletions,
       templateDiagnostics,
@@ -133,6 +141,7 @@ export function useCustomWidgetFormAnalysis(values: CustomWidgetFormValues) {
     }),
     [
       candidate,
+      saveCandidateValid,
       hasDiagnostics,
       invalidSections,
       jsxCompletions,

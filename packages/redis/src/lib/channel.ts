@@ -65,10 +65,11 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
+      const serialized = superjson.stringify(data);
       if (persist) {
-        await requireRedisConnection(lastDataClient).set(lastChannelName, superjson.stringify(data));
+        await requireRedisConnection(lastDataClient).set(lastChannelName, serialized);
       }
-      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(publisher).publish(channelName, serialized);
     },
     getLastDataAsync: async () => {
       const data = await requireRedisConnection(lastDataClient).get(lastChannelName);
@@ -518,6 +519,7 @@ const recoverIntegrationCacheOverflowAsync = async () => {
 
 export const getIntegrationCacheGenerationAsync = async (
   integrationId: string,
+  { fresh = false }: { fresh?: boolean } = {},
 ): Promise<IntegrationCacheGeneration> => {
   const cacheKey = integrationCacheGenerationKey(integrationId);
   const pendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
@@ -555,6 +557,7 @@ export const getIntegrationCacheGenerationAsync = async (
   const client = boundedCacheClient;
   return await getCachedGenerationAsync({
     cacheKey,
+    force: fresh,
     readAsync: async () => {
       if (!client) return null;
       const [globalGeneration, scopedGeneration] = await withCacheGenerationRedisTimeoutAsync(

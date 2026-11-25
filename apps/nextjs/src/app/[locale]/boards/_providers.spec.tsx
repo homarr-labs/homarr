@@ -26,6 +26,16 @@ vi.mock("@homarr/boards/context", async () => {
   };
 });
 
+vi.mock("@homarr/boards/tabs", async () => {
+  const React = await import("react");
+
+  return {
+    boardTabSearchParam: "tab",
+    BoardTabsProvider: ({ children }: { children: React.ReactNode }) =>
+      React.createElement(React.Fragment, null, children),
+  };
+});
+
 vi.mock("@homarr/boards/edit-mode", async () => {
   const React = await import("react");
 

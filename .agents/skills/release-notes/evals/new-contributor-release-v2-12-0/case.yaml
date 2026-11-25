@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: new-contributor-release-v2-12-0
+expected_outcome: |
+  notes.md holds user-facing release notes for Homarr v2.12.0 built only from the merged PRs between v2.11.1 and v2.12.0:
+  a "# Homarr v2.12.0: ..." title naming the main change in plain words (not a slogan), a one or two sentence summary,
+  2 to 4 highlights, New / Improved / Fixed bullets that start with a bold lead and end with
+  "by @login in [#N](url)", no bot, chore, ci, docs or test noise, no emojis,
+  a thanks line for first-time contributor @Epoustouflant,
+  and the Full Changelog compare link as the last line.

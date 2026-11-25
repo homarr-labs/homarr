@@ -66,6 +66,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       version: systemInfo.info.os.release,
       cpuModelName: systemInfo.info.cpu.brand,
       cpuUtilization: cpuUtilizationNormalized,
+      cpuCores: systemInfo.metrics.cpu.cpus.map((core, id) => ({ id, utilization: core.percentTotal })),
       memUsedInBytes: usedMemory,
       memAvailableInBytes: totalMemory - usedMemory,
       uptime: dayjs().diff(uptime, "seconds"),

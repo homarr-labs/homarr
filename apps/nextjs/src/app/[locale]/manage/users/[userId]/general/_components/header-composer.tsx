@@ -17,6 +17,7 @@ import {
   Menu,
   Paper,
   SegmentedControl,
+  Select,
   Stack,
   Text,
   ThemeIcon,
@@ -24,11 +25,14 @@ import {
 } from "@mantine/core";
 import {
   IconBrandDocker,
+  IconBell,
+  IconApps,
   IconEye,
   IconEyeOff,
   IconGripVertical,
   IconHome,
   IconLayoutDashboard,
+  IconLayoutNavbar,
   IconPencil,
   IconPlus,
   IconReplace,
@@ -41,14 +45,19 @@ import {
 } from "@tabler/icons-react";
 
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
+import { createId } from "@homarr/common";
+import { getWidgetName, widgetKinds } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import type {
   HeaderBuiltinItemId,
   HeaderItem,
   HeaderPreferences,
   HeaderZoneId,
   HeaderZones,
+  HeaderWidgetItem,
 } from "@homarr/validation/user";
 import {
   createBoardHeaderItem,
@@ -63,6 +72,8 @@ import {
 
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
 import { HomarrLogo } from "~/components/layout/logo/homarr-logo";
+import { useHeaderWidgetEditor } from "~/components/layout/header/header-widget-editor";
+import { isBoardOnlyHeaderWidget } from "~/components/layout/header/header-widget-support";
 import classes from "./header-composer.module.css";
 
 interface HeaderComposerProps {
@@ -101,6 +112,10 @@ const headerSortablePlugins = [SortableKeyboardPlugin];
 const headerGuideZones = ["left", "center", "right"] as const;
 
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
+  const latestPreferences = useRef({ value, onChange });
+  latestPreferences.current = { value, onChange };
+  const tAll = useI18n();
+  const widgetEditor = useHeaderWidgetEditor();
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
   const zoneTableRef = useRef<HTMLDivElement>(null);
@@ -154,7 +169,25 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
 
   const itemLabel = (item: HeaderItem) => {
     if (item.type === "board") return boardsById.get(item.boardId)?.name ?? t("items.boardUnavailable");
+    if (item.type === "widget") {
+      if (item.id === "notifications") return t("items.notifications");
+      return item.advancedOptions.title ?? getWidgetName(item.kind, tAll);
+    }
     return t(`items.${item.id}` as never);
+  };
+
+  const updateWidget = (nextItem: HeaderWidgetItem) => {
+    const latest = latestPreferences.current;
+    const zones = { ...latest.value.zones };
+    for (const zone of headerGuideZones) {
+      zones[zone] = zones[zone].map((item) => {
+        if (getHeaderItemKey(item) === getHeaderItemKey(nextItem)) return nextItem;
+        return item;
+      });
+    }
+    const nextValue = { ...latest.value, zones };
+    latestPreferences.current = { ...latest, value: nextValue };
+    latest.onChange(nextValue);
   };
 
   const updateZones = (zones: HeaderZones) => onChange({ ...value, zones });
@@ -204,7 +237,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
   };
 
   return (
-    <Card className={classes.composer} padding={0} radius="lg" withBorder>
+    <Card className={classes.composer} padding={0} radius="lg">
       <Stack gap={0}>
         <Group className={classes.heading} justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={4}>
@@ -235,7 +268,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
         </Group>
 
         <Box className={classes.stage} data-visible={value.visible}>
-          <Paper className={classes.device} radius="lg" withBorder>
+          <Paper className={classes.device} radius="lg" withBorder w="100%" miw={0}>
             {value.visible ? (
               <DragDropProvider
                 onDragStart={({ operation }) => setDraggedItemKey(operation.source?.id.toString() ?? null)}
@@ -254,6 +287,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                             label={itemLabel(item)}
                             searchDisplay={value.searchDisplay}
                             logoDisplay={value.logoDisplay}
+                            tabsDisplay={value.tabsDisplay}
                             logoTitle={branding.appName}
                             boardLogo={
                               item.type === "board" ? (boardsById.get(item.boardId)?.logoImageUrl ?? null) : null
@@ -276,6 +310,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       compact={false}
                       searchDisplay={value.searchDisplay}
                       logoDisplay={value.logoDisplay}
+                      tabsDisplay={value.tabsDisplay}
                       logoTitle={branding.appName}
                       boardLogo={
                         draggedItem.type === "board" ? boardsById.get(draggedItem.boardId)?.logoImageUrl : null
@@ -304,7 +339,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
 
         <Stack className={classes.tray} gap="sm">
           {selectedItem ? (
-            <Paper className={classes.configuration} p="sm" radius="md" withBorder>
+            <Paper className={classes.configuration} p="sm" radius="md">
               <Group justify="space-between" gap="sm" wrap="wrap">
                 <Stack gap={0}>
                   <Text fw={650} size="sm">
@@ -315,6 +350,39 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                   </Text>
                 </Stack>
                 <Group gap="xs">
+                  {selectedItem.type === "widget" && (
+                    <>
+                      {selectedItem.id !== "notifications" && (
+                        <Select
+                          size="xs"
+                          aria-label={t("configuration.widgetKind")}
+                          value={selectedItem.kind}
+                          disabled={widgetEditor.loading}
+                          searchable
+                          allowDeselect={false}
+                          data={widgetKinds.map((kind) => {
+                            let label = getWidgetName(kind, tAll);
+                            const boardOnly = isBoardOnlyHeaderWidget(kind);
+                            if (boardOnly) label = `${label} (${t("configuration.boardOnly")})`;
+                            return { value: kind, label, disabled: boardOnly };
+                          })}
+                          onChange={(kind) => {
+                            if (!kind || kind === selectedItem.kind) return;
+                            updateWidget(createHeaderWidgetItem(kind as WidgetKind, selectedItem.id));
+                          }}
+                        />
+                      )}
+                      <Button
+                        size="xs"
+                        variant="default"
+                        leftSection={<IconSettings size={14} />}
+                        loading={widgetEditor.loading}
+                        onClick={() => void widgetEditor.open(selectedItem, updateWidget)}
+                      >
+                        {t("configuration.widgetOptions")}
+                      </Button>
+                    </>
+                  )}
                   {selectedItem.type === "builtin" && selectedItem.id === "search" ? (
                     <SegmentedControl
                       size="xs"
@@ -341,6 +409,19 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       ]}
                     />
                   ) : null}
+                  {selectedItem.type === "builtin" && selectedItem.id === "boardTabs" && (
+                    <SegmentedControl<HeaderPreferences["tabsDisplay"]>
+                      size="xs"
+                      value={value.tabsDisplay}
+                      aria-label={t("items.boardTabs")}
+                      onChange={(tabsDisplay) => onChange({ ...value, tabsDisplay })}
+                      data={[
+                        { value: "wide", label: t("configuration.tabsDisplay.wide") },
+                        { value: "compact", label: t("configuration.tabsDisplay.compact") },
+                        { value: "indicator", label: t("configuration.tabsDisplay.indicator") },
+                      ]}
+                    />
+                  )}
                   {!isRequiredHeaderItem(selectedItem) ? (
                     <Button
                       size="xs"
@@ -400,6 +481,23 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
             </Menu>
           </Group>
           <Group gap="xs">
+            <Button
+              size="xs"
+              variant="default"
+              leftSection={<IconBell size={16} />}
+              disabled={activeItemKeySet.has("widget:notifications")}
+              onClick={() => addItem(createHeaderWidgetItem("notifications", "notifications"))}
+            >
+              {t("items.notifications")}
+            </Button>
+            <Button
+              size="xs"
+              variant="default"
+              leftSection={<IconApps size={16} />}
+              onClick={() => addItem(createHeaderWidgetItem("clock", createId()))}
+            >
+              {t("available.widget")}
+            </Button>
             {inactiveBuiltinIds.length === 0 ? (
               <Text c="dimmed" size="sm">
                 {t("available.allAdded")}
@@ -458,6 +556,7 @@ interface SortableHeaderItemProps {
   label: string;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null;
   configureLabel: string;
@@ -473,6 +572,7 @@ const SortableHeaderItem = ({
   label,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
   configureLabel,
@@ -507,7 +607,8 @@ const SortableHeaderItem = ({
         data-wide={
           (item.type === "builtin" &&
             ((item.id === "search" && searchDisplay === "input") ||
-              (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+              (item.id === "logo" && logoDisplay === "logoAndText") ||
+              (item.id === "boardTabs" && tabsDisplay !== "indicator"))) ||
           undefined
         }
         aria-label={configureLabel}
@@ -524,6 +625,7 @@ const SortableHeaderItem = ({
           compact={false}
           searchDisplay={searchDisplay}
           logoDisplay={logoDisplay}
+          tabsDisplay={tabsDisplay}
           logoTitle={logoTitle}
           boardLogo={boardLogo}
         />
@@ -552,6 +654,7 @@ const HeaderItemPreview = ({
   compact,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
   overlay = false,
@@ -561,6 +664,7 @@ const HeaderItemPreview = ({
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null | undefined;
   overlay?: boolean;
@@ -572,6 +676,7 @@ const HeaderItemPreview = ({
       compact={compact}
       searchDisplay={searchDisplay}
       logoDisplay={logoDisplay}
+      tabsDisplay={tabsDisplay}
       logoTitle={logoTitle}
       boardLogo={boardLogo}
     />
@@ -586,7 +691,8 @@ const HeaderItemPreview = ({
         (item.type === "builtin" &&
           !compact &&
           ((item.id === "search" && searchDisplay === "input") ||
-            (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+            (item.id === "logo" && logoDisplay === "logoAndText") ||
+            (item.id === "boardTabs" && tabsDisplay !== "indicator"))) ||
         undefined
       }
     >
@@ -601,6 +707,7 @@ const PreviewItem = ({
   compact,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
   logoTitle,
   boardLogo,
 }: {
@@ -609,9 +716,16 @@ const PreviewItem = ({
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
   logoDisplay: HeaderPreferences["logoDisplay"];
+  tabsDisplay: HeaderPreferences["tabsDisplay"];
   logoTitle: string;
   boardLogo: string | null | undefined;
 }) => {
+  const tTabs = useI18n("board.tabs");
+  if (item.type === "widget") {
+    let Icon = widgetCatalogIcons[item.kind];
+    if (item.id === "notifications") Icon = IconBell;
+    return <Icon size={20} stroke={1.7} />;
+  }
   if (item.type === "board") {
     return (
       <Avatar src={boardLogo} size={22} radius="sm">
@@ -636,6 +750,24 @@ const PreviewItem = ({
         <IconSearch size={18} />
         {showInput ? <span>{label}…</span> : null}
       </div>
+    );
+  }
+
+  if (item.id === "boardTabs") {
+    if (tabsDisplay === "indicator")
+      return (
+        <Text span inherit textWrap="nowrap">
+          2/3
+        </Text>
+      );
+    return (
+      <Group component="span" gap={4} wrap="nowrap">
+        {[1, 2, 3].map((index) => (
+          <Box component="span" key={index} px={4} c={index === 1 ? "primaryColor" : "dimmed"}>
+            {tabsDisplay === "compact" ? index : tTabs("untitled", { index })}
+          </Box>
+        ))}
+      </Group>
     );
   }
 
@@ -678,6 +810,7 @@ const getBuiltinItemIcon = (itemId: HeaderBuiltinItemId) => {
   if (itemId === "search") return IconSearch;
   if (itemId === "home") return IconHome;
   if (itemId === "boardSwitcher") return IconReplace;
+  if (itemId === "boardTabs") return IconLayoutNavbar;
   if (itemId === "assistant") return IconRobot;
   if (itemId === "docker") return IconBrandDocker;
   if (itemId === "boardEdit") return IconPencil;
@@ -687,3 +820,13 @@ const getBuiltinItemIcon = (itemId: HeaderBuiltinItemId) => {
   if (itemId === "user") return IconUserCircle;
   return IconLayoutDashboard;
 };
+
+const createHeaderWidgetItem = (kind: WidgetKind, id: string): HeaderWidgetItem => ({
+  type: "widget",
+  id,
+  kind,
+  options: {},
+  integrationIds: [],
+  advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+  size: { width: 2, height: 2 },
+});

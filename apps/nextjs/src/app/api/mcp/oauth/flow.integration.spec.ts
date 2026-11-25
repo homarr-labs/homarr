@@ -37,6 +37,7 @@ vi.mock("@homarr/db", async () => {
 });
 
 import { sessionTokenCookieName } from "@homarr/auth/server";
+import { getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { comparePasswordsAsync } from "@homarr/auth/security";
 import { db } from "@homarr/db";
 import { apiKeys, users } from "@homarr/db/schema";
@@ -192,8 +193,8 @@ function decisionRequest(
   );
 }
 
-async function approval(grant: Awaited<ReturnType<typeof prompt>>) {
-  const response = await decide(decisionRequest(grant));
+async function approval(grant: Awaited<ReturnType<typeof prompt>>, overrides: Record<string, string> = {}) {
+  const response = await decide(decisionRequest(grant, overrides));
   grant.browser.apply(response);
   expect(response.status).toBe(303);
   const code = new URL(response.headers.get("location") ?? origin).searchParams.get("code");
@@ -249,6 +250,45 @@ afterAll(() => {
 });
 
 describe("MCP OAuth explicit consent HTTP flow", () => {
+  it.each([
+    [undefined, "readOnly", "mcp:tools:read", true],
+    ["mcp:tools:read", "readOnly", "mcp:tools:read", true],
+    ["mcp:tools", "readWrite", "mcp:tools", false],
+    ["mcp:tools:read mcp:tools", "readWrite", "mcp:tools", false],
+  ] as const)("persists scope %s with consent mode %s", async (scope, accessMode, expectedScope, readOnly) => {
+    const grant = await prompt(new Browser(), undefined, { scope });
+    const response = await redeem(tokenRequest(grant, await approval(grant, { accessMode })));
+    const token = (await response.json()) as { access_token: string; scope: string };
+
+    expect(response.status).toBe(200);
+    expect(token.scope).toBe(expectedScope);
+    const authenticated = await getSessionFromApiKeyAsync(db, token.access_token, null, "oauth-scope-test");
+    expect(authenticated?.apiKey?.readOnly).toBe(readOnly);
+  });
+
+  it("does not let consent upgrade an explicitly read-only request", async () => {
+    const grant = await prompt(new Browser(), undefined, { scope: "mcp:tools:read" });
+    expect(grant.consent.requestedScope).toBe("mcp:tools:read");
+    const rejected = await decide(decisionRequest(grant, { accessMode: "readWrite" }));
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: "invalid_scope" });
+    expect(await db.select().from(apiKeys)).toHaveLength(0);
+    const response = await redeem(tokenRequest(grant, await approval(grant)));
+    expect(await response.json()).toMatchObject({ scope: "mcp:tools:read" });
+  });
+
+  it("defaults a broad authorization request to read-only and ignores token-request escalation", async () => {
+    const grant = await prompt();
+    const code = await approval(grant);
+    const response = await redeem(tokenRequest(grant, code, { scope: "mcp:tools", readOnly: "false" }));
+    const token = (await response.json()) as { access_token: string; scope: string };
+
+    expect(response.status).toBe(200);
+    expect(token.scope).toBe("mcp:tools:read");
+    const authenticated = await getSessionFromApiKeyAsync(db, token.access_token, null, "oauth-scope-test");
+    expect(authenticated?.apiKey).toEqual({ readOnly: true, oauthClientId: grant.registration.clientId });
+  });
+
   it("requires explicit approval, safely projects consent, then writes the hash and frozen provenance", async () => {
     const grant = await prompt();
     expect(new URL(grant.response.headers.get("location") ?? "/", origin).pathname).toBe("/auth/mcp");
@@ -259,6 +299,7 @@ describe("MCP OAuth explicit consent HTTP flow", () => {
       "expiresAt",
       "pendingId",
       "redirectUri",
+      "requestedScope",
     ]);
     expect(await db.select().from(apiKeys)).toHaveLength(0);
     expect(grant.response.headers.get("set-cookie")).toContain("HttpOnly; SameSite=Lax; Secure");

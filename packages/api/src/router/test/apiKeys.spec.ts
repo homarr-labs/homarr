@@ -23,6 +23,7 @@ const issuedAt = new Date("2026-10-10T12:34:56.789Z");
 const ownerSessionToken = "owner-session-token";
 const adminSessionToken = "admin-session-token";
 const oauthMetadata = (id: string) => ({
+  readOnly: false,
   oauthClientId: `client-${id}`,
   oauthClientName: `Client ${id}`,
   oauthRedirectUri: `https://client.example/${id}/callback`,
@@ -134,6 +135,7 @@ test("keeps global key management admin-only and projects only safe metadata and
   });
   expect(allKeys.find(({ id }) => id === "own-manual")).toEqual({
     id: "own-manual",
+    readOnly: false,
     oauthClientId: null,
     oauthClientName: null,
     oauthRedirectUri: null,
@@ -142,7 +144,7 @@ test("keeps global key management admin-only and projects only safe metadata and
   });
   for (const key of allKeys) {
     expect(Object.keys(key).toSorted()).toEqual(
-      ["id", "oauthClientId", "oauthClientName", "oauthRedirectUri", "oauthIssuedAt", "user"].toSorted(),
+      ["id", "readOnly", "oauthClientId", "oauthClientName", "oauthRedirectUri", "oauthIssuedAt", "user"].toSorted(),
     );
   }
   await adminCaller.delete({ apiKeyId: "foreign-oauth" });
@@ -157,4 +159,24 @@ test("explicitly disables owner OAuth procedures in the MCP tool catalog", () =>
 
   expect(catalog.diagnostics).toEqual([]);
   expect(catalog.tools.map(({ name }) => name)).toEqual(["apiKeys_delete", "apiKeys_getAll"]);
+});
+
+test("administrators can create read-only keys without changing legacy creation defaults", async () => {
+  const { db } = await setupAsync();
+  const session = await getSessionFromToken(db, adminSessionToken);
+  if (!session) throw new Error("Expected an administrator session");
+  const caller = apiKeysRouter.createCaller({ db, session, deviceType: undefined });
+
+  for (const [input, readOnly] of [
+    [{ readOnly: true }, true],
+    [{ readOnly: false }, false],
+    [{}, false],
+    [undefined, false],
+  ] as const) {
+    const created = await caller.create(input);
+    const authenticated = await getSessionFromApiKeyAsync(db, created.apiKey, null, "key-creation-test");
+    expect(authenticated?.apiKey?.readOnly).toBe(readOnly);
+    const id = created.apiKey.split(".")[0];
+    expect((await caller.getAll()).find((key) => key.id === id)).toMatchObject({ readOnly });
+  }
 });

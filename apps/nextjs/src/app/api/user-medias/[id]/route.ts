@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { sanitize } from "isomorphic-dompurify";
 
 import { db, eq } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
@@ -114,6 +113,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
 
   // Sanitize SVG content to prevent XSS attacks
   if (isSvg) {
+    const { sanitize } = await import("isomorphic-dompurify");
     const svgText = new TextDecoder().decode(content);
     const sanitized = sanitize(svgText, {
       USE_PROFILES: { svg: true, svgFilters: true },

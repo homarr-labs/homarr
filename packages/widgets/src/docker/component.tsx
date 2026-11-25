@@ -47,6 +47,8 @@ import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
@@ -91,10 +93,10 @@ const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" |
 
 const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
 
-const getContainersQueryInput = (endpointIds: string[]) => {
-  if (endpointIds.length === 0) return undefined;
-  return { endpointIds };
-};
+const getContainersQueryInput = (endpointIds: string[], refreshInterval: number) => ({
+  ...(endpointIds.length > 0 && { endpointIds }),
+  refreshInterval,
+});
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useI18n("docker.field.state.option");
@@ -145,7 +147,7 @@ const createColumns = (
   },
   {
     accessor: "state",
-    title: t("field.state.label"),
+    title: tCommon("field.state"),
     width: 80,
     sortable: sortingEnabled,
     render: (container) => <ContainerStateBadge state={container.state} />,
@@ -263,7 +265,12 @@ export default function DockerWidget({
   const responsiveWidth = width * displayScale;
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 30);
+  const containersQuery = clientApi.docker.getContainers.useQuery(
+    getContainersQueryInput(options.endpointIds, refreshInterval),
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
@@ -522,7 +529,7 @@ function ContainerMenuButton({
   container: DockerContainer;
   handlers: ContainerActionHandlers;
 }) {
-  const t = useI18n("docker.action");
+  const tCommon = useI18n("common");
   const [opened, setOpened] = useState(false);
   const close = () => setOpened(false);
 
@@ -534,7 +541,7 @@ function ContainerMenuButton({
           variant="subtle"
           color="gray"
           size={rowActionButtonSize}
-          aria-label={t("title")}
+          aria-label={tCommon("field.actions")}
           onClick={(event) => event.stopPropagation()}
           style={{ position: "relative", overflow: "visible" }}
         >

@@ -12,6 +12,7 @@ import {
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { useDockerContainerOptions } from "./docker/use-container-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
@@ -21,6 +22,10 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
     return optionsBuilder.from(
       (factory) => ({
         appId: factory.app(),
+        dockerContainer: factory.dynamicSelect({
+          withDescription: true,
+          useOptions: (_query, _integrationIds, options) => useDockerContainerOptions(options),
+        }),
         openIn: factory.select({
           options: [
             {

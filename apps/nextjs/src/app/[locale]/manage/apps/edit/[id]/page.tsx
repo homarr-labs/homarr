@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import { Container, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AppEditForm } from "./_app-edit-form";
 
@@ -23,14 +23,13 @@ export default async function AppEditPage(props: AppEditPageProps) {
   const t = await getI18n();
 
   return (
-    <>
-      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, app.name]])} nonInteractable={["edit"]} />
-      <Container>
-        <Stack>
-          <Title>{t("app.page.edit.title")}</Title>
-          <AppEditForm app={app} />
-        </Stack>
-      </Container>
-    </>
+    <ManagePageLayout
+      title={t("app.page.edit.title")}
+      container="default"
+      breadcrumbPlacement="outside"
+      breadcrumb={<DynamicBreadcrumb dynamicMappings={new Map([[params.id, app.name]])} nonInteractable={["edit"]} />}
+    >
+      <AppEditForm app={app} />
+    </ManagePageLayout>
   );
 }

@@ -19,6 +19,7 @@ import {
   CPU_Y_AXIS_DOMAIN,
   hasGpuMetric,
   normalizeBeszelByteRate,
+  useChartRecords,
   useContainerNames,
   useContainerSeries,
   useDiskChartData,
@@ -137,19 +138,13 @@ export function BeszelStatsView({
 
   const systemStats = activeStats?.systemStats;
   const containerStats = activeStats?.containerStats;
-  const cpuData = useSystemChartData(whenVisible(visibility.cpu, systemStats), mappers.cpu, timePeriod, locale);
-  const memoryData = useSystemChartData(
-    whenVisible(visibility.memory, systemStats),
-    mappers.memory,
-    timePeriod,
-    locale,
-  );
-  const networkData = useSystemChartData(
-    whenVisible(visibility.network, systemStats),
-    mappers.network,
-    timePeriod,
-    locale,
-  );
+  // Every visible metric shares the same ordering, localized timestamps and gap grid.
+  const showSystem = Object.entries(visibility).some(([metric, visible]) => visible && !metric.startsWith("docker"));
+  const systemRecords = useChartRecords(whenVisible(showSystem, systemStats), timePeriod, locale);
+  const containerRecords = useChartRecords(whenVisible(showDocker, containerStats), timePeriod, locale);
+  const cpuData = useSystemChartData(whenVisible(visibility.cpu, systemRecords), mappers.cpu);
+  const memoryData = useSystemChartData(whenVisible(visibility.memory, systemRecords), mappers.memory);
+  const networkData = useSystemChartData(whenVisible(visibility.network, systemRecords), mappers.network);
 
   const gpuDevices = useGpuDevices(
     whenVisible(visibility.gpuUsage || visibility.gpuMemory || visibility.gpuPower, systemStats),
@@ -163,6 +158,7 @@ export function BeszelStatsView({
     [gpuDevices],
   );
   const gpuPowerSeries = useMemo(() => {
+    if (!visibility.gpuPower) return [];
     const totals = new Map(gpuDevices.map((device) => [device.id, 0]));
     for (const record of systemStats ?? []) {
       for (const [id, device] of Object.entries(record.stats.g ?? {})) {
@@ -175,59 +171,34 @@ export function BeszelStatsView({
         name: device.seriesName,
         color: `hsl(${226 + (index * 360) / gpuDevices.length} 65% 52%)`,
       }));
-  }, [gpuDevices, systemStats]);
-  const gpuUsageData = useGpuChartData(
-    whenVisible(visibility.gpuUsage, systemStats),
-    gpuDevices,
-    "usage",
-    timePeriod,
-    locale,
-  );
-  const gpuMemoryData = useGpuChartData(
-    whenVisible(visibility.gpuMemory, systemStats),
-    gpuDevices,
-    "memory",
-    timePeriod,
-    locale,
-  );
-  const gpuPowerData = useGpuChartData(
-    whenVisible(visibility.gpuPower, systemStats),
-    gpuDevices,
-    "power",
-    timePeriod,
-    locale,
-  );
-  const hasGpuMemory = hasGpuMetric(systemStats, "memory");
-  const hasGpuPower = hasGpuMetric(systemStats, "power");
+  }, [gpuDevices, systemStats, visibility.gpuPower]);
+  const gpuUsageData = useGpuChartData(whenVisible(visibility.gpuUsage, systemRecords), gpuDevices, "usage");
+  const gpuMemoryData = useGpuChartData(whenVisible(visibility.gpuMemory, systemRecords), gpuDevices, "memory");
+  const gpuPowerData = useGpuChartData(whenVisible(visibility.gpuPower, systemRecords), gpuDevices, "power");
+  const hasGpuMemory = visibility.gpuMemory && hasGpuMetric(systemStats, "memory");
+  const hasGpuPower = visibility.gpuPower && hasGpuMetric(systemStats, "power");
 
   const efsPaths = useMemo(() => {
+    if (!visibility.disk && !visibility.diskIO) return [];
     const paths = new Set<string>();
     for (const record of systemStats ?? []) {
       for (const path of Object.keys(record.stats.efs ?? {})) paths.add(path);
     }
     return [...paths];
-  }, [systemStats]);
+  }, [systemStats, visibility.disk, visibility.diskIO]);
   const rootSeriesName = t("chart.disk.series");
   const readLabel = t("chart.diskIO.read");
   const writeLabel = t("chart.diskIO.write");
   const rootReadSeriesName = `${rootSeriesName} ${readLabel}`;
   const rootWriteSeriesName = `${rootSeriesName} ${writeLabel}`;
-  const diskData = useDiskChartData(
-    whenVisible(visibility.disk, systemStats),
-    efsPaths,
-    rootSeriesName,
-    timePeriod,
-    locale,
-  );
+  const diskData = useDiskChartData(whenVisible(visibility.disk, systemRecords), efsPaths, rootSeriesName);
   const diskIOData = useDiskIOChartData(
-    whenVisible(visibility.diskIO, systemStats),
+    whenVisible(visibility.diskIO, systemRecords),
     efsPaths,
     rootReadSeriesName,
     rootWriteSeriesName,
     readLabel,
     writeLabel,
-    timePeriod,
-    locale,
   );
   const diskSeries = useMemo(
     () => [
@@ -258,29 +229,31 @@ export function BeszelStatsView({
   );
 
   const containerNames = useContainerNames(whenVisible(showDocker, containerStats));
-  const containerCpuSeries = useContainerSeries(containerStats, containerNames, "cpu");
-  const containerMemorySeries = useContainerSeries(containerStats, containerNames, "memory");
-  const containerNetworkSeries = useContainerSeries(containerStats, containerNames, "network");
-  const dockerCpuData = useDockerChartData(
+  const containerCpuSeries = useContainerSeries(
     whenVisible(visibility.dockerCpu, containerStats),
     containerNames,
     "cpu",
-    timePeriod,
-    locale,
   );
-  const dockerMemoryData = useDockerChartData(
+  const containerMemorySeries = useContainerSeries(
     whenVisible(visibility.dockerMemory, containerStats),
     containerNames,
     "memory",
-    timePeriod,
-    locale,
   );
-  const dockerNetworkData = useDockerChartData(
+  const containerNetworkSeries = useContainerSeries(
     whenVisible(visibility.dockerNetwork, containerStats),
     containerNames,
     "network",
-    timePeriod,
-    locale,
+  );
+  const dockerCpuData = useDockerChartData(whenVisible(visibility.dockerCpu, containerRecords), containerNames, "cpu");
+  const dockerMemoryData = useDockerChartData(
+    whenVisible(visibility.dockerMemory, containerRecords),
+    containerNames,
+    "memory",
+  );
+  const dockerNetworkData = useDockerChartData(
+    whenVisible(visibility.dockerNetwork, containerRecords),
+    containerNames,
+    "network",
   );
 
   if (isLive && liveError) {

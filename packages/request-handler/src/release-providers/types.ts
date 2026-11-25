@@ -48,6 +48,7 @@ export interface ReleaseError {
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
 
 export interface ReleaseLookup {
+  tag?: string;
   baseUrl: string;
   identifier: string;
   versionPattern?: RegExp;

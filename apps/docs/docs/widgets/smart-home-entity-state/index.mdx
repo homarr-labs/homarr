@@ -12,10 +12,11 @@ import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { smartHomeEntityStateWidget } from ".";
 import { homeAssistantIntegration } from "@site/docs/integrations/home-assistant";
+import { homeyIntegration } from "@site/docs/integrations/homey";
 
 <WidgetHeader widget={smartHomeEntityStateWidget} categories={["Smart home"]} />
 
-The Entity State widget shows a Home Assistant entity's state and can optionally toggle it. Advanced view includes the
+The Entity State widget shows a Home Assistant or Homey entity's state and can optionally toggle it. Advanced view includes the
 entity ID, unit, device class, icon, and update timestamps; arbitrary attributes are not exposed.
 
 ### Screenshots
@@ -34,6 +35,9 @@ import temperature from "./img/temperature.png";
   items={[
     {
       integration: homeAssistantIntegration,
+    },
+    {
+      integration: homeyIntegration,
     },
   ]}
 />
@@ -56,8 +60,4 @@ import temperature from "./img/temperature.png";
 
 ### Entity ID
 
-Find the entity under **Home Assistant → Developer Tools → States** and copy its `domain.object_id` value.
-
-import retrieveEntityId from "./img/retrieve-entity-id.png";
-
-<img src={retrieveEntityId.src} alt="Home Assistant entity IDs under Developer Tools and States" width={256 * 2} />
+Home Assistant uses native IDs such as `sensor.living_room_temperature`. Homey devices and individual sensor capabilities are mapped to entities by Homarr. Both are available in the searchable entity list after selecting an integration; existing saved IDs remain valid.

@@ -4,13 +4,16 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
   supportsAdvancedFocus: true,
   refetchInterval: 10,
   createOptions() {
-    return optionsBuilder.from(() => ({}));
+    return optionsBuilder.from(() => ({
+      ...createWidgetRefreshIntervalOptions(10),
+    }));
   },
   ...getWidgetIntegrationConfig("firewall"),
   errors: {

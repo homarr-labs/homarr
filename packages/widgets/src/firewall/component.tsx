@@ -26,6 +26,8 @@ import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { calculateBandwidth } from "./bandwidth";
 import { FirewallMenu } from "./firewall-menu";
 import { FirewallVersion, formatVersion } from "./firewall-version";
@@ -66,6 +68,7 @@ const getCompactRingSize = (width: number, height: number): number => {
 
 export default function FirewallWidget({
   integrationIds,
+  options,
   width,
   height,
   displayScale = 1,
@@ -89,16 +92,19 @@ export default function FirewallWidget({
     setSelectedFirewall(value ?? "");
   }, []);
 
-  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
-  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
-    integrationIds,
-  });
-  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
-    integrationIds,
-  });
-  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
-    integrationIds,
-  });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const firewallInput = { integrationIds, refreshInterval };
+  const firewallQueryOptions: { refetchInterval: number | false } = {
+    refetchInterval: demoReadOnly ? false : refreshInterval * 1000,
+  };
+  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery(firewallInput, firewallQueryOptions);
+  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery(firewallInput, firewallQueryOptions);
+  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery(firewallInput, firewallQueryOptions);
+  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery(
+    firewallInput,
+    firewallQueryOptions,
+  );
   const firewallsCpuData = cpuQuery.data ?? [];
   const firewallsMemoryData = memoryQuery.data ?? [];
   const firewallsVersionData = versionQuery.data ?? [];

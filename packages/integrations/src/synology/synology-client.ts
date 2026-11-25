@@ -30,8 +30,6 @@ import {
 
 const logger = createLogger({ module: "synologyClient" });
 
-const AUTH_SESSION_NAME = "DownloadStation";
-
 type ApiDefinition = {
   cgiPath: string;
   maxVersion: number;
@@ -319,7 +317,6 @@ export class SynologyClient {
         method: "login",
         account: this.username,
         passwd: this.password,
-        session: AUTH_SESSION_NAME,
         format: "cookie",
       }).toString(),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

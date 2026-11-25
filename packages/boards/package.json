@@ -13,11 +13,15 @@
   },
   "exports": {
     "./context": "./src/context.tsx",
+    "./draft-changes": "./src/draft-changes.ts",
     "./layout-selection": "./src/layout-selection.ts",
     "./layout-preview": "./src/layout-preview.ts",
     "./updater": "./src/updater.ts",
     "./edit-mode": "./src/edit-mode.tsx",
-    "./scale": "./src/scale.ts"
+    "./scale": "./src/scale.ts",
+    "./layout-data": "./src/layout-data.ts",
+    "./tab-selection": "./src/tab-selection.ts",
+    "./tabs": "./src/tabs.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -29,6 +33,8 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@tanstack/react-query": "catalog:",
+    "@trpc/react-query": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

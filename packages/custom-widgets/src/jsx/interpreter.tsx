@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 
 import { callCollectionMethod } from "./collection-methods";
+import type { InterpreterMethodContext } from "./interpreter-method-context";
 import { staticPropertyName } from "./analyzer-ast";
 import type { JsxEmitterContext } from "./emitter-context";
 import { createInterpreterCallback, runInterpreterCallback } from "./interpreter-callbacks";
@@ -29,8 +30,19 @@ export interface SafeJsxRenderResult {
   warnings: string[];
 }
 
+const SHORT_CIRCUITED_CHAIN = Symbol("shortCircuitedChain");
+
+function unavailableMethodMessage(receiver: unknown, method: string) {
+  if (receiver === undefined || receiver === null) {
+    return `Cannot call '${method}' on ${String(receiver)}; guard the value with ?. or a fallback such as ?? []`;
+  }
+  if (Array.isArray(receiver)) return `Calling method '${method}' on an array is not allowed`;
+  return `Calling method '${method}' on ${typeof receiver === "object" ? "an object" : `a ${typeof receiver}`} is not allowed`;
+}
+
 class Interpreter {
   private readonly budget: Budget;
+  private readonly context: JsxEmitterContext & InterpreterMethodContext;
   private readonly warnings = new Set<string>();
 
   public constructor(
@@ -39,6 +51,15 @@ class Interpreter {
     private readonly limits: EvaluationBudgets,
   ) {
     this.budget = new Budget(limits);
+    this.context = {
+      components: this.components,
+      budget: this.budget,
+      warnings: this.warnings,
+      evaluate: (node, currentEnvironment, depth) => this.evaluate(node, currentEnvironment, depth),
+      createCallback: (node, currentEnvironment) => this.createCallback(node, currentEnvironment),
+      renderCallback: (callback, args, depth) => this.runCallback(callback, args, depth) as ReactNode,
+      runCallback: (callback, args, depth) => this.runCallback(callback, args, depth),
+    };
   }
 
   public render(root: AstNode): SafeJsxRenderResult {
@@ -101,8 +122,11 @@ class Interpreter {
         );
       case "TemplateLiteral":
         return this.evaluateTemplateLiteral(node, environment, depth + 1);
-      case "ChainExpression":
-        return this.evaluate(asNode(node.expression, "chain expression"), environment, depth + 1);
+      case "ChainExpression": {
+        const value = this.evaluate(asNode(node.expression, "chain expression"), environment, depth + 1);
+        if (value === SHORT_CIRCUITED_CHAIN) return undefined;
+        return value;
+      }
       case "AssignmentExpression":
       case "UpdateExpression":
       case "NewExpression":
@@ -115,22 +139,11 @@ class Interpreter {
   }
 
   private evaluateJsxFragment(node: AstNode, environment: Environment, depth: number): ReactNode {
-    return emitJsxFragment(node, environment, depth, this.emitterContext());
+    return emitJsxFragment(node, environment, depth, this.context);
   }
 
   private evaluateJsxElement(node: AstNode, environment: Environment, depth: number): ReactNode {
-    return emitJsxElement(node, environment, depth, this.emitterContext());
-  }
-
-  private emitterContext(): JsxEmitterContext {
-    return {
-      components: this.components,
-      budget: this.budget,
-      warnings: this.warnings,
-      evaluate: (node, environment, depth) => this.evaluate(node, environment, depth),
-      createCallback: (node, environment) => this.createCallback(node, environment),
-      renderCallback: (callback, args, depth) => this.runCallback(callback, args, depth) as ReactNode,
-    };
+    return emitJsxElement(node, environment, depth, this.context);
   }
 
   private evaluateArray(node: AstNode, environment: Environment, depth: number): unknown[] {
@@ -267,6 +280,7 @@ class Interpreter {
 
   private evaluateMember(node: AstNode, environment: Environment, depth: number): unknown {
     const object = this.evaluate(asNode(node.object, "member object"), environment, depth + 1);
+    if (object === SHORT_CIRCUITED_CHAIN || (node.optional && object == null)) return SHORT_CIRCUITED_CHAIN;
     const property = this.memberProperty(node, environment, depth + 1);
     return ownProperty(object, property);
   }
@@ -283,27 +297,31 @@ class Interpreter {
           ? staticPropertyName(asNode(callee.property, "method property"))
           : normalizedProperty(asNode(callee.property, "method property").name)
         : null;
-    const args = argumentNodes.map((argument) => {
-      if (argument.type === "SpreadElement") throw new SafeJsxError("Spread call arguments are not supported");
-      if (argument.type === "ArrowFunctionExpression") {
-        if (!callbackMethod || !CUSTOM_JSX_CALLBACK_METHODS.has(callbackMethod)) {
-          throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Callback argument is not allowed for this call");
+    const evaluateArguments = () =>
+      argumentNodes.map((argument) => {
+        if (argument.type === "SpreadElement") throw new SafeJsxError("Spread call arguments are not supported");
+        if (argument.type === "ArrowFunctionExpression") {
+          if (!callbackMethod || !CUSTOM_JSX_CALLBACK_METHODS.has(callbackMethod)) {
+            throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Callback argument is not allowed for this call");
+          }
+          return this.createCallback(argument, environment);
         }
-        return this.createCallback(argument, environment);
-      }
-      return this.evaluate(argument, environment, depth + 1);
-    });
+        return this.evaluate(argument, environment, depth + 1);
+      });
 
     if (callee.type === "MemberExpression") {
       const receiver = this.evaluate(asNode(callee.object, "method receiver"), environment, depth + 1);
+      if (receiver === SHORT_CIRCUITED_CHAIN || (callee.optional && receiver == null)) return SHORT_CIRCUITED_CHAIN;
+      const args = evaluateArguments();
       const method = this.memberProperty(callee, environment, depth + 1);
       const collectionResult = this.callCollectionMethod(receiver, method, args, depth + 1);
       if (collectionResult.handled) return collectionResult.value;
       const callable = ownProperty(receiver, method);
-      if (!isSafeCallable(callable)) throw new SafeJsxError(`Calling method '${method}' is not allowed`);
+      if (!isSafeCallable(callable)) throw new SafeJsxError(unavailableMethodMessage(receiver, method));
       return this.accountHostResult(callable(...(args as never[])));
     }
 
+    const args = evaluateArguments();
     const callable = this.evaluate(callee, environment, depth + 1);
     if (!isSafeCallable(callable)) throw new SafeJsxError("Calling this value is not allowed");
     return this.accountHostResult(callable(...(args as never[])));
@@ -315,10 +333,7 @@ class Interpreter {
     args: unknown[],
     depth: number,
   ): { handled: boolean; value?: unknown } {
-    return callCollectionMethod(receiver, method, args, depth, {
-      budget: this.budget,
-      runCallback: (callback, callbackArgs, callbackDepth) => this.runCallback(callback, callbackArgs, callbackDepth),
-    });
+    return callCollectionMethod(receiver, method, args, depth, this.context);
   }
 
   private accountHostResult(value: unknown): unknown {
@@ -332,10 +347,7 @@ class Interpreter {
   }
 
   private runCallback(callback: InterpreterCallback, args: unknown[], depth: number): unknown {
-    return runInterpreterCallback(callback, args, depth, {
-      budget: this.budget,
-      evaluate: (node, environment, callbackDepth) => this.evaluate(node, environment, callbackDepth),
-    });
+    return runInterpreterCallback(callback, args, depth, this.context);
   }
 
   private evaluateTemplateLiteral(node: AstNode, environment: Environment, depth: number): string {
@@ -353,11 +365,19 @@ class Interpreter {
   }
 }
 
-export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
-  const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
-  for (const [name, value] of Object.entries(limits)) {
-    if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
-  }
-  const root = parseCustomJsxTemplate(template);
-  return new Interpreter(components, new Environment(bindings), limits).render(root);
+export function createSafeJsxRenderer(template: string) {
+  let root: AstNode | undefined;
+  return ({ components, bindings, budgets }: Omit<RenderSafeJsxOptions, "template">): SafeJsxRenderResult => {
+    const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
+    for (const [name, value] of Object.entries(limits)) {
+      if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
+    }
+    // Only syntax is reused. Bindings, warnings, callbacks, and budgets belong to each evaluation.
+    root ??= parseCustomJsxTemplate(template);
+    return new Interpreter(components, new Environment(bindings), limits).render(root);
+  };
+}
+
+export function renderSafeJsx({ template, ...options }: RenderSafeJsxOptions): SafeJsxRenderResult {
+  return createSafeJsxRenderer(template)(options);
 }

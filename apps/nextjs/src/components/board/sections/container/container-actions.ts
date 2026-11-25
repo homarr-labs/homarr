@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { useActiveBoardTabId } from "@homarr/boards/tabs";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { ContainerSectionOptions } from "@homarr/validation/shared";
 
@@ -14,10 +15,11 @@ interface UpdateContainerOptions {
 
 export const useContainerActions = () => {
   const { updateBoard } = useUpdateBoard();
+  const activeTabId = useActiveBoardTabId();
 
   const addContainer = useCallback(() => {
-    updateBoard(addContainerCallback());
-  }, [updateBoard]);
+    updateBoard(addContainerCallback(activeTabId));
+  }, [activeTabId, updateBoard]);
 
   const updateContainer = useCallback(
     ({ containerId, newOptions }: UpdateContainerOptions) => {

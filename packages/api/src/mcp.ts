@@ -30,6 +30,7 @@ import { patchmonRouter } from "./router/widgets/patchmon";
 import { smartHomeRouter } from "./router/widgets/smart-home";
 import { traefikRouter } from "./router/widgets/traefik";
 import { userRouter } from "./router/user";
+import { themeRouter } from "./router/theme";
 import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
 import { wudRouter } from "./router/widgets/wud";
 
@@ -47,6 +48,7 @@ export const mcpRouter = createTRPCRouter({
   kubernetes: kubernetesMcpRouter,
   searchEngine: searchEngineRouter,
   user: userRouter,
+  theme: themeRouter,
   airQuality: airQualityRouter,
   bazarr: bazarrRouter,
   serverSettings: serverSettingsRouter,

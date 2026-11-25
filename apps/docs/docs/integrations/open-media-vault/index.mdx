@@ -52,3 +52,9 @@ Disk temperatures are matched to filesystem partitions, including device names w
     },
   ]}
 />
+
+### TOTP authentication
+
+For accounts with TOTP enabled, use the optional Base32 shared secret shown beside the QR code during OpenMediaVault enrollment, not a 6-digit code. OpenMediaVault does not show it again after enrollment. Homarr generates fresh codes at login and session renewal; both servers' clocks must be synchronized.
+
+The secret is encrypted like the password, but storing both in Homarr removes factor separation inside Homarr. Use a dedicated administrator account without TOTP if you do not want Homarr to hold both factors.

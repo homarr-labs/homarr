@@ -23,6 +23,7 @@ export type CreateModalOptions = Pick<
   | "scrollAreaComponent"
   | "yOffset"
   | "transitionProps"
+  | "styles"
   | "closeOnClickOutside"
   | "closeOnEscape"
 > & {

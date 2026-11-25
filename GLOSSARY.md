@@ -56,8 +56,12 @@ A widget authored in JSX and installed from Workshop or written inside Homarr, w
 _Avoid_: Plugin, extension, userscript
 
 **Workshop**:
-The community exchange for publishing and installing Custom widgets.
+The community exchange for sharing Custom widgets and Custom themes.
 _Avoid_: Marketplace, store, registry
+
+**Custom theme**:
+Appearance overrides that can be shared through Workshop. An imported theme changes only its listed settings; the recipient chooses whether to replace their base preset or custom CSS.
+_Avoid_: Custom CSS, when referring to the whole theme
 
 ### Scheduling
 

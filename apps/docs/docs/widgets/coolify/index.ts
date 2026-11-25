@@ -4,7 +4,7 @@ import { IconCloud } from "@tabler/icons-react";
 export const coolifyWidget: WidgetDefinition = {
   icon: IconCloud,
   name: "Coolify",
-  description: "Overview of your Coolify instance with servers, applications, and services.",
+  description: "Overview of your Coolify projects, resources, and servers.",
   path: "../../widgets/coolify",
   configuration: {
     items: [

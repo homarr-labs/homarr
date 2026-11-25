@@ -22,9 +22,10 @@ interface SecretCardProps {
     | { kind: IntegrationSecretKind; value: null; updatedAt: null };
   children: React.ReactNode;
   onCancel: () => Promise<boolean>;
+  onRemove?: () => void;
 }
 
-export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
+export const SecretCard = ({ secret, children, onCancel, onRemove }: SecretCardProps) => {
   const tIntegration = useI18n("integration");
   const tCommon = useI18n("common");
   const { isPublic } = integrationSecretKindObject[secret.kind];
@@ -67,6 +68,11 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
               >
                 <DisplayIcon size={16} stroke={1.5} />
               </ActionIcon>
+            ) : null}
+            {onRemove ? (
+              <Button variant="default" onClick={onRemove}>
+                {tCommon("action.remove")}
+              </Button>
             ) : null}
             <Button
               variant="default"

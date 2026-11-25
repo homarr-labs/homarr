@@ -1,8 +1,8 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import type { ModalProps } from "@mantine/core";
 
+import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
@@ -38,6 +38,7 @@ export function CustomWidgetImportDialog({
   onImported,
 }: CustomWidgetImportDialogProps) {
   const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const importer = useCustomWidgetImport({
     widget,
     legacyId,
@@ -64,8 +65,8 @@ export function CustomWidgetImportDialog({
           ? t("importReview.migrationDescription")
           : (labels?.description ?? importer.reviewMessages.description),
         title: legacyId ? t("importReview.migrationTitle") : (labels?.title ?? t("importReview.title")),
-        cancel: labels?.cancel ?? t("importReview.cancel"),
-        confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? t("importReview.confirm")),
+        cancel: labels?.cancel ?? tCommon("action.cancel"),
+        confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? tCommon("action.import")),
       }}
     >
       <SourceSetupPanel

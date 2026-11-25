@@ -6,7 +6,8 @@ import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
-import { ntfyNotificationSchema } from "./ntfy-schema";
+import { ntfyDeletionSchema, ntfyEventSchema, ntfyNotificationSchema } from "./ntfy-schema";
+import type { NtfyNotification } from "./ntfy-schema";
 
 export class NTFYIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -44,23 +45,35 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
           if (line.length === 0) return null;
 
           const json = JSON.parse(line) as unknown;
-          const parsed = await ntfyNotificationSchema.parseAsync(json);
-          if (parsed.event === "message") return parsed;
-          // ignore non-event messages
-          else return null;
+          const { event } = await ntfyEventSchema.parseAsync(json);
+          if (event === "message") return await ntfyNotificationSchema.parseAsync(json);
+          if (event === "message_delete") return await ntfyDeletionSchema.parseAsync(json);
+
+          // Clear marks a message as read without replacing its content.
+          return null;
         }),
     );
 
-    return notifications
-      .filter((notification) => notification !== null)
-      .map((notification): Notification => {
-        const topicURL = this.externalUrl(`/${notification.topic}`);
-        return {
-          id: notification.id,
-          time: new Date(notification.time * 1000),
-          title: notification.title ?? topicURL.hostname + topicURL.pathname,
-          body: notification.message,
-        };
-      });
+    const notificationsBySequence = new Map<string, NtfyNotification>();
+    // Preserve replay order, including events published during the same second.
+    for (const notification of notifications) {
+      if (notification === null) continue;
+
+      const sequenceKey = JSON.stringify([notification.topic, notification.sequence_id || notification.id]);
+      notificationsBySequence.delete(sequenceKey);
+      if (notification.event === "message") {
+        notificationsBySequence.set(sequenceKey, notification);
+      }
+    }
+
+    return [...notificationsBySequence.values()].map((notification): Notification => {
+      const topicURL = this.externalUrl(`/${notification.topic}`);
+      return {
+        id: notification.id,
+        time: new Date(notification.time * 1000),
+        title: notification.title ?? topicURL.hostname + topicURL.pathname,
+        body: notification.message,
+      };
+    });
   }
 }

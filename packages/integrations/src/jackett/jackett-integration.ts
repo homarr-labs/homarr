@@ -1,14 +1,21 @@
 import { z } from "zod/v4";
 import { parseStringPromise } from "xml2js";
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
+import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
+import { IntegrationParseError } from "../base/errors/parse/integration-parse-error";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IIndexerManagerIntegration } from "../interfaces/indexer-manager/indexer-manager-integration";
 import type { Indexer } from "../interfaces/indexer-manager/indexer-manager-types";
+import { JackettIndexerTestError } from "./jackett-indexer-test-error";
+
+const indexerTestConcurrency = 4;
 
 const indexerSchema = z.object({
   $: z.object({ id: z.string().min(1), configured: z.enum(["true", "false"]) }),
@@ -58,22 +65,42 @@ export class JackettIntegration extends Integration implements IIndexerManagerIn
     return { configured: (await this.getConfiguredIndexersAsync()).length };
   }
 
+  private async testIndexerAsync(indexer: z.infer<typeof indexerSchema>) {
+    const response = await fetchWithTrustedCertificatesAsync(this.torznabUrl(indexer.$.id, "search"), {
+      signal: AbortSignal.timeout(30_000),
+      redirect: "error",
+    });
+    if (!response.ok) throw new ResponseError(response);
+    // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
+    searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
+  }
+
   public async testAllAsync(): Promise<void> {
     const indexers = await this.getConfiguredIndexersAsync();
-    // Torznab search exercises the upstream indexer; caps only returns metadata.
-    // Limit concurrency so a large catalog does not flood every tracker at once.
-    for (let offset = 0; offset < indexers.length; offset += 4) {
+    const failures: string[] = [];
+    for (let offset = 0; offset < indexers.length; offset += indexerTestConcurrency) {
       await Promise.all(
-        indexers.slice(offset, offset + 4).map(async (indexer) => {
-          const response = await fetchWithTrustedCertificatesAsync(this.torznabUrl(indexer.$.id, "search"), {
-            signal: AbortSignal.timeout(30_000),
-            redirect: "error",
-          });
-          if (!response.ok) throw new Error(`Jackett indexer test failed (${response.status})`);
-          // A Torznab <error> can use HTTP 200; only a valid RSS result is success.
-          searchSchema.parse(await parseStringPromise(await response.text(), { explicitArray: true }));
+        indexers.slice(offset, offset + indexerTestConcurrency).map(async (indexer) => {
+          try {
+            await this.testIndexerAsync(indexer);
+          } catch (error: unknown) {
+            let reason = "Test failed";
+            if (error instanceof IntegrationResponseError) reason = `HTTP ${error.cause.statusCode}`;
+            if (error instanceof IntegrationParseError) reason = "Invalid Torznab response";
+            if (error instanceof IntegrationRequestError) {
+              reason = "Request failed";
+              if (error.cause.type === "timeout") reason = "Request timed out";
+              if (error.cause.type === "certificate") reason = "Certificate error";
+              if (error.cause.type === "dns") reason = "DNS error";
+              if (error.cause.type === "connection") reason = "Connection failed";
+            }
+            failures.push(`${indexer.title[0] ?? indexer.$.id} (${indexer.$.id}): ${reason}`);
+          }
         }),
       );
+    }
+    if (failures.length > 0) {
+      throw new JackettIndexerTestError(this.publicIntegration, failures, indexers.length);
     }
   }
 

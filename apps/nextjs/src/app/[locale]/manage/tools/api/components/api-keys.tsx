@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Alert, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Alert, Button, Checkbox, Group, Stack, Text, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
@@ -89,8 +89,10 @@ const ApiKeyActionsCell = ({ row, table }: ApiKeyCellProps & { table: MRT_TableI
 
 export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps) => {
   const t = useI18n("management.page.tool.api.tab.apiKey");
+  const tCommon = useI18n("common");
   const utils = clientApi.useUtils();
   const [newApiKey, setNewApiKey] = useState<string | null>(null);
+  const [readOnly, setReadOnly] = useState(true);
   const [feedback, setFeedback] = useState<"createError" | "deleteError" | "deleteSuccess" | "refreshError" | null>(
     null,
   );
@@ -147,21 +149,29 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
         Cell: ApiKeyCreatedByCell,
       },
       {
+        id: "readOnly",
+        accessorFn: ({ readOnly }) => {
+          if (readOnly) return t("access.readOnly");
+          return t("access.readWrite");
+        },
+        header: t("access.label"),
+      },
+      {
         id: "provenance",
         accessorFn: (key) =>
           key.oauthClientId === null
             ? t("provenance.unattributed")
             : `${t("provenance.oauth")} ${key.oauthClientName ?? ""} ${key.oauthClientId} ${key.oauthRedirectUri ?? ""}`,
-        header: t("table.header.source"),
+        header: tCommon("field.source"),
         Cell: ApiKeyProvenanceCell,
         size: 300,
       },
       {
-        header: t("table.header.actions"),
+        header: tCommon("field.actions"),
         Cell: ApiKeyActionsCell,
       },
     ],
-    [t],
+    [t, tCommon],
   );
 
   const table = useMantineReactTable({
@@ -181,15 +191,18 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
       </Stack>
     ),
     renderTopToolbarCustomActions: () => (
-      <Button
-        onClick={() => {
-          mutateCreate();
-        }}
-        loading={isPendingCreate}
-        disabled={newApiKey !== null}
-      >
-        {t("button.createApiToken")}
-      </Button>
+      <Group gap="md" p="xs">
+        <Checkbox
+          label={t("access.readOnly")}
+          description={t("access.description")}
+          checked={readOnly}
+          onChange={(event) => setReadOnly(event.currentTarget.checked)}
+          disabled={isPendingCreate || newApiKey !== null}
+        />
+        <Button onClick={() => mutateCreate({ readOnly })} loading={isPendingCreate} disabled={newApiKey !== null}>
+          {t("button.createApiToken")}
+        </Button>
+      </Group>
     ),
     enableDensityToggle: false,
     state: {

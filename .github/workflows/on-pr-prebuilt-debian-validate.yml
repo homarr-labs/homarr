@@ -10,6 +10,12 @@ on:
       - ".github/actions/prebuilt-debian/**"
       - ".github/actions/extract-build-artifact/**"
       - "deployments/prebuilt-debian/**"
+      - "Dockerfile"
+      - "package.json"
+      - "bun.lock"
+      - "packages/cli/package.json"
+      - "packages/db/package.json"
+      - "apps/nextjs/next.config.ts"
       - ".github/workflows/on-pr-prebuilt-debian-validate.yml"
 
 jobs:
@@ -23,18 +29,29 @@ jobs:
           - architecture: arm64
             runner: ubuntu-26.04-arm
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 10
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Validate Debian archive for ${{ matrix.architecture }}
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      # A released fixture can contain a different SQLite JS wrapper from this PR.
+      # Build this checkout without publishing or passing repository secrets.
+      - name: Build matching application fixture
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/${{ matrix.architecture }}
+          load: true
+          push: false
+          tags: homarr-native-validation
+          cache-from: type=gha,scope=homarr-linux-${{ matrix.architecture }}-glibc-${{ github.ref_name }}
+      - name: Validate both native archives for ${{ matrix.architecture }}
         uses: ./.github/actions/extract-build-artifact
         with:
-          # This Alpine release image reproduces #7097 without the Debian replacement.
-          digest: ghcr.io/homarr-labs/homarr:v2.3.0
+          digest: homarr-native-validation
           architecture: ${{ matrix.architecture }}
-          release-tag: v2.3.0
+          release-tag: native-validation
           repository: ${{ github.repository }}
           token: ${{ github.token }}
           upload: "false"

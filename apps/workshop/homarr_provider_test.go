@@ -123,8 +123,8 @@ func TestSanitizeProviderPayload(t *testing.T) {
 
 func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 	payload := map[string]any{
-		"reasoning_effort":  "none",
-		"reasoning":         map[string]any{"effort": "low", "enabled": false, "exclude": true},
+		"reasoning_effort":  "high",
+		"reasoning":         map[string]any{"effort": "xhigh", "enabled": false, "exclude": true},
 		"include_reasoning": false,
 		"temperature":       0.3,
 		"top_p":             0.5,
@@ -136,12 +136,12 @@ func TestSanitizeProviderPayloadPinsDefaultModelQuality(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if payload["model"] != "openai/gpt-6-luna" {
+	if payload["model"] != "openai/gpt-6.1-sol" {
 		t.Fatalf("unexpected default model: %#v", payload["model"])
 	}
 	reasoning := payload["reasoning"].(map[string]any)
-	if reasoning["effort"] != "max" || reasoning["exclude"] != false {
-		t.Fatalf("default model did not use visible max reasoning: %#v", reasoning)
+	if len(reasoning) != 2 || reasoning["effort"] != "low" || reasoning["exclude"] != false {
+		t.Fatalf("default model did not use visible low reasoning: %#v", reasoning)
 	}
 	for _, field := range []string{"reasoning_effort", "include_reasoning", "temperature", "top_p"} {
 		if _, exists := payload[field]; exists {

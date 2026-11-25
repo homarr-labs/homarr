@@ -2,6 +2,7 @@ import type { Headers, RequestInit } from "undici";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
+import type { IntegrationErrorData } from "../base/errors/integration-error";
 
 export type StatsValue = number | string | boolean | null;
 export type StatsUnit =
@@ -12,6 +13,9 @@ export type StatsUnit =
   | "seconds"
   | "milliseconds"
   | "bytesPerSecond"
+  | "celsius"
+  | "watts"
+  | "kilowattHours"
   | "text";
 
 export interface StatsMetric {
@@ -26,6 +30,7 @@ export interface StatsAuthenticationContext {
 }
 
 export interface StatsFetchContext extends StatsAuthenticationContext {
+  integration: IntegrationErrorData;
   /** Base integration URL. Credential exchanges must verify its protocol before reading or sending secrets. */
   url: URL;
   /** Relative service path. The shared client applies trusted certificates and a deadline. */

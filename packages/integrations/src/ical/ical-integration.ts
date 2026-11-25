@@ -16,12 +16,18 @@ const logger = createLogger({ module: "icalIntegration" });
 // Caps the walk so a high frequency rule on an untrusted feed can't hang the request.
 const MAX_OCCURRENCE_ITERATIONS = 100000;
 
+const toJSDate = (time: ICAL.Time) => {
+  if (!time.isDate) return time.toJSDate();
+  return new Date(Date.UTC(time.year, time.month - 1, time.day));
+};
+
 const toCalendarEvent = (event: ICAL.Event, startDate: Date, endDate: Date): CalendarEvent => ({
   title: event.summary,
   subTitle: null,
   description: event.description,
   startDate,
   endDate,
+  isAllDay: event.startDate.isDate,
   image: null,
   location: event.location,
   indicatorColor: "red",
@@ -69,8 +75,8 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
       }
 
       if (!event.isRecurring()) {
-        const startDate = event.startDate.toJSDate();
-        const endDate = event.endDate.toJSDate();
+        const startDate = toJSDate(event.startDate);
+        const endDate = toJSDate(event.endDate);
 
         if (startDate > end) continue;
         if (endDate < start) continue;
@@ -92,11 +98,11 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
         }
         iterations++;
 
-        if (next.toJSDate() > end) break;
+        if (toJSDate(next) > end) break;
 
         const details = event.getOccurrenceDetails(next);
-        const startDate = details.startDate.toJSDate();
-        const endDate = details.endDate.toJSDate();
+        const startDate = toJSDate(details.startDate);
+        const endDate = toJSDate(details.endDate);
 
         if (startDate > end) continue;
         if (endDate < start) continue;
@@ -126,8 +132,8 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
       const key = `${exceptionEvent.uid}:${exceptionEvent.recurrenceId.toString()}`;
       if (emittedExceptionKeys.has(key)) continue;
 
-      const startDate = exceptionEvent.startDate.toJSDate();
-      const endDate = exceptionEvent.endDate.toJSDate();
+      const startDate = toJSDate(exceptionEvent.startDate);
+      const endDate = toJSDate(exceptionEvent.endDate);
 
       if (startDate > end) continue;
       if (endDate < start) continue;

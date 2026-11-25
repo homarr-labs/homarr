@@ -207,12 +207,12 @@ const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ 
           }),
     };
   }, []);
-  const getRequestHeaders = useCallback((): Record<string, string> => {
+  const getRequestHeaders = useCallbackRef((): Record<string, string> => {
     if (data?.provider !== "homarr") return {};
     const token = workshopClient.authToken;
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
-  }, [data?.provider, workshopClient]);
-  const refreshQuota = useCallback(async () => {
+  });
+  const refreshQuota = useCallbackRef(async () => {
     if (!active) return;
     quotaRequestRef.current?.abort();
     if (data?.provider !== "homarr" || !workshopClient.authToken) {
@@ -239,7 +239,7 @@ const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ 
         setQuotaLoading(false);
       }
     }
-  }, [active, data?.provider, t, workshopClient]);
+  });
   const signInToProvider = useCallback(async () => {
     setQuotaLoading(true);
     setQuotaError(null);

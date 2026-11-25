@@ -65,7 +65,6 @@
         "themeAuto": "Система",
         "themeLight": "Світла",
         "themeDark": "Темна",
-        "serverOriginHelp": "Homarr використовує цю адресу для попереднього заповнення URL-адрес. Ви все ще можете відредагувати всі сервіси.",
         "serverDescription": "Це ярлик, а не обмеження. Кожна виявлена служба залишається редагованою.",
         "serverOrigin": "Домен, IP або шлях до зворотного проксі",
         "serverOriginDescription": "Приклад: home.lan, 192.168.1.10 або https://home.example.com/services. Виберіть, як правильно додається кожна послуга.",
@@ -102,6 +101,8 @@
       "connect": {
         "title": "Підключіть те, що зробить дошку корисною",
         "description": "Вибрати декілька служб одразу. Мітки Docker мають пріоритет, зображення заповнюють прогалини, а також кожне посилання і облікові дані можуть бути переглянуті.",
+        "confirmServerAddress": "",
+        "serverAddressReviewed": "",
         "discoveredIntegrations": "Виявлені екземпляри інтеграції ({count})",
         "detectedIntegrationLabel": "Імпорт {name}виявилося як {kind}",
         "detectedAppLabel": "Імпортувати виявлений додаток {name}",
@@ -126,7 +127,8 @@
         "needsConfiguration": "Потрібна конфігурація",
         "tested": "Перевірка підключення",
         "testFailed": "Помилка тестування підключення",
-        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?"
+        "incompleteConfirmation": "Незавершена інтеграція буде пропущена. Продовжити без них?",
+        "skipIncomplete": ""
       },
       "board": {
         "title": "Об’єднайте дошку до її будівництва",
@@ -142,13 +144,7 @@
         "secondaryColor": "Вторинний колір",
         "resetColors": "Скинути кольори",
         "radius": "Радіус кута віджета",
-        "radiusOptions": {
-          "xs": "Теренд",
-          "sm": "Тонкий",
-          "md": "Збалансований",
-          "lg": "Округлі",
-          "xl": "М'яко"
-        },
+        "radiusOptions": {},
         "columns": "Стовпці дошки",
         "columnsDescription": "Колонки визначають горизонтальну сітку, яка використовується для розмірів та позиціонування. 12 - це достатньо для більшості людей.",
         "columnCount": "{count, plural, one {# стовпець} other {# стовпчиків}}",
@@ -192,7 +188,6 @@
           "loginRequired": "Увійдіть як адміністратор після встановлення, щоб створити ключ API.",
           "configuration": "Налаштування клієнта",
           "copy": "Копіювати конфігурацію",
-          "copied": "Скопійовано",
           "advanced": "Відкрийте інструменти MCP, дозволи та налаштування"
         }
       },
@@ -284,6 +279,13 @@
         "admin": {
           "title": "Повний доступ адміністратора",
           "description": "Дозволяє керувати Омарром і підключеними послугами, включаючи деструктивні дії."
+        },
+        "mode": {
+          "label": "",
+          "readOnly": "",
+          "readWrite": "",
+          "readOnlyDescription": "",
+          "readWriteDescription": ""
         },
         "credential": {
           "title": "Посвідчення облікових даних і час життя",
@@ -804,9 +806,7 @@
         "examples": "Приклади підтримуваних посилань",
         "requiresHandler": "Для власних протоколів на вашому пристрої має бути встановлений пов’язаний застосунок."
       },
-      "description": {
-        "label": "Опис"
-      },
+      "description": {},
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Використовуйте іншу URL-адресу для ping",
@@ -858,7 +858,6 @@
       "source": "Джерело API: {name}",
       "baseUrl": "URL-адреса сервера",
       "networkScope": "Доступ до мережі",
-      "save": "Зберегти конфігурацію API",
       "expires": "Термін дії цього одноразового запиту спливає о {time}."
     },
     "page": {
@@ -889,13 +888,12 @@
       "pasteImportHint": "Вставити повний користувальницький JSON віджета за допомогою Ctrl+V або Command+V",
       "delete": "Видалити власний віджет",
       "deleteConfirm": "Ви впевнені, що хочете видалити \"{name}\"? Цю дію неможливо скасувати.",
-      "export": "Експорт",
       "duplicate": "Дублікат",
       "aiPrompt": "Дизайн з ШІ",
+      "createAssisted": "",
       "copyAiPrompt": "Копіювати запит AI",
       "enable": "Увімкнути",
       "disable": "Вимкнути",
-      "menu": "Дії",
       "downloadSkill": "Переглянути власні Вміння Віджета",
       "publishWorkshop": "Опублікувати в Майстерні",
       "migrate": "Перенесення користувацького віджета",
@@ -909,12 +907,9 @@
     "sourceSetupDialog": {
       "title": "Налаштування джерел віджетів",
       "description": "Повторіть, куди цей віджет з'єднує його і додає або замінює зашифровані облікові дані.",
-      "credentialsRequired": "Запити не виконуватимуться, доки додаються необхідні облікові дані.",
-      "save": "Зберегти конфігурацію"
+      "credentialsRequired": "Запити не виконуватимуться, доки додаються необхідні облікові дані."
     },
-    "field": {
-      "description": "Опис"
-    },
+    "field": {},
     "editor": {
       "errorBoundary": {
         "title": "Сталася помилка"
@@ -924,7 +919,6 @@
         "format": "Форматувати",
         "insertStarter": "Вставити таблицю",
         "redo": "Повторити дію",
-        "copied": "Скопійовано",
         "schema": "Схема"
       },
       "reference": {
@@ -962,6 +956,20 @@
     },
     "workbench": {
       "configure": "Настроїти",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Додатково",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Користувацькі розділи віджетів",
       "widgetPreview": "Попередній перегляд віджета",
       "generalInformation": "Загальна інформація",
@@ -1005,7 +1013,6 @@
         "manifestFilename": "widget.json",
         "request": "Запит {count, number}",
         "requestId": "Номер запиту",
-        "type": "Тип клієнта",
         "method": "Метод",
         "source": "Джерело API",
         "run": "Ран",
@@ -1042,7 +1049,6 @@
         "optionName": "Назва опції",
         "label": "Мітка",
         "control": "Контроль",
-        "description": "Опис",
         "default": "Типово",
         "optionDetails": "Обмеження і динамічний вибір",
         "minimum": "Мінімум",
@@ -1079,7 +1085,6 @@
         "credentialRemovedDescription": "Збережене значення видалено.",
         "primary": "Основний API",
         "id": "ID джерела",
-        "name": "Назва",
         "baseUrl": "Базовий URL",
         "baseUrlError": {
           "invalid": "Введіть повну URL-адресу.",
@@ -1096,7 +1101,6 @@
         "remove": "Видалити вихідні запити та їх",
         "advanced": "Додатково",
         "add": "Додати інше джерело API",
-        "sourceType": "Інтеграція",
         "manualSource": "",
         "existingIntegration": "Існуюча інтеграція",
         "integrationType": "Тип інтеграції",
@@ -1108,9 +1112,11 @@
       "ai": {
         "title": "Створити або виправити з будь-яким ШІ",
         "description": "Спочатку додайте URL в документацію API, якщо у вас є. Для виправлень запустіть Попередній перегляд, якщо це можливо. Скопіюйте запит в будь-який AI; він може попросити пропущені деталі. Вставте його остаточний JSON тут.",
+        "assistedDescription": "",
         "request": "Що слід зробити цей віджет?",
         "documentationUrl": "URL-адреса API документації (необов'язково)",
         "paste": "Вставити",
+        "pasteResponse": "",
         "response": "Відповідь ШІ",
         "manualCopyDescription": "Доступ до буфера обміну недоступний. Виберіть запит нижче та скопіюйте його вручну.",
         "manualPasteDescription": "Доступ до буфера обміну недоступний, або скопійована відповідь потребує виправлення. Вставте відповідь AI JSON в ньому тут.",
@@ -1230,7 +1236,6 @@
       "migrationTitle": "Переглядати мігнуту заміну v2",
       "migrationDescription": "Перевірте та підтвердіть це згенероване визначення v2. Підтвердження атомічно замінює збережений запис v1 дошки, зберігаючи існуючі місця на тій же ID віджета.",
       "fileLabel": "Виберіть JSON файл користувацького віджета",
-      "name": "Назва",
       "origin": "Основне джерело",
       "authentication": "Аутентифікація",
       "networkScope": "Область використання мережі",
@@ -1250,8 +1255,6 @@
         "title": "Цей віджет може змінювати віддалені дані",
         "description": "У файлі не враховуються всі іменовані дії, успадковані облікові дані та руйнівне підтвердження. Секрети в цьому файлі не включаються."
       },
-      "cancel": "Скасувати імпорт",
-      "confirm": "Імпорт віджета",
       "confirmMigration": "Підтвердіть заміну v2"
     },
     "secret": {
@@ -1259,6 +1262,20 @@
       "username": "Ім'я користувача",
       "password": "Пароль",
       "savedPlaceholder": "• • • • • • (збережено, залиште порожнім, щоб зберегти)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Доступне оновлення",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Імпортувати CSS з Майстерні",
     "importCssConfirm": "Замінити поточний користувацький CSS на \"{title}\"? Нічого не зберігається, поки ви не збережете налаштування форуму.",
+    "theme": {
+      "label": "Тема",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Типово",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Опис",
+      "published": ""
+    },
     "screenshotAlt": "{title} скріншот {count, number}",
     "screenshotViewer": "Переглядач скріншотів {title}",
     "screenshotsLabel": "Скріншоти {title}",
@@ -1314,8 +1363,8 @@
     "hideScreenshotThumbnails": "Приховати мініатюри екрану",
     "closeScreenshotViewer": "Закрити переглядач знімків екрану",
     "technicalDetails": "Технічні деталі",
+    "integrations": "Інтеграції",
     "sourceCode": "Запис в Майстерні",
-    "export": "Експорт",
     "report": "Доповісти",
     "reportTitle": "Повідомити про ухвалення",
     "reportReason": "Підстава",
@@ -1334,6 +1383,12 @@
       "inappropriate": "Невідповідність",
       "other": "Інше"
     },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
+    },
     "publish": {
       "title": "Опублікувати в Майстерні",
       "introTitle": "Поділитися цим віджетом зі спільнотою",
@@ -1346,8 +1401,6 @@
       "viewSubmission": "Перегляд та керування сабмітом",
       "done": "Готово",
       "signInHint": "Увійдіть, щоб опублікувати свою особу в Майстерні.",
-      "titleField": "Заголовок",
-      "descriptionField": "Опис",
       "screenshots": "Скріншоти",
       "screenshotsDescription": "До п'яти PNG, JPEG, або WebP зображень",
       "screenshotsPlaceholder": "Вибрати знімки екрану",
@@ -1410,11 +1463,7 @@
               "label": "Виберіть наявний застосунок"
             },
             "new": {
-              "title": "Новий",
-              "url": {
-                "label": "URL-адреса додатку",
-                "description": "URL-адреса додатку відкриється при доступі до панелі керування"
-              }
+              "title": "Новий"
             }
           }
         }
@@ -1466,8 +1515,9 @@
         "label": "Прив'язати існуючу програму",
         "description": "Під'єднайте цю інтеграцію до програми, яку ви вже можете використовувати."
       },
-      "appHref": {
-        "placeholder": "Власний URL додатку"
+      "externalUrl": {
+        "label": "",
+        "description": ""
       },
       "apiKeySettings": {
         "label": "Отримати API ключ"
@@ -1534,6 +1584,27 @@
         "unknown": {
           "title": "Невідома помилка",
           "description": "Сталася невідома помилка, відкрийте причину нижче, щоб побачити більше деталей"
+        },
+        "frigate": {
+          "title": "",
+          "status": "",
+          "description": {
+            "cookie": "",
+            "profileMismatch": "",
+            "redirect": "",
+            "login": "",
+            "profile": "",
+            "stats": ""
+          }
+        },
+        "openmediavault": {
+          "title": "",
+          "description": {
+            "totpSecretRequired": "",
+            "totpSecretInvalid": "",
+            "totpVerificationFailed": "",
+            "unsupportedChallenge": ""
+          }
         },
         "parse": {
           "title": "Синтаксична помилка",
@@ -1613,11 +1684,9 @@
             },
             "notification": {
               "success": {
-                "title": "Довірені сертифікати",
                 "message": "Додано сертифікат до списку довірених сертифікатів"
               },
               "error": {
-                "title": "Не вдалося довіряти сертифікату",
                 "message": "Не вдалося додати сертифікат до списку довірених сертифікатів"
               }
             }
@@ -1736,6 +1805,11 @@
         "title": "Скинути секрет",
         "message": "Ви впевнені, що хочете скинути цей секрет?"
       },
+      "totpNotice": "",
+      "remove": {
+        "title": "",
+        "message": ""
+      },
       "noSecretsRequired": {
         "segmentTitle": "Немає секретів",
         "text": "Для цієї інтеграції не потрібні секрети"
@@ -1817,9 +1891,9 @@
           "label": "Пароль індексатора",
           "newLabel": "Новий пароль індексатора"
         },
-        "wazuhDashboardUrl": {
-          "label": "URL-адреса панелі (необов’язково)",
-          "newLabel": "Нова URL-адреса панелі керування"
+        "totpSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1838,9 +1912,7 @@
     "search": "Пошук медіафайлів",
     "field": {
       "preview": "Попередній перегляд",
-      "size": "Розмір",
-      "creator": "Творець",
-      "actions": "Управління"
+      "creator": "Творець"
     },
     "action": {
       "upload": {
@@ -1918,7 +1990,9 @@
       "clearSearch": "Очистити пошук",
       "copy": "Копіювати",
       "copied": "Скопійовано",
-      "refresh": "Оновити"
+      "refresh": "Оновити",
+      "export": "Експорт",
+      "advanced": "Додатково"
     },
     "hidden": "Приховати",
     "pagination": {
@@ -1930,6 +2004,8 @@
     "here": "тут",
     "serviceUrlTemplate": {
       "serverTitle": "Адреса серверу Usual",
+      "description": "",
+      "example": "",
       "urlModeLabel": "Шаблони адрес служби",
       "hostPort": "Той же хост, різні порти",
       "subdomain": "Один піддомен на послугу",
@@ -2011,6 +2087,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Нотатка",
+        "tip": "",
+        "important": "",
+        "warning": "Застереження",
+        "caution": ""
+      }
+    },
     "dangerZone": "Небезпечна зона",
     "noResults": "Результатів не знайдено",
     "unsavedChanges": "Є незбережені зміни!",
@@ -2063,7 +2148,18 @@
     "total": "Всього",
     "filesystemUsage": "{count, plural, one {Показати використання # файлової системи} other {Показувати використання для # файлової системи}}",
     "field": {
-      "name": "Назва"
+      "name": "Назва",
+      "state": "Стан",
+      "size": "Розмір",
+      "actions": "Дії",
+      "source": "Джерело",
+      "title": "Заголовок",
+      "description": "Опис",
+      "created": "Створено",
+      "namespace": "Простір імен",
+      "status": "Статус",
+      "architecture": "Архітектура",
+      "type": "Тип"
     },
     "label": {
       "new": "Новий"
@@ -2081,6 +2177,168 @@
       "searchEngines": "Пошукові системи",
       "tasks": "Завдання",
       "users": "Користувачі"
+    },
+    "cornerStyle": {
+      "options": {
+        "md": "Збалансований",
+        "lg": "Округлі",
+        "xs": "Теренд",
+        "sm": "Тонкий",
+        "xl": "М'яко"
+      }
+    },
+    "customTheme": {
+      "label": "Тема",
+      "nothingFound": "",
+      "custom": "Користувацька",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Макет",
+        "typography": "",
+        "colors": "Кольори",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Інтервал",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Додатковий акцент"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Скопійовано",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Панель керування",
+        "sampleBadge": "Попередній перегляд",
+        "sampleText": "",
+        "sampleInput": "Пошук",
+        "sampleValue": "Пошук додатків",
+        "sampleButton": "Відкриті"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Інтервал",
+          "radius": "",
+          "compact": "Компактний",
+          "normal": "Нормальний",
+          "roomy": "",
+          "preset": "",
+          "none": "Немає",
+          "rounded": "",
+          "full": "Повна",
+          "custom": "Користувацька",
+          "advanced": ""
+        },
+        "previewSurface": "Попередній перегляд",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Компоненти",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Мобільна",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Інтервал",
+          "radius": "",
+          "breakpoint": "Точка зупинки",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Додатковий акцент",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Фон",
+          "surfaceText": "",
+          "surfaceBorder": "Колір контура",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Показати рамку",
+          "componentPadding": "",
+          "componentSize": "Розмір файлу",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Показати елементи керування"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2100,6 +2358,10 @@
       "scrollable": {
         "label": "Прокручування",
         "description": "Підтримує цей контейнер у своєму встановленому розмірі і прокручує його вміст замість того, щоб відповідати йому."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2118,18 +2380,33 @@
         "collapse": "Згорнути"
       },
       "option": {
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Користувацькі css класи"
         },
         "borderColor": {
           "label": "Колір контура"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Приховати"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Видалити цей контейнер? Вміст буде переміщено в навколишню зону."
+      },
+      "editBar": {
+        "edit": "Редагувати"
       }
     }
   },
@@ -2144,8 +2421,7 @@
       "label": {
         "settings": "Налаштування",
         "settingsFor": "Налаштування для {name}",
-        "options": "Опції",
-        "actions": "Дії"
+        "options": "Опції"
       },
       "status": {
         "success": "OK",
@@ -2179,6 +2455,18 @@
       },
       "customWidget": "Користувацький віджет",
       "standalone": "Автономний",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Віджети Майстерні",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Спочатку під'єднайте сервіс",
         "noPermission": "Для цього віджета потрібне сумісне підключення до сервісу. Попросіть адміністратора з'єднатися ще раз, а тоді спробуйте ще раз."
@@ -2198,7 +2486,6 @@
     "selection": {
       "summary": "{count, plural, one {# обраний елемент} other {# вибраних елементів}}",
       "selected": "{count, plural, one {# вибрано} other {# вибрано}}",
-      "copy": "Копіювати",
       "copied": "{count, plural, one {# об'єкт скопійовано в буфер обміну} other {# елементів скопійовано до буфера обміну}}",
       "copyError": "Вибрані елементи не можуть бути скопійовані. Ваш браузер може не дозволити доступ до буфера обміну.",
       "paste": "Вставити",
@@ -2210,16 +2497,18 @@
       "removed": "{count, plural, one {# файл видалено} other {# елементів видалено}}",
       "move": "Пересунути",
       "moveTo": "Пересунути відмічене",
-      "delete": "Видалити",
       "clear": "Очистити вибране",
       "clearShortcut": "Очистити вибір (альбомна)",
       "saveErrorTitle": "Не вдалося оновити елементи",
       "saveErrorMessage": "Зміни не вдалося зберегти. Дошка була оновлена.",
       "moveUnavailableTitle": "Не вдалося перемістити вибрані елементи",
-      "moveUnavailableMessage": "Призначення не має достатньо місця для усього виділення."
+      "moveUnavailableMessage": "Призначення не має достатньо місця для усього виділення.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Перемістити/змінити розмір",
+      "sizeOverlap": "",
       "entryLabel": "{name}, стовпець {column}, рядок {row}",
       "target": {
         "numbered": "{name}, призначення {index}",
@@ -2259,7 +2548,12 @@
         "integration": "Редагувати інтеграцію"
       },
       "app": {
-        "propagationNotice": "Зміни до цього застосунку будуть застосовані скрізь, де вони використовуються на всіх панелях."
+        "propagationNotice": "Зміни до цього застосунку будуть застосовані скрізь, де вони використовуються на всіх панелях.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Редагувати",
@@ -2286,9 +2580,7 @@
           "label": "Інтеграції",
           "removeLabel": "Видалити інтеграцію з {name}"
         },
-        "title": {
-          "label": "Заголовок"
-        },
+        "title": {},
         "customCssClasses": {
           "label": "Користувацькі css класи"
         },
@@ -2304,6 +2596,36 @@
       "open": "Відкрити розширений вигляд",
       "close": "Закрити розширений вигляд",
       "label": "Розширений вигляд {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Віджети",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "пересунути",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -2347,7 +2669,29 @@
             "tooltip": "Як підказка",
             "hidden": "Приховати"
           }
+        },
+        "dockerContainer": {
+          "label": "",
+          "description": "",
+          "placeholder": "",
+          "disabled": "",
+          "unavailable": ""
         }
+      },
+      "docker": {
+        "action": {
+          "start": "",
+          "stop": ""
+        },
+        "notification": {
+          "startFailed": "",
+          "stopFailed": ""
+        },
+        "switch": {
+          "start": "",
+          "stop": ""
+        },
+        "stopped": ""
       },
       "error": {
         "notFound": {
@@ -2426,6 +2770,10 @@
         "hideHostname": {
           "label": "Приховати імена хостів"
         },
+        "showFullUrls": {
+          "label": "",
+          "description": ""
+        },
         "withBorder": {
           "label": "Показати рамку"
         },
@@ -2448,6 +2796,9 @@
         }
       },
       "empty": "Додати URL-адресу або програму у налаштуваннях віджета",
+      "copyUrl": "",
+      "copied": "Скопійовано",
+      "copyFailed": "",
       "groups": {
         "label": "Категорії",
         "placeholder": "Нова категорія",
@@ -3067,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Стан об'єкта",
       "description": "Відображення стану сутності і включеного параметру",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Ідентифікатор об'єкта"
@@ -3099,6 +3451,141 @@
       "error": {
         "loadFailed": "Не вдалося завантажити об'єкт",
         "toggleFailed": "Неможливо оновити об'єкт"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Заголовок",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Автоматично",
+            "compact": "Компактний",
+            "large": "Великий"
+          }
+        },
+        "palette": {
+          "label": "Кольори",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Люди",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Погода",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Сутність",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Додати",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Сутність",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Не знайдено",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "увімк",
+          "off": "вимкнено",
+          "sensors": "",
+          "offline": "офлайн"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3501,7 +3988,6 @@
         },
         "table": {
           "header": {
-            "name": "Назва",
             "node": "Вузол"
           }
         }
@@ -3531,8 +4017,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Назва",
-            "state": "Стан",
             "cpuUsage": "Використання CPU",
             "memoryUsage": "Використання пам’яті"
           }
@@ -3550,6 +4034,34 @@
     },
     "coolify": {
       "description": "Огляд вашого Coolify екземпляра з серверами та додатками",
+      "summary": {
+        "needsAttention": "",
+        "inProgress": "",
+        "unknown": "",
+        "healthy": "",
+        "empty": "",
+        "healthyDetail": "",
+        "more": "",
+        "moreInstances": ""
+      },
+      "details": {
+        "tabs": "",
+        "overview": "",
+        "search": "",
+        "serviceApplications": ""
+      },
+      "overview": {
+        "projects": "",
+        "resources": "",
+        "attention": "Потребує уваги",
+        "ready": "Готово",
+        "noProjects": "",
+        "projectsUnavailable": "",
+        "moreProjects": "+{count, plural, one {# more project} other {# more projects}}",
+        "running": "Запущено",
+        "resourceCount": "{count, plural, one {# resource} other {# resources}}",
+        "environmentCount": "{count, plural, one {# environment} other {# environments}}"
+      },
       "option": {
         "showServers": {
           "label": "Показати сервери"
@@ -3581,7 +4093,13 @@
       },
       "source": {
         "url": "Джерело: {url}",
-        "unavailable": ""
+        "unavailable": "",
+        "unavailableCount": "{count, plural, one {# source unavailable} other {# sources unavailable}}"
+      },
+      "kind": {
+        "server": "",
+        "application": "Програма",
+        "service": "Послуга"
       },
       "instances": {
         "title": "Iнстанси"
@@ -3598,6 +4116,7 @@
         "exited": "Вийшов",
         "starting": "Запускається",
         "restarting": "Перезапуск",
+        "unhealthy": "Нездоровий",
         "unknown": "Невідомо",
         "online": "Онлайн",
         "offline": "Офлайн",
@@ -3803,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Місто / Поштовий індекс",
         "latitude": "Широта",
@@ -3934,6 +4456,10 @@
         "showLocation": {
           "label": "Показати розташування",
           "description": "Показувати, чи перебуває потік у вашій локальній або глобальній мережі."
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -3943,9 +4469,7 @@
       "items": {
         "currentlyPlaying": "Зараз відтворюється",
         "user": "Користувач",
-        "name": "Назва",
         "id": "Id",
-        "status": "Статус",
         "directPlay": "Пряме відтворення",
         "directStream": "Прямий потік",
         "transcodeVideo": "Транскодування відео",
@@ -3968,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Прогрес завантаження",
+          "endsAt": "",
+          "episode": "Епізод",
+          "album": "Альбом",
           "unknown": ""
         },
         "metadata": {
@@ -4440,38 +4968,29 @@
           "columnTitle": "Управління"
         },
         "added": {
-          "columnTitle": "Додано",
-          "detailsTitle": "Дата додавання"
+          "columnTitle": "Додано"
         },
         "category": {
-          "columnTitle": "Додатково",
-          "detailsTitle": "Категорії (Або додаткову інформацію)"
+          "columnTitle": "Додатково"
         },
         "downSpeed": {
-          "columnTitle": "Завантаження",
-          "detailsTitle": "Швидкість завантаження"
+          "columnTitle": "Завантаження"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Поточний індекс всередині клієнта"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "ID елемента"
+          "columnTitle": "Id"
         },
-        "integration": {
-          "columnTitle": "Інтеграція"
-        },
-        "name": {
-          "columnTitle": "Назва"
-        },
+        "integration": {},
+        "name": {},
         "progress": {
           "columnTitle": "Прогрес",
           "detailsTitle": "Прогрес завантаження"
         },
         "ratio": {
-          "columnTitle": "Співвідношення",
-          "detailsTitle": "Коефіцієнт роздачі (отриманий/надісланий)"
+          "columnTitle": "Співвідношення"
         },
         "received": {
           "columnTitle": "Всього завантажено",
@@ -4481,26 +5000,16 @@
           "columnTitle": "Всього відвантажено",
           "detailsTitle": "Всього вивантажено"
         },
-        "size": {
-          "columnTitle": "Розмір файлу",
-          "detailsTitle": "Загальний розмір вибору/файлів"
-        },
-        "state": {
-          "columnTitle": "Стан",
-          "detailsTitle": "Стан"
-        },
+        "size": {},
+        "state": {},
         "time": {
-          "columnTitle": "Час завершення",
-          "detailsTitle": "Час з/до завершення",
-          "eta": "Залишилося"
+          "columnTitle": "Час завершення"
         },
         "type": {
-          "columnTitle": "Тип",
           "detailsTitle": "Тип клієнта"
         },
         "upSpeed": {
-          "columnTitle": "Віддача",
-          "detailsTitle": "Швидкість вивантаження"
+          "columnTitle": "Віддача"
         }
       },
       "states": {
@@ -4540,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Копіювати назву",
         "copyId": "Копіювати ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Очистити фільтри"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фільтрувати завантаження"
@@ -4689,9 +5209,7 @@
           }
         },
         "queue": {
-          "table": {
-            "size": "Розмір"
-          }
+          "table": {}
         },
         "common": {
           "empty": "Пусто",
@@ -4756,8 +5274,20 @@
         "hideDescription": {
           "label": "Приховати опис"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Показати зображення постеру"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -4794,10 +5324,6 @@
           "description": ""
         },
         "sections": {
-          "label": "",
-          "description": ""
-        },
-        "collapsedSections": {
           "label": "",
           "description": ""
         },
@@ -4857,11 +5383,10 @@
           },
           "identifier": {
             "label": "Ідентифікатор",
+            "containerPlaceholder": "",
             "placeholder": "Назва або Власник/Назва"
           },
-          "name": {
-            "label": "Назва"
-          },
+          "name": {},
           "excludePrereleases": {
             "label": "",
             "description": ""
@@ -5005,7 +5530,11 @@
       "runningVersions": "Запущені версії",
       "upToDate": "Остання версія",
       "updateAvailable": "Доступне оновлення",
-      "unknownStatus": "Невідомо"
+      "unknownStatus": "Невідомо",
+      "error": {
+        "collapsedSaveTitle": "",
+        "collapsedSaveMessage": ""
+      }
     },
     "networkControllerSummary": {
       "advanced": {
@@ -5133,6 +5662,7 @@
       },
       "openService": "Відкрити службу сповіщень",
       "deleteNotification": "Видалити сповіщення з Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не вдалося видалити сповіщення",
       "deleteFailedMessage": "Сповіщення не вдалося видалити. Будь ласка, спробуйте ще раз."
     },
@@ -5162,7 +5692,6 @@
       "download": "Завантажити",
       "upload": "Вивантаж",
       "ping": "Пінг",
-      "status": "Статус",
       "avgDownload": "Середнє завантаження",
       "avgUpload": "Середнє вивантаження",
       "avgPing": "Середній пінг",
@@ -5392,6 +5921,23 @@
       "name": "Системні ресурси",
       "description": "Процесор, пам'ять, диск та інше використання системи",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Відсоток (напр., 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Увімкнути затінення графіку"
         },
@@ -5399,6 +5945,7 @@
           "label": "Видимі графіки",
           "description": "Оберіть графіки, які хочете бачити.",
           "option": {
+            "cpuCores": "",
             "memory": "Оперативна Пам'ять",
             "network": "Мережа"
           }
@@ -5470,7 +6017,6 @@
         "actionsDisabledEditMode": "Дії вимкнені у режимі редагування.",
         "widgetItemUnavailable": "Цей елемент віджета недоступний.",
         "toggle": "Переключити",
-        "copied": "Скопійовано",
         "confirmDelete": "Підтвердіть цю руйнівну дію."
       },
       "option": {
@@ -5511,6 +6057,9 @@
       "name": "Beszel системи (Таблиця)",
       "description": "Вид таблиць всіх систем, що контролюються в Beszel, з сортованими стовпцями і індикатори стану",
       "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        },
         "sortBy": {
           "label": "Сортувати за"
         },
@@ -5525,7 +6074,12 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel система (Сітка)",
-      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу"
+      "description": "Таблиця карток усіх систем, що контролюються Beszel, з показниками в режимі реального часу",
+      "option": {
+        "fahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        }
+      }
     },
     "beszelAlerts": {
       "name": "Beszel сповіщення",
@@ -5739,7 +6293,6 @@
       },
       "metric": {
         "system": "Система",
-        "source": "Інтеграція",
         "hostname": "Назва хоста",
         "cpuModel": "Модель ЦП",
         "cores": "Ядра",
@@ -6321,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Головна",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Полотно на панелі керування",
       "leftRail": "Панель навігації зліва",
@@ -6429,13 +7002,7 @@
       "itemRadius": {
         "label": "Радіус елемента",
         "description": "Змінює округлення плиток на вашій дошці",
-        "option": {
-          "xs": "Дуже малий",
-          "sm": "Малий",
-          "md": "Середній",
-          "lg": "Великий",
-          "xl": "Дуже великий"
-        }
+        "option": {}
       },
       "isPublic": {
         "label": "Публічний",
@@ -6593,6 +7160,11 @@
           "description": "Адміністратор сервера ще не встановив домашню дошку.",
           "link": "Переглянути публічні дошки",
           "notice": "Щоб ця сторінка зникла, попросіть адміністратора сервера встановити домашню дошку для сервера"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6664,10 +7236,12 @@
             "documentation": "Документація",
             "submitIssue": "Повідомити про проблему",
             "discord": "Discord",
-            "sourceCode": "Вихідний код"
+            "sourceCode": "Вихідний код",
+            "changelog": ""
           }
         },
         "about": "Про програму",
+        "updateAvailable": "Доступне оновлення",
         "assistant": "Помічник"
       }
     },
@@ -6679,9 +7253,23 @@
           "authentication": "Аутентифікація",
           "authorization": "Авторизація"
         },
-        "heroBanner": {
-          "title": "З поверненням до",
-          "subtitle": "{app} дошка"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6726,7 +7314,9 @@
         },
         "noResults": {
           "title": "У вас ще немає дошок",
-          "description": "Створіть дошку для організації програм та віджетів."
+          "description": "Створіть дошку для організації програм та віджетів.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6768,9 +7358,13 @@
                 "allAdded": "Кожна вбудована система управління вже у вашому заголовку.",
                 "add": "Додати {item}",
                 "boardShortcut": "Ярлик дошки",
+                "widget": "Віджет",
                 "chooseBoard": "Виберіть дошку"
               },
               "configuration": {
+                "widgetKind": "Віджет",
+                "widgetOptions": "Опції",
+                "boardOnly": "",
                 "description": "Цей елемент керування залишається таким же розміром, як і в живому заголовку.",
                 "searchDisplay": {
                   "input": "Рядок пошуку",
@@ -6779,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Тільки логотип",
                   "logoAndText": "Логотип + текст"
+                },
+                "tabsDisplay": {
+                  "wide": "Широкий",
+                  "compact": "Компактний",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6786,6 +7385,7 @@
                 "search": "Пошук",
                 "home": "Домашня дошка",
                 "boardSwitcher": "Контури",
+                "boardTabs": "",
                 "assistant": "Помічник",
                 "docker": "Docker",
                 "boardEdit": "Редагувати дошку",
@@ -6793,7 +7393,9 @@
                 "settings": "Ваші налаштування",
                 "themeToggle": "Перемкнути тему",
                 "user": "Обліковий запис",
-                "boardUnavailable": "Дошка недоступна"
+                "boardUnavailable": "Дошка недоступна",
+                "notifications": "Сповіщення",
+                "widget": "Віджет"
               }
             },
             "item": {
@@ -7017,6 +7619,10 @@
             "title": "Вигляд",
             "defaultColorScheme": {
               "label": "Стандартна кольорова тема"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7067,13 +7673,7 @@
             },
             "defaultRadius": {
               "label": "Кутовий стиль",
-              "options": {
-                "xs": "Теренд",
-                "sm": "Тонкий",
-                "md": "Збалансований",
-                "lg": "Округлі",
-                "xl": "М'яко"
-              }
+              "options": {}
             },
             "customCss": {
               "label": "Глобальний користувацький CSS",
@@ -7095,7 +7695,6 @@
               "greetingDefault": "Стандартне привітання",
               "boardColorLocked": "Колір дошки заблоковано",
               "boardColorFlexible": "Дозволено кольори дошки",
-              "appName": "Назва",
               "logo": "Логотип",
               "greeting": "Привітання",
               "on": "Увімк",
@@ -7230,6 +7829,7 @@
             "model": {
               "title": "Модель",
               "description": "Оберіть знайдену модель або введіть ID точної кінцевої моделі.",
+              "save": "",
               "placeholder": "ID моделі",
               "refresh": "Оновити моделі",
               "chooseModel": "Виберіть модель, що використовується для нових розмов.",
@@ -7322,9 +7922,7 @@
             "lastExecution": {
               "label": "Останнє виконання"
             },
-            "actions": {
-              "label": "Дії"
-            }
+            "actions": {}
           },
           "table": {
             "search": "Шукати завдання {count}..."
@@ -7376,6 +7974,12 @@
             "apiKey": {
               "label": "Аутентифікація",
               "title": "Ключі API",
+              "access": {
+                "label": "",
+                "readOnly": "",
+                "readWrite": "",
+                "description": ""
+              },
               "button": {
                 "createApiToken": "Створити API токен",
                 "confirmDeletion": "Підтвердіть видалення"
@@ -7388,9 +7992,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Створено",
-                  "source": "Інтеграція",
-                  "actions": "Дії"
+                  "createdBy": "Створено"
                 }
               },
               "provenance": {
@@ -7603,7 +8205,8 @@
               "openSpotlightApps": "Відкрити пошук додатків",
               "openSpotlightAssistant": "Відкрити режим помічника",
               "openSpotlightPreferences": "Відкрийте режим налаштувань",
-              "openAssistant": "Відкрити помічника"
+              "openAssistant": "Відкрити помічника",
+              "switchBoardTab": ""
             },
             "note": "Порада: Mod стосується як клавіші Ctrl, так і клавіші ⌘ у macOS"
           }
@@ -7683,7 +8286,6 @@
     },
     "field": {
       "state": {
-        "label": "Стан",
         "option": {
           "created": "Створено",
           "running": "Запущено",
@@ -7710,7 +8312,6 @@
       }
     },
     "action": {
-      "title": "Дії",
       "logs": {
         "label": "Перегляд журналу",
         "page": {
@@ -7948,27 +8549,13 @@
       "internalServerError": "Не вдалося отримати дані Kubernetes"
     },
     "field": {
-      "name": {
-        "label": "Назва"
-      },
-      "namespace": {
-        "label": "Простір імен"
-      },
-      "creationTimestamp": {
-        "label": "Створено"
-      },
-      "state": {
-        "label": "Стан"
-      },
-      "status": {
-        "label": "Статус"
-      },
-      "type": {
-        "label": "Тип клієнта"
-      },
-      "architecture": {
-        "label": "Архітектура"
-      }
+      "name": {},
+      "namespace": {},
+      "creationTimestamp": {},
+      "state": {},
+      "status": {},
+      "type": {},
+      "architecture": {}
     }
   },
   "permission": {
@@ -7995,10 +8582,7 @@
         "label": "Дозвіл"
       }
     },
-    "action": {
-      "saveUser": "Зберегти дозвіл користувача",
-      "saveGroup": "Зберегти дозвіл групи"
-    }
+    "action": {}
   },
   "navigationStructure": {
     "manage": {
@@ -8109,8 +8693,7 @@
       "resultsAriaLabel": "{mode} результатів",
       "footer": {
         "navigate": "",
-        "open": "Відкриті",
-        "close": "Закрити"
+        "open": "Відкриті"
       }
     },
     "error": {
@@ -8540,9 +9123,7 @@
         "urlTemplate": {
           "label": "Шаблон пошуку URL-адрес"
         },
-        "description": {
-          "label": "Опис"
-        }
+        "description": {}
       },
       "page": {
         "list": {
@@ -8611,8 +9192,7 @@
             "table": {
               "header": {
                 "season": "Сезон",
-                "episodes": "Серії",
-                "status": "Статус"
+                "episodes": "Серії"
               },
               "status": {
                 "requested": "Запитано"
@@ -8797,6 +9377,12 @@
       }
     }
   },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
+  },
   "metadata": {
     "description": "Панель самостійного хостингу для стеку * arr і всієї вашої батьківщини. Інтегрується з 50+ послугами, у реальному часі віджети, без конфігураційних файлів.",
     "dashboardTitle": "Панель керування {appName}"
@@ -8882,6 +9468,7 @@
       "imageInput": "Приймає введення зображення",
       "thinking": "Режим мислення",
       "reasoning": {
+        "default": "Типово",
         "auto": "Авто",
         "none": "Вимкнено",
         "minimal": "Мінімальні",
@@ -9121,7 +9708,6 @@
       "cssDescription": "Редагувати повну таблицю стилів. Існуючі правила залишаються, якщо їх не видалили тут.",
       "cssCharacters": "{count} з 16384 символів",
       "copyCss": "",
-      "copied": "Скопійовано",
       "restoreCss": "",
       "remoteCssTitle": "Цей CSS завантажує віддалений ресурс",
       "remoteCssDescription": "Імпортовані стилі та віддалені URL-адреси контактують з іншим сервером під час завантаження дошки. Перегляньте їх, перш ніж продовжити."

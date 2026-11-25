@@ -8,12 +8,19 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CustomWidgetForm } from "../_custom-widget-form";
 import { FormErrorBoundary } from "../_form-error-boundary";
 
-export default async function NewCustomWidgetPage() {
+export default async function NewCustomWidgetPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ name?: string | string[]; mode?: string }>;
+}) {
   const session = await auth();
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
   const t = await getI18n("customWidget");
+  const { name, mode } = await searchParams;
+  const assisted = mode === "assisted";
+  const initialValues = typeof name === "string" && name.trim() ? { name: name.trim() } : undefined;
 
   return (
     <>
@@ -27,7 +34,11 @@ export default async function NewCustomWidgetPage() {
             </Text>
           </div>
           <FormErrorBoundary>
-            <CustomWidgetForm mode="create" />
+            <CustomWidgetForm
+              mode="create"
+              initialValues={initialValues}
+              initialAuthoringMode={assisted ? "assisted" : "advanced"}
+            />
           </FormErrorBoundary>
         </Stack>
       </Container>

@@ -1,0 +1,1 @@
+ALTER TABLE "integration" ADD COLUMN "external_url" text;

@@ -31,6 +31,7 @@ describe("REST API browser access", () => {
   });
 
   it.each([200, 401, 403, 500])("exposes a %s API response to the calling browser", async (status) => {
+    sessionFromKey.mockResolvedValueOnce({ user: { id: "owner" } });
     handle.mockResolvedValueOnce(Response.json({ status }, { status }));
     const request = new NextRequest("https://homarr.example/api/info", {
       headers: { Origin: "https://homarr.dev", ApiKey: "test-id.test-token" },
@@ -48,4 +49,13 @@ describe("REST API browser access", () => {
     await GET(new NextRequest("https://homarr.example/api/info", { headers: { Cookie: "authjs.session-token=test" } }));
     expect(sessionFromKey).toHaveBeenCalledWith({}, null, "127.0.0.1", expect.any(String));
   });
+
+  it.each(["", "invalid", "revoked.secret"])(
+    "rejects an invalid explicit API key (%s) before public procedures",
+    async (key) => {
+      const response = await GET(new NextRequest("https://homarr.example/api/info", { headers: { ApiKey: key } }));
+      expect(response.status).toBe(401);
+      expect(handle).not.toHaveBeenCalled();
+    },
+  );
 });

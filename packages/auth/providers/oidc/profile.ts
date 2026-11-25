@@ -3,6 +3,10 @@ import type { Profile } from "@auth/core/types";
 import { env } from "../../env";
 
 export const getProfileValueByPath = (profile: Profile, path: string): unknown => {
+  if (Object.hasOwn(profile, path)) {
+    return (profile as Record<string, unknown>)[path];
+  }
+
   return path.split(".").reduce<unknown>((value, key) => {
     if (typeof value !== "object" || value === null || !Object.hasOwn(value, key)) {
       return undefined;

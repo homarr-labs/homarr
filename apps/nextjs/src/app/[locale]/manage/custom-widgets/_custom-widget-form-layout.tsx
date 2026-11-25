@@ -47,7 +47,7 @@ export function EditorSection({
   children: ReactNode;
 }) {
   return (
-    <Card id={id} component="section" withBorder p="lg" className={classes.editorSection}>
+    <Card id={id} component="section" p="lg" className={classes.editorSection}>
       <Stack gap="md">
         <Group gap="sm">
           <ThemeIcon variant="light" size="lg">
@@ -68,15 +68,21 @@ export function SaveActions({
   savePending,
   previewPending,
   invalid,
+  saveInvalid,
   mode,
   onPreview,
+  saveDisabled = false,
+  previewLabel,
 }: {
   dirty: boolean;
   savePending: boolean;
   previewPending: boolean;
   invalid: boolean;
+  saveInvalid: boolean;
   mode: "create" | "edit";
   onPreview(): void;
+  saveDisabled?: boolean;
+  previewLabel?: string;
 }) {
   const t = useI18n("customWidget.workbench");
   const tCommon = useI18n("common");
@@ -101,9 +107,9 @@ export function SaveActions({
           loading={previewPending}
           disabled={invalid || savePending}
         >
-          {previewPending ? t("action.previewLoading") : t("action.preview")}
+          {previewPending ? t("action.previewLoading") : (previewLabel ?? t("action.preview"))}
         </Button>
-        <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
+        <Button type="submit" loading={savePending} disabled={saveInvalid || previewPending || saveDisabled}>
           {mode === "create" ? tCommon("action.create") : tCommon("action.save")}
         </Button>
       </Group>
@@ -113,14 +119,17 @@ export function SaveActions({
 
 export function CustomWidgetSectionNavigation({
   onSelect,
+  assisted = false,
 }: {
   onSelect(section: (typeof sectionLinks)[number][0]): void;
+  assisted?: boolean;
 }) {
   const t = useI18n("customWidget.workbench");
   const invalidSections = useCustomWidgetFormAnalysisField("invalidSections");
   return (
     <nav className={classes.sectionNav} aria-label={t("sectionNavigation")}>
       {sectionLinks.map(([id, key, SectionIcon]) => {
+        if (assisted && (id === "options" || id === "jsx" || id === "general")) return null;
         const invalid = invalidSections.has(id);
         return (
           <Button
@@ -147,23 +156,34 @@ export function CustomWidgetSaveActions({
   savePending,
   previewPending,
   onPreview,
+  saveDisabled,
+  previewLabel,
 }: {
   mode: "create" | "edit";
   savePending: boolean;
   previewPending: boolean;
   onPreview(): void;
+  saveDisabled?: boolean;
+  previewLabel?: string;
 }) {
   const dirty = useCustomWidgetFormDocumentDirty();
   const candidateValid = useCustomWidgetFormAnalysisField("candidateValid");
+  const saveCandidateValid = useCustomWidgetFormAnalysisField("saveCandidateValid");
   const hasDiagnostics = useCustomWidgetFormAnalysisField("hasDiagnostics");
+  const invalid = hasDiagnostics || !candidateValid;
+  let saveInvalid = invalid;
+  if (mode === "edit") saveInvalid = !saveCandidateValid;
   return (
     <SaveActions
       dirty={dirty}
       savePending={savePending}
       previewPending={previewPending}
-      invalid={hasDiagnostics || !candidateValid}
+      invalid={invalid}
+      saveInvalid={saveInvalid}
       mode={mode}
       onPreview={onPreview}
+      saveDisabled={saveDisabled}
+      previewLabel={previewLabel}
     />
   );
 }

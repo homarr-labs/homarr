@@ -10,16 +10,15 @@ export const smartHomeEntityStateWidget: WidgetDefinition = {
     items: [
       {
         name: "Entity ID",
-        description:
-          "The ID of the entity to display. This can be any entity that is available in your smart home integration.",
+        description: "An entity from the selected Home Assistant or Homey integration, chosen from a searchable list.",
         values: { type: "string" },
-        defaultValue: "sun.sun",
+        defaultValue: "",
       },
       {
         name: "Display Name",
-        description: "Display name for the entity, if not set the entity ID will be used.",
+        description: "Optional display name. Defaults to the entity's name, or its ID if no name is available.",
         values: { type: "string" },
-        defaultValue: "Sun",
+        defaultValue: "",
       },
       {
         name: "Entity unit",

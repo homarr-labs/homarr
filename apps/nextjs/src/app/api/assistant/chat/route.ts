@@ -95,9 +95,17 @@ import {
   assistantExecutionPolicy,
   createCustomWidgetToolStepGate,
 } from "./assistant-execution-policy";
-import { createAssistantAbortErrorTransform, getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import {
+  createAssistantAbortErrorTransform,
+  getAssistantProviderErrorLogMetadata,
+  getAssistantStreamErrorMessage,
+} from "./assistant-stream-error";
 import { shouldEmitAssistantMessageMetadata } from "./assistant-stream-metadata";
-import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
+import {
+  getAssistantToolErrorCode,
+  getCustomWidgetConfigurationStatusRecovery,
+  getSafeAssistantToolError,
+} from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { getAssistantToolOutputOptions, toAssistantToolOutput } from "./assistant-tool-output";
 import { getAssistantToolInputSchema, getValidatedAssistantToolSchema } from "./assistant-tool-schema";
@@ -111,13 +119,15 @@ import {
   hasCustomWidgetLegacyMigrationContext,
   getRequestedCustomWidgetExampleIds,
   getRequestedCustomWidgetServiceTarget,
+  hasCustomWidgetToolHistory,
   hasExplicitCustomWidgetComponentDiscoveryRequest,
   hasMultiCustomWidgetCreationRequest,
+  isCustomWidgetManagementPath,
   isFreshCustomWidgetCreationRequest,
   needsCustomWidgetAuthoringContext,
   shouldRequireCustomWidgetAuthoringTool,
 } from "./custom-widget-authoring-context";
-import { createAssistantMcpToolGroups } from "./assistant-tool-groups";
+import { createAssistantMcpToolGroups, getEnabledAssistantMcpToolGroupIds } from "./assistant-tool-groups";
 import {
   customWidgetAssistantInstructions,
   getForcedAssistantToolName,
@@ -206,6 +216,12 @@ const integrationResearchReplayToolNames = new Set([
   "integration_request",
   assistantIntegrationResearchToolName,
   "ask_user",
+]);
+const customWidgetPhaseFrontendToolNames = new Set([
+  "ask_user",
+  "configure_widget",
+  "navigate_to_route",
+  "refresh_current_view",
 ]);
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
@@ -445,13 +461,14 @@ export async function POST(request: Request) {
   }
   const incomingMessages = parsed.data.messages as UIMessage[];
 
-  const configuration = await db.query.assistantConfigurations.findFirst({
-    where: eq(assistantConfigurations.id, "default"),
-  });
-
-  const thread = await db.query.assistantThreads.findFirst({
-    where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
-  });
+  const [configuration, thread] = await Promise.all([
+    db.query.assistantConfigurations.findFirst({
+      where: eq(assistantConfigurations.id, "default"),
+    }),
+    db.query.assistantThreads.findFirst({
+      where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
+    }),
+  ]);
   if (!thread) {
     return Response.json({ error: "Conversation not found." }, { status: 404 });
   }
@@ -559,6 +576,12 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringActive = canAuthorCustomWidgets && needsCustomWidgetAuthoringContext(incomingMessages);
+  let customWidgetReferenceLoaded =
+    canAuthorCustomWidgets &&
+    (customWidgetAuthoringActive ||
+      isCustomWidgetManagementPath(parsed.data.clientContext?.pathname) ||
+      hasCustomWidgetToolHistory(incomingMessages));
+  const initialCustomWidgetReferenceLoaded = customWidgetReferenceLoaded;
   const customWidgetLegacyMigrationOnly =
     customWidgetAuthoringActive && hasCustomWidgetLegacyMigrationContext(incomingMessages);
   const multiCustomWidgetCreationRequest =
@@ -762,7 +785,7 @@ export async function POST(request: Request) {
                   ...(typeof executionInput.requestId === "string" ? { requestId: executionInput.requestId } : {}),
                 };
               }
-              return { error: safeError };
+              return { error: safeError, code: getAssistantToolErrorCode(error), toolName: mcpTool.name };
             }
           },
         }),
@@ -835,10 +858,12 @@ export async function POST(request: Request) {
       .max(maxAssistantToolGroupsPerActivation)
       .describe("MCP router groups whose typed Homarr tools are needed for the current task."),
   });
-  const enabledToolGroupIds = new Set<string>();
+  // Approval and browser-tool continuations start a new HTTP request. Restore
+  // successful activations from this conversation before preparing model steps.
+  const enabledToolGroupIds = getEnabledAssistantMcpToolGroupIds(incomingMessages, assistantToolGroups.ids);
   const toolGroupActivation = tool({
     description:
-      "Enable task-needed typed Homarr tools by MCP router group. Enabled groups remain available on later steps.",
+      "Enable task-needed typed Homarr tools by MCP router group. Enabled groups remain available throughout this conversation, including after approvals and browser-tool results.",
     inputSchema: jsonSchema(z.toJSONSchema(assistantToolGroupActivationSchema) as Parameters<typeof jsonSchema>[0]),
     execute: (value) => {
       if (customWidgetAuthoringActive && !customWidgetToolStepGate.claim(assistantToolGroupActivationName)) {
@@ -968,7 +993,7 @@ export async function POST(request: Request) {
     }
     const phaseToolNames = customWidgetAuthoringActive
       ? getCustomWidgetPhaseToolNames(
-          [...Object.keys(homarrTools), ...frontendToolNames],
+          [...Object.keys(homarrTools).filter(customWidgetDiscoveryPhase.canClaim), ...frontendToolNames],
           [...restoredCustomWidgetSteps, ...responseMessageSteps, ...steps],
           {
             continueAfterPersistence: customWidgetFollowUpEditContext === null && multiCustomWidgetCreationRequest,
@@ -988,8 +1013,15 @@ export async function POST(request: Request) {
         )
       : null;
     // Authoring phases constrain server lifecycle calls, not the user's ability
-    // to answer a question or review placement of an already saved widget.
-    if (phaseToolNames) return [...new Set([...phaseToolNames, ...frontendToolNames])];
+    // to answer a question or navigate; pending placement is handled above.
+    if (phaseToolNames) {
+      return [
+        ...new Set([
+          ...phaseToolNames,
+          ...frontendToolNames.filter((name) => customWidgetPhaseFrontendToolNames.has(name)),
+        ]),
+      ];
+    }
     return [
       assistantToolGroupActivationName,
       ...Object.keys(documentationTools).filter(() => documentationSearchCount < 2),
@@ -1053,16 +1085,26 @@ export async function POST(request: Request) {
       prepareMessagesForModel(incomingMessages),
     );
     const assistantStepContextMaxCharacters = getAssistantStepContextMaxCharacters(selectedModel?.contextLength);
-    const baseInstructions = `${assistantInstructions}${canAuthorCustomWidgets ? customWidgetAssistantInstructions : ""}${requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null ? getCustomWidgetProductionInstructions(openRouterServerToolsEnabled) : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
+    const getBaseInstructions = () =>
+      `${assistantInstructions}${customWidgetReferenceLoaded ? customWidgetAssistantInstructions : ""}${requestedCustomWidgetService !== null && requestedCustomWidgetExampleId === null ? getCustomWidgetProductionInstructions(openRouterServerToolsEnabled) : ""}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${requestContext}`;
     const getStepInstructions = (activeToolNames: readonly string[]) => {
+      if (canAuthorCustomWidgets && activeToolNames.some((toolName) => toolName.startsWith("customWidget_"))) {
+        customWidgetReferenceLoaded = true;
+      }
       const integrationResearchInstructions = integrationResearch?.getStepInstructions() ?? "";
-      let instructions = `${baseInstructions}${integrationResearchInstructions}`;
+      let instructions = `${getBaseInstructions()}${integrationResearchInstructions}`;
       if (documentationSearchCount >= 2) {
         instructions +=
           "\nHomarr documentation lookup is complete. For a documentation-only question, give the concise answer now with supported citations and clearly identify any missing evidence. Do not enable other tool groups or fetch authoring references just to repeat this search. For an action request, continue only its remaining requested work.";
       }
       if (!customWidgetAuthoringActive) {
-        if (integrationResearchInstructions || documentationSearchCount >= 2) return instructions;
+        if (
+          integrationResearchInstructions ||
+          documentationSearchCount >= 2 ||
+          customWidgetReferenceLoaded !== initialCustomWidgetReferenceLoaded
+        ) {
+          return instructions;
+        }
         return undefined;
       }
       return appendActiveCustomWidgetToolInstruction(instructions, activeToolNames);
@@ -1085,7 +1127,7 @@ export async function POST(request: Request) {
     if (customWidgetLegacyMigrationOnly) stepTimeoutMs = assistantExecutionPolicy.totalTimeoutMs;
     const result = streamText({
       model: provider(modelId),
-      instructions: baseInstructions,
+      instructions: getBaseInstructions(),
       messages: initialModelMessages,
       tools: availableTools,
       prepareStep: ({ messages, responseMessages, stepNumber, steps }) => {
@@ -1096,7 +1138,7 @@ export async function POST(request: Request) {
           return {
             activeTools: [],
             toolChoice: "none",
-            instructions: `${baseInstructions}\nThe user denied a tool approval. Stop this action; do not retry, revise, or replace it. Briefly acknowledge the cancellation without claiming it succeeded.`,
+            instructions: `${getBaseInstructions()}\nThe user denied a tool approval. Stop this action; do not retry, revise, or replace it. Briefly acknowledge the cancellation without claiming it succeeded.`,
           };
         }
         const previewOutageStatus = getCustomWidgetPreviewOutageStatus(steps);
@@ -1104,7 +1146,7 @@ export async function POST(request: Request) {
           return {
             activeTools: [],
             toolChoice: "none",
-            instructions: `${baseInstructions}\nThe preview API returned HTTP ${previewOutageStatus}. Stop tool calls for this turn: an upstream server failure is not a JSX defect. Do not rebuild the preview, retry automatically, or claim verification or saving succeeded. Briefly explain that persistence requires successful API evidence, even when the outage was expected. Offer to retry when the service is available. Do not expose the raw response body.`,
+            instructions: `${getBaseInstructions()}\nThe preview API returned HTTP ${previewOutageStatus}. Stop tool calls for this turn: an upstream server failure is not a JSX defect. Do not rebuild the preview, retry automatically, or claim verification or saving succeeded. Briefly explain that persistence requires successful API evidence, even when the outage was expected. Offer to retry when the service is available. Do not expose the raw response body.`,
           };
         }
         const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
@@ -1273,6 +1315,7 @@ export async function POST(request: Request) {
           provider: configuration.provider,
           modelId,
           errorType: getAssistantLogErrorType(error),
+          ...getAssistantProviderErrorLogMetadata(error),
         });
       },
       onFinish: async () => {
@@ -1395,6 +1438,7 @@ export async function POST(request: Request) {
   } catch (error) {
     logger.error("Assistant response could not start", {
       errorType: getAssistantLogErrorType(error),
+      ...getAssistantProviderErrorLogMetadata(error),
     });
     return Response.json(
       {

@@ -28,7 +28,7 @@ export const integrationSecretKindObject = {
   wazuhIndexerUrl: { isPublic: true, multiline: false },
   wazuhIndexerUsername: { isPublic: true, multiline: false },
   wazuhIndexerPassword: { isPublic: false, multiline: false },
-  wazuhDashboardUrl: { isPublic: true, multiline: false },
+  totpSecret: { isPublic: false, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
@@ -251,6 +251,17 @@ export const integrationDefs = {
     category: ["miscellaneous"],
     documentationSlug: "plantit",
     defaultPort: 8080,
+  },
+
+  yuvomi: {
+    httpAuth: { type: "bearer" },
+    name: "Yuvomi",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yuvomi.svg",
+    category: ["miscellaneous"],
+    documentationSlug: "yuvomi",
+    defaultPort: 3000,
+    apiKeySettingsPath: "/settings/admin/api",
   },
 
   netdata: {
@@ -637,16 +648,25 @@ export const integrationDefs = {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
-    category: ["smartHomeServer", "calendar"],
+    category: ["smartHomeServer", "calendar", "notifications"],
     documentationSlug: "home-assistant",
     defaultPort: 8123,
     apiKeySettingsPath: "/profile/security",
     features: { docker: { aliases: ["homeassistant", "home-assistant", "hass"] } },
   },
+  homey: {
+    httpAuth: { type: "adapter" },
+    name: "Homey",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homey.svg",
+    category: ["smartHomeServer"],
+    documentationSlug: "homey",
+  },
   openmediavault: {
     httpAuth: { type: "adapter" },
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
+    optionalSecretKinds: ["totpSecret"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
     category: ["healthMonitoring"],
     documentationSlug: "open-media-vault",
@@ -886,7 +906,7 @@ export const integrationDefs = {
     name: "Uptime Kuma",
     secretKinds: [[], ["slug"], ["slug", "apiKey"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
-    category: ["uptimeMonitoring"],
+    category: ["uptimeMonitoring", "notifications"],
     documentationSlug: "uptime-kuma",
     defaultPort: 3001,
     apiKeySettingsPath: "/settings/api-keys",
@@ -943,7 +963,7 @@ export const integrationDefs = {
     name: "Beszel",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
-    category: ["beszel"],
+    category: ["beszel", "notifications"],
     documentationSlug: "beszel",
     defaultPort: 8090,
   },
@@ -1005,8 +1025,6 @@ export const integrationDefs = {
       ["username", "password", "wazuhIndexerUrl", "wazuhIndexerUsername", "wazuhIndexerPassword"],
       ["wazuhIndexerUsername", "wazuhIndexerPassword"],
     ],
-    // Used for deep links from the widgets into the Wazuh dashboard.
-    optionalSecretKinds: ["wazuhDashboardUrl"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
     category: ["security", "notifications"],
     documentationSlug: "wazuh",

@@ -10,6 +10,7 @@ import { Link } from "@homarr/ui";
 
 import { navigationCollapsedAtom } from "./header/burger";
 import { TourTarget } from "./header/tour-target";
+import { useOpenWhatsNew } from "./header/whats-new-modal";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
@@ -61,9 +62,27 @@ const NavLinkHref = (props: NavigationLinkHref) => {
   return withOptionalTourTarget(tourId, link);
 };
 
+const NavLinkChangelog = ({ label, icon }: NavigationLinkChangelog) => {
+  const setNavigationCollapsed = useSetAtom(navigationCollapsedAtom);
+  const openWhatsNew = useOpenWhatsNew();
+
+  return (
+    <NavLink
+      component="button"
+      label={label}
+      leftSection={icon}
+      onClick={() => {
+        setNavigationCollapsed(true);
+        openWhatsNew("recent");
+      }}
+    />
+  );
+};
+
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
   const { pathname, isClient } = useClientPathname();
-  const activeItemHref = getMostSpecificMatchingHref(pathname, props.items);
+  const hrefItems = props.items.filter((item) => "href" in item);
+  const activeItemHref = getMostSpecificMatchingHref(pathname, hrefItems);
   const isActive = isClient && activeItemHref !== undefined;
   const [opened, setOpened] = useState(false);
 
@@ -73,9 +92,10 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
 
   const nav = (
     <NavLink label={props.label} leftSection={props.icon} active={isActive} opened={opened} onChange={setOpened}>
-      {props.items.map((item) => (
-        <NavLinkHref key={item.label} {...item} active={isClient && activeItemHref === item.href} />
-      ))}
+      {props.items.map((item) => {
+        if ("action" in item) return <NavLinkChangelog key={item.label} {...item} />;
+        return <NavLinkHref key={item.label} {...item} active={isClient && activeItemHref === item.href} />;
+      })}
     </NavLink>
   );
   return withOptionalTourTarget(props["data-onboarding-tour-id"], nav);
@@ -94,8 +114,11 @@ interface NavigationLinkHref extends CommonNavigationLinkProps {
   exact?: boolean;
   active?: boolean;
 }
+interface NavigationLinkChangelog extends CommonNavigationLinkProps {
+  action: "changelog";
+}
 interface NavigationLinkWithItems extends CommonNavigationLinkProps {
-  items: NavigationLinkHref[];
+  items: (NavigationLinkHref | NavigationLinkChangelog)[];
 }
 
 export type ClientNavigationLink = NavigationLinkHref | NavigationLinkWithItems;

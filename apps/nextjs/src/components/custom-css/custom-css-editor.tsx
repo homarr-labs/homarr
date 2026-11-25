@@ -1,15 +1,17 @@
 "use client";
 
-import { CodeEditor } from "~/components/custom-widgets/code-editor";
+import { CodeEditor } from "@homarr/forms-collection/custom-widgets";
 
 interface CustomCssEditorProps {
   id: string;
   label: string;
-  description: string;
+  description?: string;
   value?: string;
   onChange: (value: string) => void;
   error?: React.ReactNode;
   actions?: React.ReactNode;
+  height?: string;
+  readOnly?: boolean;
 }
 
 export const CustomCssEditor = ({
@@ -20,6 +22,8 @@ export const CustomCssEditor = ({
   onChange,
   error,
   actions,
+  height = "250px",
+  readOnly,
 }: CustomCssEditorProps) => {
   return (
     <CodeEditor
@@ -30,7 +34,8 @@ export const CustomCssEditor = ({
       onChange={onChange}
       error={error}
       language="css"
-      height="250px"
+      height={height}
+      readOnly={readOnly}
       maxLength={16_384}
       actions={actions}
     />

@@ -31,6 +31,8 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
+import { useDemoReadOnly } from "../../demo-read-only";
+import { getWidgetRefreshInterval } from "../../refresh-interval";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
@@ -42,9 +44,12 @@ export default function DnsHoleSummaryWidget({
   height,
   displayScale = 1,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
-    integrationIds,
-  });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
 
   const t = useI18n();
@@ -223,7 +228,7 @@ const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProp
         aria-label={`${label}: ${value}`}
         className="summary-card"
         p={padding}
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         bg={backgroundColor}
         style={{
           flex: 1,

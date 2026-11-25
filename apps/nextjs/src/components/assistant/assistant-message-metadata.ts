@@ -210,6 +210,7 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
           toolDurationMs === undefined
         )
           return [];
+        const webSearchSources = getWebSearchSources(candidate.webSearchSources);
         return [
           {
             index,
@@ -283,9 +284,7 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
             ...(getFiniteNonNegativeNumber(candidate.webSearchRequests) !== undefined
               ? { webSearchRequests: getFiniteNonNegativeNumber(candidate.webSearchRequests) }
               : {}),
-            ...(getWebSearchSources(candidate.webSearchSources).length > 0
-              ? { webSearchSources: getWebSearchSources(candidate.webSearchSources) }
-              : {}),
+            ...(webSearchSources.length > 0 ? { webSearchSources } : {}),
             ...(typeof candidate.isByok === "boolean" ? { isByok: candidate.isByok } : {}),
             ...(typeof candidate.streamed === "boolean" ? { streamed: candidate.streamed } : {}),
             ...(typeof candidate.cancelled === "boolean" ? { cancelled: candidate.cancelled } : {}),
@@ -293,6 +292,7 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
         ];
       })
     : [];
+  const webSearchSources = getWebSearchSources(value.webSearchSources);
   return {
     requestId: value.requestId,
     provider: value.provider,
@@ -340,9 +340,7 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
     ...(getFiniteNonNegativeNumber(value.webSearchRequests) !== undefined
       ? { webSearchRequests: getFiniteNonNegativeNumber(value.webSearchRequests) }
       : {}),
-    ...(getWebSearchSources(value.webSearchSources).length > 0
-      ? { webSearchSources: getWebSearchSources(value.webSearchSources) }
-      : {}),
+    ...(webSearchSources.length > 0 ? { webSearchSources } : {}),
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),
   };
@@ -352,11 +350,12 @@ const sumReportedStepMetric = (
   steps: AssistantRequestStep[],
   getValue: (step: AssistantRequestStep) => number | undefined,
 ) => {
-  const values = steps.flatMap((step) => {
+  let total: number | undefined;
+  for (const step of steps) {
     const value = getValue(step);
-    return value === undefined ? [] : [value];
-  });
-  return values.length > 0 ? values.reduce((sum, value) => sum + value, 0) : undefined;
+    if (value !== undefined) total = (total ?? 0) + value;
+  }
+  return total;
 };
 
 /**

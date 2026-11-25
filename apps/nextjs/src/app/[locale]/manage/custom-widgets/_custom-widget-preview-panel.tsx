@@ -26,6 +26,7 @@ export interface PreviewState {
   status: Record<string, unknown>;
   session: { id: string; expiresAt: number; liveActions: boolean } | null;
   outcome: PreviewOutcome;
+  setupIssues?: Array<{ path?: string; message: string }>;
 }
 
 interface PreviewPanelProps {
@@ -51,6 +52,14 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
     { sessionId: props.preview.session?.id ?? "" },
     { enabled: showDiagnostics, refetchInterval: showDiagnostics && 2_000, staleTime: 0 },
   );
+  const previewDataJson = useMemo(() => {
+    if (activeTab !== "data") return "";
+    return JSON.stringify({ data: props.preview.data, status: props.preview.status }, null, 2);
+  }, [activeTab, props.preview.data, props.preview.status]);
+  const journalJson = useMemo(() => {
+    if (!showDiagnostics) return "";
+    return JSON.stringify(journalQuery.data ?? [], null, 2);
+  }, [journalQuery.data, showDiagnostics]);
   const candidate = props.candidate;
   const candidateTemplate = candidate?.template;
   const candidateRequests = candidate?.requests;
@@ -79,6 +88,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
     [fixture, fixtureError, previewCandidate, previewSnapshot, props.optionsSnapshot],
   );
   const previewSummary = useMemo(() => getPreviewSummary(props.preview.status), [props.preview.status]);
+  const validationIssues = [...props.validationIssues, ...(props.preview.setupIssues ?? [])];
   const rendererResetKey = useMemo(
     () =>
       JSON.stringify({
@@ -100,8 +110,12 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
       props.preview.status,
     ],
   );
-  const previewResult =
-    props.preview.outcome === "success"
+  const previewResult = props.preview.setupIssues?.length
+    ? {
+        title: t("tab.diagnostics"),
+        description: props.preview.setupIssues.map((issue) => issue.message).join("\n"),
+      }
+    : props.preview.outcome === "success"
       ? {
           title: t("result.success.title"),
           description: t("result.success.description", previewSummary),
@@ -116,7 +130,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
           : { title: "", description: "" };
 
   return (
-    <Card withBorder p="md">
+    <Card p="md">
       <Stack gap="md">
         <Group gap="xs" justify="space-between">
           <CustomWidgetPreviewSizeControl value={props.size} onChange={props.onSizeChange} />
@@ -133,13 +147,11 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
             ]}
           />
         </Group>
-        {candidate && (
-          <PreviewResult
-            outcome={props.preview.outcome}
-            title={previewResult.title}
-            description={previewResult.description}
-          />
-        )}
+        <PreviewResult
+          outcome={props.preview.outcome}
+          title={previewResult.title}
+          description={previewResult.description}
+        />
         <Tabs value={activeTab} onChange={setActiveTab} keepMounted={false}>
           <Tabs.List grow>
             {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
@@ -183,7 +195,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
               id="preview-data"
               label={t("requestData")}
               language="json"
-              value={JSON.stringify({ data: props.preview.data, status: props.preview.status }, null, 2)}
+              value={previewDataJson}
               readOnly
               onChange={() => undefined}
             />
@@ -235,10 +247,10 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
               <Text size="sm" fw={600}>
                 {t("validation.title")}
               </Text>
-              {props.validationIssues.length === 0 ? (
+              {validationIssues.length === 0 ? (
                 <Alert color="green">{t("validation.ready")}</Alert>
               ) : (
-                props.validationIssues.map((issue, index) => (
+                validationIssues.map((issue, index) => (
                   <Alert key={`${issue.path ?? "widget"}-${index}`} color="red" title={issue.path}>
                     {issue.message}
                   </Alert>
@@ -263,7 +275,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
                   id="preview-journal"
                   label={t("journal")}
                   language="json"
-                  value={JSON.stringify(journalQuery.data ?? [], null, 2)}
+                  value={journalJson}
                   readOnly
                   onChange={() => undefined}
                 />

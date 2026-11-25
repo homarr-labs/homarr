@@ -1,4 +1,7 @@
 export * from "./interfaces/calendar/calendar-types";
+export * from "./interfaces/smart-home/smart-home-types";
+export * from "./interfaces/smart-home/smart-home-optimistic";
+export * from "./interfaces/smart-home/smart-home-capabilities";
 export * from "./interfaces/media-organizer/media-organizer-types";
 export type { IMediaOrganizerIntegration } from "./interfaces/media-organizer/media-organizer-integration";
 export * from "./interfaces/dns-hole-summary/dns-hole-summary-types";

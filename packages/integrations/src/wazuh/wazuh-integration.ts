@@ -281,14 +281,7 @@ export class WazuhIntegration extends Integration implements INotificationsInteg
   // Dashboard links
   // ---------------------------------------------------------------------------------------------
 
-  /**
-   * Base URL of the Wazuh dashboard used for deep links. Prefers the optional "Dashboard URL" field and falls back
-   * to the linked app, as long as that app does not simply point at the API/indexer URL.
-   */
   public getDashboardUrl(): string | null {
-    if (this.hasSecretValue("wazuhDashboardUrl")) {
-      return removeTrailingSlash(this.getSecretValue("wazuhDashboardUrl"));
-    }
     const external = this.integration.externalUrl;
     if (external && removeTrailingSlash(external) !== removeTrailingSlash(this.integration.url)) {
       return removeTrailingSlash(external);

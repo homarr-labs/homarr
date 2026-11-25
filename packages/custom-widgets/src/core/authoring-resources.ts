@@ -1,4 +1,10 @@
 import { customJsxAuthoringCatalog } from "./component-catalog";
+import {
+  CUSTOM_WIDGET_COMMON_CHART_GUIDANCE,
+  CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE,
+  CUSTOM_WIDGET_SKILL_SOURCE_URL,
+} from "./ai-prompt";
+import type { CustomJsxPropDescriptor } from "./component-catalog-types";
 import { CUSTOM_WIDGET_SCHEMA } from "./custom-jsx-schema";
 import { customJsxTablerIconExamples } from "./tabler-icons";
 
@@ -41,14 +47,80 @@ const assistantCommonComponentNames = new Set([
   "Tabs",
 ]);
 
+const assistantSharedPropNames = new Set(
+  [
+    "m mx my mt mb ml mr ms me mis mie p px py pt pb pl pr ps pe pis pie",
+    "w h miw maw mih mah display flex opacity c bg bga bgp bgr bgsz bd bdrs ff fs fw fz lh lts ta td tt",
+    "hiddenFrom visibleFrom lightHidden darkHidden mod style radius shadow withBorder",
+    "id title role hidden tabIndex aria-label aria-labelledby aria-describedby",
+    "aria-hidden aria-live aria-busy aria-current aria-valuenow aria-valuemin aria-valuemax",
+  ].flatMap((names) => names.split(" ")),
+);
+const cssWideKeywords = new Set(['"-moz-initial"', '"inherit"', '"initial"', '"revert"', '"revert-layer"', '"unset"']);
+const maximumInlineTypeLength = 32;
+
+const isAssistantReferenceProp = (name: string) =>
+  name !== "attributes" && name !== "unstyled" && !name.endsWith("Props");
+
 const assistantReferenceComponents = customJsxAuthoringCatalog.components.filter(
   ({ name, safety, package: packageName }) =>
     safety !== "denied" && (assistantCommonComponentNames.has(name) || packageName === "@homarr/widgets"),
 );
-const assistantReferenceTypeIds = new Set(
-  [...customJsxAuthoringCatalog.globalProps, ...assistantReferenceComponents.flatMap(({ props }) => props)].map(
-    ({ typeRef }) => typeRef,
-  ),
+const assistantReferenceSharedProps = customJsxAuthoringCatalog.globalProps.filter(({ name }) =>
+  assistantSharedPropNames.has(name),
+);
+const getAssistantReferenceType = (typeRef: number) => {
+  const members = (customJsxAuthoringCatalog.types[typeRef] ?? "unknown")
+    .split(" | ")
+    .filter((member) => !cssWideKeywords.has(member));
+  const booleanMembers = new Set(["false", "true", '"false"', '"true"']);
+  if (members.includes("false") && members.includes("true")) {
+    return ["boolean", ...members.filter((member) => !booleanMembers.has(member))].join(" | ");
+  }
+  return members.join(" | ");
+};
+const assistantReferenceTypes = new Map<number, string>();
+const getAssistantReferencePropType = (typeRef: number) => {
+  const type = getAssistantReferenceType(typeRef);
+  if (type.length <= maximumInlineTypeLength) return type;
+  assistantReferenceTypes.set(typeRef, type);
+  return typeRef;
+};
+const toAssistantReferenceProps = (props: readonly CustomJsxPropDescriptor[]) =>
+  Object.fromEntries(
+    props
+      .filter(({ name }) => isAssistantReferenceProp(name))
+      .map(({ name, typeRef }) => [name, getAssistantReferencePropType(typeRef)]),
+  );
+const groupAssistantReferenceProps = (props: readonly CustomJsxPropDescriptor[]) => {
+  const namesByType = new Map<string | number, string[]>();
+  for (const { name, typeRef } of props) {
+    const type = getAssistantReferencePropType(typeRef);
+    namesByType.set(type, [...(namesByType.get(type) ?? []), name]);
+  }
+  return Object.fromEntries([...namesByType].map(([type, names]) => [names.join(" "), type]));
+};
+const enabledComponentNames = new Set(
+  customJsxAuthoringCatalog.components.filter(({ safety }) => safety !== "denied").map(({ name }) => name),
+);
+const flatComponentAliases = new Set(
+  [...enabledComponentNames].filter((name) => name.includes(".")).map((name) => name.replaceAll(".", "")),
+);
+const assistantSharedProps = groupAssistantReferenceProps(assistantReferenceSharedProps);
+const assistantComponents = assistantReferenceComponents.map(
+  ({ name, description, props, blockedProps, bind, subcomponents, accessibilityRequirements }) => {
+    const required = props.filter((prop) => prop.required).map((prop) => prop.name);
+    return {
+      name,
+      ...(description ? { description } : {}),
+      props: toAssistantReferenceProps(props),
+      ...(required.length > 0 ? { required } : {}),
+      ...(blockedProps.length > 0 ? { blockedProps: blockedProps.map((prop) => prop.name) } : {}),
+      ...(bind ? { bind } : {}),
+      ...(subcomponents.length > 0 ? { subcomponents } : {}),
+      accessibilityRequirements,
+    };
+  },
 );
 
 export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
@@ -56,28 +128,16 @@ export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
   iconNames: customJsxTablerIconExamples,
   iconNaming:
     "All installed Tabler kebab-case names are supported; iconNames are examples. Filled icons end in -filled.",
-  format: "Props are [name, type ID, required]. Shared props apply unless blocked. Type IDs resolve through types.",
-  types: Object.fromEntries([...assistantReferenceTypeIds].map((id) => [id, customJsxAuthoringCatalog.types[id]])),
-  registeredNames: customJsxAuthoringCatalog.components
-    .filter(({ safety }) => safety !== "denied")
-    .map(({ name }) => name),
-  sharedProps: customJsxAuthoringCatalog.globalProps.map(({ name, typeRef, required }) => [name, typeRef, required]),
-  components: assistantReferenceComponents.map(
-    ({ name, description, props, blockedProps, bind, subcomponents, accessibilityRequirements }) => ({
-      name,
-      description,
-      props: props.map(({ name, typeRef, required }) => [name, typeRef, required]),
-      blockedProps,
-      bind,
-      subcomponents,
-      accessibilityRequirements,
-    }),
-  ),
+  format:
+    "props map each name to its type, or to a numeric ID resolved through types. sharedProps map space-separated names to one type and apply to every component unless blocked; other standard HTML, SVG and aria-* attributes, low-level *Props objects, attributes and unstyled are omitted. Dotted names also accept their flat alias (Tabs.Tab = TabsTab).",
+  types: Object.fromEntries(assistantReferenceTypes),
+  registeredNames: [...enabledComponentNames].filter((name) => !flatComponentAliases.has(name)),
+  sharedProps: assistantSharedProps,
+  components: assistantComponents,
 });
 
 export const CUSTOM_WIDGET_SKILLS_SH_URL = "https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
-  "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
+export { CUSTOM_WIDGET_SKILL_SOURCE_URL } from "./ai-prompt";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_VERSION = "2.10.9";
@@ -112,100 +172,93 @@ export function getCustomWidgetContextRequestKey(toolName: string, input: unknow
 export const CUSTOM_WIDGET_SKILL_REFERENCES = {
   "references/schema.md": `# Schema
 
-\`\`\`ts
-interface HomarrCustomWidgetV2 {
-  $schema: "${CUSTOM_WIDGET_SCHEMA}";
-  name: string;
-  description?: string;
-  iconUrl?: string;
-  sources: Record<string, CustomWidgetSource>;
-  requests: Record<string, CustomWidgetRequest>;
-  options?: Record<string, CustomWidgetOption>;
-  template: string;
-}
-\`\`\`
-
-Key \`default\` is the required source ID, not a source property. Fields: \`name?\`, \`baseUrl\`, \`auth?\`:
+Import requires \`$schema\`, \`name\`, keyed \`sources\`/\`requests\`, and one JSX \`template\` string.
+Optional: \`description\`, valid URL \`iconUrl\`, keyed \`options\`. Key \`default\` is required in sources, not a source property.
 
 \`\`\`json
 {
-  "sources": {
-    "default": {
-      "name": "Service",
-      "baseUrl": "http://service.local:5055/api/v1",
-      "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
-    }
-  },
-  "requests": {
-    "summary": { "path": "/summary" },
-    "search": { "trigger": "manual", "path": "/search", "query": { "q": { "$param": "query" } } },
-    "create": {
-      "kind": "action",
-      "method": "POST",
-      "path": "/items",
-      "body": { "id": { "$param": "id" } },
-      "confirmation": "Create this item?",
-      "invalidates": ["search"]
-    }
-  }
+  "$schema": "${CUSTOM_WIDGET_SCHEMA}",
+  "name": "Service summary",
+  "sources": { "default": { "baseUrl": "https://your-service.example.com/api", "auth": "bearer" } },
+  "requests": { "summary": { "path": "/summary", "trigger": "load" } },
+  "template": "<Text>{data.summary?.title}</Text>"
 }
 \`\`\`
 
-Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit \`integrationId\`.
+Saved sources use \`{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}\`; paths append to its URL and exports omit \`integrationId\`.
 
-Auth is \`none\`, \`bearer\`, \`basic\`, \`apiKeyHeader\`, \`apiKeyQuery\`, or \`headers\`. Requests default to source \`default\`, query/GET/load, inherited auth, and view permission. Use \`load\` for initial/current display and \`manual\` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+HTTP sources have optional \`name\`, required \`baseUrl\`, and credential-free \`auth\` forms:
+\`"none"\`, \`"bearer"\`, \`"basic"\`, \`{"type":"apiKeyHeader","name":"X-Api-Key"}\`,
+\`{"type":"apiKeyQuery","name":"api_key"}\`, or \`{"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"}]}\`.
+\`{"type":"none"}\` is invalid. Headers auth sends up to 8 encrypted headers: unique names, distinct slots of at most
+57 characters; renaming either needs reconfiguration. Use \`bearer\` for Authorization; routing/proxy/cookie/hop-by-hop headers
+are reserved. Configure values only in Homarr's secure credential UI, never chat or definitions.
 
-For multiple secret headers, use \`auth: {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}\`. Up to 8 HTTP-token names are allowed, unique ignoring case, with distinct stable slot IDs of at most 57 characters. Homarr configures each slot separately and stores its value encrypted; the manifest contains only names and slots. Header name or slot changes require credential configuration again. Use \`bearer\` for Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
+Requests default to source \`default\`, query/GET/load, inherited auth and view permission. Use \`load\` for initial/current
+display and \`manual\` for explicit interactions or invocation params. Actions default to modify permission.
+${CUSTOM_WIDGET_REQUEST_KIND_GUIDANCE}
 
-JSON responses become their decoded value. Responses with \`application/x-ndjson\` become an array with one decoded object per non-empty line.
+JSON responses become their decoded value; \`application/x-ndjson\` becomes an array of decoded lines. Use real public
+API URLs and clear self-hosted placeholders; Homarr collects URL and credentials outside the manifest.
 
-Use real public API URLs and clear self-hosted placeholders. Homarr collects URL and credentials outside the manifest.
+Paths start with \`/\`; use \`{option:name}\`/\`{param:name}\` in paths and \`{"$option":"name"}\`/\`{"$param":"name"}\` in query/body.
+\`$param\` is manual-only; \`$option\` may drive loads. Path/query values are primitive. Actions use \`kind:"action"\`,
+\`trigger:"manual"\`, method/body, permission, confirmation, and \`invalidates\` request IDs; never invent mutation endpoints.
 
-Paths use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`. \`$param\` is manual-only; \`$option\` may drive loads. Constants stay primitive.
-
-Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
+Options: required \`label\`/\`control\`/\`default\`; optional \`description\`/\`choices\`/\`choicesFrom\`/\`min\`/\`max\`/\`step\`/\`advanced\`/\`group\`.
+Controls: \`text\`, \`textarea\`, \`number\`, \`switch\`, \`select\`, \`multiSelect\`, \`slider\`, \`date\`, \`time\`, \`color\`, \`icon\`, \`url\`,
+\`duration\`, \`timeZone\`, \`json\`. \`choices\`/\`choicesFrom\` need \`select\` or \`multiSelect\`.
 `,
   "references/runtime.md": `# Runtime
 
-Load-query templates read \`data.requestId\` and \`status.requestId\`, plus \`options.name\` and temporary \`inputs.name\`. Manual \`SubFetch\` results stay local to that instance and never populate \`data\`/\`status\`; render them in its child callback. Status is \`{ loading, ok, status, statusText, error }\`. Render load queries directly from \`data\` and \`status\` with \`RefreshButton\`; never wrap them in \`SubFetch\`.
+Load q with body B gives \`data.q === B\`; \`q=events\`/\`B={"events":[...]}\` gives \`data.events.events\`.
+Keep sibling states independent, guard optional arrays/nesting, and handle loading/error/empty/success.
+Status is \`{ loading, ok, status, statusText, error }\`; \`status.q?.ok === false\` means error.
+One RefreshButton per load stays outside its branches; \`requestId\`, never \`request\`. Omit it to refresh all loads.
 
-\`bind\` is temporary; manual request values go in \`params\` and map to \`$param\`:
-
-\`\`\`jsx
-<TextInput bind="search" label="Search" />
-<NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.search} min={1} />
-<SubFetch requestId="search" trigger="manual" params={{ query: inputs.search ?? "", page: inputs.page ?? 1 }}>
-  {(result) => <Stack>{(result.results ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
-</SubFetch>
-\`\`\`
-
-Manual queries require \`trigger: "manual"\` on request and \`SubFetch\`; otherwise they run automatically. \`triggerContent\` with \`triggerAriaLabel\` makes custom content the launcher; it is already wrapped in a button, so use non-interactive content such as Text or Card, never Button, Anchor, or form controls inside it. \`SubFetch\` owns loading/error/retry; its child receives success plus \`{ ok, status, statusText, loading: false }\`. Never author \`onClick\` or fetch callbacks.
-
-\`SubFetch\`, \`ActionButton\`, and \`ToggleSwitch\` need literal \`requestId\`; validation rejects missing/computed IDs.
-
-After an explicit \`ActionButton\` or \`ToggleSwitch\` invocation, its response is published as \`data.requestId\` and \`status.requestId\` in that widget instance. Guard the initial state before any action has run. This local response is not persisted across reloads; actions never execute automatically.
-
-Inside a successful manual result, \`<RefreshButton requestId="search" label="Run again" />\` reruns the same parameters.
-
-SubFetch/ActionButton params must contain exactly the names referenced by $param or {param:name} in that request. Fixed query values such as limit or fields belong in requests.<id>.query, not params. Test using the same parameter names the JSX will supply; do not fix only the test call while leaving mismatched JSX.
-When a manual SubFetch ID, params, or definition changes, Homarr hides the prior result and returns to the trigger; new params fetch only after triggering again.
-
-Exact paths: load request ID \`q\` with raw preview body \`B\` -> \`data.q === B\`. \`q=events\` body\`{"events":[...]}\` -> \`data.events.events\`; do not flatten repeated keys. Manual \`SubFetch\` receives \`B\` as result -> \`result.events\`. Before persistence inspect core paths against preview; revise JSX and retest if mismatched
-
-Format timestamps with safe static helpers; never use \`new Date\`. Never invent a formatter component. Use \`Date.toLocaleString(value, "en-US", documentedTimezone)\` and label the documented timezone; if no timezone is documented, preserve the source value or omit any timezone label; use UTC only when the response contract says UTC. For countdowns, \`Date.getTime(isoTimestamp) - Date.now()\` gives milliseconds; \`Date.parse\` is unavailable. Also available: \`Date.toISOString\`, \`Date.toLocaleDateString\`, and \`Date.toLocaleTimeString\`.
-
-For compact numeric enums, index a literal label array with a fallback:
+Options are installation config (\`options.name\`). Temporary controls use literal \`bind\`, defaults and \`inputs.name\`:
 
 \`\`\`jsx
-<Text>{["Unknown", "Pending", "Ready"][(item.status ?? 1) - 1] ?? "Unknown"}</Text>
+<Stack>
+  <TextInput bind="search" label="Search" defaultValue="" />
+  <NumberInput bind="page" label="Page" defaultValue={1} resetKey={inputs.search} min={1} />
+  <SubFetch requestId="search" trigger="manual" params={{ query: inputs.search ?? "", page: inputs.page ?? 1 }}>
+    {(result) => (
+      <Stack>
+        {(result.results ?? []).map((item) => (
+          <Text key={item.id}>{item.name}</Text>
+        ))}
+      </Stack>
+    )}
+  </SubFetch>
+</Stack>
 \`\`\`
 
-Request-bound controls use literal \`bind\` plus a default (\`defaultChecked\` for Switch/Checkbox); pass \`inputs.<name>\` through manual \`SubFetch params\` to matching \`$param\`. Options are installation config via \`options.name\`, never \`inputs\`; dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Remove dead controls.
+Manual queries set trigger manual on request and SubFetch. Their body stays local to the child \`(result, meta)\`, never global
+data/status. SubFetch owns loading/error/retry; meta has ok/status/statusText/loading=false. When ID, params or definition
+changes, the previous result hides until triggered again. RefreshButton inside success reruns captured params.
+SubFetch/ActionButton/ToggleSwitch require literal requestId. triggerContent/triggerAriaLabel is already a button: use
+non-interactive content. Actions run explicitly, publish local data/status until reload, and retain confirmation/permissions/invalidates.
 
-Callback parameters must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`. Use registered component names returned by discovery; \`Icon\` is an accepted alias for canonical \`TablerIcon\`. Never invent components such as \`<IconFoo />\`.
+Params match exactly the request's $param/{param:name}: string/number/boolean, never undefined/null.
+Fixed values belong in query/body. Omitted optional values need verified request variants; empty strings need API support.
+Validate nonblank optional inputs, show field errors and block invalid requests. Every control changes a request/selection.
+Switch/Checkbox use defaultChecked; dependent pagination uses defaultValue={1}/resetKey={inputs.query}.
 
-Use expression callbacks for supported collections and trusted slots. No callback blocks, IIFEs, authored recursion, or raw events. Regex is limited to safe string operations.
+Safe Date: toISOString/toLocaleString/toLocaleDateString/toLocaleTimeString/getTime/now. Guard timestamps; pass
+Date.toLocaleString(value, "en-US", documentedTimezone), otherwise omit timezone argument/label. UTC requires a UTC contract.
+Countdown milliseconds: Date.getTime(isoTimestamp) - Date.now(). No constructors, Date.parse or Intl.
+Numbers support \`n.toLocaleString("en-US", { maximumFractionDigits: 1, notation: "compact" })\`, percent/currency/unit/signDisplay.
+Guard scalar types and finite numbers, preserve 0/false, and use — for missing values. Convert numbers before relabeling units.
+Map cross-collection IDs to verified names or retain IDs. Follow documented rate semantics.
 
+Keep requested fields/collections reachable through summaries, tables/details, filters, pagination or a bounded ScrollArea; never silently slice rows.
+Label partial results/totals and verify pagination. Bounded response observations are not full schemas.
+
+${CUSTOM_WIDGET_COMMON_CHART_GUIDANCE}
+
+Use registered names, Icon/TablerIcon with installed kebab-case names, concise expression callbacks and bounded regex.
+Callback parameters cannot shadow data/status/options/inputs. Never invent IconFoo components or raw browser callbacks.
 `,
   "references/security.md": `# Security
 
@@ -219,84 +272,89 @@ Credentials are stored separately and never exported or returned to an agent. A 
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, repair, preview, install, or configure Homarr Custom JSX v2 widgets through tools or an importable definition.
 ---
 
 # Homarr Custom Widget
 
-Author requested widgets with release context; validate, test, persist, and return artifacts.
+Reuse verified samples and shipped examples. Research missing contracts; keep credentials in Homarr.
 
-- Read primary API docs when missing/changed. Samples and successful previews are binding; load only needed schema, runtime,
-  security, or component context.
-- Batch unknown component searches/details. \`contextAlreadyLoaded\` reuses context; \`phaseComplete\` advances. Stop only for
-  genuine provider/model, lifecycle-service, or workbench-closure failure.
-- Community widgets use \`customWidget_workshopSearch\`, \`customWidget_workshopGet\`, and
-  \`customWidget_workshopInstall\`; configure and persist.
+## Context
 
-Return one fenced \`json\` block with the complete definition; keep evidence prose outside it. The definition has keyed
-\`sources\`, \`requests\`, \`template\`, and optional \`options\`; actions are requests with \`kind: "action"\`.
+Reuse supplied context; load only missing references:
 
-- \`sources.default\` is required. HTTP has \`baseUrl\` and credential-free \`auth\`. Saved sources use \`type: "integration"\`/\`integrationKind\`;
-  Homarr holds credentials.
-- Saved integrations: discover kinds/full-access entries with \`integration_getKinds\`/\`integration_all\`, bind \`integrationId\`
-  before preview, omit URL/auth, and keep non-GET requests as actions.
-- Paths are slash-prefixed: strings use \`{option:name}\`/\`{param:name}\`; query/body uses \`{"$option":"name"}\`/\`{"$param":"name"}\`.
-  Loads use \`trigger: "load"\`; manual helpers use \`trigger: "manual"\`.
-- Actions stay manual; preserve \`confirmation\`, \`permission\`, and \`invalidates\`; DELETE requires full permission/confirmation.
-  \`$param\` is manual-only; \`$option\` may drive loads.
-- Load data.requestId/status.requestId with RefreshButton; status.requestId?.ok === false is error. Manual SubFetch never
-  populates data/status; its child receives (result, metadata) and renders its fields.
-- Options have \`label\`, \`control\`, \`default\`; installation config is \`options.name\`, never \`inputs\`. Request-bound TextInput,
-  Select, NumberInput, Pagination use literal \`bind\` + default and manual \`SubFetch params\` map \`inputs.<name>\` to \`$param\`.
-  Dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Remove controls without an option/request/helper; guard arrays/nested with \`??\`;
-  preserve documented timezone values; use UTC only when the contract says UTC.
-- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use registered component names; \`Icon\` may alias \`TablerIcon\`. Keep hierarchy,
-  theme tokens, useful states, and narrow/wide layouts purposeful.
+- [schema](references/schema.md): new manifests, sources, requests, options, migration contracts.
+- [runtime](references/runtime.md): response paths, manual interactions, input bindings, safe formatters.
+- [security](references/security.md): auth, network access, mutations.
 
-## Bounded lifecycle
+Discover unknown names with \`customWidget_findComponents\`; batch details via \`customWidget_getComponents\`.
+Reuse \`contextAlreadyLoaded\`; advance on \`phaseComplete\`.
 
-1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
-   body, options, and behavior; omit unknown requests rather than guessing.
-2. Send the coherent complete definition directly to \`customWidget_previewCreate\`; it validates both manifest and JSX.
-   Use \`customWidget_validateTemplate\` only for isolated JSX diagnostics, never as a preview prerequisite. Use
-   \`customWidget_previewReviseTemplate\` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
-   JSX uses \`templateLines\` and preview creation receives the complete definition.
-3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
-   that field and retry \`customWidget_previewCreate\` with the corrected definition; use \`customWidget_previewReviseTemplate\`
-   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
-   workbench-closure failure.
-4. If \`previewCreate\` used \`definitionId\`, persist with \`customWidget_updateFromPreview\`; otherwise use
-   \`customWidget_createFromPreview\`. Follow create \`nextAction\` once. Configure credentials in Homarr; never repeat plaintext
-   secrets.
+## Working-app design
 
-## Delivery
+Use faithful numbers, rows or charts; no quotas. Preserve identities/units; unknown is not zero. Verify series, history,
+denominators and registered chart/helper props. Use quiet theme tokens, persistent options, accessible disclosure,
+reduced motion and keyboard/touch access. Keep facts visible; check hover and narrow/wide fit. Preserve repairs/migrations.
 
-Report actual lifecycle results. If unavailable, add one post-artifact \`Unverified:\` line naming missing validation, preview,
-renderer, or persistence. Never claim rendering/persistence from schema checks.
+https://impeccable.style/ and https://usehallmark.com/: design references, not API authority.
+
+## Author
+
+- Definition: \`$schema: "homarr-custom-widget-v2"\`, \`name\`, keyed \`sources\`/\`requests\`, one JSX \`template\`, optional \`options\`.
+  \`sources.default\` is always required, even static. HTTP: \`baseUrl\`, credential-free \`auth\`. Integrations:
+  \`type: "integration"\`/\`integrationKind\`; bind a matching full-access \`integrationId\` before preview.
+- Loads: \`data.requestId\`/\`status.requestId\`, RefreshButton, useful loading/error/empty/success states. Preserve envelopes;
+  guard nullable fields. Manual SubFetch renders its result in its child callback.
+- Config: \`options.name\`. Temporary controls: literal \`bind\`, default, \`inputs.name\` passed through manual request \`params\`.
+  Every control affects a request or visible selection.
+- JSX: one expression, registered names, concise callbacks, theme tokens, wrapping tiles. Imports, hooks, raw HTML/events,
+  browser requests, arbitrary functions, statements, IIFEs, and recursion are unavailable.
+
+## Preview and save
+
+1. Call \`customWidget_previewCreate\` with the complete candidate (validates manifest/JSX). Edits: \`definitionId\`;
+   multiline Assistant JSX: \`templateLines\`.
+2. Configure sources in Homarr. Test every returned query/simulated action once; batch independent reads. Match response
+   paths/params to JSX. Live mutations require an explicit request.
+3. Fix concrete diagnostics; preserve accepted behavior. Manifest changes: fresh \`previewCreate\`; JSX-only:
+   \`customWidget_previewReviseTemplate\` resets evidence. Retest.
+4. With a renderer, inspect screenshots and bounds at requested sizes. Repair clipping, overlap or unwanted scrolling
+   without hiding required content, then inspect again. Otherwise report visual verification missing.
+5. For edits, restore unrelated \`removedFromSaved\` losses. \`acknowledgedRemovals\` must match only user-requested removals;
+   this heuristic does not prove behavior was preserved. Save with \`customWidget_updateFromPreview\` (edit) or \`customWidget_createFromPreview\` (new).
+   Follow \`nextAction\` once; briefly report the actual saved result.
+
+\`customWidget_validateTemplate\`: isolated JSX diagnostics only, never a preview prerequisite. Stop unavailable or repeatedly
+stalled paths. Workshop: search/get/install, then configure sources. Schema checks prove neither rendering nor persistence.
+
+Without tools or on an artifact request: one complete fenced \`json\` definition plus one \`Unverified:\` line naming missing
+preview/renderer/persistence evidence. Successful saves need no duplicate manifest.
 `;
 
 const CUSTOM_WIDGET_SKILL_ENTRYPOINT_MD = `# Homarr Custom Widget authoring index
 
-Use current tools and primary docs. Create one validated preview, batch/test every query/action, then persist it. JSX-only fixes use
-\`customWidget_previewReviseTemplate\` with its session; it resets evidence.
-In the Assistant wrapper, multiline JSX goes to \`templateLines\`; \`previewCreate\` receives the complete definition.
+Choose faithful numbers, rows, or charts without quotas; discover task-needed registered props. Keep units/missingness honest.
+Use verified contracts and samples; reuse loaded context. Load schema for a new manifest, runtime for manual interactions or
+response paths, and security for auth/mutations. Resolve only unknown components through focused search and batched details.
 
-Deliver the smallest result while preserving migration intent, request shape, and visible behavior. On a concrete schema/preview
-error, fix only that field, then retry \`customWidget_previewCreate\` with the corrected definition. Use
-\`customWidget_validateTemplate\` only for focused JSX diagnostics, never as a preview prerequisite. Changes to sources/requests/options require fresh \`customWidget_previewCreate\`; JSX-only fixes use
-\`customWidget_previewReviseTemplate\`. \`contextAlreadyLoaded\` reuses earlier context and continues; \`phaseComplete\` advances.
-Only genuine provider/model, unavailable lifecycle service, or closed-workbench errors are terminal. If lifecycle tools are
-unavailable, return one importable definition and one unverified note.
+Send the complete definition directly to customWidget_previewCreate; it validates manifest and JSX. Use definitionId for an
+edit and templateLines for multiline Assistant tool input. Configure sources in Homarr, test every returned query and
+simulated action, then save the exact tested preview with updateFromPreview for edits or createFromPreview for new widgets.
+Manifest changes need a fresh preview; JSX-only fixes use previewReviseTemplate and reset evidence. validateTemplate is only
+for focused diagnostics. Batch reads; reuse contextAlreadyLoaded and advance on phaseComplete. Stop a failing path when
+repeated attempts make no progress. Use customWidget_getReference for named references.
 
-Binding: path strings use \`{option:name}\`/\`{param:name}\`; query/body objects use \`{"$option":"name"}\`/\`{"$param":"name"}\`;
-$param is manual-only and $option may drive loads. Request-bound TextInput, Select, NumberInput, and Pagination use literal
-\`bind\`, a default, and manual \`SubFetch params\` for matching \`$param\`; options are installation config via \`options.name\`.
-Dependent pagination uses \`defaultValue={1}\`/\`resetKey={inputs.query}\`. Fallbacks preserve source shape: HTTP keeps \`baseUrl\`,
-\`auth\`; integrations use \`type: "integration"\`, \`integrationKind\`, optional \`integrationId\`.
+Include sources.default, keyed requests, optional options, and one JSX template. Preserve source shape, request shape,
+response envelopes, and migration behavior. Keep credentials outside definitions. Every control affects a request or visible
+selection; render useful states in narrow tiles.
 
-Load \`schema\` once for a new manifest, \`runtime\` for manual interactions, and \`security\` for auth/mutations. Search once,
-prefer discovered components, keep credentials outside definitions, and make all states useful.`;
+Before saving, inspect screenshots and bounds at requested sizes, repair clipping/overlap and recheck; if no renderer,
+report visual verification missing. Restore unrelated removedFromSaved losses; acknowledgedRemovals must exactly match
+the user-requested keys. Report saved but unplaced until placement succeeds.
+
+After a tool save, report its actual result briefly. When tools are unavailable or an artifact is requested, return one
+complete fenced JSON definition and one Unverified: line naming missing evidence.
+`;
 
 const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
   CUSTOM_WIDGET_SKILL_MD.trimEnd(),

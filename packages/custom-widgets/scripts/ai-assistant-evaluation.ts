@@ -472,7 +472,11 @@ export const getActiveAssistantEvaluationToolDefinitions = (state: AssistantAtte
   const steps = state.toolCalls.map((toolCall) => ({
     toolResults: [{ toolName: toolCall.name, output: toolCall.output }],
   }));
-  const phaseToolNames = getCustomWidgetPhaseToolNames(availableNames, steps, {
+  const claimable = availableNames.filter((name) => {
+    const budget = customWidgetContextToolBudgets[name];
+    return budget === undefined || getContextToolCallsInCurrentPhase(state, name) < budget;
+  });
+  const phaseToolNames = getCustomWidgetPhaseToolNames(claimable, steps, {
     preferDirectPreview: true,
     ...(state.preferredExampleId === null ? {} : { preferredExampleId: state.preferredExampleId }),
   });
@@ -510,6 +514,8 @@ const getContextToolCallsInCurrentPhase = (state: AssistantAttemptState, toolNam
   const lastPhaseBoundaryIndex = state.toolCalls.findLastIndex(
     (toolCall) =>
       toolCall.name === "customWidget_validateTemplate" ||
+      toolCall.name === "customWidget_previewCreate" ||
+      toolCall.name === "customWidget_previewReviseTemplate" ||
       toolCall.name === "customWidget_createFromPreview" ||
       toolCall.name === "customWidget_updateFromPreview",
   );
@@ -781,6 +787,8 @@ const executeAssistantEvaluationToolCore = (
       success: true,
       previewSession: { id, revision: 0 },
       previewPath: `/manage/custom-widgets/preview/${id}`,
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       ...getAssistantEvaluationPreviewChecklist(parsed.widget),
     };
   }
@@ -827,6 +835,8 @@ const executeAssistantEvaluationToolCore = (
       evidenceReset: true,
       previewSession: { id: sessionId, revision: preview.revision },
       previewPath: `/manage/custom-widgets/preview/${sessionId}`,
+      persistenceTool: "customWidget_createFromPreview",
+      sourceConfigurations: [],
       ...getAssistantEvaluationPreviewChecklist(preview.widget),
     };
   }

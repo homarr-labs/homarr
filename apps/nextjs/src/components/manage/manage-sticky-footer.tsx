@@ -14,7 +14,6 @@ export interface ManageStickyFooterProps {
  */
 export const ManageStickyFooter = ({ secondary, children }: ManageStickyFooterProps) => (
   <Paper
-    withBorder
     shadow="md"
     radius="md"
     p="sm"

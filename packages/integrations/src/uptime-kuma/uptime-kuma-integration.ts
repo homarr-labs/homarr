@@ -5,6 +5,8 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import {
   toUptimeKumaMonitorStatus,
   uptimeKumaHeartbeatResponseSchema,
@@ -31,7 +33,44 @@ type StatusPageMonitor = UptimeKumaStatusPageResponse["publicGroupList"][number]
 type StatusPageIncident = NonNullable<UptimeKumaStatusPageResponse["incident"]>;
 type RawHeartbeat = UptimeKumaHeartbeatResponse["heartbeatList"][string][number];
 
-export class UptimeKumaIntegration extends Integration {
+export class UptimeKumaIntegration extends Integration implements INotificationsIntegration {
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const statusPage = await this.getStatusPageAsync();
+    const notifications = statusPage.incidents.flatMap((incident): Notification[] => {
+      const time = incident.updatedAt ?? incident.createdAt;
+      if (time === null) return [];
+      return [
+        {
+          id: `incident-${incident.id}`,
+          time: new Date(time),
+          title: incident.title || statusPage.title,
+          body: incident.content ?? "",
+          contentType: "text/markdown",
+          href: statusPage.url,
+        },
+      ];
+    });
+
+    const monitors = uniqueById(statusPage.groups.flatMap((group) => group.monitors));
+    for (const monitor of monitors) {
+      if (monitor.status !== "down" && monitor.status !== "pending") continue;
+      const time = monitor.statusSince ?? monitor.heartbeats.at(0)?.time;
+      if (time === undefined) continue;
+      let body = "The service is down.";
+      if (monitor.status === "pending") body = "The service is pending confirmation of an outage.";
+      notifications.push({
+        id: `monitor-${monitor.id}-${monitor.status}`,
+        time: new Date(time),
+        title: monitor.name,
+        body,
+        href: statusPage.url,
+        source: { name: statusPage.title },
+      });
+    }
+
+    return notifications;
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const statusPageResponse = await input.fetchAsync(this.statusPageApiUrl());
     if (!statusPageResponse.ok) {

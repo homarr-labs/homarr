@@ -84,23 +84,26 @@ function clearAuthFailures(ip: string | null) {
   authFailures.delete(ip ?? "unknown");
 }
 
-const getVisibleTools = (tools: McpTool[], isAdmin: boolean) => {
-  if (isAdmin) return tools;
-  return tools.filter((tool) => !tool.name.startsWith("customWidget_"));
+const getVisibleTools = (tools: McpTool[], isAdmin: boolean, readOnly: boolean) => {
+  return tools.filter((tool) => {
+    if (!isAdmin && tool.name.startsWith("customWidget_")) return false;
+    return !readOnly || tool.annotations?.readOnlyHint === true;
+  });
 };
 
 function registerCustomWidgetAuthoring(server: McpServer) {
   server.registerPrompt(
     "homarr-custom-widget-author",
     {
-      description: "Author and iterate on one or more Homarr Custom JSX v2 widgets.",
+      description:
+        "Author and iterate on Homarr Custom JSX v2 widgets through external MCP tools, loading the skill and needed named references.",
       argsSchema: z.object({
         request: z.string().optional().describe("The widget the user wants."),
         documentationUrl: z.string().optional().describe("External API documentation URL."),
       }),
     },
     ({ request, documentationUrl }) => ({
-      description: "Current Homarr Custom Widget authoring workflow.",
+      description: "External MCP Custom Widget workflow; reference bodies must be loaded separately.",
       messages: [
         {
           role: "user" as const,
@@ -230,11 +233,11 @@ const SERVER_INSTRUCTIONS = `You are connected to Homarr, a self-hosted homelab 
 
 Integrations connect Homarr to services, boards contain widgets, and apps are visual links. Discover an integration before passing its integrationId to another tool. Returned permissions are authoritative: use access permits reads, interact access permits service actions, and full access permits configuration changes. Explain denied or unavailable access without suggesting a bypass.
 
-Read current state when it matters, reuse results across a batch, and complete the requested work before summarizing. Load optional resources only when the task needs them. For Custom JSX authoring, start with the compact Custom Widget skill resource or prompt, then fetch only the live schema and named references or component documentation required by the design.`;
+Read current state when it matters, reuse results across a batch, and complete the requested work before summarizing. Load optional resources only when the task needs them. For Custom JSX authoring, start with customWidget_getSkill or homarr://custom-widgets/skill; the authoring prompt does not bundle reference bodies. Load needed schema/runtime/security references through customWidget_getReference or homarr://custom-widgets/references/<name>, and fetch live JSON Schema or component documentation only as needed. A saved Custom Widget is unplaced until a placement tool or the Homarr board editor actually adds it; do not assume client-only tools are available.`;
 
 function extractApiKeyValue(req: NextRequest): string | null {
   const apiKeyHeader = req.headers.get(API_KEY_HEADER_NAME);
-  if (apiKeyHeader) return apiKeyHeader;
+  if (apiKeyHeader !== null) return apiKeyHeader;
 
   const authHeader = req.headers.get("Authorization");
   if (authHeader?.startsWith("Bearer ")) return authHeader.slice(7);
@@ -252,7 +255,7 @@ function jsonErrorResponse(status: number, body: Record<string, string>, extraHe
 const getOAuthChallenge = (req: NextRequest) => {
   const baseUrl = getMcpBaseUrl(req.headers);
   const resourcePath = removeTrailingSlash(new URL(req.url).pathname);
-  return `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}"`;
+  return `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}", scope="mcp:tools:read"`;
 };
 
 export const handleMcpRequest = async (req: NextRequest) => {
@@ -317,11 +320,17 @@ export const handleMcpRequest = async (req: NextRequest) => {
   const ctx = createTRPCContext({ session, headers: req.headers });
   const caller = mcpRouter.createCaller(ctx);
   const isAdmin = session.user.permissions.includes("admin");
+  const readOnly = session.apiKey?.readOnly ?? false;
+  let instructions = SERVER_INSTRUCTIONS;
+  if (readOnly) {
+    instructions +=
+      "\n\nThis credential is read-only. Write operations and arbitrary upstream requests are unavailable.";
+  }
   const protocolHandler = createMcpProtocolHandler({
     caller,
-    tools: getVisibleTools(extractMcpTools(), isAdmin),
+    tools: getVisibleTools(extractMcpTools(), isAdmin, readOnly),
     version: getPackageVersion(),
-    instructions: SERVER_INSTRUCTIONS,
+    instructions,
     configureServer: isAdmin ? registerCustomWidgetAuthoring : undefined,
     formatToolError: sanitizeErrorMessage,
     onToolError: (tool, error) => {
@@ -339,8 +348,8 @@ export const handleMcpRequest = async (req: NextRequest) => {
   return protocolHandler.fetch(req, {
     authInfo: {
       token: apiKeyValue,
-      clientId: session.user.id,
-      scopes: ["mcp:tools"],
+      clientId: session.apiKey?.oauthClientId ?? session.user.id,
+      scopes: [readOnly ? "mcp:tools:read" : "mcp:tools"],
     },
   });
 };

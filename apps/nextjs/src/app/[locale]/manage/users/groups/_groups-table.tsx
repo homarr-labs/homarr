@@ -21,7 +21,6 @@ import {
   Anchor,
   Box,
   Button,
-  Card,
   Flex,
   Group,
   Table,
@@ -30,8 +29,6 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
-  Transition,
 } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
 
@@ -41,6 +38,8 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatarGroup } from "@homarr/ui";
+
+import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 
 interface GroupsTableProps {
   initialGroupIds: string[];
@@ -152,12 +151,14 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
           )}
         </DragOverlay>
       </DndContext>
-      <SaveAffix
-        visible={isDirty}
-        onDiscard={() => setGroupIds(initialGroupIds)}
-        isPending={isPending}
-        onSave={handleSavePositionsAsync}
-      />
+      <UnsavedChangesBar visible={isDirty}>
+        <Button disabled={isPending} onClick={() => setGroupIds(initialGroupIds)}>
+          {tCommon("action.discard")}
+        </Button>
+        <Button loading={isPending} onClick={handleSavePositionsAsync}>
+          {tCommon("action.saveChanges")}
+        </Button>
+      </UnsavedChangesBar>
     </>
   );
 };
@@ -244,38 +245,5 @@ const DragHandle = ({ attributes, listeners, active, disabled }: DragHandleProps
     >
       <IconGripVertical size={18} stroke={1.5} />
     </Flex>
-  );
-};
-
-interface SaveAffixProps {
-  visible: boolean;
-  isPending: boolean;
-  onDiscard: () => void;
-  onSave: () => void;
-}
-
-const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) => {
-  const tCommon = useI18n("common");
-
-  return (
-    <div style={{ position: "sticky", bottom: 20 }}>
-      <Transition transition="slide-up" mounted={visible}>
-        {(transitionStyles) => (
-          <Card style={transitionStyles}>
-            <Group justify="space-between">
-              <Text fw={500}>{tCommon("unsavedChanges")}</Text>
-              <Group>
-                <Button disabled={isPending} onClick={onDiscard}>
-                  {tCommon("action.discard")}
-                </Button>
-                <Button loading={isPending} onClick={onSave}>
-                  {tCommon("action.saveChanges")}
-                </Button>
-              </Group>
-            </Group>
-          </Card>
-        )}
-      </Transition>
-    </div>
   );
 };

@@ -7,14 +7,11 @@ import {
   Badge,
   Box,
   Button,
-  ColorInput,
   CopyButton,
   Group,
-  InputWrapper,
   Select,
   SimpleGrid,
   Skeleton,
-  Slider,
   Stack,
   Switch,
   Tabs,
@@ -40,6 +37,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
+import { BoardAppearanceFields } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
@@ -292,14 +290,14 @@ const BoardSettingsForm = ({
                 <Group gap="xs">
                   <CopyButton value={form.values.customCss}>
                     {({ copied, copy }) => (
-                      <Tooltip label={copied ? t("copied") : t("copyCss")}>
+                      <Tooltip label={copied ? actionT("copied") : t("copyCss")}>
                         <Button
                           variant="subtle"
                           size="compact-sm"
                           leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
                           onClick={copy}
                         >
-                          {copied ? t("copied") : actionT("copy")}
+                          {copied ? actionT("copied") : actionT("copy")}
                         </Button>
                       </Tooltip>
                     )}
@@ -330,36 +328,7 @@ const BoardSettingsForm = ({
           </Tabs.Panel>
 
           <Tabs.Panel value="appearance" pt="md">
-            <Stack gap="md">
-              <SimpleGrid cols={{ base: 1, sm: 2 }}>
-                <ColorInput
-                  label={boardT("board.field.primaryColor.label")}
-                  format="hex"
-                  {...form.getInputProps("primaryColor")}
-                />
-                <ColorInput
-                  label={boardT("board.field.secondaryColor.label")}
-                  format="hex"
-                  {...form.getInputProps("secondaryColor")}
-                />
-                <ColorInput
-                  label={boardT("board.field.iconColor.label")}
-                  format="hex"
-                  {...form.getInputProps("iconColor")}
-                />
-                <Select
-                  label={boardT("board.field.itemRadius.label")}
-                  data={(["xs", "sm", "md", "lg", "xl"] as const).map((value) => ({
-                    value,
-                    label: boardT(`board.field.itemRadius.option.${value}`),
-                  }))}
-                  {...form.getInputProps("itemRadius")}
-                />
-              </SimpleGrid>
-              <InputWrapper label={boardT("board.field.opacity.label")}>
-                <Slider min={0} max={100} step={5} label={(value) => `${value}%`} {...form.getInputProps("opacity")} />
-              </InputWrapper>
-            </Stack>
+            <BoardAppearanceFields form={form} stacked />
           </Tabs.Panel>
 
           <Tabs.Panel value="background" pt="md">

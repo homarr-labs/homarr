@@ -1,17 +1,19 @@
 import { createId } from "@homarr/common";
+import { getBoardTabs } from "@homarr/boards/tabs";
 import { getRootSectionLane } from "@homarr/definitions";
 
-import type { Board, EmptySection, ItemLayout, Section } from "~/app/[locale]/boards/_types";
+import type { Board, ItemLayout, Section } from "~/app/[locale]/boards/_types";
 import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { getFirstEmptyPosition } from "./empty-position";
 import { getSectionElements } from "./section-elements";
 
 export interface DuplicateItemInput {
   itemId: string;
+  fallbackSectionId?: string;
 }
 
 export const duplicateItemCallback =
-  ({ itemId }: DuplicateItemInput) =>
+  ({ itemId, fallbackSectionId }: DuplicateItemInput) =>
   (previous: Board): Board => {
     const itemToDuplicate = previous.items.find((item) => item.id === itemId);
     if (!itemToDuplicate) return previous;
@@ -19,7 +21,7 @@ export const duplicateItemCallback =
     const clonedItem = structuredClone(itemToDuplicate);
     const clonedLayouts = clonedItem.layouts.map((layout) => ({
       ...layout,
-      ...getNextPosition(previous, layout),
+      ...getNextPosition(previous, layout, fallbackSectionId),
     }));
 
     return {
@@ -32,7 +34,11 @@ export const duplicateItemCallback =
     };
   };
 
-const getNextPosition = (board: Board, layout: ItemLayout): { xOffset: number; yOffset: number; sectionId: string } => {
+const getNextPosition = (
+  board: Board,
+  layout: ItemLayout,
+  fallbackSectionId: string | undefined,
+): { xOffset: number; yOffset: number; sectionId: string } => {
   const currentSection = board.sections.find((section) => section.id === layout.sectionId);
   if (currentSection) {
     const emptySectionPosition = getEmptySectionPosition(board, layout, currentSection);
@@ -44,12 +50,8 @@ const getNextPosition = (board: Board, layout: ItemLayout): { xOffset: number; y
     }
   }
 
-  const firstSection = board.sections
-    .filter(
-      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-    )
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-    .at(0);
+  const tabs = getBoardTabs(board);
+  const firstSection = tabs.find((tab) => tab.id === fallbackSectionId) ?? tabs.at(0);
 
   if (!firstSection) {
     throw new Error("Your board is full. reason='no first section'");

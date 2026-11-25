@@ -16,6 +16,7 @@ afterEach(() => {
 describe("getProfileValueByPath", () => {
   const profile = {
     sub: "user-id",
+    "https://domain.com/roles": ["namespaced"],
     resource_access: {
       homarr: {
         roles: ["admins"],
@@ -25,6 +26,10 @@ describe("getProfileValueByPath", () => {
 
   test("returns a top-level claim", () => {
     expect(getProfileValueByPath(profile, "sub")).toBe("user-id");
+  });
+
+  test("returns a namespaced claim whose name contains dots", () => {
+    expect(getProfileValueByPath(profile, "https://domain.com/roles")).toEqual(["namespaced"]);
   });
 
   test("returns a nested claim", () => {

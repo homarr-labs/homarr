@@ -168,7 +168,7 @@ interface SystemCardProps {
   tCommon: ReturnType<typeof useI18n<"common">>;
   size: SizeConfig;
   maxMetrics: number;
-  itemRadius: MantineSize;
+  itemRadius: MantineSize | "default";
   integrationName: string;
   isAdvanced: boolean;
   onClick?: () => void;
@@ -423,7 +423,7 @@ const SystemCard = ({
             label={t("metric.memoryTotal")}
             value={system.memoryTotal > 0 ? formatBytes(system.memoryTotal) : "—"}
           />
-          <SystemMetadata label={t("metric.source")} value={integrationName} />
+          <SystemMetadata label={tCommon("field.source")} value={integrationName} />
         </SimpleGrid>
       )}
 
@@ -534,7 +534,7 @@ export default function BeszelSystemGridWidget({
               tCommon={tCommon}
               size={size}
               maxMetrics={maxMetrics}
-              itemRadius={board.itemRadius}
+              itemRadius={board.itemRadius ?? "default"}
               integrationName={integrationName}
               isAdvanced={isAdvanced}
               onClick={handleClick}

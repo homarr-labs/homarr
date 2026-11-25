@@ -47,24 +47,46 @@ export const createDockerLogStreamProcessor = (
   onError: (err: Error) => void,
   maxMessageSize: number,
 ) => {
-  let buffer = Buffer.alloc(0);
+  let buffer: Buffer = Buffer.alloc(0);
+  let bufferSize = 0;
+  let cursor = 0;
 
   const processChunk = (chunk: Buffer) => {
-    buffer = Buffer.concat([buffer, chunk]);
+    if (bufferSize === 0) {
+      buffer = chunk;
+      bufferSize = chunk.length;
+    } else {
+      const pendingSize = bufferSize - cursor;
+      const requiredSize = pendingSize + chunk.length;
+      if (cursor > 0 || buffer.length < requiredSize) {
+        // Grow partial frames geometrically so fragmented messages copy each byte
+        // a bounded number of times. Complete frames use the input chunk directly.
+        const capacity = Math.max(
+          requiredSize,
+          Math.min(maxMessageSize + DOCKER_STREAM_HEADER_SIZE, buffer.length * 2),
+        );
+        const expanded = Buffer.allocUnsafe(capacity);
+        buffer.copy(expanded, 0, cursor, bufferSize);
+        buffer = expanded;
+      }
+      chunk.copy(buffer, pendingSize);
+      cursor = 0;
+      bufferSize = requiredSize;
+    }
 
-    while (buffer.length > 0) {
-      if (buffer.length < DOCKER_STREAM_HEADER_SIZE) {
+    while (cursor < bufferSize) {
+      if (bufferSize - cursor < DOCKER_STREAM_HEADER_SIZE) {
         break;
       }
 
-      const streamType = buffer.readUInt8(0);
+      const streamType = buffer.readUInt8(cursor);
       if (!DOCKER_STREAM_TYPES.has(streamType)) {
-        onData(buffer.toString("utf-8"));
-        buffer = Buffer.alloc(0);
+        onData(buffer.toString("utf-8", cursor, bufferSize));
+        cursor = bufferSize;
         break;
       }
 
-      const length = buffer.readUInt32BE(4);
+      const length = buffer.readUInt32BE(cursor + 4);
       if (length > maxMessageSize) {
         onError(
           new Error(`Docker log message size (${length} bytes) exceeds maximum allowed (${maxMessageSize} bytes)`),
@@ -72,14 +94,20 @@ export const createDockerLogStreamProcessor = (
         return false;
       }
 
-      const fullMessageSize = DOCKER_STREAM_HEADER_SIZE + length;
-      if (buffer.length < fullMessageSize) {
+      const start = cursor + DOCKER_STREAM_HEADER_SIZE;
+      const end = start + length;
+      if (bufferSize < end) {
         break;
       }
 
-      const payload = buffer.subarray(DOCKER_STREAM_HEADER_SIZE, fullMessageSize);
-      onData(payload.toString("utf-8"));
-      buffer = buffer.subarray(fullMessageSize);
+      onData(buffer.toString("utf-8", start, end));
+      cursor = end;
+    }
+
+    if (cursor === bufferSize) {
+      buffer = Buffer.alloc(0);
+      bufferSize = 0;
+      cursor = 0;
     }
 
     return true;
