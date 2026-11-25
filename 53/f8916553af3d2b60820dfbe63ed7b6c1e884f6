@@ -1,0 +1,158 @@
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 35-37,39,41,46,66-67,140
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 12,54-61
+packages/api/src/router/widgets/media-server.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 25,33
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 38,62-64
+packages/validation/src/shared.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 6-8,101
+packages/widgets/src/downloads/component.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 60-61,63,77,333-334,432-454,805
+  s_560cd7a81b1b64::t_24639a2c55f26f 806
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 40,503,549-556,561-562
+apps/nextjs/src/components/board/sections/container/lazy-container-edit-modal.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-67
+packages/widgets/src/media-requests/list/component.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 3,9,13,21,26-28,34,54-77
+packages/translation/src/lang/en.json
+  s_560cd7a81b1b64::t_53cddf801226a6 2408-2494,2559,2570-2571
+packages/validation/src/smart-container.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-164
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 241-242
+apps/nextjs/src/components/board/sections/container/container-state-editor.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-370
+packages/boards/src/updater.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 9,46-48
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 142-145,450-458,460-467,469
+packages/validation/src/board.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 16,153-184,215-219,225
+packages/api/src/router/widgets/media-requests.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 24,42-44,48-49,81-85
+packages/request-handler/src/media-request-list.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 4,44
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 75-80
+packages/integrations/src/plex/plex-integration.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 168-171
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 28,48-49,72-75,212-214,218
+apps/nextjs/src/components/board/sections/content.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-7,48-52,54-61,66-96,115-122,129
+packages/boards/src/layout-data.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 80-81
+packages/widgets/src/downloads/activity.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-29
+apps/docs/public/api/open-api-schema.json
+  s_560cd7a81b1b64::t_53cddf801226a6 2805-2913,3063-3171,3513,3632-3650
+  s_560cd7a81b1b64::t_c11438e19b4903 3651-3652
+packages/widgets/src/media-server/activity.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-26
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-433
+packages/widgets/src/media-requests/list/activity.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-15
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.module.css
+  s_560cd7a81b1b64::t_53cddf801226a6 1-175
+apps/nextjs/src/components/board/sections/smart-container/smart-container-layout.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-119
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 14,26,28,37
+packages/widgets/src/common/query-state.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 12-17,20-21
+packages/widgets/src/errors/component.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 21-22,27,43,59
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 3-5,7-10,12,14-16,18,20-23,25-38,41-42,46-85,91-97,103-206,208-392,394-398,400-441,446-476,478-483
+packages/boards/package.json
+  s_560cd7a81b1b64::t_53cddf801226a6 36
+packages/request-handler/src/lib/request-handler.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 261-263
+apps/nextjs/src/components/board/sections/grid/container-grid-sizing.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 101,135-137
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 7,22,24,38,76,83,367-373,386,390,410,467-468,504-523,536,539,543,545,549-561,563-603,605,607-644
+packages/widgets/src/_inputs/widget-app-input.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 3,18,33-34
+packages/widgets/src/media-server/component.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 43-44,47,50,176,189-209,288-289
+  s_560cd7a81b1b64::t_d3da3206144132 290
+packages/definitions/src/widget.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 73-74
+packages/api/src/router/board.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 2,68,71-75,80-87,162-166,552,883,885,891-898,1240,1326,1614,1749,1754-1763,1789,1791-1814,1821-1841,1849,1881-1882,1886-1896,1899,1937-1938,1943-1963,1973,1981-1988,2041-2060,2070,2105-2106,2111-2124,2165-2166,2172-2191,2201,2210-2220,2433,2439,2476,2483-2491,2494-2543,2545-2549,2553,2559,2576,2590,2594,2596-2635,2674-2675,2705,2716,3348,3373-3374
+apps/nextjs/src/components/board/sections/container/container-editor.module.css
+  s_560cd7a81b1b64::t_53cddf801226a6 1-69
+packages/widgets/src/modals/widget-edit-modal.module.css
+  s_560cd7a81b1b64::t_53cddf801226a6 175-178
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 51-52,89-92,126-127,186,217-229,244-254,256,270-272,283-284,286-289,291,317-333,336,345-346,372-376,390-393
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 26-32,143
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 62,68-73,122-123,166-168,190-203,220,358,366-377,445,453-464,481-487,567,597,680,693-699,752-756,778-779,791-797
+apps/nextjs/src/components/board/sections/smart-container/smart-container-editor-preview.module.css
+  s_560cd7a81b1b64::t_53cddf801226a6 1-14
+apps/nextjs/src/components/board/sections/smart-container/constants.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-6
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_560cd7a81b1b64::t_53cddf801226a6 127-131
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 2,21,50,67,76,116,137,189,242,250-258,265-269,274-277
+  s_560cd7a81b1b64::t_2a58cc65c9da7d 278
+apps/nextjs/src/components/board/sections/smart-container/use-smart-container-runtime.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-215
+GLOSSARY.md
+  s_560cd7a81b1b64::t_53cddf801226a6 26-33
+packages/widgets/src/activity.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-138
+packages/widgets/src/modals/widget-edit-workspace.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-17
+apps/nextjs/src/components/board/sections/smart-container/smart-container-layout.spec.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-37
+apps/nextjs/src/components/board/sections/smart-container/smart-container-editor-preview.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-153
+apps/nextjs/src/components/board/sections/container/container-option-fields.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-252
+packages/api/src/router/test/board.spec.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 28,1414
+packages/widgets/package.json
+  s_560cd7a81b1b64::t_53cddf801226a6 23,35
+apps/nextjs/src/components/assistant/assistant-tool-contracts.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 96
+apps/nextjs/src/components/board/sections/container/container-editor-draft.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-150
+apps/nextjs/src/components/board/sections/smart-container/smart-container-selection.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 1-57
+packages/widgets/src/_inputs/form.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 4,9
+packages/widgets/src/media-server/index.ts
+  s_560cd7a81b1b64::t_53cddf801226a6 9,34
+apps/nextjs/src/components/board/sections/smart-container/smart-container-context.tsx
+  s_560cd7a81b1b64::t_53cddf801226a6 1-57
+apps/docs/docs/management/boards/index.mdx
+  s_560cd7a81b1b64::t_53cddf801226a6 61-74,95-96
+  s_560cd7a81b1b64::t_4a454c80603676 97
+bun.lock
+  s_560cd7a81b1b64::t_95ed998eaeacca 381
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53f8916553af3d2b60820dfbe63ed7b6c1e884f6",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
