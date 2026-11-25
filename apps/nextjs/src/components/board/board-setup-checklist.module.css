@@ -15,15 +15,3 @@
 .step[data-complete] {
   background: light-dark(var(--mantine-color-green-0), rgba(47, 158, 68, 0.1));
 }
-
-@media (max-width: 48em) {
-  .root {
-    position: static;
-    max-width: none;
-    padding: 0.5rem;
-  }
-
-  .panel {
-    width: 100%;
-  }
-}
