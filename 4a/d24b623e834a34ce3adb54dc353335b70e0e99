@@ -1,0 +1,66 @@
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_cd067dc346cd77::t_7860e59a68e168 990-1018
+  s_cd067dc346cd77::t_5bd0d649a2328c 912,924-927
+  s_cd067dc346cd77::t_db341291f9d494 921-923
+  s_dd846147ac2aa0::t_95eef65c6a91e4 928
+packages/api/src/router/integration/integration-router.ts
+  s_cd067dc346cd77::t_883e8d64d87850 442-455,460,462,466-467,469,471-480,482-483,491-492,495-504,507,510-511,520-521,526-529
+  s_cd067dc346cd77::t_5bd0d649a2328c 397-406,411
+  s_cd067dc346cd77::t_7860e59a68e168 11,456-459,461,481,508-509
+  s_cd067dc346cd77::t_d96666f2b855f9 463-465,484-490,493-494,505-506,512-519,522-525
+packages/api/src/router/board.ts
+  s_cd067dc346cd77::t_a4dbf19b0cf8d6 1392-1396,1398-1418,1420-1422
+  s_cd067dc346cd77::t_c934f30f837b5e 1581-1586
+  s_cd067dc346cd77::t_6f31581b1c446a 1345
+  s_cd067dc346cd77::t_db341291f9d494 2600-2620,2622-2689,2691,2819-2820
+  s_cd067dc346cd77::t_2865a80812db8d 1371-1372
+  s_cd067dc346cd77::t_bb7f266bf6bc76 2451-2459,2466,2785-2786,2813-2818,2821-2823
+  s_cd067dc346cd77::t_d8044e9aeeb988 2824-2825
+packages/api/src/trpc.ts
+  s_cd067dc346cd77::t_745124c7e3f628 90-114
+packages/api/src/test/open-api.spec.ts
+  s_cd067dc346cd77::t_745124c7e3f628 1,3,6,10-30
+  s_cd067dc346cd77::t_eb976156fa75f6 31
+apps/docs/docs/management/api/index.mdx
+  s_cd067dc346cd77::t_5bd0d649a2328c 14-16
+packages/validation/src/board.ts
+  s_cd067dc346cd77::t_5bd0d649a2328c 275-276,280-282
+packages/api/src/router/test/board.spec.ts
+  s_cd067dc346cd77::t_6f31581b1c446a 1543,2518-2525
+  s_cd067dc346cd77::t_5bd0d649a2328c 2585,2599
+  s_b4343a30d33181::t_ec70e5ccdf43be 2526
+apps/docs/public/api/open-api-schema.json
+  s_cd067dc346cd77::t_835376dfb01c04 3173-3179,3214-3254,3264-3265,4878-4882,4896-4898,4906-4908,4926,4984,5002-5004,5012-5014,5275-5277,5285-5287,5584-5590,5615-5622,5625-5662,5668-5711,13082,13121,13354,13393,13581,13620,13824,13863,14030,14069
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4ad24b623e834a34ce3adb54dc353335b70e0e99",
+  "prompts": {},
+  "sessions": {
+    "s_b4343a30d33181": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21251-2cf9-74f0-af6b-7cf5d8c2c0b6",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_cd067dc346cd77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21250-f369-7662-b04d-906ff04de540",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_dd846147ac2aa0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ffdeb4e-8672-4c33-a87e-b656277d3066",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
