@@ -15,8 +15,8 @@ export const pfsenseVersionSchema = createResponseSchema(
 
 export const pfsenseSystemStatusSchema = createResponseSchema(
   z.object({
-    cpu_usage: z.number().nullable().catch(null),
-    mem_usage: z.number().nullable().catch(null),
+    cpu_usage: z.number().nullish(),
+    mem_usage: z.number().nullish(),
   }),
 );
 

@@ -78,3 +78,10 @@ test.each([
   vi.mocked(fetchWithTrustedCertificatesAsync).mockResolvedValue(Response.json({ data }));
   await expect(createIntegration().getFirewallUsageAsync()).resolves.toEqual(expected);
 });
+
+test("rejects malformed metrics", async () => {
+  vi.mocked(fetchWithTrustedCertificatesAsync).mockResolvedValue(
+    Response.json({ data: { cpu_usage: true, mem_usage: 23 } }),
+  );
+  await expect(createIntegration().getFirewallUsageAsync()).rejects.toThrow();
+});

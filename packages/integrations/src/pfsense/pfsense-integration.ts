@@ -53,9 +53,9 @@ export class PfSenseIntegration extends Integration {
     const { data } = pfsenseSystemStatusSchema.parse(await this.getJsonAsync(systemStatusPath));
     const { cpu_usage: cpu, mem_usage: memory } = data;
     return {
-      cpu: cpu === null ? null : { total: cpu },
+      cpu: cpu == null ? null : { total: cpu },
       // pfREST only reports memory usage as a percentage.
-      memory: memory === null ? null : { used: memory, total: 100, percent: memory },
+      memory: memory == null ? null : { used: memory, total: 100, percent: memory },
     };
   }
 
