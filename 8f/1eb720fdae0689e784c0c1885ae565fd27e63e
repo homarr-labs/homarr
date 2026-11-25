@@ -1,0 +1,25 @@
+.github/actions/prebuilt-debian/action.yaml
+  s_185a1a2f21bbc3::t_9b5861f6dc2437 26,30
+.agents/skills/codebase-context/SKILL.md
+  s_185a1a2f21bbc3::t_9b5861f6dc2437 20
+tooling/github/setup/action.yml
+  s_185a1a2f21bbc3::t_9b5861f6dc2437 45,47
+Dockerfile
+  s_185a1a2f21bbc3::t_9b5861f6dc2437 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8f1eb720fdae0689e784c0c1885ae565fd27e63e",
+  "prompts": {},
+  "sessions": {
+    "s_185a1a2f21bbc3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21247-609c-7d70-bab9-27d56f6c3fb1",
+        "model": "gpt-6.1-terra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
