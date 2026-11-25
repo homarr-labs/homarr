@@ -2,6 +2,7 @@ import { createId } from "@homarr/common";
 import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/validation/shared";
 import {
   getSmartContainerMemberIds,
+  getUnassignedSmartContainerItemCount,
   resolveSmartContainerMembership,
   smartContainerOptionsSchema,
   smartContainerStateItemLimit,
@@ -118,33 +119,55 @@ export const applyContainerEditorDraft = (
     if (item.layouts.length === 0) return null;
     addedItems.push(editedItems.get(item.id) ?? item);
   }
+  const items = [
+    ...board.items
+      .filter((item) => !deletedIds.has(item.id))
+      .map((item) => {
+        const edited = editedItems.get(item.id);
+        if (!edited) return item;
+        return {
+          ...item,
+          options: edited.options,
+          integrationIds: edited.integrationIds,
+          advancedOptions: edited.advancedOptions,
+        };
+      }),
+    ...addedItems,
+  ];
+  const smart = updatedOptions.smart;
+  if (smart?.enabled) {
+    const memberIds = getSmartContainerMemberIds(container, items);
+    const states = resolveSmartContainerMembership(smart.states, memberIds);
+    if (getUnassignedSmartContainerItemCount(states, memberIds) > 0) return null;
+  }
+
   return {
     ...board,
     sections: board.sections.map((section) => {
-      if (section.id !== containerId || section.kind !== "container") return section;
-      return { ...section, options: updatedOptions };
+      if (section.id !== containerId) return section;
+      return { ...container, options: updatedOptions };
     }),
-    items: [
-      ...board.items
-        .filter((item) => !deletedIds.has(item.id))
-        .map((item) => {
-          const edited = editedItems.get(item.id);
-          if (!edited) return item;
-          return {
-            ...item,
-            options: edited.options,
-            advancedOptions: edited.advancedOptions,
-            integrationIds: edited.integrationIds,
-          };
-        }),
-      ...addedItems,
-    ],
+    items,
   };
 };
 
-export const createContainerEditorItem = (board: Board, items: Item[], input: CreateItemInput, containerId: string) => {
+export const createContainerEditorItem = (
+  board: Board,
+  items: Item[],
+  input: CreateItemInput,
+  containerId: string,
+  smart: SmartContainerOptions,
+  stateId: string,
+) => {
   const id = input.id ?? createId();
-  return createItemCallback({ ...input, id, targetSectionId: containerId })({ ...board, items }).items.find(
+  const sections = board.sections.map((section) => {
+    if (section.id !== containerId || section.kind !== "container") return section;
+    return { ...section, options: { ...section.options, smart } };
+  });
+  return createItemCallback(
+    { ...input, id, targetSectionId: containerId },
+    stateId,
+  )({ ...board, sections, items }).items.find(
     (item) => item.id === id && item.layouts.some((layout) => layout.sectionId === containerId),
   );
 };

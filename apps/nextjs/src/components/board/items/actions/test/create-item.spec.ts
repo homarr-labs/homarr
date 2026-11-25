@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
+import { smartContainerOptionsSchema, smartContainerStateItemLimit } from "@homarr/validation/smart-container";
 
 import { createItemCallback, hasRoomForItem } from "../create-item";
 import * as emptyPositionModule from "../empty-position";
@@ -12,6 +13,38 @@ import { LayoutMockBuilder } from "./mocks/layout-mock";
 describe("item actions create-item", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  test("relocates a widget when only manual Smart Container states have room", () => {
+    const memberIds = Array.from({ length: smartContainerStateItemLimit }, (_, index) => `member-${index}`);
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    const layoutId = board.layouts[0]?.id ?? "";
+    const container = new ContainerSectionMockBuilder({
+      id: "smart",
+      options: {
+        smart: smartContainerOptionsSchema.parse({
+          enabled: true,
+          states: [
+            { id: "automatic", itemIds: memberIds },
+            { id: "manual", enabled: false },
+          ],
+        }),
+      },
+    })
+      .addLayout({ layoutId, parentSectionId: "canvas", width: 3 })
+      .build();
+    board.sections.push(container);
+    board.items.push(
+      ...memberIds.map((id, yOffset) =>
+        new ItemMockBuilder({ id }).addLayout({ layoutId, sectionId: container.id, yOffset }).build(),
+      ),
+    );
+
+    const createItem = { kind: "clock", targetSectionId: container.id } as const;
+    expect(createItemCallback(createItem)(board).items.at(-1)?.layouts).toMatchObject([{ sectionId: "canvas" }]);
+    expect(createItemCallback(createItem, "manual")(board).items.at(-1)?.layouts).toMatchObject([
+      { sectionId: container.id },
+    ]);
   });
 
   test("clips oversized widgets to each layout's column count", () => {

@@ -17,7 +17,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/validation/shared";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
-import { smartContainerStateItemLimit, smartContainerStateLimit } from "@homarr/validation/smart-container";
+import { getSmartContainerStateCapacity, smartContainerStateLimit } from "@homarr/validation/smart-container";
 import { WidgetEditFooter, WidgetEditWorkspace } from "@homarr/widgets/edit-workspace";
 import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
 import { loadAllWidgetDefinitions, loadWidgetDefinition } from "@homarr/widgets/manifest";
@@ -170,7 +170,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
     const states = smart.states.filter((state) => state.id !== selectedStateId);
     const destination = states[Math.min(index, states.length - 1)];
     if (!destination) return;
-    if (destination.itemIds.length + deleted.itemIds.length > smartContainerStateItemLimit) {
+    if (deleted.itemIds.length > getSmartContainerStateCapacity(destination)) {
       notifyStateFull();
       return;
     }
@@ -190,7 +190,9 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const notifyStateFull = () => showErrorNotification({ title: translate("common.error"), message: t("stateFull") });
   const addItem = (index: number) => {
     const stateId = selectedStateId;
-    if ((smart.states.find((state) => state.id === stateId)?.itemIds.length ?? 0) >= smartContainerStateItemLimit) {
+    const destination = smart.states.find((entry) => entry.id === stateId);
+    if (!destination) return;
+    if (getSmartContainerStateCapacity(destination) <= 0) {
       notifyStateFull();
       return;
     }
@@ -200,7 +202,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       onConfiguredItem: (input) => {
         let item: ReturnType<typeof createContainerEditorItem>;
         try {
-          item = createContainerEditorItem(board, items, input, innerProps.containerId);
+          item = createContainerEditorItem(board, items, input, innerProps.containerId, smart, stateId);
         } catch (error) {
           if (error instanceof NoItemPlacementSpaceError) return false;
           throw error;
@@ -298,7 +300,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const moveItemToState = (itemId: string, stateId: string) => {
     const target = smart.states.find((state) => state.id === stateId);
     if (!target || target.itemIds.includes(itemId)) return;
-    if (target.itemIds.length >= smartContainerStateItemLimit) {
+    if (getSmartContainerStateCapacity(target) <= 0) {
       notifyStateFull();
       return;
     }

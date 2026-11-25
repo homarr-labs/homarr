@@ -2673,7 +2673,7 @@
       "put": {
         "operationId": "boardRouter-saveBoard",
         "summary": "Save dashboard content",
-        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
+        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Omitted placements for retained items and containers are preserved unless replaceLayouts is true. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
         "tags": [
           "boards"
         ],
@@ -2699,6 +2699,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "replaceLayouts": {
+                    "type": "boolean"
+                  },
                   "sections": {
                     "type": "array",
                     "items": {

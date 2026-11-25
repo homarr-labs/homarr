@@ -34,17 +34,25 @@ export const useSmartContainerRuntime = ({
   const [hold, setHold] = useState<"manual" | "focus" | "paused" | null>(null);
   const [isHovered, setHovered] = useState(false);
   const [isDocumentHidden, setDocumentHidden] = useState(false);
-  const [clock, setClock] = useState(() => ({ mode: options.mode, interval: options.intervalSeconds, elapsed: 0 }));
-  const clockMatches = clock.mode === options.mode && clock.interval === options.intervalSeconds;
-  const elapsedSeconds = clockMatches ? clock.elapsed : 0;
+  const [clockCycle, setClockCycle] = useState(0);
+  const clockKey = useMemo(
+    () => ({ mode: options.mode, interval: options.intervalSeconds, cycle: clockCycle }),
+    [options.mode, options.intervalSeconds, clockCycle],
+  );
+  const [clockDeadline, setClockDeadline] = useState<{ key: typeof clockKey; time: number }>();
+  const [expiredClockKey, setExpiredClockKey] = useState<typeof clockKey>();
+  const pausedClock = useRef<{ key: typeof clockKey; remaining: number }>(undefined);
+  const clockExpired = expiredClockKey === clockKey;
   const lastSelectionAt = useRef(0);
   const hasShownActivity = useRef(false);
   const itemIds = useMemo(() => new Set(items.map((item) => item.id)), [items]);
-  const observationTime = Math.max(now, Date.now());
-  const states = useMemo(
-    () => resolveSmartContainerStates(options.states, itemIds, activities, observationTime),
-    [options.states, itemIds, activities, observationTime],
-  );
+  const { states, observationTime } = useMemo(() => {
+    const observationTime = Math.max(now, Date.now());
+    return {
+      states: resolveSmartContainerStates(options.states, itemIds, activities, observationTime),
+      observationTime,
+    };
+  }, [options.states, itemIds, activities, now]);
   const currentState = states.find((state) => state.id === selectedId) ?? states[0];
   let selectedState = currentState;
   if (previewStateId) selectedState = states.find((state) => state.id === previewStateId) ?? currentState;
@@ -95,8 +103,8 @@ export const useSmartContainerRuntime = ({
   }, [activities, memberIds, observationTime]);
 
   const resetClock = useCallback(() => {
-    setClock({ mode: options.mode, interval: options.intervalSeconds, elapsed: 0 });
-  }, [options.mode, options.intervalSeconds]);
+    setClockCycle((cycle) => cycle + 1);
+  }, []);
 
   const changeState = useCallback(
     (id: string) => {
@@ -137,24 +145,17 @@ export const useSmartContainerRuntime = ({
   const holdForFocus = useCallback(() => setHold((previous) => previous ?? "focus"), []);
 
   useEffect(() => {
-    if (!clockMatches) resetClock();
-  }, [clockMatches, resetClock]);
-
-  useEffect(() => {
-    if (isPaused || !canRotate || (options.mode !== "timed" && options.mode !== "hybrid")) return;
-    const interval = window.setInterval(() => {
-      setClock((previous) => {
-        const elapsed =
-          previous.mode === options.mode && previous.interval === options.intervalSeconds ? previous.elapsed : 0;
-        return {
-          mode: options.mode,
-          interval: options.intervalSeconds,
-          elapsed: Math.min(elapsed + 1, options.intervalSeconds),
-        };
-      });
-    }, 1_000);
-    return () => window.clearInterval(interval);
-  }, [isPaused, canRotate, options.mode, options.intervalSeconds]);
+    if (isPaused || !canRotate || clockExpired) return;
+    let remaining = options.intervalSeconds * 1_000;
+    if (pausedClock.current?.key === clockKey) remaining = pausedClock.current.remaining;
+    const time = Date.now() + remaining;
+    setClockDeadline({ key: clockKey, time });
+    const timeout = window.setTimeout(() => setExpiredClockKey(clockKey), remaining);
+    return () => {
+      window.clearTimeout(timeout);
+      pausedClock.current = { key: clockKey, remaining: Math.max(0, time - Date.now()) };
+    };
+  }, [isPaused, canRotate, clockExpired, clockKey, options.intervalSeconds]);
 
   useEffect(() => {
     if (isPaused) return;
@@ -178,21 +179,14 @@ export const useSmartContainerRuntime = ({
       }
     }
     if (options.mode !== "timed" && options.mode !== "hybrid") return;
-    if (elapsedSeconds < options.intervalSeconds || !canRotate) return;
+    if (!clockExpired || !canRotate) return;
     const next = policy.next;
     if (!next) return;
     changeState(next.id);
-  }, [
-    isPaused,
-    elapsedSeconds,
-    options.mode,
-    options.intervalSeconds,
-    policy,
-    canRotate,
-    currentState,
-    now,
-    changeState,
-  ]);
+  }, [isPaused, clockExpired, options.mode, policy, canRotate, currentState, now, changeState]);
+
+  let rotationDeadline: number | undefined;
+  if (!isPaused && canRotate && clockDeadline?.key === clockKey) rotationDeadline = clockDeadline.time;
 
   return {
     activities,
@@ -207,9 +201,7 @@ export const useSmartContainerRuntime = ({
     setHovered,
     holdForFocus,
     pauseReason,
-    isPaused,
-    canRotate,
-    remainingSeconds: Math.max(0, options.intervalSeconds - elapsedSeconds),
+    rotationDeadline,
     now: observationTime,
   };
 };

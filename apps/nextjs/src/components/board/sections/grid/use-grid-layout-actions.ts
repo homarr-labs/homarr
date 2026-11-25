@@ -3,6 +3,11 @@
 import { useCallback } from "react";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
+import {
+  getSmartContainerMemberIds,
+  getUnassignedSmartContainerItemCount,
+  resolveSmartContainerMembership,
+} from "@homarr/validation/smart-container";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 import type { GridPlacement } from "~/components/board/layout";
@@ -93,7 +98,19 @@ export const commitSectionGridsCallback =
       return { ...innerSection, layouts };
     });
 
-    return hasChanges ? { ...previous, items, sections } : previous;
+    if (!hasChanges) return previous;
+
+    for (const section of sections) {
+      if (section.kind !== "container" || !section.options.smart?.enabled) continue;
+      const before = getSmartContainerMemberIds(section, previous.items);
+      const after = getSmartContainerMemberIds(section, items);
+      if ([...after].every((id) => before.has(id))) continue;
+
+      const states = section.options.smart.states;
+      const resolved = resolveSmartContainerMembership(states, after);
+      if (getUnassignedSmartContainerItemCount(resolved, after) > 0) return previous;
+    }
+    return { ...previous, items, sections };
   };
 
 export const useGridLayoutActions = () => {

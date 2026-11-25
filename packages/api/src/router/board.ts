@@ -83,7 +83,7 @@ import {
   reconcileSmartContainerStates,
   remapSmartContainerItems,
   resolveSmartContainerMembership,
-  smartContainerStateItemLimit,
+  getSmartContainerStateCapacity,
 } from "@homarr/validation/smart-container";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -1736,12 +1736,12 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Save dashboard content",
         description:
-          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Omitted placements for retained items and containers are preserved unless replaceLayouts is true. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
       },
       mcp: {
         enabled: true,
         description:
-          "Save complete dashboard sections and items, including widget options and placements. Omitted entries are removed. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Up to five empty main canvas roots (xOffset 0) represent tabs, ordered by yOffset, with optional name. Preserve all tabs and their items. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save complete dashboard sections and items, including widget options and placements. Omitted items and sections are removed. Omitted placements for retained items and containers are preserved unless replaceLayouts is true. Placements must fit their parent section's columns in each layout. Read current content with board_getBoardByName first. Up to five empty main canvas roots (xOffset 0) represent tabs, ordered by yOffset, with optional name. Preserve all tabs and their items. Requires modify access; Custom Widget placement changes require admin access.",
       },
     })
     .input(boardSaveSchema)
@@ -1751,8 +1751,50 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
       const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-      const reconciledSections = reconcileSmartContainerStates(input.sections, input.items);
-      const reconciledBoard = reconciledBoardSaveSchema.safeParse({ ...input, sections: reconciledSections });
+      const storedItemsById = new Map(dbBoard.items.map((item) => [item.id, item]));
+      const storedSectionsById = new Map(dbBoard.sections.map((section) => [section.id, section]));
+      const boardLayoutIds = new Set(dbBoard.layouts.map(({ id }) => id));
+      const submittedSectionIds = new Set(input.sections.map(({ id }) => id));
+      let membershipSections = input.sections;
+      let membershipItems = input.items;
+      if (
+        !input.replaceLayouts &&
+        input.sections.some((section) => section.kind === "container" && section.options.smart)
+      ) {
+        // Reconcile against the placements that survive a partial save, without rewriting omitted rows.
+        const retainOmitted = <T extends { layoutId: string }>(submitted: T[], stored: T[]) => [
+          ...submitted,
+          ...stored.filter(
+            (layout) =>
+              boardLayoutIds.has(layout.layoutId) && !submitted.some((entry) => entry.layoutId === layout.layoutId),
+          ),
+        ];
+        membershipSections = input.sections.map((section) => {
+          if (section.kind !== "container") return section;
+          const stored = storedSectionsById.get(section.id);
+          if (stored?.kind !== "container") return section;
+          return {
+            ...section,
+            layouts: retainOmitted(
+              section.layouts,
+              stored.layouts.filter(({ parentSectionId }) => submittedSectionIds.has(parentSectionId)),
+            ),
+          };
+        });
+        membershipItems = input.items.map((item) => ({
+          ...item,
+          layouts: retainOmitted(
+            item.layouts,
+            (storedItemsById.get(item.id)?.layouts ?? []).filter(({ sectionId }) => submittedSectionIds.has(sectionId)),
+          ),
+        }));
+      }
+      const reconciledSections = reconcileSmartContainerStates(membershipSections, membershipItems);
+      const reconciledBoard = reconciledBoardSaveSchema.safeParse({
+        ...input,
+        sections: reconciledSections,
+        items: membershipItems,
+      });
       if (!reconciledBoard.success) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -1760,7 +1802,11 @@ export const boardRouter = createTRPCRouter({
           cause: reconciledBoard.error,
         });
       }
-      input.sections = reconciledBoard.data.sections;
+      input.sections = input.sections.map((section, index) => {
+        const reconciled = reconciledBoard.data.sections[index];
+        if (section.kind !== "container" || reconciled?.kind !== "container") return section;
+        return { ...section, options: reconciled.options };
+      });
       throwIfBoardLayoutBoundsInvalid(getBoardLayoutBoundsIssue({ ...input, layouts: dbBoard.layouts }));
       throwIfBoardTabsInvalid(input.sections);
       await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
@@ -1782,15 +1828,11 @@ export const boardRouter = createTRPCRouter({
       const storedItemIds = new Set(dbBoard.items.map(({ id }) => id));
       const storedSectionIds = new Set(dbBoard.sections.map(({ id }) => id));
       const submittedItemIds = new Set(input.items.map(({ id }) => id));
-      const submittedSectionIds = new Set(input.sections.map(({ id }) => id));
       const addedItems = input.items.filter(({ id }) => !storedItemIds.has(id));
       const addedSections = input.sections.filter(({ id }) => !storedSectionIds.has(id));
       const updatedItems = input.items.filter(({ id }) => storedItemIds.has(id));
-      const storedItemsById = new Map(dbBoard.items.map((item) => [item.id, item]));
       const updatedSections = input.sections.filter(({ id }) => storedSectionIds.has(id));
-      const storedSectionsById = new Map(dbBoard.sections.map((section) => [section.id, section]));
-      const boardLayoutIds = new Set(dbBoard.layouts.map(({ id }) => id));
-      const removedItemLayouts = updatedItems.flatMap((item) =>
+      const removedItemLayouts = (input.replaceLayouts ? updatedItems : []).flatMap((item) =>
         (storedItemsById.get(item.id)?.layouts ?? [])
           .filter(
             (layout) =>
@@ -1800,7 +1842,7 @@ export const boardRouter = createTRPCRouter({
           )
           .map((layout) => ({ ...layout, itemId: item.id })),
       );
-      const removedSectionLayouts = updatedSections.flatMap((section) => {
+      const removedSectionLayouts = (input.replaceLayouts ? updatedSections : []).flatMap((section) => {
         if (section.kind !== "container") return [];
         const stored = storedSectionsById.get(section.id);
         if (!stored || stored.kind !== "container") return [];
@@ -2513,7 +2555,7 @@ export const boardRouter = createTRPCRouter({
           if (!targetState) {
             throw new TRPCError({ code: "BAD_REQUEST", message: "Smart Container state not found on this board" });
           }
-          if (targetState.itemIds.length >= smartContainerStateItemLimit) {
+          if (getSmartContainerStateCapacity(targetState) <= 0) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message: "This Smart Container state cannot accept more widgets",

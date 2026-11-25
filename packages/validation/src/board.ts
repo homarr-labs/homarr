@@ -13,7 +13,7 @@ import {
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 import { commonItemSchema, sectionSchema } from "./shared";
-import { getSmartContainerMemberIds } from "./smart-container";
+import { getSmartContainerMemberIds, getUnassignedSmartContainerItemCount } from "./smart-container";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -146,6 +146,7 @@ export const boardResetLayoutSchema = z.object({
 
 export const boardSaveSchema = z.object({
   id: z.string(),
+  replaceLayouts: z.boolean().optional(),
   sections: z.array(sectionSchema),
   items: z.array(commonItemSchema),
 });
@@ -157,13 +158,9 @@ export const reconciledBoardSaveSchema = boardSaveSchema.superRefine((board, ctx
 
     if (section.options.smart.states.length === 0) return;
     const availableIds = getSmartContainerMemberIds(section, board.items);
-    const assignedIds = new Set<string>();
     section.options.smart.states.forEach((state, stateIndex) => {
       state.itemIds.forEach((itemId, itemIndex) => {
-        if (availableIds.has(itemId)) {
-          assignedIds.add(itemId);
-          return;
-        }
+        if (availableIds.has(itemId)) return;
 
         ctx.addIssue({
           code: "custom",
@@ -172,7 +169,10 @@ export const reconciledBoardSaveSchema = boardSaveSchema.superRefine((board, ctx
         });
       });
     });
-    if (section.options.smart.enabled && assignedIds.size < availableIds.size) {
+    if (
+      section.options.smart.enabled &&
+      getUnassignedSmartContainerItemCount(section.options.smart.states, availableIds) > 0
+    ) {
       ctx.addIssue({
         code: "custom",
         message: "Smart Container states are full. Add a state or move widgets out of the container.",

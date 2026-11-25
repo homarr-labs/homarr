@@ -67,6 +67,9 @@ export const smartContainerOptionsSchema = z
 export type SmartContainerState = z.infer<typeof smartContainerStateSchema>;
 export type SmartContainerOptions = z.infer<typeof smartContainerOptionsSchema>;
 
+export const getSmartContainerStateCapacity = (state: SmartContainerState): number =>
+  smartContainerStateItemLimit - state.itemIds.length;
+
 export const resolveSmartContainerMembership = (
   states: readonly SmartContainerState[],
   availableIds: ReadonlySet<string>,
@@ -87,7 +90,7 @@ export const resolveSmartContainerMembership = (
   let nextUnassignedIndex = 0;
   return resolved.map((state) => {
     if (!state.enabled || nextUnassignedIndex >= unassignedIds.length) return state;
-    const capacity = smartContainerStateItemLimit - state.itemIds.length;
+    const capacity = getSmartContainerStateCapacity(state);
     if (capacity <= 0) return state;
     const additional = unassignedIds.slice(nextUnassignedIndex, nextUnassignedIndex + capacity);
     nextUnassignedIndex += additional.length;
@@ -119,6 +122,29 @@ export const getSmartContainerMemberIds = (
     }
   }
   return memberIds;
+};
+
+/** Implicit placement uses enabled states. Explicit placement may also target a manual-only state. */
+export const canPlaceSmartContainerItem = (
+  section: SmartContainerSection,
+  items: readonly SmartContainerItem[],
+  stateId?: string,
+): boolean => {
+  const smart = section.options?.smart;
+  if (section.kind !== "container" || !smart?.enabled) return true;
+  const states = resolveSmartContainerMembership(smart.states, getSmartContainerMemberIds(section, items));
+  return states.some(
+    (state) =>
+      (stateId === undefined ? state.enabled : state.id === stateId) && getSmartContainerStateCapacity(state) > 0,
+  );
+};
+
+export const getUnassignedSmartContainerItemCount = (
+  states: readonly SmartContainerState[],
+  memberIds: ReadonlySet<string>,
+): number => {
+  const assignedIds = new Set(states.flatMap((state) => state.itemIds));
+  return [...memberIds].filter((id) => !assignedIds.has(id)).length;
 };
 
 /** Keep state membership aligned with native widget placement after editor changes. */

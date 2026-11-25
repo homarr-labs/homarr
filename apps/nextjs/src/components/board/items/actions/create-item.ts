@@ -5,6 +5,7 @@ import type { Modify } from "@homarr/common/types";
 import { getRootSectionLane } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetDefaultSizes } from "@homarr/definitions";
+import { canPlaceSmartContainerItem } from "@homarr/validation/smart-container";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 import type { Board, ContainerSection, EmptySection, Item, ItemLayout } from "~/app/[locale]/boards/_types";
@@ -31,16 +32,10 @@ export class NoItemPlacementSpaceError extends Error {
 }
 
 export const createItemCallback =
-  ({
-    id,
-    kind,
-    options = {},
-    integrationIds = [],
-    targetSectionId,
-    advancedOptions,
-    size,
-    position,
-  }: CreateItemInput) =>
+  (
+    { id, kind, options = {}, integrationIds = [], targetSectionId, advancedOptions, size, position }: CreateItemInput,
+    smartContainerStateId?: string,
+  ) =>
   (previous: Board): Board => {
     const firstCanvasSection = getBoardTabs(previous).at(0);
     const requestedSection = targetSectionId
@@ -53,7 +48,10 @@ export const createItemCallback =
 
     if (!targetSection) return previous;
 
-    let itemLayouts = createItemLayouts(previous, targetSection, kind, size, position);
+    let itemLayouts: ItemLayout[] = [];
+    if (canPlaceSmartContainerItem(targetSection, previous.items, smartContainerStateId)) {
+      itemLayouts = createItemLayouts(previous, targetSection, kind, size, position);
+    }
     if (itemLayouts.length === 0 && firstCanvasSection && targetSection.id !== firstCanvasSection.id) {
       targetSection = firstCanvasSection;
       itemLayouts = createItemLayouts(previous, targetSection, kind, size, position);

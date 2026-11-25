@@ -321,8 +321,6 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
     pauseLabel = t("resume");
     pauseIcon = <IconPlayerPlay style={iconSizes.sm} />;
   }
-  const isTimer =
-    runtime.canRotate && (section.options.smart?.mode === "hybrid" || section.options.smart?.mode === "timed");
   return (
     <Group
       className={classes.toolbar}
@@ -387,10 +385,8 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           <IconChevronRight style={iconSizes.md} />
         </ActionIcon>
       </Group>
-      {isTimer && !runtime.isPaused && (
-        <Text size="xs" c="dimmed" className={classes.countdown}>
-          {runtime.remainingSeconds}s
-        </Text>
+      {runtime.rotationDeadline !== undefined && (
+        <RotationCountdown key={runtime.rotationDeadline} deadline={runtime.rotationDeadline} />
       )}
       {!isEditMode && !preview && section.options.smart?.mode !== "manual" && (
         <ActionIcon
@@ -429,5 +425,29 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         </ActionIcon>
       )}
     </Group>
+  );
+};
+
+// Only the countdown label renders on each tick. Rotation runs on its own deadline.
+const RotationCountdown = ({ deadline }: { deadline: number }) => {
+  const [remainingSeconds, setRemainingSeconds] = useState(() =>
+    Math.max(0, Math.ceil((deadline - Date.now()) / 1_000)),
+  );
+  useEffect(() => {
+    let timeout: number;
+    const update = () => {
+      const remainingMs = Math.max(0, deadline - Date.now());
+      const seconds = Math.ceil(remainingMs / 1_000);
+      setRemainingSeconds(seconds);
+      if (seconds > 0) timeout = window.setTimeout(update, remainingMs - (seconds - 1) * 1_000);
+    };
+    update();
+    return () => window.clearTimeout(timeout);
+  }, [deadline]);
+
+  return (
+    <Text size="xs" c="dimmed" className={classes.countdown}>
+      {remainingSeconds}s
+    </Text>
   );
 };
