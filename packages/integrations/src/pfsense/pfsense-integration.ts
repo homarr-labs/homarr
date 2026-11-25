@@ -1,62 +1,62 @@
-import { ParseError, ResponseError } from "@homarr/common/server";
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createChannelEventHistoryOld } from "@homarr/redis";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
 import type {
-  FirewallCpuSummary,
   FirewallInterface,
   FirewallInterfacesSummary,
-  FirewallMemorySummary,
   FirewallVersionSummary,
 } from "../interfaces/firewall-summary/firewall-summary-types";
 import { pfsenseInterfacesSchema, pfsenseSystemStatusSchema, pfsenseVersionSchema } from "./pfsense-types";
 
-export class PfSenseIntegration extends Integration implements FirewallSummaryIntegration {
+const versionPath = "/api/v2/system/version";
+const systemStatusPath = "/api/v2/status/system";
+const interfacesPath = "/api/v2/status/interfaces";
+
+export class PfSenseIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/api/v2/system/version"), {
-      headers: this.getAuthHeaders(),
-    });
-    if (!response.ok) return TestConnectionError.StatusResult(response);
-
-    const result = pfsenseVersionSchema.safeParse(await response.json());
-    if (result.success) return { success: true };
-
-    return TestConnectionError.ParseResult(new ParseError("Unexpected pfSense REST API response"));
+    const signal = AbortSignal.timeout(10_000);
+    const request = (path: `/${string}`) => this.getJsonAsync(path, input.fetchAsync, signal);
+    await Promise.all([
+      request(versionPath).then((json) => pfsenseVersionSchema.parse(json)),
+      request(systemStatusPath).then((json) => pfsenseSystemStatusSchema.parse(json)),
+      request(interfacesPath).then((json) => pfsenseInterfacesSchema.parse(json)),
+    ]);
+    return { success: true };
   }
 
-  private getAuthHeaders() {
-    return { "x-api-key": super.getSecretValue("apiKey") };
-  }
-
-  private async getJsonAsync(path: `/${string}`) {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
-      headers: this.getAuthHeaders(),
+  private async getJsonAsync(
+    path: `/${string}`,
+    fetchAsync: IntegrationTestingInput["fetchAsync"] = fetchWithTrustedCertificatesAsync,
+    signal?: AbortSignal,
+  ): Promise<unknown> {
+    const response = await fetchAsync(this.url(path), {
+      headers: { "x-api-key": this.getSecretValue("apiKey") },
+      redirect: "error",
+      signal,
     });
     if (!response.ok) {
       throw new ResponseError(response);
     }
-    return (await response.json()) as unknown;
+    return await response.json();
   }
 
   public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
-    const { data } = pfsenseVersionSchema.parse(await this.getJsonAsync("/api/v2/system/version"));
+    const { data } = pfsenseVersionSchema.parse(await this.getJsonAsync(versionPath));
     return { version: data.version };
   }
 
-  public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
-    const { data } = pfsenseSystemStatusSchema.parse(await this.getJsonAsync("/api/v2/status/system"));
-    return { total: data.cpu_usage };
-  }
-
-  public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
-    const { data } = pfsenseSystemStatusSchema.parse(await this.getJsonAsync("/api/v2/status/system"));
-    // The pfSense REST API only reports memory usage as a percentage.
-    return { used: data.mem_usage, total: 100, percent: data.mem_usage };
+  public async getFirewallUsageAsync() {
+    const { data } = pfsenseSystemStatusSchema.parse(await this.getJsonAsync(systemStatusPath));
+    const { cpu_usage: cpu, mem_usage: memory } = data;
+    return {
+      cpu: cpu === null ? null : { total: cpu },
+      // pfREST only reports memory usage as a percentage.
+      memory: memory === null ? null : { used: memory, total: 100, percent: memory },
+    };
   }
 
   private getInterfacesChannel() {
@@ -65,14 +65,14 @@ export class PfSenseIntegration extends Integration implements FirewallSummaryIn
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
     const channel = this.getInterfacesChannel();
-    const { data } = pfsenseInterfacesSchema.parse(await this.getJsonAsync("/api/v2/status/interfaces"));
+    const { data } = pfsenseInterfacesSchema.parse(await this.getJsonAsync(interfacesPath));
 
     await channel.pushAsync(
-      data.flatMap(({ name, descr, inbytes, outbytes }) =>
-        typeof inbytes === "number" && typeof outbytes === "number"
-          ? [{ name: descr || name, receive: inbytes, transmit: outbytes }]
-          : [],
-      ),
+      data.flatMap(({ name, descr, inbytes, outbytes }) => {
+        const label = descr || name;
+        if (!label || inbytes == null || outbytes == null) return [];
+        return [{ name: label, receive: inbytes, transmit: outbytes }];
+      }),
     );
 
     return await channel.getSliceAsync(0, 1);

@@ -15,15 +15,15 @@ export const pfsenseVersionSchema = createResponseSchema(
 
 export const pfsenseSystemStatusSchema = createResponseSchema(
   z.object({
-    cpu_usage: z.number(),
-    mem_usage: z.number(),
+    cpu_usage: z.number().nullable().catch(null),
+    mem_usage: z.number().nullable().catch(null),
   }),
 );
 
 export const pfsenseInterfacesSchema = createResponseSchema(
   z.array(
     z.object({
-      name: z.string(),
+      name: z.string().nullish(),
       descr: z.string().nullish(),
       // Interfaces without a running device (e.g. a stopped VPN) may report no counters.
       inbytes: z.number().nullish(),

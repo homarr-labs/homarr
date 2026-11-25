@@ -384,8 +384,8 @@ existingStatsProviders.opnsense = adapter(
 existingStatsProviders.pfsense = adapter(
   "pfsense",
   [metric("cpu", "CPU", "percent")],
-  (client) => client.getFirewallCpuAsync(),
-  (data) => ({ cpu: data.total }),
+  (client) => client.getFirewallUsageAsync(),
+  (data) => ({ cpu: data.cpu?.total ?? null }),
 );
 existingStatsProviders.archiveTeamWarrior = adapter(
   "archiveTeamWarrior",
