@@ -1,5 +1,4 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIcon } from "../types/repository-icon";
@@ -18,10 +17,16 @@ export class JsdelivrIconRepository extends IconRepository {
     super(name, slug, license, repositoryUrl, repositoryIndexingUrl, repositoryBlobUrlTemplate);
   }
 
-  protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    const response = await withTimeoutAsync(async (signal) =>
-      fetchWithTrustedCertificatesAsync(this.repositoryIndexingUrl, { signal }),
-    );
+  protected async getAllIconsInternalAsync(etag?: string): Promise<RepositoryIconGroup> {
+    const response = await fetchWithTrustedCertificatesAsync(this.repositoryIndexingUrl, {
+      signal: AbortSignal.timeout(10_000),
+      headers: etag === undefined ? undefined : { "If-None-Match": etag },
+    });
+    if (response.status === 304 && etag !== undefined) return { status: "unchanged", slug: this.slug };
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new Error(`jsDelivr icon index request failed (${response.status})`);
+    }
     const listOfFiles = (await response.json()) as JsdelivrApiResponse;
 
     const icons: RepositoryIcon[] = [];
@@ -30,7 +35,7 @@ export class JsdelivrIconRepository extends IconRepository {
       if (icon) icons.push(icon);
     }
 
-    return { success: true, icons, slug: this.slug };
+    return { status: "updated", icons, slug: this.slug, etag: response.headers.get("etag") ?? undefined };
   }
 }
 

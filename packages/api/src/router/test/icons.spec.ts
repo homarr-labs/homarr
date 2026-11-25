@@ -4,14 +4,19 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
-import { iconRepositories, icons } from "@homarr/db/schema";
+import { eq } from "@homarr/db";
+import { iconRepositories, icons, serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { fetchFaviconUrlAsync } from "@homarr/icons";
+import type * as IconsModule from "@homarr/icons";
+import { fetchFaviconUrlAsync, iconCatalogSettingKey } from "@homarr/icons";
 
 import { iconsRouter } from "../icons";
 
-vi.mock("@homarr/icons", () => ({ fetchFaviconUrlAsync: vi.fn() }));
+vi.mock("@homarr/icons", async (importOriginal) => ({
+  ...(await importOriginal<typeof IconsModule>()),
+  fetchFaviconUrlAsync: vi.fn(),
+}));
 
 const createSession = (permissions: GroupPermissionKey[]): Session => ({
   user: { id: createId(), permissions, colorScheme: "light" },
@@ -42,6 +47,58 @@ describe("detectFavicon", () => {
 });
 
 describe("findIcons", () => {
+  test("keeps the best match and picks up catalog refreshes and local uploads", async () => {
+    const db = createDb();
+    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+    const state = { revision: "first", etags: {} };
+    await db.insert(serverSettings).values({ settingKey: iconCatalogSettingKey, value: JSON.stringify(state) });
+    await db.insert(iconRepositories).values([
+      { id: "local", slug: "local" },
+      { id: "remote", slug: "example/icons" },
+    ]);
+    await db.insert(icons).values([
+      {
+        id: "exact",
+        name: "",
+        url: "https://example.com/Café-Icons.svg?format=large",
+        checksum: "a",
+        iconRepositoryId: "remote",
+      },
+      {
+        id: "partial",
+        name: "Café-Icons-Dark.svg",
+        url: "https://example.com/dark.svg",
+        checksum: "b",
+        iconRepositoryId: "remote",
+      },
+    ]);
+
+    const search = () => caller.findIcons({ searchText: "cafe icons", limitPerGroup: 1 });
+    await expect(search()).resolves.toMatchObject({ countIcons: 2, icons: [{ icons: [{ id: "exact" }] }] });
+
+    await db.insert(icons).values({
+      id: "upload",
+      name: "cafe_icons.png",
+      url: "/api/media/upload",
+      checksum: "c",
+      iconRepositoryId: "local",
+    });
+    await expect(search()).resolves.toMatchObject({
+      countIcons: 3,
+      icons: [{ icons: [{ id: "upload" }] }, { icons: [{ id: "exact" }] }],
+    });
+
+    await db.delete(icons).where(eq(icons.id, "exact"));
+    await db
+      .update(serverSettings)
+      .set({ value: JSON.stringify({ ...state, revision: "second" }) })
+      .where(eq(serverSettings.settingKey, iconCatalogSettingKey));
+    await expect(search()).resolves.toMatchObject({
+      countIcons: 2,
+      icons: [{ icons: [{ id: "upload" }] }, { icons: [{ id: "partial" }] }],
+    });
+  });
+
   test("returns only repositories containing matches for a search", async () => {
     const db = createDb();
     await db.insert(iconRepositories).values([

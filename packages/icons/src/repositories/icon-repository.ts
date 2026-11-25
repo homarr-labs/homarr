@@ -21,16 +21,15 @@ export abstract class IconRepository {
     public readonly repositoryBlobUrlTemplate?: string,
   ) {}
 
-  public async getAllIconsAsync(): Promise<RepositoryIconGroup> {
+  public async getAllIconsAsync(etag?: string): Promise<RepositoryIconGroup> {
     try {
-      return await this.getAllIconsInternalAsync();
+      return await this.getAllIconsInternalAsync(etag);
     } catch (err) {
       logger.error(
         new ErrorWithMetadata("Unable to request icons from repository", { slug: this.slug }, { cause: err }),
       );
       return {
-        success: false,
-        icons: [],
+        status: "failed",
         slug: this.slug,
       };
     }
@@ -52,5 +51,5 @@ export abstract class IconRepository {
     };
   }
 
-  protected abstract getAllIconsInternalAsync(): Promise<RepositoryIconGroup>;
+  protected abstract getAllIconsInternalAsync(etag?: string): Promise<RepositoryIconGroup>;
 }

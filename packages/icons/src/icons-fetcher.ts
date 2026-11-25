@@ -47,6 +47,6 @@ const repositories = [
   new LocalIconRepository(),
 ];
 
-export const fetchIconsAsync = async (): Promise<RepositoryIconGroup[]> => {
-  return await Promise.all(repositories.map(async (repository) => await repository.getAllIconsAsync()));
+export const fetchIconsAsync = async (etags: Record<string, string> = {}): Promise<RepositoryIconGroup[]> => {
+  return await Promise.all(repositories.map((repository) => repository.getAllIconsAsync(etags[repository.slug])));
 };
