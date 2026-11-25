@@ -1,0 +1,51 @@
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 8,10-11
+apps/nextjs/src/components/board/selection/board-item-clipboard.ts
+  s_9898269a6e4c5a::t_af5232265df2a2 45
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  s_9898269a6e4c5a::t_af5232265df2a2 4,6,11,17,65-77,152,156-157,160,163-168,182,191-211,217,223-225,227,229,231,233-234,237-238,243,248
+  s_9898269a6e4c5a::t_1316b3d0e44b00 78,509-514
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 12,17-24
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 13,40-41,123
+apps/nextjs/src/components/integration/integration-completion-modal.tsx
+  s_9898269a6e4c5a::t_1316b3d0e44b00 3,16,32-33,41-49,79-92,95,98,190-195,203-204,210-212
+packages/ui/src/lazy-content.tsx
+  s_9898269a6e4c5a::t_31726935922d63 15,44-45,53
+  s_9898269a6e4c5a::t_af5232265df2a2 35,39,49-50
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 1-14,16-34,36-38,40-43,46-48,51-52,54-61
+packages/modals/src/index.tsx
+  s_9898269a6e4c5a::t_1316b3d0e44b00 184,186,188
+packages/ui/package.json
+  s_9898269a6e4c5a::t_af5232265df2a2 24-25
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 49
+packages/translation/src/lang/en.json
+  s_9898269a6e4c5a::t_bdfa4dd71e1313 1959
+bun.lock
+  s_8147c75b6bbf04::t_e2c0c5c5d7b9a1 946
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f7f7d3fcbea9c0b9a30aab13d96d2381277c08c5",
+  "prompts": {},
+  "sessions": {
+    "s_8147c75b6bbf04": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21249-5917-7e41-876e-d7d7c01aa82c",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9898269a6e4c5a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21249-2014-7023-b843-e50cc1e4f882",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
