@@ -1,0 +1,517 @@
+packages/integrations/src/media-organizer/bindery/bindery-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 106-109
+apps/docs/src/components/docs-mascot/styles.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 59-60
+packages/api/src/router/kubernetes/kubernetes-client.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 175-179,185,190
+packages/integrations/src/glances/glances-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28,30-31,79,93,111,126,138
+apps/nextjs/src/components/board/in-place-editor/panel/panel.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 198
+apps/nextjs/src/app/[locale]/widgets/[kind]/_dimension-popover.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 57-63,66-72
+packages/integrations/src/unraid/unraid-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 201
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 207-213
+packages/widgets/src/media-transcoding/health-check-status.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 25-30,57-60
+apps/nextjs/src/components/layout/background.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 85
+packages/integrations/src/emby/emby-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 106,126,248,303
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 43,185
+packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 42-45,61,80,121,138,163,189-192,235
+apps/nextjs/src/app/[locale]/manage/tools/logs/level-selection.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 19
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 37,42-46,60,62,67,70-76,201
+packages/integrations/src/peanut/peanut-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 19-22,35
+packages/ui/src/themes/presets/solarized.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 10
+packages/integrations/src/prowlarr/prowlarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 32,38-39,46,90,112-115
+apps/nextjs/src/components/board/in-place-editor/use-add-in-place-entry.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 7,48,52-53,66
+packages/request-handler/src/release-providers/codeberg.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 73-74
+packages/widgets/src/_inputs/widget-sortable-item-list-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1,58,154
+apps/nextjs/src/components/layout/header/tour-target.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,6,31-46,51
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 138-143,150,166
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 12,34,38,43,48,64-89
+packages/translation/src/config.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 8-19,26,252,263,362
+packages/widgets/src/thingport/featured-model/model-viewer.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,82-83,90-91,250-251
+packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 43,53,56,85,96,103
+packages/widgets/src/app/ping/ping-dot.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 17-18
+packages/widgets/src/thingport/models/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 75
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-identifier-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 37
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 23,48-49,51-58,63
+packages/widgets/src/countdown/recurrence.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 104
+apps/nextjs/src/components/board/items/actions/section-elements.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1-2,6-7
+packages/widgets/src/ups/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 317
+packages/api/src/router/onboard/onboard-router.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 114-116
+packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 30-33,50-53
+packages/integrations/src/gluetun/gluetun-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 21,51-54,65-68
+packages/integrations/src/tracearr/tracearr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 26,45,63,81,118,150,201-205
+apps/nextjs/src/components/assistant/assistant-runtime-controls.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 141
+packages/custom-widgets/src/jsx/string-methods.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 3-12,62,120,126
+apps/nextjs/src/components/board/board-switcher.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 121
+apps/docs/src/pages/index.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 223-228,235-238,258-261
+packages/integrations/src/nextcloud/nextcloud.integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 56,106,121,125-132,195-198
+packages/integrations/src/thingport/thingport-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 52,236
+packages/integrations/src/homeassistant/homeassistant-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 374-377,383-386,411
+packages/core/src/infrastructure/logs/format/metadata.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 5-6
+packages/forms-collection/src/upload-media/upload-media.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 61-65
+packages/integrations/src/download-client/aria2/aria2-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 139,144-150
+packages/integrations/src/llama-cpp/llamacpp-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 31,51-68,72,75-81,83,86-95
+packages/request-handler/src/weather.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 82-85
+packages/integrations/src/download-client/deluge/deluge-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 36-39
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 77,90,106-108,111-112,145,148,151
+packages/widgets/src/errors/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 5-6,47,65
+packages/integrations/src/synology/synology-client.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 50-52,60,265,308-318,341,365,367-368,370,386,403-407
+packages/integrations/src/dashdot/dashdot-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 17-20,118,123,129
+packages/widgets/src/common/homarr-data-table.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 68
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 17,88
+apps/nextjs/src/components/assistant/assistant-url.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1-13
+apps/nextjs/src/app/[locale]/_client-providers/session.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 42-55
+packages/api/src/router/widgets/rssFeed.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 6,147-155
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 37,47,102,113,124,135
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 116,126-129,286-289,302-305
+packages/integrations/src/wazuh/wazuh-queries.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 178-179,183-185
+packages/api/src/router/kubernetes/resource-parser/memory-resource-parser.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 39-41
+packages/api/src/router/custom-widget/secret-persistence.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 34-39,51-57,76-82,104-118
+packages/integrations/src/base/servarr-service-version.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 16-19
+packages/integrations/src/adguard-home/adguard-home-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 22-38,92-95,114,134
+packages/cron-jobs/src/jobs/icons-updater.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 106-109,134-137
+packages/ping/src/index.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 10-14,21
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 30,123-130
+apps/nextjs/src/app/[locale]/manage/tools/logs/log-context.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 5,13,33-38
+packages/integrations/src/opnsense/opnsense-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 31-34,58,82,121,146,157-158,172-175,181-183
+packages/modals/src/index.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 100-101
+packages/request-handler/src/release-providers/http.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28-31
+apps/nextjs/src/styles/color-scheme.scss
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1-10,12
+packages/integrations/src/speedtest-tracker/speedtest-tracker-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 32,45,50,61,75
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 137,226-230,241,243-245,247-250
+apps/nextjs/src/components/board/sections/auto-expand/use-widget-activity-signal.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 42,101-102
+packages/cron-jobs/src/job-manager.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1,34-36,42,48
+packages/integrations/src/beszel/beszel-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 189,248,268,449-455,459-466,470-477,481-487,559-562,695
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 63-64
+packages/widgets/src/bookmarks/add-button.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 158
+packages/integrations/src/jackett/jackett-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 46-49,76-79,115-118
+packages/api/src/assistant-generation-telemetry.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 152-155
+packages/widgets/src/clock/use-current-time.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1-2,5-7
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 121,125
+apps/nextjs/src/components/assistant/assistant-human-tools.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 220-221
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 41-48
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 257-260,277-280
+packages/integrations/src/pi-hole/pi-hole-integration-factory.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 13
+packages/widgets/src/wazuh/views/vulnerabilities.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 7,25-27
+packages/integrations/src/download-client/nzbget/nzbget-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 127
+packages/api/src/router/group.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 7,370,384,394,405-415
+packages/api/src/router/widgets/umami.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 181
+packages/integrations/src/stats/stats-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 134
+apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,38,55-61,82,103-106,108
+packages/ui/src/components/table-pagination.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,43
+packages/integrations/src/truenas/truenas-client.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 6,21,39-40,46-48,74-78,87-88,175-176,180-189,192,207-220,224,227,232-240,242-243,253,337,348-353
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 47,54-56
+apps/nextjs/src/components/assistant/assistant-message-content.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 45,91,103-104,107,111,117,123
+packages/modals-collection/src/docker/add-docker-app-to-homarr.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 6,58-59,95-103,113
+packages/integrations/src/jellyfin/jellyfin-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 144-147
+packages/widgets/src/downloads/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 432,571,715,1055-1061,1162,1173
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/_rename-group-form.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 43
+apps/nextjs/src/components/layout/navigation.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 34
+packages/ui/src/themes/presets/rose-pine.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 10
+packages/widgets/src/app/app.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 41-48
+packages/widgets/src/tracearr/streams-section.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 146-152
+packages/integrations/src/coolify/coolify-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 46,57,76,95,113,131,149,169,187,205,223,241,259
+packages/integrations/src/base/test-connection/test-connection-service.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 127-130,141,145-148,150-151,154-157,159,164-169
+apps/nextjs/src/components/board/tabs/board-tabs.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 189
+packages/widgets/src/smart-home/controls/control-center/controls.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 179
+packages/integrations/src/mock/data/smart-home.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 119,122-140,142-143
+packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 35-38,289-292
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 44,67,94-95,121-125
+packages/integrations/src/media-organizer/radarr/radarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 36-39,238-241
+apps/nextjs/src/app/api/assistant/chat/assistant-stream-error.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 46,48-49,57
+packages/widgets/src/anchor-note/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 89,98,148,161,196,205-210
+packages/widgets/src/beszel-system-table/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 96,103,274,286,318
+packages/api/src/router/app.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 247-248,252,254,257
+apps/nextjs/src/components/assistant/assistant-history.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 133-138
+packages/modals/src/confirm-modal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 44-47,49-51,53-57
+packages/integrations/src/bazarr/bazarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 17,32
+packages/widgets/src/health-monitoring/cluster/resource-popover.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 156,163,167,177,184,188
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 386-395
+packages/custom-widgets/src/jsx/collection-methods.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 168,170
+packages/widgets/src/uptime-kuma/notices.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 107
+packages/widgets/src/llama-cpp/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 433,511,560
+apps/nextjs/src/app/[locale]/manage/error.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 9,30
+packages/redis/src/lib/channel.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 834
+packages/api/src/router/board.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 673,1755-1757,1806-1808,1986-1988,2623
+packages/ui/src/components/password-input/password-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 23-24,32
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 37,75-80
+packages/widgets/src/firewall/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 22,121-124,161
+apps/nextjs/src/components/layout/header/configurable-header.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 46,51,109
+packages/widgets/src/vpn/vpn-card.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 130-131
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 57-58
+packages/custom-widgets/src/workbench/component-reference.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 66,82,100-131
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 626,730
+packages/integrations/src/traefik/traefik-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 36,216
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 59
+packages/forms-collection/src/new-app/_form.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 162-168
+packages/api/src/router/assistant.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 234
+packages/integrations/src/wud/wud-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 22,46
+packages/integrations/src/gotify/gotify-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 14-15,37-40,60-64,84-87,96-99
+packages/integrations/src/openmediavault/openmediavault-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 197,224,246-249
+apps/docs/src/components/pages/about/code-contributors/code-contributor-list.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1,5,10
+packages/widgets/src/releases/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 296-298
+packages/widgets/src/wazuh/_shared/frame.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 138
+packages/core/src/infrastructure/env/schemas.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 23
+packages/integrations/src/download-client/slskd/slskd-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 91,164
+.github/act/README.md
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 26,32
+packages/cron-jobs-core/src/creator.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 89
+packages/integrations/src/ical/ical-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 149-152
+packages/integrations/src/download-client/sabnzbd/sabnzbd-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 158,160
+packages/integrations/src/media-transcoding/tdarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 21-24
+packages/integrations/src/technitium/technitium-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 132-148,314
+packages/ui/src/components/selectable-card/selectable-card.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 18-23,31-33,53-57
+apps/nextjs/src/components/assistant/assistant-conversation-export.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 124-135
+packages/forms-collection/src/access/access-table-rows.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 2,22-23,39-41,45-46
+packages/widgets/src/wazuh/views/agents.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,182-184
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 66-71,109-115,125-130
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-request-value-editors.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 132-136
+apps/nextjs/src/components/assistant/assistant-tool-contracts.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 11-12,162
+packages/ui/src/components/overflow-badge.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 41-45
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28,90
+packages/integrations/src/umami/umami-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 77,89-92,233,251-254,326,370,439,464,490-493
+packages/widgets/src/smart-home/controls/technical/styles.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 179-180,199-201,622-624
+packages/integrations/src/wazuh/wazuh-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 207-210,238,242-245,248-249,274-277,287-290
+apps/nextjs/src/components/backup/dangerous-action-confirmation.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 61-62
+apps/nextjs/src/components/assistant/assistant-markdown-image.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1,5,16
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 179,289
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 3,26-27,69-77,81-84,95-96,101,104,106,115,118,142,181,194,198-202,209-211
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 134
+packages/api/src/router/onboard/onboard-queries.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 3,12
+packages/widgets/src/_inputs/json-path-tree-picker.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 249,299
+packages/widgets/src/smart-home/controls/control-center/styles.module.css
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1744-1745
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 78
+packages/widgets/src/common/use-local-widget-state.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 110
+packages/integrations/src/media-organizer/readarr/readarr-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 30-33,50-53
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 131-144,146,152-153,156-176,316,318,326-327
+packages/integrations/src/homeassistant/homeassistant-connection.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 617-618
+packages/widgets/src/_inputs/widget-multi-text-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 103
+packages/widgets/src/immich/server-stats/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 9,50-51,145-149
+packages/integrations/src/ntfy/ntfy-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 14-15,31-35
+packages/api/src/router/kubernetes/router/cluster.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 42,58
+packages/api/src/schema-merger.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 12-14,16-20
+packages/validation/src/redirection-url.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 9-19,21-22
+apps/docs/src/components/workshop/ScreenshotEditor.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 100,117
+packages/translation/src/client/use-change-locale.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 20
+apps/nextjs/src/app/[locale]/manage/tools/logs/font-size-slider.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 6-7,12,18
+packages/custom-widgets/src/core/options-schema.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 100-101
+packages/api/src/router/kubernetes/router/nodes.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28,43
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 127
+packages/integrations/src/beszel/pocketbase-realtime.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 10-11,17,24,48-49,64
+packages/custom-widgets/src/jsx/interactive-components.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4,123,128,136-138
+packages/widgets/src/firewall/firewall-menu.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 7,14,17
+packages/widgets/src/thingport/library-stats/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 65
+packages/workshop/src/backend.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 728-729
+packages/widgets/src/rssFeed/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 6,20
+packages/integrations/src/anchor/anchor-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 24-27
+packages/spotlight/src/modes/app-integration-board/boards-search-group.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 24,100
+packages/api/src/router/widgets/releases.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 39
+packages/translation/src/lang/en.json
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 9301,9307
+packages/ui/src/integration-select-grid/integration-select-grid.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 58-60
+apps/docs/src/components/ui/toggle-group.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 38
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 194,199
+packages/request-handler/src/air-quality.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 61-64
+packages/integrations/src/patchmon/patchmon-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 20,44
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 281,287
+packages/api/src/router/integration/integration-router.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 245,303,375,412,891,906
+packages/widgets/src/health-monitoring/rings/memory-ring.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 60-61
+apps/workshop/homarr_provider.go
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 564
+packages/widgets/src/widget-integration-select.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 171
+apps/nextjs/src/components/assistant/assistant-tool-rendering.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 35,168-172
+packages/api/src/router/custom-widget/configuration-requests.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 93-98
+apps/nextjs/src/components/board/in-place-editor/panel/pick-step.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 114-121
+packages/integrations/src/pi-hole/v5/pi-hole-integration-v5.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 24,44-47,62,74
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 55
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 206-208
+packages/api/src/router/docker/docker-router.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 248
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 66,73
+packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 18,48
+packages/api/src/router/integration/integration-test-connection.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28,99
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 142-145
+apps/docs/src/components/workshop/SubmitForm.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 420,435
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 98
+packages/widgets/src/smart-home/controls/control-center/color-controls.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 113
+packages/widgets/src/umami/umami-events-content.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 48-49,55-56,76
+packages/forms-collection/src/board-create/board-create-form.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 84
+apps/nextjs/scripts/standalone-artifact.mjs
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 79
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 48,412,423
+apps/docs/src/components/pages/about/translations-contributors/translation-constributor-list.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 1,6
+apps/nextjs/src/components/layout/header/configurable-header.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 332
+apps/nextjs/src/components/layout/loading.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 4
+packages/widgets/src/bookmarks/groups.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 37,62
+packages/common/src/stopwatch.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 41
+packages/integrations/src/immich/immich-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 21,154,171-173,183-184
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 378-380,392-394,403
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 403,475,527-528,535
+packages/integrations/src/unifi-controller/unifi-controller-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 146,159-162,246
+packages/request-handler/src/duckduckgo-bangs.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 55
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 265-273
+packages/integrations/src/plex/plex-integration.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 455,477-480
+apps/nextjs/src/components/assistant/assistant-browser-tool-executors.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 13
+packages/api/src/router/custom-widget/secret-procedures.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 77-79
+packages/widgets/src/_inputs/widget-integration-select-input.tsx
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 25-26,52-53
+packages/api/src/router/section/section-router.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 5-6,11,33-34,52-54,59-62
+apps/nextjs/src/app/api/assistant/chat/assistant-integration-research.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 379-387
+packages/widgets/src/wazuh/_shared/links.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 43-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "90acde7634b88946cc7bd491d5adc10c337e2555",
+  "prompts": {},
+  "sessions": {
+    "s_d2a825fc82ac1d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21238-39a6-72d3-ab12-b89b3efbcd54",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
