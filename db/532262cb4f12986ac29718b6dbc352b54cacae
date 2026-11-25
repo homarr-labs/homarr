@@ -1,0 +1,24 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-stream-error.ts
+  s_202d227ac9d617::t_ec5228cd7085dc 124,156-157
+  s_202d227ac9d617::t_75ee6b05c66c4a 121-122
+  s_202d227ac9d617::t_a6a0cf1c29a280 158
+apps/nextjs/src/app/api/assistant/chat/assistant-stream-error.spec.ts
+  s_202d227ac9d617::t_75ee6b05c66c4a 34-37,46-48
+  s_202d227ac9d617::t_ec5228cd7085dc 1,15-33,38-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "db532262cb4f12986ac29718b6dbc352b54cacae",
+  "prompts": {},
+  "sessions": {
+    "s_202d227ac9d617": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21247-31dd-7122-b521-7a3855717543",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
