@@ -18,9 +18,9 @@ import { statsWidget } from "@site/docs/widgets/stats";
 <IntegrationCapabilites items={[{ widget: statsWidget }]} />
 
 The [Stats widget](/docs/widgets/stats) displays subscribed channels, downloaded videos and the storage they use, the
-downloaded and failed counts of the last run, and the Youtarr and yt-dlp versions. The last-run values come from the
-most recent run that downloaded or failed a video, so a later check that finds nothing new leaves them unchanged. They
-are empty until such a run has finished.
+downloaded and failed counts of the last run, and the Youtarr and yt-dlp versions. The counts are empty until Youtarr
+reports a finished run and can both be zero after a first empty check or a run-level error. A later successful check that finds nothing new
+can leave the previous counts unchanged.
 
 Requires Youtarr 1.94.0 or newer.
 
