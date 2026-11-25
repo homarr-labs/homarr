@@ -272,12 +272,14 @@ export const boardContentSchema = z.object({
 });
 
 export const boardItemByIdSchema = z.object({
-  boardId: z.string(),
-  itemId: z.string(),
+  boardId: z.string().min(1).max(255),
+  itemId: z.string().min(1).max(255),
 });
 
 export const updateBoardItemSchema = boardItemByIdSchema.extend({
-  options: boardItemSchema.shape.options.optional(),
+  options: boardItemSchema.shape.options
+    .refine((options) => Buffer.byteLength(JSON.stringify(options)) <= 65_536, "Options exceed 64 KiB")
+    .optional(),
   advancedOptions: itemAdvancedOptionsSchema.optional(),
   integrationIds: z
     .array(z.string())

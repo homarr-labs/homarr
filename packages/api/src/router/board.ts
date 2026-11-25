@@ -1342,7 +1342,7 @@ export const boardRouter = createTRPCRouter({
         where: eq(layouts.boardId, input.id),
         orderBy: asc(layouts.breakpoint),
       });
-      if (!boardLayoutsNeedRepair(boardLayouts)) return boardLayouts;
+      if (ctx.session.apiKey?.readOnly || !boardLayoutsNeedRepair(boardLayouts)) return boardLayouts;
 
       const board = await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session.user.id);
       return board.layouts.map(({ resizeSource: _, ...layout }) => layout);
@@ -1368,12 +1368,9 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-      const requiredGutterRoots = (["left", "right"] as const).filter((lane) =>
-        input.layouts.some((layout) => getBoardLaneColumnCount(layout, lane) > 0),
+      return await serializeBoardItemPlacementAsync(input.id, () =>
+        saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.id, () => input.layouts),
       );
-      await ensureGutterRootSectionsAsync(ctx.db, input.id, requiredGutterRoots);
-
-      return await saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.id, () => input.layouts);
     }),
   updateLayout: protectedProcedure
     .meta({
@@ -1392,42 +1389,37 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      const requestedGutterColumnCounts = {
-        left: input.leftGutterColumnCount ?? 0,
-        right: input.rightGutterColumnCount ?? 0,
-      };
-      const requiredGutterRoots = (["left", "right"] as const).filter((lane) => requestedGutterColumnCounts[lane] > 0);
-      await ensureGutterRootSectionsAsync(ctx.db, input.boardId, requiredGutterRoots);
+      const savedLayouts = await serializeBoardItemPlacementAsync(input.boardId, () =>
+        saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.boardId, (currentLayouts) => {
+          if (!currentLayouts.some((layout) => layout.id === input.layoutId)) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
+          }
 
-      const savedLayouts = await saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.boardId, (currentLayouts) => {
-        if (!currentLayouts.some((layout) => layout.id === input.layoutId)) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
-        }
+          const parsedLayouts = responsiveBoardLayoutsSchema.safeParse(
+            currentLayouts.map((layout) =>
+              layout.id === input.layoutId
+                ? {
+                    ...layout,
+                    name: input.name ?? layout.name,
+                    columnCount: input.columnCount ?? layout.columnCount,
+                    leftGutterColumnCount: input.leftGutterColumnCount ?? layout.leftGutterColumnCount,
+                    rightGutterColumnCount: input.rightGutterColumnCount ?? layout.rightGutterColumnCount,
+                    breakpoint: input.breakpoint ?? layout.breakpoint,
+                  }
+                : layout,
+            ),
+          );
+          if (!parsedLayouts.success) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              cause: parsedLayouts.error,
+              message: parsedLayouts.error.message,
+            });
+          }
 
-        const parsedLayouts = responsiveBoardLayoutsSchema.safeParse(
-          currentLayouts.map((layout) =>
-            layout.id === input.layoutId
-              ? {
-                  ...layout,
-                  name: input.name ?? layout.name,
-                  columnCount: input.columnCount ?? layout.columnCount,
-                  leftGutterColumnCount: input.leftGutterColumnCount ?? layout.leftGutterColumnCount,
-                  rightGutterColumnCount: input.rightGutterColumnCount ?? layout.rightGutterColumnCount,
-                  breakpoint: input.breakpoint ?? layout.breakpoint,
-                }
-              : layout,
-          ),
-        );
-        if (!parsedLayouts.success) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            cause: parsedLayouts.error,
-            message: parsedLayouts.error.message,
-          });
-        }
-
-        return parsedLayouts.data;
-      });
+          return parsedLayouts.data;
+        }),
+      );
       const savedLayout = savedLayouts.find((layout) => layout.id === input.layoutId);
       if (!savedLayout) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
@@ -1586,7 +1578,12 @@ export const boardRouter = createTRPCRouter({
       const boardWhere = eq(boards.id, input.id);
       await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
-      const board = await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session.user.id);
+      const board = await getFullBoardWithWhereAsync(
+        ctx.db,
+        boardWhere,
+        ctx.session.user.id,
+        !ctx.session.apiKey?.readOnly,
+      );
       return {
         id: board.id,
         name: board.name,
@@ -2451,13 +2448,22 @@ export const boardRouter = createTRPCRouter({
     }),
   deleteItem: protectedProcedure
     .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/boards/{boardId}/items/{itemId}",
+        tags: ["boards"],
+        protect: true,
+        summary: "Delete one board item",
+        description:
+          "Remove one item with its placements and integration links and return the deleted item ID. Requires modify access to the board.",
+      },
       mcp: {
         enabled: true,
         description:
           "Permanently delete one widget/app item and its placements from a board. Requires modify access. Read board_getItems first to identify the intended boardId and itemId. Other items and their placements are preserved. Returns { itemId }.",
       },
     })
-    .input(z.object({ boardId: z.string().min(1).max(255), itemId: z.string().min(1).max(255) }))
+    .input(boardItemByIdSchema)
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
@@ -2591,117 +2597,99 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      const storedItem = await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
-      if (storedItem.kind === "app" && input.options !== undefined) {
-        input.options = normalizeAppWidgetOptions(input.options);
-      }
-      const submittedItem: z.infer<typeof boardItemSchema> = {
-        ...storedItem,
-        options: input.options ?? storedItem.options,
-        advancedOptions: input.advancedOptions ?? storedItem.advancedOptions,
-        integrationIds: input.integrationIds ?? storedItem.integrationIds,
-      };
+      return await serializeBoardItemPlacementAsync(input.boardId, async () => {
+        const storedItem = await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
+        if (storedItem.kind === "app" && input.options !== undefined) {
+          input.options = normalizeAppWidgetOptions(input.options);
+        }
+        const submittedItem: z.infer<typeof boardItemSchema> = {
+          ...storedItem,
+          options: input.options ?? storedItem.options,
+          advancedOptions: input.advancedOptions ?? storedItem.advancedOptions,
+          integrationIds: input.integrationIds ?? storedItem.integrationIds,
+        };
 
-      await validateWidgetConfigurationsAsync(ctx, [submittedItem], [storedItem]);
-      throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
-        submittedItems: [submittedItem],
-        storedItems: [storedItem],
+        await validateWidgetConfigurationsAsync(ctx, [submittedItem], [storedItem]);
+        throwIfCustomWidgetPlacementChangeForbidden({
+          isAdmin: ctx.session.user.permissions.includes("admin"),
+          submittedItems: [submittedItem],
+          storedItems: [storedItem],
+        });
+        if (submittedItem.kind === "timetable" && input.options !== undefined) {
+          await validateTimetableOptionsChangeAsync(submittedItem.options, storedItem.options);
+        }
+
+        const addedIntegrationIds = submittedItem.integrationIds.filter(
+          (integrationId) => !storedItem.integrationIds.includes(integrationId),
+        );
+        const removedIntegrationIds = storedItem.integrationIds.filter(
+          (integrationId) => !submittedItem.integrationIds.includes(integrationId),
+        );
+        const itemUpdate = {
+          options: input.options === undefined ? undefined : superjson.stringify(submittedItem.options),
+          advancedOptions:
+            input.advancedOptions === undefined ? undefined : superjson.stringify(submittedItem.advancedOptions),
+        };
+        const shouldUpdateItem = input.options !== undefined || input.advancedOptions !== undefined;
+
+        await handleTransactionsAsync(ctx.db, {
+          async handleAsync(db, schema) {
+            await db.transaction(async (transaction) => {
+              if (shouldUpdateItem) {
+                await transaction
+                  .update(schema.items)
+                  .set(itemUpdate)
+                  .where(and(eq(schema.items.id, submittedItem.id), eq(schema.items.boardId, input.boardId)));
+              }
+              if (removedIntegrationIds.length > 0) {
+                await transaction
+                  .delete(schema.integrationItems)
+                  .where(
+                    and(
+                      eq(schema.integrationItems.itemId, submittedItem.id),
+                      inArray(schema.integrationItems.integrationId, removedIntegrationIds),
+                    ),
+                  );
+              }
+              if (addedIntegrationIds.length > 0) {
+                await transaction
+                  .insert(schema.integrationItems)
+                  .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })));
+              }
+            });
+          },
+          handleSync(db) {
+            db.transaction((transaction) => {
+              if (shouldUpdateItem) {
+                transaction
+                  .update(items)
+                  .set(itemUpdate)
+                  .where(and(eq(items.id, submittedItem.id), eq(items.boardId, input.boardId)))
+                  .run();
+              }
+              if (removedIntegrationIds.length > 0) {
+                transaction
+                  .delete(integrationItems)
+                  .where(
+                    and(
+                      eq(integrationItems.itemId, submittedItem.id),
+                      inArray(integrationItems.integrationId, removedIntegrationIds),
+                    ),
+                  )
+                  .run();
+              }
+              if (addedIntegrationIds.length > 0) {
+                transaction
+                  .insert(integrationItems)
+                  .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })))
+                  .run();
+              }
+            });
+          },
+        });
+
+        return await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
       });
-      if (submittedItem.kind === "timetable" && input.options !== undefined) {
-        await validateTimetableOptionsChangeAsync(submittedItem.options, storedItem.options);
-      }
-
-      const addedIntegrationIds = submittedItem.integrationIds.filter(
-        (integrationId) => !storedItem.integrationIds.includes(integrationId),
-      );
-      const removedIntegrationIds = storedItem.integrationIds.filter(
-        (integrationId) => !submittedItem.integrationIds.includes(integrationId),
-      );
-      const itemUpdate = {
-        options: input.options === undefined ? undefined : superjson.stringify(submittedItem.options),
-        advancedOptions:
-          input.advancedOptions === undefined ? undefined : superjson.stringify(submittedItem.advancedOptions),
-      };
-      const shouldUpdateItem = input.options !== undefined || input.advancedOptions !== undefined;
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            if (shouldUpdateItem) {
-              await transaction.update(schema.items).set(itemUpdate).where(eq(schema.items.id, submittedItem.id));
-            }
-            if (removedIntegrationIds.length > 0) {
-              await transaction
-                .delete(schema.integrationItems)
-                .where(
-                  and(
-                    eq(schema.integrationItems.itemId, submittedItem.id),
-                    inArray(schema.integrationItems.integrationId, removedIntegrationIds),
-                  ),
-                );
-            }
-            if (addedIntegrationIds.length > 0) {
-              await transaction
-                .insert(schema.integrationItems)
-                .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })));
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            if (shouldUpdateItem) {
-              transaction.update(items).set(itemUpdate).where(eq(items.id, submittedItem.id)).run();
-            }
-            if (removedIntegrationIds.length > 0) {
-              transaction
-                .delete(integrationItems)
-                .where(
-                  and(
-                    eq(integrationItems.itemId, submittedItem.id),
-                    inArray(integrationItems.integrationId, removedIntegrationIds),
-                  ),
-                )
-                .run();
-            }
-            if (addedIntegrationIds.length > 0) {
-              transaction
-                .insert(integrationItems)
-                .values(addedIntegrationIds.map((integrationId) => ({ itemId: submittedItem.id, integrationId })))
-                .run();
-            }
-          });
-        },
-      });
-
-      return await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
-    }),
-  deleteItem: protectedProcedure
-    .meta({
-      openapi: {
-        method: "DELETE",
-        path: "/api/boards/{boardId}/items/{itemId}",
-        tags: ["boards"],
-        protect: true,
-        summary: "Delete one board item",
-        description:
-          "Remove one item with its placements and integration links without replacing the board. Requires modify access to the board.",
-      },
-    })
-    .input(boardItemByIdSchema)
-    .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-
-      const item = await ctx.db.query.items.findFirst({
-        columns: { id: true },
-        where: and(eq(items.id, input.itemId), eq(items.boardId, input.boardId)),
-      });
-      if (!item) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Item not found" });
-      }
-
-      await ctx.db.delete(items).where(eq(items.id, item.id));
     }),
 });
 
@@ -2794,7 +2782,8 @@ const saveBoardLayoutsAsync = async (
     currentLayouts: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>["layouts"],
   ) => z.infer<typeof responsiveBoardLayoutsSchema>,
 ) => {
-  const board = await getFullBoardWithWhereAsync(db, eq(boards.id, boardId), userId);
+  const boardWhere = eq(boards.id, boardId);
+  let board = await getFullBoardWithWhereAsync(db, boardWhere, userId);
   const layoutsToSave = getLayoutsToSave(board.layouts);
   const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
   const submittedLayoutIds = new Set(layoutsToSave.map(({ id }) => id));
@@ -2819,6 +2808,19 @@ const saveBoardLayoutsAsync = async (
   const baseLayout = board.layouts.find((layout) => layout.role === "base");
   if (!baseLayout) {
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
+  }
+
+  const requiredGutterRoots = (["left", "right"] as const).filter((lane) =>
+    layoutsToSave.some((layout) => getBoardLaneColumnCount(layout, lane) > 0),
+  );
+  await ensureGutterRootSectionsAsync(db, boardId, requiredGutterRoots);
+  if (
+    requiredGutterRoots.some(
+      (lane) =>
+        !board.sections.some((section) => section.kind === "empty" && section.xOffset === rootSectionOffsets[lane]),
+    )
+  ) {
+    board = await getFullBoardWithWhereAsync(db, boardWhere, userId);
   }
 
   const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];

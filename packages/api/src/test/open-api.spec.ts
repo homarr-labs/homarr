@@ -1,8 +1,33 @@
+import { createOpenApiFetchHandler } from "trpc-to-openapi";
 import { expect, test, vi } from "vitest";
+import { z } from "zod/v4";
 
 import { openApiDocument } from "../open-api";
+import { createTRPCContext, createTRPCRouter, publicProcedure } from "../trpc";
 
 vi.mock("@homarr/auth", () => ({}));
+
+test("REST masks internal failure details", async () => {
+  const router = createTRPCRouter({
+    fail: publicProcedure
+      .meta({ openapi: { method: "GET", path: "/api/failure" } })
+      .output(z.void())
+      .query(() => {
+        throw new Error("private database details");
+      }),
+  });
+  const req = new Request("http://localhost/api/failure");
+  const response = await createOpenApiFetchHandler({
+    req,
+    endpoint: "/",
+    router,
+    createContext: () => createTRPCContext({ headers: req.headers, session: null, isOpenApiRequest: true }),
+  });
+  expect(response.status).toBe(500);
+  const body = await response.text();
+  expect(body).toContain("Internal server error");
+  expect(body).not.toContain("private database details");
+});
 
 test("OpenAPI documentation should expose board automation endpoints", () => {
   const document = openApiDocument("https://homarr.dev");

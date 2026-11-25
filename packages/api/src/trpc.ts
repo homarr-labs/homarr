@@ -87,15 +87,31 @@ const t = initTRPC
   .meta<OpenApiMeta & McpMeta & CredentialAccessMeta>()
   .create({
     transformer: superjson,
-    errorFormatter: ({ shape, error }) => ({
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-        error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
-        isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
-      },
-    }),
+    errorFormatter: ({ shape, error, ctx }) => {
+      if (ctx?.isOpenApiRequest && error.code === "INTERNAL_SERVER_ERROR") {
+        return {
+          ...shape,
+          message: "Internal server error",
+          data: {
+            code: shape.data.code,
+            httpStatus: shape.data.httpStatus,
+            path: shape.data.path,
+            zodError: null,
+            error: null,
+            isBoardLayoutBoundsError: false,
+          },
+        };
+      }
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+          error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+          isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
+        },
+      };
+    },
   });
 
 /**

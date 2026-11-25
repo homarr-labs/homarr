@@ -909,7 +909,7 @@ describe("update should update an integration", () => {
       id: integrationId,
       name: "Milky Way Pi Hole",
       kind: "piHole" as const,
-      url: "http://milkyway.local",
+      url: "http://hole.local/",
       secrets: [
         { kind: "username" as const, value: "newUser" },
         { kind: "password" as const, value: null },
@@ -917,6 +917,14 @@ describe("update should update an integration", () => {
       ],
       appId,
     };
+
+    await expect(
+      caller.update({ ...input, url: "http://milkyway.local", skipConnectionTest: true }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: "Only secrets already stored for the same integration URL can be kept",
+    });
+    expect(await db.query.integrations.findFirst()).toMatchObject({ url: toInsert.url });
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
     vi.useFakeTimers();
@@ -977,6 +985,35 @@ describe("update should update an integration", () => {
     const dbIntegration = await db.query.integrations.findFirst({ with: { secrets: true } });
     expect(dbIntegration?.name).toBe("Sonarr");
     expect(dbIntegration?.secrets).toEqual([]);
+  });
+
+  test("a concurrent URL and secret change cannot be overwritten by an older update", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+    const id = createId();
+    const original = { id, name: "Sonarr", url: "http://sonarr.local" };
+    await db.insert(integrations).values({ ...original, kind: "sonarr" });
+    await db.insert(integrationSecrets).values({ integrationId: id, kind: "apiKey", value: encryptSecret("old") });
+    const newUrl = "http://new-sonarr.local";
+    vi.mocked(testConnectionAsync).mockImplementationOnce(async () => {
+      await caller.update({
+        ...original,
+        url: newUrl,
+        secrets: [{ kind: "apiKey", value: "new" }],
+        appId: null,
+        skipConnectionTest: true,
+      });
+      return { success: true };
+    });
+
+    await expect(
+      caller.update({ ...original, secrets: [{ kind: "apiKey", value: null }], appId: null }),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(await db.query.integrations.findFirst()).toMatchObject({ url: newUrl });
   });
 
   test("with skipConnectionTest should reject secrets that leave the integration incomplete", async () => {

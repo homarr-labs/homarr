@@ -1540,6 +1540,7 @@ describe("saveBoard should save full board", () => {
       collapsible: false,
       showOpenAll: false,
       scrollable: false,
+      autoExpand: { enabled: false, itemId: null, inactiveDisplay: "collapsed", fitToContent: false },
     });
     expect(
       await db.query.sectionLayouts.findFirst({
@@ -2514,6 +2515,15 @@ describe("getBoardLayouts should return board layouts", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
 
+    const readOnlyCaller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: { ...defaultSession, apiKey: { readOnly: true, oauthClientId: null } },
+    });
+    expect(await readOnlyCaller.getBoardLayouts({ id: boardId })).toEqual([createExistingLayout(layoutId)]);
+    expect((await readOnlyCaller.getBoardContent({ id: boardId })).layouts).toEqual([createExistingLayout(layoutId)]);
+    expect(await db.query.layouts.findMany({ where: eq(layouts.boardId, boardId) })).toHaveLength(1);
+
     const result = await caller.getBoardLayouts({ id: boardId });
 
     expect(result).toEqual([
@@ -2572,6 +2582,7 @@ describe("updateLayout should change one layout", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
     const { boardId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const initialSections = await db.query.sections.findMany({ where: eq(sections.boardId, boardId) });
 
     await expect(caller.updateLayout({ boardId, layoutId: mobileLayoutId, breakpoint: 480 })).rejects.toMatchObject({
       code: "BAD_REQUEST",
@@ -2585,6 +2596,7 @@ describe("updateLayout should change one layout", () => {
 
     const mobileLayout = await db.query.layouts.findFirst({ where: eq(layouts.id, mobileLayoutId) });
     expect(mobileLayout).toMatchObject({ breakpoint: 0, leftGutterColumnCount: 0 });
+    expect(await db.query.sections.findMany({ where: eq(sections.boardId, boardId) })).toEqual(initialSections);
   });
 });
 

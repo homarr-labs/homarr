@@ -8,7 +8,7 @@ import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, SQL } from "@homarr/db";
-import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
+import { and, asc, eq, handleTransactionsAsync, inArray, like, sql } from "@homarr/db";
 import {
   apps,
   groupMembers,
@@ -394,15 +394,21 @@ export const integrationRouter = createTRPCRouter({
       await throwIfAppNotFoundAsync(ctx.db, input.appId);
 
       const reusableSecrets = isSameUrl(integration.url, input.url) ? integration.secrets : [];
+      if (
+        input.secrets.some(
+          (secret) => secret.value === null && !reusableSecrets.some((stored) => stored.kind === secret.kind),
+        )
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only secrets already stored for the same integration URL can be kept",
+        });
+      }
 
       if (input.skipConnectionTest) {
         throwIfSecretsMissing(
           integration.kind,
-          input.secrets
-            .filter(
-              (secret) => secret.value !== null || reusableSecrets.some((dbSecret) => dbSecret.kind === secret.kind),
-            )
-            .map((secret) => secret.kind),
+          input.secrets.map((secret) => secret.kind),
         );
       } else {
         await throwIfConnectionTestFailedAsync(
@@ -417,16 +423,6 @@ export const integrationRouter = createTRPCRouter({
           reusableSecrets.filter((dbSecret) => input.secrets.some((secret) => secret.kind === dbSecret.kind)),
         );
       }
-
-      await ctx.db
-        .update(integrations)
-        .set({
-          name: input.name,
-          url: input.url,
-          externalUrl: input.externalUrl,
-          appId: input.appId,
-        })
-        .where(eq(integrations.id, input.id));
 
       const changedSecrets = input.secrets.filter(
         (secret): secret is { kind: IntegrationSecretKind; value: string } => {
@@ -443,35 +439,94 @@ export const integrationRouter = createTRPCRouter({
         },
       );
 
-      if (changedSecrets.length > 0) {
-        for (const changedSecret of changedSecrets) {
-          const secretInput = {
-            integrationId: input.id,
-            value: changedSecret.value,
-            kind: changedSecret.kind,
-          };
-          if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
-            await addSecretAsync(ctx.db, secretInput);
-          } else {
-            await updateSecretAsync(ctx.db, secretInput);
-          }
+      const integrationUpdate = {
+        name: input.name,
+        url: input.url,
+        externalUrl: input.externalUrl,
+        appId: input.appId,
+      };
+      const changedSecretRows = changedSecrets.map(({ kind, value }) => ({
+        kind,
+        value: encryptSecret(value),
+        integrationId: input.id,
+      }));
+      const removedSecretKinds = integration.secrets
+        .filter((stored) => !input.secrets.some((secret) => secret.kind === stored.kind))
+        .map(({ kind }) => kind);
+      const throwIfIntegrationChanged = (
+        updatedCount: number,
+        secrets: { kind: IntegrationSecretKind; value: string }[],
+      ) => {
+        if (
+          updatedCount === 0 ||
+          secrets.length !== integration.secrets.length ||
+          secrets.some(
+            (secret) => !integration.secrets.some((old) => old.kind === secret.kind && old.value === secret.value),
+          )
+        ) {
+          throw new TRPCError({ code: "CONFLICT", message: "Integration changed while updating; read it again" });
         }
-      }
+      };
 
-      const removedSecrets = integration.secrets.filter(
-        (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
-      );
-      if (removedSecrets.length >= 1) {
-        await ctx.db
-          .delete(integrationSecrets)
-          .where(
-            or(
-              ...removedSecrets.map((secret) =>
-                and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
-              ),
-            ),
-          );
-      }
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            const updated = await transaction
+              .update(schema.integrations)
+              .set(integrationUpdate)
+              .where(and(eq(schema.integrations.id, input.id), eq(schema.integrations.url, integration.url)))
+              .returning({ id: schema.integrations.id });
+            const secretWhere = eq(schema.integrationSecrets.integrationId, input.id);
+            const currentSecrets = await transaction.query.integrationSecrets.findMany({ where: secretWhere });
+            throwIfIntegrationChanged(updated.length, currentSecrets);
+
+            if (changedSecretRows.length > 0) {
+              await transaction
+                .insert(schema.integrationSecrets)
+                .values(changedSecretRows)
+                .onConflictDoUpdate({
+                  target: [schema.integrationSecrets.integrationId, schema.integrationSecrets.kind],
+                  set: { value: sql`excluded.value` },
+                });
+            }
+            if (removedSecretKinds.length > 0) {
+              await transaction
+                .delete(schema.integrationSecrets)
+                .where(and(secretWhere, inArray(schema.integrationSecrets.kind, removedSecretKinds)));
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            const updated = transaction
+              .update(integrations)
+              .set(integrationUpdate)
+              .where(and(eq(integrations.id, input.id), eq(integrations.url, integration.url)))
+              .returning({ id: integrations.id })
+              .all();
+            const secretWhere = eq(integrationSecrets.integrationId, input.id);
+            const currentSecrets = transaction.select().from(integrationSecrets).where(secretWhere).all();
+            throwIfIntegrationChanged(updated.length, currentSecrets);
+
+            if (changedSecretRows.length > 0) {
+              transaction
+                .insert(integrationSecrets)
+                .values(changedSecretRows)
+                .onConflictDoUpdate({
+                  target: [integrationSecrets.integrationId, integrationSecrets.kind],
+                  set: { value: sql`excluded.value` },
+                })
+                .run();
+            }
+            if (removedSecretKinds.length > 0) {
+              transaction
+                .delete(integrationSecrets)
+                .where(and(secretWhere, inArray(integrationSecrets.kind, removedSecretKinds)))
+                .run();
+            }
+          });
+        },
+      });
 
       logger.info("Updated integration", {
         id: input.id,
@@ -1025,34 +1080,6 @@ const throwIfAppNotFoundAsync = async (db: Database, appId: string | null) => {
   throw new TRPCError({
     code: "NOT_FOUND",
     message: "App not found",
-  });
-};
-
-interface UpdateSecretInput {
-  integrationId: string;
-  value: string;
-  kind: IntegrationSecretKind;
-}
-const updateSecretAsync = async (db: Database, input: UpdateSecretInput) => {
-  await db
-    .update(integrationSecrets)
-    .set({
-      value: encryptSecret(input.value),
-    })
-    .where(and(eq(integrationSecrets.integrationId, input.integrationId), eq(integrationSecrets.kind, input.kind)));
-};
-
-interface AddSecretInput {
-  integrationId: string;
-  value: string;
-  kind: IntegrationSecretKind;
-}
-
-const addSecretAsync = async (db: Database, input: AddSecretInput) => {
-  await db.insert(integrationSecrets).values({
-    kind: input.kind,
-    value: encryptSecret(input.value),
-    integrationId: input.integrationId,
   });
 };
 
