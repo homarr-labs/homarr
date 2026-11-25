@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_560cd7a81b1b64::t_d401355f87d530 40,55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1abdaef666ddaa70686b8e4560491cc8dc5ca430",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
