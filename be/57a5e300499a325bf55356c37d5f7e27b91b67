@@ -1,0 +1,19 @@
+apps/docs/docs/integrations/youtarr/index.mdx
+  s_9f569eb084c663::t_a2ccdbc2855bcc 22-23,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "be57a5e300499a325bf55356c37d5f7e27b91b67",
+  "prompts": {},
+  "sessions": {
+    "s_9f569eb084c663": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21247-bb1a-7e80-8fca-e9f54928ee50",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
