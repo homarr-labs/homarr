@@ -61,7 +61,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
           />
         </Box>
       )}
-      <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
+      <Stack className="clock-text-stack" h="100%" align="center" justify="safe center" gap={sizing}>
         {options.customTitleToggle && (
           <Text className="clock-customTitle-text" size={sizing} ta="center">
             {options.customTitle}

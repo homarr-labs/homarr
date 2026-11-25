@@ -23,6 +23,9 @@ import type { SmartContainerOptions } from "@homarr/validation/smart-container";
 import { WidgetActivityProvider } from "@homarr/widgets/activity";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
+import { getLogicalGridSize } from "~/components/board/layout";
+import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { getSmartContainerChromeHeight, getSmartContainerStateLabel } from "./constants";
 import { useSectionItems } from "../use-section-items";
 import { LazyContainerEditModal } from "../container/lazy-container-edit-modal";
 import { projectSmartContainerState } from "./smart-container-layout";
@@ -117,11 +120,25 @@ const ReelSurface = ({
   const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
   const projection = (!isEditMode && focusedProjection) || liveProjection;
   const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
-  const showPeeks = !collapsed && options.appearance === "reel" && states.length > 2 && section.height >= 3;
+  const canvasScale = useBoardCanvasScale();
+  const showPeeks =
+    !collapsed &&
+    options.appearance === "reel" &&
+    states.length > 2 &&
+    section.height >= 3 &&
+    getLogicalGridSize(section.height - 1) >
+      (getSmartContainerChromeHeight(true) + 24) * calculateBoardUiScale(canvasScale);
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);
   const t = useI18n("section.container.smart");
+  const stateLabel = t("state");
+  const previousLabel = getSmartContainerStateLabel(
+    previous?.title,
+    stateLabel,
+    (selectedIndex - 1 + states.length) % states.length,
+  );
+  const nextLabel = getSmartContainerStateLabel(next?.title, stateLabel, (selectedIndex + 1) % states.length);
   const surfaceRef = useRef<HTMLElement>(null);
   const priorStateId = useRef(selectedStateId);
   const { setHovered } = runtime;
@@ -160,6 +177,7 @@ const ReelSurface = ({
     projection,
     now: runtime.now,
     savedRows,
+    showPeeks,
     compactQuiet: options.compactQuiet && !isEditMode,
     expandedItemId,
     toggleCompactWidget: (itemId: string) => {
@@ -244,11 +262,11 @@ const ReelSurface = ({
             type="button"
             className={classes.peek}
             data-direction="previous"
-            aria-label={t("previousState") + ": " + previous.title}
+            aria-label={t("previousState") + ": " + previousLabel}
             onClick={previousState}
           >
             <IconChevronUp />
-            <span className={classes.peekTitle}>{previous.title || t("state")}</span>
+            <span className={classes.peekTitle}>{previousLabel}</span>
           </UnstyledButton>
         )}
         <div className={classes.content}>
@@ -257,12 +275,14 @@ const ReelSurface = ({
             projection.itemIds.length === 0 &&
             innerSections.length === 0 &&
             (!isEditMode || items.length === 0) && (
-              <div className={classes.empty}>
-                <Text size="sm" c="dimmed">
-                  {t("empty")}
-                </Text>
+              <div className={classes.empty} data-narrow={section.width === 1 || undefined}>
+                {(!isEditMode || section.width > 1) && (
+                  <Text size="sm" c="dimmed">
+                    {t("empty")}
+                  </Text>
+                )}
                 {isEditMode && (
-                  <Button variant="light" onClick={openEditor}>
+                  <Button variant="light" size="compact-sm" maw="100%" onClick={openEditor}>
                     {t("addWidget")}
                   </Button>
                 )}
@@ -274,11 +294,11 @@ const ReelSurface = ({
             type="button"
             className={classes.peek}
             data-direction="next"
-            aria-label={t("nextState") + ": " + next.title}
+            aria-label={t("nextState") + ": " + nextLabel}
             onClick={nextState}
           >
             <IconChevronDown />
-            <span className={classes.peekTitle}>{next.title || t("state")}</span>
+            <span className={classes.peekTitle}>{nextLabel}</span>
           </UnstyledButton>
         )}
         <span
@@ -286,7 +306,8 @@ const ReelSurface = ({
           aria-live={runtime.pauseReason === "manual" ? "polite" : "off"}
           aria-atomic="true"
         >
-          {selectedState?.title} · {t("position", { current: selectedIndex + 1, total: states.length })}
+          {getSmartContainerStateLabel(selectedState?.title, stateLabel, selectedIndex)} ·{" "}
+          {t("position", { current: selectedIndex + 1, total: states.length })}
         </span>
       </Box>
     </SmartContainerProjectionProvider>
@@ -304,7 +325,8 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
   const { runtime } = context;
   const preview = inheritedPreview?.containerId === section.id && inheritedPreview.stateId;
   const selectedIndex = runtime.states.findIndex((state) => state.id === runtime.selectedStateId);
-  const stateName = runtime.selectedState?.title || t("state");
+  const stateName = getSmartContainerStateLabel(runtime.selectedState?.title, t("state"), selectedIndex);
+  const hasMultipleStates = runtime.states.length > 1;
   const position = t("position", { current: selectedIndex + 1, total: runtime.states.length });
   const relevance = runtime.selectedState?.relevance ?? "unknown";
   const activityLabel = {
@@ -329,6 +351,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
       data-grid-no-drag
       data-editing={isEditMode || undefined}
       data-narrow={section.width === 1 || undefined}
+      data-single-state={!hasMultipleStates || undefined}
     >
       <Group className={classes.navigation} gap={2} wrap="nowrap">
         <ActionIcon
@@ -341,39 +364,46 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
         >
           <IconChevronLeft style={iconSizes.md} />
         </ActionIcon>
-        <Menu position="bottom-start" shadow="md" returnFocus>
-          <Menu.Target>
-            <UnstyledButton
-              className={classes.statePicker}
-              aria-label={`${t("chooseState", { stateName, position })} · ${activityLabel}`}
-            >
-              <span className={classes.stateTitle}>
-                <Text component="span" size="sm" fw={650} truncate>
-                  {stateName}
-                </Text>
-                <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
-                  {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
-                  {isEditMode ? t("allStatesInEdit") : activityLabel}
-                </Text>
-              </span>
-              <IconChevronDown size={14} aria-hidden />
-            </UnstyledButton>
-          </Menu.Target>
-          <Menu.Dropdown mah="min(60dvh, 20rem)" maw="min(24rem, calc(100vw - 2rem))" style={{ overflowY: "auto" }}>
-            <Menu.Label>{t("states")}</Menu.Label>
-            {runtime.states.map((state, index) => (
-              <Menu.Item
-                key={state.id}
-                mih={44}
-                aria-current={state.id === runtime.selectedStateId || undefined}
-                rightSection={state.id === runtime.selectedStateId ? <IconCheck size={16} /> : null}
-                onClick={() => runtime.selectState(state.id)}
+        {!hasMultipleStates ? (
+          <Text size="sm" fw={650} truncate title={stateName}>
+            {stateName}
+          </Text>
+        ) : (
+          <Menu position="bottom-start" shadow="md" returnFocus>
+            <Menu.Target>
+              <UnstyledButton
+                className={classes.statePicker}
+                aria-label={`${t("chooseState", { stateName, position })} · ${activityLabel}`}
               >
-                {state.title || `${t("state")} ${index + 1}`}
-              </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
+                <span className={classes.stateTitle}>
+                  <Text component="span" size="sm" fw={650} truncate>
+                    {stateName}
+                  </Text>
+                  <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
+                    {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
+                    {isEditMode ? t("allStatesInEdit") : activityLabel}
+                  </Text>
+                </span>
+                <IconChevronDown size={14} aria-hidden />
+              </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown mah="min(60dvh, 20rem)" maw="min(24rem, calc(100vw - 2rem))" style={{ overflowY: "auto" }}>
+              <Menu.Label>{t("states")}</Menu.Label>
+              {runtime.states.map((state, index) => (
+                <Menu.Item
+                  key={state.id}
+                  mih={44}
+                  styles={{ itemLabel: { whiteSpace: "normal", overflowWrap: "anywhere" } }}
+                  aria-current={state.id === runtime.selectedStateId || undefined}
+                  rightSection={state.id === runtime.selectedStateId ? <IconCheck size={16} /> : null}
+                  onClick={() => runtime.selectState(state.id)}
+                >
+                  {getSmartContainerStateLabel(state.title, t("state"), index)}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        )}
         <ActionIcon
           className={classes.step}
           variant="default"
@@ -388,7 +418,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
       {runtime.rotationDeadline !== undefined && (
         <RotationCountdown key={runtime.rotationDeadline} deadline={runtime.rotationDeadline} />
       )}
-      {!isEditMode && !preview && section.options.smart?.mode !== "manual" && (
+      {hasMultipleStates && !isEditMode && !preview && section.options.smart?.mode !== "manual" && (
         <ActionIcon
           data-smart-resume
           variant="subtle"

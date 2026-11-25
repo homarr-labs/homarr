@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { Box, Button, Stack, Switch, Tabs, TextInput } from "@mantine/core";
+import { Box, Button, Stack, Switch, Tabs, Text, TextInput } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
@@ -51,6 +51,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const { updateBoard } = useUpdateBoard();
   const settings = useSettings();
   const formId = useId();
+  const [capacityWarning, setCapacityWarning] = useState(false);
   const utils = clientApi.useUtils();
   const [initialSmart] = useState(() =>
     getContainerEditorSmartOptions(
@@ -133,7 +134,10 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       activityCapableKinds.has(item.kind) &&
       item.layouts.some((layout) => layout.layoutId === currentLayoutId && layout.sectionId === innerProps.containerId),
   );
-  const setSmart = (value: SmartContainerOptions) => form.setFieldValue("smart", value);
+  const setSmart = (value: SmartContainerOptions) => {
+    setCapacityWarning(false);
+    form.setFieldValue("smart", value);
+  };
   const setSmartOption = <K extends keyof SmartContainerOptions>(key: K, value: SmartContainerOptions[K]) =>
     setSmart({ ...smart, [key]: value });
   const changeStateItems = (stateId: string, itemIds: string[]) =>
@@ -187,7 +191,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
     });
     setSelectedStateId(destination.id);
   };
-  const notifyStateFull = () => showErrorNotification({ title: translate("common.error"), message: t("stateFull") });
+  const notifyStateFull = () => setCapacityWarning(true);
   const addItem = (index: number) => {
     const stateId = selectedStateId;
     const destination = smart.states.find((entry) => entry.id === stateId);
@@ -472,6 +476,11 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         )}
       </Box>
       <WidgetEditFooter>
+        {capacityWarning && (
+          <Text role="alert" size="sm" c="red" mb="xs">
+            {t("stateFull")}
+          </Text>
+        )}
         <ModalFormFooter onCancel={closeEditor} form={formId} />
       </WidgetEditFooter>
     </Stack>

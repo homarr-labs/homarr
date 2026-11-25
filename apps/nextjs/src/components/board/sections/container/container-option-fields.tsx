@@ -22,6 +22,8 @@ interface SmartOptionsProps {
   setSmartOption: <K extends keyof SmartContainerOptions>(key: K, value: SmartContainerOptions[K]) => void;
 }
 
+import { getSmartContainerStateLabel } from "../smart-container/constants";
+
 export const editorSwitchStyles = { body: { minHeight: 44, alignItems: "center" } };
 
 export const ContainerRotationSettings = ({ smart, setSmartOption }: SmartOptionsProps) => {
@@ -57,12 +59,10 @@ export const ContainerRotationSettings = ({ smart, setSmartOption }: SmartOption
         label={t("fallbackState")}
         description={t("fallbackStateDescription")}
         placeholder={t("firstEnabledState")}
-        data={smart.states
-          .filter((state) => state.enabled)
-          .map((state, index) => ({
-            value: state.id,
-            label: state.title || `${t("state")} ${index + 1}`,
-          }))}
+        data={smart.states.flatMap((state, index) => {
+          if (!state.enabled) return [];
+          return [{ value: state.id, label: getSmartContainerStateLabel(state.title, t("state"), index) }];
+        })}
         value={smart.fallbackStateId ?? null}
         clearable
         onChange={(id) => setSmartOption("fallbackStateId", id ?? undefined)}

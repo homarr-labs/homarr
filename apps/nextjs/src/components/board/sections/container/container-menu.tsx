@@ -31,6 +31,8 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
   if (!isEditMode) return null;
 
   const label = section.options.title.trim() || tContainer("untitled");
+  const isSmart = section.options.smart?.enabled;
+  const isNarrow = isSmart && section.width === 1;
 
   const openEditModal = () => {
     openModal({
@@ -43,6 +45,7 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
     <div
       className={combineClasses(classes.anchor, placement === "header" ? classes.headerAnchor : classes.borderAnchor)}
       style={{ "--container-edit-bar-depth": depth } as CSSProperties}
+      data-narrow={isNarrow || undefined}
     >
       <div className={classes.bar} data-board-container-edit-bar data-grid-no-drag>
         {placement === "border" && (
@@ -59,12 +62,13 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
               color="blue"
               leftSection={<IconPencil size="var(--mantine-font-size-xs)" />}
               className={classes.editButton}
+              classNames={{ label: classes.editLabel, section: classes.editIcon }}
               aria-label={`${tContainer("editBar.edit")}: ${label}`}
             >
               {tContainer("editBar.edit")}
             </Button>
           </Menu.Target>
-          <Menu.Dropdown miw={128}>
+          <Menu.Dropdown miw={128} maw="min(26rem, calc(100vw - 2rem))">
             <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
               {tItem("action.edit")}
             </Menu.Item>
@@ -78,6 +82,7 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
             <InlineConfirmMenuItem
               color="red"
               confirmLabel={tContainer("remove.message")}
+              styles={{ itemLabel: { whiteSpace: "normal", overflowWrap: "anywhere" } }}
               leftSection={<IconTrash size={16} />}
               onConfirm={() => removeContainer({ id: section.id })}
             >

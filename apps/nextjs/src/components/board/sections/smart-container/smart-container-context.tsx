@@ -12,6 +12,7 @@ interface SmartContainerContextValue {
   projection: Projection;
   now: number;
   savedRows: number;
+  showPeeks: boolean;
   runtime: ReturnType<typeof useSmartContainerRuntime>;
   focusedItemId: string | null;
   compactQuiet: boolean;

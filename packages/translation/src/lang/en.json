@@ -2454,6 +2454,7 @@
         "compactQuietDescription": "Give active widgets more room while keeping quiet widgets visible.",
         "minActiveRows": "Minimum rows per active widget",
         "maxActiveRows": "Maximum rows per active widget",
+        "scrollHint": "Scroll to see more widgets",
         "stateFull": "This state is full. Move widgets to another state to make room.",
         "invalidSettings": "Check the state settings and widget row limits.",
         "concurrentChange": "This container or an edited widget changed while you were editing. Close and reopen the editor to try again.",

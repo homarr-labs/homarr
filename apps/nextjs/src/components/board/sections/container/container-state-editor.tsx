@@ -29,6 +29,7 @@ import { smartContainerStateLimit } from "@homarr/validation/smart-container";
 import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import type { Item } from "~/app/[locale]/boards/_types";
+import { getSmartContainerStateLabel } from "../smart-container/constants";
 import classes from "./container-editor.module.css";
 import { editorSwitchStyles } from "./container-option-fields";
 
@@ -98,7 +99,7 @@ export const ContainerStateSettings = ({
               </Text>
             }
           >
-            {state.title || t("state")}
+            {getSmartContainerStateLabel(state.title, t("state"), index)}
           </Button>
         ))}
       </Stack>
@@ -107,6 +108,10 @@ export const ContainerStateSettings = ({
         value={selected.title}
         maxLength={64}
         onChange={(event) => changeSelected({ title: event.currentTarget.value })}
+        onBlur={(event) => {
+          const title = event.currentTarget.value.trim();
+          if (title !== selected.title) changeSelected({ title });
+        }}
       />
       <NumberInput
         label={t("priority")}
@@ -258,7 +263,7 @@ export const ContainerStatePreview = ({
       <Stack className={classes.reel} gap="xs">
         <Group justify="space-between" wrap="nowrap">
           <Text fw={600} truncate>
-            {selected.title || t("state")}
+            {getSmartContainerStateLabel(selected.title, t("state"), stateIndex)}
           </Text>
           <Text size="xs" c="dimmed">
             {t("position", { current: stateIndex + 1, total: smart.states.length })}
@@ -336,7 +341,7 @@ export const ContainerStatePreview = ({
                     value={selected.id}
                     data={smart.states.map((state, statePosition) => ({
                       value: state.id,
-                      label: state.title || `${t("state")} ${statePosition + 1}`,
+                      label: getSmartContainerStateLabel(state.title, t("state"), statePosition),
                     }))}
                     allowDeselect={false}
                     onChange={(id) => {

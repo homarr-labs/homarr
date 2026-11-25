@@ -64,6 +64,9 @@
 :global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing] {
   padding-inline-end: calc(84px * var(--board-canvas-ui-scale, 1));
 }
+:global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing][data-narrow] {
+  padding-inline-end: calc(52px * var(--board-canvas-ui-scale, 1));
+}
 :global([data-smart-edit-bar-in-toolbar]) .toolbar[data-editing] .edit {
   display: none;
 }
@@ -126,6 +129,7 @@
     padding-inline: 3px;
   }
 }
+.toolbar[data-single-state] .step,
 .toolbar[data-narrow] .step,
 .toolbar[data-narrow] .countdown,
 .toolbar[data-narrow] .edit {
@@ -159,6 +163,10 @@
   justify-content: center;
   gap: var(--mantine-spacing-sm);
   text-align: center;
+}
+.empty[data-narrow] {
+  padding-inline: 2px;
+  overflow-wrap: anywhere;
 }
 .liveRegion {
   position: absolute;

@@ -22,8 +22,16 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
   const [errorTimestamp] = useState(Date.now);
 
   return (
-    <Stack h="100%" align="center" justify="center" gap="md" data-homarr-widget-error>
-      <props.icon style={zoomCompensatedSize(40)} />
+    <Stack
+      h="100%"
+      align="center"
+      justify="safe center"
+      gap={4}
+      p={4}
+      style={{ overflowY: "auto" }}
+      data-homarr-widget-error
+    >
+      <props.icon style={zoomCompensatedSize(24)} />
       <Stack gap={0}>
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>
         {props.showLogsLink && session?.user.permissions.includes("other-view-logs") && (

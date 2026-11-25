@@ -129,3 +129,14 @@
   outline-offset: -2px;
   border-radius: var(--board-item-radius, var(--mantine-radius-md));
 }
+
+.scrollHint {
+  display: grid;
+  align-items: center;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.viewport[aria-describedby]:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
