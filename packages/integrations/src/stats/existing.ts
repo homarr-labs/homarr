@@ -111,6 +111,25 @@ export const existingStatsProviders: Partial<Record<IntegrationKind, ExistingSta
     (client) => client.getStatsAsync(),
     ({ totalContainers, updatesAvailable }) => ({ totalContainers, updatesAvailable }),
   ),
+  dockhand: adapter(
+    "dockhand",
+    [
+      metric("containersRunning", "Running containers"),
+      metric("containersStopped", "Stopped containers"),
+      metric("containersUnhealthy", "Unhealthy containers"),
+      metric("containersTotal", "Containers"),
+      metric("updatesAvailable", "Updates available"),
+      metric("stacksRunning", "Running stacks"),
+      metric("stacksTotal", "Stacks"),
+      metric("images", "Images"),
+      metric("imagesSize", "Image disk usage", "bytes"),
+      metric("volumes", "Volumes"),
+      metric("environmentsOnline", "Environments online"),
+      metric("environments", "Environments"),
+    ],
+    (client) => client.getStatsAsync(),
+    (data) => ({ ...data }),
+  ),
   patchmon: adapter(
     "patchmon",
     [

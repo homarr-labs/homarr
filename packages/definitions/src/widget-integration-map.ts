@@ -120,6 +120,7 @@ export const statsIntegrationKinds = [
   "traefik",
   "archiveTeamWarrior",
   "wud",
+  "dockhand",
   "llamacpp",
   "wazuh",
   "mock",

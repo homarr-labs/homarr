@@ -1048,6 +1048,22 @@ export const integrationDefs = {
     defaultPort: 3000,
     apiKeySettingsPath: "/profile",
   },
+  dockhand: {
+    httpAuth: {
+      type: "modes",
+      modes: [
+        { when: ["apiKey"], auth: { type: "bearer", secretKind: "apiKey" } },
+        { when: [], auth: { type: "none" } },
+      ],
+    },
+    name: "Dockhand",
+    secretKinds: [["apiKey"], []],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dockhand.png",
+    category: ["miscellaneous", "notifications"],
+    documentationSlug: "dockhand",
+    defaultPort: 3000,
+    apiKeySettingsPath: "/profile",
+  },
   llamacpp: {
     httpAuth: { type: "none" },
     name: "llama.cpp",

@@ -1,0 +1,208 @@
+---
+title: "Dockhand"
+description: "Dockhand is a self-hosted web UI for managing Docker containers, stacks and hosts."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { dockhandIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+import { notificationsWidget } from "@site/docs/widgets/notifications";
+
+<IntegrationHeader integration={dockhandIntegration} categories={["Container management"]} />
+
+The Dockhand integration connects Homarr to [Dockhand](https://dockhand.pro) 1.0.25 or newer. Earlier versions have no
+API tokens.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }, { widget: notificationsWidget }]} />
+
+- The [Stats widget](/docs/widgets/stats) shows containers (running, stopped, unhealthy, total), available updates,
+  stacks, images, image disk usage, volumes and online environments. Totals cover every environment the token can see
+  that is currently reachable; offline environments are counted only in **Environments**.
+- The [Notifications widget](/docs/widgets/notifications) lists the 50 most recent container events from Dockhand's
+  activity log. Dockhand only records events for environments with **Collect activity** enabled.
+
+Two [Custom Widgets](/docs/management/custom-widgets) cover a single environment each. Import a definition below,
+select your Dockhand integration as the source, then choose the environment in the widget options.
+
+- **Dockhand Containers** lists the containers with their state and can start, stop or restart them. Actions ask for
+  confirmation and require permission to interact with the integration.
+- **Dockhand Updates** lists containers with a pending image update, a moved pinned digest or a newer version tag.
+  Containers appear only after Dockhand has checked them for updates.
+
+<details>
+<summary>Dockhand Containers definition</summary>
+
+```json
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Dockhand Containers",
+  "description": "Containers in one Dockhand environment, with start, stop and restart.",
+  "iconUrl": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dockhand.png",
+  "sources": {
+    "default": {
+      "type": "integration",
+      "integrationKind": "dockhand"
+    }
+  },
+  "requests": {
+    "environments": {
+      "path": "/api/environments",
+      "cacheSeconds": 300
+    },
+    "containers": {
+      "path": "/api/containers",
+      "query": {
+        "env": {
+          "$option": "environment"
+        },
+        "all": "true"
+      }
+    },
+    "start": {
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/containers/{param:id}/start",
+      "query": {
+        "env": {
+          "$option": "environment"
+        }
+      },
+      "permission": "modify",
+      "confirmation": "Start this container?",
+      "invalidates": ["containers"]
+    },
+    "stop": {
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/containers/{param:id}/stop",
+      "query": {
+        "env": {
+          "$option": "environment"
+        }
+      },
+      "permission": "modify",
+      "confirmation": "Stop this container?",
+      "invalidates": ["containers"]
+    },
+    "restart": {
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/containers/{param:id}/restart",
+      "query": {
+        "env": {
+          "$option": "environment"
+        }
+      },
+      "permission": "modify",
+      "confirmation": "Restart this container?",
+      "invalidates": ["containers"]
+    }
+  },
+  "options": {
+    "environment": {
+      "label": "Environment",
+      "description": "Dockhand environment to show",
+      "control": "select",
+      "default": "",
+      "choicesFrom": {
+        "request": "environments",
+        "valuePath": "id",
+        "labelPath": "name"
+      }
+    }
+  },
+  "template": "<Stack gap=\"xs\" p=\"sm\" h=\"100%\" style={{ minHeight: 0, minWidth: 0 }}>\n  <Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\">\n    <Text size=\"xs\" c=\"dimmed\" tt=\"uppercase\" fw={700} truncate>Dockhand containers</Text>\n    <RefreshButton requestId=\"containers\" label=\"Refresh containers\" size=\"xs\" />\n  </Group>\n  {!options.environment ? (\n    <Text size=\"sm\" c=\"dimmed\">Choose a Dockhand environment in the widget options.</Text>\n  ) : status.containers?.loading ? (\n    <Skeleton height={96} radius=\"md\" />\n  ) : status.containers?.ok === false ? (\n    <Text size=\"sm\" c=\"red\">Could not load containers ({status.containers?.status ?? \"\u2014\"} {status.containers?.statusText ?? \"\"})</Text>\n  ) : (data.containers ?? []).length === 0 ? (\n    <Text size=\"sm\" c=\"dimmed\">No containers in this environment.</Text>\n  ) : (\n    <Stack gap=\"xs\" style={{ flex: 1, minHeight: 0 }}>\n      <Group gap=\"xs\" wrap=\"nowrap\">\n        <TextInput bind=\"filter\" defaultValue=\"\" placeholder=\"Filter by name\" aria-label=\"Filter containers by name\" size=\"xs\" style={{ flex: 1, minWidth: 0 }} />\n        <Text size=\"xs\" c=\"dimmed\" style={{ whiteSpace: \"nowrap\" }}>{(data.containers ?? []).filter((c) => c.state === \"running\").length} / {(data.containers ?? []).length} running</Text>\n      </Group>\n      {inputs.filter && (data.containers ?? []).filter((c) => (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).length === 0 ? (\n        <Text size=\"sm\" c=\"dimmed\">No containers match this filter.</Text>\n      ) : null}\n      <ScrollArea type=\"auto\" style={{ flex: 1, minHeight: 0 }}>\n        <Stack gap={6}>\n          {(data.containers ?? []).filter((c) => !inputs.filter || (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).map((c) => (\n            <Paper key={c.id} withBorder p=\"xs\" radius=\"md\">\n              <Group justify=\"space-between\" wrap=\"wrap\" gap=\"xs\">\n                <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>\n                  <Group gap={6} wrap=\"nowrap\">\n                    <Text size=\"sm\" fw={600} truncate>{c.name ?? c.id}</Text>\n                    <Badge size=\"xs\" variant=\"light\" color={c.state === \"running\" ? \"green\" : c.state === \"paused\" || c.state === \"restarting\" ? \"yellow\" : c.state === \"exited\" || c.state === \"dead\" ? \"red\" : \"gray\"}>{c.state ?? \"unknown\"}</Badge>\n                  </Group>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.image ?? \"\u2014\"}</Text>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.status ?? \"\u2014\"}</Text>\n                </Stack>\n                {c.state === \"running\" ? (\n                  <Group gap={4} wrap=\"nowrap\">\n                    <ActionButton requestId=\"restart\" params={{ id: c.id }} icon=\"refresh\" size=\"compact-xs\" variant=\"light\" label={\"Restart \" + (c.name ?? \"container\")}>Restart</ActionButton>\n                    <ActionButton requestId=\"stop\" params={{ id: c.id }} icon=\"power\" size=\"compact-xs\" variant=\"light\" color=\"red\" label={\"Stop \" + (c.name ?? \"container\")}>Stop</ActionButton>\n                  </Group>\n                ) : (\n                  <ActionButton requestId=\"start\" params={{ id: c.id }} icon=\"play\" size=\"compact-xs\" variant=\"light\" color=\"green\" label={\"Start \" + (c.name ?? \"container\")}>Start</ActionButton>\n                )}\n              </Group>\n            </Paper>\n          ))}\n        </Stack>\n      </ScrollArea>\n    </Stack>\n  )}\n</Stack>"
+}
+```
+
+</details>
+
+<details>
+<summary>Dockhand Updates definition</summary>
+
+```json
+{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Dockhand Updates",
+  "description": "Containers with pending image updates in one Dockhand environment.",
+  "iconUrl": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dockhand.png",
+  "sources": {
+    "default": {
+      "type": "integration",
+      "integrationKind": "dockhand"
+    }
+  },
+  "requests": {
+    "environments": {
+      "path": "/api/environments",
+      "cacheSeconds": 300
+    },
+    "updates": {
+      "path": "/api/containers/pending-updates",
+      "query": {
+        "env": {
+          "$option": "environment"
+        }
+      }
+    }
+  },
+  "options": {
+    "environment": {
+      "label": "Environment",
+      "description": "Dockhand environment to show",
+      "control": "select",
+      "default": "",
+      "choicesFrom": {
+        "request": "environments",
+        "valuePath": "id",
+        "labelPath": "name"
+      }
+    }
+  },
+  "template": "<Stack gap=\"xs\" p=\"sm\" h=\"100%\" style={{ minHeight: 0, minWidth: 0 }}>\n  <Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\">\n    <Text size=\"xs\" c=\"dimmed\" tt=\"uppercase\" fw={700} truncate>Dockhand updates</Text>\n    <RefreshButton requestId=\"updates\" label=\"Refresh updates\" size=\"xs\" />\n  </Group>\n  {!options.environment ? (\n    <Text size=\"sm\" c=\"dimmed\">Choose a Dockhand environment in the widget options.</Text>\n  ) : status.updates?.loading ? (\n    <Skeleton height={96} radius=\"md\" />\n  ) : status.updates?.ok === false ? (\n    <Text size=\"sm\" c=\"red\">Could not load updates ({status.updates?.status ?? \"\u2014\"} {status.updates?.statusText ?? \"\"})</Text>\n  ) : (data.updates?.pendingUpdates ?? []).length === 0 ? (\n    <Text size=\"sm\" c=\"dimmed\">No pending updates. Containers are only listed after Dockhand has checked them for updates.</Text>\n  ) : (\n    <Stack gap=\"xs\" style={{ flex: 1, minHeight: 0 }}>\n      <Text size=\"xs\" c=\"dimmed\">{(data.updates?.pendingUpdates ?? []).length} container(s) with an update</Text>\n      <ScrollArea type=\"auto\" style={{ flex: 1, minHeight: 0 }}>\n        <Stack gap={6}>\n          {(data.updates?.pendingUpdates ?? []).map((u) => (\n            <Paper key={u.containerId} withBorder p=\"xs\" radius=\"md\">\n              <Stack gap={2} style={{ minWidth: 0 }}>\n                <Group gap={6} wrap=\"wrap\">\n                  <Text size=\"sm\" fw={600} truncate style={{ minWidth: 0 }}>{u.containerName ?? u.containerId}</Text>\n                  {u.hasImageUpdate === true ? <Badge size=\"xs\" variant=\"light\" color=\"blue\">New image</Badge> : null}\n                  {u.pinnedToDigest === true ? <Badge size=\"xs\" variant=\"light\" color=\"gray\">Pinned digest moved</Badge> : null}\n                  {u.newerVersion?.tag ? <Badge size=\"xs\" variant=\"light\" color=\"teal\">{u.newerVersion.tag}{u.newerVersion.bump ? \" (\" + u.newerVersion.bump + \")\" : \"\"}</Badge> : null}\n                  {typeof u.releaseAgeRemainingHours === \"number\" && u.releaseAgeRemainingHours > 0 ? <Badge size=\"xs\" variant=\"outline\" color=\"yellow\">Held {u.releaseAgeRemainingHours} h</Badge> : null}\n                </Group>\n                <Text size=\"xs\" c=\"dimmed\" truncate>{u.currentImage ?? \"\u2014\"}</Text>\n                <Text size=\"xs\" c=\"dimmed\">Checked {typeof u.checkedAt === \"string\" ? u.checkedAt.slice(0, 16) : \"\u2014\"}</Text>\n              </Stack>\n            </Paper>\n          ))}\n        </Stack>\n      </ScrollArea>\n    </Stack>\n  )}\n</Stack>"
+}
+```
+
+</details>
+
+### Adding the integration
+
+<AddingIntegration />
+
+Use the URL of the Dockhand web interface without a path, for example `http://dockhand.local:3000`.
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "In Dockhand, open your profile and create an API token. The token is shown only once.",
+        "Enter the dh_... token as the API key in Homarr. It has the same permissions as your Dockhand user.",
+      ],
+    },
+    {
+      credentials: [],
+      steps: ["Leave the secrets empty only when authentication is turned off in Dockhand."],
+    },
+  ]}
+/>
+
+The token's user needs permission to view environments, containers and activity. The Containers Custom Widget also
+needs permission to start, stop and restart containers.
+
+### Troubleshooting
+
+- **401 Unauthorized:** the token is missing, expired or deleted, or Dockhand authentication is enabled and no token was
+  entered. Create a new token and update the integration.
+- **403 Forbidden:** the token's user lacks a required permission or, with Dockhand Enterprise roles, access to the
+  environment.
+- **Stats show "—":** no environment is reachable from Dockhand. Check the environment connection in Dockhand.
+- **No notifications:** turn on **Collect activity** for the environment in Dockhand.
