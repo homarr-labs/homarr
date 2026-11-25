@@ -1141,7 +1141,7 @@ describe("saveBoard should save full board", () => {
             kind: "clock",
             options: {},
             integrationIds: [],
-          advancedOptions: {},
+            advancedOptions: {},
             layouts: board.layouts.map(({ id }) => ({
               layoutId: id,
               sectionId: containerId,
