@@ -1,4 +1,4 @@
-import type { SmartHomeHistoryPoint } from "../interfaces/smart-home/smart-home-types";
+import type { SmartHomeHistoryPoint } from "./smart-home-types";
 
 interface HistoryState {
   state: string;

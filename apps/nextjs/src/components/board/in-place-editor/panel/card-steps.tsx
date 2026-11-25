@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
+import { useState } from "react";
 import { Box, Button, Group, Image, Text, UnstyledButton } from "@mantine/core";
 import { IconApps, IconArrowLeft, IconWand, IconX } from "@tabler/icons-react";
 
@@ -30,9 +31,10 @@ interface CardHeaderProps {
   subtitle: string;
   onBack?: () => void;
   onClose: () => void;
+  controlTargetRef?: Ref<HTMLDivElement>;
 }
 
-const CardHeader = ({ icon, title, subtitle, onBack, onClose }: CardHeaderProps) => {
+const CardHeader = ({ icon, title, subtitle, onBack, onClose, controlTargetRef }: CardHeaderProps) => {
   const t = useI18n("common.action");
 
   return (
@@ -46,6 +48,7 @@ const CardHeader = ({ icon, title, subtitle, onBack, onClose }: CardHeaderProps)
           {subtitle}
         </Text>
       </Box>
+      {controlTargetRef && <Box ref={controlTargetRef} display="contents" />}
       {onBack && (
         <UnstyledButton className={classes.backButton} onClick={onBack}>
           <IconArrowLeft size={14} />
@@ -93,6 +96,7 @@ export const ConfigureStep = ({
   const t = useI18n();
   const isEdit = session.mode === "edit";
   const identity = useTargetIdentity(session.picked, useCatalog);
+  const [headerControlTarget, setHeaderControlTarget] = useState<HTMLDivElement | null>(null);
 
   return (
     <>
@@ -102,9 +106,10 @@ export const ConfigureStep = ({
         subtitle={t("item.edit.settings.label")}
         onBack={isEdit ? undefined : actions.back}
         onClose={() => actions.cancel()}
+        controlTargetRef={setHeaderControlTarget}
       />
       <Box className={classes.body}>
-        <BoundEditorForm />
+        <BoundEditorForm headerControlTarget={headerControlTarget} />
       </Box>
       <Group className={classes.footer} justify="space-between" wrap="wrap" gap={8}>
         <AreaSizeInputs compact />

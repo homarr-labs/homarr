@@ -11,6 +11,7 @@ import {
   IconFlag,
   IconMessage,
   IconPackage,
+  IconPalette,
   IconPlus,
   IconPuzzle,
   IconRefresh,
@@ -38,6 +39,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 import { WorkshopAccountMenu } from "./WorkshopAccountMenu";
+import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 import { WorkshopVoteControl } from "./WorkshopVoteControl";
 import { formatRelativeTime } from "./format";
 import type { SortKey, TypeFilter } from "./useWorkshop";
@@ -45,13 +47,22 @@ import { useWorkshop } from "./useWorkshop";
 
 const SubmitForm = lazy(() => import("./SubmitForm").then((module) => ({ default: module.SubmitForm })));
 
-const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
-const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
+const typeDotColors: Record<SubmissionType, string> = {
+  customCss: "bg-blue-500",
+  customWidget: "bg-yellow-500",
+  customTheme: "bg-violet-500",
+};
+const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget", customTheme: "Theme" };
 const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = {
   customCss: IconBrandCss3,
   customWidget: IconPuzzle,
+  customTheme: IconPalette,
 };
-const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
+const typeBgColors: Record<SubmissionType, string> = {
+  customCss: "bg-blue-500/5",
+  customWidget: "bg-yellow-500/5",
+  customTheme: "bg-violet-500/5",
+};
 const cardMediaClassName = "aspect-video w-full overflow-hidden bg-muted";
 const emptyState = {
   none: { title: "No submissions yet", hint: "Be the first to share something." },
@@ -61,7 +72,7 @@ const emptyState = {
 const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
   { value: "customWidget", label: "Widgets", dot: typeDotColors.customWidget },
-  { value: "customCss", label: "CSS", dot: typeDotColors.customCss },
+  { value: "customTheme", label: "Themes", dot: typeDotColors.customTheme },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
@@ -427,7 +438,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </CardAction>
       </CardHeader>
 
-      <CardContent className="min-h-[4.5rem] flex-1 overflow-hidden">
+      <CardContent className="flex min-h-[4.5rem] flex-1 flex-col gap-2 overflow-hidden">
         {(submission.outdated || submission.reportCount > 0) && (
           <div className="mb-2 flex flex-wrap gap-1.5">
             {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
@@ -438,6 +449,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
             )}
           </div>
         )}
+        <WorkshopIntegrationBadges kinds={submission.integrationKinds} />
         {submission.description && (
           <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{submission.description}</p>
         )}

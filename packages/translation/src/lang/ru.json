@@ -890,6 +890,7 @@
       "deleteConfirm": "Вы уверены, что хотите удалить \"{name}\"? Это действие нельзя отменить.",
       "duplicate": "Создать копию",
       "aiPrompt": "Создать с помощью ИИ",
+      "createAssisted": "",
       "copyAiPrompt": "Копировать промпт для ИИ",
       "enable": "Включить",
       "disable": "Выключить",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Настройка",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Дополнительно",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Разделы пользовательского виджета",
       "widgetPreview": "Предпросмотр виджета",
       "generalInformation": "Основная информация",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Создавайте или исправляйте с помощью любого ИИ",
         "description": "Если есть ссылка на документацию API, сначала добавьте её. Для исправления по возможности запустите предпросмотр. Скопируйте промпт в любой ИИ — он может уточнить недостающие детали. Итоговый JSON вставьте сюда.",
+        "assistedDescription": "",
         "request": "Что должен делать этот виджет?",
         "documentationUrl": "URL документации API (необязательно)",
         "paste": "Вставить",
+        "pasteResponse": "",
         "response": "Ответ ИИ",
         "manualCopyDescription": "Нет доступа к буферу обмена. Выделите промпт ниже и скопируйте его вручную.",
         "manualPasteDescription": "Нет доступа к буферу обмена, или скопированный ответ нужно исправить. Вставьте сюда JSON-ответ ИИ.",
@@ -1304,6 +1321,38 @@
     "useCss": "Импорт CSS",
     "importCss": "Импорт CSS из Мастерской",
     "importCssConfirm": "Заменить текущий пользовательский CSS на \"{title}\"? Ничего не сохранится, пока вы не сохраните настройки панели.",
+    "theme": {
+      "label": "Тема",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "Пользовательский CSS",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "По умолчанию",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Описание",
+      "published": ""
+    },
     "screenshotAlt": "{title}: скриншот {count, number}",
     "screenshotViewer": "Просмотр скриншотов: {title}",
     "screenshotsLabel": "Скриншоты: {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Скрыть миниатюры скриншотов",
     "closeScreenshotViewer": "Закрыть просмотр скриншотов",
     "technicalDetails": "Технические подробности",
+    "integrations": "Интеграции",
     "sourceCode": "Содержимое публикации",
     "report": "Пожаловаться",
     "reportTitle": "Жалоба на публикацию",
@@ -1332,6 +1382,12 @@
       "copyright": "Нарушение авторских прав",
       "inappropriate": "Неприемлемое содержимое",
       "other": "Прочее"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Публикация в Мастерской",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Мобильный",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Прокрутка",
         "description": "Сохранять заданный размер контейнера и прокручивать содержимое, а не растягивать контейнер под него."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Цвет границы"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Скрыто"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Удалить контейнер? Его содержимое перейдёт в окружающую область."
+      },
+      "editBar": {
+        "edit": "Редактировать"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Изменить интеграцию"
       },
       "app": {
-        "propagationNotice": "Изменения приложения применятся везде, где оно используется, на всех панелях."
+        "propagationNotice": "Изменения приложения применятся везде, где оно используется, на всех панелях.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Изменить подключение",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Состояние объекта",
       "description": "Отображает состояние объекта и позволяет управлять им при необходимости",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID объекта"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Город / Почтовый индекс",
         "latitude": "Широта",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Показывать местоположение",
           "description": "Показывать, идёт поток в локальной сети (LAN) или во внешней (WAN)"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "Транскодирование в {target}",
           "containerChanged": "{container} (ремукс)",
           "position": "{position} / {duration}",
+          "progress": "Прогресс",
+          "endsAt": "",
+          "episode": "Серия",
+          "album": "Альбом",
           "unknown": "неизвестный формат"
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Копировать название",
         "copyId": "Копировать ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Сбросить фильтры"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фильтровать загрузки"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Скрывать описание"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Показывать постер"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Открыть сервис уведомлений",
       "deleteNotification": "Удалить уведомление из Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не удалось удалить уведомление",
       "deleteFailedMessage": "Не удалось удалить уведомление. Попробуйте ещё раз."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Все встроенные элементы уже есть в вашей шапке.",
                 "add": "Добавить {item}",
                 "boardShortcut": "Ярлык панели",
+                "widget": "Виджет",
                 "chooseBoard": "Выберите панель"
               },
               "configuration": {
+                "widgetKind": "Виджет",
+                "widgetOptions": "Опции",
+                "boardOnly": "",
                 "description": "В макете этот элемент того же размера, что и в настоящей шапке.",
                 "searchDisplay": {
                   "input": "Строка поиска",
@@ -7270,7 +7393,9 @@
                 "settings": "Ваши настройки",
                 "themeToggle": "Переключить тему",
                 "user": "Учётная запись",
-                "boardUnavailable": "Панель недоступна"
+                "boardUnavailable": "Панель недоступна",
+                "notifications": "Уведомления",
+                "widget": "Виджет"
               }
             },
             "item": {

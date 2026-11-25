@@ -890,6 +890,7 @@
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
+      "createAssisted": "Create with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configure",
+      "assisted": {
+        "modeLabel": "Authoring mode",
+        "mode": "Assisted",
+        "advancedMode": "Advanced",
+        "description": "Connect your API, test a request, then let AI design a widget from real data.",
+        "test": "Test API request",
+        "testDescription": "Only load queries run automatically. Inspect Data, then copy the grounded prompt below. API documentation and response shapes help AI use the right fields.",
+        "importRequired": "An API test is not a finished widget. Paste the generated widget, then preview it before creating it.",
+        "previewRequired": "Run Test and preview for the current generated widget and preview options before creating it. Any edit requires a new final preview.",
+        "finalPreview": "Review the generated widget, run Test and preview, then create it. Test manual queries with the widget's controls and actions in the Actions tab; actions are simulated unless you enable live execution. Static widgets still need a final preview.",
+        "evidenceHelp": "Run a fresh preview after edits. Exercise each manual query in the widget and each action in the Actions tab, then retry Create. Keep live actions off unless you intend to change the real service.",
+        "invalidSources": "Fix the current API source JSON before importing a response so Homarr can verify that credentials stay attached to the same destination and authentication.",
+        "incompatibleSources": "The response changes the destination, authentication, or integration binding for source(s): {sources}. Keep the original source IDs and configuration in the AI response, or explicitly reconfigure these sources in Homarr and test again. Existing credentials have not been sent to the changed destination."
+      },
       "sectionNavigation": "Custom widget sections",
       "widgetPreview": "Widget preview",
       "generalInformation": "General information",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Create or fix with any AI",
         "description": "Add an API docs URL first if you have one. For fixes, run Preview if possible. Copy the prompt into any AI; it can ask for missing details. Paste its final JSON here.",
+        "assistedDescription": "Describe the widget and add API docs if available. Copy the prompt into your AI, then paste its complete JSON response here. Tested response shapes improve generation; credentials stay in Homarr. Review the prompt and response data before sharing them with an external AI.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste",
+        "pasteResponse": "Paste AI response",
         "response": "AI response",
         "manualCopyDescription": "Clipboard access is unavailable. Select the prompt below and copy it manually.",
         "manualPasteDescription": "Clipboard access is unavailable or the copied response needs correction. Paste the AI's JSON response here.",
@@ -1304,6 +1321,38 @@
     "useCss": "Import CSS",
     "importCss": "Import CSS from Workshop",
     "importCssConfirm": "Replace the current custom CSS with \"{title}\"? Nothing is saved until you save the board settings.",
+    "theme": {
+      "label": "Theme",
+      "browse": "Browse Workshop themes",
+      "browseHint": "Browse community themes and preview their changes before saving.",
+      "search": "Search themes",
+      "listLabel": "Workshop themes",
+      "empty": "No Workshop themes found",
+      "review": "Review theme",
+      "reviewCss": "Review CSS",
+      "cssContent": "Custom CSS",
+      "importConfirm": "Only settings in this JSON change. Your preset and CSS stay as they are unless you choose to replace them. Nothing goes live until you save the theme.",
+      "cssWarning": "Only include CSS you trust. It can load external resources.",
+      "useCss": "Replace my custom CSS",
+      "usePreset": "Switch base preset to {name}",
+      "defaultPreset": "Default",
+      "noCss": "This theme does not include custom CSS.",
+      "noChanges": "No settings will change. Select a preset or CSS above if you want to replace it.",
+      "json": "Theme JSON",
+      "copyJson": "Copy theme JSON",
+      "pasteJson": "Paste theme JSON",
+      "copied": "Theme JSON copied.",
+      "clipboardEmpty": "Clipboard is empty. Paste theme JSON below.",
+      "manualPaste": "Clipboard access is unavailable. Paste theme JSON into the field below.",
+      "manualCopy": "Clipboard access is unavailable. Copy the selected JSON manually.",
+      "backToThemes": "Back to themes",
+      "loadDraft": "Load as draft",
+      "share": "Share theme",
+      "shareHint": "Publish a copy of the current theme draft. It includes the base preset, theme settings, and any custom CSS. Review it for private URLs before publishing.",
+      "title": "Listing title",
+      "description": "Description",
+      "published": "Your theme is live on Workshop."
+    },
     "screenshotAlt": "{title} screenshot {count, number}",
     "screenshotViewer": "{title} screenshot viewer",
     "screenshotsLabel": "{title} screenshots",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Hide screenshot thumbnails",
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
+    "integrations": "Integrations",
     "sourceCode": "Workshop entry",
     "report": "Report",
     "reportTitle": "Report submission",
@@ -1332,6 +1382,12 @@
       "copyright": "Copyright",
       "inappropriate": "Inappropriate",
       "other": "Other"
+    },
+    "share": {
+      "title": "Your widget is ready",
+      "description": "Want to share it? Review a credential-free copy and publish it to Workshop when you're ready. Sharing is optional.",
+      "action": "Share on Workshop",
+      "dismiss": "Not now"
     },
     "publish": {
       "title": "Publish to Workshop",
@@ -2166,7 +2222,7 @@
         "luminanceThreshold": "Contrast threshold",
         "jsonHint": "Edit or paste a Mantine theme object. Omitted settings inherit the starting preset. JavaScript and external resources are not supported.",
         "invalidJson": "Enter valid JSON.",
-        "tooLong": "Theme bundle exceeds 48 KB",
+        "tooLong": "Theme JSON is too large",
         "copyJson": "Copy JSON",
         "copied": "Copied",
         "discardJson": "Discard JSON edits",
@@ -2216,6 +2272,7 @@
         "tablet": "Tablet",
         "mobile": "Mobile",
         "includeCustomCss": "Theme CSS",
+        "customCssHint": "Edit CSS alongside the live preview. Changes apply to your instance only after you save.",
         "groups": {
           "layout": "Layout & spacing",
           "typography": "Typography",
@@ -2297,6 +2354,10 @@
       "scrollable": {
         "label": "Scrollable",
         "description": "Keep this container at its set size and scroll its contents instead of growing to fit them."
+      },
+      "autoExpand": {
+        "label": "Auto-expand when active",
+        "description": "Automatically reveal this container when a widget inside it goes active, and hide it again once it's not."
       }
     },
     "action": {
@@ -2321,10 +2382,27 @@
         },
         "borderColor": {
           "label": "Border color"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "Widget to watch",
+            "placeholder": "Select a widget"
+          },
+          "inactiveDisplay": {
+            "collapsed": "Collapsed",
+            "hidden": "Hidden"
+          },
+          "fitToContent": {
+            "label": "Shrink to fit content",
+            "description": "While active, only take up as much height as the watched widget needs. The saved size is the maximum, and the widgets below move up into the freed space."
+          }
         }
       },
       "remove": {
         "message": "Remove this container? Its contents will move into the surrounding area."
+      },
+      "editBar": {
+        "edit": "Edit"
       }
     }
   },
@@ -2466,7 +2544,12 @@
         "integration": "Edit integration"
       },
       "app": {
-        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards.",
+        "confirmDiscard": {
+          "title": "Discard other app changes?",
+          "message": "Only the selected app will be saved. Unsaved changes to other apps will be discarded.",
+          "confirm": "Save and discard"
+        }
       },
       "integration": {
         "action": "Edit connection",
@@ -3331,6 +3414,7 @@
     "smartHome-entityState": {
       "name": "Entity State",
       "description": "Display the state of an entity and toggle it optionally",
+      "selectEntity": "Select an entity in the widget settings",
       "option": {
         "entityId": {
           "label": "Entity ID"
@@ -3366,8 +3450,8 @@
       }
     },
     "smartHome-controls": {
-      "name": "Home Assistant controls",
-      "description": "Monitor and control Home Assistant rooms and entities",
+      "name": "Smart home controls",
+      "description": "Monitor and control smart home rooms and entities",
       "option": {
         "presentation": {
           "label": "Style",
@@ -3482,14 +3566,14 @@
         "otherSource": "These blocks belong to another integration. Choose rooms from the selected integration."
       },
       "live": {
-        "loading": "Loading Home Assistant states",
-        "error": "Could not load Home Assistant states",
+        "loading": "Loading smart home states",
+        "error": "Could not load smart home states",
         "retry": "Retry",
         "actionFailed": "Could not control {name}",
         "actionUnconfirmed": "{name} did not confirm the change",
-        "unconfirmed": "Not confirmed; showing latest Home Assistant state",
+        "unconfirmed": "Not confirmed; showing latest smart home state",
         "selectionLimit": "This selection is too large. Select at most 200 individual entities, 50 rooms and 400 exclusions per widget.",
-        "unknownError": "Home Assistant did not accept the action"
+        "unknownError": "The smart home server did not accept the action"
       },
       "inline": {
         "open": "Blocks ({count})",
@@ -4234,6 +4318,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "Refresh interval (seconds)"
+      },
       "location": {
         "query": "City / Postal code",
         "latitude": "Latitude",
@@ -4365,6 +4452,10 @@
         "showLocation": {
           "label": "Show location",
           "description": "Show whether the stream is on your LAN or WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "Detailed stats up to",
+          "description": "While this many streams or fewer are active, each one gets a row of extra stats underneath it. Set to 0 to always keep rows compact"
         }
       },
       "footer": {
@@ -4397,6 +4488,10 @@
           "transcode": "Transcoding to {target}",
           "containerChanged": "{container} (remux)",
           "position": "{position} / {duration}",
+          "progress": "Progress",
+          "endsAt": "Ends at",
+          "episode": "Episode",
+          "album": "Album",
           "unknown": "unknown format"
         },
         "metadata": {
@@ -4950,7 +5045,18 @@
       "contextMenu": {
         "copyName": "Copy name",
         "copyId": "Copy ID",
+        "setCategory": "Set Category",
+        "setLabels": "Set Labels",
         "clearFilters": "Clear filters"
+      },
+      "setCategory": {
+        "none": "No category",
+        "loadFailed": "Could not load categories. Please try again.",
+        "labels": "Labels",
+        "labelsDescription": "Select labels or type a new label and press Enter.",
+        "labelsLoadFailed": "Could not load labels. Please try again.",
+        "delugePluginRequired": "Enable the Label plugin in Deluge's Preferences → Plugins to change categories.",
+        "transmissionUnsupported": "Transmission 3.0 or later is required to change labels."
       },
       "footer": {
         "filter": "Filter downloads"
@@ -5164,8 +5270,20 @@
         "hideDescription": {
           "label": "Hide description"
         },
+        "hideFeedTitle": {
+          "label": "Hide feed title"
+        },
+        "hideBackgroundImage": {
+          "label": "Hide background image"
+        },
         "showPosterImage": {
           "label": "Show poster image"
+        },
+        "thumbnailWidth": {
+          "label": "Poster width"
+        },
+        "thumbnailHeight": {
+          "label": "Poster height"
         }
       },
       "error": {
@@ -5540,6 +5658,7 @@
       },
       "openService": "Open notification service",
       "deleteNotification": "Delete notification from Gotify",
+      "dismissNotification": "Dismiss notification in Home Assistant",
       "deleteFailed": "Could not delete notification",
       "deleteFailedMessage": "The notification could not be deleted. Please try again."
     },
@@ -7235,9 +7354,13 @@
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
                 "boardShortcut": "Board shortcut",
+                "widget": "Widget",
                 "chooseBoard": "Choose a board"
               },
               "configuration": {
+                "widgetKind": "Widget",
+                "widgetOptions": "Options",
+                "boardOnly": "Requires placement on a board",
                 "description": "This control stays the same size as it does in the live header.",
                 "searchDisplay": {
                   "input": "Search bar",
@@ -7266,7 +7389,9 @@
                 "settings": "Your settings",
                 "themeToggle": "Toggle theme",
                 "user": "Account",
-                "boardUnavailable": "Board unavailable"
+                "boardUnavailable": "Board unavailable",
+                "notifications": "Notifications",
+                "widget": "Widget"
               }
             },
             "item": {

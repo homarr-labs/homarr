@@ -890,6 +890,7 @@
       "deleteConfirm": "Ви впевнені, що хочете видалити \"{name}\"? Цю дію неможливо скасувати.",
       "duplicate": "Дублікат",
       "aiPrompt": "Дизайн з ШІ",
+      "createAssisted": "",
       "copyAiPrompt": "Копіювати запит AI",
       "enable": "Увімкнути",
       "disable": "Вимкнути",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Настроїти",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Додатково",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Користувацькі розділи віджетів",
       "widgetPreview": "Попередній перегляд віджета",
       "generalInformation": "Загальна інформація",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Створити або виправити з будь-яким ШІ",
         "description": "Спочатку додайте URL в документацію API, якщо у вас є. Для виправлень запустіть Попередній перегляд, якщо це можливо. Скопіюйте запит в будь-який AI; він може попросити пропущені деталі. Вставте його остаточний JSON тут.",
+        "assistedDescription": "",
         "request": "Що слід зробити цей віджет?",
         "documentationUrl": "URL-адреса API документації (необов'язково)",
         "paste": "Вставити",
+        "pasteResponse": "",
         "response": "Відповідь ШІ",
         "manualCopyDescription": "Доступ до буфера обміну недоступний. Виберіть запит нижче та скопіюйте його вручну.",
         "manualPasteDescription": "Доступ до буфера обміну недоступний, або скопійована відповідь потребує виправлення. Вставте відповідь AI JSON в ньому тут.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Імпортувати CSS з Майстерні",
     "importCssConfirm": "Замінити поточний користувацький CSS на \"{title}\"? Нічого не зберігається, поки ви не збережете налаштування форуму.",
+    "theme": {
+      "label": "Тема",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Типово",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Опис",
+      "published": ""
+    },
     "screenshotAlt": "{title} скріншот {count, number}",
     "screenshotViewer": "Переглядач скріншотів {title}",
     "screenshotsLabel": "Скріншоти {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Приховати мініатюри екрану",
     "closeScreenshotViewer": "Закрити переглядач знімків екрану",
     "technicalDetails": "Технічні деталі",
+    "integrations": "Інтеграції",
     "sourceCode": "Запис в Майстерні",
     "report": "Доповісти",
     "reportTitle": "Повідомити про ухвалення",
@@ -1332,6 +1382,12 @@
       "copyright": "Авторське право",
       "inappropriate": "Невідповідність",
       "other": "Інше"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Опублікувати в Майстерні",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Мобільна",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Прокручування",
         "description": "Підтримує цей контейнер у своєму встановленому розмірі і прокручує його вміст замість того, щоб відповідати йому."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Колір контура"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Приховати"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Видалити цей контейнер? Вміст буде переміщено в навколишню зону."
+      },
+      "editBar": {
+        "edit": "Редагувати"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Редагувати інтеграцію"
       },
       "app": {
-        "propagationNotice": "Зміни до цього застосунку будуть застосовані скрізь, де вони використовуються на всіх панелях."
+        "propagationNotice": "Зміни до цього застосунку будуть застосовані скрізь, де вони використовуються на всіх панелях.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Редагувати",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Стан об'єкта",
       "description": "Відображення стану сутності і включеного параметру",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Ідентифікатор об'єкта"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Місто / Поштовий індекс",
         "latitude": "Широта",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Показати розташування",
           "description": "Показувати, чи перебуває потік у вашій локальній або глобальній мережі."
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Прогрес завантаження",
+          "endsAt": "",
+          "episode": "Епізод",
+          "album": "Альбом",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Копіювати назву",
         "copyId": "Копіювати ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Очистити фільтри"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фільтрувати завантаження"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Приховати опис"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Показати зображення постеру"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Відкрити службу сповіщень",
       "deleteNotification": "Видалити сповіщення з Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не вдалося видалити сповіщення",
       "deleteFailedMessage": "Сповіщення не вдалося видалити. Будь ласка, спробуйте ще раз."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Кожна вбудована система управління вже у вашому заголовку.",
                 "add": "Додати {item}",
                 "boardShortcut": "Ярлик дошки",
+                "widget": "Віджет",
                 "chooseBoard": "Виберіть дошку"
               },
               "configuration": {
+                "widgetKind": "Віджет",
+                "widgetOptions": "Опції",
+                "boardOnly": "",
                 "description": "Цей елемент керування залишається таким же розміром, як і в живому заголовку.",
                 "searchDisplay": {
                   "input": "Рядок пошуку",
@@ -7270,7 +7393,9 @@
                 "settings": "Ваші налаштування",
                 "themeToggle": "Перемкнути тему",
                 "user": "Обліковий запис",
-                "boardUnavailable": "Дошка недоступна"
+                "boardUnavailable": "Дошка недоступна",
+                "notifications": "Сповіщення",
+                "widget": "Віджет"
               }
             },
             "item": {

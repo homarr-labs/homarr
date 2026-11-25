@@ -890,6 +890,7 @@
       "deleteConfirm": "crwdns5303:0{name}crwdne5303:0",
       "duplicate": "crwdns5323:0crwdne5323:0",
       "aiPrompt": "crwdns6797:0crwdne6797:0",
+      "createAssisted": "crwdns13005:0crwdne13005:0",
       "copyAiPrompt": "crwdns5325:0crwdne5325:0",
       "enable": "crwdns5327:0crwdne5327:0",
       "disable": "crwdns5329:0crwdne5329:0",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "crwdns6887:0crwdne6887:0",
+      "assisted": {
+        "modeLabel": "crwdns13007:0crwdne13007:0",
+        "mode": "crwdns13009:0crwdne13009:0",
+        "advancedMode": "crwdns13011:0crwdne13011:0",
+        "description": "crwdns13013:0crwdne13013:0",
+        "test": "crwdns13015:0crwdne13015:0",
+        "testDescription": "crwdns13017:0crwdne13017:0",
+        "importRequired": "crwdns13019:0crwdne13019:0",
+        "previewRequired": "crwdns13021:0crwdne13021:0",
+        "finalPreview": "crwdns13023:0crwdne13023:0",
+        "evidenceHelp": "crwdns13025:0crwdne13025:0",
+        "invalidSources": "crwdns13027:0crwdne13027:0",
+        "incompatibleSources": "crwdns13029:0{sources}crwdne13029:0"
+      },
       "sectionNavigation": "crwdns6889:0crwdne6889:0",
       "widgetPreview": "crwdns6891:0crwdne6891:0",
       "generalInformation": "crwdns6893:0crwdne6893:0",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "crwdns7135:0crwdne7135:0",
         "description": "crwdns7137:0crwdne7137:0",
+        "assistedDescription": "crwdns13031:0crwdne13031:0",
         "request": "crwdns7139:0crwdne7139:0",
         "documentationUrl": "crwdns7141:0crwdne7141:0",
         "paste": "crwdns7143:0crwdne7143:0",
+        "pasteResponse": "crwdns13033:0crwdne13033:0",
         "response": "crwdns7145:0crwdne7145:0",
         "manualCopyDescription": "crwdns7147:0crwdne7147:0",
         "manualPasteDescription": "crwdns7149:0crwdne7149:0",
@@ -1304,6 +1321,38 @@
     "useCss": "crwdns7409:0crwdne7409:0",
     "importCss": "crwdns7411:0crwdne7411:0",
     "importCssConfirm": "crwdns7413:0{title}crwdne7413:0",
+    "theme": {
+      "label": "crwdns13035:0crwdne13035:0",
+      "browse": "crwdns13037:0crwdne13037:0",
+      "browseHint": "crwdns13039:0crwdne13039:0",
+      "search": "crwdns13041:0crwdne13041:0",
+      "listLabel": "crwdns13043:0crwdne13043:0",
+      "empty": "crwdns13045:0crwdne13045:0",
+      "review": "crwdns13047:0crwdne13047:0",
+      "reviewCss": "crwdns13049:0crwdne13049:0",
+      "cssContent": "crwdns13051:0crwdne13051:0",
+      "importConfirm": "crwdns13053:0crwdne13053:0",
+      "cssWarning": "crwdns13055:0crwdne13055:0",
+      "useCss": "crwdns13057:0crwdne13057:0",
+      "usePreset": "crwdns13059:0{name}crwdne13059:0",
+      "defaultPreset": "crwdns13061:0crwdne13061:0",
+      "noCss": "crwdns13063:0crwdne13063:0",
+      "noChanges": "crwdns13065:0crwdne13065:0",
+      "json": "crwdns13067:0crwdne13067:0",
+      "copyJson": "crwdns13069:0crwdne13069:0",
+      "pasteJson": "crwdns13071:0crwdne13071:0",
+      "copied": "crwdns13073:0crwdne13073:0",
+      "clipboardEmpty": "crwdns13075:0crwdne13075:0",
+      "manualPaste": "crwdns13077:0crwdne13077:0",
+      "manualCopy": "crwdns13079:0crwdne13079:0",
+      "backToThemes": "crwdns13081:0crwdne13081:0",
+      "loadDraft": "crwdns13083:0crwdne13083:0",
+      "share": "crwdns13085:0crwdne13085:0",
+      "shareHint": "crwdns13087:0crwdne13087:0",
+      "title": "crwdns13089:0crwdne13089:0",
+      "description": "crwdns13091:0crwdne13091:0",
+      "published": "crwdns13093:0crwdne13093:0"
+    },
     "screenshotAlt": "crwdns7415:0title={title}crwdnd7415:0count={count}crwdne7415:0",
     "screenshotViewer": "crwdns7417:0{title}crwdne7417:0",
     "screenshotsLabel": "crwdns7419:0{title}crwdne7419:0",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "crwdns7429:0crwdne7429:0",
     "closeScreenshotViewer": "crwdns7431:0crwdne7431:0",
     "technicalDetails": "crwdns7433:0crwdne7433:0",
+    "integrations": "crwdns13095:0crwdne13095:0",
     "sourceCode": "crwdns7435:0crwdne7435:0",
     "report": "crwdns7439:0crwdne7439:0",
     "reportTitle": "crwdns7441:0crwdne7441:0",
@@ -1332,6 +1382,12 @@
       "copyright": "crwdns7465:0crwdne7465:0",
       "inappropriate": "crwdns7467:0crwdne7467:0",
       "other": "crwdns7469:0crwdne7469:0"
+    },
+    "share": {
+      "title": "crwdns13097:0crwdne13097:0",
+      "description": "crwdns13099:0crwdne13099:0",
+      "action": "crwdns13101:0crwdne13101:0",
+      "dismiss": "crwdns13103:0crwdne13103:0"
     },
     "publish": {
       "title": "crwdns7471:0crwdne7471:0",
@@ -2170,7 +2226,7 @@
         "luminanceThreshold": "crwdns12639:0crwdne12639:0",
         "jsonHint": "crwdns12641:0crwdne12641:0",
         "invalidJson": "crwdns12643:0crwdne12643:0",
-        "tooLong": "crwdns12645:0crwdne12645:0",
+        "tooLong": "crwdns13105:0crwdne13105:0",
         "copyJson": "crwdns12647:0crwdne12647:0",
         "copied": "crwdns12649:0crwdne12649:0",
         "discardJson": "crwdns12651:0crwdne12651:0",
@@ -2220,6 +2276,7 @@
         "tablet": "crwdns12731:0crwdne12731:0",
         "mobile": "crwdns12733:0crwdne12733:0",
         "includeCustomCss": "crwdns12735:0crwdne12735:0",
+        "customCssHint": "crwdns13107:0crwdne13107:0",
         "groups": {
           "layout": "crwdns12737:0crwdne12737:0",
           "typography": "crwdns12739:0crwdne12739:0",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "crwdns7685:0crwdne7685:0",
         "description": "crwdns7687:0crwdne7687:0"
+      },
+      "autoExpand": {
+        "label": "crwdns12913:0crwdne12913:0",
+        "description": "crwdns12915:0crwdne12915:0"
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "crwdns7709:0crwdne7709:0"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "crwdns12917:0crwdne12917:0",
+            "placeholder": "crwdns12919:0crwdne12919:0"
+          },
+          "inactiveDisplay": {
+            "collapsed": "crwdns12921:0crwdne12921:0",
+            "hidden": "crwdns12923:0crwdne12923:0"
+          },
+          "fitToContent": {
+            "label": "crwdns12925:0crwdne12925:0",
+            "description": "crwdns12927:0crwdne12927:0"
+          }
         }
       },
       "remove": {
         "message": "crwdns7711:0crwdne7711:0"
+      },
+      "editBar": {
+        "edit": "crwdns12929:0crwdne12929:0"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "crwdns7817:0crwdne7817:0"
       },
       "app": {
-        "propagationNotice": "crwdns4279:0crwdne4279:0"
+        "propagationNotice": "crwdns4279:0crwdne4279:0",
+        "confirmDiscard": {
+          "title": "crwdns12979:0crwdne12979:0",
+          "message": "crwdns12981:0crwdne12981:0",
+          "confirm": "crwdns12983:0crwdne12983:0"
+        }
       },
       "integration": {
         "action": "crwdns7819:0crwdne7819:0",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "crwdns976:0crwdne976:0",
       "description": "crwdns978:0crwdne978:0",
+      "selectEntity": "crwdns12985:0crwdne12985:0",
       "option": {
         "entityId": {
           "label": "crwdns980:0crwdne980:0"
@@ -3370,8 +3454,8 @@
       }
     },
     "smartHome-controls": {
-      "name": "crwdns12273:0crwdne12273:0",
-      "description": "crwdns12275:0crwdne12275:0",
+      "name": "crwdns12987:0crwdne12987:0",
+      "description": "crwdns12989:0crwdne12989:0",
       "option": {
         "presentation": {
           "label": "crwdns12277:0crwdne12277:0",
@@ -3486,14 +3570,14 @@
         "otherSource": "crwdns12421:0crwdne12421:0"
       },
       "live": {
-        "loading": "crwdns12423:0crwdne12423:0",
-        "error": "crwdns12425:0crwdne12425:0",
+        "loading": "crwdns12991:0crwdne12991:0",
+        "error": "crwdns12993:0crwdne12993:0",
         "retry": "crwdns12427:0crwdne12427:0",
         "actionFailed": "crwdns12429:0{name}crwdne12429:0",
         "actionUnconfirmed": "crwdns12431:0{name}crwdne12431:0",
-        "unconfirmed": "crwdns12433:0crwdne12433:0",
+        "unconfirmed": "crwdns12995:0crwdne12995:0",
         "selectionLimit": "crwdns12435:0crwdne12435:0",
-        "unknownError": "crwdns12437:0crwdne12437:0"
+        "unknownError": "crwdns12997:0crwdne12997:0"
       },
       "inline": {
         "open": "crwdns12439:0{count}crwdne12439:0",
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": "crwdns12977:0crwdne12977:0"
+      },
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
         "latitude": "crwdns1112:0crwdne1112:0",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "crwdns6179:0crwdne6179:0",
           "description": "crwdns6181:0crwdne6181:0"
+        },
+        "detailedSessionLimit": {
+          "label": "crwdns12931:0crwdne12931:0",
+          "description": "crwdns12933:0crwdne12933:0"
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "crwdns11191:0{target}crwdne11191:0",
           "containerChanged": "crwdns11193:0{container}crwdne11193:0",
           "position": "crwdns11195:0{position}crwdnd11195:0{duration}crwdne11195:0",
+          "progress": "crwdns12935:0crwdne12935:0",
+          "endsAt": "crwdns12937:0crwdne12937:0",
+          "episode": "crwdns12939:0crwdne12939:0",
+          "album": "crwdns12941:0crwdne12941:0",
           "unknown": "crwdns11197:0crwdne11197:0"
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "crwdns6135:0crwdne6135:0",
         "copyId": "crwdns6137:0crwdne6137:0",
+        "setCategory": "crwdns12943:0crwdne12943:0",
+        "setLabels": "crwdns12945:0crwdne12945:0",
         "clearFilters": "crwdns6139:0crwdne6139:0"
+      },
+      "setCategory": {
+        "none": "crwdns12947:0crwdne12947:0",
+        "loadFailed": "crwdns12949:0crwdne12949:0",
+        "labels": "crwdns12951:0crwdne12951:0",
+        "labelsDescription": "crwdns12953:0crwdne12953:0",
+        "labelsLoadFailed": "crwdns12955:0crwdne12955:0",
+        "delugePluginRequired": "crwdns12957:0crwdne12957:0",
+        "transmissionUnsupported": "crwdns12959:0crwdne12959:0"
       },
       "footer": {
         "filter": "crwdns6141:0crwdne6141:0"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "crwdns3674:0crwdne3674:0"
         },
+        "hideFeedTitle": {
+          "label": "crwdns12961:0crwdne12961:0"
+        },
+        "hideBackgroundImage": {
+          "label": "crwdns12999:0crwdne12999:0"
+        },
         "showPosterImage": {
           "label": "crwdns4012:0crwdne4012:0"
+        },
+        "thumbnailWidth": {
+          "label": "crwdns13001:0crwdne13001:0"
+        },
+        "thumbnailHeight": {
+          "label": "crwdns13003:0crwdne13003:0"
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "crwdns8821:0crwdne8821:0",
       "deleteNotification": "crwdns8823:0crwdne8823:0",
+      "dismissNotification": "crwdns12963:0crwdne12963:0",
       "deleteFailed": "crwdns8825:0crwdne8825:0",
       "deleteFailedMessage": "crwdns8827:0crwdne8827:0"
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "crwdns9737:0crwdne9737:0",
                 "add": "crwdns9739:0{item}crwdne9739:0",
                 "boardShortcut": "crwdns9741:0crwdne9741:0",
+                "widget": "crwdns12965:0crwdne12965:0",
                 "chooseBoard": "crwdns9743:0crwdne9743:0"
               },
               "configuration": {
+                "widgetKind": "crwdns12967:0crwdne12967:0",
+                "widgetOptions": "crwdns12969:0crwdne12969:0",
+                "boardOnly": "crwdns12971:0crwdne12971:0",
                 "description": "crwdns9745:0crwdne9745:0",
                 "searchDisplay": {
                   "input": "crwdns9747:0crwdne9747:0",
@@ -7270,7 +7393,9 @@
                 "settings": "crwdns9771:0crwdne9771:0",
                 "themeToggle": "crwdns9773:0crwdne9773:0",
                 "user": "crwdns9775:0crwdne9775:0",
-                "boardUnavailable": "crwdns9777:0crwdne9777:0"
+                "boardUnavailable": "crwdns9777:0crwdne9777:0",
+                "notifications": "crwdns12973:0crwdne12973:0",
+                "widget": "crwdns12975:0crwdne12975:0"
               }
             },
             "item": {

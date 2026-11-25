@@ -20,7 +20,7 @@ import type { HotkeyItem } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight, IconDotsVertical, IconHome, IconPencil, IconPlus } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useBoardDraftChanges } from "@homarr/boards/draft-changes";
 import type { BoardTab } from "@homarr/boards/tabs";
 import { useBoardTabs } from "@homarr/boards/tabs";
@@ -29,6 +29,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { BoardRemoveConfirmationMenuItem } from "~/components/board/remove-confirmation-menu-item";
 import classes from "./board-tabs.module.css";
+import { preloadBoardTabWidgets } from "./preload-board-tab-widgets";
 import { useBoardTabActions } from "./use-board-tab-actions";
 import { useBoardTabLabel } from "./use-board-tab-label";
 
@@ -63,6 +64,8 @@ export const BoardTabBar = ({
   menuWithinPortal?: boolean;
 }) => {
   const { tabs, activeTab } = useBoardTabs();
+  const board = useRequiredBoard();
+  const layoutId = useCurrentLayout();
   const [isEditMode] = useEditMode();
   const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTab?.id);
   const [renamingTabId, setRenamingTabId] = useState<string | null>(null);
@@ -119,6 +122,12 @@ export const BoardTabBar = ({
                 aria-label={getTabLabel(tab)}
                 aria-controls={`board-tabs-panel-${tab.id}`}
                 title={t("hotkeyHint", { key: String(index + 1) })}
+                onPointerEnter={() => {
+                  if (tab.id !== activeTab?.id) preloadBoardTabWidgets(board, layoutId, tab.id);
+                }}
+                onFocus={() => {
+                  if (tab.id !== activeTab?.id) preloadBoardTabWidgets(board, layoutId, tab.id);
+                }}
                 leftSection={index === 0 && isEditMode && !compact ? <IconHome size={14} stroke={1.75} /> : undefined}
                 rightSection={
                   !compact && (

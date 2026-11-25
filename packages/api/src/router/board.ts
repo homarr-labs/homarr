@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import { createId, getLayoutResizeSource, serializeLayoutResizeSource } from "@homarr/common";
+import { createId, getLayoutResizeSource, isRecord, serializeLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -887,14 +887,31 @@ export const boardRouter = createTRPCRouter({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base and a Mobile layout" });
       }
 
+      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
-        ({ collapseStates: _, layouts: _layouts, ...section }) => ({
-          ...section,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: sectionMap.get(section.id)!,
-          boardId: newBoardId,
-        }),
+        ({ collapseStates: _, layouts: _layouts, ...section }) => {
+          let options = section.options;
+          if (section.kind === "container" && options) {
+            const parsed: unknown = superjson.parse(options);
+            if (isRecord(parsed) && isRecord(parsed.autoExpand) && typeof parsed.autoExpand.itemId === "string") {
+              options = superjson.stringify({
+                ...parsed,
+                autoExpand: {
+                  ...parsed.autoExpand,
+                  itemId: itemMap.get(parsed.autoExpand.itemId) ?? null,
+                },
+              });
+            }
+          }
+          return {
+            ...section,
+            options,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: sectionMap.get(section.id)!,
+            boardId: newBoardId,
+          };
+        },
       );
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
@@ -937,7 +954,6 @@ export const boardRouter = createTRPCRouter({
           ),
       );
 
-      const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
       const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
         ({ integrations: _, layouts: _layouts, ...item }) => ({
           ...item,
@@ -1226,7 +1242,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Read a dashboard by name, including current sections, items, widget options and layout IDs used by board_saveBoard and board_saveLayouts. Only accessible boards are returned; obtain names from board_getAllBoards.",
+          "Read a board by name, including current sections, items, widget options and layout IDs used by board_saveBoard and board_saveLayouts. Only accessible boards are returned; obtain names from board_catalog. For item IDs/options/placements, prefer the smaller paginated board_getItems; use board_updateItemOptions or board_deleteItem for a single-item change.",
       },
     })
     .input(boardByNameSchema)
@@ -2347,6 +2363,110 @@ export const boardRouter = createTRPCRouter({
         }
 
         return { itemId };
+      });
+    }),
+  getItems: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Read a page of board items with IDs, widget options, integration IDs and existing placements, without board images or creator profiles. Requires view access. Get boardId from board_catalog or board_search. Optional itemId selects one item; otherwise follow nextCursor until null. Use this before board_updateItemOptions or board_deleteItem. Default limit 10, maximum 50.",
+      },
+    })
+    .input(
+      z.object({
+        boardId: z.string().min(1).max(255),
+        itemId: z.string().min(1).max(255).optional(),
+        cursor: z.string().min(1).max(255).optional(),
+        limit: z.number().int().min(1).max(50).default(10),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "view");
+      const itemFilters = [eq(items.boardId, input.boardId)];
+      if (input.itemId) itemFilters.push(eq(items.id, input.itemId));
+      if (input.cursor) itemFilters.push(gt(items.id, input.cursor));
+      const page = await ctx.db.query.items.findMany({
+        where: and(...itemFilters),
+        orderBy: asc(items.id),
+        limit: input.limit + 1,
+        with: { layouts: true, integrations: { columns: { integrationId: true } } },
+      });
+      const pageItems = page.slice(0, input.limit);
+      let nextCursor: string | null = null;
+      if (page.length > input.limit) nextCursor = pageItems.at(-1)?.id ?? null;
+      return {
+        items: pageItems.map(({ integrations: linkedIntegrations, ...item }) => ({
+          ...item,
+          options: superjson.parse<Record<string, unknown>>(item.options),
+          advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
+          integrationIds: linkedIntegrations.map(({ integrationId }) => integrationId),
+        })),
+        nextCursor,
+      };
+    }),
+  updateItemOptions: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Patch the top-level options of one existing widget without changing its ID, integration bindings, advanced options or placements. Requires modify access; configuring Custom Widgets requires admin. Get boardId and itemId from board_getItems. Supply only changed option keys; arrays and nested objects replace that option's entire value. For smartHome-controls use presentation: 'controlPanel' for controls or 'entities' for the entity list. Returns { itemId }.",
+      },
+    })
+    .input(
+      z.object({
+        boardId: z.string().min(1).max(255),
+        itemId: z.string().min(1).max(255),
+        options: z
+          .record(z.string(), z.unknown())
+          .refine((options) => Buffer.byteLength(JSON.stringify(options)) <= 65_536, "Options patch exceeds 64 KiB"),
+      }),
+    )
+    .output(z.object({ itemId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      return await serializeBoardItemPlacementAsync(input.boardId, async () => {
+        const itemWhere = and(eq(items.boardId, input.boardId), eq(items.id, input.itemId));
+        const item = await ctx.db.query.items.findFirst({ where: itemWhere });
+        if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Item not found on this board" });
+        const previousOptions = superjson.parse<Record<string, unknown>>(item.options);
+        let options = { ...previousOptions, ...input.options };
+        if (item.kind === "app") options = normalizeAppWidgetOptions(options);
+        throwIfCustomWidgetPlacementChangeForbidden({
+          isAdmin: ctx.session.user.permissions.includes("admin"),
+          submittedItems: [{ id: item.id, kind: item.kind, options }],
+          storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
+        });
+        if (item.kind === "timetable") await validateTimetableOptionsChangeAsync(options, previousOptions);
+        const updatedItems = await ctx.db
+          .update(items)
+          .set({ options: superjson.stringify(options) })
+          .where(and(itemWhere, eq(items.kind, item.kind), eq(items.options, item.options)))
+          .returning({ id: items.id });
+        if (updatedItems.length === 0) {
+          throw new TRPCError({ code: "CONFLICT", message: "Item changed while updating options; read it again" });
+        }
+        return { itemId: item.id };
+      });
+    }),
+  deleteItem: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Permanently delete one widget/app item and its placements from a board. Requires modify access. Read board_getItems first to identify the intended boardId and itemId. Other items and their placements are preserved. Returns { itemId }.",
+      },
+    })
+    .input(z.object({ boardId: z.string().min(1).max(255), itemId: z.string().min(1).max(255) }))
+    .output(z.object({ itemId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      return await serializeBoardItemPlacementAsync(input.boardId, async () => {
+        const itemWhere = and(eq(items.boardId, input.boardId), eq(items.id, input.itemId));
+        const item = await ctx.db.query.items.findFirst({ where: itemWhere, columns: { id: true } });
+        if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Item not found on this board" });
+        await ctx.db.delete(items).where(itemWhere);
+        return { itemId: item.id };
       });
     }),
   updateItemLayout: protectedProcedure

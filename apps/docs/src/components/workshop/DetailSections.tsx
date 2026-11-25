@@ -169,9 +169,15 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
   );
 };
 
-export const CodeBlock = ({ content, language }: { content: string; language: string }) => (
-  <DynamicCodeBlock lang={language} code={content} />
-);
+export const CodeBlock = ({
+  content,
+  language,
+  allowCopy,
+}: {
+  content: string;
+  language: string;
+  allowCopy?: boolean;
+}) => <DynamicCodeBlock lang={language} code={content} codeblock={{ allowCopy }} />;
 
 export const DeleteConfirmButton = ({ onConfirm, className }: { onConfirm: () => void; className?: string }) => {
   return (

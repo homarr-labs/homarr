@@ -1,7 +1,6 @@
 import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren } from "react";
 import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
 import { useInViewport, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
@@ -36,15 +35,12 @@ import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
+import { useBoardEditorTools } from "../editor-tools";
 import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
-
-const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
-  ssr: false,
-});
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -208,6 +204,7 @@ const ResolvedBoardItemContent = ({
   const boardCanvasScale = useBoardCanvasScale();
   const t = useI18n();
   const [isEditMode] = useEditMode();
+  const BoardItemMenu = useBoardEditorTools()?.BoardItemMenu;
   const settings = useSettings();
   const menuItem = useMemo(
     () => ({ ...item, options: reduceWidgetOptionsWithDefinition(definition, settings, item.options) }),
@@ -403,7 +400,9 @@ const ResolvedBoardItemContent = ({
 
   return (
     <>
-      {isEditMode && <BoardItemMenu item={menuItem} definition={definition} previewDimensions={previewDimensions} />}
+      {isEditMode && BoardItemMenu && (
+        <BoardItemMenu item={menuItem} definition={definition} previewDimensions={previewDimensions} />
+      )}
       <WidgetContextMenu
         item={item}
         definition={definition}

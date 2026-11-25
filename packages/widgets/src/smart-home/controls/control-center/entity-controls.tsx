@@ -476,7 +476,10 @@ function CoverButtonControl({ entity, width, height }: ControlProps) {
     { type: "close", label: "Close", Icon: IconChevronDown },
   ] as const;
   const supported = actions.filter(({ type }) => supportsSmartHomeAction(entity, { type }));
-  if (tier === "mini" || supported.length === 0) return <ToggleControl entity={entity} width={width} height={height} />;
+  if (tier === "mini" || supported.length === 0) {
+    if (entity.attributes.coverPositionUnknown) return <InfoControl entity={entity} width={width} height={height} />;
+    return <ToggleControl entity={entity} width={width} height={height} />;
+  }
   const controls = (
     <Group gap={BUTTON_GAP} wrap="nowrap" justify="center">
       {supported.map(({ type, label, Icon }) => (
@@ -514,7 +517,7 @@ function CoverControl(props: ControlProps) {
   const { run } = useRunner(entity);
   const theme = useEntityTheme(entity);
 
-  if (entity.deviceClass === "garage") {
+  if (entity.deviceClass === "garage" && !entity.attributes.coverPositionUnknown) {
     const closed = entity.state === "closed";
     if (!supportsSmartHomeAction(entity, { type: closed ? "open" : "close" })) return <InfoControl {...props} />;
     return (

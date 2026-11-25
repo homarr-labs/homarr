@@ -35,6 +35,8 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
+import { useDemoReadOnly } from "../../demo-read-only";
+import { getWidgetRefreshInterval } from "../../refresh-interval";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
@@ -67,7 +69,12 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 10);
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    { integrationIds, refreshInterval },
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
   const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
   const utils = clientApi.useUtils();
@@ -92,6 +99,7 @@ export default function DnsHoleControlsWidget({
     utils.widget.dnsHole.summary.setData(
       {
         integrationIds,
+        refreshInterval,
       },
       (prevData) => {
         if (!prevData) return [];

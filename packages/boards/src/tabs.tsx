@@ -4,19 +4,17 @@ import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { getBoardTabSections, getRootSectionLane } from "@homarr/definitions";
+import { getRootSectionLane } from "@homarr/definitions";
 
 import { useOptionalBoard } from "./context";
 import { getBoardLayoutData } from "./layout-data";
+import type { BoardTab } from "./tab-selection";
+import { boardTabSearchParam, findBoardTab, getBoardTabKey, getBoardTabs } from "./tab-selection";
+
+export type { BoardTab } from "./tab-selection";
+export { boardTabSearchParam, findBoardTab, getBoardTabKey, getBoardTabs } from "./tab-selection";
 
 type Board = RouterOutputs["board"]["getBoardByName"];
-type Section = Board["sections"][number];
-export type BoardTab = Extract<Section, { kind: "empty" }>;
-
-export const boardTabSearchParam = "tab";
-
-export const getBoardTabs = (board: Pick<Board, "sections">): BoardTab[] =>
-  getBoardTabSections(board.sections.filter((section): section is BoardTab => section.kind === "empty"));
 
 export const getBoardTabForSection = (board: Board, layoutId: string, sectionId: string): BoardTab | undefined => {
   const { sectionsById } = getBoardLayoutData(board, layoutId);
@@ -31,27 +29,6 @@ export const getBoardTabForSection = (board: Board, layoutId: string, sectionId:
   }
   if (section?.kind === "empty" && getRootSectionLane(section.xOffset) === "main") return section;
   return undefined;
-};
-
-const normalizeTabKey = (value: string) => value.trim().toLowerCase();
-
-export const findBoardTab = (tabs: readonly BoardTab[], key: string | null | undefined) => {
-  if (!key) return undefined;
-  const byId = tabs.find((tab) => tab.id === key);
-  if (byId) return byId;
-  const normalizedKey = normalizeTabKey(key);
-  return tabs.find((tab) => tab.name && normalizeTabKey(tab.name) === normalizedKey);
-};
-
-export const getBoardTabKey = (tabs: readonly BoardTab[], tab: BoardTab) => {
-  const name = tab.name?.trim();
-  if (!name) return tab.id;
-  const normalizedName = normalizeTabKey(name);
-  const isUnique = tabs.every(
-    (candidate) => candidate.id === tab.id || !candidate.name || normalizeTabKey(candidate.name) !== normalizedName,
-  );
-  if (!isUnique || findBoardTab(tabs, name)?.id !== tab.id) return tab.id;
-  return name;
 };
 
 const replaceTabSearchParam = (key: string | null) => {

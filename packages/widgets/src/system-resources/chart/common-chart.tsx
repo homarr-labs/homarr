@@ -1,34 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { useState } from "react";
-import type { AreaChartSeries } from "@mantine/charts";
-import { AreaChart, LineChart } from "@mantine/charts";
-import { Card, Center, Group, Stack, Text, Tooltip, useComputedColorScheme, useMantineTheme } from "@mantine/core";
+import { Box, Card, Center, Group, Stack, Text, Tooltip, useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
-import type { YAxisProps } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { LabelDisplayModeOption } from "..";
+import { Sparkline } from "../../common/sparkline";
 
 export const CommonChart = ({
   data,
-  dataKey,
   series,
   title,
   icon: Icon,
   labelDisplayMode,
   tooltipLabel,
-  yAxisProps,
+  yDomain,
   lastValue,
   chartType = "line",
   advanced = false,
 }: {
   data: Record<string, any>[];
-  dataKey: string;
-  series: AreaChartSeries[];
+  series: { name: string; color: string }[];
   title: ReactNode;
   icon: TablerIcon;
   labelDisplayMode: LabelDisplayModeOption;
@@ -36,7 +32,7 @@ export const CommonChart = ({
   // the datum under the cursor as it moves across multi-point data (e.g. memory's
   // used/available at that point), instead of always showing the latest value.
   tooltipLabel?: ReactNode | ((index: number) => ReactNode);
-  yAxisProps?: Omit<YAxisProps, "ref">;
+  yDomain?: readonly [number, number];
   lastValue?: string;
   chartType?: "line" | "area";
   advanced?: boolean;
@@ -51,8 +47,9 @@ export const CommonChart = ({
   const opacity = board.opacity / 100;
   let backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
   const cardStyle: CSSProperties = { overflow: "hidden" };
+  // Matches the previous Recharts layout: 5px root padding plus Recharts' default 5px plot margin.
   const chartRootStyle: CSSProperties = {
-    padding: 5,
+    padding: 10,
     borderRadius: theme.radius[board.itemRadius ?? "default"],
   };
   if (advanced) {
@@ -62,7 +59,6 @@ export const CommonChart = ({
     chartRootStyle.backgroundColor = backgroundColor;
   }
 
-  const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
   const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
@@ -158,23 +154,17 @@ export const CommonChart = ({
             </Stack>
           </Center>
         ) : (
-          <ChartComponent
-            data={data}
-            dataKey={dataKey}
-            h={"100%"}
-            series={series}
-            curveType="monotone"
-            tickLine="none"
-            gridAxis="none"
-            withXAxis={false}
-            withYAxis={false}
-            withDots={false}
-            bg={backgroundColor}
-            styles={{ root: chartRootStyle }}
-            withTooltip={false}
-            yAxisProps={yAxisProps}
-            fillOpacity={chartType === "area" ? 0.3 : undefined}
-          />
+          // Absolutely positioned so the SVG's intrinsic aspect ratio never sizes the surrounding grid cell.
+          <Box pos="absolute" top={0} left={0} right={0} bottom={0} bg={backgroundColor} style={chartRootStyle}>
+            <Sparkline
+              series={series.map(({ name, color }) => ({
+                color,
+                values: data.map((row) => row[name] as number | null | undefined),
+              }))}
+              yDomain={yDomain}
+              variant={chartType}
+            />
+          </Box>
         )}
       </Card>
     </Tooltip.Floating>

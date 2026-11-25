@@ -40,6 +40,25 @@ describe("Homarr documentation assistant search", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  test.each([
+    ["[Content](/docs/content.md)", "/docs/content.md", "/docs/content/"],
+    [
+      "[Content](/docs/content): [Markdown](/llms.mdx/docs/content/content.md)",
+      "/llms.mdx/docs/content/content.md",
+      "/docs/content/",
+    ],
+  ])("resolves current and legacy content-page links: %s", async (index, markdownPath, citationPath) => {
+    const fetchMock = stubFetch(async (url) => {
+      if (url === indexUrl) return responseAt(url, index);
+      return responseAt(url, "# Content\n\nContent guide.");
+    });
+
+    const result = await searchHomarrDocumentationAsync({ query: "content" });
+
+    expect(fetchMock.mock.calls.map(([url]) => String(url))).toEqual([indexUrl, `https://homarr.dev${markdownPath}`]);
+    expect(result.results[0]).toMatchObject({ title: "Content", url: `https://homarr.dev${citationPath}` });
+  });
+
   test("rejects external index links and returns canonical, safe citations", async () => {
     const pageUrl = "https://homarr.dev/docs/proxy.md";
     const fetchMock = stubFetch(async (url) => {

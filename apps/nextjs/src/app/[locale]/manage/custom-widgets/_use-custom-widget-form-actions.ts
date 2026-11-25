@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { Dispatch, FormEventHandler, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
 import { clientApi } from "@homarr/api/client";
-import { formatCustomWidgetImportIssues } from "@homarr/custom-widgets/core";
+import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import {
-  applyCustomWidgetAiResponse,
+  applyDefinition,
   buildDefinition,
   getChangedSecrets,
   getDefinitionDefaults,
@@ -25,15 +25,20 @@ import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
 import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
 import { CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS } from "./_custom-widget-form-state";
+import {
+  createCustomWidgetAuthoringSession,
+  getIncompatibleCustomWidgetImportSources,
+} from "./_custom-widget-authoring-session";
 
 interface FormActionsInput {
   mode: "create" | "edit";
+  assisted: boolean;
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
   documentStore: CustomWidgetFormDocumentStore;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
-  optionsSnapshot: Record<string, unknown>;
+  getOptionsSnapshot(): Record<string, unknown>;
   setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
 }
 
@@ -44,9 +49,18 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const utils = clientApi.useUtils();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
+  const createFromPreviewMutation = clientApi.customWidget.createFromPreview.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
+  const [authoringSession] = useState(createCustomWidgetAuthoringSession);
+  const [hasGeneratedImport, setHasGeneratedImport] = useState(false);
+  const [hasAssistedImport, setHasAssistedImport] = useState(false);
+  const requiresImport = input.assisted && !hasGeneratedImport;
+  const requiresPreview = input.assisted || hasAssistedImport;
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
+  const documentStore = input.documentStore;
+  const getOptionsSnapshot = input.getOptionsSnapshot;
+  const setOptionsSnapshot = input.setOptionsSnapshot;
   const setPreview = input.setPreview;
   const previewGeneration = useRef(0);
   const activePreviewGeneration = useRef<number | null>(null);
@@ -57,6 +71,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       if (
         preview.outcome === "idle" &&
         preview.session === null &&
+        !preview.setupIssues?.length &&
         Object.keys(preview.data).length === 0 &&
         Object.keys(preview.status).length === 0
       )
@@ -64,15 +79,22 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       return { data: {}, status: {}, session: null, outcome: "idle" };
     });
   }, [setPreview]);
-  useLayoutEffect(() => {
-    previewGeneration.current += 1;
-    clearTimeout(previewInvalidationTimeout.current);
-    clearPreview();
-  }, [input.optionsSnapshot, clearPreview]);
-  useEffect(() => {
-    const unsubscribe = input.documentStore.subscribe(() => {
-      // Reject stale requests immediately, but keep typing out of the preview render path.
+  const changeOptionsSnapshot = useCallback<Dispatch<SetStateAction<Record<string, unknown>>>>(
+    (update) => {
+      const previous = getOptionsSnapshot();
+      setOptionsSnapshot(update);
+      if (previous === getOptionsSnapshot()) return;
       previewGeneration.current += 1;
+      authoringSession.invalidate(documentStore.getValues(), getOptionsSnapshot());
+      clearTimeout(previewInvalidationTimeout.current);
+      clearPreview();
+    },
+    [documentStore, getOptionsSnapshot, setOptionsSnapshot, authoringSession, clearPreview],
+  );
+  useEffect(() => {
+    const unsubscribe = documentStore.subscribe(() => {
+      previewGeneration.current += 1;
+      authoringSession.invalidate(documentStore.getValues(), getOptionsSnapshot());
       clearTimeout(previewInvalidationTimeout.current);
       previewInvalidationTimeout.current = setTimeout(clearPreview, CUSTOM_WIDGET_PREVIEW_DEBOUNCE_MS);
     });
@@ -80,7 +102,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       clearTimeout(previewInvalidationTimeout.current);
       unsubscribe();
     };
-  }, [input.documentStore, clearPreview]);
+  }, [documentStore, getOptionsSnapshot, authoringSession, clearPreview]);
   useEffect(
     () => () => {
       previewGeneration.current += 1;
@@ -91,10 +113,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   let actionLabel = tCommon("action.save");
   if (input.mode === "create") actionLabel = tCommon("action.create");
 
-  const save = input.form.onSubmit(async (values) => {
+  const submit = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
     setSaveIssues([]);
-    const definition = buildDefinition(values);
+    const definition = buildDefinition(values, input.mode === "create");
     if (!definition.success) {
       reportSaveIssues(
         input.form,
@@ -108,7 +130,23 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     const changedSecrets = getChangedSecrets(values);
     try {
       if (input.mode === "create") {
-        const result = await createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
+        const persist = async () => {
+          if (!requiresPreview) return createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
+          const session = authoringSession.getFinalPreview(values, input.getOptionsSnapshot());
+          if (!session) {
+            reportSaveIssues(
+              input.form,
+              [{ message: w("assisted.previewRequired") }],
+              setSaveIssues,
+              actionLabel,
+              (count) => w("saveError.more", { count }),
+            );
+            return null;
+          }
+          return createFromPreviewMutation.mutateAsync({ previewSessionId: session.id });
+        };
+        const result = await persist();
+        if (!result) return;
         await utils.customWidget.list.invalidate();
         showSuccessNotification({
           title: tCommon("action.create"),
@@ -118,7 +156,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         input.form.resetDirty();
         input.documentStore.markSaved(values);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        window.location.assign(result.managementPath);
+        window.location.assign(`${result.managementPath}?created=1`);
       } else if (input.definitionId) {
         await updateMutation.mutateAsync({
           id: input.definitionId,
@@ -140,6 +178,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       }
     } catch (error) {
       const issues = extractCustomWidgetSaveIssues(error);
+      if (requiresPreview && issues.length > 0) issues.push({ message: w("assisted.evidenceHelp") });
       if (issues.length > 0) {
         reportSaveIssues(input.form, issues, setSaveIssues, actionLabel, (count) => w("saveError.more", { count }));
       } else {
@@ -148,21 +187,45 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     }
   });
 
+  const save: FormEventHandler<HTMLFormElement> = (event) => {
+    if (requiresImport) {
+      event.preventDefault();
+      reportSaveIssues(input.form, [{ message: w("assisted.importRequired") }], setSaveIssues, actionLabel, (count) =>
+        w("saveError.more", { count }),
+      );
+      return;
+    }
+    submit(event);
+  };
+
   const runPreview = async () => {
     if (activePreviewGeneration.current !== null) return;
+    clearTimeout(previewInvalidationTimeout.current);
+    clearPreview();
     const valuesAtStart = input.documentStore.getValues();
-    const candidateAtStart = buildDefinition(valuesAtStart);
+    const candidateAtStart = buildDefinition(valuesAtStart, true);
     if (!candidateAtStart.success) {
+      input.setPreview({
+        data: {},
+        status: {},
+        session: null,
+        outcome: "error",
+        setupIssues: candidateAtStart.error.issues.map((issue) => ({
+          path: issue.path.map(String).join(".") || undefined,
+          message: issue.message,
+        })),
+      });
       showErrorNotification({
         title: w("section.preview"),
         message: candidateAtStart.error.issues[0]?.message ?? w("invalidWidget"),
       });
       return;
     }
-    const optionsAtStart = input.optionsSnapshot;
+    const optionsAtStart = input.getOptionsSnapshot();
     const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, optionsAtStart);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
+      input.setPreview({ data: {}, status: {}, session: null, outcome: "error", setupIssues: optionIssues });
       showErrorNotification({
         title: w("section.preview"),
         message: issue ? `${issue.path}: ${issue.message}` : w("invalidWidget"),
@@ -173,8 +236,12 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     const secretsAtStart = getChangedSecrets(valuesAtStart);
     const generation = previewGeneration.current + 1;
     previewGeneration.current = generation;
+    authoringSession.invalidate(valuesAtStart, optionsAtStart);
     activePreviewGeneration.current = generation;
-    const isCurrent = () => previewGeneration.current === generation;
+    const isCurrent = () =>
+      previewGeneration.current === generation &&
+      input.documentStore.getValues() === valuesAtStart &&
+      input.getOptionsSnapshot() === optionsAtStart;
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
     setPreviewPending(true);
@@ -189,6 +256,14 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id);
       if (!isCurrent()) return;
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
+      const successfulData = Object.fromEntries(
+        Object.entries(snapshot.data).filter(([id]) => {
+          const status = snapshot.status[id];
+          return isRecord(status) && status.ok === true;
+        }),
+      );
+      authoringSession.captureSample(valuesAtStart, optionsAtStart, successfulData);
+      if (failed === 0) authoringSession.captureFinalPreview(valuesAtStart, optionsAtStart, created.previewSession);
       input.setPreview({
         ...snapshot,
         session: created.previewSession,
@@ -211,10 +286,22 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           }),
         });
       }
-    } catch {
+    } catch (error) {
       if (!isCurrent()) return;
-      input.setPreview((current) => ({ ...current, outcome: "error" }));
-      showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
+      const errorData = isRecord(error) ? error.data : undefined;
+      let setupIssues: CustomWidgetSaveIssue[] = [{ message: t("notification.previewError") }];
+      if (
+        isRecord(errorData) &&
+        (isRecord(errorData.zodError) || errorData.code === "BAD_REQUEST" || errorData.code === "NOT_FOUND")
+      ) {
+        const extractedIssues = extractCustomWidgetSaveIssues(error);
+        if (extractedIssues.length > 0) setupIssues = extractedIssues;
+      }
+      input.setPreview({ data: {}, status: {}, session: null, outcome: "error", setupIssues });
+      showErrorNotification({
+        title: w("section.preview"),
+        message: setupIssues[0]?.message ?? t("notification.previewError"),
+      });
     } finally {
       if (activePreviewGeneration.current === generation) {
         activePreviewGeneration.current = null;
@@ -225,9 +312,21 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   };
 
   const pasteAiResponse = (response: string): string | null => {
-    const result = applyCustomWidgetAiResponse(input.form, response);
+    const result = parseCustomWidgetAiResponse(response);
     if (!result.success) return formatCustomWidgetImportIssues(result.issues);
-    input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
+    const values = input.documentStore.getValues();
+    const incompatible = getIncompatibleCustomWidgetImportSources(values, result.widget);
+    if (!incompatible && (requiresPreview || values.secrets.some(({ hasValue, value }) => hasValue || value.trim())))
+      return w("assisted.invalidSources");
+    if (incompatible && incompatible.length > 0)
+      return w("assisted.incompatibleSources", { sources: incompatible.join(", ") });
+    previewGeneration.current += 1;
+    applyDefinition(input.form, result.widget);
+    changeOptionsSnapshot(getDefinitionDefaults(result.widget));
+    authoringSession.invalidate(input.documentStore.getValues(), input.getOptionsSnapshot());
+    setHasGeneratedImport(true);
+    if (input.assisted) setHasAssistedImport(true);
+    clearPreview();
     showSuccessNotification({
       title: w("ai.response"),
       message:
@@ -242,8 +341,13 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     save,
     runPreview,
     pasteAiResponse,
+    hasGeneratedImport,
+    requiresImport,
+    requiresPreview,
+    getSampleResponse: () => authoringSession.readSample(input.documentStore.getValues(), input.getOptionsSnapshot()),
+    setOptionsSnapshot: changeOptionsSnapshot,
     saveIssues,
-    savePending: createMutation.isPending || updateMutation.isPending,
+    savePending: createMutation.isPending || updateMutation.isPending || createFromPreviewMutation.isPending,
     previewPending,
   };
 }

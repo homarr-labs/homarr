@@ -1,11 +1,30 @@
 import { TRPCError } from "@trpc/server";
 import { describe, expect, test } from "vitest";
+import { z } from "zod/v4";
 
 import {
+  getAssistantToolErrorCode,
   getConnectionTestFailureMessage,
   getCustomWidgetConfigurationStatusRecovery,
   getSafeAssistantToolError,
 } from "./assistant-tool-error";
+
+describe("getAssistantToolErrorCode", () => {
+  test.each(["NOT_FOUND", "BAD_REQUEST", "CONFLICT", "METHOD_NOT_SUPPORTED"] as const)(
+    "preserves wrapped tRPC %s codes",
+    (code) => {
+      const error = new Error("Tool failed", { cause: new TRPCError({ code, message: "private detail" }) });
+      expect(getAssistantToolErrorCode(error)).toBe(code);
+    },
+  );
+
+  test("classifies validation failures without exposing arbitrary error codes", () => {
+    const result = z.object({ boardId: z.string() }).safeParse({ boardId: 1 });
+    expect(getAssistantToolErrorCode(result.error)).toBe("BAD_REQUEST");
+    const error = Object.assign(new Error("secret"), { code: "ERR_PRIVATE_UPSTREAM_DETAIL" });
+    expect(getAssistantToolErrorCode(error)).toBe("INTERNAL_SERVER_ERROR");
+  });
+});
 
 describe("getSafeAssistantToolError", () => {
   test("explains integration connection failures without leaking upstream details or inviting write retries", () => {

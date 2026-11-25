@@ -47,7 +47,8 @@ const workshopDetailPage = (event) => {
       };
     }
     const type = submission.type;
-    const section = type === "customCss" ? "Custom CSS" : "Custom widget";
+    const sections = { customCss: "Custom CSS", customTheme: "Custom theme", customWidget: "Custom widget" };
+    const section = sections[type] ?? "Workshop submission";
     const submissionTitle = submission.title;
     const title = `${submissionTitle} · Homarr Workshop`;
     const description = `${section} for Homarr. ${submission.description}`.trim();
@@ -77,6 +78,15 @@ const workshopDetailPage = (event) => {
 
 routerAdd("GET", "/workshop/{id}", workshopDetailPage);
 routerAdd("GET", "/workshop/{id}/{$}", workshopDetailPage);
+
+const deriveSubmissionIntegrationKinds = (event) => {
+  const { getSubmissionIntegrationKinds } = require(`${__hooks}/workshop-utils.js`);
+  event.record.set("integrationKinds", getSubmissionIntegrationKinds(event.record));
+  event.next();
+};
+
+onRecordCreate(deriveSubmissionIntegrationKinds, "submissions");
+onRecordUpdate(deriveSubmissionIntegrationKinds, "submissions");
 
 onRecordCreateRequest((event) => {
   const { validateSubmissionManifest } = require(`${__hooks}/workshop-utils.js`);

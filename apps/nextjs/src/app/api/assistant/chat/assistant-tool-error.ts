@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import { isRecord } from "@homarr/common";
 
 const asErrorRecord = (value: unknown): Record<string, unknown> | undefined => (isRecord(value) ? value : undefined);
@@ -10,6 +12,15 @@ const getErrorChain = (error: unknown) => {
     current = asErrorRecord(current.cause);
   }
   return chain;
+};
+
+export const getAssistantToolErrorCode = (error: unknown): string => {
+  const chain = getErrorChain(error);
+  for (const candidate of chain) {
+    if (candidate instanceof TRPCError) return candidate.code;
+    if (candidate.name === "ZodError") return "BAD_REQUEST";
+  }
+  return "INTERNAL_SERVER_ERROR";
 };
 
 const sanitizeValidationText = (value: string) =>
@@ -105,6 +116,15 @@ export const getSafeAssistantToolError = (error: unknown, options?: { toolName?:
       return "The requested resource was not found or is not compatible with this tool.";
     case "BAD_REQUEST":
       if (isCustomWidgetTool) {
+        if (
+          options?.toolName === "customWidget_updateFromPreview" &&
+          chain.some(
+            (candidate) =>
+              typeof candidate.message === "string" && /Unacknowledged removals:/iu.test(candidate.message),
+          )
+        ) {
+          return "Unacknowledged removals: restore the original JSX with customWidget_previewReviseTemplate, or supply acknowledgedRemovals to customWidget_updateFromPreview only for user-authorized keys from the complete removedFromSaved list. If that list is missing or incomplete, restore the loaded original JSX and make a narrower change; never guess acknowledgement keys.";
+        }
         const details = getCustomWidgetValidationDetails(chain);
         if (details) return `The custom widget input was invalid: ${details}`;
       }

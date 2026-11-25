@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   IconAlertCircle,
   IconBraces,
@@ -14,6 +14,8 @@ import {
 
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { getCustomWidgetIntegrationKinds } from "@homarr/custom-widgets/core";
+import { workshopScreenshotsSchema, workshopSubmissionInputSchema } from "@homarr/workshop/schema";
 
 import { CustomWidgetCodeInput } from "@/components/custom-widget-code";
 
@@ -37,6 +39,7 @@ import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
 import { ScreenshotEditor } from "./ScreenshotEditor";
+import { WorkshopIntegrationBadges } from "./WorkshopIntegrationBadges";
 
 interface Props {
   onClose: () => void;
@@ -51,10 +54,18 @@ const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 const placeholders: Record<SubmissionType, string> = {
   customWidget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
   customCss: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
+  customTheme: '{\n  "preset": "nord",\n  "theme": { "defaultRadius": "md" },\n  "dark": { "primary": "#88c0d0" }\n}',
 };
 const contentLabels: Record<SubmissionType, string> = {
   customWidget: "Widget JSON (homarr-custom-widget-v2)",
   customCss: "Custom CSS",
+  customTheme: "Theme JSON",
+};
+const contentHints: Record<SubmissionType, string> = {
+  customWidget: "Paste exported widget JSON. The title and description are filled from its metadata.",
+  customCss: "Paste the stylesheet that users will import into their board settings.",
+  customTheme:
+    "Paste the complete JSON from Homarr’s theme editor. Review any included CSS for private URLs before publishing.",
 };
 
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
@@ -85,7 +96,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     track("Workshop Submit Started");
   }, []);
 
-  const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
+  const canAdvance = [
+    type !== null,
+    title.trim().length >= 3 && title.trim().length <= 100 && content.trim().length > 0,
+    true,
+  ];
+  const integrationKinds = useMemo(() => {
+    if (type !== "customWidget") return [];
+    const validation = validateSubmissionContent(type, content);
+    if (!validation.success || typeof validation.data === "string") return [];
+    return getCustomWidgetIntegrationKinds(validation.data.sources);
+  }, [type, content]);
 
   const goTo = useCallback((next: number) => setStep(next), []);
 
@@ -93,7 +114,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     setContent(json);
     const meta = parseJsonObject(json);
     if (!meta) return;
-    if (typeof meta.name === "string" && !currentTitle) setTitle(meta.name);
+    if (typeof meta.name === "string" && !currentTitle) setTitle(meta.name.slice(0, 100));
     if (typeof meta.description === "string" && !currentDesc) setDescription(String(meta.description));
   }, []);
 
@@ -104,8 +125,18 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const reader = new FileReader();
       reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
-        setType("customWidget");
-        setContentAndAutofill(text, title, description);
+        const json = parseJsonObject(text);
+        const isTheme =
+          json &&
+          !Object.hasOwn(json, "$schema") &&
+          ["preset", "theme", "light", "dark", "customCss"].some((key) => Object.hasOwn(json, key));
+        if (isTheme) {
+          setType("customTheme");
+          setContent(text);
+        } else {
+          setType("customWidget");
+          setContentAndAutofill(text, title, description);
+        }
         if (step === 0) goTo(1);
       });
       reader.addEventListener("error", () => setError("Could not read the file"));
@@ -160,17 +191,22 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   );
 
   const handleSubmit = async () => {
-    if (!type) return;
-    const validation = validateSubmissionContent(type, content);
+    if (!type || pending) return;
+    const validation = workshopSubmissionInputSchema.safeParse({ type, title, description, changelog, content });
     if (!validation.success) {
-      setError(validation.error);
+      setError(validation.error.issues.map((issue) => issue.message).join("\n"));
       goTo(1);
+      return;
+    }
+    if (!workshopScreenshotsSchema.safeParse(screenshots).success) {
+      setError("Use up to five PNG, JPG, or WebP images no larger than 5 MiB each.");
+      goTo(2);
       return;
     }
     setError(null);
     setPending(true);
     try {
-      await onSubmit({ type, title, description, changelog, content, screenshots });
+      await onSubmit({ ...validation.data, screenshots });
     } catch (caught) {
       setError(errorMessage(caught, "Submission failed"));
     } finally {
@@ -257,6 +293,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
               />
             )}
           </div>
+          <WorkshopIntegrationBadges kinds={integrationKinds} />
         </div>
 
         <DialogFooter className="sm:justify-between">
@@ -302,10 +339,10 @@ const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string;
     desc: "A JSON-based widget using the homarr-custom-widget-v2 schema",
   },
   {
-    type: "customCss",
+    type: "customTheme",
     icon: IconPalette,
-    label: "Custom CSS",
-    desc: "A CSS theme or style override for Homarr dashboards",
+    label: "Custom Theme",
+    desc: "A complete theme from Homarr’s theme editor: preset, settings, and optional CSS",
   },
 ];
 
@@ -389,11 +426,11 @@ const StepType = ({
         </div>
         <div className="min-w-0">
           <p className="text-xs font-medium">Or drop a .json file here</p>
-          <p className="text-xs text-muted-foreground">Auto-selects Widget type and fills title from JSON</p>
+          <p className="text-xs text-muted-foreground">Use an exported widget or theme JSON file</p>
         </div>
         <input
           type="file"
-          aria-label="Choose a widget JSON file"
+          aria-label="Choose a widget or theme JSON file"
           accept=".json,application/json"
           className="hidden"
           onChange={(e) => {
@@ -426,26 +463,22 @@ const StepDetails = ({
   content: string;
   onContentChange: (v: string) => void;
 }) => (
-  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
-    <div className="flex flex-col gap-1.5">
+  <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+    <div className="flex min-w-0 flex-col gap-1.5">
       <CustomWidgetCodeInput
         id="submit-content"
         label={contentLabels[type]}
-        language={type === "customWidget" ? "json" : "css"}
+        language={type === "customCss" ? "css" : "json"}
         value={content}
         onChange={onContentChange}
         placeholder={placeholders[type]}
         required
         height="min(44vh, 440px)"
         maxLength={type === "customCss" ? 16_384 : undefined}
-        description={
-          type === "customWidget"
-            ? "Paste exported widget JSON. The title and description are filled from its metadata."
-            : "Paste the stylesheet that users will import into their board settings."
-        }
+        description={contentHints[type]}
       />
     </div>
-    <FieldGroup className="gap-4">
+    <FieldGroup className="min-w-0 gap-4">
       <Field>
         <FieldLabel htmlFor="submit-title">
           Title <span aria-hidden="true">*</span>

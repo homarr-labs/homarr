@@ -890,6 +890,7 @@
       "deleteConfirm": "Ar tikrai norite ištrinti „{name}“? Šio veiksmo neįmanoma atšaukti.",
       "duplicate": "Dubliuoti",
       "aiPrompt": "Kurti naudojant DI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopijuoti DI užklausą",
       "enable": "Įjungti",
       "disable": "Išjungti",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigūruoti",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Pasirinktinių valdiklių skyriai",
       "widgetPreview": "Valdiklio peržiūra",
       "generalInformation": "Bendroji informacija",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Kurti arba taisyti naudojant bet kurį DI",
         "description": "Pirmiausia pridėkite API dokumentacijos URL, jei jį turite. Jei įmanoma, paleiskite peržiūrą. Nukopijuokite raginimą į bet kurį DI; jis gali paprašyti trūkstamos informacijos. Čia įklijuokite galutinį JSON.",
+        "assistedDescription": "",
         "request": "Ką turėtų daryti šis valdiklis?",
         "documentationUrl": "API dokumentacijos URL (pasirinktinai)",
         "paste": "Įklijuoti",
+        "pasteResponse": "",
         "response": "DI atsakymas",
         "manualCopyDescription": "Iškarpinė nepasiekiama. Pasirinkite toliau pateiktą raginimą ir nukopijuokite jį rankiniu būdu.",
         "manualPasteDescription": "Iškarpinė nepasiekiama arba nukopijuotą atsakymą reikia pataisyti. Įklijuokite DI JSON atsakymą čia.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importuoti CSS",
     "importCss": "Importuoti CSS iš dirbtuvių",
     "importCssConfirm": "Pakeisti dabartinį pasirinktinį CSS į „{title}“? Nieko neišsaugoma, kol neišsaugote lentos nustatymų.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Aprašymas",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekrano kopija {count, number}",
     "screenshotViewer": "„{title}“ ekrano kopijų peržiūros priemonė",
     "screenshotsLabel": "„{title}“ ekrano kopijos",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Slėpti ekrano kopijų miniatiūras",
     "closeScreenshotViewer": "Uždaryti ekrano kopijų peržiūros priemonę",
     "technicalDetails": "Techninė informacija",
+    "integrations": "",
     "sourceCode": "Dirbtuvių įrašas",
     "report": "Pranešti",
     "reportTitle": "Pranešti apie pateiktą elementą",
@@ -1332,6 +1382,12 @@
       "copyright": "Autorių teisės",
       "inappropriate": "Netinkamas",
       "other": "Kita"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Skelbti dirbtuvėse",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Slenkamas",
         "description": "Išlaikyti nustatytą šio konteinerio dydį ir slinkti jo turinį, užuot didinus konteinerį pagal turinį."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Rėmelio spalva"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Pašalinti šį konteinerį? Jo turinys bus perkeltas į aplinkinę sritį."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Redaguoti integraciją"
       },
       "app": {
-        "propagationNotice": "Šios programėlės pakeitimai bus taikomi visur, kur ji naudojama visose lentose."
+        "propagationNotice": "Šios programėlės pakeitimai bus taikomi visur, kur ji naudojama visose lentose.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Redaguoti ryšį",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Objekto būsena",
       "description": "Rodyti objekto būseną ir pasirinktinai jį perjungti",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Subjekto ID"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Miestas / Pašto kodas",
         "latitude": "Platuma",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Rodyti vietą",
           "description": "Rodyti, ar srautas yra jūsų LAN, ar WAN tinkle"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Atsisiuntimo progresas",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopijuoti pavadinimą",
         "copyId": "Kopijuoti ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Išvalyti filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtruoti atsisiuntimus"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Slėpti aprašą"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rodyti plakato vaizdą"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Atidaryti pranešimų paslaugą",
       "deleteNotification": "Ištrinti pranešimą iš Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nepavyko ištrinti pranešimo",
       "deleteFailedMessage": "Pranešimo ištrinti nepavyko. Bandykite dar kartą."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Visi integruoti valdikliai jau yra jūsų antraštėje.",
                 "add": "Pridėti {item}",
                 "boardShortcut": "Lentos nuoroda",
+                "widget": "",
                 "chooseBoard": "Pasirinkti lentą"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šis valdiklis išlaiko tokį patį dydį kaip veikiančioje antraštėje.",
                 "searchDisplay": {
                   "input": "Paieškos juosta",
@@ -7270,7 +7393,9 @@
                 "settings": "Jūsų nustatymai",
                 "themeToggle": "Perjungti temą",
                 "user": "Paskyra",
-                "boardUnavailable": "Lenta neprieinama"
+                "boardUnavailable": "Lenta neprieinama",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {

@@ -890,6 +890,7 @@
       "deleteConfirm": "確定要刪除 \"{name}\" 嗎？此動作無法復原。",
       "duplicate": "複製",
       "aiPrompt": "使用 AI 設計",
+      "createAssisted": "",
       "copyAiPrompt": "複製 AI 提示",
       "enable": "啟用",
       "disable": "停用",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "設定",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "自訂小工具區段",
       "widgetPreview": "小工具預覽",
       "generalInformation": "一般資訊",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "使用任何 AI 建立或修正",
         "description": "如果有 API 文件 URL，請先新增。若要修正問題，請盡可能執行預覽。將提示複製到任何 AI；它可能會要求缺少的詳細資料。將其最終 JSON 貼到此處。",
+        "assistedDescription": "",
         "request": "您希望此小工具執行什麼操作？",
         "documentationUrl": "API 文件 URL（選填）",
         "paste": "貼上",
+        "pasteResponse": "",
         "response": "AI 回應",
         "manualCopyDescription": "剪貼簿存取不可用。請選取下方提示並手動複製。",
         "manualPasteDescription": "剪貼簿存取不可用，或複製的回應需要修正。請將 AI 的 JSON 回應貼到此處。",
@@ -1304,6 +1321,38 @@
     "useCss": "匯入 CSS",
     "importCss": "從 Workshop 匯入 CSS",
     "importCssConfirm": "以「{title}」取代目前的自訂 CSS？在儲存面板設定前，不會儲存任何內容。",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "描述",
+      "published": ""
+    },
     "screenshotAlt": "{title} 螢幕截圖 {count, number}",
     "screenshotViewer": "{title} 螢幕截圖檢視器",
     "screenshotsLabel": "{title} 螢幕截圖",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "隱藏螢幕截圖縮圖",
     "closeScreenshotViewer": "關閉螢幕截圖檢視器",
     "technicalDetails": "技術詳細資料",
+    "integrations": "整合",
     "sourceCode": "Workshop 項目",
     "report": "檢舉",
     "reportTitle": "檢舉投稿",
@@ -1332,6 +1382,12 @@
       "copyright": "著作權",
       "inappropriate": "不當內容",
       "other": "其他"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "發佈至 Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "移動裝置",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "可捲動",
         "description": "讓此容器維持設定的大小，捲動其內容而不是隨內容增長。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "邊框顏色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "隱藏"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "要移除此容器嗎？其內容將移至周圍區域。"
+      },
+      "editBar": {
+        "edit": "編輯"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "編輯整合"
       },
       "app": {
-        "propagationNotice": "對此應用程式的變更將會套用到所有使用它的儀表板。"
+        "propagationNotice": "對此應用程式的變更將會套用到所有使用它的儀表板。",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "編輯連線",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "設備狀態",
       "description": "顯示設備狀態並可選切換",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "設備 ID"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "城市 / 郵遞區號",
         "latitude": "緯度",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "顯示位置",
           "description": "顯示串流位於 LAN 或 WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "下載進度",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "複製名稱",
         "copyId": "複製 ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "清除篩選器"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "篩選下載項目"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "隱藏說明"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "顯示封面圖片"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "開啟通知服務",
       "deleteNotification": "從 Gotify 刪除通知",
+      "dismissNotification": "",
       "deleteFailed": "無法刪除通知",
       "deleteFailedMessage": "無法刪除通知。請再試一次。"
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "所有內建控制項都已在您的標頭中。",
                 "add": "新增 {item}",
                 "boardShortcut": "面板捷徑",
+                "widget": "",
                 "chooseBoard": "選擇面板"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "此控制項會維持與即時標頭中相同的大小。",
                 "searchDisplay": {
                   "input": "搜尋列",
@@ -7270,7 +7393,9 @@
                 "settings": "您的設定",
                 "themeToggle": "切換主題",
                 "user": "帳戶",
-                "boardUnavailable": "面板無法使用"
+                "boardUnavailable": "面板無法使用",
+                "notifications": "通知",
+                "widget": ""
               }
             },
             "item": {
