@@ -33,7 +33,7 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId, avail
     await mutateAsync(
       {
         id: groupId,
-        settings: values,
+        ...values,
       },
       {
         onSuccess() {

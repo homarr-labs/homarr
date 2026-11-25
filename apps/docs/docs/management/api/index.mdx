@@ -11,9 +11,9 @@ This page covers contracts that are not obvious from those schemas.
 The in-app reference loads its schema from `/api/openapi?format=scalar` on your Homarr instance. `/api/openapi` provides the raw JSON specification.
 
 REST exposes selected existing Homarr controls. Use tRPC for advanced operations; both accept the `ApiKey` header.
-`PUT /api/boards/{id}/content` uses the dashboard editor's complete `sections` and `items` arrays. Omitted entries are
-removed, so read the current content through tRPC `board.getBoardByName` before editing it. Widget movement and
-resizing can instead use the existing item-layout endpoint.
+Read the current `sections` and `items` with `GET /api/boards/{id}/content` before saving them with
+`PUT /api/boards/{id}/content`. Omitted entries are removed. Keep the canvas roots for all tabs and gutters.
+Use the item-layout endpoint to move or resize one widget without replacing the board.
 
 Use `GET /api/users/preferences` and `PATCH /api/users/preferences` to read or change preferences. Send only changed
 values: `{ "colorScheme": "light" }` or `{ "headerPreferences": { "visible": false } }`. Omitted values stay unchanged;

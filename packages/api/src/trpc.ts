@@ -47,10 +47,15 @@ interface ApiContext {
   baseUrl?: `${string}://${string}`;
   onboardingClaimToken?: string;
   requestIdentity?: RequestIdentity;
+  isOpenApiRequest?: boolean;
   db: typeof db;
 }
 
-export const createTRPCContext = (opts: { headers: Headers; session: Session | null }): ApiContext => {
+export const createTRPCContext = (opts: {
+  headers: Headers;
+  session: Session | null;
+  isOpenApiRequest?: boolean;
+}): ApiContext => {
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
@@ -66,6 +71,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
     baseUrl: extractBaseUrlFromHeaders(opts.headers),
     onboardingClaimToken: getOnboardingClaimTokenFromCookieHeader(opts.headers.get("cookie")),
     requestIdentity: resolveRequestIdentity(opts.headers),
+    isOpenApiRequest: opts.isOpenApiRequest,
     db,
   };
 };
@@ -81,15 +87,31 @@ const t = initTRPC
   .meta<OpenApiMeta & McpMeta & CredentialAccessMeta>()
   .create({
     transformer: superjson,
-    errorFormatter: ({ shape, error }) => ({
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-        error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
-        isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
-      },
-    }),
+    errorFormatter: ({ shape, error, ctx }) => {
+      if (ctx?.isOpenApiRequest && error.code === "INTERNAL_SERVER_ERROR") {
+        return {
+          ...shape,
+          message: "Internal server error",
+          data: {
+            code: shape.data.code,
+            httpStatus: shape.data.httpStatus,
+            path: shape.data.path,
+            zodError: null,
+            error: null,
+            isBoardLayoutBoundsError: false,
+          },
+        };
+      }
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+          error: error.cause instanceof FlattenError ? error.cause.flatten() : null,
+          isBoardLayoutBoundsError: error.cause instanceof BoardLayoutBoundsError,
+        },
+      };
+    },
   });
 
 /**

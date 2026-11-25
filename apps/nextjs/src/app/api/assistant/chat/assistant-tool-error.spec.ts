@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import {
   getAssistantToolErrorCode,
+  getConnectionTestFailureMessage,
   getCustomWidgetConfigurationStatusRecovery,
   getSafeAssistantToolError,
 } from "./assistant-tool-error";
@@ -129,6 +130,21 @@ describe("getSafeAssistantToolError", () => {
         toolName: "integration_create",
       }),
     ).toBe("The tool input was not valid.");
+  });
+
+  test("names the failure category of a rejected integration connection test without upstream details", () => {
+    const error = new TRPCError({
+      code: "BAD_REQUEST",
+      message: "authorization",
+      cause: new Error("401 from https://private.test/api token=secret"),
+    });
+
+    const message = getSafeAssistantToolError(error, { toolName: "integration_create" });
+    expect(message).toContain("connection test failed (authorization)");
+    expect(message).not.toContain("private.test");
+    expect(message).not.toContain("token=");
+    // MCP clients get the same message
+    expect(getConnectionTestFailureMessage(error, "integration_create")).toBe(message);
   });
 
   test.each([

@@ -235,7 +235,7 @@ describe("Custom JSX v2 board router", () => {
     const editor = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(editorId) });
     await expect(
       editor.executeAction({ itemId, requestId: "delete", params: {}, confirmed: true }),
-    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(owner.executeAction({ itemId, requestId: "delete", params: {}, confirmed: true })).resolves.toEqual(
       expect.objectContaining({ ok: true }),
     );

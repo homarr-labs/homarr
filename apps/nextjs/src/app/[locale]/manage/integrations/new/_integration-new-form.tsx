@@ -33,7 +33,6 @@ import {
   getIntegrationName,
   getOptionalSecretKinds,
   invariantTechnicalLabels,
-  integrationDefs,
 } from "@homarr/definitions";
 import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
@@ -57,17 +56,19 @@ interface NewIntegrationFormProps {
   onCancel?: () => void;
 }
 
-export type CreatedIntegrationResult = Extract<RouterOutputs["integration"]["create"], { integration: unknown }>;
+export type CreatedIntegrationResult = RouterOutputs["integration"]["create"];
 
-const formSchema = integrationCreateSchema.omit({ kind: true, app: true, externalUrl: true }).and(
-  z.object({
-    externalUrl: z.string(),
-    hasApp: z.boolean(),
-    appMode: z.enum(["new", "existing"]),
-    appId: z.string().nullable(),
-    optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
-  }),
-);
+const formSchema = integrationCreateSchema
+  .omit({ kind: true, app: true, skipConnectionTest: true, externalUrl: true })
+  .and(
+    z.object({
+      externalUrl: z.string(),
+      hasApp: z.boolean(),
+      appMode: z.enum(["new", "existing"]),
+      appId: z.string().nullable(),
+      optionalSecrets: z.array(z.object({ kind: z.string(), value: z.string() })),
+    }),
+  );
 
 export const NewIntegrationForm = ({
   kind,
@@ -101,7 +102,6 @@ export const NewIntegrationForm = ({
         kind,
         value: "",
       })),
-      attemptSearchEngineCreation: true,
       hasApp: canCreateApps,
       appMode: canCreateApps ? "new" : "existing",
       appId: null,
@@ -109,17 +109,23 @@ export const NewIntegrationForm = ({
     },
   });
 
+  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const errorRef = useRef<HTMLElement>(null);
   const utils = clientApi.useUtils();
-  const { mutateAsync: createIntegrationAsync, isPending: isCreatePending } = clientApi.integration.create.useMutation({
+  const { mutate: createIntegration, isPending: isCreatePending } = clientApi.integration.create.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/integrations");
       await utils.integration.invalidate();
     },
+    onError(mutationError) {
+      const testConnectionError = mutationError.data?.error as AnyMappedTestConnectionError | null | undefined;
+      if (!testConnectionError) return;
+      setError(testConnectionError);
+      requestAnimationFrame(() => errorRef.current?.focus());
+    },
   });
-  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
-  const errorRef = useRef<HTMLElement>(null);
 
-  const handleSubmitAsync = async ({ appId, appMode: _appMode, hasApp, optionalSecrets, ...formValues }: FormType) => {
+  const handleSubmit = ({ appId, appMode: _appMode, hasApp, optionalSecrets, ...formValues }: FormType) => {
     // Optional secrets are only stored when a value was entered.
     const values = {
       ...formValues,
@@ -135,25 +141,13 @@ export const NewIntegrationForm = ({
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
 
-    const onMutationSuccess = (
-      data: CreatedIntegrationResult | { error?: AnyMappedTestConnectionError } | undefined | void,
-    ) => {
-      if (data && "error" in data && data.error) {
-        setError(data.error);
-        showErrorNotification({
-          title: tCommon("notification.create.error"),
-          message: tIntegration("page.create.notification.error.message"),
-        });
-        requestAnimationFrame(() => errorRef.current?.focus());
-        return;
-      }
-
+    const onMutationSuccess = (data: CreatedIntegrationResult) => {
       showSuccessNotification({
         title: tCommon("notification.create.success"),
         message: tIntegration("page.create.notification.success.message"),
       });
 
-      onSuccess(data && "integration" in data ? data : undefined);
+      onSuccess(data);
     };
 
     const onMutationError = () => {
@@ -177,18 +171,11 @@ export const NewIntegrationForm = ({
           : undefined
       : undefined;
 
-    await createIntegrationAsync(
-      { kind, ...values, url, app },
-      { onSuccess: onMutationSuccess, onError: onMutationError },
-    );
+    createIntegration({ kind, ...values, url, app }, { onSuccess: onMutationSuccess, onError: onMutationError });
   };
 
-  const integrationCategories = integrationDefs[kind].category.flat();
-  const supportsSearchEngine =
-    integrationCategories.includes("search") && !integrationCategories.includes("mediaSearch");
-
   return (
-    <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
+    <form onSubmit={form.onSubmit((value) => handleSubmit(value))}>
       <Stack>
         <TextInput withAsterisk label={tCommon("field.name")} autoFocus {...form.getInputProps("name")} />
 
@@ -238,16 +225,6 @@ export const NewIntegrationForm = ({
           >
             <IntegrationTestConnectionError error={error} url={form.values.url} />
           </section>
-        )}
-
-        {supportsSearchEngine && (
-          <Checkbox
-            label={tIntegration("field.attemptSearchEngineCreation.label")}
-            description={tIntegration("field.attemptSearchEngineCreation.description", {
-              kind: getIntegrationName(kind),
-            })}
-            {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
-          />
         )}
 
         <AppForm form={form} canCreateApps={canCreateApps} selectableApps={selectableApps} />
