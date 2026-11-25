@@ -1,0 +1,23 @@
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  s_4d148b33737230::t_52e2b7356768a8 6,25,137-168,177,179
+apps/nextjs/src/components/integration/integration-completion-modal.tsx
+  s_4d148b33737230::t_2c68f721fd0c5a 11,14,67-69,71-76,78,81-84
+packages/modals-collection/src/search-engines/request-media-seasons-table.tsx
+  s_4d148b33737230::t_ab14b5609f5352 72-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "32a85752ba12fda4eeb39965cd44f11c079de4d5",
+  "prompts": {},
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

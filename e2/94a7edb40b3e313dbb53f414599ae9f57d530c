@@ -1,0 +1,54 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_4d148b33737230::t_b7ab6b5d585b08 4,40-48,128-133
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  h_d6e478ca18e517 34
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  h_d6e478ca18e517 17
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx
+  h_d6e478ca18e517 17
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  h_d6e478ca18e517 15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx
+  h_d6e478ca18e517 14
+apps/nextjs/src/app/[locale]/manage/tools/tasks/_components/tasks-table.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  h_d6e478ca18e517 13
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  h_d6e478ca18e517 17
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  h_d6e478ca18e517 10
+packages/ui/package.json
+  h_d6e478ca18e517 22
+packages/modals/index.ts
+  s_4d148b33737230::t_224cd8365130ba 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e294a7edb40b3e313dbb53f414599ae9f57d530c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_4d148b33737230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "175c9582-3b6a-41fe-a64c-436c8f924b33",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
