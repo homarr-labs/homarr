@@ -12,6 +12,7 @@ interface NetworkCause {
   syscall?: string;
   hostname?: string;
   cause?: NetworkCause;
+  errors?: NetworkCause[];
 }
 
 const sanitizeCause = (error: unknown, depth = 0): NetworkCause | undefined => {
@@ -31,7 +32,19 @@ const sanitizeCause = (error: unknown, depth = 0): NetworkCause | undefined => {
   }
   const inner = sanitizeCause(error.cause, depth + 1);
   if (inner) cause.cause = inner;
+  if (error instanceof AggregateError) {
+    const errors = error.errors
+      .slice(0, 2)
+      .map((entry: unknown) => sanitizeCause(entry, depth + 1))
+      .filter((entry) => entry !== undefined);
+    if (errors.length > 0) cause.errors = errors;
+  }
   return cause;
+};
+
+const isTimeout = (cause: NetworkCause | undefined): boolean => {
+  if (!cause) return false;
+  return timeoutCodes.includes(cause.code ?? "") || isTimeout(cause.cause) || (cause.errors?.some(isTimeout) ?? false);
 };
 
 export const fetchOpenMeteoJsonAsync = async (url: URL, signal: AbortSignal): Promise<unknown> => {
@@ -47,10 +60,7 @@ export const fetchOpenMeteoJsonAsync = async (url: URL, signal: AbortSignal): Pr
     let stage = "response headers";
     if (response) stage = "response body";
     let outcome = "failed";
-    if (signal.aborted) outcome = "timed out";
-    for (let current = cause; current; current = current.cause) {
-      if (current.code && timeoutCodes.includes(current.code)) outcome = "timed out";
-    }
+    if (signal.aborted || isTimeout(cause)) outcome = "timed out";
     throw new ErrorWithMetadata(`Open-Meteo ${stage} ${outcome}`, metadata(), { cause });
   }
 

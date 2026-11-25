@@ -17,7 +17,9 @@ it("preserves safe connection timeout diagnostics before the request deadline", 
     syscall: "connect",
     hostname: url.hostname,
   });
-  vi.mocked(fetchWithTrustedCertificatesAsync).mockRejectedValueOnce(new TypeError("fetch failed", { cause }));
+  vi.mocked(fetchWithTrustedCertificatesAsync).mockRejectedValueOnce(
+    new TypeError("fetch failed", { cause: new AggregateError([cause], "Connection attempts failed") }),
+  );
 
   const result = fetchOpenMeteoJsonAsync(url, signal);
   await expect(result).rejects.toMatchObject({
@@ -25,10 +27,13 @@ it("preserves safe connection timeout diagnostics before the request deadline", 
     metadata: { host: url.hostname, elapsedMs: expect.any(Number) },
     cause: {
       name: "TypeError",
-      cause: { name: "Error", code: "ETIMEDOUT", errno: -110, syscall: "connect", hostname: url.hostname },
+      cause: {
+        name: "AggregateError",
+        errors: [{ name: "Error", code: "ETIMEDOUT", errno: -110, syscall: "connect", hostname: url.hostname }],
+      },
     },
   });
-  await expect(result).rejects.not.toHaveProperty("cause.cause.message");
+  await expect(result).rejects.not.toHaveProperty("cause.cause.errors.0.message");
   expect(vi.mocked(fetchWithTrustedCertificatesAsync)).toHaveBeenCalledWith(url.toString(), {
     signal,
     logOriginOnly: true,
