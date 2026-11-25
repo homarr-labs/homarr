@@ -517,7 +517,14 @@ export const userRouter = createTRPCRouter({
             name: z.string(),
           }),
         ),
-        groupsClaim: z.array(z.string()).nullable(),
+        groupsClaim: z
+          .array(
+            z.object({
+              value: z.string(),
+              exists: z.boolean(),
+            }),
+          )
+          .nullable(),
         groupsClaimSeenAt: z.date().nullable(),
       }),
     )
@@ -575,15 +582,14 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      const oidcAccount = user.accounts.find((entry) => entry.provider === "oidc");
-      const account = oidcAccount ?? user.accounts.find((entry) => entry.provider === user.provider);
+      const account = selectSignInAccount(user.accounts, user.provider);
 
       return {
-        provider: oidcAccount ? "oidc" : user.provider,
+        provider: resolveSignInProvider(account?.provider, user.provider),
         email: user.email,
         subject: account?.providerAccountId ?? null,
         homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
-        groupsClaim: parseLastGroupsClaim(account?.lastGroupsClaim ?? null),
+        groupsClaim: await withGroupExistenceAsync(ctx.db, parseLastGroupsClaim(account?.lastGroupsClaim ?? null)),
         groupsClaimSeenAt: account?.lastGroupsClaimSeenAt ?? null,
       };
     }),
@@ -1068,6 +1074,33 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
   });
 };
 
+const isSupportedAuthProvider = (provider: string): provider is SupportedAuthProvider =>
+  (supportedAuthProviders as readonly string[]).includes(provider);
+
+const resolveSignInProvider = (
+  accountProvider: string | undefined,
+  userProvider: SupportedAuthProvider,
+): SupportedAuthProvider =>
+  accountProvider !== undefined && isSupportedAuthProvider(accountProvider) ? accountProvider : userProvider;
+
+const selectSignInAccount = <T extends { provider: string; lastGroupsClaimSeenAt: Date | null }>(
+  accountRows: T[],
+  userProvider: string,
+): T | null => {
+  const withSeenAt = accountRows.filter((entry) => entry.lastGroupsClaimSeenAt !== null);
+  if (withSeenAt.length > 0) {
+    return withSeenAt.reduce((latest, entry) =>
+      Number(entry.lastGroupsClaimSeenAt) > Number(latest.lastGroupsClaimSeenAt) ? entry : latest,
+    );
+  }
+
+  return (
+    accountRows.find((entry) => entry.provider === "oidc") ??
+    accountRows.find((entry) => entry.provider === userProvider) ??
+    null
+  );
+};
+
 const parseLastGroupsClaim = (value: string | null): string[] | null => {
   if (!value) {
     return null;
@@ -1083,4 +1116,22 @@ const parseLastGroupsClaim = (value: string | null): string[] | null => {
   } catch {
     return null;
   }
+};
+
+const withGroupExistenceAsync = async (db: Database, claims: string[] | null) => {
+  if (claims === null) {
+    return null;
+  }
+
+  if (claims.length === 0) {
+    return [];
+  }
+
+  const existingGroups = await db.query.groups.findMany({
+    columns: { name: true },
+    where: inArray(groups.name, claims),
+  });
+  const existingNames = new Set(existingGroups.map((group) => group.name));
+
+  return claims.map((value) => ({ value, exists: existingNames.has(value) }));
 };

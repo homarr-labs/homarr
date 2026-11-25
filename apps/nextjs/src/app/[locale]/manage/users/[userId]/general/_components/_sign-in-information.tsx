@@ -52,7 +52,6 @@ export const SignInInformation = ({ information }: SignInInformationProps) => {
 
 const GroupsClaimDetails = ({ information }: SignInInformationProps) => {
   const t = useI18n("management.page.user.setting.general.item.signInInformation");
-  const homarrGroupNames = new Set(information.homarrGroups.map((group) => group.name));
 
   return (
     <Stack gap={4}>
@@ -76,12 +75,16 @@ const GroupsClaimDetails = ({ information }: SignInInformationProps) => {
         </Text>
       ) : (
         <Group gap="xs">
-          {information.groupsClaim.map((claim) => {
-            const unmatched = !homarrGroupNames.has(claim);
+          {information.groupsClaim.map((claim, index) => {
+            const unmatched = !claim.exists;
             return (
-              <Tooltip key={claim} label={unmatched ? t("unmatched") : claim} disabled={!unmatched}>
+              <Tooltip
+                key={`${index}-${claim.value}`}
+                label={unmatched ? t("unmatched") : claim.value}
+                disabled={!unmatched}
+              >
                 <Badge variant="light" color={unmatched ? "yellow" : "blue"}>
-                  {claim}
+                  {claim.value}
                 </Badge>
               </Tooltip>
             );

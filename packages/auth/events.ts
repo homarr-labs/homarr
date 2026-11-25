@@ -14,7 +14,7 @@ import { extractProfileName, getProfileValueByPath } from "./providers/oidc/prof
 const logger = createLogger({ module: "authEvents" });
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
-  return async ({ user, profile }) => {
+  return async ({ user, account, profile }) => {
     logger.debug(`SignIn EventHandler for user: ${JSON.stringify(user)} . profile: ${JSON.stringify(profile)}`);
     if (!user.id) throw new Error("User ID is missing");
 
@@ -34,7 +34,9 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     const profileGroups = asStringGroups(profile ? getProfileValueByPath(profile, groupsKey) : undefined);
     // Groups from oidc provider are provided from the profile, it's not typed.
     if (profileGroups) {
-      await storeLastGroupsClaimAsync(db, user.id, profileGroups);
+      if (account?.provider && account.providerAccountId) {
+        await storeLastGroupsClaimAsync(db, account, profileGroups);
+      }
       if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc") {
         logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
         await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups);
@@ -46,7 +48,8 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       const ldapGroups = asStringGroups(user.groups);
       if (ldapGroups) {
         logger.debug(`Using profile groups: ${JSON.stringify(ldapGroups)}`);
-        await storeLastGroupsClaimAsync(db, user.id, ldapGroups);
+        const ldapAccount = await ensureLdapAccountAsync(db, user.id);
+        await storeLastGroupsClaimAsync(db, ldapAccount, ldapGroups);
         await synchronizeGroupsWithExternalForUserAsync(db, user.id, ldapGroups);
       }
     }
@@ -110,14 +113,31 @@ const asStringGroups = (value: unknown): string[] | null => {
   return null;
 };
 
-const storeLastGroupsClaimAsync = async (db: Database, userId: string, groupsClaim: string[]) => {
+const storeLastGroupsClaimAsync = async (
+  db: Database,
+  account: { provider: string; providerAccountId: string },
+  groupsClaim: string[],
+) => {
   await db
     .update(accounts)
     .set({
       lastGroupsClaim: JSON.stringify(groupsClaim),
       lastGroupsClaimSeenAt: new Date(),
     })
-    .where(eq(accounts.userId, userId));
+    .where(and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId)));
+};
+
+const ensureLdapAccountAsync = async (db: Database, userId: string) => {
+  const ldapAccount = { provider: "ldap", providerAccountId: userId };
+  await db
+    .insert(accounts)
+    .values({
+      userId,
+      type: "credentials",
+      ...ldapAccount,
+    })
+    .onConflictDoNothing();
+  return ldapAccount;
 };
 
 const addUserToEveryoneGroupIfNotMemberAsync = async (db: Database, userId: string) => {

@@ -243,7 +243,11 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
           preferred_username: "test",
           someRandomGroupsKey: ["admins", "00000000-0000-0000-0000-000000000001"],
         },
-        account: null,
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
       });
 
       const account = await db.query.accounts.findFirst({ where: eq(accounts.userId, "1") });
@@ -274,6 +278,83 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
 
       // Cleanup
       mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = false;
+    });
+    test("should store the last groups claim only on the signing-in account", async () => {
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      await db.insert(accounts).values({
+        userId: "1",
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "linked-subject",
+        id_token: "other-id-token",
+      });
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: ["admins"],
+        },
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
+      });
+
+      const signedInAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.providerAccountId, "oidc-subject"),
+      });
+      const otherAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.providerAccountId, "linked-subject"),
+      });
+      expect(signedInAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+      expect(signedInAccount?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+      expect(otherAccount?.lastGroupsClaim).toBeNull();
+      expect(otherAccount?.lastGroupsClaimSeenAt).toBeNull();
+    });
+  });
+  describe("signInEventHandler should store ldap groups claims without a pre-existing account", () => {
+    test("should persist the claim on a new ldap account row", async () => {
+      const db = createDb();
+      await createUserAsync(db, "ldap");
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test", groups: ["admins"] } as never,
+        profile: undefined,
+        account: null,
+      });
+
+      const ldapAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.provider, "ldap"),
+      });
+      expect(ldapAccount?.providerAccountId).toBe("1");
+      expect(ldapAccount?.type).toBe("credentials");
+      expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+      expect(ldapAccount?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+    });
+    test("overlapping first ldap sign-ins both persist the claim", async () => {
+      const db = createDb();
+      await createUserAsync(db, "ldap");
+      const eventHandler = createSignInEventHandler(db);
+      const signIn = () =>
+        eventHandler?.({
+          user: { id: "1", name: "test", groups: ["admins"] } as never,
+          profile: undefined,
+          account: null,
+        });
+
+      const settled = await Promise.allSettled([signIn(), signIn()]);
+      const ldapAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.provider, "ldap"),
+      });
+
+      expect(settled.every((entry) => entry.status === "fulfilled")).toBe(true);
+      expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
     });
   });
   test.each([

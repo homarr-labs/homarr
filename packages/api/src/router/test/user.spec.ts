@@ -367,7 +367,10 @@ describe("getSignInInformation should return safe authentication details", () =>
         email: "owner@example.com",
         subject: "oidc-subject",
         homarrGroups: [{ id: groupId, name: "admins" }],
-        groupsClaim: ["admins", "00000000-0000-0000-0000-000000000001"],
+        groupsClaim: [
+          { value: "admins", exists: true },
+          { value: "00000000-0000-0000-0000-000000000001", exists: false },
+        ],
         groupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
       });
       expect(JSON.stringify(result)).not.toContain("secret-");
@@ -423,6 +426,80 @@ describe("getSignInInformation should return safe authentication details", () =>
       groupsClaim: null,
       groupsClaimSeenAt: null,
     });
+  });
+
+  test("marks a claim as existing when the Homarr group exists even if the user is not a member", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const groupId = createId();
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "owner",
+      email: "owner@example.com",
+      provider: "oidc",
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oidc",
+      provider: "oidc",
+      providerAccountId: "oidc-subject",
+      lastGroupsClaim: JSON.stringify(["ops", "unknown"]),
+      lastGroupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
+    });
+    await db.insert(groups).values({ id: groupId, name: "ops", position: 0 });
+
+    const result = await caller.getSignInInformation({ userId: defaultOwnerId });
+
+    expect(result.groupsClaim).toEqual([
+      { value: "ops", exists: true },
+      { value: "unknown", exists: false },
+    ]);
+    expect(result.homarrGroups).toEqual([]);
+  });
+
+  test("returns the groups claim from the account that last stored it when multiple oidc accounts exist", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const groupId = createId();
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "owner",
+      email: "owner@example.com",
+      provider: "oidc",
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oidc",
+      provider: "oidc",
+      providerAccountId: "linked-subject",
+      lastGroupsClaim: JSON.stringify(["stale"]),
+      lastGroupsClaimSeenAt: new Date("2020-01-01T00:00:00.000Z"),
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oidc",
+      provider: "oidc",
+      providerAccountId: "oidc-subject",
+      lastGroupsClaim: JSON.stringify(["ops"]),
+      lastGroupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
+    });
+    await db.insert(groups).values({ id: groupId, name: "ops", position: 0 });
+
+    const result = await caller.getSignInInformation({ userId: defaultOwnerId });
+
+    expect(result.subject).toBe("oidc-subject");
+    expect(result.groupsClaim).toEqual([{ value: "ops", exists: true }]);
+    expect(result.groupsClaimSeenAt).toEqual(new Date("2026-10-30T12:00:00.000Z"));
   });
 });
 
