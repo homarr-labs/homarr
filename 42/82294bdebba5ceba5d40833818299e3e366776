@@ -1,0 +1,44 @@
+apps/workshop/pb_hooks/http-integration-kinds.json
+  s_39baa184ac89c6::t_adfcafbceefa07 68
+packages/integrations/src/pfsense/pfsense-integration.spec.ts
+  s_39baa184ac89c6::t_7e29a614993ed9 1-5,7-9,12-13,15-37,39-51,56-67,76-80
+  s_39baa184ac89c6::t_8f2fe56c8995a2 6,10-11,14,38
+  s_39baa184ac89c6::t_a84adb95447919 52-55,68-75
+packages/integrations/src/stats/existing.ts
+  s_39baa184ac89c6::t_d349e2e3cd841b 387-388
+packages/integrations/src/pfsense/pfsense-types.ts
+  s_39baa184ac89c6::t_d349e2e3cd841b 18-19
+  s_39baa184ac89c6::t_7ac9b613484762 26
+packages/integrations/src/pfsense/pfsense-integration.ts
+  s_39baa184ac89c6::t_d349e2e3cd841b 1,15-17,19-28,31-39,44,48,52-59,68
+  s_39baa184ac89c6::t_7ac9b613484762 71-75
+packages/widgets/src/firewall/component.tsx
+  s_39baa184ac89c6::t_d349e2e3cd841b 193-194
+packages/request-handler/src/firewall.ts
+  s_39baa184ac89c6::t_d349e2e3cd841b 2,13,15,25,27,37-71
+  s_b4343a30d33181::t_7bbc4c6769e8ae 72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4282294bdebba5ceba5d40833818299e3e366776",
+  "prompts": {},
+  "sessions": {
+    "s_39baa184ac89c6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a2124a-8fde-78e3-8baf-cb51ae18ad10",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b4343a30d33181": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21251-2cf9-74f0-af6b-7cf5d8c2c0b6",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
