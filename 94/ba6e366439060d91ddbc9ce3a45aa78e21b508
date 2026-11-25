@@ -1,0 +1,22 @@
+packages/request-handler/src/open-meteo.ts
+  s_518b60e97b42f2::t_9c31ee00296024 6-7,49-54,62-66,68-79,85-89
+  s_518b60e97b42f2::t_ab779d5a78bc27 61,67
+packages/request-handler/src/lib/request-handler.ts
+  s_518b60e97b42f2::t_9c31ee00296024 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "94ba6e366439060d91ddbc9ce3a45aa78e21b508",
+  "prompts": {},
+  "sessions": {
+    "s_518b60e97b42f2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21249-b50f-7d30-8644-362b36fc5a72",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
