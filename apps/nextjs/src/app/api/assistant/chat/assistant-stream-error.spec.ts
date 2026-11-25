@@ -1,4 +1,4 @@
-import { NoSuchToolError } from "ai";
+import { NoSuchToolError, RetryError } from "ai";
 import { describe, expect, test } from "vitest";
 
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
@@ -12,6 +12,40 @@ describe("assistant stream errors", () => {
     });
     expect(getAssistantStreamErrorMessage(error)).toBe(detail);
     expect(getAssistantStreamErrorMessage(new Error("Retry failed", { cause: error }))).toBe(detail);
+    expect(getAssistantStreamErrorMessage(error, true)).toBe(detail);
+  });
+
+  test("explains exhausted Homarr credits through a retry error", () => {
+    const error = Object.assign(new Error("Payment Required"), { statusCode: 402 });
+    const retryError = new RetryError({
+      message: "Retry failed",
+      reason: "errorNotRetryable",
+      errors: [error],
+    });
+    expect(getAssistantStreamErrorMessage(retryError, true)).toBe(
+      "The Homarr Assistant has run out of shared credits. Please try again later.",
+    );
+  });
+
+  test.each([
+    { statusCode: 502 },
+    {
+      statusCode: 502,
+      error: {
+        type: "homarr_provider_upstream_error",
+        message: "Upstream model service returned HTTP 502. Bad Gateway",
+      },
+    },
+  ])("suggests trying again after a generic Homarr 502", (error) => {
+    expect(getAssistantStreamErrorMessage(error, true)).toBe(
+      "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.",
+    );
+  });
+
+  test("keeps the model guidance for a marker-less Homarr 502 with an invalid model", () => {
+    expect(getAssistantStreamErrorMessage({ statusCode: 502, message: "The selected model is invalid" }, true)).toBe(
+      "The provider rejected the selected model. Ask an administrator to select a valid model ID.",
+    );
   });
 
   test("does not forward arbitrary upstream metadata or unmarked response bodies", () => {

@@ -118,13 +118,11 @@ export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider 
     return "The Homarr Assistant has run out of shared credits. Please try again later.";
   }
   if (
-    isHomarrProvider &&
-    statusCode === 502 &&
-    (!upstreamMessage || genericWorkshopGatewayMessages.has(upstreamMessage))
+    upstreamMessage &&
+    !(isHomarrProvider && statusCode === 502 && genericWorkshopGatewayMessages.has(upstreamMessage))
   ) {
-    return "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.";
+    return upstreamMessage;
   }
-  if (upstreamMessage) return upstreamMessage;
 
   if (hasUnavailableToolError(error)) {
     return "The requested tool is unavailable at this step. Homarr did not run the action. Try again.";
@@ -154,6 +152,9 @@ export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider 
   }
   if (statusCode === 429) {
     return "The model endpoint is rate limited. Wait a moment and try again.";
+  }
+  if (isHomarrProvider && statusCode === 502) {
+    return "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.";
   }
   if (statusCode !== undefined && statusCode >= 500) {
     return "The model provider is temporarily unavailable. Try again later.";
