@@ -1,0 +1,18 @@
+packages/api/src/router/location.ts
+  h_d6e478ca18e517 4,44-45
+packages/request-handler/src/air-quality.ts
+  h_d6e478ca18e517 7,58
+packages/request-handler/src/open-meteo.ts
+  h_d6e478ca18e517 1-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "37eaf16eb2afd75bc7270457ec449a27f3d85f7b",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
