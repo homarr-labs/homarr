@@ -1,0 +1,62 @@
+apps/nextjs/src/components/board/sections/smart-container/smart-container-context.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 15
+apps/nextjs/src/components/board/sections/container/container-state-editor.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 32,102,111-114,266,344
+apps/nextjs/src/components/board/sections/smart-container/constants.ts
+  s_560cd7a81b1b64::t_b2e84242e504e5 1-2,5-7
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 125-130,136-140,280-282,309-310,368-370,372-376,378-405
+  s_560cd7a81b1b64::t_b2e84242e504e5 26-28,123-124,135,141,180,265,269,278-279,283,285,297,301,328-329,354,367,371,406,421
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 6,14,29-31,33,35,37,39-43
+  s_560cd7a81b1b64::t_6d762951510558 32,34,36,38
+apps/nextjs/src/components/board/board-setup-checklist.module.css
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 18-29
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 34-35,48,65,71,85
+packages/widgets/src/errors/base-component.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 34
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 25-33
+apps/nextjs/src/components/board/sections/container/container-menu.module.css
+  s_560cd7a81b1b64::t_6d762951510558 65
+  s_560cd7a81b1b64::t_b2e84242e504e5 76-85
+packages/widgets/src/notebook/read-mode.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 226
+packages/translation/src/lang/en.json
+  s_560cd7a81b1b64::t_b2e84242e504e5 2457
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 396-401,403-407,571-580
+  s_560cd7a81b1b64::t_b2e84242e504e5 10,16,22,91-92,377,394-395,402,538-539,570,581-583
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_560cd7a81b1b64::t_b2e84242e504e5 132-142
+apps/nextjs/src/components/board/sections/container/container-option-fields.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 62-65
+  s_560cd7a81b1b64::t_b2e84242e504e5 25-26
+packages/modals/src/index.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 144
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.module.css
+  s_560cd7a81b1b64::t_b2e84242e504e5 67-69,132,167-170
+packages/widgets/src/clock/component.tsx
+  s_560cd7a81b1b64::t_b2e84242e504e5 64
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 40,55
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_560cd7a81b1b64::t_1d0cf428d7b1ae 479-483
+  s_560cd7a81b1b64::t_b2e84242e504e5 4,54,137-140,194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8313ea57157b61aaccfb3b104b7e4c5426a8c154",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
