@@ -9,8 +9,6 @@ import { useOptionalBackgroundProps } from "./background";
 import { appShellHeaderHeight } from "./constants";
 import { navigationCollapsedAtom } from "./header/burger";
 
-import classes from "./shell.module.css";
-
 interface ClientShellProps {
   hasHeader?: boolean;
   hasNavigation?: boolean;
@@ -35,11 +33,7 @@ export const ClientShell = ({
       // container short enough leaves flat page background showing below it instead of the
       // background continuing to the bottom of the viewport.
       mih={backgroundProps.bg ? "100dvh" : undefined}
-      classNames={{
-        root: hasHeader ? undefined : classes.rootWithoutHeader,
-        main: hasHeader ? classes.main : classes.mainWithoutHeader,
-      }}
-      header={hasHeader ? { height: `calc(${headerHeight}px + env(safe-area-inset-top, 0px))` } : undefined}
+      header={hasHeader ? { height: headerHeight } : undefined}
       navbar={
         hasNavigation
           ? {

@@ -12,7 +12,6 @@ import "flag-icons/css/flag-icons.min.css";
 import "mantine-datatable/styles.css";
 import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
-import "~/styles/safe-area.scss";
 
 import { notFound } from "next/navigation";
 import { ColorSchemeScript } from "@mantine/core";
@@ -98,7 +97,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 export const generateViewport = (): Viewport => {
-  return { themeColor: [...pwaViewportThemeColor], viewportFit: "cover" };
+  return { themeColor: [...pwaViewportThemeColor] };
 };
 
 export default async function Layout(props: {

@@ -1,7 +1,5 @@
 .header {
   overflow: hidden;
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header[data-visible="false"] {
@@ -20,8 +18,7 @@
   gap: var(--mantine-spacing-sm);
   width: 100%;
   height: 100%;
-  padding-inline-start: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-start));
-  padding-inline-end: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-end));
+  padding-inline: var(--mantine-spacing-md);
 }
 
 .zone {
