@@ -1,0 +1,44 @@
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_d2a825fc82ac1d::t_3f628642e9e115 30,123-130
+apps/nextjs/src/components/assistant/assistant-conversation-export.spec.ts
+  s_d2a825fc82ac1d::t_19a7e57b4ba6bb 88,93-97,108-112
+packages/request-handler/src/weather.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 82-85
+packages/api/src/router/docker/docker-router.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 248
+packages/request-handler/src/release-providers/codeberg.ts
+  s_d2a825fc82ac1d::t_19a7e57b4ba6bb 74
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 73
+apps/nextjs/src/components/assistant/assistant-conversation-export.ts
+  s_d2a825fc82ac1d::t_19a7e57b4ba6bb 125
+  s_d2a825fc82ac1d::t_3f628642e9e115 124,126-135
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_d2a825fc82ac1d::t_3f628642e9e115 43-47,49-51
+  s_d2a825fc82ac1d::t_19a7e57b4ba6bb 3,32,48,54
+packages/request-handler/src/release-providers/http.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 28-31
+packages/cron-jobs/src/jobs/icons-updater.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 106-109,134-137
+packages/request-handler/src/air-quality.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 61-64
+packages/redis/src/lib/channel.ts
+  s_d2a825fc82ac1d::t_19a7e57b4ba6bb 829,832-833
+packages/request-handler/src/duckduckgo-bangs.ts
+  s_d2a825fc82ac1d::t_aaaf83f1fe649c 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f8fe7c5ef0a2ab449cb8bc68dcd1801ea002c237",
+  "prompts": {},
+  "sessions": {
+    "s_d2a825fc82ac1d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21238-39a6-72d3-ab12-b89b3efbcd54",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": null
+    }
+  }
+}
