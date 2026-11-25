@@ -9052,6 +9052,7 @@
                       "archiveTeamWarrior",
                       "wazuh",
                       "wud",
+                      "dockhand",
                       "llamacpp",
                       "mock"
                     ]
@@ -9231,6 +9232,7 @@
                             "archiveTeamWarrior",
                             "wazuh",
                             "wud",
+                            "dockhand",
                             "llamacpp",
                             "mock"
                           ]

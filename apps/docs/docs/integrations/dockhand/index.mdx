@@ -28,12 +28,15 @@ API tokens.
   activity log. Dockhand only records events for environments with **Collect activity** enabled.
 
 Two [Custom Widgets](/docs/management/custom-widgets) cover a single environment each. Import a definition below,
-select your Dockhand integration as the source, then choose the environment in the widget options.
+select your Dockhand integration as the source, then choose the environment in the widget options. Users need full
+access to the Dockhand integration in Homarr to use either widget, in addition to the token permissions below.
 
-- **Dockhand Containers** lists the containers with their state and can start, stop or restart them. Actions ask for
-  confirmation and require permission to interact with the integration.
-- **Dockhand Updates** lists containers with a pending image update, a moved pinned digest or a newer version tag.
-  Containers appear only after Dockhand has checked them for updates.
+- **Dockhand Containers** lists the containers with their state. It can start stopped containers, restart or stop
+  running ones, and resume or stop paused ones. Actions ask for confirmation and require permission to modify the
+  board item.
+- **Dockhand Updates** lists containers with a pending image update. Containers appear only after Dockhand has checked
+  them for updates. Newer version tags need Dockhand 1.0.43 or newer, minimum release age holds need 1.0.52 or newer,
+  and moved pinned digests need 1.0.54 or newer.
 
 <details>
 <summary>Dockhand Containers definition</summary>
@@ -77,6 +80,19 @@ select your Dockhand integration as the source, then choose the environment in t
       "confirmation": "Start this container?",
       "invalidates": ["containers"]
     },
+    "unpause": {
+      "kind": "action",
+      "method": "POST",
+      "path": "/api/containers/{param:id}/unpause",
+      "query": {
+        "env": {
+          "$option": "environment"
+        }
+      },
+      "permission": "modify",
+      "confirmation": "Resume this paused container?",
+      "invalidates": ["containers"]
+    },
     "stop": {
       "kind": "action",
       "method": "POST",
@@ -117,7 +133,7 @@ select your Dockhand integration as the source, then choose the environment in t
       }
     }
   },
-  "template": "<Stack gap=\"xs\" p=\"sm\" h=\"100%\" style={{ minHeight: 0, minWidth: 0 }}>\n  <Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\">\n    <Text size=\"xs\" c=\"dimmed\" tt=\"uppercase\" fw={700} truncate>Dockhand containers</Text>\n    <RefreshButton requestId=\"containers\" label=\"Refresh containers\" size=\"xs\" />\n  </Group>\n  {!options.environment ? (\n    <Text size=\"sm\" c=\"dimmed\">Choose a Dockhand environment in the widget options.</Text>\n  ) : status.containers?.loading ? (\n    <Skeleton height={96} radius=\"md\" />\n  ) : status.containers?.ok === false ? (\n    <Text size=\"sm\" c=\"red\">Could not load containers ({status.containers?.status ?? \"\u2014\"} {status.containers?.statusText ?? \"\"})</Text>\n  ) : (data.containers ?? []).length === 0 ? (\n    <Text size=\"sm\" c=\"dimmed\">No containers in this environment.</Text>\n  ) : (\n    <Stack gap=\"xs\" style={{ flex: 1, minHeight: 0 }}>\n      <Group gap=\"xs\" wrap=\"nowrap\">\n        <TextInput bind=\"filter\" defaultValue=\"\" placeholder=\"Filter by name\" aria-label=\"Filter containers by name\" size=\"xs\" style={{ flex: 1, minWidth: 0 }} />\n        <Text size=\"xs\" c=\"dimmed\" style={{ whiteSpace: \"nowrap\" }}>{(data.containers ?? []).filter((c) => c.state === \"running\").length} / {(data.containers ?? []).length} running</Text>\n      </Group>\n      {inputs.filter && (data.containers ?? []).filter((c) => (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).length === 0 ? (\n        <Text size=\"sm\" c=\"dimmed\">No containers match this filter.</Text>\n      ) : null}\n      <ScrollArea type=\"auto\" style={{ flex: 1, minHeight: 0 }}>\n        <Stack gap={6}>\n          {(data.containers ?? []).filter((c) => !inputs.filter || (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).map((c) => (\n            <Paper key={c.id} withBorder p=\"xs\" radius=\"md\">\n              <Group justify=\"space-between\" wrap=\"wrap\" gap=\"xs\">\n                <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>\n                  <Group gap={6} wrap=\"nowrap\">\n                    <Text size=\"sm\" fw={600} truncate>{c.name ?? c.id}</Text>\n                    <Badge size=\"xs\" variant=\"light\" color={c.state === \"running\" ? \"green\" : c.state === \"paused\" || c.state === \"restarting\" ? \"yellow\" : c.state === \"exited\" || c.state === \"dead\" ? \"red\" : \"gray\"}>{c.state ?? \"unknown\"}</Badge>\n                  </Group>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.image ?? \"\u2014\"}</Text>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.status ?? \"\u2014\"}</Text>\n                </Stack>\n                {c.state === \"running\" ? (\n                  <Group gap={4} wrap=\"nowrap\">\n                    <ActionButton requestId=\"restart\" params={{ id: c.id }} icon=\"refresh\" size=\"compact-xs\" variant=\"light\" label={\"Restart \" + (c.name ?? \"container\")}>Restart</ActionButton>\n                    <ActionButton requestId=\"stop\" params={{ id: c.id }} icon=\"power\" size=\"compact-xs\" variant=\"light\" color=\"red\" label={\"Stop \" + (c.name ?? \"container\")}>Stop</ActionButton>\n                  </Group>\n                ) : (\n                  <ActionButton requestId=\"start\" params={{ id: c.id }} icon=\"play\" size=\"compact-xs\" variant=\"light\" color=\"green\" label={\"Start \" + (c.name ?? \"container\")}>Start</ActionButton>\n                )}\n              </Group>\n            </Paper>\n          ))}\n        </Stack>\n      </ScrollArea>\n    </Stack>\n  )}\n</Stack>"
+  "template": "<Stack gap=\"xs\" p=\"sm\" h=\"100%\" style={{ minHeight: 0, minWidth: 0 }}>\n  <Group justify=\"space-between\" wrap=\"nowrap\" gap=\"xs\">\n    <Text size=\"xs\" c=\"dimmed\" tt=\"uppercase\" fw={700} truncate>Dockhand containers</Text>\n    <RefreshButton requestId=\"containers\" label=\"Refresh containers\" size=\"xs\" />\n  </Group>\n  {!options.environment ? (\n    <Text size=\"sm\" c=\"dimmed\">Choose a Dockhand environment in the widget options.</Text>\n  ) : status.containers?.loading ? (\n    <Skeleton height={96} radius=\"md\" />\n  ) : status.containers?.ok === false ? (\n    <Text size=\"sm\" c=\"red\">Could not load containers ({status.containers?.status ?? \"\u2014\"} {status.containers?.statusText ?? \"\"})</Text>\n  ) : (data.containers ?? []).length === 0 ? (\n    <Text size=\"sm\" c=\"dimmed\">No containers in this environment.</Text>\n  ) : (\n    <Stack gap=\"xs\" style={{ flex: 1, minHeight: 0 }}>\n      <Group gap=\"xs\" wrap=\"nowrap\">\n        <TextInput bind=\"filter\" defaultValue=\"\" placeholder=\"Filter by name\" aria-label=\"Filter containers by name\" size=\"xs\" style={{ flex: 1, minWidth: 0 }} />\n        <Text size=\"xs\" c=\"dimmed\" style={{ whiteSpace: \"nowrap\" }}>{(data.containers ?? []).filter((c) => c.state === \"running\").length} / {(data.containers ?? []).length} running</Text>\n      </Group>\n      {inputs.filter && (data.containers ?? []).filter((c) => (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).length === 0 ? (\n        <Text size=\"sm\" c=\"dimmed\">No containers match this filter.</Text>\n      ) : null}\n      <ScrollArea type=\"auto\" style={{ flex: 1, minHeight: 0 }}>\n        <Stack gap={6}>\n          {(data.containers ?? []).filter((c) => !inputs.filter || (c.name ?? \"\").toLowerCase().includes(inputs.filter.toLowerCase())).map((c) => (\n            <Paper key={c.id} withBorder p=\"xs\" radius=\"md\">\n              <Group justify=\"space-between\" wrap=\"wrap\" gap=\"xs\">\n                <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>\n                  <Group gap={6} wrap=\"nowrap\">\n                    <Text size=\"sm\" fw={600} truncate>{c.name ?? c.id}</Text>\n                    <Badge size=\"xs\" variant=\"light\" color={c.state === \"running\" ? \"green\" : c.state === \"paused\" || c.state === \"restarting\" ? \"yellow\" : c.state === \"exited\" || c.state === \"dead\" ? \"red\" : \"gray\"}>{c.state ?? \"unknown\"}</Badge>\n                  </Group>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.image ?? \"\u2014\"}</Text>\n                  <Text size=\"xs\" c=\"dimmed\" truncate>{c.status ?? \"\u2014\"}</Text>\n                </Stack>\n                {c.state === \"running\" ? (\n                  <Group gap={4} wrap=\"nowrap\">\n                    <ActionButton requestId=\"restart\" params={{ id: c.id }} icon=\"refresh\" size=\"compact-xs\" variant=\"light\" label={\"Restart \" + (c.name ?? \"container\")}>Restart</ActionButton>\n                    <ActionButton requestId=\"stop\" params={{ id: c.id }} icon=\"power\" size=\"compact-xs\" variant=\"light\" color=\"red\" label={\"Stop \" + (c.name ?? \"container\")}>Stop</ActionButton>\n                  </Group>\n                ) : c.state === \"paused\" ? (\n                  <Group gap={4} wrap=\"nowrap\">\n                    <ActionButton requestId=\"unpause\" params={{ id: c.id }} icon=\"play\" size=\"compact-xs\" variant=\"light\" color=\"green\" label={\"Resume \" + (c.name ?? \"container\")}>Resume</ActionButton>\n                    <ActionButton requestId=\"stop\" params={{ id: c.id }} icon=\"power\" size=\"compact-xs\" variant=\"light\" color=\"red\" label={\"Stop \" + (c.name ?? \"container\")}>Stop</ActionButton>\n                  </Group>\n                ) : c.state === \"exited\" || c.state === \"created\" ? (\n                  <ActionButton requestId=\"start\" params={{ id: c.id }} icon=\"play\" size=\"compact-xs\" variant=\"light\" color=\"green\" label={\"Start \" + (c.name ?? \"container\")}>Start</ActionButton>\n                ) : null}\n              </Group>\n            </Paper>\n          ))}\n        </Stack>\n      </ScrollArea>\n    </Stack>\n  )}\n</Stack>"
 }
 ```
 
@@ -196,7 +212,7 @@ Use the URL of the Dockhand web interface without a path, for example `http://do
 />
 
 The token's user needs permission to view environments, containers and activity. The Containers Custom Widget also
-needs permission to start, stop and restart containers.
+needs permission to start, stop, restart and unpause containers.
 
 ### Troubleshooting
 
