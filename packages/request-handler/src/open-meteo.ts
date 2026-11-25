@@ -3,6 +3,8 @@ import type { Response } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import { RequestHandlerTimeoutError } from "./lib/request-handler";
+
 const timeoutCodes = ["ETIMEDOUT", "UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"];
 
 interface NetworkCause {
@@ -44,24 +46,47 @@ const sanitizeCause = (error: unknown, depth = 0): NetworkCause | undefined => {
 
 const isTimeout = (cause: NetworkCause | undefined): boolean => {
   if (!cause) return false;
-  return timeoutCodes.includes(cause.code ?? "") || isTimeout(cause.cause) || (cause.errors?.some(isTimeout) ?? false);
+  return (
+    cause.name === "TimeoutError" ||
+    timeoutCodes.includes(cause.code ?? "") ||
+    isTimeout(cause.cause) ||
+    (cause.errors?.some(isTimeout) ?? false)
+  );
 };
 
 export const fetchOpenMeteoJsonAsync = async (url: URL, signal: AbortSignal): Promise<unknown> => {
   const started = performance.now();
   const metadata = () => ({ host: url.hostname, elapsedMs: Math.round(performance.now() - started) });
   let response: Response | undefined;
+  const describeFailure = (error: unknown, reason: unknown = signal.reason) => {
+    const cause = sanitizeCause(error);
+    let stage = "response headers";
+    if (response) stage = "response body";
+    let outcome = "failed";
+    if (signal.aborted) outcome = "cancelled";
+    if (reason instanceof RequestHandlerTimeoutError || isTimeout(cause) || isTimeout(sanitizeCause(reason))) {
+      outcome = "timed out";
+    }
+    return new ErrorWithMetadata(`Open-Meteo ${stage} ${outcome}`, metadata(), { cause });
+  };
+  const annotateDeadline = () => {
+    const reason: unknown = signal.reason;
+    if (!(reason instanceof RequestHandlerTimeoutError)) return;
+    // The outer deadline races the body read and throws this same reason immediately after aborting.
+    reason.cause = describeFailure(reason);
+  };
+
+  signal.addEventListener("abort", annotateDeadline, { once: true });
   try {
     response = await fetchWithTrustedCertificatesAsync(url.toString(), { signal, logOriginOnly: true });
     if (response.ok) return await response.json();
     void response.body?.cancel().catch(() => undefined);
   } catch (error) {
-    const cause = sanitizeCause(error);
-    let stage = "response headers";
-    if (response) stage = "response body";
-    let outcome = "failed";
-    if (signal.aborted || isTimeout(cause)) outcome = "timed out";
-    throw new ErrorWithMetadata(`Open-Meteo ${stage} ${outcome}`, metadata(), { cause });
+    const reason: unknown = signal.reason;
+    if (reason instanceof RequestHandlerTimeoutError && reason.cause) throw reason;
+    throw describeFailure(error);
+  } finally {
+    signal.removeEventListener("abort", annotateDeadline);
   }
 
   throw new ErrorWithMetadata(`Open-Meteo returned HTTP ${response.status}`, metadata());
