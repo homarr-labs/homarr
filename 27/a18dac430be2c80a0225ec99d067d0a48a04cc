@@ -1,0 +1,29 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_560cd7a81b1b64::t_8528bf221ae00f 4,195
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.tsx
+  s_560cd7a81b1b64::t_8528bf221ae00f 281,368
+packages/widgets/src/clock/component.tsx
+  s_560cd7a81b1b64::t_8528bf221ae00f 16-22,47
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_560cd7a81b1b64::t_8528bf221ae00f 577
+packages/translation/src/lang/en.json
+  s_560cd7a81b1b64::t_8528bf221ae00f 2417
+apps/nextjs/src/components/board/sections/smart-container/smart-container-surface.module.css
+  s_560cd7a81b1b64::t_8528bf221ae00f 68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "27a18dac430be2c80a0225ec99d067d0a48a04cc",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
