@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState, useTransition } from "react";
 import { ActionIcon, Button, Divider, Group, List, Stack, Text, ThemeIcon, Title, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconAppWindow, IconCheck, IconLayoutDashboard, IconPlugConnected, IconX } from "@tabler/icons-react";
@@ -11,8 +12,8 @@ import { useOptionalBoard } from "@homarr/boards/context";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { getIntegrationName, getWidgetKindsForIntegration, getWidgetName } from "@homarr/definitions";
 import { createModal, modalSizeForm, useLazyModalAction } from "@homarr/modals";
-import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { LazyLoadFeedback } from "@homarr/ui/lazy-content";
 
 import type { CreatedIntegrationResult } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import {
@@ -28,6 +29,8 @@ interface IntegrationCompletionModalProps {
   boardId?: string;
 }
 
+type ItemSelection = { initialIntegrationKind: IntegrationKind } | { initialWidgetKind: WidgetKind };
+
 export const IntegrationCompletionModal = createModal<IntegrationCompletionModalProps>(({ actions, innerProps }) => {
   const tIntegration = useI18n("integration");
   const tCommon = useI18n("common");
@@ -35,6 +38,15 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const { openModal: openItemSelectModal } = useLazyModalAction(loadItemSelectModal);
+  const [isPickerLoading, startPickerLoad] = useTransition();
+  const [failedSelection, setFailedSelection] = useState<ItemSelection | null>(null);
+  const pickerSession = useRef<AbortSignal | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    pickerSession.current = controller.signal;
+    return () => controller.abort();
+  }, []);
+
   const compatibleWidgets = getWidgetKindsForIntegration(innerProps.result.integration.kind);
   const boardMatchesContext = board !== null && board.id === innerProps.boardId;
   const canModifyBoard = boardMatchesContext && constructBoardPermissions(board, session).hasChangeAccess;
@@ -64,24 +76,26 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
     : [];
   const showRecommendations = canModifyBoard && !recommendationsDismissed && recommendations.length > 0;
 
-  const openItemSelection = async (
-    selection: { initialIntegrationKind: IntegrationKind } | { initialWidgetKind: WidgetKind },
-  ) => {
-    if (!innerProps.boardId) return;
-    try {
-      await loadItemSelectModal();
-    } catch {
-      showErrorNotification({ title: tCommon("error"), message: tCommon("action.tryAgain") });
-      return;
-    }
-    actions.closeModal();
-    await openItemSelectModal({ boardId: innerProps.boardId, ...selection });
+  const openItemSelection = (selection: ItemSelection) => {
+    const { boardId } = innerProps;
+    const signal = pickerSession.current;
+    if (!boardId || !signal || signal.aborted || isPickerLoading) return;
+
+    setFailedSelection(null);
+    startPickerLoad(async () => {
+      try {
+        const opened = await openItemSelectModal({ boardId, ...selection }, undefined, signal);
+        if (opened) actions.closeModal();
+      } catch {
+        if (!signal.aborted) setFailedSelection(selection);
+      }
+    });
   };
 
-  const addWidget = () => void openItemSelection({ initialIntegrationKind: innerProps.result.integration.kind });
+  const addWidget = () => openItemSelection({ initialIntegrationKind: innerProps.result.integration.kind });
 
   const addRecommendedWidget = (widgetKind: (typeof recommendations)[number]["widgetKind"]) =>
-    void openItemSelection({ initialWidgetKind: widgetKind });
+    openItemSelection({ initialWidgetKind: widgetKind });
 
   return (
     <Stack gap="lg">
@@ -173,7 +187,12 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
                   )}
                 </Text>
               </Stack>
-              <Button variant="light" size="compact-xs" onClick={() => addRecommendedWidget(recommendation.widgetKind)}>
+              <Button
+                variant="light"
+                size="compact-xs"
+                disabled={isPickerLoading}
+                onClick={() => addRecommendedWidget(recommendation.widgetKind)}
+              >
                 {tCommon("action.add")}
               </Button>
             </Group>
@@ -181,12 +200,16 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
         </Stack>
       )}
 
+      {isPickerLoading && <LazyLoadFeedback />}
+      {!isPickerLoading && failedSelection && <LazyLoadFeedback onRetry={() => openItemSelection(failedSelection)} />}
       <Group justify="end">
         <Button variant="default" onClick={actions.closeModal}>
           {tCommon("action.close")}
         </Button>
         {innerProps.boardId && compatibleWidgets.length > 0 && (
-          <Button onClick={addWidget}>{tIntegration("completion.chooseWidget")}</Button>
+          <Button onClick={addWidget} disabled={isPickerLoading}>
+            {tIntegration("completion.chooseWidget")}
+          </Button>
         )}
       </Group>
     </Stack>

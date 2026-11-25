@@ -1,7 +1,6 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import dynamic from "next/dynamic";
 import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
@@ -11,6 +10,7 @@ import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useBoardTabs, useSyncBoardTabSearchParam } from "@homarr/boards/tabs";
 import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
+import { createRetryableLazyContent } from "@homarr/ui/lazy-content";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
@@ -37,13 +37,8 @@ import { useVisitedBoardTabs } from "~/components/board/tabs/use-visited-board-t
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
 
-const BoardEmptyState = dynamic(
-  () => import("~/components/board/board-empty-state").then((module) => module.BoardEmptyState),
-  { ssr: false },
-);
-const BoardSetupChecklist = dynamic(
-  () => import("~/components/board/board-setup-checklist").then((module) => module.BoardSetupChecklist),
-  { ssr: false },
+const BoardSetupPanels = createRetryableLazyContent(() =>
+  import("~/components/board/board-setup-checklist").then((module) => module.BoardSetupPanels),
 );
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
@@ -125,12 +120,7 @@ export const ClientBoard = () => {
         >
           <BoardAppsSpotlightRegistrar />
           <BoardBackgroundVideo />
-          {isEditMode && (
-            <>
-              <BoardEmptyState />
-              <BoardSetupChecklist />
-            </>
-          )}
+          {isEditMode && <BoardSetupPanels />}
           <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
             <BoardGridPortalHost>

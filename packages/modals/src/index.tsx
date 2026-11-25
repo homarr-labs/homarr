@@ -181,9 +181,11 @@ export const useLazyModalAction = <TModal extends ModalDefinition>(loadModal: ()
   if (!context) throw new Error("ModalContext is not provided");
 
   return {
-    openModal: async (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void) => {
+    openModal: async (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void, signal: AbortSignal) => {
       const modal = await loadModal();
+      if (signal.aborted) return false;
       context.openModalInner({ modal, innerProps, options: options ?? {} });
+      return true;
     },
   };
 };

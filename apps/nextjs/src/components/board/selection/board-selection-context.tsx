@@ -1,19 +1,20 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Group, Text } from "@mantine/core";
-import { useCallbackRef } from "@mantine/hooks";
+import { useCallbackRef, useIsomorphicEffect } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useActiveBoardTabId } from "@homarr/boards/tabs";
+import { getBoardTabs, useActiveBoardTabId } from "@homarr/boards/tabs";
 import { usePersistBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/common";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { LazyLoadFeedback } from "@homarr/ui/lazy-content";
 
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
 import { createItemCallback } from "~/components/board/items/actions/create-item";
@@ -61,6 +62,20 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   const { updateAndPersistBoard } = usePersistBoard(board);
   const tCommon = useI18n("common");
   const tSelection = useI18n("item.selection");
+  const pasteSession = useRef<AbortSignal | null>(null);
+  const [pasteFeedback, setPasteFeedback] = useState<{ onRetry?: () => void } | null>(null);
+
+  useIsomorphicEffect(() => {
+    setPasteFeedback(null);
+    if (!isEditMode) return;
+
+    const controller = new AbortController();
+    pasteSession.current = controller.signal;
+    return () => {
+      controller.abort();
+      pasteSession.current = null;
+    };
+  }, [board.id, board.name, isEditMode]);
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) =>
@@ -134,18 +149,23 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     }
   }, [board.items, currentLayoutId, selectedItemIds, tCommon, tSelection]);
 
-  const applyPastedItems = useCallbackRef((payload: BoardItemClipboardPayload) => {
-    if (!isEditMode) return;
+  const applyPastedItems = useCallbackRef((payload: BoardItemClipboardPayload, targetTabId: string) => {
     const pastedIds = payload.items.map(() => createId());
     let didPasteAll = false;
     persistBoard((previous) => {
+      if (!getBoardTabs(previous).some(({ id }) => id === targetTabId)) return previous;
+
       let next = previous;
       try {
-        payload.items.forEach((item, index) => {
+        for (const [index, item] of payload.items.entries()) {
           const id = pastedIds[index];
           if (!id) throw new Error("Missing pasted item ID");
-          next = createItemCallback({ ...item, id, targetSectionId: activeTabId })(next);
-        });
+          next = createItemCallback({ ...item, id, targetSectionId: targetTabId })(next);
+          const createdItem = next.items.at(-1);
+          if (createdItem?.id !== id || createdItem.layouts.some((layout) => layout.sectionId !== targetTabId)) {
+            return previous;
+          }
+        }
       } catch {
         return previous;
       }
@@ -159,7 +179,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
-    setSelectedItemIds(new Set(pastedIds));
+    if (activeTabId === targetTabId) setSelectedItemIds(new Set(pastedIds));
     playPopSound();
     showSuccessNotification({
       title: tCommon("success"),
@@ -168,43 +188,64 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   });
 
   const pasteItemsFromText = useCallback(
-    async (value: string) => {
-      const payload = await parseBoardItemClipboard(value);
+    async function validateAndPaste(value: string, targetTabId: string, signal: AbortSignal) {
+      if (signal.aborted) return;
+
+      const loading = {};
+      setPasteFeedback(loading);
+      let payload: BoardItemClipboardPayload | null;
+      try {
+        payload = await parseBoardItemClipboard(value);
+      } catch {
+        if (signal.aborted) return;
+        setPasteFeedback((current) => {
+          if (current !== loading) return current;
+          return { onRetry: () => void validateAndPaste(value, targetTabId, signal) };
+        });
+        return;
+      }
+      if (signal.aborted) return;
+      setPasteFeedback((current) => {
+        if (current !== loading) return current;
+        return null;
+      });
       if (!payload) {
         showErrorNotification({ title: tCommon("error"), message: tSelection("pasteInvalid") });
         return;
       }
 
-      applyPastedItems(payload);
+      applyPastedItems(payload, targetTabId);
     },
     [applyPastedItems, tCommon, tSelection],
   );
 
   const pasteItems = useCallback(async () => {
-    try {
-      await pasteItemsFromText(await navigator.clipboard.readText());
-    } catch {
-      showErrorNotification({ title: tCommon("error"), message: tSelection("pasteError") });
-    }
-  }, [pasteItemsFromText, tCommon, tSelection]);
+    const signal = pasteSession.current;
+    if (!signal || !activeTabId) return;
 
-  useEffect(() => {
-    if (!isEditMode) return;
+    try {
+      await pasteItemsFromText(await navigator.clipboard.readText(), activeTabId, signal);
+    } catch {
+      if (!signal.aborted) showErrorNotification({ title: tCommon("error"), message: tSelection("pasteError") });
+    }
+  }, [activeTabId, pasteItemsFromText, tCommon, tSelection]);
+
+  useIsomorphicEffect(() => {
+    if (!isEditMode || !activeTabId) return;
 
     const handlePaste = (event: ClipboardEvent) => {
-      if (isEditableTarget(event.target)) return;
+      const signal = pasteSession.current;
+      if (!signal || isEditableTarget(event.target)) return;
 
       const value = event.clipboardData?.getData("text/plain") ?? "";
       if (!isBoardItemClipboardText(value)) return;
       event.preventDefault();
-      void pasteItemsFromText(value).catch(() => {
-        showErrorNotification({ title: tCommon("error"), message: tSelection("pasteInvalid") });
-      });
+      void pasteItemsFromText(value, activeTabId, signal);
     };
 
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [isEditMode, pasteItemsFromText, tCommon, tSelection]);
+  }, [activeTabId, isEditMode, pasteItemsFromText]);
 
   const removeSelectedItems = useCallback(() => {
     if (selectedItemIds.size === 0) return;
@@ -465,7 +506,12 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     ],
   );
 
-  return <BoardSelectionContext.Provider value={value}>{children}</BoardSelectionContext.Provider>;
+  return (
+    <BoardSelectionContext.Provider value={value}>
+      {isEditMode && pasteFeedback && <LazyLoadFeedback onRetry={pasteFeedback.onRetry} />}
+      {children}
+    </BoardSelectionContext.Provider>
+  );
 };
 
 export const useBoardSelection = () => {

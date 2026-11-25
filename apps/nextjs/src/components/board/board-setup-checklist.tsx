@@ -9,11 +9,19 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 
+import { BoardEmptyState } from "./board-empty-state";
 import { getBoardSetupProgress } from "./board-setup-progress";
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-setup-checklist.module.css";
 
-export const BoardSetupChecklist = () => {
+export const BoardSetupPanels = () => (
+  <>
+    <BoardEmptyState />
+    <BoardSetupChecklist />
+  </>
+);
+
+const BoardSetupChecklist = () => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const integrations = useIntegrationsWithUseAccess();

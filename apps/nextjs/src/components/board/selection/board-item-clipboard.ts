@@ -42,8 +42,8 @@ export const isBoardItemClipboardText = (value: string): boolean => value.starts
 export const parseBoardItemClipboard = async (value: string): Promise<BoardItemClipboardPayload | null> => {
   if (!isBoardItemClipboardText(value)) return null;
 
+  const { parseBoardItemClipboardPayload } = await import("./board-item-clipboard-validation");
   try {
-    const { parseBoardItemClipboardPayload } = await import("./board-item-clipboard-validation");
     return parseBoardItemClipboardPayload(JSON.parse(value.slice(clipboardPrefix.length)));
   } catch {
     return null;

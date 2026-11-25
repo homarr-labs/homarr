@@ -1,15 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
 import { Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { createRetryableLazyContent } from "@homarr/ui/lazy-content";
 
-const RequestMediaSeasonsTable = dynamic(
-  () => import("./request-media-seasons-table").then((module) => module.RequestMediaSeasonsTable),
-  { ssr: false },
+const RequestMediaSeasonsTable = createRetryableLazyContent(() =>
+  import("./request-media-seasons-table").then((module) => module.RequestMediaSeasonsTable),
 );
 
 interface RequestMediaModalProps {
