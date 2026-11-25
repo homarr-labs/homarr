@@ -1,0 +1,19 @@
+packages/api/src/router/test/board.spec.ts
+  s_560cd7a81b1b64::t_df4e8352c161ed 1144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dac363407124361fd28a5d0b99c6306ae8720f5e",
+  "prompts": {},
+  "sessions": {
+    "s_560cd7a81b1b64": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21248-4994-74c2-b81c-7f8ee2e7a91a",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
