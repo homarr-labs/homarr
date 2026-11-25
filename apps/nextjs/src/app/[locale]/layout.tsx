@@ -96,8 +96,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-export const generateViewport = (): Viewport => {
-  return { themeColor: [...pwaViewportThemeColor] };
+export const generateViewport = async (): Promise<Viewport> => {
+  const colorScheme = await getCurrentColorSchemeAsync();
+  // A fixed app scheme must win over the system preference, or the chrome would not match the page background.
+  if (colorScheme === "auto") return { themeColor: [...pwaViewportThemeColor] };
+  return { themeColor: pwaPageBackground[colorScheme] };
 };
 
 export default async function Layout(props: {
