@@ -7412,7 +7412,6 @@
               "accessibility": "Accessibility",
               "signInInformation": {
                 "title": "Sign-in information",
-                "description": "Read-only details from this user's authentication provider. Access and ID tokens are never shown.",
                 "provider": "Provider",
                 "subject": "Subject",
                 "email": "Email",

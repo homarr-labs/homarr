@@ -18,7 +18,6 @@ export const SignInInformation = ({ information }: SignInInformationProps) => {
   return (
     <Stack mb="lg">
       <Title order={2}>{t("title")}</Title>
-      <Text size="sm">{t("description")}</Text>
       <Stack gap="sm">
         <SignInDetail label={t("provider")} value={information.provider} />
         <SignInDetail label={t("subject")} value={information.subject} copyable />
@@ -76,7 +75,7 @@ const SignInDetail = ({
         {label}
       </Text>
       <Group gap="xs" wrap="nowrap">
-        <Code>{value}</Code>
+        <Code style={{ overflowWrap: "anywhere" }}>{value}</Code>
         {copyable && (
           <CopyButton value={value}>
             {({ copied, copy }) => (
@@ -87,7 +86,7 @@ const SignInDetail = ({
                   onClick={copy}
                   aria-label={copied ? t("copied") : t("copy")}
                 >
-                  {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                  {copied ? <IconCheck size={16} aria-hidden /> : <IconCopy size={16} aria-hidden />}
                 </ActionIcon>
               </Tooltip>
             )}

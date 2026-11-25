@@ -527,7 +527,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Get sign-in information",
         description:
-          "Return the authentication provider, subject, email, and Homarr groups for a user. Users can read themselves; reading another user requires admin permission. Tokens are never returned.",
+          "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -571,14 +571,11 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      const account =
-        user.accounts.find((entry) => entry.provider === "oidc") ??
-        user.accounts.find((entry) => entry.provider === user.provider) ??
-        user.accounts[0] ??
-        null;
+      const oidcAccount = user.accounts.find((entry) => entry.provider === "oidc");
+      const account = oidcAccount ?? user.accounts.find((entry) => entry.provider === user.provider);
 
       return {
-        provider: user.provider,
+        provider: oidcAccount ? "oidc" : user.provider,
         email: user.email,
         subject: account?.providerAccountId ?? null,
         homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
