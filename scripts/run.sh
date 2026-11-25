@@ -86,7 +86,8 @@ if [ "$(id -u)" = "0" ] && id www-data >/dev/null 2>&1; then
     NGINX_USER='user www-data;'
 fi
 # Preserve ordinary compiled temp roots without reusing old worker-owned buckets.
-# nginx -V loses custom path whitespace/quoting; inherit its default if ambiguous.
+# The temp root must be writable by the worker. nginx -V loses custom path
+# whitespace/quoting, so inherit its default if the path is ambiguous.
 NGINX_BUILD_OPTIONS=$(nginx -V 2>&1) || exit 1
 NGINX_PROXY_TEMP_DIRECTIVE=$(printf '%s\n' "$NGINX_BUILD_OPTIONS" | awk '
     /^configure arguments:/ {
@@ -109,8 +110,7 @@ NGINX_PROXY_TEMP_DIRECTIVE=$(printf '%s\n' "$NGINX_BUILD_OPTIONS" | awk '
                 continue
             }
             if (substr(args, 1, 1) == "\047") {
-                # Packages use quoted compiler/linker flags; inherit other custom quoting.
-                if (option != "--with-cc-opt" && option != "--with-ld-opt") { valid = 0; break }
+                # Consume quoted values as one token, including any embedded option text.
                 args = substr(args, 2)
                 closing = index(args, "\047")
                 if (!closing) { valid = 0; break }
