@@ -1,0 +1,23 @@
+packages/integrations/src/pfsense/pfsense-types.ts
+  s_39baa184ac89c6::t_50f9be7b56b0db 18-19
+packages/integrations/src/pfsense/pfsense-integration.spec.ts
+  s_39baa184ac89c6::t_50f9be7b56b0db 81-87
+packages/integrations/src/pfsense/pfsense-integration.ts
+  s_39baa184ac89c6::t_50f9be7b56b0db 56,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7de9b7ddc3a145be81b9669decdfa97657271ffb",
+  "prompts": {},
+  "sessions": {
+    "s_39baa184ac89c6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a2124a-8fde-78e3-8baf-cb51ae18ad10",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
