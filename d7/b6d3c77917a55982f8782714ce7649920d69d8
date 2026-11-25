@@ -1,0 +1,50 @@
+packages/icons/src/repositories/jsdelivr.icon-repository.ts
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 20,25-29,38
+  s_b4343a30d33181::t_3c0e3c07785d4d 21-24
+packages/icons/src/icons-fetcher.ts
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 50-51
+packages/icons/src/icon-catalog.ts
+  s_b4343a30d33181::t_99678724443621 78,107-108
+  s_b4343a30d33181::t_7e2215df9ba986 1-41,46-77,83-106,109-119
+  s_b4343a30d33181::t_07063119f6546c 42-45,79-82
+packages/icons/src/repositories/github.icon-repository.ts
+  s_b4343a30d33181::t_3c0e3c07785d4d 27-30
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 21,31,59
+packages/cron-jobs/src/jobs/icons-updater.ts
+  s_b4343a30d33181::t_07063119f6546c 34,97-107,124-125
+  s_b4343a30d33181::t_3c0e3c07785d4d 1,9,14,22-31,111,114,139
+  s_b4343a30d33181::t_98ed69e15733a4 5-8,35-42,44-46,51-60,62-63,65,67-70,72-76,78-82,91-92,95-96,108-110,112-113,115-116,118-123,126-130,132,136-137
+packages/icons/src/types/repository-icon-group.ts
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 3-5
+packages/icons/src/repositories/icon-repository.ts
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 24,26,32,54
+packages/api/src/router/icons.ts
+  s_b4343a30d33181::t_7e2215df9ba986 2,17
+packages/api/src/router/test/icons.spec.ts
+  s_b4343a30d33181::t_07063119f6546c 60-73,92-93
+  s_b4343a30d33181::t_63f20051de2aff 79-85
+  s_b4343a30d33181::t_99678724443621 11,17
+  s_b4343a30d33181::t_3c0e3c07785d4d 7-8,12,16,18-19,50-59,74-78,86-91,94-101
+packages/icons/src/repositories/local.icon-repository.ts
+  s_b4343a30d33181::t_0d9f0dcc7dfb67 20
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_b4343a30d33181::t_3c0e3c07785d4d 86,101-105
+packages/icons/index.ts
+  s_b4343a30d33181::t_7e2215df9ba986 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d7b6d3c77917a55982f8782714ce7649920d69d8",
+  "prompts": {},
+  "sessions": {
+    "s_b4343a30d33181": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21251-2cf9-74f0-af6b-7cf5d8c2c0b6",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
