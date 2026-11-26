@@ -13,8 +13,10 @@ export const getLayoutContentSize = (width: number, height: number, hasTitle: bo
 
 export const LAYOUT_ROW_HEIGHT = 32;
 export const LAYOUT_GAP = 8;
-// The layout scales with the widget like the editor shows it; only very narrow widgets (under ~160 px) fall back to
-// fewer, wider columns where cards stack.
+// Reserve enough space for the title, card padding and a usable control in the shortest card.
+export const getMinimumRowHeight = (cards: readonly SmartHomeLayoutCard[]) =>
+  Math.max(1, ...cards.map((card) => ((card.title ? 72 : 48) + LAYOUT_GAP) / card.h - LAYOUT_GAP));
+
 const MIN_COLUMN_WIDTH = 6;
 const MIN_CARD_WIDTH = 140;
 

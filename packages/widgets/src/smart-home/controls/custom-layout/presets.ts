@@ -5,6 +5,7 @@ import { toSmartHomeDomain } from "../types";
 import { fitElementsIntoCard, getCardMinSize } from "./card-grid";
 import { findFreeSlot } from "./responsive";
 import { SMART_HOME_LAYOUT_MAX_TEXT } from "./schema";
+import { fullTileDomains } from "./schema";
 import type { SmartHomeElementView, SmartHomeLayoutCard, SmartHomeLayoutElement } from "./schema";
 
 export const smartHomeLayoutPresets = ["plug", "fan", "climate", "overview"] as const;
@@ -19,17 +20,6 @@ const isControllable = (entity: Pick<SmartHomeCatalogEntity, "domain">) => {
 
 // Domains whose main value is a 0–100 slider (brightness, fan speed, position), like on device cards.
 const sliderDomains = new Set(["light", "fan", "cover"]);
-// Domains whose large control is their full control center tile (dial, player, ...).
-const fullTileDomains = new Set([
-  "climate",
-  "water_heater",
-  "humidifier",
-  "media_player",
-  "vacuum",
-  "alarm_control_panel",
-  "camera",
-]);
-
 type ViewEntity = Pick<SmartHomeCatalogEntity, "domain" | "deviceClass">;
 
 /**

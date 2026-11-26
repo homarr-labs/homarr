@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Portal } from "@mantine/core";
 
-import { useCurrentLayout } from "@homarr/boards/context";
+import { useCurrentLayout, usePreserveEditingLayout } from "@homarr/boards/context";
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { createId } from "@homarr/common";
@@ -51,6 +51,7 @@ export const InPlaceEditorHost = () => {
     [canCreateApp, isAdmin],
   );
   const layoutId = useCurrentLayout();
+  usePreserveEditingLayout(isEditMode && step === "configure");
   const { createItem } = useItemActions();
   const isMobile = useIsMobile();
   const anchorRect = useAreaAnchorRect();

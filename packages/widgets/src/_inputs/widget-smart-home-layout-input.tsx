@@ -25,9 +25,10 @@ const getContentSize = (
 ) => {
   if (preview) return getLayoutContentSize(preview.width, preview.height, hasTitle);
   if (!itemId || typeof document === "undefined") return undefined;
-  const item = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
+  const item = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"] [data-grid-item-content]`);
   if (!item || item.clientWidth === 0) return undefined;
-  return getLayoutContentSize(item.clientWidth, item.clientHeight, hasTitle);
+  const scale = item.getBoundingClientRect().width / item.offsetWidth;
+  return getLayoutContentSize(item.clientWidth * scale, item.clientHeight * scale, hasTitle);
 };
 
 /** The custom layout itself is edited in its own dialog; the settings only show a summary and the entry point. */

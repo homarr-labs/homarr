@@ -157,6 +157,7 @@ const getFanSteps = (percentageStep: number | undefined) => {
 };
 
 interface StepSliderProps {
+  offIcon?: ReactNode;
   steps: number;
   value: number;
   label: string;
@@ -171,6 +172,7 @@ interface StepSliderProps {
 
 /** One segment per fan speed; tapping a segment sets exactly that speed. */
 export function StepSlider({
+  offIcon,
   steps,
   value,
   label,
@@ -194,7 +196,7 @@ export function StepSlider({
           disabled={disabled || level === 0}
           onClick={onTurnOff}
         >
-          <IconPower size="60%" stroke={2} aria-hidden />
+          {offIcon ?? <IconPower size="60%" stroke={2} aria-hidden />}
         </button>
       ) : null}
       {Array.from({ length: steps }, (_, index) => index + 1).map((step) => (
@@ -287,7 +289,7 @@ export function DeviceHeader({
   const offline = isDeviceOffline(device);
   const keyReading = device.showKeyValue && !offline ? getKeyReading(device) : null;
   const state = offline ? t("offline", { time: formatRelativeTime(primary.lastChanged) }) : formatEntityState(primary);
-  const subtitle = [primary.device?.entityName, state, keyReading && formatEntityState(keyReading)]
+  const subtitle = [!hideName && primary.device?.entityName, state, keyReading && formatEntityState(keyReading)]
     .filter(Boolean)
     .join(" · ");
   const text = (

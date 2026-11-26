@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ReactNode } from "react";
 import {
   Accordion,
@@ -157,7 +158,7 @@ function ColorSwatchPicker({
   const custom = value && !isNamedLayoutColor(value) ? value : null;
   const name = value ? colorLabel(value) : t("noColor");
   return (
-    <Popover position="bottom-end" withArrow shadow="md">
+    <Popover position="bottom-end" withArrow shadow="md" trapFocus returnFocus>
       <Popover.Target>
         <ActionIcon
           title={name}
@@ -281,6 +282,9 @@ function RulesEditor({
 }
 
 interface ElementRowProps {
+  cardId: string;
+  cardOptions: { value: string; label: string }[];
+  onMoveToCard: (id: string) => void;
   element: SmartHomeLayoutElement;
   entity: SmartHomeCatalogEntity | undefined;
   catalog: SmartHomeCatalogState;
@@ -292,8 +296,20 @@ interface ElementRowProps {
 }
 
 /** One element in the card panel: what it shows and how, with the rarely used options folded away. */
-export function ElementRow({ element, entity, catalog, source, onChange, onDuplicate, onRemove }: ElementRowProps) {
+export function ElementRow({
+  cardId,
+  cardOptions,
+  onMoveToCard,
+  element,
+  entity,
+  catalog,
+  source,
+  onChange,
+  onDuplicate,
+  onRemove,
+}: ElementRowProps) {
   const t = useI18n("widget.smartHome-controls.layout.editor");
+  const [factorDraft, setFactorDraft] = useState<number | string>();
   const isStatic = staticElementViews.has(element.view);
   const views = isStatic ? staticViews : entity ? getAllowedViews(entity) : [element.view];
   const { title, subtitle } = isStatic
@@ -406,12 +422,14 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             max={SMART_HOME_FACTOR_MAX}
             clampBehavior="strict"
             decimalScale={6}
-            value={element.factor ?? ""}
-            onChange={(value) =>
-              set({
-                factor: typeof value === "number" && value > 0 && value <= SMART_HOME_FACTOR_MAX ? value : undefined,
-              })
-            }
+            value={factorDraft ?? element.factor ?? ""}
+            onChange={setFactorDraft}
+            onBlur={() => {
+              if (factorDraft === "") set({ factor: undefined });
+              const value = Number(factorDraft);
+              if (value > 0 && value <= SMART_HOME_FACTOR_MAX) set({ factor: value });
+              setFactorDraft(undefined);
+            }}
           />
           <TextInput
             size="sm"
@@ -434,6 +452,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
   const parts = isStatic ? [] : getElementParts(element.view, entity?.domain);
   // A full tile (thermostat, player, ...) draws its own name and icon.
   const fullTile = element.view === "tile" && entity !== undefined && fullTileDomains.has(entity.domain);
+  const canHideLabel = labelledElementViews.has(element.view) && !fullTile;
   if (parts.length > 0) {
     const hidden = new Set(element.hide ?? []);
     const togglePart = (part: SmartHomeElementPart, shown: boolean) => {
@@ -595,7 +614,7 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
               placeholder={isStatic ? "" : title}
               value={element.label ?? ""}
               maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
-              disabled={element.hideLabel === true}
+              disabled={canHideLabel && element.hideLabel === true}
               onChange={(event) => set({ label: event.currentTarget.value || undefined })}
             />
           </Group>
@@ -622,11 +641,21 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
             onChange={(event) => set({ live: event.currentTarget.checked ? undefined : false })}
           />
         )}
-        {labelledElementViews.has(element.view) && !fullTile && (
+        {canHideLabel && (
           <Switch
             label={t("showLabel")}
             checked={element.hideLabel !== true}
             onChange={(event) => set({ hideLabel: event.currentTarget.checked ? undefined : true })}
+          />
+        )}
+        {cardOptions.length > 1 && (
+          <Select
+            size="sm"
+            label={t("moveToCard")}
+            value={cardId}
+            data={cardOptions}
+            allowDeselect={false}
+            onChange={(id) => id && id !== cardId && onMoveToCard(id)}
           />
         )}
         <OptionSections sections={sections} />

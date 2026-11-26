@@ -58,7 +58,14 @@ import controlClasses from "../control-center/styles.module.css";
 import { accentVars, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
 import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
-import { deriveLayout, getLayoutColumns, getStackColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
+import {
+  deriveLayout,
+  getLayoutColumns,
+  getMinimumRowHeight,
+  getStackColumns,
+  LAYOUT_GAP,
+  LAYOUT_ROW_HEIGHT,
+} from "./responsive";
 import {
   aggregateEntities,
   compareState,
@@ -305,6 +312,7 @@ function PillElement(props: ElementProps) {
       <div className={classes.pillElement} style={accentVars(theme.accent, theme.onAccent)}>
         <StepSlider
           axis="vertical"
+          offIcon={element.icon && <SpriteIcon name={element.icon} size="60%" />}
           steps={slider.steps}
           value={slider.value}
           label={`${label} ${t(`slider.${slider.label}`)}`}
@@ -354,14 +362,18 @@ const getButtonAction = (entity: HaEntity) => {
 };
 
 function ButtonElement({ entity, element, label }: ElementProps) {
+  const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const { run, pending, done } = useRunner(entity);
   const error = useSmartHomeEntityError(entity.id);
   const failed = error?.kind === "failed";
   const open = useEntityDetailOpener(entity.id);
   const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
-  const action = getButtonAction(entity);
+  const action = disabled ? null : getButtonAction(entity);
   const onClick = action ? () => void run(action) : (open ?? undefined);
+  let accessibleLabel = label;
+  if (action?.type === "trigger") accessibleLabel = t("run", { name: label });
+  if (!action && open) accessibleLabel = t("showDetails", { name: label, state: formatEntityState(entity) });
   return (
     <UnstyledButton
       className={classes.buttonElement}
@@ -371,9 +383,11 @@ function ButtonElement({ entity, element, label }: ElementProps) {
       data-pending={pending}
       data-done={done}
       data-failed={failed}
-      disabled={disabled || !onClick}
+      disabled={!onClick}
       onClick={onClick}
-      aria-label={label}
+      aria-label={accessibleLabel}
+      aria-haspopup={!action && open ? "dialog" : undefined}
+      aria-pressed={action?.type === "toggle" ? theme.active : undefined}
       title={failed ? error.message : undefined}
     >
       {/* What the tap did, in place of the icon: running, done for a moment, or failed (reason on hover). */}
@@ -411,6 +425,7 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
       onClick={open ?? undefined}
       disabled={!open}
       aria-label={label}
+      aria-haspopup="dialog"
     >
       {camera.frame ? (
         <img src={camera.frame} alt="" className={classes.cameraImage} draggable={false} />
@@ -827,6 +842,7 @@ interface CardBodyProps {
 function CardBody({ card, source, placements, columns, stacked, collapsedRows }: CardBodyProps) {
   const t = useI18n("widget.smartHome-controls.layout");
   const elements = useMemo(() => new Map(card.elements.map((element) => [element.id, element])), [card.elements]);
+  const editing = useSmartHomeInteractionBlock() === "editing";
   const rows = stacked ? null : Math.max(1, getCardInnerRows(card) - (collapsedRows?.size ?? 0));
   const style = cardBodyStyle(columns, rows);
   return (
@@ -840,7 +856,12 @@ function CardBody({ card, source, placements, columns, stacked, collapsedRows }:
         }
         if (!h) return null;
         return element ? (
-          <div key={element.id} className={classes.elementCell} style={placementStyle({ ...placement, y, h })}>
+          <div
+            key={element.id}
+            inert={editing}
+            className={classes.elementCell}
+            style={placementStyle({ ...placement, y, h })}
+          >
             <LayoutElement element={element} source={source} />
           </div>
         ) : null;
@@ -965,11 +986,12 @@ export function CustomLayoutView({ layout, source, width }: CustomLayoutViewProp
       className={classes.grid}
       style={{
         gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-        // The layout always fills the widget: its rows share the widget's height. Only a narrow widget, where cards
-        // stack and the row count grows, keeps fixed rows and scrolls instead of squeezing them.
+        // Wide layouts share the available height until their shortest card needs to scroll into view.
         ...(stacked
           ? { gridAutoRows: LAYOUT_ROW_HEIGHT }
-          : { gridTemplateRows: `repeat(${SMART_HOME_LAYOUT_ROWS}, minmax(0, 1fr))` }),
+          : {
+              gridTemplateRows: `repeat(${SMART_HOME_LAYOUT_ROWS}, minmax(${getMinimumRowHeight(shownCards)}px, 1fr))`,
+            }),
         gap: LAYOUT_GAP,
       }}
     >

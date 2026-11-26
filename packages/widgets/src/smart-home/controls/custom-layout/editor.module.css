@@ -110,8 +110,17 @@
   touch-action: none;
 }
 
+.elementHandle {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+  background: transparent;
+  border: 0;
+}
+
 .canvasElement:hover,
-.canvasElement:focus-visible {
+.canvasElement:focus-within {
   outline-color: var(--mantine-color-dimmed);
 }
 
@@ -122,6 +131,7 @@
 }
 
 .elementPreview {
+  pointer-events: none;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -177,7 +187,8 @@
 
 @media (hover: none) {
   /* Touch has no hover: keep the grip visible on the selected card. */
-  .canvasCard[data-selected="true"] > .resizeHandle {
+  .canvasCard[data-selected="true"] > .resizeHandle,
+  .canvasCard[data-selected="true"] .elementResize {
     opacity: 1;
   }
 }

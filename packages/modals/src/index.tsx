@@ -106,12 +106,14 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     content: presentationClasses.inspectorContent,
   });
 
+  const active = modal.id === state.current?.id;
   const handleClose = useCallback(() => {
+    if (!active) return;
     const canClose = modal.reference.onCloseRequest ? modal.reference.onCloseRequest() : true;
     if (canClose) {
       handleCloseModal();
     }
-  }, [handleCloseModal, modal.reference]);
+  }, [active, handleCloseModal, modal.reference]);
 
   return (
     <Modal
@@ -138,9 +140,10 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
           },
         };
       }}
-      trapFocus={modal.id === state.current?.id}
       classNames={presentationClassNames}
       {...otherModalProps}
+      trapFocus={active && (otherModalProps.trapFocus ?? true)}
+      closeOnEscape={active ? otherModalProps.closeOnEscape : false}
       title={translateIfNecessary(t, modal.props.defaultTitle)}
       opened={opened}
       onClose={handleClose}

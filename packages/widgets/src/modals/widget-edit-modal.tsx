@@ -222,21 +222,14 @@ const WidgetEditPreview = ({
   if (availableWidth > 0 && availableHeight > 0) {
     previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, displayScale);
   }
-  const roundedWidth = Math.round(sourceWidth);
-  const roundedHeight = Math.round(sourceHeight);
+  const roundedWidth = Math.round(sourceWidth * displayScale);
+  const roundedHeight = Math.round(sourceHeight * displayScale);
   const reportSize = useContext(WidgetPreviewSizeContext)?.setSize;
   useEffect(() => {
     reportSize?.({ width: roundedWidth, height: roundedHeight });
   }, [reportSize, roundedWidth, roundedHeight]);
   const previewWidth = sourceWidth * previewScale;
   const previewHeight = sourceHeight * previewScale;
-  let previewUiScale = 1;
-  let contentDisplayScale = 1;
-  if (previewMode === "board") {
-    previewUiScale = calculateBoardUiScale(previewScale);
-    contentDisplayScale = previewScale;
-  }
-
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
@@ -317,7 +310,7 @@ const WidgetEditPreview = ({
             className={classes.previewViewport}
             style={{
               ...previewAppearance?.style,
-              "--board-canvas-ui-scale": previewUiScale,
+              "--board-canvas-ui-scale": calculateBoardUiScale(displayScale),
               width: previewWidth,
               height: previewHeight,
             }}
@@ -332,7 +325,7 @@ const WidgetEditPreview = ({
               integrationData={integrationData}
               fallbackWidth={dimensions.width}
               fallbackHeight={dimensions.height}
-              displayScale={contentDisplayScale}
+              displayScale={displayScale}
               itemId={componentItemId}
               boardId={boardId}
               isEditMode={isPendingCustomWidget}

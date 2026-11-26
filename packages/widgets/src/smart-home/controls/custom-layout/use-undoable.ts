@@ -10,6 +10,7 @@ interface History<T> {
   future: T[];
   /** When the present was last edited; 0 after undo and redo, so the next edit starts its own step. */
   editedAt: number;
+  field?: Element | null;
 }
 
 /** State with undo and redo. Updates that return the same value are ignored. */
@@ -19,15 +20,18 @@ export const useUndoable = <T>(initial: () => T) => {
   const update = useCallback((updater: (current: T) => T) => {
     // Taken once, outside the state updater, which React may run twice: both runs then decide alike.
     const now = Date.now();
+    const field = document.activeElement?.closest('input[type="text"]:not([role="combobox"]), textarea');
     setHistory((current) => {
       const next = updater(current.present);
       if (next === current.present) return current;
-      const merge = now - current.editedAt < MERGE_WINDOW_MS && current.past.length > 0;
+      const merge =
+        field && field === current.field && now - current.editedAt < MERGE_WINDOW_MS && current.past.length > 0;
       return {
         past: merge ? current.past : [...current.past.slice(-(MAX_STEPS - 1)), current.present],
         present: next,
         future: [],
         editedAt: now,
+        field,
       };
     });
   }, []);

@@ -21,7 +21,6 @@
 
   --tile-bg: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
   --tile-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
-  --secondary-ink: var(--mantine-color-dimmed);
 
   position: relative;
   display: flex;
@@ -299,6 +298,11 @@
   transition:
     background 0.2s,
     transform 0.1s;
+}
+
+.buttonElement:focus-visible,
+.cameraElement:focus-visible {
+  outline-offset: -3px;
 }
 
 .buttonElement[data-active="true"] {

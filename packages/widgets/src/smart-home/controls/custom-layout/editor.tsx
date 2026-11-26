@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useCallback, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 import { DndContext, KeyboardSensor, PointerSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
-import type { DragEndEvent, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragMoveEvent, DragStartEvent, KeyboardSensorOptions } from "@dnd-kit/core";
 import {
   ActionIcon,
   Box,
@@ -39,6 +39,7 @@ import {
 
 import {
   beginGridTransaction,
+  findFreeGridSlot,
   previewGridMove,
   previewGridResize,
   resolvePinnedGridCollisions,
@@ -78,7 +79,7 @@ import { ColorSelect, ElementRow, OptionSections } from "./element-row";
 import layoutClasses from "./layout.module.css";
 import { buildPresetElements, createCard, getDefaultView, smartHomeLayoutPresets } from "./presets";
 import type { SmartHomeLayoutPreset } from "./presets";
-import { findFreeSlot, LAYOUT_GAP } from "./responsive";
+import { findFreeSlot, getMinimumRowHeight, LAYOUT_GAP } from "./responsive";
 import {
   getLayoutEntityIds,
   getLayoutGraphEntityIds,
@@ -113,8 +114,6 @@ import CustomLayoutView, {
 } from "./view";
 
 const GRID_ID = "smart-home-layout";
-// Only guards against a negative size; above it the canvas matches the widget exactly.
-const MIN_ROW_HEIGHT = 1;
 // Used when the widget's size is unknown (e.g. a widget not yet placed on the board).
 const FALLBACK_CANVAS_HEIGHT = 420;
 const CANVAS_PADDING = 8;
@@ -248,18 +247,25 @@ interface CanvasElementProps {
 
 function CanvasElement({ element, placement, source, onSelect, onResizeStart }: CanvasElementProps) {
   const t = useI18n("widget.smartHome-controls.layout.editor");
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: element.id });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, isDragging } = useDraggable({ id: element.id });
+  const name = element.label || element.entityId || t(`views.${element.view}`);
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       data-element-id={element.id}
       className={`${layoutClasses.elementCell} ${classes.canvasElement}`}
       data-dragging={isDragging}
       style={placementStyle(placement)}
       onFocus={onSelect}
     >
+      <button
+        type="button"
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+        className={classes.elementHandle}
+        aria-label={t("moveElement", { name })}
+      />
       {/* The real element, inert: nothing in it can reach a device while editing. */}
       <div className={classes.elementPreview} inert>
         <LayoutElement element={element} source={source} />
@@ -267,7 +273,7 @@ function CanvasElement({ element, placement, source, onSelect, onResizeStart }: 
       <button
         type="button"
         className={classes.elementResize}
-        aria-label={t("resizeElement")}
+        aria-label={t("resizeElement", { name })}
         onPointerDown={(event) => onResizeStart(element.id, event)}
         onKeyDown={(event) => onResizeStart(element.id, event)}
         aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"
@@ -307,6 +313,7 @@ function CanvasCard({
     <div
       ref={setNodeRef}
       className={classes.canvasCard}
+      onPointerDown={() => onSelect(card.id)}
       data-selected={selected}
       data-dragging={isDragging}
       style={placementStyle(placement)}
@@ -350,7 +357,7 @@ function CanvasCard({
       <button
         type="button"
         className={classes.resizeHandle}
-        aria-label={t("resize")}
+        aria-label={t("resize", { name: card.title || t("untitledCard") })}
         onPointerDown={(event) => onResizeStart(card.id, event)}
         onKeyDown={(event) => onResizeStart(card.id, event)}
         aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"
@@ -360,6 +367,8 @@ function CanvasCard({
 }
 
 interface CardPropertiesProps {
+  cardOptions: { value: string; label: string }[];
+  onMoveElement: (element: SmartHomeLayoutElement, cardId: string) => void;
   card: SmartHomeLayoutCard;
   catalog: SmartHomeCatalogState;
   source: string;
@@ -370,6 +379,8 @@ interface CardPropertiesProps {
 }
 
 function CardProperties({
+  cardOptions,
+  onMoveElement,
   card,
   catalog,
   source,
@@ -504,6 +515,9 @@ function CardProperties({
         <ElementRow
           key={element.id}
           element={element}
+          cardId={card.id}
+          cardOptions={cardOptions}
+          onMoveToCard={(id) => onMoveElement(element, id)}
           entity={entities?.get(element.entityId)}
           catalog={catalog}
           source={source}
@@ -636,7 +650,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     ["mod+shift+Z", redo],
     ["mod+Y", redo],
   ]);
-  const [selectedId, setSelectedId] = useState<string | null>(layout.cards[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(cards[0]?.id ?? null);
+  const [shareOpened, setShareOpened] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState(false);
   // The narrow arrangement is shown at a phone-sized width; the height stays the widget's.
@@ -668,7 +683,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   );
   const showStackedPreview = variant === "narrow" && !cards.length && history.value.cards.length > 0;
   const canvasHeight = shownSize?.height ?? FALLBACK_CANVAS_HEIGHT;
-  const rowHeight = Math.max(MIN_ROW_HEIGHT, (canvasHeight + LAYOUT_GAP) / layoutRows - LAYOUT_GAP);
+  const rowHeight = Math.max(getMinimumRowHeight(cards), (canvasHeight + LAYOUT_GAP) / layoutRows - LAYOUT_GAP);
+  const gridHeight = rowHeight * layoutRows + LAYOUT_GAP * (layoutRows - 1);
   const pitchY = rowHeight + LAYOUT_GAP;
 
   const draft = useMemo(
@@ -707,9 +723,22 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     [index],
   );
 
+  const gestureCleanup = useRef<() => void>(() => {});
+  useEffect(() => () => gestureCleanup.current(), []);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor),
+    useSensor<KeyboardSensorOptions>(KeyboardSensor, {
+      coordinateGetter(event, { active, currentCoordinates }) {
+        const dx = Number(event.code === "ArrowRight") - Number(event.code === "ArrowLeft");
+        const dy = Number(event.code === "ArrowDown") - Number(event.code === "ArrowUp");
+        if (!dx && !dy) return;
+        const node = canvasNode.current?.querySelector(`[data-element-id="${CSS.escape(String(active))}"]`);
+        const body = node?.closest<HTMLElement>("[data-card-body]");
+        const owner = body && cards.find((card) => card.id === body.dataset.cardBody);
+        const cell = body && owner ? cardCellSize(body, owner) : { width: pitchX, height: pitchY };
+        return { x: currentCoordinates.x + dx * cell.width, y: currentCoordinates.y + dy * cell.height };
+      },
+    }),
   );
 
   const showPreview = (next: GridTransaction) => {
@@ -827,14 +856,40 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     }
   };
 
+  const moveElementToCard = (element: SmartHomeLayoutElement, targetId: string) => {
+    const target = cards.find((card) => card.id === targetId);
+    const start = beginGesture(element.id, true);
+    if (!target || !selected || !start) return;
+    const placement = getElementPlacements(selected).find((item) => item.id === element.id);
+    if (!placement) return;
+    const slot = findFreeGridSlot(
+      getElementPlacements(target),
+      { columns: target.w, rows: getCardInnerRows(target) },
+      placement,
+    );
+    if (!slot) return notApplied(t("noRoom"));
+    const result = previewGridMove(
+      start,
+      { targetGridId: getInnerGridId(targetId), x: slot.x, y: slot.y },
+      { guards: [elementLimitGuard] },
+    );
+    if (!result.accepted) return notApplied(t("noRoom"));
+    transaction.current = result.transaction;
+    finish();
+    setSelectedId(targetId);
+  };
+
   const onDragStart = ({ active, activatorEvent }: DragStartEvent) => {
     const id = String(active.id);
     const card = isCard(id);
     transaction.current = beginGesture(id, !card);
     if (!transaction.current) return;
     if (!(activatorEvent instanceof PointerEvent)) return;
-    const origin = { x: activatorEvent.clientX, y: activatorEvent.clientY };
-    pointer.current = { origin, last: origin };
+    const rect = canvasNode.current?.getBoundingClientRect();
+    if (!rect) return;
+    const last = { x: activatorEvent.clientX, y: activatorEvent.clientY };
+    pointer.current = { origin: { x: last.x - rect.left, y: last.y - rect.top }, last };
+    gestureCleanup.current = stopTracking;
     // Capturing on window runs before dnd-kit sees the release, so the drop uses the true final position.
     window.addEventListener("pointermove", trackPointer, { capture: true, passive: true });
     window.addEventListener("pointerup", trackPointer, { capture: true, passive: true });
@@ -848,10 +903,10 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     if (!owner || !node || !body) return;
     setSelectedId(owner.id);
     const cell = cardCellSize(body, owner);
-    const rect = node.getBoundingClientRect();
+    const elementRect = node.getBoundingClientRect();
     grab.current = {
-      column: Math.floor((origin.x - rect.left) / cell.width),
-      row: Math.floor((origin.y - rect.top) / cell.height),
+      column: Math.floor((last.x - elementRect.left) / cell.width),
+      row: Math.floor((last.y - elementRect.top) / cell.height),
       sourceCardId: owner.id,
     };
   };
@@ -859,10 +914,11 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   const settle = (id: string, delta: { x: number; y: number }) => {
     const tracked = pointer.current;
     if (isCard(id)) {
+      const rect = canvasNode.current?.getBoundingClientRect();
       previewCardMove(
         id,
-        tracked ? tracked.last.x - tracked.origin.x : delta.x,
-        tracked ? tracked.last.y - tracked.origin.y : delta.y,
+        tracked && rect ? tracked.last.x - rect.left - tracked.origin.x : delta.x,
+        tracked && rect ? tracked.last.y - rect.top - tracked.origin.y : delta.y,
       );
     } else if (tracked) {
       previewElementMove(tracked.last);
@@ -875,7 +931,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
 
   const onDragEnd = ({ active, delta }: DragEndEvent) => {
     const id = String(active.id);
-    settle(id, delta);
+    if (pointer.current) settle(id, delta);
     // An element dropped on another card selects that card, so its settings show the element.
     const owner = transaction.current?.preview.grids.find(
       (grid) => grid.ownerPlacementId && grid.placements.some((placement) => placement.id === id),
@@ -891,6 +947,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     event: ResizeEvent,
     options: { withCardGrids: boolean; cell: { width: number; height: number }; minWidth: number; minHeight: number },
   ) => {
+    if ("pointerId" in event && (!event.isPrimary || event.button !== 0)) return;
     if ("key" in event && !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
     event.stopPropagation();
     event.preventDefault();
@@ -917,7 +974,9 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     const handle = event.currentTarget;
     handle.setPointerCapture(event.pointerId);
 
+    const pointerId = event.pointerId;
     const onMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
       const result = previewGridResize(start, {
         direction: "se",
         deltaColumns: Math.round((moveEvent.clientX - origin.x) / options.cell.width),
@@ -930,9 +989,15 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     const cleanup = () => {
       handle.removeEventListener("pointermove", onMove);
       handle.removeEventListener("pointerup", onUp);
-      handle.removeEventListener("pointercancel", onCancel);
+      handle.removeEventListener("pointercancel", onLost);
+      handle.removeEventListener("lostpointercapture", onLost);
+      window.removeEventListener("keydown", onEscape, true);
+      if (handle.hasPointerCapture(pointerId)) handle.releasePointerCapture(pointerId);
+      gestureCleanup.current = () => {};
     };
-    const onUp = () => {
+    const onUp = (upEvent: PointerEvent) => {
+      if (upEvent.pointerId !== pointerId) return;
+      onMove(upEvent);
       cleanup();
       finish();
     };
@@ -940,9 +1005,21 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       cleanup();
       cancel();
     };
+    const onEscape = (keyEvent: KeyboardEvent) => {
+      if (keyEvent.key !== "Escape") return;
+      keyEvent.preventDefault();
+      keyEvent.stopPropagation();
+      onCancel();
+    };
+    const onLost = (lostEvent: PointerEvent) => {
+      if (lostEvent.pointerId === pointerId) onCancel();
+    };
+    gestureCleanup.current = cleanup;
+    window.addEventListener("keydown", onEscape, true);
+    handle.addEventListener("lostpointercapture", onLost);
     handle.addEventListener("pointermove", onMove);
     handle.addEventListener("pointerup", onUp);
-    handle.addEventListener("pointercancel", onCancel);
+    handle.addEventListener("pointercancel", onLost);
   };
 
   const onCardResizeStart = (cardId: string, event: ResizeEvent) => {
@@ -1108,6 +1185,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
         templates: mergedTemplates.length > 0 ? mergedTemplates : undefined,
       };
     });
+    setShareOpened(false);
     setImportText("");
     setImportError(false);
     setSelectedId(null);
@@ -1137,13 +1215,17 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
           />
           <Menu position="bottom-start" withinPortal>
             <Menu.Target>
-              <Button variant="light" leftSection={<IconTemplate size={16} />} disabled={!templateDevice || isFull}>
+              <Button
+                variant="light"
+                leftSection={<IconTemplate size={16} />}
+                disabled={(!templateDevice || isFull) && templates.length === 0}
+              >
                 {t("addTemplate")}
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
               {smartHomeLayoutPresets.map((preset) => (
-                <Menu.Item key={preset} onClick={() => addPreset(preset)}>
+                <Menu.Item key={preset} disabled={!templateDevice || isFull} onClick={() => addPreset(preset)}>
                   {t(`preset.${preset}`)}
                 </Menu.Item>
               ))}
@@ -1153,7 +1235,9 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                   <Menu.Label>{t("myTemplates")}</Menu.Label>
                   {templates.map((template) => (
                     <Fragment key={template.id}>
-                      <Menu.Item onClick={() => addOwnTemplate(template)}>{template.name}</Menu.Item>
+                      <Menu.Item disabled={!templateDevice || isFull} onClick={() => addOwnTemplate(template)}>
+                        {template.name}
+                      </Menu.Item>
                       <Menu.Item
                         color="red"
                         leftSection={<IconTrash size={14} />}
@@ -1201,9 +1285,22 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
               <IconArrowForwardUp size={16} />
             </ActionIcon>
           </Tooltip>
-          <Popover position="bottom-end" width={340} shadow="md" withinPortal>
+          <Popover
+            opened={shareOpened}
+            onChange={setShareOpened}
+            position="bottom-end"
+            width="min(340px, calc(100vw - 16px))"
+            shadow="md"
+            trapFocus
+            returnFocus
+          >
             <Popover.Target>
-              <Button size="sm" variant="default" leftSection={<IconShare size={16} />}>
+              <Button
+                size="sm"
+                variant="default"
+                leftSection={<IconShare size={16} />}
+                onClick={() => setShareOpened((opened) => !opened)}
+              >
                 {t("share")}
               </Button>
             </Popover.Target>
@@ -1232,6 +1329,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                 </Group>
                 <Textarea
                   size="sm"
+                  data-autofocus
                   label={t("importLayout")}
                   placeholder={t("importPlaceholder")}
                   autosize
@@ -1308,7 +1406,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                       // Exactly the widget's width: a larger widget scrolls here rather than being previewed narrower.
                       width: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
                       // Explicit, because the canvas is a size container and so does not grow with its rows.
-                      height: canvasHeight + CANVAS_PADDING * 2,
+                      height: (showStackedPreview ? canvasHeight : gridHeight) + CANVAS_PADDING * 2,
                       gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,
                       gridTemplateRows: `repeat(${layoutRows}, ${rowHeight}px)`,
                       gap: LAYOUT_GAP,
@@ -1340,7 +1438,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                     />
                   ))}
                   {showStackedPreview && (
-                    <Box style={{ gridColumn: "1 / -1", gridRow: "1 / -1" }} mih={0} inert>
+                    <Box style={{ gridColumn: "1 / -1", gridRow: "1 / -1" }} mih={0}>
                       <CustomLayoutView
                         layout={draft}
                         source={integrationId}
@@ -1374,6 +1472,11 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
             <CardProperties
               key={selected.id}
               card={selected}
+              onMoveElement={moveElementToCard}
+              cardOptions={cards.map((card, position) => ({
+                value: card.id,
+                label: card.title || t("numberedCard", { number: position + 1 }),
+              }))}
               catalog={catalog}
               source={integrationId}
               onChange={updateCard}

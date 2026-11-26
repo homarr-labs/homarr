@@ -56,6 +56,7 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
   const t = useI18n("common.tablerIconPicker");
   const [opened, setOpened] = useState(false);
   const [query, setQuery] = useState("");
+  const [categoryOpened, setCategoryOpened] = useState(false);
   const [category, setCategory] = useState<string | null>(null);
   const [meta, setMeta] = useState<IconMeta | null>(null);
   useEffect(() => {
@@ -105,7 +106,8 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
         opened={opened}
         onChange={setOpened}
         position="bottom-start"
-        width={344}
+        width="min(344px, calc(100vw - 16px))"
+        closeOnEscape={!categoryOpened}
         shadow="md"
         trapFocus
         returnFocus
@@ -154,6 +156,8 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
               data={meta?.categories ?? []}
               value={category}
               onChange={setCategory}
+              onDropdownOpen={() => setCategoryOpened(true)}
+              onDropdownClose={() => setCategoryOpened(false)}
               disabled={!meta}
               searchable
               clearable
@@ -167,7 +171,10 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
                       key={name}
                       variant={name === value ? "filled" : "subtle"}
                       color={name === value ? undefined : "gray"}
+                      w="100%"
+                      maw={36}
                       size="lg"
+                      aria-pressed={value === name}
                       title={name}
                       aria-label={name}
                       onClick={() => pick(name)}
