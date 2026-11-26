@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
@@ -8,6 +9,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem } from "@homarr/ui";
+import { useIsMobile } from "@homarr/ui/hooks";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 import type { WidgetPreviewDimensions } from "@homarr/widgets/modals";
 
@@ -38,7 +40,15 @@ interface BoardItemContextMenuProps extends BoardItemMenuProps {
   disabled?: boolean;
 }
 
-export const BoardItemContextMenu = (props: BoardItemContextMenuProps) => <BoardItemMenuInner {...props} />;
+export const BoardItemContextMenu = (props: BoardItemContextMenuProps) => {
+  const isMobile = useIsMobile();
+  const hasCoarsePointer = useMediaQuery("(pointer: coarse)");
+
+  // The item's settings button stays visible while a touch hold starts a drag.
+  if (isMobile && hasCoarsePointer) return props.children;
+
+  return <BoardItemMenuInner {...props} />;
+};
 
 const BoardItemMenuInner = ({
   item,
