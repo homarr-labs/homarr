@@ -1,0 +1,14 @@
+/* Each safe-area value is 0px outside standalone display, so the navbar keeps its md padding there. */
+.navbar {
+  padding: var(--mantine-spacing-md);
+  padding-top: max(var(--mantine-spacing-md), var(--homarr-navbar-safe-area-top, 0px));
+  padding-inline-start: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-start));
+  padding-bottom: max(var(--mantine-spacing-md), env(safe-area-inset-bottom, 0px));
+}
+
+/* Below sm the open navbar spans the full width, so its inline-end edge touches the screen edge too. */
+@media (max-width: $mantine-breakpoint-sm) {
+  .navbar {
+    padding-inline-end: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-end));
+  }
+}
