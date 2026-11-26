@@ -1,0 +1,57 @@
+packages/modals/src/index.tsx
+  s_302ff56614d98d::t_5747d80710926b 109,111,116,145-146
+packages/forms-collection/src/tabler-icon-picker/tabler-icon-picker.tsx
+  s_302ff56614d98d::t_d917c3f30b4b88 59,109-110,159-160,174-175,177
+packages/widgets/src/smart-home/controls/control-center/device-control.tsx
+  s_302ff56614d98d::t_d917c3f30b4b88 160,175,199,292
+packages/widgets/src/smart-home/controls/custom-layout/use-undoable.ts
+  s_302ff56614d98d::t_d917c3f30b4b88 13,23,27-28,34
+packages/widgets/src/smart-home/controls/custom-layout/editor.tsx
+  s_302ff56614d98d::t_d917c3f30b4b88 82,653-654,686-687,1409,1441
+  s_302ff56614d98d::t_d1934069e67371 3,6,42,250-251,261-268,276,316,360,370-371,382-383,518-520,726-727,731-737,739-741,859-867,869-873,875-881,888-892,906,908-909,917,920-921,934,950,977,979,992-996,998-1000,1008-1019,1022,1332,1475,1477,1479
+  s_302ff56614d98d::t_5747d80710926b 1288-1296
+  s_302ff56614d98d::t_48e57f1338a3cd 730,738,868,874,1188,1218-1222,1228,1238-1240,1298-1303,1476,1478
+packages/translation/src/lang/en.json
+  s_302ff56614d98d::t_d1934069e67371 3653-3656,3658
+packages/widgets/src/smart-home/controls/custom-layout/layout.module.css
+  s_302ff56614d98d::t_d917c3f30b4b88 303-305
+  s_302ff56614d98d::t_00bca0300457b5 306-307
+packages/widgets/src/smart-home/controls/custom-layout/editor.module.css
+  s_302ff56614d98d::t_d1934069e67371 113-121,123,134,190-191
+packages/widgets/src/smart-home/controls/custom-layout/presets.ts
+  s_302ff56614d98d::t_d917c3f30b4b88 8
+packages/widgets/src/smart-home/controls/custom-layout/element-row.tsx
+  s_302ff56614d98d::t_d917c3f30b4b88 1,161,312,425-432,455,617,644
+  s_302ff56614d98d::t_d1934069e67371 285-287,299-308,310,652-659
+  s_302ff56614d98d::t_4f73c87f1e3571 309,651,660
+packages/widgets/src/smart-home/controls/custom-layout/responsive.ts
+  s_302ff56614d98d::t_d1934069e67371 16
+  s_302ff56614d98d::t_d917c3f30b4b88 17-19
+packages/widgets/src/smart-home/controls/custom-layout/view.tsx
+  s_302ff56614d98d::t_d917c3f30b4b88 315,365,389-390,428,845,859-864,989,992,994
+  s_302ff56614d98d::t_53c5d58b5016e0 61-68,372,374-376,386,388,993
+apps/nextjs/src/components/board/in-place-editor/host.tsx
+  s_302ff56614d98d::t_3425412c8dc061 6,54
+packages/boards/src/context.tsx
+  s_302ff56614d98d::t_15ec6838ac1598 4,16,88,91,118,141-152
+packages/widgets/src/_inputs/widget-smart-home-layout-input.tsx
+  s_302ff56614d98d::t_eaedf16d62bd54 28,30-31
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_302ff56614d98d::t_c2c01bb8eaa9d3 225-226,313,328
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6f6040dd921565666239603c99ebf0049d309ef4",
+  "prompts": {},
+  "sessions": {
+    "s_302ff56614d98d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21838-1d54-7453-abaa-168b3ef3887b",
+        "model": "gpt-6.2-astra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
