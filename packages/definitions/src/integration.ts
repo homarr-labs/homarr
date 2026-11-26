@@ -116,6 +116,16 @@ export const integrationDefs = {
     documentationSlug: "tubearchivist",
     defaultPort: 8000,
   },
+  youtarr: {
+    httpAuth: { type: "apiKeyHeader", name: "x-api-key" },
+    name: "Youtarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/youtarr.png",
+    category: ["miscellaneous"],
+    documentationSlug: "youtarr",
+    defaultPort: 3087,
+    apiKeySettingsPath: "/settings/api-keys",
+  },
   frigate: {
     httpAuth: { type: "adapter" },
     name: "Frigate",

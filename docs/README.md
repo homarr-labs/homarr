@@ -697,6 +697,13 @@
 </a>
 </td></tr>
 <tr><td align="center">
+<a href="https://homarr.dev/docs/integrations/youtarr" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/youtarr.png" alt="Youtarr" width="90" height="90" />
+  <br/>
+  <p align="center">Youtarr</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/yuvomi" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/svg/yuvomi.svg" alt="Yuvomi" width="90" height="90" />
   <br/>

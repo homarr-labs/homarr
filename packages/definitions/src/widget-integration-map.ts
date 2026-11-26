@@ -37,6 +37,7 @@ export const statsIntegrationKinds = [
   "jellystat",
   "scrutiny",
   "tubearchivist",
+  "youtarr",
   "frigate",
   "komga",
   "netalertx",

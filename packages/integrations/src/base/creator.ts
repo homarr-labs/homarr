@@ -38,6 +38,13 @@ const integrationCreators = {
     ]);
     return new StatsIntegration(input, tubearchivistStatsProvider);
   },
+  youtarr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { youtarrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/youtarr"),
+    ]);
+    return new StatsIntegration(input, youtarrStatsProvider);
+  },
   frigate: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { frigateStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),

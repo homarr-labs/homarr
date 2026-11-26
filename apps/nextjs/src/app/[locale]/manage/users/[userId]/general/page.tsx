@@ -16,6 +16,7 @@ import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { OAuthConnections } from "./_components/_oauth-connections";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
+import { SignInInformation } from "./_components/_sign-in-information";
 
 const logger = createLogger({ module: "userGeneralSettings" });
 
@@ -55,7 +56,7 @@ export default async function EditUserPage(props: Props) {
   }
 
   const isSelf = session?.user.id === user.id;
-  const [boards, searchEngines, connections, tourStatus] = await Promise.all([
+  const [boards, searchEngines, connections, tourStatus, signInInformation] = await Promise.all([
     api.board.getManageOverview({ fullPreview: false, userId: user.id }),
     api.searchEngine.getSelectable(),
     isSelf
@@ -70,6 +71,7 @@ export default async function EditUserPage(props: Props) {
           return undefined;
         })
       : undefined,
+    api.user.getSignInInformation({ userId: user.id }),
   ]);
   const isCredentialsUser = user.provider === "credentials";
 
@@ -93,6 +95,8 @@ export default async function EditUserPage(props: Props) {
         showLanguageSelector={isSelf}
         profileAvatar={<UserProfileAvatarForm user={user} />}
       />
+
+      <SignInInformation information={signInInformation} />
 
       {isSelf && <OAuthConnections key={user.id} initialConnections={connections} />}
 
