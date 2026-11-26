@@ -1,0 +1,19 @@
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_45e78b57f364d1::t_84c7bf2d32ec8f 25,186-187,189,207-208,799,811-815,899-908,925,1014-1017,1066
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "92c39521b5f58c835060bfe6e6d24fd96e1e971b",
+  "prompts": {},
+  "sessions": {
+    "s_45e78b57f364d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21834-767c-7002-a1ac-a17422e7c193",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
