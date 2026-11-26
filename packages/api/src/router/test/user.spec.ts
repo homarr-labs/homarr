@@ -501,6 +501,49 @@ describe("getSignInInformation should return safe authentication details", () =>
     expect(result.groupsClaim).toEqual([{ value: "ops", exists: true }]);
     expect(result.groupsClaimSeenAt).toEqual(new Date("2026-10-30T12:00:00.000Z"));
   });
+
+  test("returns provider, subject, and claim from the same account row", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const groupId = createId();
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "owner",
+      email: "owner@example.com",
+      provider: "credentials",
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oidc",
+      provider: "oidc",
+      providerAccountId: "oidc-subject",
+    });
+    await db.insert(accounts).values({
+      userId: defaultOwnerId,
+      type: "oauth",
+      provider: "ldap",
+      providerAccountId: "ldap-subject",
+      lastGroupsClaim: JSON.stringify(["ops"]),
+      lastGroupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
+    });
+    await db.insert(groups).values({ id: groupId, name: "ops", position: 0 });
+
+    const result = await caller.getSignInInformation({ userId: defaultOwnerId });
+
+    expect(result).toEqual({
+      provider: "ldap",
+      email: "owner@example.com",
+      subject: "ldap-subject",
+      homarrGroups: [],
+      groupsClaim: [{ value: "ops", exists: true }],
+      groupsClaimSeenAt: new Date("2026-10-30T12:00:00.000Z"),
+    });
+  });
 });
 
 describe("delete should delete user", () => {

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { AdapterAccount } from "@auth/core/adapters";
 import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
@@ -113,15 +114,28 @@ const asStringGroups = (value: unknown): string[] | null => {
   return null;
 };
 
+const LAST_GROUPS_CLAIM_MAX_BYTES = 16_384;
+
 const storeLastGroupsClaimAsync = async (
   db: Database,
   account: { provider: string; providerAccountId: string },
   groupsClaim: string[],
 ) => {
+  const serialized = JSON.stringify(groupsClaim);
+  const byteLength = new TextEncoder().encode(serialized).length;
+  if (byteLength > LAST_GROUPS_CLAIM_MAX_BYTES) {
+    logger.warn("Skipping last groups claim store because it exceeds the size limit", {
+      provider: account.provider,
+      byteLength,
+      limit: LAST_GROUPS_CLAIM_MAX_BYTES,
+    });
+    return;
+  }
+
   await db
     .update(accounts)
     .set({
-      lastGroupsClaim: JSON.stringify(groupsClaim),
+      lastGroupsClaim: serialized,
       lastGroupsClaimSeenAt: new Date(),
     })
     .where(and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId)));
@@ -133,7 +147,7 @@ const ensureLdapAccountAsync = async (db: Database, userId: string) => {
     .insert(accounts)
     .values({
       userId,
-      type: "credentials",
+      type: "oauth" satisfies AdapterAccount["type"],
       ...ldapAccount,
     })
     .onConflictDoNothing();

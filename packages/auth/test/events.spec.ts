@@ -333,7 +333,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
         where: eq(accounts.provider, "ldap"),
       });
       expect(ldapAccount?.providerAccountId).toBe("1");
-      expect(ldapAccount?.type).toBe("credentials");
+      expect(ldapAccount?.type).toBe("oauth");
       expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
       expect(ldapAccount?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
     });
@@ -355,6 +355,30 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
 
       expect(settled.every((entry) => entry.status === "fulfilled")).toBe(true);
       expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+    });
+    test("should not store a groups claim that exceeds the size limit", async () => {
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+      const oversized = Array.from({ length: 2000 }, (_, index) => `group-${index}-${"x".repeat(20)}`);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: oversized,
+        },
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
+      });
+
+      const account = await db.query.accounts.findFirst({ where: eq(accounts.userId, "1") });
+      expect(account?.lastGroupsClaim).toBeNull();
+      expect(account?.lastGroupsClaimSeenAt).toBeNull();
     });
   });
   test.each([
