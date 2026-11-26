@@ -12,6 +12,7 @@ import "flag-icons/css/flag-icons.min.css";
 import "mantine-datatable/styles.css";
 import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
+import "~/styles/safe-area.scss";
 
 import { notFound } from "next/navigation";
 import { ColorSchemeScript } from "@mantine/core";
@@ -99,8 +100,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 export const generateViewport = async (): Promise<Viewport> => {
   const colorScheme = await getCurrentColorSchemeAsync();
   // A fixed app scheme must win over the system preference, or the chrome would not match the page background.
-  if (colorScheme === "auto") return { themeColor: [...pwaViewportThemeColor] };
-  return { themeColor: pwaPageBackground[colorScheme] };
+  const themeColor = colorScheme === "auto" ? [...pwaViewportThemeColor] : pwaPageBackground[colorScheme];
+  return { themeColor, viewportFit: "cover" };
 };
 
 export default async function Layout(props: {
