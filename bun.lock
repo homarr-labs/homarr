@@ -1107,7 +1107,7 @@
     },
     "@assistant-ui/core": "0.3.37",
     "@assistant-ui/store": "0.3.25",
-    "@assistant-ui/tap": "0.9.26",
+    "@assistant-ui/tap": "0.9.27",
     "@babel/helpers@<7.26.10": {
       ".": "7.29.7",
     },
@@ -1599,7 +1599,7 @@
 
     "@assistant-ui/store": ["@assistant-ui/store@0.3.25", "", { "peerDependencies": { "@assistant-ui/tap": "^0.9.27", "@types/react": "*", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-7iG8fRILIN1Z8tsu61iY1PyTriiH1eKly+SlhBJg58RLs+lqmsTvH99ukuvZaNxNSJp8+QHeVL30PWi2xYJZ1Q=="],
 
-    "@assistant-ui/tap": ["@assistant-ui/tap@0.9.26", "", { "peerDependencies": { "@types/react": "*", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-Rbau9i+EfPPNfXZBv0rXqZxbexR572xfKMnRXOrudRLfTYbzT2nfkyDh5NCpEutUV9uAJi1bBRoZqKrSQBpAKQ=="],
+    "@assistant-ui/tap": ["@assistant-ui/tap@0.9.27", "", { "peerDependencies": { "@types/react": "*", "react": "^18 || ^19" }, "optionalPeers": ["@types/react", "react"] }, "sha512-DG0LAGq7UqO11h5BlYavqndHx3/2YYtV16dEXkzIhMUwGpu5I4ost/vt781K/Zqt1YDa9BC0u0Kl0FhZoTOacQ=="],
 
     "@auth/core": ["@auth/core@0.41.3", "", { "dependencies": { "@panva/hkdf": "1.2.1", "jose": "6.2.3", "oauth4webapi": "3.3.0", "preact": "10.24.3", "preact-render-to-string": "6.5.11" }, "peerDependencies": { "@simplewebauthn/browser": "^9.0.1", "@simplewebauthn/server": "^9.0.2", "nodemailer": "^7.0.7 || ^8.0.5" }, "optionalPeers": ["@simplewebauthn/browser", "@simplewebauthn/server", "nodemailer"] }, "sha512-sJ3JMHHkXMD3aOjopv7mOBTO1Ocw4b0fAEXJBz6k7YHLpYQI6C40jCUPc5fNvUKxXRXNE1/sRISA15UrwWJBTw=="],
 
