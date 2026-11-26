@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { splitToChunksWithNItems } from "@homarr/common";
 import { applySmartHomeAction, supportsSmartHomeAction } from "@homarr/integrations/types";
 import type {
   SmartHomeAction,
@@ -972,20 +973,21 @@ function LiveSnapshot({ integrationId, selection, source, historyEntityIds, chil
   // Without an explicit list every measured sensor gets a trend; a custom layout asks only for its graphs.
   const loaded = snapshot.data?.entities ?? [];
   const loadedIds = new Set(loaded.map((entity) => entity.id));
-  const historyKey = (
-    historyEntityIds
-      ? historyEntityIds.filter((id) => loadedIds.has(id))
-      : loaded.filter(isHistoryCandidate).map((entity) => entity.id)
-  )
-    // The limit applies in the given order (a layout's reading order), before the ids are sorted into a stable key.
-    .slice(0, HISTORY_LIMIT)
-    .toSorted()
-    .slice(0, HISTORY_LIMIT)
-    .join(",");
-  const historyIds = useMemo(() => historyKey.split(",").filter(Boolean), [historyKey]);
-  const history = clientApi.widget.smartHome.history.useQuery(
-    { integrationId, entityIds: historyIds, hours: 24, samples: 32 },
-    { enabled: historyIds.length > 0, staleTime: 300_000, refetchInterval: 300_000, refetchOnWindowFocus: false },
+  const historyIds = historyEntityIds
+    ? historyEntityIds.filter((id) => loadedIds.has(id))
+    : loaded
+        .filter(isHistoryCandidate)
+        .slice(0, HISTORY_LIMIT)
+        .map((entity) => entity.id);
+  const history = clientApi.useQueries(
+    (api) =>
+      splitToChunksWithNItems(historyIds.toSorted(), HISTORY_LIMIT).map((entityIds) =>
+        api.widget.smartHome.history(
+          { integrationId, entityIds, hours: 24, samples: 32 },
+          { staleTime: 300_000, refetchInterval: 300_000, refetchOnWindowFocus: false },
+        ),
+      ),
+    { combine: (queries) => queries.flatMap((query) => query.data ?? []) },
   );
 
   useEffect(() => {
@@ -1014,8 +1016,8 @@ function LiveSnapshot({ integrationId, selection, source, historyEntityIds, chil
   }, [snapshot.data, source]);
 
   useEffect(() => {
-    source.setHistory(history.data ?? []);
-  }, [history.data, source]);
+    source.setHistory(history);
+  }, [history, source]);
 
   let status: SmartHomeLiveStatus["status"] = "loading";
   let message: string | undefined;

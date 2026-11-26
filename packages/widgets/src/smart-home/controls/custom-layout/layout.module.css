@@ -19,6 +19,19 @@
   --el-weight-strong: 700;
   --el-weight-medium: 600;
 
+  --tile-bg: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
+  --tile-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  --secondary-ink: var(--mantine-color-dimmed);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  border-radius: var(--e-radius);
   gap: var(--el-gap);
   min-height: 0;
   padding: 0.75em;
@@ -250,23 +263,13 @@
   text-align: center;
 }
 
-.emptyLayout {
-  display: grid;
-  place-items: center;
-  height: 100%;
-  padding: 12px;
-  font-size: 13px;
-  color: var(--secondary-ink);
-  text-align: center;
-}
-
 /* While the card's first entity is on, its color shines through behind the content. */
 .cardTint {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.14;
+  opacity: calc(var(--opacity, 1) * 0.14);
   transition: opacity 0.35s;
 }
 
@@ -372,13 +375,6 @@
   justify-content: flex-end;
 }
 
-.dividerElement {
-  width: 100%;
-  margin: 0;
-  border: 0;
-  border-top: 1px solid var(--tile-border);
-}
-
 /* In the editor, an element whose condition does not hold right now is shown faded. */
 .conditionHidden {
   display: contents;
@@ -429,7 +425,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--mantine-color-white);
   background: rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
@@ -453,7 +449,7 @@
   justify-content: space-between;
   padding: 0.6em 0.6em 0.4em;
   font-weight: var(--el-weight-medium);
-  color: #fff;
+  color: var(--mantine-color-white);
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
 }
 
@@ -462,7 +458,7 @@
   padding: 0 0.45em;
   font-size: 0.8em;
   font-weight: var(--el-weight-strong);
-  color: #fff;
+  color: var(--mantine-color-white);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: var(--mantine-color-red-6);
@@ -474,7 +470,7 @@
   padding: 0 0.45em;
   font-size: 0.8em;
   font-weight: var(--el-weight-strong);
-  color: #fff;
+  color: var(--mantine-color-white);
   background: rgba(0, 0, 0, 0.55);
   border-radius: 0.3em;
 }

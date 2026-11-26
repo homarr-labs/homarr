@@ -8,14 +8,11 @@ import { useI18n } from "@homarr/translation/client";
 
 import { useWidgetPreviewSize } from "../modals/preview-size-context";
 import { SmartHomeLayoutEditorModal } from "../smart-home/controls/custom-layout/editor-modal";
+import { getLayoutContentSize } from "../smart-home/controls/custom-layout/responsive";
 import { parseSmartHomeLayout } from "../smart-home/controls/custom-layout/schema";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
-
-// The widget's content sits inside the item's padding, below the title when it has one.
-const ITEM_INSET = 8;
-const TITLE_HEIGHT = 28;
 
 /**
  * The widget's content size: from the edit dialog's preview (also for a widget not placed yet, and after changing
@@ -26,12 +23,11 @@ const getContentSize = (
   itemId: string | undefined,
   hasTitle: boolean,
 ) => {
-  const titleHeight = hasTitle ? TITLE_HEIGHT : 0;
-  if (preview) return { width: preview.width - ITEM_INSET, height: preview.height - ITEM_INSET - titleHeight };
+  if (preview) return getLayoutContentSize(preview.width, preview.height, hasTitle);
   if (!itemId || typeof document === "undefined") return undefined;
   const item = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
   if (!item || item.clientWidth === 0) return undefined;
-  return { width: item.clientWidth - ITEM_INSET, height: item.clientHeight - ITEM_INSET - titleHeight };
+  return getLayoutContentSize(item.clientWidth, item.clientHeight, hasTitle);
 };
 
 /** The custom layout itself is edited in its own dialog; the settings only show a summary and the entry point. */

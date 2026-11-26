@@ -134,6 +134,7 @@ export function TablerIconPicker({ value, onChange, label, resetLabel, suggestio
               size="xs"
               data-autofocus
               leftSection={<IconSearch size={14} />}
+              aria-label={t("search")}
               placeholder={t("search")}
               // How many icons the search and category leave, right where they are narrowed down.
               rightSection={

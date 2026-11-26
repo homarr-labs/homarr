@@ -1,10 +1,7 @@
 import { memo } from "react";
 
-import {
-  customJsxTablerIconNames,
-  customJsxTablerIconSpriteBasePath,
-  getTablerSpriteSymbol,
-} from "@homarr/custom-widgets/tabler-icons";
+import { customJsxTablerIconNames } from "@homarr/custom-widgets/tabler-icons";
+import { SpriteIcon } from "@homarr/forms-collection/tabler-icon-picker";
 
 export const SAFE_TABLER_ICON_NAMES = customJsxTablerIconNames;
 const supportedIconNames: ReadonlySet<string> = new Set(SAFE_TABLER_ICON_NAMES);
@@ -15,7 +12,6 @@ function isValidIconProp(value: unknown): value is string | number {
 
 export const SafeTablerIcon = memo(function SafeTablerIcon(props: Record<string, unknown>) {
   if (typeof props.name !== "string" || !supportedIconNames.has(props.name)) return null;
-  const { sprite, symbol } = getTablerSpriteSymbol(props.name);
 
   let size: string | number = 24;
   let color = "currentColor";
@@ -25,18 +21,12 @@ export const SafeTablerIcon = memo(function SafeTablerIcon(props: Record<string,
   if (isValidIconProp(props.stroke)) stroke = props.stroke;
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
+    <SpriteIcon
+      name={props.name}
+      size={size}
       color={color}
-      strokeWidth={stroke}
+      stroke={stroke}
       className={`tabler-icon tabler-icon-${props.name}`}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use href={`${customJsxTablerIconSpriteBasePath}/${sprite}.svg#${symbol}`} />
-    </svg>
+    />
   );
 });

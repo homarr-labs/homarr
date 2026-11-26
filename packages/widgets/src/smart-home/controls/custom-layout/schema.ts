@@ -373,7 +373,6 @@ export const getShownCards = (layout: SmartHomeLayout, width: number) =>
 
 // The live selection's limit (entities per widget) and the shared history's (entities per request).
 export const SMART_HOME_LAYOUT_MAX_LIVE_ENTITIES = 200;
-export const SMART_HOME_LAYOUT_MAX_SHARED_HISTORY = 20;
 
 const inReadingOrder = (cards: readonly SmartHomeLayoutCard[]) =>
   cards.toSorted((left, right) => left.y - right.y || left.x - right.x);
@@ -406,19 +405,18 @@ export const hasOwnGraphHistory = (element: SmartHomeLayoutElement) =>
 
 /**
  * Only entities shown in a default graph need the shared history, in reading order of the given cards (by default
- * both arrangements), at most as many as one history request takes.
+ * both arrangements).
  */
 export const getLayoutGraphEntityIds = (
   layout: SmartHomeLayout,
   source: string | null,
   cards: readonly SmartHomeLayoutCard[] = allCards(layout),
-) =>
-  [
-    ...new Set(
-      inReadingOrder(cards).flatMap((card) =>
-        card.elements
-          .filter((element) => element.source === source && element.view === "graph" && !hasOwnGraphHistory(element))
-          .map((element) => element.entityId),
-      ),
+) => [
+  ...new Set(
+    inReadingOrder(cards).flatMap((card) =>
+      card.elements
+        .filter((element) => element.source === source && element.view === "graph" && !hasOwnGraphHistory(element))
+        .map((element) => element.entityId),
     ),
-  ].slice(0, SMART_HOME_LAYOUT_MAX_SHARED_HISTORY);
+  ),
+];

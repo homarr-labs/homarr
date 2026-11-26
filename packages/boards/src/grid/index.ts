@@ -5,6 +5,7 @@ export {
   previewGridMove,
   previewGridResize,
   resolvePinnedGridCollisions,
+  validateGridState,
 } from "./engine";
 export { doGridPlacementsOverlap, findFreeGridSlot, getLayoutRowCount, normalizeGridPlacement } from "./placement";
 export type { GridCoordinates, GridPlacement } from "./placement";

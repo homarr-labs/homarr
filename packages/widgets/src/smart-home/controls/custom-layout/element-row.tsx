@@ -10,6 +10,9 @@ import {
   Input,
   NumberInput,
   Popover,
+  Paper,
+  SimpleGrid,
+  useMantineTheme,
   SegmentedControl,
   Select,
   Stack,
@@ -25,6 +28,7 @@ import {
   IconAlignLeft,
   IconAlignRight,
   IconCopy,
+  IconBan,
   IconPlus,
   IconTrash,
   IconX,
@@ -85,7 +89,12 @@ export interface OptionSection {
 export function OptionSections({ sections }: { sections: readonly OptionSection[] }) {
   if (sections.length === 0) return null;
   return (
-    <Accordion variant="separated" multiple chevronPosition="left" classNames={{ content: classes.optionContent }}>
+    <Accordion
+      variant="separated"
+      multiple
+      chevronPosition="left"
+      styles={{ content: { padding: "0 var(--mantine-spacing-sm) var(--mantine-spacing-sm)" } }}
+    >
       {sections.map((section) => (
         <Accordion.Item key={section.value} value={section.value}>
           <Accordion.Control>
@@ -129,9 +138,6 @@ export function ColorSelect({
   );
 }
 
-// A custom color starts from the current palette color's neighborhood rather than black.
-const DEFAULT_CUSTOM_COLOR = "#4dabf7";
-
 /**
  * A color as a round swatch; a tap opens the palette (theme colors) and a picker for any other color. Takes little
  * room beside a rule's value.
@@ -147,24 +153,26 @@ function ColorSwatchPicker({
 }) {
   const t = useI18n("widget.smartHome-controls.layout.editor");
   const colorLabel = useColorLabel();
+  const theme = useMantineTheme();
   const custom = value && !isNamedLayoutColor(value) ? value : null;
   const name = value ? colorLabel(value) : t("noColor");
   return (
     <Popover position="bottom-end" withArrow shadow="md">
       <Popover.Target>
-        <Tooltip label={name} openDelay={400}>
-          <UnstyledButton className={classes.swatchButton} aria-label={`${t("color")}: ${name}`}>
-            {value ? (
-              <ColorSwatch color={layoutColor(value)} size={20} />
-            ) : (
-              <span className={classes.swatchNone} aria-hidden />
-            )}
-          </UnstyledButton>
-        </Tooltip>
+        <ActionIcon
+          title={name}
+          variant="subtle"
+          color="gray"
+          radius="xl"
+          size="lg"
+          aria-label={`${t("color")}: ${name}`}
+        >
+          {value ? <ColorSwatch color={layoutColor(value)} size={20} /> : <IconBan size={20} aria-hidden />}
+        </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap="sm">
-          <div className={classes.swatchGrid}>
+          <SimpleGrid cols={6} spacing="xs">
             {clearable && (
               <Tooltip label={t("noColor")} openDelay={300}>
                 <UnstyledButton
@@ -173,7 +181,7 @@ function ColorSwatchPicker({
                   aria-pressed={!value}
                   onClick={() => onChange(undefined)}
                 >
-                  <span className={classes.swatchNone} aria-hidden />
+                  <IconBan size={24} aria-hidden />
                 </UnstyledButton>
               </Tooltip>
             )}
@@ -191,13 +199,13 @@ function ColorSwatchPicker({
                 />
               </Tooltip>
             ))}
-          </div>
+          </SimpleGrid>
           <Divider label={t("customColor")} labelPosition="left" />
           <ColorPicker
             size="sm"
             format="hex"
             fullWidth
-            value={custom ?? DEFAULT_CUSTOM_COLOR}
+            value={custom ?? theme.colors[value && isNamedLayoutColor(value) ? value : theme.primaryColor]?.[6]}
             saturationLabel={t("colorSaturation")}
             hueLabel={t("colorHue")}
             onChangeEnd={(hex) => onChange(hex.toLowerCase() as `#${string}`)}
@@ -232,7 +240,7 @@ function RulesEditor({
             data={operatorData}
             value={rule.op}
             onChange={(op) => update(index, { ...rule, op: op as SmartHomeCompareOperator })}
-            classNames={{ label: classes.operatorLabel }}
+            styles={{ label: { minWidth: 18, paddingInline: 6, fontSize: "var(--mantine-font-size-sm)" } }}
           />
           <TextInput
             size="sm"
@@ -515,112 +523,114 @@ export function ElementRow({ element, entity, catalog, source, onChange, onDupli
   }
 
   return (
-    <Stack gap="xs" className={classes.elementRow}>
-      <Group gap="xs" wrap="nowrap" justify="space-between" align="flex-start">
-        <Group gap={8} wrap="nowrap" miw={0}>
-          {missing && <IconAlertTriangle size={18} color="var(--mantine-color-orange-6)" aria-hidden />}
-          <Stack gap={0} miw={0}>
-            <Text size="sm" fw={600} truncate title={entity?.name ?? element.entityId}>
-              {title}
-            </Text>
-            {subtitle && (
-              <Text size="xs" c="dimmed" ff={missing ? "monospace" : undefined} truncate title={subtitle}>
-                {subtitle}
+    <Paper withBorder p="sm" radius="sm">
+      <Stack gap="xs">
+        <Group gap="xs" wrap="nowrap" justify="space-between" align="flex-start">
+          <Group gap={8} wrap="nowrap" miw={0}>
+            {missing && <IconAlertTriangle size={18} color="var(--mantine-color-orange-6)" aria-hidden />}
+            <Stack gap={0} miw={0}>
+              <Text size="sm" fw={600} truncate title={entity?.name ?? element.entityId}>
+                {title}
               </Text>
-            )}
-          </Stack>
+              {subtitle && (
+                <Text size="xs" c="dimmed" ff={missing ? "monospace" : undefined} truncate title={subtitle}>
+                  {subtitle}
+                </Text>
+              )}
+            </Stack>
+          </Group>
+          <Group gap={2} wrap="nowrap">
+            <ActionIcon variant="subtle" color="gray" onClick={onDuplicate} aria-label={t("duplicate")}>
+              <IconCopy size={16} />
+            </ActionIcon>
+            <ActionIcon variant="subtle" color="red" onClick={onRemove} aria-label={t("removeElement")}>
+              <IconTrash size={16} />
+            </ActionIcon>
+          </Group>
         </Group>
-        <Group gap={2} wrap="nowrap">
-          <ActionIcon variant="subtle" color="gray" onClick={onDuplicate} aria-label={t("duplicate")}>
-            <IconCopy size={16} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" color="red" onClick={onRemove} aria-label={t("removeElement")}>
-            <IconTrash size={16} />
-          </ActionIcon>
-        </Group>
-      </Group>
-      {!isStatic && (
-        <SmartHomeEntitySelect
-          catalog={catalog}
-          label={t("elementEntity")}
-          description={missing ? t("missingEntityHint") : undefined}
-          value={element.entityId || null}
-          clearable={false}
-          onChange={relink}
-        />
-      )}
-      <Select
-        size="sm"
-        label={t("view")}
-        allowDeselect={false}
-        data={
-          isStatic
-            ? views.map((view) => ({ value: view, label: t(`views.${view}`) }))
-            : (["controls", "readings"] as const)
-                .map((group) => ({
-                  group: t(`viewGroups.${group}`),
-                  items: views
-                    .filter((view) => isControlView(view) === (group === "controls"))
-                    .map((view) => ({ value: view, label: t(`views.${view}`) })),
-                }))
-                .filter((group) => group.items.length > 0)
-        }
-        value={element.view}
-        onChange={(value) => value && set({ view: value as SmartHomeElementView })}
-      />
-      {element.view !== "divider" && element.view !== "spacer" && (
-        <Group gap="xs" wrap="nowrap" align="flex-end">
-          {iconElementViews.has(element.view) && !fullTile && (
-            <TablerIconPicker
-              label={t("icon")}
-              resetLabel={t("iconReset")}
-              suggestions={smartHomeIconSuggestions}
-              value={element.icon}
-              onChange={(icon) => set({ icon })}
-            />
-          )}
-          <TextInput
-            size="sm"
-            flex={1}
-            label={element.view === "heading" ? t("headingText") : t("elementLabel")}
-            placeholder={isStatic ? "" : title}
-            value={element.label ?? ""}
-            maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
-            disabled={element.hideLabel === true}
-            onChange={(event) => set({ label: event.currentTarget.value || undefined })}
+        {!isStatic && (
+          <SmartHomeEntitySelect
+            catalog={catalog}
+            label={t("elementEntity")}
+            description={missing ? t("missingEntityHint") : undefined}
+            value={element.entityId || null}
+            clearable={false}
+            onChange={relink}
           />
-        </Group>
-      )}
-      {element.view === "heading" && (
-        <SegmentedControl
-          size="xs"
-          fullWidth
-          aria-label={t("align")}
-          value={element.align ?? "start"}
-          onChange={(value) => set({ align: value === "start" ? undefined : (value as "center" | "end") })}
-          data={[
-            { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
-            { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },
-            { value: "end", label: <IconAlignRight size={16} aria-label={t("alignEnd")} /> },
-          ]}
+        )}
+        <Select
+          size="sm"
+          label={t("view")}
+          allowDeselect={false}
+          data={
+            isStatic
+              ? views.map((view) => ({ value: view, label: t(`views.${view}`) }))
+              : (["controls", "readings"] as const)
+                  .map((group) => ({
+                    group: t(`viewGroups.${group}`),
+                    items: views
+                      .filter((view) => isControlView(view) === (group === "controls"))
+                      .map((view) => ({ value: view, label: t(`views.${view}`) })),
+                  }))
+                  .filter((group) => group.items.length > 0)
+          }
+          value={element.view}
+          onChange={(value) => value && set({ view: value as SmartHomeElementView })}
         />
-      )}
-      {element.view === "camera" && (
-        <Switch
-          label={t("cameraLive")}
-          description={t("cameraLiveHint")}
-          checked={element.live !== false}
-          onChange={(event) => set({ live: event.currentTarget.checked ? undefined : false })}
-        />
-      )}
-      {labelledElementViews.has(element.view) && !fullTile && (
-        <Switch
-          label={t("showLabel")}
-          checked={element.hideLabel !== true}
-          onChange={(event) => set({ hideLabel: event.currentTarget.checked ? undefined : true })}
-        />
-      )}
-      <OptionSections sections={sections} />
-    </Stack>
+        {element.view !== "divider" && element.view !== "spacer" && (
+          <Group gap="xs" wrap="nowrap" align="flex-end">
+            {iconElementViews.has(element.view) && !fullTile && (
+              <TablerIconPicker
+                label={t("icon")}
+                resetLabel={t("iconReset")}
+                suggestions={smartHomeIconSuggestions}
+                value={element.icon}
+                onChange={(icon) => set({ icon })}
+              />
+            )}
+            <TextInput
+              size="sm"
+              flex={1}
+              label={element.view === "heading" ? t("headingText") : t("elementLabel")}
+              placeholder={isStatic ? "" : title}
+              value={element.label ?? ""}
+              maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
+              disabled={element.hideLabel === true}
+              onChange={(event) => set({ label: event.currentTarget.value || undefined })}
+            />
+          </Group>
+        )}
+        {element.view === "heading" && (
+          <SegmentedControl
+            size="xs"
+            fullWidth
+            aria-label={t("align")}
+            value={element.align ?? "start"}
+            onChange={(value) => set({ align: value === "start" ? undefined : (value as "center" | "end") })}
+            data={[
+              { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
+              { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },
+              { value: "end", label: <IconAlignRight size={16} aria-label={t("alignEnd")} /> },
+            ]}
+          />
+        )}
+        {element.view === "camera" && (
+          <Switch
+            label={t("cameraLive")}
+            description={t("cameraLiveHint")}
+            checked={element.live !== false}
+            onChange={(event) => set({ live: event.currentTarget.checked ? undefined : false })}
+          />
+        )}
+        {labelledElementViews.has(element.view) && !fullTile && (
+          <Switch
+            label={t("showLabel")}
+            checked={element.hideLabel !== true}
+            onChange={(event) => set({ hideLabel: event.currentTarget.checked ? undefined : true })}
+          />
+        )}
+        <OptionSections sections={sections} />
+      </Stack>
+    </Paper>
   );
 }

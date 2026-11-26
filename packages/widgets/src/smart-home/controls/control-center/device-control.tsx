@@ -570,10 +570,10 @@ export function ReadingRow({ entity, label: labelOverride, icon, hideLabel }: Re
   );
 }
 
-function ChipFace({ entity, control }: { entity: HaEntity; control: ReadingControl | null }) {
+function ChipFace({ entity, control, label }: { entity: HaEntity; control: ReadingControl | null; label?: string }) {
   const theme = useEntityTheme(entity);
   const Icon = control?.kind === "trigger" ? IconPlayerPlay : theme.Icon;
-  const text = control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity);
+  const text = label ?? (control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity));
   return (
     <>
       <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
@@ -582,13 +582,13 @@ function ChipFace({ entity, control }: { entity: HaEntity; control: ReadingContr
   );
 }
 
-export function ReadingChip({ entity }: { entity: HaEntity }) {
+export function ReadingChip({ entity, label: labelOverride }: { entity: HaEntity; label?: string }) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
   const { run, pending } = useRunner(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
-  const label = getDeviceEntityLabel(entity);
+  const label = labelOverride ?? getDeviceEntityLabel(entity);
   const state = formatEntityState(entity);
   const control = getReadingControl(entity);
   const highlighted = theme.active && (entity.domain === "binary_sensor" || !isSensorLike(entity));
@@ -600,7 +600,7 @@ export function ReadingChip({ entity }: { entity: HaEntity }) {
     "data-pending": pending,
     "data-unavailable": theme.unavailable,
   };
-  const content = <ChipFace entity={entity} control={control} />;
+  const content = <ChipFace entity={entity} control={control} label={labelOverride} />;
 
   if (control?.kind === "select") {
     return (

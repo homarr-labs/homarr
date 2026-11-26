@@ -3741,6 +3741,7 @@
           "notApplied": "Not applied",
           "noRoom": "There is no free space in the widget for this card and its elements.",
           "cardTooSmall": "Its elements would not fit the card at this size.",
+          "invalidPlacement": "Check the layout for overlapping items, duplicate IDs, or items outside their grid.",
           "importInvalid": "This is not a smart home layout.",
           "importApply": "Import and replace",
           "narrowHint": "Shown when the widget is narrower than {width} px. Without cards here, the wide cards stack.",

@@ -4,6 +4,13 @@ import type { GridPlacement } from "@homarr/boards/grid";
 import { SMART_HOME_CARD_MIN, SMART_HOME_LAYOUT_COLUMNS, SMART_HOME_LAYOUT_ROWS } from "./schema";
 import type { SmartHomeLayoutCard } from "./schema";
 
+// The control center insets the grid by 4px per side. Its optional title takes one 28px row.
+export const CUSTOM_LAYOUT_INSET = 8;
+export const getLayoutContentSize = (width: number, height: number, hasTitle: boolean) => ({
+  width: Math.max(1, width - CUSTOM_LAYOUT_INSET),
+  height: Math.max(1, height - CUSTOM_LAYOUT_INSET - (hasTitle ? 28 : 0)),
+});
+
 export const LAYOUT_ROW_HEIGHT = 32;
 export const LAYOUT_GAP = 8;
 // The layout scales with the widget like the editor shows it; only very narrow widgets (under ~160 px) fall back to

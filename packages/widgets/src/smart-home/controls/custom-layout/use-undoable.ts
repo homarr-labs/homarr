@@ -13,8 +13,8 @@ interface History<T> {
 }
 
 /** State with undo and redo. Updates that return the same value are ignored. */
-export const useUndoable = <T>(initial: T) => {
-  const [history, setHistory] = useState<History<T>>({ past: [], present: initial, future: [], editedAt: 0 });
+export const useUndoable = <T>(initial: () => T) => {
+  const [history, setHistory] = useState<History<T>>(() => ({ past: [], present: initial(), future: [], editedAt: 0 }));
 
   const update = useCallback((updater: (current: T) => T) => {
     // Taken once, outside the state updater, which React may run twice: both runs then decide alike.

@@ -36,7 +36,7 @@
   margin: auto;
   padding: 8px;
   /* The widget's outline: everything inside is what the board shows. */
-  outline: 1px dashed light-dark(rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.16));
+  outline: 1px dashed var(--mantine-color-default-border);
   outline-offset: -1px;
   border-radius: var(--mantine-radius-md);
 }
@@ -44,12 +44,12 @@
 /* One cell of the widget's grid; cards cover the cells they take. */
 .canvasCell {
   pointer-events: none;
-  background: light-dark(rgba(0, 0, 0, 0.025), rgba(255, 255, 255, 0.025));
+  background: rgb(from var(--mantine-color-text) r g b / 0.025);
   border-radius: 4px;
 }
 
 .canvas[data-empty="true"] .canvasCell {
-  background: light-dark(rgba(0, 0, 0, 0.045), rgba(255, 255, 255, 0.045));
+  background: rgb(from var(--mantine-color-text) r g b / 0.045);
 }
 
 .canvasCard {
@@ -95,7 +95,7 @@
 .cardHandle:hover,
 .cardHandle:focus-visible {
   color: var(--mantine-color-text);
-  background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
+  background: var(--mantine-color-default-hover);
 }
 
 .cardHandle:active {
@@ -196,70 +196,11 @@
   overflow-y: auto;
 }
 
-.elementRow {
-  padding: 12px;
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-sm);
-}
-
 .canvasHint {
   flex: none;
   padding: 6px 10px 0;
   font-size: 12px;
   color: var(--mantine-color-dimmed);
-}
-
-/* Folded option sections in the card and element panels: a little tighter than Mantine's default. */
-.optionContent {
-  padding: 0 var(--mantine-spacing-sm) var(--mantine-spacing-sm);
-}
-
-/* Color rules: a compact operator switch, the value, and the color as a swatch. */
-.operatorLabel {
-  min-width: 18px;
-  padding-inline: 6px;
-  font-size: 14px;
-}
-
-.swatchButton {
-  display: grid;
-  flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  place-items: center;
-}
-
-.swatchButton:hover {
-  background: var(--mantine-color-default-hover);
-}
-
-.swatchGrid {
-  display: grid;
-  grid-template-columns: repeat(6, 24px);
-  gap: 8px;
-  justify-content: space-between;
-}
-
-/* "No color": an empty ring with a slash. */
-.swatchNone {
-  display: block;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(
-    135deg,
-    transparent calc(50% - 1px),
-    var(--mantine-color-red-6) calc(50% - 1px),
-    var(--mantine-color-red-6) calc(50% + 1px),
-    transparent calc(50% + 1px)
-  );
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: 50%;
-}
-
-.swatchOption .swatchNone {
-  width: 24px;
-  height: 24px;
 }
 
 .swatchOption {

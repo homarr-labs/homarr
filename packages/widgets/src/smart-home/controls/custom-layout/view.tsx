@@ -2,7 +2,7 @@
 
 import { memo, useMemo, useState } from "react";
 import type { ComponentType, CSSProperties, ReactNode } from "react";
-import { UnstyledButton } from "@mantine/core";
+import { Center, Divider, getContrastColor, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import {
   IconAlertTriangle,
@@ -55,7 +55,7 @@ import {
   useShowsPart,
 } from "../control-center/hooks";
 import controlClasses from "../control-center/styles.module.css";
-import { accentVars, getOnAccent, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
+import { accentVars, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
 import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
 import { deriveLayout, getLayoutColumns, getStackColumns, LAYOUT_GAP, LAYOUT_ROW_HEIGHT } from "./responsive";
@@ -426,6 +426,7 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
         </span>
       ) : null}
       <span className={classes.cameraBar}>
+        {element.icon && <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} />}
         {element.hideLabel ? null : <span className={classes.labelText}>{label}</span>}
         {!showsStatus || !camera.status ? null : (
           <span className={camera.status === "live" ? classes.cameraLive : classes.cameraRestarting}>
@@ -437,10 +438,10 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
   );
 }
 
-function ChipElement({ entity }: ElementProps) {
+function ChipElement({ entity, element }: ElementProps) {
   return (
     <div className={classes.chipElement}>
-      <ReadingChip entity={entity} />
+      <ReadingChip entity={entity} label={element.label} />
     </div>
   );
 }
@@ -561,8 +562,7 @@ const SHARED_HISTORY_HOURS = 24;
 
 /** A line's current value from its entity, for the legend. */
 const getCurrentValue = (entity: HaEntity | undefined) => {
-  const value = entity ? Number.parseFloat(entity.state) : Number.NaN;
-  return Number.isFinite(value) ? value : null;
+  return entity ? getNumericState(entity) : null;
 };
 
 /**
@@ -696,7 +696,7 @@ function StaticElement({ element }: { element: SmartHomeLayoutElement }) {
       </div>
     );
   }
-  if (element.view === "divider") return <hr className={classes.dividerElement} />;
+  if (element.view === "divider") return <Divider color="var(--tile-border)" />;
   return null;
 }
 
@@ -777,10 +777,12 @@ export const getCardPalette = (card: Pick<SmartHomeLayoutCard, "colors">) =>
  */
 export function CardColors({ card, children }: { card: SmartHomeLayoutCard; children: ReactNode }) {
   const color = card.colors === "accent" ? (card.accent ?? DEFAULT_CARD_ACCENT) : null;
-  const ownAccent = useMemo(
-    () => (color ? { accent: layoutColor(color), onAccent: getOnAccent(color) } : null),
-    [color],
-  );
+  const theme = useMantineTheme();
+  const ownAccent = useMemo(() => {
+    if (!color) return null;
+    const shade = color.startsWith("#") ? color : theme.colors[color]?.[6];
+    return { accent: layoutColor(color), onAccent: getContrastColor({ color: shade, theme, autoContrast: true }) };
+  }, [color, theme]);
   return (
     <PaletteProvider value={getCardPalette(card)}>
       <OwnAccentProvider value={ownAccent}>{children}</OwnAccentProvider>
@@ -825,19 +827,20 @@ interface CardBodyProps {
 function CardBody({ card, source, placements, columns, stacked, collapsedRows }: CardBodyProps) {
   const t = useI18n("widget.smartHome-controls.layout");
   const elements = useMemo(() => new Map(card.elements.map((element) => [element.id, element])), [card.elements]);
-  const rows = stacked ? null : getCardInnerRows(card);
+  const rows = stacked ? null : Math.max(1, getCardInnerRows(card) - (collapsedRows?.size ?? 0));
   const style = cardBodyStyle(columns, rows);
-  if (rows !== null && collapsedRows?.size) {
-    style.gridTemplateRows = Array.from({ length: rows }, (_, row) =>
-      collapsedRows.has(row) ? "minmax(0, 0fr)" : "minmax(0, 1fr)",
-    ).join(" ");
-  }
   return (
     <div className={classes.cardBody} style={style} data-stacked={stacked}>
       {placements.map((placement) => {
         const element = elements.get(placement.id);
+        let { y, h } = placement;
+        for (const row of collapsedRows ?? []) {
+          if (row < placement.y) y--;
+          else if (row < placement.y + placement.h) h--;
+        }
+        if (!h) return null;
         return element ? (
-          <div key={element.id} className={classes.elementCell} style={placementStyle(placement)}>
+          <div key={element.id} className={classes.elementCell} style={placementStyle({ ...placement, y, h })}>
             <LayoutElement element={element} source={source} />
           </div>
         ) : null;
@@ -869,12 +872,13 @@ function CollapsingCardBody(props: CardBodyProps & { collapsible: readonly Smart
         .map((element) => element.id),
     );
     const rows = new Set<number>();
-    for (let row = 0; row < getCardInnerRows(props.card); row++) {
+    const rowCount = Math.max(0, ...placements.map(({ y, h }) => y + h));
+    for (let row = 0; row < rowCount; row++) {
       const inRow = placements.filter((placement) => placement.y <= row && row < placement.y + placement.h);
       if (inRow.length > 0 && inRow.every((placement) => hidden.has(placement.id))) rows.add(row);
     }
     return rows;
-  }, [collapsible, entities, editing, placements, props.card]);
+  }, [collapsible, entities, editing, placements]);
   return <CardBody {...rest} placements={placements} collapsedRows={collapsedRows} />;
 }
 
@@ -899,7 +903,7 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
   );
   const bodyProps = { card: shownCard, source, placements, columns: w, stacked };
   const body =
-    collapsible.length > 0 && !stacked ? (
+    collapsible.length > 0 ? (
       <SmartHomeEntitiesProvider entityIds={watched}>
         <CollapsingCardBody {...bodyProps} collapsible={collapsible} />
       </SmartHomeEntitiesProvider>
@@ -908,7 +912,7 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
     );
   return (
     <section
-      className={`${controlClasses.device} ${classes.card}`}
+      className={classes.card}
       style={placementStyle({ x, y, w, h })}
       data-palette={getCardPalette(card)}
       aria-label={card.title}
@@ -947,7 +951,13 @@ export function CustomLayoutView({ layout, source, width }: CustomLayoutViewProp
   const stacked = columns < SMART_HOME_LAYOUT_COLUMNS;
 
   if (shownCards.length === 0) {
-    return <div className={classes.emptyLayout}>{t(editing ? "emptyEditing" : "empty")}</div>;
+    return (
+      <Center h="100%" p="sm">
+        <Text size="sm" c="dimmed" ta="center">
+          {t(editing ? "emptyEditing" : "empty")}
+        </Text>
+      </Center>
+    );
   }
 
   return (

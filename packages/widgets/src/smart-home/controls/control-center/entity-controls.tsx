@@ -1943,10 +1943,10 @@ export function EntityControl({ entity, width, height, details = true }: EntityC
     </DetailTrigger>
   );
   if (detail !== undefined) return control;
-  return <StandaloneDetail>{control}</StandaloneDetail>;
+  return <EntityDetailProvider>{control}</EntityDetailProvider>;
 }
 
-function StandaloneDetail({ children }: { children: ReactNode }) {
+export function EntityDetailProvider({ children, disabled = false }: { children: ReactNode; disabled?: boolean }) {
   const [opened, setOpened] = useState<{ id: string; readOnly: boolean } | null>(null);
   const api = useMemo(
     (): DetailApi => ({ open: (id, options) => setOpened({ id, readOnly: options?.readOnly === true }) }),
@@ -1954,14 +1954,14 @@ function StandaloneDetail({ children }: { children: ReactNode }) {
   );
   const detail = (
     <EntityDetail
-      entityId={opened?.id ?? null}
+      entityId={disabled ? null : (opened?.id ?? null)}
       onClose={() => setOpened(null)}
       // A related entity opened from the detail keeps its restrictions.
       onOpen={(id) => setOpened((current) => ({ id, readOnly: current?.readOnly ?? false }))}
     />
   );
   return (
-    <DetailProvider value={api}>
+    <DetailProvider value={disabled ? null : api}>
       {children}
       {opened?.readOnly ? (
         <SmartHomeInteractionProvider blocked="readOnly">{detail}</SmartHomeInteractionProvider>

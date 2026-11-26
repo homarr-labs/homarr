@@ -43,9 +43,9 @@ import { ControlListRoot } from "./technical/root";
 import { EntityRow } from "./technical/row";
 import technicalClasses from "./technical/styles.module.css";
 import { EntityTile, StatCells } from "./technical/tile";
-import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./control-center/details";
+import { EntityDetailProvider, EntityControl, PaletteProvider } from "./control-center/details";
+import { CUSTOM_LAYOUT_INSET, getLayoutContentSize } from "./custom-layout/responsive";
 import { Measured } from "./control-center/hooks";
-import type { DetailApi } from "./control-center/hooks";
 import { DeviceControl } from "./control-center/device-control";
 import controlCenterClasses from "./control-center/styles.module.css";
 
@@ -570,23 +570,9 @@ function ControlPanelRoot({
   palette: SmartHomeControlPalette | null;
   children: ReactNode;
 }) {
-  const [opened, setOpened] = useState<{ id: string; readOnly: boolean } | null>(null);
-  const detail = useMemo((): DetailApi | null => {
-    if (isEditMode) return null;
-    return { open: (id, options) => setOpened({ id, readOnly: options?.readOnly === true }) };
-  }, [isEditMode]);
-  const entityDetail = (
-    <EntityDetail
-      entityId={detail && (opened?.id ?? null)}
-      onClose={() => setOpened(null)}
-      // A related entity opened from the detail keeps its restrictions.
-      onOpen={(id) => setOpened((current) => ({ id, readOnly: current?.readOnly ?? false }))}
-    />
-  );
-
   return (
     <PaletteProvider value={palette ?? "boring"}>
-      <DetailProvider value={detail}>
+      <EntityDetailProvider disabled={isEditMode}>
         <div
           className={controlCenterClasses.root}
           data-edit={isEditMode}
@@ -596,12 +582,7 @@ function ControlPanelRoot({
         >
           {children}
         </div>
-        {opened?.readOnly ? (
-          <SmartHomeInteractionProvider blocked="readOnly">{entityDetail}</SmartHomeInteractionProvider>
-        ) : (
-          entityDetail
-        )}
-      </DetailProvider>
+      </EntityDetailProvider>
     </PaletteProvider>
   );
 }
@@ -694,10 +675,6 @@ const useInteractionBlock = (configuration: SmartHomeConfiguration, isEditMode: 
 // Only widgets in custom mode load the layout renderer.
 const CustomLayoutView = lazy(() => import("./custom-layout/view"));
 const noValues: string[] = [];
-// The control center root insets its content (both sides together), and the widget title takes a fixed row
-// (`.title` in configuration.module.css).
-const CUSTOM_LAYOUT_INSET = 8;
-const CUSTOM_LAYOUT_TITLE_HEIGHT = 28;
 
 function CustomPreview({ configuration, width, height, isEditMode }: PreviewProps) {
   const title = configuration.title.trim();
@@ -773,11 +750,7 @@ function ConfigurableContent({
           <CustomLayoutEditButton
             integrationId={integrationId}
             // Same size the custom view gets: inside the control center root, below the optional title.
-            previewSize={{
-              width: props.width - CUSTOM_LAYOUT_INSET,
-              height:
-                props.height - CUSTOM_LAYOUT_INSET - (configuration.title.trim() ? CUSTOM_LAYOUT_TITLE_HEIGHT : 0),
-            }}
+            previewSize={getLayoutContentSize(props.width, props.height, Boolean(configuration.title.trim()))}
             layout={customLayout}
             onChange={(next) => onChange({ customLayout: next })}
           />

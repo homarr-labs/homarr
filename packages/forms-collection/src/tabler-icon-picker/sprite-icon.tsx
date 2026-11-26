@@ -7,12 +7,13 @@ export const spriteBasePath = customJsxTablerIconSpriteBasePath;
 interface SpriteIconProps {
   name: string;
   size: number | string;
-  stroke?: number;
+  stroke?: number | string;
+  color?: string;
   className?: string;
 }
 
 /** A Tabler icon by name, e.g. "bolt" or "star-filled"; legacy names resolve like they do in custom widgets. */
-export function SpriteIcon({ name, size, stroke = 1.8, className }: SpriteIconProps) {
+export function SpriteIcon({ name, size, stroke = 1.8, className, color }: SpriteIconProps) {
   const { sprite, symbol } = getTablerSpriteSymbol(name);
   return (
     <svg
@@ -20,6 +21,7 @@ export function SpriteIcon({ name, size, stroke = 1.8, className }: SpriteIconPr
       width={size}
       height={size}
       viewBox="0 0 24 24"
+      color={color}
       strokeWidth={stroke}
       className={className}
       aria-hidden="true"

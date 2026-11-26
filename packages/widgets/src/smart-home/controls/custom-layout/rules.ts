@@ -70,8 +70,7 @@ export const formatLayoutNumber = (value: number | null, unit: string | null, fo
 /** The numeric value of a sensor-like entity, or null when its state is not a number. */
 export const getNumericState = (entity: HaEntity) => {
   if (isUnavailable(entity)) return null;
-  const value = Number(entity.state);
-  return Number.isFinite(value) ? value : null;
+  return toNumber(entity.state);
 };
 
 /** The entity's state as the element shows it: formatted like everywhere else unless the element formats it. */

@@ -42,13 +42,6 @@ export interface OwnAccent {
 const OwnAccentContext = createContext<OwnAccent | null>(null);
 export const OwnAccentProvider = OwnAccentContext.Provider;
 
-/** Text on a color: dark on light colors, white on the others. Takes a Mantine color name or `#rrggbb`. */
-export const getOnAccent = (color: string) => {
-  if (!color.startsWith("#")) return darkOnColors.has(color) ? darkInk : "#fff";
-  const channel = (start: number) => Number.parseInt(color.slice(start, start + 2), 16);
-  return luminance([channel(1), channel(3), channel(5)]) > 0.55 ? darkInk : "#fff";
-};
-
 export const getTheme = (
   entity: HaEntity,
   palette: SmartHomeControlPalette,
