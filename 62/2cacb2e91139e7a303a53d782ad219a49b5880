@@ -1,0 +1,21 @@
+packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts
+  s_3cfe77b28f2887::t_8a4ebc84516dbd 87,352
+packages/integrations/src/media-organizer/sportarr/sportarr-integration.ts
+  s_3cfe77b28f2887::t_8a4ebc84516dbd 12-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "622cacb2e91139e7a303a53d782ad219a49b5880",
+  "prompts": {},
+  "sessions": {
+    "s_3cfe77b28f2887": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21834-1e34-73e1-b157-e109910617f6",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
