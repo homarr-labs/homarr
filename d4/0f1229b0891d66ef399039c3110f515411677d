@@ -1,0 +1,69 @@
+packages/custom-widgets/src/core/tabler-icons.ts
+  s_302ff56614d98d::t_aac764fbbac58e 24
+packages/boards/src/grid/engine.ts
+  s_302ff56614d98d::t_bd1b44082d2b88 505
+packages/translation/src/lang/en.json
+  s_302ff56614d98d::t_bd1b44082d2b88 3744
+packages/forms-collection/src/tabler-icon-picker/sprite-icon.tsx
+  s_302ff56614d98d::t_030ed92494e998 10-11,16,24
+packages/widgets/src/smart-home/controls/custom-layout/element-row.tsx
+  s_302ff56614d98d::t_030ed92494e998 13-15,31,156,175,184,202,208,243
+  s_302ff56614d98d::t_bd1b44082d2b88 92-97,162-171,526-533,535-549,551-578,580-599,601-614,616-634
+packages/widgets/src/smart-home/controls/control-center/details.ts
+  s_302ff56614d98d::t_030ed92494e998 1
+packages/widgets/src/smart-home/controls/custom-layout/view.tsx
+  s_302ff56614d98d::t_bd1b44082d2b88 565,781-785,954-960
+  s_302ff56614d98d::t_aac764fbbac58e 5,58,429,441,444,699,780,830,836-841,843,875-876,881,906,915
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  s_302ff56614d98d::t_030ed92494e998 3-4
+  s_302ff56614d98d::t_bd1b44082d2b88 24-26,28,30
+packages/widgets/src/smart-home/controls/custom-layout/editor.module.css
+  s_302ff56614d98d::t_030ed92494e998 39,47,52,98
+packages/widgets/src/smart-home/controls/custom-layout/use-undoable.ts
+  s_302ff56614d98d::t_aac764fbbac58e 16-17
+packages/widgets/src/_inputs/widget-smart-home-layout-input.tsx
+  s_302ff56614d98d::t_bd1b44082d2b88 11,26,30
+packages/widgets/src/smart-home/controls/custom-layout/layout.module.css
+  s_302ff56614d98d::t_aac764fbbac58e 22-34,272,428,452,461,473
+packages/widgets/src/smart-home/controls/custom-layout/rules.ts
+  s_302ff56614d98d::t_bd1b44082d2b88 73
+packages/widgets/src/smart-home/controls/live.tsx
+  s_302ff56614d98d::t_bd1b44082d2b88 978-981,983-988
+  s_302ff56614d98d::t_030ed92494e998 7,976-977,982,989-990,1019-1020
+packages/widgets/src/smart-home/controls/custom-layout/schema.ts
+  s_302ff56614d98d::t_bd1b44082d2b88 414-419,421-422
+  s_302ff56614d98d::t_030ed92494e998 408
+packages/widgets/src/smart-home/controls/control-center/device-control.tsx
+  s_302ff56614d98d::t_aac764fbbac58e 573,576,585,591,603
+packages/forms-collection/src/tabler-icon-picker/tabler-icon-picker.tsx
+  s_302ff56614d98d::t_030ed92494e998 137
+packages/widgets/src/smart-home/controls/custom-layout/editor.tsx
+  s_302ff56614d98d::t_bd1b44082d2b88 45,171-179,612-614,821-829,833-834,899-900,1022,1094,1157-1161,1305-1316,1319-1327,1344-1348
+  s_302ff56614d98d::t_030ed92494e998 105,669,1342-1343,1349-1351
+  s_302ff56614d98d::t_aac764fbbac58e 3-4,49,86,231,234-235,239-240,246,272-273,287-288,314,355-356,603,606,610,891,894,901-914,948,962,1083,1155-1156,1162-1164
+packages/widgets/src/smart-home/controls/control-center/entity-controls.tsx
+  s_302ff56614d98d::t_030ed92494e998 1946,1949,1957,1964
+packages/boards/src/grid/index.ts
+  s_302ff56614d98d::t_bd1b44082d2b88 8
+packages/widgets/src/smart-home/controls/custom-layout/responsive.ts
+  s_302ff56614d98d::t_bd1b44082d2b88 7-13
+packages/widgets/src/smart-home/controls/component.tsx
+  s_302ff56614d98d::t_030ed92494e998 46,575,585
+  s_302ff56614d98d::t_bd1b44082d2b88 47,753
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d40f1229b0891d66ef399039c3110f515411677d",
+  "prompts": {},
+  "sessions": {
+    "s_302ff56614d98d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21838-1d54-7453-abaa-168b3ef3887b",
+        "model": "gpt-6.2-astra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
