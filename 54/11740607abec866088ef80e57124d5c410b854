@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_29d2c87d056852::t_d3c097385a5112 63
+apps/nextjs/src/components/board/sections/container/container-menu.module.css
+  s_29d2c87d056852::t_d3c097385a5112 67-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5411740607abec866088ef80e57124d5c410b854",
+  "prompts": {},
+  "sessions": {
+    "s_29d2c87d056852": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21834-ac9b-7772-b932-c980df59254c",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
