@@ -55,7 +55,7 @@
   rangeStrategy: "bump",
   automerge: false,
   baseBranchPatterns: ["dev"],
-  dependencyDashboard: true,
+  dependencyDashboard: { enabled: true },
   // prevent special characters in branch names (otherwise git errors occur on windows)
   branchNameStrict: true,
 }
