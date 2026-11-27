@@ -20,8 +20,10 @@ export const getMinimumRowHeight = (cards: readonly SmartHomeLayoutCard[]) =>
 const MIN_COLUMN_WIDTH = 6;
 const MIN_CARD_WIDTH = 140;
 
-// Below this a card cannot show a usable control; the layout then stacks its cards instead.
-const MIN_SHOWN_CARD_WIDTH = 80;
+// Below this a card cannot show even one slider or button; only then does the layout stack its cards. (The editor
+// previews the arrangement as designed, so a higher limit would stack layouts that looked fine there, e.g. a
+// 2-column card on a 500px widget.)
+const MIN_SHOWN_CARD_WIDTH = 48;
 
 /**
  * Whether the widget is too narrow for the layout as designed. The editor previews the layout at the widget's own
