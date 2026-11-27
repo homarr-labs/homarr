@@ -206,6 +206,8 @@ const elementOptionsSchema = z.object({
   label: z.string().max(SMART_HOME_LAYOUT_MAX_TEXT).optional(),
   hideLabel: z.boolean().optional(),
   icon: iconNameSchema.optional(),
+  /** Shows no icon at all, neither a chosen one nor the entity's own. */
+  hideIcon: z.boolean().optional(),
   /** Shows the entity without letting anyone control it from here. */
   readOnly: z.boolean().optional(),
   /** Value colors, first match wins. */

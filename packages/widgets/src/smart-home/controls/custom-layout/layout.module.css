@@ -269,6 +269,23 @@
   justify-content: flex-start;
 }
 
+/* Aligned, the ring (with its label) moves to the element's start, middle or end. */
+.ringTile[data-wide="true"][data-align="center"] {
+  justify-content: center;
+}
+
+.ringTile[data-wide="true"][data-align="end"] {
+  justify-content: flex-end;
+}
+
+.ringTile[data-wide="false"][data-align="start"] {
+  align-items: flex-start;
+}
+
+.ringTile[data-wide="false"][data-align="end"] {
+  align-items: flex-end;
+}
+
 .ringValue {
   display: block;
   font-weight: var(--el-weight-strong);
@@ -288,11 +305,6 @@
 
 .ringTile[data-wide="true"] .ringText {
   align-items: flex-start;
-}
-
-.ringState {
-  font-size: 0.9em;
-  color: var(--secondary-ink);
 }
 
 /* The device header sits in the middle of a taller element instead of leaving empty space below it. */

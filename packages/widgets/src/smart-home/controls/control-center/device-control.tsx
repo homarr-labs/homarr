@@ -540,7 +540,8 @@ export function ReadingRow({ entity, label: labelOverride, icon, hideLabel }: Re
   const highlighted = theme.active && (entity.domain === "binary_sensor" || !isSensorLike(entity));
   const text = (
     <>
-      {icon ?? <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />}
+      {/* null hides the icon; undefined shows the entity's own. */}
+      {icon === undefined ? <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden /> : icon}
       {/* Kept when hidden, so the value stays on the right. */}
       <span className={classes.deviceReadingName}>{hideLabel ? null : label}</span>
       {control ? null : <span className={classes.deviceReadingValue}>{state}</span>}
@@ -589,7 +590,8 @@ function ChipFace({
   const text = label ?? (control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity));
   return (
     <>
-      {icon ?? <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />}
+      {/* null hides the icon; undefined shows the entity's own. */}
+      {icon === undefined ? <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden /> : icon}
       <span className={classes.deviceReadingValue}>{text}</span>
     </>
   );

@@ -55,7 +55,7 @@ import {
   StepSlider,
 } from "../control-center/device-control";
 import type { SliderStyle } from "../control-center/device-control";
-import { EntityControl } from "../control-center/entity-controls";
+import { EntityControl, TILE_PADDING } from "../control-center/entity-controls";
 import {
   HiddenPartsProvider,
   useDeviceControlDisabled,
@@ -85,6 +85,7 @@ import {
   formatLayoutNumber,
   getNumericState,
   getRuleColor,
+  isPercentReading,
   layoutColor,
 } from "./rules";
 import {
@@ -132,11 +133,11 @@ function ElementLabel({
   fallback,
   label,
 }: {
-  element: Pick<SmartHomeLayoutElement, "icon" | "hideLabel">;
+  element: Pick<SmartHomeLayoutElement, "icon" | "hideIcon" | "hideLabel">;
   fallback: IconComponent;
   label: string;
 }) {
-  const showsIcon = useShowsPart("icon");
+  const showsIcon = useShowsPart("icon") && element.hideIcon !== true;
   return (
     <span className={classes.elementLabel}>
       {showsIcon ? (
@@ -176,9 +177,13 @@ const PILL_MIN_HEIGHT = 140;
  * Everything else gets the device card header, centered in the element: with its slider (compact, bar or fan steps,
  * or the pill beside the name when there is room) or, for switches, plugs and locks, just the button and name.
  */
-// A percentage (print progress, a washing program, a battery) as a large control: a ring with the value inside.
-const isPercentReading = (entity: HaEntity) =>
-  entity.unit === "%" && (entity.domain === "sensor" || entity.domain === "number");
+/** The entity reading 0, for a progress it does not report; its own state text (e.g. "Unknown") goes too. */
+const asZeroPercent = (entity: HaEntity): HaEntity => ({
+  ...entity,
+  state: "0",
+  attributes: { ...entity.attributes, stateLabel: undefined },
+});
+
 // Height of the label row under the ring, at the base size.
 const RING_LABEL_HEIGHT = 22;
 
@@ -201,25 +206,32 @@ function TileElement({ entity, element, label }: ElementProps) {
   );
   const slider = getSliderSpec(entity);
   if (!slider && isPercentReading(entity)) {
-    const value = getNumericState(entity);
+    // A progress the device does not report (an idle printer says "unknown") reads as 0 %.
+    const value = getNumericState(entity) ?? 0;
+    const shown = getNumericState(entity) === null ? asZeroPercent(entity) : entity;
     const ruleColor = getRuleColor(entity.state, element.rules);
     // Beside the label when the element is flat, above it otherwise.
     const wide = width >= height * 1.5;
     const ring = Math.max(0, Math.floor(wide ? height : Math.min(width, height - RING_LABEL_HEIGHT)));
     return (
-      <div ref={ref} className={classes.ringTile} data-wide={wide} style={accentVars(theme.accent, theme.onAccent)}>
+      <div
+        ref={ref}
+        className={classes.ringTile}
+        data-wide={wide}
+        data-align={element.align}
+        style={accentVars(theme.accent, theme.onAccent)}
+      >
         {ring >= 32 ? (
           <RingProgress
             size={ring}
             thickness={Math.max(4, Math.round(ring * 0.09))}
-            roundCaps
+            // A round cap on an empty ring would draw a dot at the top.
+            roundCaps={value > 0}
             rootColor="var(--track)"
-            sections={[
-              { value: value === null ? 0 : Math.min(100, Math.max(0, value)), color: ruleColor ?? "var(--accent)" },
-            ]}
+            sections={[{ value: Math.min(100, Math.max(0, value)), color: ruleColor ?? "var(--accent)" }]}
             label={
               <span className={classes.ringValue} style={{ fontSize: Math.round(ring * 0.22), color: ruleColor }}>
-                {value === null ? "—" : formatElementState(entity, element)}
+                {formatElementState(shown, element)}
               </span>
             }
             aria-label={label}
@@ -227,7 +239,6 @@ function TileElement({ entity, element, label }: ElementProps) {
         ) : null}
         <div className={classes.ringText}>
           <ElementLabel element={element} fallback={theme.Icon} label={label} />
-          {value === null ? <span className={classes.ringState}>{formatElementState(entity, element)}</span> : null}
         </div>
       </div>
     );
@@ -236,7 +247,12 @@ function TileElement({ entity, element, label }: ElementProps) {
     return (
       <div ref={ref} className={`${classes.tileElement} ${controlClasses.embeddedTile}`}>
         {width > 0 && height > 0 ? (
-          <EntityControl entity={{ ...entity, name: label }} width={width} height={height} />
+          // Embedded, the tile has no padding of its own: its size counts as if it had, so its parts fit the element.
+          <EntityControl
+            entity={{ ...entity, name: label }}
+            width={width + TILE_PADDING * 2}
+            height={height + TILE_PADDING * 2}
+          />
         ) : null}
       </div>
     );
@@ -342,11 +358,13 @@ function BarSliderElement({ entity, element, label }: ElementProps) {
           onCommit={(value) => void run(slider.toAction(value))}
         >
           {/* At the start of the bar, as the tall pill shows it at the bottom. */}
-          {() => (
-            <div className={classes.barIcon}>
-              <ElementIcon name={element.icon} fallback={theme.Icon} size="55%" />
-            </div>
-          )}
+          {element.hideIcon
+            ? undefined
+            : () => (
+                <div className={classes.barIcon}>
+                  <ElementIcon name={element.icon} fallback={theme.Icon} size="55%" />
+                </div>
+              )}
         </PillSlider>
       )}
     </div>
@@ -368,7 +386,7 @@ function PillElement(props: ElementProps) {
       <div className={classes.pillElement} style={accentVars(theme.accent, theme.onAccent)}>
         <StepSlider
           axis="vertical"
-          offIcon={element.icon && <SpriteIcon name={element.icon} size="60%" />}
+          offIcon={element.icon && !element.hideIcon && <SpriteIcon name={element.icon} size="60%" />}
           steps={slider.steps}
           value={slider.value}
           label={`${label} ${t(`slider.${slider.label}`)}`}
@@ -393,11 +411,13 @@ function PillElement(props: ElementProps) {
         onTap={toggle ? () => void run(toggle) : undefined}
         onCommit={(value) => void run(slider.toAction(value))}
       >
-        {() => (
-          <div className={controlClasses.bigPillIcon}>
-            <ElementIcon name={element.icon} fallback={theme.Icon} size={22} />
-          </div>
-        )}
+        {element.hideIcon
+          ? undefined
+          : () => (
+              <div className={controlClasses.bigPillIcon}>
+                <ElementIcon name={element.icon} fallback={theme.Icon} size={22} />
+              </div>
+            )}
       </PillSlider>
     </div>
   );
@@ -453,7 +473,7 @@ function ButtonElement({ entity, element, label }: ElementProps) {
         <IconCheck size="1.6em" stroke={2} className={classes.buttonIcon} aria-hidden />
       ) : failed ? (
         <IconAlertTriangle size="1.6em" stroke={1.8} className={classes.buttonIcon} aria-hidden />
-      ) : (
+      ) : element.hideIcon ? null : (
         <ElementIcon name={element.icon} fallback={theme.Icon} size="1.6em" className={classes.buttonIcon} />
       )}
       {element.hideLabel ? null : <span className={classes.buttonLabel}>{label}</span>}
@@ -497,7 +517,9 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
         </span>
       ) : null}
       <span className={classes.cameraBar}>
-        {element.icon && <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} />}
+        {element.icon && !element.hideIcon && (
+          <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} />
+        )}
         {element.hideLabel ? null : <span className={classes.labelText}>{label}</span>}
         {!showsStatus || !camera.status ? null : (
           <span className={camera.status === "live" ? classes.cameraLive : classes.cameraRestarting}>
@@ -516,7 +538,7 @@ function ChipElement({ entity, element }: ElementProps) {
         entity={entity}
         label={element.label}
         icon={
-          element.icon ? (
+          element.hideIcon ? null : element.icon ? (
             <SpriteIcon name={element.icon} size={14} className={controlClasses.deviceReadingIcon} />
           ) : undefined
         }
@@ -531,7 +553,7 @@ function RowElement({ entity, element, label }: ElementProps) {
       entity={entity}
       label={label}
       icon={
-        element.icon ? (
+        element.hideIcon ? null : element.icon ? (
           <SpriteIcon name={element.icon} size={15} className={controlClasses.deviceReadingIcon} />
         ) : undefined
       }
@@ -780,18 +802,20 @@ function BatteryElement({ entity, element, label }: ElementProps) {
 /** A percentage as a bar under its label and value, e.g. a 3D print or a washing program; rules color the bar. */
 function ProgressElement({ entity, element, label }: ElementProps) {
   const theme = useEntityTheme(entity);
-  const value = getNumericState(entity);
+  // Not reported (an idle printer says "unknown"): 0 %, like a progress that has not started.
+  const value = getNumericState(entity) ?? 0;
+  const shown = getNumericState(entity) === null ? asZeroPercent(entity) : entity;
   const ruleColor = getRuleColor(entity.state, element.rules);
   return (
     <Stack gap="var(--el-gap-tight)" style={accentVars(theme.accent, theme.onAccent)}>
       <div className={classes.elementHead}>
         <ElementLabel element={element} fallback={theme.Icon} label={label} />
         <span className={classes.elementValue} style={{ color: ruleColor }}>
-          {formatElementState(entity, element)}
+          {formatElementState(shown, element)}
         </span>
       </div>
       <Progress
-        value={value === null ? 0 : Math.min(100, Math.max(0, value))}
+        value={Math.min(100, Math.max(0, value))}
         color={ruleColor ?? "var(--accent)"}
         size="0.45em"
         radius="xl"
@@ -817,7 +841,9 @@ function StaticElement({ element }: { element: SmartHomeLayoutElement }) {
   if (element.view === "heading") {
     return (
       <div className={classes.headingElement} data-align={element.align ?? "start"}>
-        {element.icon ? <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} /> : null}
+        {element.icon && !element.hideIcon ? (
+          <SpriteIcon name={element.icon} size="1em" className={classes.labelIcon} />
+        ) : null}
         <span className={classes.labelText}>{element.label}</span>
       </div>
     );

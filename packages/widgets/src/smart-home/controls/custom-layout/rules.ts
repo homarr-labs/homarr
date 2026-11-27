@@ -9,6 +9,10 @@ import type {
 } from "./schema";
 import { isNamedLayoutColor } from "./schema";
 
+/** A percentage (print progress, a washing program, a battery): its large control is a ring. */
+export const isPercentReading = (entity: { unit?: string | null; domain: string }) =>
+  entity.unit === "%" && (entity.domain === "sensor" || entity.domain === "number");
+
 /** A color as a CSS value: palette colors follow the theme, custom ones are used as they are. */
 export const layoutColor = (color: SmartHomeLayoutColor) => {
   // The board's own colors, as the other widgets use them.

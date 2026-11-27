@@ -368,6 +368,11 @@
   height: 100%;
 }
 
+/* The card around an embedded tile already pads it; the tile's own padding would leave its controls less room. */
+.embeddedTile .tile {
+  padding: 0;
+}
+
 button.tile {
   cursor: pointer;
 }

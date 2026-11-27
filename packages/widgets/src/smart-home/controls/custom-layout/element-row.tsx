@@ -48,7 +48,7 @@ import classes from "./editor.module.css";
 import { smartHomeIconSuggestions } from "./icon-suggestions";
 import { splitEntityName } from "./names";
 import { getAllowedViews, getDefaultView } from "./presets";
-import { layoutColor } from "./rules";
+import { isPercentReading, layoutColor } from "./rules";
 import { getViewDomains, viewIcons } from "./view-icons";
 import {
   controlElementViews,
@@ -421,7 +421,10 @@ export function ElementSettings({
   const controllable = (views as readonly SmartHomeElementView[]).includes("button");
   const isControlView = (view: SmartHomeElementView) => controllable && controlElementViews.has(view);
   const showsValue = valueElementViews.has(element.view);
-  const movesNumber = element.view === "value" || element.view === "group";
+  // A percentage's large control is a ring that can sit anywhere in its element.
+  const ringTile = element.view === "tile" && entity !== undefined && isPercentReading(entity);
+  // These have their own place until one is chosen, so no choice shows as selected.
+  const movesNumber = element.view === "value" || element.view === "group" || ringTile;
 
   const sections: OptionSection[] = [];
   if (element.view === "group") {
@@ -528,6 +531,8 @@ export function ElementSettings({
   // A full tile (thermostat, player, ...) draws its own name and icon.
   const fullTile = element.view === "tile" && entity !== undefined && fullTileDomains.has(entity.domain);
   const canHideLabel = labelledElementViews.has(element.view) && !fullTile;
+  // A large control's icon is its switch, so it always shows.
+  const canHideIcon = iconElementViews.has(element.view) && element.view !== "tile";
   if (parts.length > 0) {
     const hidden = new Set(element.hide ?? []);
     const togglePart = (part: SmartHomeElementPart, shown: boolean) => {
@@ -672,7 +677,7 @@ export function ElementSettings({
       )}
       {element.view !== "divider" && element.view !== "spacer" && (
         <Group gap="xs" wrap="nowrap" align="flex-end">
-          {iconElementViews.has(element.view) && !fullTile && (
+          {iconElementViews.has(element.view) && !fullTile && element.hideIcon !== true && (
             <TablerIconPicker
               label={t("icon")}
               resetLabel={t("iconReset")}
@@ -693,7 +698,7 @@ export function ElementSettings({
           />
         </Group>
       )}
-      {alignableElementViews.has(element.view) && (
+      {(alignableElementViews.has(element.view) || ringTile) && (
         <SegmentedControl
           size="xs"
           fullWidth
@@ -716,6 +721,13 @@ export function ElementSettings({
           description={t("cameraLiveHint")}
           checked={element.live !== false}
           onChange={(event) => set({ live: event.currentTarget.checked ? undefined : false })}
+        />
+      )}
+      {canHideIcon && (
+        <Switch
+          label={t("showIcon")}
+          checked={element.hideIcon !== true}
+          onChange={(event) => set({ hideIcon: event.currentTarget.checked ? undefined : true })}
         />
       )}
       {canHideLabel && (

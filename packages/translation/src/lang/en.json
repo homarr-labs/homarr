@@ -3678,6 +3678,7 @@
           "elementLabel": "Label",
           "view": "Shown as",
           "showLabel": "Show label",
+          "showIcon": "Show icon",
           "icon": "Icon",
           "iconReset": "Use the entity's icon",
           "viewGroups": {

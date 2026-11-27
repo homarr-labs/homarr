@@ -156,7 +156,7 @@ interface SliderControlProps extends ControlProps {
   extras?: (sideWidth: number, bodyHeight: number) => ReactNode;
 }
 
-const TILE_PADDING = 12;
+export const TILE_PADDING = 12;
 // Round button sizes (styles.module.css) and the gap of the big media transport row.
 const transportButtons = {
   roomy: { side: 44, main: 72 },
