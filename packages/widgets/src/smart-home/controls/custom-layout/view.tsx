@@ -73,6 +73,7 @@ import {
   getLayoutColumns,
   getMinimumRowHeight,
   getStackColumns,
+  needsStacking,
   LAYOUT_GAP,
   LAYOUT_ROW_HEIGHT,
 } from "./responsive";
@@ -89,7 +90,6 @@ import {
   fullTileDomains,
   getShownCards,
   hasOwnGraphHistory,
-  NARROW_WIDGET_WIDTH,
   SMART_HOME_LAYOUT_COLUMNS,
   SMART_HOME_LAYOUT_ROWS,
   staticElementViews,
@@ -472,7 +472,7 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
 
 function ChipElement({ entity, element }: ElementProps) {
   return (
-    <div className={classes.chipElement}>
+    <div className={classes.chipElement} data-align={element.align ?? "start"}>
       <ReadingChip
         entity={entity}
         label={element.label}
@@ -508,12 +508,13 @@ interface ValueDisplayProps {
   label: ReactNode;
   value: string;
   color: string | undefined;
+  align: SmartHomeLayoutElement["align"];
 }
 
 /** A label above a large number, or beside it when the element is flat. */
-function ValueDisplay({ label, value, color }: ValueDisplayProps) {
+function ValueDisplay({ label, value, color, align }: ValueDisplayProps) {
   return (
-    <div className={classes.valueElement}>
+    <div className={classes.valueElement} data-align={align ?? "start"}>
       {label}
       {/* The character count lets CSS fit the number to the element's width. Short values count as a typical
           reading, so elements of the same size show numbers of the same size; only longer values get smaller. */}
@@ -534,6 +535,7 @@ function ValueElement({ entity, element, label }: ElementProps) {
       label={<ElementLabel element={element} fallback={theme.Icon} label={label} />}
       value={formatElementState(entity, element)}
       color={getRuleColor(entity.state, element.rules)}
+      align={element.align}
     />
   );
 }
@@ -570,6 +572,7 @@ function GroupValue({ entity, element, label, ids }: ElementProps & { ids: reado
       label={<ElementLabel element={element} fallback={theme.Icon} label={label} />}
       value={value}
       color={getRuleColor(result === null ? null : String(result), element.rules)}
+      align={element.align}
     />
   );
 }
@@ -647,6 +650,19 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
     [ids, own, history.data, entity, map, color, theme.accent],
   );
 
+  // Each line by its own entity; the element's label names the whole graph.
+  const lineLabels = useMemo(() => {
+    const short = lines.map((line) => (line.entity ? getShortName(line.entity) : line.id));
+    return Object.fromEntries(
+      lines.map((line, index) => {
+        const name = short[index] ?? line.id;
+        const repeated = short.filter((other) => other === name).length > 1;
+        // Two "Temperature" lines from different rooms read as their devices.
+        return [line.id, repeated && line.entity ? (line.entity.device?.name ?? line.entity.name) : name];
+      }),
+    );
+  }, [lines]);
+
   const primary = lines[0];
   const stats = getHistoryStats(primary?.values ?? []);
   const format = (line: HistoryGraphLine, value: number | null) =>
@@ -670,8 +686,7 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
             items={lines.map((line) => ({
               id: line.id,
               color: line.color,
-              // Each line by its own entity; the element's label names the whole graph.
-              label: line.entity ? getShortName(line.entity) : line.id,
+              label: lineLabels[line.id] ?? line.id,
               value: format(line, getCurrentValue(line.entity)),
             }))}
           />
@@ -1041,12 +1056,12 @@ export function CustomLayoutView({ layout, source, width }: CustomLayoutViewProp
   const t = useI18n("widget.smartHome-controls.layout");
   const editing = useSmartHomeInteractionBlock() === "editing";
   const shownCards = getShownCards(layout, width);
-  // A narrow arrangement is made for this width, so it keeps all 12 columns. Without one, a narrow widget stacks the
-  // wide cards, as the editor says.
+  // A narrow arrangement is made for this width, so it keeps all 12 columns. Otherwise the board shows what the
+  // editor previewed at this size, and stacks the cards only when one of them would be too thin to use.
   const columns =
     shownCards !== layout.cards
       ? SMART_HOME_LAYOUT_COLUMNS
-      : width < NARROW_WIDGET_WIDTH
+      : needsStacking(shownCards, width)
         ? getStackColumns(width)
         : getLayoutColumns(width);
   // Depends only on the stored layout and the column count, so live updates never recompute placements.

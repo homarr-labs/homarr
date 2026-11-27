@@ -50,6 +50,7 @@ import {
   controlElementViews,
   fullTileDomains,
   getElementParts,
+  alignableElementViews,
   iconElementViews,
   isNamedLayoutColor,
   labelledElementViews,
@@ -608,7 +609,7 @@ export function ElementSettings({
           />
         </Group>
       )}
-      {element.view === "heading" && (
+      {alignableElementViews.has(element.view) && (
         <SegmentedControl
           size="xs"
           fullWidth

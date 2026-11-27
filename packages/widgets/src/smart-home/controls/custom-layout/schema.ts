@@ -75,6 +75,8 @@ export const fullTileDomains = new Set([
   "alarm_control_panel",
   "camera",
 ]);
+/** Views narrower than their element, so they can sit at its start, center or end. */
+export const alignableElementViews = new Set<SmartHomeElementView>(["heading", "chip", "value", "group"]);
 /** Views that show an icon the user can replace: every labelled view, plus the ones built around an icon. */
 export const iconElementViews = new Set<SmartHomeElementView>([
   ...labelledElementViews,
@@ -223,7 +225,7 @@ const elementOptionsSchema = z.object({
   hide: z.array(z.enum(smartHomeElementParts)).max(smartHomeElementParts.length).optional(),
   /** Camera: false shows only the snapshot, even when the camera can stream. */
   live: z.boolean().optional(),
-  /** Heading: where its text sits in the element; at the start when not set. */
+  /** Where a heading, chip or value sits in its element; at the start when not set. */
   align: z.enum(["start", "center", "end"]).optional(),
   decimals: z.number().int().min(0).max(3).optional(),
   unit: z.string().max(12).optional(),

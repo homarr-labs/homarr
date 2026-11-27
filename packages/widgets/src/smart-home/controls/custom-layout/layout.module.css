@@ -414,12 +414,27 @@
   font-weight: var(--el-weight-strong);
 }
 
-.headingElement[data-align="center"] {
+.headingElement[data-align="center"],
+.chipElement[data-align="center"] {
   justify-content: center;
 }
 
-.headingElement[data-align="end"] {
+.headingElement[data-align="end"],
+.chipElement[data-align="end"] {
   justify-content: flex-end;
+}
+
+/* A value stacks its label over the number; both move together. Flat, label and number already span the row. */
+@container (min-height: 53px) {
+  .valueElement[data-align="center"] {
+    align-items: center;
+    text-align: center;
+  }
+
+  .valueElement[data-align="end"] {
+    align-items: flex-end;
+    text-align: end;
+  }
 }
 
 /* In the editor, an element whose condition does not hold right now is shown faded. */

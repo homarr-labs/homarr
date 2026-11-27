@@ -20,6 +20,18 @@ export const getMinimumRowHeight = (cards: readonly SmartHomeLayoutCard[]) =>
 const MIN_COLUMN_WIDTH = 6;
 const MIN_CARD_WIDTH = 140;
 
+// Below this a card cannot show a usable control; the layout then stacks its cards instead.
+const MIN_SHOWN_CARD_WIDTH = 80;
+
+/**
+ * Whether the widget is too narrow for the layout as designed. The editor previews the layout at the widget's own
+ * size, so the board keeps that arrangement unless one of its cards would become thinner than any control needs.
+ */
+export const needsStacking = (cards: readonly SmartHomeLayoutCard[], width: number) => {
+  const columnWidth = (width - LAYOUT_GAP * (SMART_HOME_LAYOUT_COLUMNS - 1)) / SMART_HOME_LAYOUT_COLUMNS;
+  return cards.some((card) => card.w * columnWidth + (card.w - 1) * LAYOUT_GAP < MIN_SHOWN_CARD_WIDTH);
+};
+
 /** Columns for a narrow widget that stacks its cards: as many as fit side by side at a readable card width. */
 export const getStackColumns = (width: number) =>
   Math.min(SMART_HOME_LAYOUT_COLUMNS, Math.max(1, Math.floor((width + LAYOUT_GAP) / (MIN_CARD_WIDTH + LAYOUT_GAP))));
