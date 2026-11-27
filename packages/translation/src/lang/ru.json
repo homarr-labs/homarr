@@ -7410,6 +7410,17 @@
               "search": "Поиск",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности",
+              "signInInformation": {
+                "title": "",
+                "provider": "Провайдер",
+                "subject": "Субъект",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ничего",
+                "copy": "Копировать",
+                "copied": "Скопировано"
+              },
               "oauthConnections": {
                 "title": "Подключения OAuth",
                 "description": "Эти клиенты получили учётные данные API для вашей учётной записи через OAuth. Учётные данные работают с HTTP API Homarr и MCP, не истекают автоматически и остаются действительными после выхода.",

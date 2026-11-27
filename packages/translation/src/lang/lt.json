@@ -7410,6 +7410,17 @@
               "search": "Paieška",
               "firstDayOfWeek": "Pirmoji savaitės diena",
               "accessibility": "Pritaikymas neįgaliesiems",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

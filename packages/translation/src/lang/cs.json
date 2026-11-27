@@ -7410,6 +7410,17 @@
               "search": "Vyhledávání",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "Poskytovatel",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Kopírovat",
+                "copied": "Zkopírováno"
+              },
               "oauthConnections": {
                 "title": "OAuth připojení",
                 "description": "Tito klienti získali API přihlašovací údaje k vašemu účtu prostřednictvím OAuth. Přihlašovací údaje fungují s HTTP API aplikace Homarr, stejně jako MCP, nevyprší automaticky a zůstávají platné po odhlášení.",

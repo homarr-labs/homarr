@@ -7410,6 +7410,17 @@
               "search": "Пошук",
               "firstDayOfWeek": "Перший день тижня",
               "accessibility": "Доступність",
+              "signInInformation": {
+                "title": "",
+                "provider": "Постачальник",
+                "subject": "Тема",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Немає",
+                "copy": "Копіювати",
+                "copied": "Скопійовано"
+              },
               "oauthConnections": {
                 "title": "Зв’язки OAuth",
                 "description": "Ці клієнти отримали облікові дані для вашого облікового запису через OAuth. Облікові дані працюють з HTTP API Homarre, а також MCP, не закінчуються автоматично, і залишаються дійсними після виходу.",

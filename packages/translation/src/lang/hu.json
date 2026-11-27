@@ -7410,6 +7410,17 @@
               "search": "Keresés",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek",
+              "signInInformation": {
+                "title": "",
+                "provider": "Szolgáltató",
+                "subject": "Tárgy",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Nem",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
