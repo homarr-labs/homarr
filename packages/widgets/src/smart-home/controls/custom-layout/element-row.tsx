@@ -9,6 +9,7 @@ import {
   Divider,
   Group,
   Input,
+  Menu,
   NumberInput,
   Popover,
   Paper,
@@ -28,6 +29,7 @@ import {
   IconAlignCenter,
   IconAlignLeft,
   IconAlignRight,
+  IconArrowMoveRight,
   IconCopy,
   IconBan,
   IconPlus,
@@ -559,6 +561,28 @@ export function ElementRow({
             </Stack>
           </Group>
           <Group gap={2} wrap="nowrap">
+            {/* Moving to another card is a rare step: a menu beside copy and remove, not a field in every row. */}
+            {cardOptions.length > 1 && (
+              <Menu position="bottom-end" withinPortal shadow="md">
+                <Menu.Target>
+                  <Tooltip label={t("moveToCard")} withinPortal>
+                    <ActionIcon variant="subtle" color="gray" aria-label={t("moveToCard")}>
+                      <IconArrowMoveRight size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>{t("moveToCard")}</Menu.Label>
+                  {cardOptions
+                    .filter((option) => option.value !== cardId)
+                    .map((option) => (
+                      <Menu.Item key={option.value} onClick={() => onMoveToCard(option.value)}>
+                        {option.label}
+                      </Menu.Item>
+                    ))}
+                </Menu.Dropdown>
+              </Menu>
+            )}
             <ActionIcon variant="subtle" color="gray" onClick={onDuplicate} aria-label={t("duplicate")}>
               <IconCopy size={16} />
             </ActionIcon>
@@ -646,16 +670,6 @@ export function ElementRow({
             label={t("showLabel")}
             checked={element.hideLabel !== true}
             onChange={(event) => set({ hideLabel: event.currentTarget.checked ? undefined : true })}
-          />
-        )}
-        {cardOptions.length > 1 && (
-          <Select
-            size="sm"
-            label={t("moveToCard")}
-            value={cardId}
-            data={cardOptions}
-            allowDeselect={false}
-            onChange={(id) => id && id !== cardId && onMoveToCard(id)}
           />
         )}
         <OptionSections sections={sections} />
