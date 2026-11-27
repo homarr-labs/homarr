@@ -932,22 +932,6 @@ function MediaControl({ entity, width, height }: ControlProps) {
     </div>
   );
 
-  const background = (
-    <>
-      {artwork.src ? (
-        <img
-          src={artwork.src}
-          alt=""
-          className={classes.mediaBg}
-          draggable={false}
-          data-idle={idle}
-          onError={artwork.onError}
-        />
-      ) : null}
-      <div className={classes.mediaShade} />
-    </>
-  );
-
   const volumeButton = (onCover: boolean) =>
     canSetVolume && attributes.volume !== undefined ? (
       <VolumeButton
@@ -991,8 +975,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
     const miniArtSize = Math.max(MINI_ART_MIN, Math.min(spare, MINI_ART_MAX, Math.floor(miniWidth * 0.4)));
     const skipIcon = miniSide === "xs" ? 15 : 17;
     return (
-      <Tile theme={theme} media className={classes.mediaTile}>
-        {background}
+      <Tile theme={theme} className={classes.mediaTile}>
         <div className={classes.mediaMini}>
           <div className={classes.mediaMiniHead} data-art={miniArt}>
             {miniArt ? art(miniArtSize, volumeButton(true)) : null}
@@ -1064,8 +1047,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
       if (volumePlace === "cover") volumePlace = null;
     }
     return (
-      <Tile theme={theme} media className={classes.mediaTile}>
-        {background}
+      <Tile theme={theme} className={classes.mediaTile}>
         <div className={classes.mediaRow}>
           {withArt ? art(artSize, volumePlace === "cover" ? volumeButton(true) : undefined) : null}
           <div className={classes.headText}>
@@ -1160,8 +1142,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
   const volumeOnCover = showsCover && !hero && width < VOLUME_BESIDE_TITLE_MIN_WIDTH;
 
   return (
-    <Tile theme={theme} media className={classes.mediaTile}>
-      {background}
+    <Tile theme={theme} className={classes.mediaTile}>
       <div className={classes.mediaFull} data-hero={hero}>
         {hero ? (
           <div className={classes.heroArt}>

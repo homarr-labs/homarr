@@ -79,8 +79,8 @@ export const useEntityTheme = (entity: HaEntity) => getTheme(entity, usePalette(
 export const accentVars = (accent: string, onAccent: string) =>
   ({ "--accent": accent, "--on-accent": onAccent }) as CSSProperties;
 
-const tileStyle = (theme: EntityTheme, media: boolean | undefined) => {
-  const accent = media ? accentVars("#fff", darkInk) : accentVars(theme.accent, theme.onAccent);
+const tileStyle = (theme: EntityTheme) => {
+  const accent = accentVars(theme.accent, theme.onAccent);
   if (!theme.swatch) return accent;
   return { ...accent, "--swatch": theme.swatch } as CSSProperties;
 };
@@ -89,19 +89,18 @@ interface TileProps {
   theme: EntityTheme;
   children: ReactNode;
   bare?: boolean;
-  media?: boolean;
   className?: string;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   label?: string;
 }
 
-export function Tile({ theme, children, bare, media, className, onClick, label }: TileProps) {
+export function Tile({ theme, children, bare, className, onClick, label }: TileProps) {
   const error = useSmartHomeEntityError(useContext(TileEntityContext) ?? "");
   const disabled = useDeviceControlDisabled(theme.unavailable);
   const openDetail = useDetailOpener();
   const common = {
     className: `${classes.tile} ${className ?? ""}`,
-    style: tileStyle(theme, media),
+    style: tileStyle(theme),
     title: error?.message,
     "data-error": error?.kind,
     "data-palette": theme.palette,
@@ -110,7 +109,6 @@ export function Tile({ theme, children, bare, media, className, onClick, label }
     "data-on": theme.active,
     "data-unavailable": theme.unavailable,
     "data-bare": bare ?? false,
-    "data-media": media ?? false,
     "data-controls-disabled": disabled,
   };
 

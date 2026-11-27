@@ -16,11 +16,9 @@
   --el-gap: 0.5em;
   --el-gap-tight: 0.25em;
   --el-radius: 0.8em;
-  --el-weight-strong: 700;
+  /* The device card's weights: names and readings at 650, so a card reads like a device card. */
+  --el-weight-strong: 650;
   --el-weight-medium: 600;
-
-  --tile-bg: rgb(from var(--mantine-color-default) r g b / var(--opacity, 1));
-  --tile-border: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
 
   position: relative;
   display: flex;
@@ -28,20 +26,26 @@
   min-width: 0;
   height: 100%;
   overflow: hidden;
+  /* The device card surface (control center tokens), so cards look like device cards in every theme. */
   background: var(--tile-bg);
   border: 1px solid var(--tile-border);
   border-radius: var(--e-radius);
+  box-shadow: var(--tile-shadow);
+  backdrop-filter: var(--tile-blur);
   gap: var(--el-gap);
   min-height: 0;
-  padding: 0.75em;
+  /* The device card's 12px at the base size. */
+  padding: 0.92em;
   font-size: clamp(11px, 2.9cqmin, 20px);
 }
 
+/* Like a device card's name. */
 .cardTitle {
   flex: none;
   margin: 0;
   overflow: hidden;
-  font-size: 1.08em;
+  font-size: 1em;
+  line-height: 1.2;
   font-weight: var(--el-weight-strong);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -86,7 +90,7 @@
   align-items: center;
   min-width: 0;
   overflow: hidden;
-  font-size: 1em;
+  font-size: 0.96em;
   color: var(--secondary-ink);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -103,9 +107,10 @@
   text-overflow: ellipsis;
 }
 
+/* Like a device card's reading value. */
 .elementValue {
   flex: none;
-  font-size: 1.04em;
+  font-size: 0.96em;
   font-weight: var(--el-weight-strong);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -168,12 +173,21 @@
 }
 
 /* The number grows with the element's height (minus the label row) but never gets wider than the element. An
-   average digit is about 0.6em wide; 0.7em per character leaves room between neighbouring values. */
+   average digit is about 0.6em wide; 0.7em per character leaves room between neighbouring values. It stops at the
+   size of a sensor tile's value (twice the base size), so a tall element reads like a device card reading, not a
+   poster. */
 .bigValue {
+  --value-max: 2em;
+
   overflow: hidden;
-  font-size: clamp(9px, min(calc((100cqh - 20px) * 0.85), calc(100cqw / (var(--value-chars, 8) * 0.7))), 72px);
+  font-size: clamp(
+    9px,
+    min(calc((100cqh - 20px) * 0.85), calc(100cqw / (var(--value-chars, 8) * 0.7)), var(--value-max)),
+    72px
+  );
   font-weight: var(--el-weight-strong);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -205,7 +219,11 @@
   .valueElement > .bigValue {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(9px, min(calc(100cqh * 0.75), calc(60cqw / (var(--value-chars, 8) * 0.7))), 72px);
+    font-size: clamp(
+      9px,
+      min(calc(100cqh * 0.75), calc(60cqw / (var(--value-chars, 8) * 0.7)), var(--value-max)),
+      72px
+    );
   }
 }
 
