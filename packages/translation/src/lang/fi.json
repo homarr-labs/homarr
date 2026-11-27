@@ -7410,6 +7410,17 @@
               "search": "Haku",
               "firstDayOfWeek": "Viikon ensimmäinen päivä",
               "accessibility": "Esteettömyys",
+              "signInInformation": {
+                "title": "",
+                "provider": "Tarjoaja",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ei mitään",
+                "copy": "Kopioi",
+                "copied": "Kopioitu"
+              },
               "oauthConnections": {
                 "title": "OAuth yhteydet",
                 "description": "Nämä asiakkaat saivat API käyttäjätunnukset tilillesi OAuthin kautta. Kirjautumistiedot toimivat Homarr's HTTP API:n sekä MCP:n kanssa, eivät vanhene automaattisesti, ja pysyvät voimassa kirjautumisen jälkeen.",
