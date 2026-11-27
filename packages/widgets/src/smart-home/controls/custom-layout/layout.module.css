@@ -251,6 +251,50 @@
   min-height: 0;
 }
 
+/* A percentage as a large ring with its label under it, or beside it when the element is flat. */
+.ringTile {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ringTile[data-wide="true"] {
+  flex-direction: row;
+  gap: var(--el-gap);
+  justify-content: flex-start;
+}
+
+.ringValue {
+  display: block;
+  font-weight: var(--el-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ringText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ringTile[data-wide="true"] .ringText {
+  align-items: flex-start;
+}
+
+.ringState {
+  font-size: 0.9em;
+  color: var(--secondary-ink);
+}
+
 /* The device header sits in the middle of a taller element instead of leaving empty space below it. */
 .tileElement[data-centered] {
   display: flex;
@@ -433,16 +477,31 @@
   justify-content: flex-end;
 }
 
-/* A value stacks its label over the number; both move together. Flat, label and number already span the row. */
+/* The alignment moves a value's number; its label stays at the start. Tall, the number moves under the label. */
 @container (min-height: 53px) {
-  .valueElement[data-align="center"] {
-    align-items: center;
-    text-align: center;
+  .valueElement[data-align="center"] > .bigValue {
+    align-self: center;
   }
 
-  .valueElement[data-align="end"] {
-    align-items: flex-end;
-    text-align: end;
+  .valueElement[data-align="end"] > .bigValue {
+    align-self: flex-end;
+  }
+}
+
+/* Flat, the number follows the label (start), sits in the middle of the space after it (center) or at the end. */
+@container (max-height: 52px) {
+  .valueElement[data-align="start"],
+  .valueElement[data-align="center"] {
+    justify-content: flex-start;
+  }
+
+  .valueElement[data-align="start"] > .elementLabel,
+  .valueElement[data-align="center"] > .elementLabel {
+    flex: 0 1 auto;
+  }
+
+  .valueElement[data-align="center"] > .bigValue {
+    margin-inline: auto;
   }
 }
 

@@ -421,6 +421,7 @@ export function ElementSettings({
   const controllable = (views as readonly SmartHomeElementView[]).includes("button");
   const isControlView = (view: SmartHomeElementView) => controllable && controlElementViews.has(view);
   const showsValue = valueElementViews.has(element.view);
+  const movesNumber = element.view === "value" || element.view === "group";
 
   const sections: OptionSection[] = [];
   if (element.view === "group") {
@@ -697,8 +698,11 @@ export function ElementSettings({
           size="xs"
           fullWidth
           aria-label={t("align")}
-          value={element.align ?? "start"}
-          onChange={(value) => set({ align: value === "start" ? undefined : (value as "center" | "end") })}
+          // A value's number has its own place until one is chosen (under the label, or at the end of a flat row).
+          value={element.align ?? (movesNumber ? "" : "start")}
+          onChange={(value) =>
+            set({ align: value === "start" && !movesNumber ? undefined : (value as "start" | "center" | "end") })
+          }
           data={[
             { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
             { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },

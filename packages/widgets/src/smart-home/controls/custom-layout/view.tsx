@@ -7,6 +7,7 @@ import {
   Divider,
   getContrastColor,
   Progress,
+  RingProgress,
   Stack,
   Text,
   UnstyledButton,
@@ -175,8 +176,15 @@ const PILL_MIN_HEIGHT = 140;
  * Everything else gets the device card header, centered in the element: with its slider (compact, bar or fan steps,
  * or the pill beside the name when there is room) or, for switches, plugs and locks, just the button and name.
  */
+// A percentage (print progress, a washing program, a battery) as a large control: a ring with the value inside.
+const isPercentReading = (entity: HaEntity) =>
+  entity.unit === "%" && (entity.domain === "sensor" || entity.domain === "number");
+// Height of the label row under the ring, at the base size.
+const RING_LABEL_HEIGHT = 22;
+
 function TileElement({ entity, element, label }: ElementProps) {
   const open = useEntityDetailOpener(entity.id);
+  const theme = useEntityTheme(entity);
   const { ref, width, height } = useElementSize();
   const item = useMemo(
     (): DevicePanelItem => ({
@@ -192,6 +200,38 @@ function TileElement({ entity, element, label }: ElementProps) {
     [entity, label],
   );
   const slider = getSliderSpec(entity);
+  if (!slider && isPercentReading(entity)) {
+    const value = getNumericState(entity);
+    const ruleColor = getRuleColor(entity.state, element.rules);
+    // Beside the label when the element is flat, above it otherwise.
+    const wide = width >= height * 1.5;
+    const ring = Math.max(0, Math.floor(wide ? height : Math.min(width, height - RING_LABEL_HEIGHT)));
+    return (
+      <div ref={ref} className={classes.ringTile} data-wide={wide} style={accentVars(theme.accent, theme.onAccent)}>
+        {ring >= 32 ? (
+          <RingProgress
+            size={ring}
+            thickness={Math.max(4, Math.round(ring * 0.09))}
+            roundCaps
+            rootColor="var(--track)"
+            sections={[
+              { value: value === null ? 0 : Math.min(100, Math.max(0, value)), color: ruleColor ?? "var(--accent)" },
+            ]}
+            label={
+              <span className={classes.ringValue} style={{ fontSize: Math.round(ring * 0.22), color: ruleColor }}>
+                {value === null ? "—" : formatElementState(entity, element)}
+              </span>
+            }
+            aria-label={label}
+          />
+        ) : null}
+        <div className={classes.ringText}>
+          <ElementLabel element={element} fallback={theme.Icon} label={label} />
+          {value === null ? <span className={classes.ringState}>{formatElementState(entity, element)}</span> : null}
+        </div>
+      </div>
+    );
+  }
   if (!slider && fullTileDomains.has(entity.domain)) {
     return (
       <div ref={ref} className={`${classes.tileElement} ${controlClasses.embeddedTile}`}>
@@ -513,7 +553,8 @@ interface ValueDisplayProps {
 /** A label above a large number, or beside it when the element is flat. */
 function ValueDisplay({ label, value, color, align }: ValueDisplayProps) {
   return (
-    <div className={classes.valueElement} data-align={align ?? "start"}>
+    // Unset keeps the number's own place: under the label at its start, or at the end of a flat row.
+    <div className={classes.valueElement} data-align={align}>
       {label}
       {/* The character count lets CSS fit the number to the element's width. Short values count as a typical
           reading, so elements of the same size show numbers of the same size; only longer values get smaller. */}
