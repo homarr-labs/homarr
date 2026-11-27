@@ -113,8 +113,9 @@ export const metricGraphRouter = createTRPCRouter({
           const points: SmartHomeHistoryPoint[] = (
             history.find((item) => item.entityId === entityId)?.points ?? []
           ).filter((point) => point.time >= start && point.time <= end);
-          // History is cached for minutes; the live state keeps the line moving at the refresh interval.
-          if (current !== null) points.push({ time: end, value: current });
+          // History is cached for minutes; the live state keeps the line moving at the refresh interval. An unavailable
+          // reading counts too, so the newest point is never an older value the sensor no longer reports.
+          if (entity) points.push({ time: end, value: current });
           return {
             key: entityId,
             name: entity?.name ?? entityId,
