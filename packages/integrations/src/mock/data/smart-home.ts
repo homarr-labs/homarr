@@ -58,11 +58,20 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
           domain: entity.domain,
           name: entity.name,
           areaId: entity.areaId,
+          deviceId: entity.device?.id ?? null,
           icon: entity.icon,
           deviceClass: entity.deviceClass,
+          unit: entity.unit,
           hidden: false,
         }))
         .toSorted((left, right) => left.name.localeCompare(right.name)),
+      devices: [
+        ...new Map(
+          [...this.entities.values()].flatMap(({ device, areaId }) =>
+            device ? [[device.id, { id: device.id, name: device.name, areaId, model: device.model }] as const] : [],
+          ),
+        ).values(),
+      ],
       areas: mockSmartHomeAreas,
       floors: mockSmartHomeFloors,
     });

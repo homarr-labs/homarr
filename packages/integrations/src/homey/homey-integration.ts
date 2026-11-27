@@ -134,6 +134,7 @@ export class HomeyIntegration
           deviceId: entity.device?.id ?? null,
           icon: entity.icon,
           deviceClass: entity.deviceClass,
+          unit: entity.unit,
           hidden,
         }))
         .toSorted((left, right) => left.name.localeCompare(right.name)),

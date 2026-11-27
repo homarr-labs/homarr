@@ -31,6 +31,7 @@ import {
 import type { DevicePanelItem, ReadingControl } from "../device-groups";
 import {
   formatEntityState,
+  formatOption,
   formatRelativeTime,
   getPrimaryAction,
   requiresConfirmation,
@@ -419,7 +420,7 @@ function OptionMenu({ entity, disabled, children }: { entity: HaEntity; disabled
             fw={option === entity.state ? 700 : undefined}
             onClick={() => void run({ type: "selectOption", value: option })}
           >
-            {option}
+            {formatOption(entity, option)}
           </Menu.Item>
         ))}
       </Menu.Dropdown>
@@ -509,10 +510,10 @@ function ReadingAction({ entity, control, label }: { entity: HaEntity; control: 
       <button
         type="button"
         className={classes.deviceSelect}
-        aria-label={`${label}: ${entity.state}`}
+        aria-label={`${label}: ${formatEntityState(entity)}`}
         disabled={disabled}
       >
-        <span className={classes.deviceReadingValue}>{entity.state}</span>
+        <span className={classes.deviceReadingValue}>{formatEntityState(entity)}</span>
         <IconChevronDown size={14} stroke={2} aria-hidden />
       </button>
     </OptionMenu>

@@ -2,6 +2,7 @@ import type {
   SmartHomeArea,
   SmartHomeEntity,
   SmartHomeEntityAttributes,
+  SmartHomeEntityDevice,
   SmartHomeFloor,
   SmartHomeForecastDay,
 } from "../../interfaces/smart-home/smart-home-types";
@@ -30,6 +31,7 @@ interface EntityInput {
   changedMinutesAgo?: number;
   attributes?: SmartHomeEntityAttributes & { forecast?: SmartHomeForecastDay[] };
   history?: number[];
+  device?: SmartHomeEntityDevice;
 }
 
 // A drawn front door in the evening, as the mock camera's snapshot.
@@ -47,6 +49,34 @@ const mockCameraPicture = `data:image/svg+xml,${encodeURIComponent(
     <text x="10" y="20" font-family="monospace" font-size="11" fill="#fff" opacity="0.8">FRONT DOOR · REC</text>
   </svg>`,
 )}`;
+
+// The mock 3D printer's chamber camera: a drawn printer, no real picture.
+const mockPrinterPicture = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+    <rect width="320" height="180" fill="#1b1d22"/>
+    <rect x="40" y="24" width="240" height="8" rx="2" fill="#4b5058"/>
+    <rect x="132" y="32" width="56" height="30" rx="4" fill="#2f3339"/>
+    <polygon points="152,62 168,62 162,74 158,74" fill="#c8ccd2"/>
+    <rect x="70" y="140" width="180" height="10" rx="2" fill="#3c4148"/>
+    <path d="M128 140 h64 v-14 h-6 v-10 h-10 v-12 h-32 v12 h-10 v10 h-6 z" fill="#f08c2e"/>
+    <text x="10" y="172" font-family="monospace" font-size="11" fill="#fff" opacity="0.8">P1S · CHAMBER</text>
+  </svg>`,
+)}`;
+
+const printer: SmartHomeEntityDevice = { id: "bambu_p1s", name: "P1S", entityName: null, model: "Bambu Lab P1S" };
+const printerPart = (entityName: string): SmartHomeEntityDevice => ({ ...printer, entityName });
+const printStatusOptions = [
+  "failed",
+  "finish",
+  "idle",
+  "init",
+  "offline",
+  "pause",
+  "prepare",
+  "running",
+  "slicing",
+  "unknown",
+];
 
 export const mockSmartHomeHistory = new Map<string, number[]>();
 export const mockSmartHomeForecasts = new Map<string, SmartHomeForecastDay[]>();
@@ -69,6 +99,7 @@ const entity = (input: EntityInput): SmartHomeEntity => {
     lastChanged: changedAt,
     lastUpdated: changedAt,
     attributes,
+    device: input.device ?? null,
   };
 };
 
@@ -428,5 +459,145 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
     deviceClass: "temperature",
     unit: "°C",
     history: dailyCurve(14.2, 4.5),
+  }),
+  // A Bambu Lab P1S as the ha-bambulab integration reports it, in the middle of a print.
+  entity({
+    id: "camera.p1s_camera",
+    name: "P1S Camera",
+    areaId: "office",
+    state: "idle",
+    changedMinutesAgo: 1,
+    attributes: { pictureUrl: mockPrinterPicture },
+    device: printerPart("Camera"),
+  }),
+  entity({
+    id: "sensor.p1s_print_progress",
+    name: "P1S Print progress",
+    areaId: "office",
+    state: "42",
+    unit: "%",
+    changedMinutesAgo: 1,
+    device: printerPart("Print progress"),
+  }),
+  entity({
+    id: "sensor.p1s_print_status",
+    name: "P1S Print status",
+    areaId: "office",
+    state: "running",
+    deviceClass: "enum",
+    changedMinutesAgo: 70,
+    attributes: { options: printStatusOptions },
+    device: printerPart("Print status"),
+  }),
+  entity({
+    id: "sensor.p1s_current_stage",
+    name: "P1S Current stage",
+    areaId: "office",
+    state: "printing",
+    deviceClass: "enum",
+    changedMinutesAgo: 62,
+    device: printerPart("Current stage"),
+  }),
+  entity({
+    // ha-bambulab reports minutes and suggests hours, so Home Assistant sends hours.
+    id: "sensor.p1s_remaining_time",
+    name: "P1S Remaining time",
+    areaId: "office",
+    state: "1.583",
+    deviceClass: "duration",
+    unit: "h",
+    changedMinutesAgo: 1,
+    device: printerPart("Remaining time"),
+  }),
+  entity({
+    id: "sensor.p1s_end_time",
+    name: "P1S End time",
+    areaId: "office",
+    state: new Date(now + 95 * 60_000).toISOString(),
+    deviceClass: "timestamp",
+    changedMinutesAgo: 1,
+    device: printerPart("End time"),
+  }),
+  entity({
+    id: "sensor.p1s_current_layer",
+    name: "P1S Current layer",
+    areaId: "office",
+    state: "57",
+    changedMinutesAgo: 1,
+    device: printerPart("Current layer"),
+  }),
+  entity({
+    id: "sensor.p1s_nozzle_temperature",
+    name: "P1S Nozzle temperature",
+    areaId: "office",
+    state: "219.8",
+    deviceClass: "temperature",
+    unit: "°C",
+    changedMinutesAgo: 1,
+    device: printerPart("Nozzle temperature"),
+  }),
+  entity({
+    id: "sensor.p1s_nozzle_target_temperature",
+    name: "P1S Nozzle target temperature",
+    areaId: "office",
+    state: "220",
+    deviceClass: "temperature",
+    unit: "°C",
+    changedMinutesAgo: 70,
+    device: printerPart("Nozzle target temperature"),
+  }),
+  entity({
+    id: "sensor.p1s_bed_temperature",
+    name: "P1S Bed temperature",
+    areaId: "office",
+    state: "65.1",
+    deviceClass: "temperature",
+    unit: "°C",
+    changedMinutesAgo: 1,
+    device: printerPart("Bed temperature"),
+  }),
+  entity({
+    id: "light.p1s_chamber_light",
+    name: "P1S Chamber light",
+    areaId: "office",
+    state: "on",
+    changedMinutesAgo: 70,
+    attributes: { colorModes: ["onoff"], colorMode: "onoff" },
+    device: printerPart("Chamber light"),
+  }),
+  entity({
+    // Never pressed: Home Assistant reports "unknown" until a button is used.
+    id: "button.p1s_pause_printing",
+    name: "P1S Pause printing",
+    areaId: "office",
+    state: "unknown",
+    changedMinutesAgo: 70,
+    device: printerPart("Pause printing"),
+  }),
+  entity({
+    // Only available while a print is paused.
+    id: "button.p1s_resume_printing",
+    name: "P1S Resume printing",
+    areaId: "office",
+    state: "unavailable",
+    changedMinutesAgo: 70,
+    device: printerPart("Resume printing"),
+  }),
+  entity({
+    id: "button.p1s_stop_printing",
+    name: "P1S Stop printing",
+    areaId: "office",
+    state: "unknown",
+    changedMinutesAgo: 70,
+    device: printerPart("Stop printing"),
+  }),
+  entity({
+    id: "select.p1s_printing_speed",
+    name: "P1S Printing speed",
+    areaId: "office",
+    state: "standard",
+    changedMinutesAgo: 70,
+    attributes: { options: ["silent", "standard", "sport", "ludicrous"] },
+    device: printerPart("Printing speed"),
   }),
 ];

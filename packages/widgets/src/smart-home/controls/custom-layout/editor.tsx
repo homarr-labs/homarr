@@ -400,8 +400,9 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     templates: layout.templates,
   }));
   const { update: updateDraft } = history;
+  // A narrow widget opens on its narrow cards; without any it shows the wide cards stacked, so those are what to edit.
   const [variant, setVariant] = useState<LayoutVariant>(() =>
-    previewSize && previewSize.width < NARROW_WIDGET_WIDTH ? "narrow" : "wide",
+    previewSize && previewSize.width < NARROW_WIDGET_WIDTH && layout.narrowCards?.length ? "narrow" : "wide",
   );
   const cards = variant === "wide" ? history.value.cards : (history.value.narrowCards ?? noCards);
   // Changes the arrangement being edited, wide or narrow.

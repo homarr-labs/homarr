@@ -3644,6 +3644,7 @@
             "plug": "Smart plug",
             "fan": "Fan",
             "climate": "Room climate",
+            "printer": "3D printer",
             "overview": "Device overview"
           },
           "canvasEmpty": "Add a card, or pick a device and add it from a template",
@@ -3697,6 +3698,7 @@
             "graph": "Graph",
             "status": "Status",
             "battery": "Battery",
+            "progress": "Progress bar",
             "heading": "Heading",
             "divider": "Divider",
             "spacer": "Spacer"
