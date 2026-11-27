@@ -7410,6 +7410,17 @@
               "search": "Sökning",
               "firstDayOfWeek": "Första dag på veckan",
               "accessibility": "Tillgänglighet",
+              "signInInformation": {
+                "title": "",
+                "provider": "Leverantör",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Kopiera",
+                "copied": "Kopierad"
+              },
               "oauthConnections": {
                 "title": "OAuth anslutningar",
                 "description": "Dessa klienter erhöll API-uppgifter för ditt konto genom OAuth. Referenserna fungerar med Homarr's HTTP API såväl som MCP, upphör inte automatiskt och förblir giltiga efter att du loggat ut.",

@@ -7410,6 +7410,17 @@
               "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik",
+              "signInInformation": {
+                "title": "",
+                "provider": "Sağlayıcı",
+                "subject": "Konu",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Yok",
+                "copy": "Kopyala",
+                "copied": "Kopyalandı"
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
