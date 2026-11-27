@@ -111,20 +111,11 @@ export const smartHomeElementParts = [
 ] as const;
 export type SmartHomeElementPart = (typeof smartHomeElementParts)[number];
 
-const iconPartViews = new Set<SmartHomeElementView>([
-  "control",
-  "value",
-  "group",
-  "graph",
-  "status",
-  "battery",
-  "progress",
-]);
 const climateDomains = new Set(["climate", "water_heater"]);
 
 /** The parts an element can hide, in the order the editor lists them. */
 export const getElementParts = (view: SmartHomeElementView, domain: string | undefined): SmartHomeElementPart[] => {
-  if (iconPartViews.has(view)) return ["icon"];
+  // The icon has its own switch for every view ("Show icon"); "icon" stays readable here for older layouts.
   if (view === "camera") return ["status"];
   if (view !== "tile") return [];
   if (domain === "media_player") return ["cover", "artist", "progress", "skip", "volume"];

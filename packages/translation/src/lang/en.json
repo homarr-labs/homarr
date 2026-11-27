@@ -3779,7 +3779,6 @@
           "ruleValue": "Value",
           "removeRule": "Remove rule",
           "addRule": "Add rule",
-          "sectionGroup": "Combined entities",
           "groupEntities": "Entities",
           "groupEntitiesHint": "Combined into one value",
           "aggregate": "Combine as",

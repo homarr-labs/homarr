@@ -420,31 +420,13 @@ export function ElementSettings({
   // Only an entity that can be controlled has controls; for a sensor, the large tile and the row only show it.
   const controllable = (views as readonly SmartHomeElementView[]).includes("button");
   const isControlView = (view: SmartHomeElementView) => controllable && controlElementViews.has(view);
-  const showsValue = valueElementViews.has(element.view);
-  // A percentage's large control is a ring that can sit anywhere in its element.
+  // A percentage's large control is a ring that can sit anywhere in its element and reads like a value.
   const ringTile = element.view === "tile" && entity !== undefined && isPercentReading(entity);
+  const showsValue = valueElementViews.has(element.view) || ringTile;
   // These have their own place until one is chosen, so no choice shows as selected.
   const movesNumber = element.view === "value" || element.view === "group" || ringTile;
 
   const sections: OptionSection[] = [];
-  if (element.view === "group") {
-    sections.push({
-      value: "group",
-      label: t("sectionGroup"),
-      content: (
-        <Stack gap="xs">
-          <Select
-            size="sm"
-            label={t("aggregate")}
-            allowDeselect={false}
-            data={smartHomeAggregates.map((aggregate) => ({ value: aggregate, label: t(`aggregates.${aggregate}`) }))}
-            value={element.aggregate ?? "sum"}
-            onChange={(value) => value && set({ aggregate: value as SmartHomeAggregate })}
-          />
-        </Stack>
-      ),
-    });
-  }
   if (element.view === "graph") {
     sections.push({
       value: "graph",
@@ -653,6 +635,16 @@ export function ElementSettings({
           openOnMount={autoFocusEntity}
         />
       )}
+      {element.view === "group" && (
+        <Select
+          size="sm"
+          label={t("aggregate")}
+          allowDeselect={false}
+          data={smartHomeAggregates.map((aggregate) => ({ value: aggregate, label: t(`aggregates.${aggregate}`) }))}
+          value={element.aggregate ?? "sum"}
+          onChange={(value) => value && set({ aggregate: value as SmartHomeAggregate })}
+        />
+      )}
       {!isStatic && !isMulti && (
         <SmartHomeEntitySelect
           catalog={catalog}
@@ -717,21 +709,24 @@ export function ElementSettings({
         </Group>
       )}
       {(alignableElementViews.has(element.view) || ringTile) && (
-        <SegmentedControl
-          size="xs"
-          fullWidth
-          aria-label={t("align")}
-          // A value's number has its own place until one is chosen (under the label, or at the end of a flat row).
-          value={element.align ?? (movesNumber ? "" : "start")}
-          onChange={(value) =>
-            set({ align: value === "start" && !movesNumber ? undefined : (value as "start" | "center" | "end") })
-          }
-          data={[
-            { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
-            { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },
-            { value: "end", label: <IconAlignRight size={16} aria-label={t("alignEnd")} /> },
-          ]}
-        />
+        <Input.Wrapper label={t("align")}>
+          <SegmentedControl
+            mt={4}
+            size="xs"
+            fullWidth
+            aria-label={t("align")}
+            // A value's number has its own place until one is chosen (under the label, or at the end of a flat row).
+            value={element.align ?? (movesNumber ? "" : "start")}
+            onChange={(value) =>
+              set({ align: value === "start" && !movesNumber ? undefined : (value as "start" | "center" | "end") })
+            }
+            data={[
+              { value: "start", label: <IconAlignLeft size={16} aria-label={t("alignStart")} /> },
+              { value: "center", label: <IconAlignCenter size={16} aria-label={t("alignCenter")} /> },
+              { value: "end", label: <IconAlignRight size={16} aria-label={t("alignEnd")} /> },
+            ]}
+          />
+        </Input.Wrapper>
       )}
       {element.view === "camera" && (
         <Switch
@@ -744,8 +739,14 @@ export function ElementSettings({
       {canHideIcon && (
         <Switch
           label={t("showIcon")}
-          checked={element.hideIcon !== true}
-          onChange={(event) => set({ hideIcon: event.currentTarget.checked ? undefined : true })}
+          checked={element.hideIcon !== true && !element.hide?.includes("icon")}
+          onChange={(event) => {
+            const hide = element.hide?.filter((part) => part !== "icon");
+            set({
+              hideIcon: event.currentTarget.checked ? undefined : true,
+              hide: hide && hide.length > 0 ? hide : undefined,
+            });
+          }}
         />
       )}
       {canHideLabel && (
