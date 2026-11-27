@@ -7410,6 +7410,17 @@
               "search": "Hladať",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť",
+              "signInInformation": {
+                "title": "",
+                "provider": "Poskytovateľ",
+                "subject": "Predmet",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Žiadne",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

@@ -7410,6 +7410,17 @@
               "search": "검색",
               "firstDayOfWeek": "요일별 요일",
               "accessibility": "접근성",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "주체",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "없음",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

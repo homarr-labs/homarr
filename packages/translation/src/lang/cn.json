@@ -7410,6 +7410,17 @@
               "search": "搜索",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务",
+              "signInInformation": {
+                "title": "",
+                "provider": "提供商",
+                "subject": "主体",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "无",
+                "copy": "复制",
+                "copied": "已复制"
+              },
               "oauthConnections": {
                 "title": "OAuth 连接",
                 "description": "这些客户通过 OAuth 获取您账户的 API 凭据。 凭据适用于Homarr的 HTTP API 和 MCP，它不会自动过期，并且在您退出后继续有效。",
