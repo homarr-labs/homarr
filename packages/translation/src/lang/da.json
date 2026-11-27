@@ -7410,6 +7410,17 @@
               "search": "Søg",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner",
+              "signInInformation": {
+                "title": "",
+                "provider": "Udbyder",
+                "subject": "Emne",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ingen",
+                "copy": "Kopiér",
+                "copied": "Kopieret"
+              },
               "oauthConnections": {
                 "title": "OAuth forbindelser",
                 "description": "Disse klienter har fået API-legitimationsoplysninger til din konto via OAuth. De legitimationsoplysninger arbejde med Homarr's HTTP API samt MCP, udløber ikke automatisk, og forbliver gyldige, når du logger ud.",
