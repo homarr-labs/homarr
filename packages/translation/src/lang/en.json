@@ -3786,8 +3786,8 @@
           "removeRule": "Remove rule",
           "addRule": "Add rule",
           "sectionGroup": "Combined entities",
-          "groupEntities": "More entities",
-          "groupEntitiesHint": "Combined with the element's own entity",
+          "groupEntities": "Entities",
+          "groupEntitiesHint": "Combined into one value",
           "aggregate": "Combine as",
           "aggregates": {
             "sum": "Sum",
@@ -3804,7 +3804,7 @@
             "24": "24 h",
             "168": "7 days"
           },
-          "graphLines": "More lines",
+          "graphLines": "Lines",
           "showMinMax": "Show minimum, average and maximum",
           "cameraLive": "Live view",
           "cameraLiveHint": "Streams while the camera is on screen, when the integration supports it (Home Assistant, Homey); otherwise the snapshot shows",

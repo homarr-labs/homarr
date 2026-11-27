@@ -573,19 +573,38 @@ export function ReadingRow({ entity, label: labelOverride, icon, hideLabel }: Re
   );
 }
 
-function ChipFace({ entity, control, label }: { entity: HaEntity; control: ReadingControl | null; label?: string }) {
+function ChipFace({
+  entity,
+  control,
+  label,
+  icon,
+}: {
+  entity: HaEntity;
+  control: ReadingControl | null;
+  label?: string;
+  icon?: ReactNode;
+}) {
   const theme = useEntityTheme(entity);
   const Icon = control?.kind === "trigger" ? IconPlayerPlay : theme.Icon;
   const text = label ?? (control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity));
   return (
     <>
-      <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
+      {icon ?? <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />}
       <span className={classes.deviceReadingValue}>{text}</span>
     </>
   );
 }
 
-export function ReadingChip({ entity, label: labelOverride }: { entity: HaEntity; label?: string }) {
+export function ReadingChip({
+  entity,
+  label: labelOverride,
+  icon,
+}: {
+  entity: HaEntity;
+  label?: string;
+  /** Replaces the entity's own icon, e.g. one chosen in a custom layout. */
+  icon?: ReactNode;
+}) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
@@ -603,7 +622,7 @@ export function ReadingChip({ entity, label: labelOverride }: { entity: HaEntity
     "data-pending": pending,
     "data-unavailable": theme.unavailable,
   };
-  const content = <ChipFace entity={entity} control={control} label={labelOverride} />;
+  const content = <ChipFace entity={entity} control={control} label={labelOverride} icon={icon} />;
 
   if (control?.kind === "select") {
     return (

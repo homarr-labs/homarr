@@ -76,7 +76,14 @@ export const fullTileDomains = new Set([
   "camera",
 ]);
 /** Views that show an icon the user can replace: every labelled view, plus the ones built around an icon. */
-export const iconElementViews = new Set<SmartHomeElementView>([...labelledElementViews, "pill", "button", "heading"]);
+export const iconElementViews = new Set<SmartHomeElementView>([
+  ...labelledElementViews,
+  "pill",
+  "slider",
+  "chip",
+  "button",
+  "heading",
+]);
 /** How the view picker groups the views: what controls an entity, and what only shows it. */
 export const controlElementViews = new Set<SmartHomeElementView>([
   "tile",

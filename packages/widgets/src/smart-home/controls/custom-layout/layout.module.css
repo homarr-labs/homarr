@@ -130,6 +130,17 @@
   height: clamp(16px, 100cqh, 64px);
 }
 
+/* The bar's icon: a square as tall as the bar at its start, so it grows and shrinks with the element. */
+.barIcon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
 /* A vertical pill fills its element; the user shapes it by resizing the element. */
 .pillElement {
   flex: 1;
@@ -199,6 +210,7 @@
 }
 
 .graphElement {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -224,6 +236,19 @@
   position: relative;
   flex: 1;
   min-height: 0;
+}
+
+/* The label, value and legend lie on the graph's top; the graph's own hover stays reachable through them. */
+.graphOverlay {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  pointer-events: none;
+  /* Readable where a line runs behind the text. */
+  text-shadow: 0 0 0.35em var(--mantine-color-body);
 }
 
 /* A one-line reading: label (icon and text) on the left, the value on the right. */

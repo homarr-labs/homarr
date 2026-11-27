@@ -1,7 +1,8 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
+import { createPortal } from "react-dom";
 import {
   DndContext,
   DragOverlay,
@@ -18,7 +19,6 @@ import {
   Button,
   CopyButton,
   Group,
-  Menu,
   Popover,
   SegmentedControl,
   Select,
@@ -454,6 +454,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
         }
       : previewSize;
   const [templateDevice, setTemplateDevice] = useState<string | null>(null);
+  const [templateOpened, setTemplateOpened] = useState(false);
   // Positions while dragging or resizing; the cards themselves change once, when the gesture ends.
   const [preview, setPreview] = useState<TransactionalGridState | null>(null);
   const transaction = useRef<GridTransaction | null>(null);
@@ -1089,55 +1090,94 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
               onAddCard={() => addCards(createCard(cards, []))}
               onAddElement={(view) => addElement(view)}
             />
-            <Select
-              w={240}
-              placeholder={t("templateDevice")}
-              aria-label={t("templateDevice")}
-              data={deviceOptions}
-              value={templateDevice}
-              onChange={setTemplateDevice}
-              searchable
-              clearable
-              disabled={!index}
-            />
-            <Menu position="bottom-start" withinPortal>
-              <Menu.Target>
+            {/* A device and what to build from it, in one place: the toolbar keeps a single row. */}
+            <Popover
+              opened={templateOpened}
+              onChange={setTemplateOpened}
+              position="bottom-start"
+              width={300}
+              shadow="md"
+              trapFocus
+              returnFocus
+            >
+              <Popover.Target>
                 <Button
-                  variant="light"
+                  size="sm"
+                  variant="default"
                   leftSection={<IconTemplate size={16} />}
-                  disabled={(!templateDevice || isFull) && templates.length === 0}
+                  disabled={isFull || (!index && templates.length === 0)}
+                  onClick={() => setTemplateOpened((opened) => !opened)}
                 >
                   {t("addTemplate")}
                 </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                {smartHomeLayoutPresets.map((preset) => (
-                  <Menu.Item key={preset} disabled={!templateDevice || isFull} onClick={() => addPreset(preset)}>
-                    {t(`preset.${preset}`)}
-                  </Menu.Item>
-                ))}
-                {templates.length > 0 && (
-                  <>
-                    <Menu.Divider />
-                    <Menu.Label>{t("myTemplates")}</Menu.Label>
-                    {templates.map((template) => (
-                      <Fragment key={template.id}>
-                        <Menu.Item disabled={!templateDevice || isFull} onClick={() => addOwnTemplate(template)}>
-                          {template.name}
-                        </Menu.Item>
-                        <Menu.Item
-                          color="red"
-                          leftSection={<IconTrash size={14} />}
-                          onClick={() => removeTemplate(template.id)}
-                        >
-                          {t("deleteTemplate", { name: template.name })}
-                        </Menu.Item>
-                      </Fragment>
-                    ))}
-                  </>
-                )}
-              </Menu.Dropdown>
-            </Menu>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Stack gap="xs">
+                  <Select
+                    size="sm"
+                    data-autofocus
+                    label={t("templateDevice")}
+                    placeholder={t("templateDevice")}
+                    data={deviceOptions}
+                    value={templateDevice}
+                    onChange={setTemplateDevice}
+                    searchable
+                    clearable
+                    disabled={!index}
+                    // In the popover's own layer, so picking a device does not count as a click outside it.
+                    comboboxProps={{ withinPortal: false }}
+                  />
+                  {smartHomeLayoutPresets.map((preset) => (
+                    <Button
+                      key={preset}
+                      size="sm"
+                      variant="light"
+                      justify="flex-start"
+                      disabled={!templateDevice}
+                      onClick={() => {
+                        addPreset(preset);
+                        setTemplateOpened(false);
+                      }}
+                    >
+                      {t(`preset.${preset}`)}
+                    </Button>
+                  ))}
+                  {templates.length > 0 && (
+                    <>
+                      <Text size="xs" fw={500} c="dimmed" mt={4}>
+                        {t("myTemplates")}
+                      </Text>
+                      {templates.map((template) => (
+                        <Group key={template.id} gap={4} wrap="nowrap">
+                          <Button
+                            flex={1}
+                            size="sm"
+                            variant="light"
+                            justify="flex-start"
+                            disabled={!templateDevice}
+                            onClick={() => {
+                              addOwnTemplate(template);
+                              setTemplateOpened(false);
+                            }}
+                          >
+                            {template.name}
+                          </Button>
+                          <ActionIcon
+                            size="input-sm"
+                            variant="subtle"
+                            color="red"
+                            aria-label={t("deleteTemplate", { name: template.name })}
+                            onClick={() => removeTemplate(template.id)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                      ))}
+                    </>
+                  )}
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
           </Group>
           <Group gap="xs" wrap="wrap">
             <SegmentedControl
@@ -1424,7 +1464,13 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
         </Group>
       </Stack>
       {/* The dragged element type follows the pointer. */}
-      <DragOverlay dropAnimation={null}>{insertDrag ? <InsertDragPreview view={insertDrag.view} /> : null}</DragOverlay>
+      {/* On the page itself: inside the dialog, whose transform moves fixed boxes, it would trail beside the pointer. */}
+      {createPortal(
+        <DragOverlay dropAnimation={null} zIndex={1000}>
+          {insertDrag ? <InsertDragPreview view={insertDrag.view} /> : null}
+        </DragOverlay>,
+        document.body,
+      )}
     </DndContext>
   );
 }

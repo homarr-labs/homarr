@@ -319,6 +319,20 @@ export function ElementSettings({
     const view = getAllowedViews(next).includes(element.view) ? element.view : getDefaultView(next);
     onChange({ ...element, source, entityId: next.id, view });
   };
+  // A graph draws and a group combines several entities: one list, the first is the element's own.
+  const isMulti = element.view === "graph" || element.view === "group";
+  const relinkAll = (ids: string[]) => {
+    const [first, ...rest] = ids;
+    const next = first && catalog.status === "ready" ? catalog.index.entitiesById.get(first) : undefined;
+    const view = !next || getAllowedViews(next).includes(element.view) ? element.view : getDefaultView(next);
+    onChange({
+      ...element,
+      source,
+      entityId: first ?? "",
+      entityIds: rest.length > 0 ? rest : undefined,
+      view,
+    });
+  };
   // Only an entity that can be controlled has controls; for a sensor, the large tile and the row only show it.
   const controllable = (views as readonly SmartHomeElementView[]).includes("button");
   const isControlView = (view: SmartHomeElementView) => controllable && controlElementViews.has(view);
@@ -331,14 +345,6 @@ export function ElementSettings({
       label: t("sectionGroup"),
       content: (
         <Stack gap="xs">
-          <SmartHomeEntityPicker
-            catalog={catalog}
-            label={t("groupEntities")}
-            description={t("groupEntitiesHint")}
-            value={element.entityIds ?? []}
-            maxValues={SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES}
-            onChange={(ids) => set({ entityIds: ids.length > 0 ? ids : undefined })}
-          />
           <Select
             size="sm"
             label={t("aggregate")}
@@ -364,14 +370,6 @@ export function ElementSettings({
             value={String(element.range ?? 24)}
             onChange={(value) => set({ range: Number(value) === 24 ? undefined : Number(value) })}
             data={smartHomeGraphRanges.map((hours) => ({ value: String(hours), label: t(`ranges.${hours}`) }))}
-          />
-          <SmartHomeEntityPicker
-            catalog={catalog}
-            label={t("graphLines")}
-            value={element.entityIds ?? []}
-            domains={["sensor", "number"]}
-            maxValues={SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES}
-            onChange={(ids) => set({ entityIds: ids.length > 0 ? ids : undefined })}
           />
           <Switch
             label={t("showMinMax")}
@@ -535,7 +533,19 @@ export function ElementSettings({
 
   return (
     <Stack gap="md">
-      {!isStatic && (
+      {isMulti && (
+        <SmartHomeEntityPicker
+          catalog={catalog}
+          label={t(element.view === "graph" ? "graphLines" : "groupEntities")}
+          description={missing ? t("missingEntityHint") : element.view === "group" ? t("groupEntitiesHint") : undefined}
+          value={[element.entityId, ...(element.entityIds ?? [])].filter((id) => id !== "")}
+          domains={getViewDomains(element.view)}
+          maxValues={SMART_HOME_ELEMENT_MAX_EXTRA_ENTITIES + 1}
+          onChange={relinkAll}
+          openOnMount={autoFocusEntity}
+        />
+      )}
+      {!isStatic && !isMulti && (
         <SmartHomeEntitySelect
           catalog={catalog}
           label={t("elementEntity")}

@@ -67,6 +67,7 @@ import controlClasses from "../control-center/styles.module.css";
 import { accentVars, OwnAccentProvider, PaletteProvider, useEntityTheme } from "../control-center/theme";
 import { fitElementsIntoCard, getCardInnerRows, getElementPlacements, stackElementPlacements } from "./card-grid";
 import classes from "./layout.module.css";
+import { getShortName } from "./names";
 import {
   deriveLayout,
   getLayoutColumns,
@@ -270,7 +271,7 @@ function SliderElement({ entity, element, label }: ElementProps) {
 }
 
 /** The device card's big bar on its own: no label, the bar (or fan steps) fills the element. */
-function BarSliderElement({ entity, label }: ElementProps) {
+function BarSliderElement({ entity, element, label }: ElementProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
@@ -300,7 +301,14 @@ function BarSliderElement({ entity, label }: ElementProps) {
           pending={pending}
           disabled={disabled}
           onCommit={(value) => void run(slider.toAction(value))}
-        />
+        >
+          {/* At the start of the bar, as the tall pill shows it at the bottom. */}
+          {() => (
+            <div className={classes.barIcon}>
+              <ElementIcon name={element.icon} fallback={theme.Icon} size="55%" />
+            </div>
+          )}
+        </PillSlider>
       )}
     </div>
   );
@@ -465,7 +473,15 @@ function CameraElement({ entity, element, label, source }: ElementProps) {
 function ChipElement({ entity, element }: ElementProps) {
   return (
     <div className={classes.chipElement}>
-      <ReadingChip entity={entity} label={element.label} />
+      <ReadingChip
+        entity={entity}
+        label={element.label}
+        icon={
+          element.icon ? (
+            <SpriteIcon name={element.icon} size={14} className={controlClasses.deviceReadingIcon} />
+          ) : undefined
+        }
+      />
     </div>
   );
 }
@@ -639,22 +655,28 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
 
   return (
     <div className={classes.graphElement}>
-      <div className={classes.elementHead}>
-        <ElementLabel element={element} fallback={theme.Icon} label={label} />
-        <span className={classes.elementValue} style={{ color }}>
-          {formatElementState(entity, element)}
-        </span>
+      {/* Over the graph, so the lines use the element's full height. */}
+      <div className={classes.graphOverlay}>
+        <div className={classes.elementHead}>
+          <ElementLabel element={element} fallback={theme.Icon} label={label} />
+          {lines.length === 1 ? (
+            <span className={classes.elementValue} style={{ color }}>
+              {formatElementState(entity, element)}
+            </span>
+          ) : null}
+        </div>
+        {lines.length > 1 ? (
+          <HistoryLegend
+            items={lines.map((line) => ({
+              id: line.id,
+              color: line.color,
+              // Each line by its own entity; the element's label names the whole graph.
+              label: line.entity ? getShortName(line.entity) : line.id,
+              value: format(line, getCurrentValue(line.entity)),
+            }))}
+          />
+        ) : null}
       </div>
-      {lines.length > 1 ? (
-        <HistoryLegend
-          items={lines.map((line) => ({
-            id: line.id,
-            color: line.color,
-            label: line === primary ? label : (line.entity?.device?.name ?? line.entity?.name ?? line.id),
-            value: format(line, getCurrentValue(line.entity)),
-          }))}
-        />
-      ) : null}
       <div className={classes.graphArea}>
         <HistoryGraph lines={lines} formatValue={format} formatTime={(time) => timeFormat.format(time)} />
       </div>

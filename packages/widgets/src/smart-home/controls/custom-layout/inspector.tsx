@@ -66,7 +66,7 @@ function InsertItem({ view, disabled, onAdd }: InsertItemProps) {
         ref={setNodeRef}
         variant="subtle"
         color="gray"
-        size="lg"
+        size="md"
         disabled={disabled}
         aria-label={t("insertElement", { view: t(`views.${view}`) })}
         // Only the pointer drags; the keyboard clicks, which adds to the selected card.
@@ -74,7 +74,7 @@ function InsertItem({ view, disabled, onAdd }: InsertItemProps) {
         onClick={() => onAdd(view)}
         className={classes.insertItem}
       >
-        <Icon size={20} stroke={1.8} />
+        <Icon size={18} stroke={1.8} />
       </ActionIcon>
     </Tooltip>
   );
@@ -96,17 +96,17 @@ export function InsertBar({ canAddCard, canAddElement, onAddCard, onAddElement }
         <ActionIcon
           variant="subtle"
           color="gray"
-          size="lg"
+          size="md"
           disabled={!canAddCard}
           aria-label={t("addCard")}
           onClick={onAddCard}
         >
-          <IconSquarePlus size={20} stroke={1.8} />
+          <IconSquarePlus size={18} stroke={1.8} />
         </ActionIcon>
       </Tooltip>
       {insertViewGroups.map((group) => (
         <Fragment key={group[0]}>
-          <Divider orientation="vertical" mx={4} />
+          <Divider orientation="vertical" mx={3} my={2} />
           {group.map((view) => (
             <InsertItem key={view} view={view} disabled={!canAddElement} onAdd={onAddElement} />
           ))}

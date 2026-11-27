@@ -10,6 +10,7 @@ import {
   IconLayoutDashboard,
   IconList,
   IconNumber,
+  IconProgress,
   IconSeparator,
   IconSpace,
   IconSum,
@@ -36,6 +37,7 @@ export const viewIcons: Record<SmartHomeElementView, TablerIcon> = {
   status: IconCircleDot,
   chip: IconTag,
   battery: IconBattery2,
+  progress: IconProgress,
   heading: IconHeading,
   divider: IconSeparator,
   spacer: IconSpace,
@@ -44,7 +46,7 @@ export const viewIcons: Record<SmartHomeElementView, TablerIcon> = {
 /** What the insert bar offers, in groups: controls, readings, structure. */
 export const insertViewGroups: readonly (readonly SmartHomeElementView[])[] = [
   ["pill", "slider", "control", "button", "tile", "camera"],
-  ["value", "graph", "group", "row", "status", "chip", "battery"],
+  ["value", "graph", "group", "row", "status", "chip", "battery", "progress"],
   ["heading", "divider", "spacer"],
 ];
 

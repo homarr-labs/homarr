@@ -2,7 +2,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
   gap: var(--mantine-spacing-md);
-  height: min(70vh, 760px);
+  /* The dialog fits the window: its head, the toolbar and the footer take about 200px, the margins 10%. The
+     canvas and the panel scroll inside instead. */
+  height: clamp(360px, calc(90dvh - 210px), 760px);
 }
 
 @media (max-width: 900px) {
@@ -105,9 +107,12 @@
 .canvasElement {
   position: relative;
   cursor: grab;
-  border-radius: 6px;
-  outline: 1px dashed transparent;
+  /* The ring follows the element's own corners, a little outside them, so it never covers the element. */
+  border-radius: var(--el-radius, 8px);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   touch-action: none;
+  transition: outline-color 0.15s;
 }
 
 .elementHandle {
@@ -121,7 +126,7 @@
 
 .canvasElement:hover,
 .canvasElement:focus-within {
-  outline-color: var(--mantine-color-dimmed);
+  outline-color: rgb(from var(--mantine-color-dimmed) r g b / 0.45);
 }
 
 .canvasElement[data-dragging="true"] {
@@ -139,24 +144,32 @@
   min-height: 0;
 }
 
+/* A small knob on the ring's corner, like the card's. */
 .elementResize {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 12px;
-  height: 12px;
+  right: -6px;
+  bottom: -6px;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
   padding: 0;
   cursor: nwse-resize;
-  background: linear-gradient(135deg, transparent 55%, var(--mantine-color-dimmed) 55%);
-  border: 0;
-  border-radius: 0 0 6px 0;
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-color-dimmed);
+  border-radius: 50%;
   opacity: 0;
   touch-action: none;
+  transition: opacity 0.15s;
 }
 
 .canvasElement:hover .elementResize,
-.canvasElement:focus-within .elementResize {
+.canvasElement:focus-within .elementResize,
+.canvasElement[data-selected="true"] .elementResize {
   opacity: 1;
+}
+
+.canvasElement[data-selected="true"] .elementResize {
+  border-color: var(--mantine-primary-color-filled);
 }
 
 /* The card's resize grip sits on the card's outer corner, half outside it: a round knob, so it never lands on
@@ -179,8 +192,8 @@
 }
 
 /* Like the element handles, the card's resize grip only shows while the card is pointed at or focused. */
-.canvasCard:hover > .resizeHandle,
-.canvasCard:focus-within > .resizeHandle,
+.canvasCard[data-selected="true"] > .resizeHandle,
+.canvasCard:hover:not(:has(.canvasElement:hover)) > .resizeHandle,
 .resizeHandle:focus-visible {
   opacity: 1;
 }
@@ -226,8 +239,9 @@
 }
 
 /* The insert bar: element types to drag onto a card, in Homarr's toolbar look. */
+/* As tall as the toolbar's inputs and buttons (36px), so the row lines up. */
 .insertBar {
-  padding: 4px;
+  padding: 3px;
   background: var(--mantine-color-default);
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-md);
@@ -261,13 +275,26 @@
 }
 
 .canvasElement[data-selected="true"] {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 1px;
-  border-radius: var(--el-radius, 8px);
+  outline-color: var(--mantine-primary-color-filled);
 }
 
 .canvasCard[data-drop-target="true"] {
   outline: 2px dashed var(--mantine-primary-color-filled);
   outline-offset: 2px;
   border-radius: var(--e-radius, 12px);
+}
+
+/* In the editor the element ring and its resize knob sit just outside the element, in the card's padding. */
+.canvasCard [data-card-body]:not([data-stacked="true"]) {
+  overflow: visible;
+}
+
+/* The cell lets the knob out; the element's own content is still cut at its edge. */
+.canvas .canvasElement {
+  overflow: visible;
+}
+
+.canvas .elementPreview {
+  overflow: hidden;
+  border-radius: inherit;
 }

@@ -49,6 +49,8 @@ export interface SmartHomeEntityPickerProps extends SmartHomePickerBaseProps, Sm
   value: readonly string[];
   onChange: (value: string[]) => void;
   maxValues?: number;
+  /** Focuses the field with its list open, for an element that was just added and needs its entities. */
+  openOnMount?: boolean;
 }
 
 export interface SmartHomeEntitySelectProps extends SmartHomePickerBaseProps, SmartHomeEntityScope {
@@ -180,6 +182,7 @@ export const SmartHomeEntityPicker = ({
   areaIds,
   includeHidden,
   limit = DEFAULT_OPTION_LIMIT,
+  openOnMount,
 }: SmartHomeEntityPickerProps) => {
   const t = useI18n();
   const status = useSmartHomePickerStatus(catalog, placeholder);
@@ -210,6 +213,9 @@ export const SmartHomeEntityPicker = ({
       searchable
       clearable={!status.unavailable}
       hidePickedOptions
+      // oxlint-disable-next-line jsx-a11y/no-autofocus
+      autoFocus={openOnMount}
+      defaultDropdownOpened={openOnMount}
       maxDropdownHeight={320}
       nothingFoundMessage={t("common.noResults")}
       renderPill={renderPill}
