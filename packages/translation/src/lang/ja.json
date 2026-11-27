@@ -7410,6 +7410,17 @@
               "search": "検索",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ",
+              "signInInformation": {
+                "title": "",
+                "provider": "プロバイダー",
+                "subject": "Subject",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "なし",
+                "copy": "コピー",
+                "copied": "コピーしました"
+              },
               "oauthConnections": {
                 "title": "OAuth接続",
                 "description": "これらのクライアントは、OAuth を通じてアカウントの API 資格情報を取得しました。 認証情報は Homarr の HTTP API と MCP で動作します。自動的に失効することはなく、サインアウト後も有効になります。",

@@ -7410,6 +7410,17 @@
               "search": "Meklēšana",
               "firstDayOfWeek": "Nedēļas pirmā diena",
               "accessibility": "Piekļūstamība",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

@@ -7410,6 +7410,17 @@
               "search": "Zoeken",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid",
+              "signInInformation": {
+                "title": "",
+                "provider": "Aanbieder",
+                "subject": "Onderwerp",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Geen",
+                "copy": "Kopiëren",
+                "copied": "Gekoppeld"
+              },
               "oauthConnections": {
                 "title": "OAuth verbindingen",
                 "description": "Deze cliënten hebben API-referenties voor uw account verkregen via OAuth. De inloggegevens werken met de HTTP-API van Homarr en MCP, verlopen niet automatisch, en blijven geldig na uitloggen.",

@@ -7410,6 +7410,17 @@
               "search": "חיפוש",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות",
+              "signInInformation": {
+                "title": "",
+                "provider": "ספק",
+                "subject": "נושא",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "ללא",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

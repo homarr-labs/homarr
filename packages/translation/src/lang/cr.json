@@ -7410,6 +7410,17 @@
               "search": "crwdns2702:0crwdne2702:0",
               "firstDayOfWeek": "crwdns1674:0crwdne1674:0",
               "accessibility": "crwdns1676:0crwdne1676:0",
+              "signInInformation": {
+                "title": "crwdns13109:0crwdne13109:0",
+                "provider": "crwdns13111:0crwdne13111:0",
+                "subject": "crwdns13113:0crwdne13113:0",
+                "email": "crwdns13115:0crwdne13115:0",
+                "homarrGroups": "crwdns13117:0crwdne13117:0",
+                "empty": "crwdns13119:0crwdne13119:0",
+                "noGroups": "crwdns13121:0crwdne13121:0",
+                "copy": "crwdns13123:0crwdne13123:0",
+                "copied": "crwdns13125:0crwdne13125:0"
+              },
               "oauthConnections": {
                 "title": "crwdns11045:0crwdne11045:0",
                 "description": "crwdns11047:0crwdne11047:0",
