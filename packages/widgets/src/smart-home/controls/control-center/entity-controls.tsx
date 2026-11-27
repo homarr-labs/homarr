@@ -178,6 +178,8 @@ const MEDIA_ROW_GAP = 8;
 const PROGRESS_ROW_HEIGHT = 22;
 const MINI_TITLE_HEIGHT = 20;
 const MINI_GAP = 6;
+// Room around the mini player's buttons (`.mediaMini .transport`), so they can grow on hover and cast their shadow.
+const MINI_TRANSPORT_PAD = 6;
 const MINI_ART_MIN = 36;
 const MINI_ART_MAX = 64;
 const MINI_ART_MIN_WIDTH = 110;
@@ -949,19 +951,24 @@ function MediaControl({ entity, width, height }: ControlProps) {
     const miniWidth = width - TILE_PADDING * 2;
     const miniHeight = height - TILE_PADDING * 2;
     const miniMain = transportButtons.compact.main;
+    // The button row with its room around it.
+    const miniRow = miniMain + MINI_TRANSPORT_PAD * 2;
+    const miniRowWidth = miniWidth - MINI_TRANSPORT_PAD * 2;
     // Only the skip buttons the player supports need room: play and one skip fit where two would not.
     const miniSkips = Number(canPrevious) + Number(canNext);
     const miniSide =
-      miniWidth >= miniMain + miniSkips * (transportButtons.compact.side + TRANSPORT_GAP_MIN)
+      miniRowWidth >= miniMain + miniSkips * (transportButtons.compact.side + TRANSPORT_GAP_MIN)
         ? "sm"
-        : miniWidth >= miniMain + miniSkips * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
+        : miniRowWidth >= miniMain + miniSkips * (transportButtons.tight.side + TRANSPORT_GAP_MIN)
           ? "xs"
           : null;
     // The cover needs its own height besides the playback row; a short tile drops it rather than clip the buttons.
-    const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH && miniHeight >= MINI_ART_MIN + MINI_GAP + miniMain;
+    const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH && miniHeight >= MINI_ART_MIN + MINI_GAP + miniRow;
     // The artist line goes before the play button would be cut off at the bottom.
-    const miniSubtitle = !idle && subtitle !== "" && (miniArt || miniHeight >= MINI_ART_MIN + MINI_GAP + miniMain);
+    const miniSubtitle = !idle && subtitle !== "" && (miniArt || miniHeight >= MINI_ART_MIN + MINI_GAP + miniRow);
     const headHeight = miniArt || miniSubtitle ? MINI_ART_MIN : MINI_TITLE_HEIGHT;
+    // Shorter still, only the buttons remain: a title cut in half helps no one.
+    const miniHead = miniHeight >= MINI_TITLE_HEIGHT + MINI_GAP + miniRow;
     // The time bar takes a row when the player reports where it is and the tile has the height.
     const miniProgress =
       showsProgress &&
@@ -970,24 +977,26 @@ function MediaControl({ entity, width, height }: ControlProps) {
       !idle &&
       // Elapsed and total time need room side by side; narrower, they would run into each other.
       miniWidth >= MINI_PROGRESS_MIN_WIDTH &&
-      miniHeight >= headHeight + MINI_GAP + PROGRESS_ROW_HEIGHT + MINI_GAP + miniMain;
+      miniHeight >= headHeight + MINI_GAP + PROGRESS_ROW_HEIGHT + MINI_GAP + miniRow;
     // Spare height grows the cover, up to a size that still leaves room for the title beside it.
-    const spare = miniHeight - (miniMain + MINI_GAP + (miniProgress ? PROGRESS_ROW_HEIGHT + MINI_GAP : 0));
+    const spare = miniHeight - (miniRow + MINI_GAP + (miniProgress ? PROGRESS_ROW_HEIGHT + MINI_GAP : 0));
     const miniArtSize = Math.max(MINI_ART_MIN, Math.min(spare, MINI_ART_MAX, Math.floor(miniWidth * 0.4)));
     const skipIcon = miniSide === "xs" ? 15 : 17;
     return (
       <Tile theme={theme} className={classes.mediaTile}>
         <div className={classes.mediaMini}>
-          <div className={classes.mediaMiniHead} data-art={miniArt} data-single={!miniArt && !miniSubtitle}>
-            {miniArt ? art(miniArtSize, volumeButton(true)) : null}
-            <div className={classes.mediaMiniText}>
-              <span className={classes.name} title={title} data-entity-name={title === entity.name}>
-                {title}
-              </span>
-              {miniSubtitle ? <span className={classes.state}>{subtitle}</span> : null}
+          {miniHead ? (
+            <div className={classes.mediaMiniHead} data-art={miniArt} data-single={!miniArt && !miniSubtitle}>
+              {miniArt ? art(miniArtSize, volumeButton(true)) : null}
+              <div className={classes.mediaMiniText}>
+                <span className={classes.name} title={title} data-entity-name={title === entity.name}>
+                  {title}
+                </span>
+                {miniSubtitle ? <span className={classes.state}>{subtitle}</span> : null}
+              </div>
+              {miniArt ? null : volumeButton(false)}
             </div>
-            {miniArt ? null : volumeButton(false)}
-          </div>
+          ) : null}
           {miniProgress && <MediaProgress entity={entity} />}
           <div className={classes.transport}>
             {canPrevious && miniSide ? (

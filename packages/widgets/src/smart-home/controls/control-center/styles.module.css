@@ -1336,6 +1336,11 @@ button.tile:not(:disabled):active {
   align-self: stretch;
 }
 
+/* Room for the buttons to grow on hover and for the play button's shadow (MINI_TRANSPORT_PAD in the tile). */
+.mediaMini .transport {
+  padding: 6px;
+}
+
 .mediaMiniHead {
   display: flex;
   /* When the tile is too short, the title row gives way, never the play button. */
