@@ -398,8 +398,12 @@ export const formatEntityState = (entity: HaEntity): string => {
       if (attributes.stateLabel) return attributes.stateLabel;
       const value = Number(entity.state);
       if (Number.isNaN(value)) return entity.state;
-      // A number entity shows as many digits as its step has (0.01 shows two), so every step is visible.
-      const digits = entity.domain === "number" && attributes.step ? Math.max(1, decimalsOf(attributes.step)) : 1;
+      // A number entity shows as many digits as its step has (0.01 shows two), and as its range starts at (from 0.25 in
+      // steps of 1 shows 0.25, 1.25), so every step is visible.
+      const digits =
+        entity.domain === "number" && attributes.step
+          ? Math.max(1, decimalsOf(attributes.step), decimalsOf(attributes.min ?? 0))
+          : 1;
       return `${formatNumber(value, digits)}${entity.unit === "%" ? "" : " "}${entity.unit ?? ""}`.trim();
     }
     case "binary_sensor": {
@@ -463,7 +467,12 @@ export const formatEntityState = (entity: HaEntity): string => {
   }
 };
 
-const decimalsOf = (value: number) => (String(value).split(".")[1] ?? "").length;
+/** Digits after the point, also for numbers JavaScript writes with an exponent (1e-7 has seven). */
+const decimalsOf = (value: number) => {
+  if (!Number.isFinite(value)) return 0;
+  const [mantissa = "", exponent = "0"] = String(value).toLowerCase().split("e");
+  return Math.max(0, (mantissa.split(".")[1] ?? "").length - Number(exponent));
+};
 
 /** The next value one step up or down, or null when the entity is at its limit or has no number to step from. */
 export const stepNumber = (entity: HaEntity, direction: 1 | -1): number | null => {

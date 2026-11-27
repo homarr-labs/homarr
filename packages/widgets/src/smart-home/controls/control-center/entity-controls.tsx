@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode, SyntheticEvent } from "react";
 import { ActionIcon, Box, Group, Modal, Popover, Slider, Text } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
@@ -1041,22 +1041,26 @@ function MediaControl({ entity, width, height }: ControlProps) {
 
   if (tier === "wide") {
     // One width budget for the row: the title keeps room to be read. What does not fit goes in this order: the
-    // volume moves onto the cover (or goes when there is none), then the skip buttons, then the cover.
+    // volume moves onto the cover (or goes when there is none), then "previous", then "next", then the cover.
     const rowWidth = width - TILE_PADDING * 2;
     const artSize = Math.min(height - 24, 56);
-    const skips = Number(canPrevious) + Number(canNext);
     let withArt = showsCover;
-    let withSkips = skips > 0;
+    let withPrevious = canPrevious;
+    let withNext = canNext;
     let volumePlace: "row" | "cover" | null = canSetVolume && attributes.volume !== undefined ? "row" : null;
     const titleRoom = () =>
       rowWidth -
       (withArt ? artSize + WIDE_ROW_GAP : 0) -
       WIDE_ROW_GAP -
       WIDE_PLAY_SIZE -
-      (withSkips ? skips * (transportButtons.compact.side + WIDE_BUTTON_GAP) : 0) -
+      (Number(withPrevious) + Number(withNext)) * (transportButtons.compact.side + WIDE_BUTTON_GAP) -
       (volumePlace === "row" ? WIDE_VOLUME_SIZE + WIDE_BUTTON_GAP : 0);
     if (titleRoom() < WIDE_TITLE_MIN && volumePlace === "row") volumePlace = withArt ? "cover" : null;
-    if (titleRoom() < WIDE_TITLE_MIN) withSkips = false;
+    if (titleRoom() < WIDE_TITLE_MIN && withPrevious && withNext) withPrevious = false;
+    if (titleRoom() < WIDE_TITLE_MIN) {
+      withPrevious = false;
+      withNext = false;
+    }
     if (titleRoom() < WIDE_TITLE_MIN) {
       withArt = false;
       if (volumePlace === "cover") volumePlace = null;
@@ -1073,7 +1077,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             <span className={classes.state}>{subtitle}</span>
           </div>
           <div className={classes.transport}>
-            {withSkips && canPrevious ? (
+            {withPrevious ? (
               <RoundButton
                 size="sm"
                 label={tMedia("previous", { name: entity.name })}
@@ -1092,7 +1096,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
             >
               {playGlyph}
             </RoundButton>
-            {withSkips && canNext ? (
+            {withNext ? (
               <RoundButton
                 size="sm"
                 label={tMedia("next", { name: entity.name })}
@@ -1244,8 +1248,20 @@ function VolumeButton({
   onCommit: (value: number) => void;
 }) {
   const tMedia = useI18n("widget.smartHome-controls.device.media");
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpenedState] = useState(false);
   const [draft, setDraft] = useState<number | null>(null);
+  // The slider's latest position, also between renders, for the commit at the end of a drag.
+  const latest = useRef<number | null>(null);
+  // Closing drops a drag that never ended (Escape mid-drag), so reopening shows the device's volume again.
+  const setOpened = (next: boolean | ((open: boolean) => boolean)) =>
+    setOpenedState((open) => {
+      const value = typeof next === "function" ? next(open) : next;
+      if (!value) {
+        latest.current = null;
+        setDraft(null);
+      }
+      return value;
+    });
   // Inside a dialog (the entity's details) the slider opens within it, so it stays in the dialog's focus scope.
   const [dialog, setDialog] = useState<HTMLElement | null>(null);
   // A read-only view shows the volume but offers no slider that could not apply.
@@ -1273,6 +1289,8 @@ function VolumeButton({
           disabled={blocked}
           aria-label={tMedia("volume", { name: entity.name })}
           aria-expanded={opened && !blocked}
+          // A press here opens the volume, never the entity's details by holding it.
+          data-gesture="true"
           onPointerDown={stopEvent}
           onClick={(event) => {
             event.stopPropagation();
@@ -1299,10 +1317,19 @@ function VolumeButton({
             value={shown}
             label={null}
             thumbLabel={tMedia("volume", { name: entity.name })}
-            onChange={setDraft}
+            onChange={(value) => {
+              latest.current = value;
+              setDraft(value);
+            }}
             onChangeEnd={(value) => {
-              setDraft(null);
-              onCommit(value);
+              // The slider applies the last pointer move in an animation frame and may report the end before it:
+              // the commit waits one frame and takes the final position.
+              requestAnimationFrame(() => {
+                const final = latest.current ?? value;
+                latest.current = null;
+                setDraft(null);
+                onCommit(final);
+              });
             }}
           />
           <Text size="sm" w={40} ta="right" style={{ fontVariantNumeric: "tabular-nums" }}>
