@@ -314,6 +314,8 @@ const CombinedGraph = ({
       {hasData ? (
         <HistoryGraph
           lines={lines}
+          // Names the graph for screen readers by the metrics it shows.
+          label={legendLines.map((line) => line.title).join(", ")}
           variant={chartType}
           connectNulls
           formatValue={(line, value) => formatMetricValue(value, line.unit ?? null)}

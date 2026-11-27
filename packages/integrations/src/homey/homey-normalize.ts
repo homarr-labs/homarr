@@ -97,21 +97,24 @@ const updatedAt = (capability: HomeyCapability | undefined) => {
 
 /**
  * Duration and position of the current track. Players without a position (the Alexa app) still tell when the track
- * started and when playback last paused or resumed: as long as it has played straight through since the track
- * started, or paused once since, the position follows from those times. Otherwise it stays unknown.
+ * started and when playback last resumed: while it has played straight through since the track started, the
+ * position follows from those times. Once it has paused, earlier pauses cannot be told apart, so it stays unknown.
  */
 const mediaTiming = (cap: DeviceCapabilities, device: HomeyDevice) => {
+  // Each capability in the unit it declares; without one, the app's known unit (an eight-hour audiobook stays eight
+  // hours). Duration and position may declare different units.
+  const scaleOf = (capability: HomeyCapability | undefined) => {
+    const units = capability?.units;
+    const milliseconds = units ? units === "ms" : MILLISECOND_MEDIA_APPS.has(device.driverUri ?? "");
+    return milliseconds ? 1000 : 1;
+  };
   const durationValue = number(cap("speaker_duration"));
-  // The unit the capability declares; without one, the app's known unit (an eight-hour audiobook stays eight hours).
-  const units = cap("speaker_duration")?.units ?? cap("speaker_position")?.units;
-  const milliseconds = units ? units === "ms" : MILLISECOND_MEDIA_APPS.has(device.driverUri ?? "");
-  const scale = milliseconds ? 1000 : 1;
-  const mediaDuration = durationValue === undefined ? undefined : durationValue / scale;
+  const mediaDuration = durationValue === undefined ? undefined : durationValue / scaleOf(cap("speaker_duration"));
   const positionValue = number(cap("speaker_position"));
   if (positionValue !== undefined) {
     return {
       mediaDuration,
-      mediaPosition: positionValue / scale,
+      mediaPosition: positionValue / scaleOf(cap("speaker_position")),
       mediaPositionUpdatedAt: updatedAt(cap("speaker_position")),
     };
   }
@@ -123,9 +126,6 @@ const mediaTiming = (cap: DeviceCapabilities, device: HomeyDevice) => {
   }
   if (boolean(playing) === true && playingChanged <= trackStarted) {
     return { mediaDuration, mediaPosition: 0, mediaPositionUpdatedAt: trackStarted };
-  }
-  if (boolean(playing) === false && playingChanged > trackStarted) {
-    return { mediaDuration, mediaPosition: (playingChanged - trackStarted) / 1000 };
   }
   return { mediaDuration };
 };
