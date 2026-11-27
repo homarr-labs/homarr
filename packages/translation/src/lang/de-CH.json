@@ -7410,6 +7410,17 @@
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
