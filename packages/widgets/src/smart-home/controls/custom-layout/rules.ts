@@ -10,8 +10,12 @@ import type {
 import { isNamedLayoutColor } from "./schema";
 
 /** A color as a CSS value: palette colors follow the theme, custom ones are used as they are. */
-export const layoutColor = (color: SmartHomeLayoutColor) =>
-  isNamedLayoutColor(color) ? `var(--mantine-color-${color}-6)` : color;
+export const layoutColor = (color: SmartHomeLayoutColor) => {
+  // The board's own colors, as the other widgets use them.
+  if (color === "primary") return "var(--mantine-color-primaryColor-filled)";
+  if (color === "secondary") return "var(--mantine-color-secondaryColor-filled)";
+  return isNamedLayoutColor(color) ? `var(--mantine-color-${color}-6)` : color;
+};
 
 const toNumber = (value: string) => {
   if (value.trim() === "") return null;

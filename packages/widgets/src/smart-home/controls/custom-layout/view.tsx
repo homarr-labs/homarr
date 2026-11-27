@@ -84,7 +84,7 @@ import {
   SMART_HOME_LAYOUT_ROWS,
   staticElementViews,
 } from "./schema";
-import type { SmartHomeLayout, SmartHomeLayoutCard, SmartHomeLayoutElement } from "./schema";
+import type { SmartHomeLayoutColor, SmartHomeLayout, SmartHomeLayoutCard, SmartHomeLayoutElement } from "./schema";
 import type { GridPlacement } from "@homarr/boards/grid";
 
 interface ElementProps {
@@ -761,8 +761,12 @@ function EntityElement({ element, source }: { element: SmartHomeLayoutElement; s
 
 /** One element; it subscribes to its own entities, so a sensor update re-renders only this element. */
 export function LayoutElement({ element, source }: { element: SmartHomeLayoutElement; source: string | null }) {
-  if (staticElementViews.has(element.view)) return <StaticElement element={element} />;
-  return <EntityElement element={element} source={source} />;
+  const content = staticElementViews.has(element.view) ? (
+    <StaticElement element={element} />
+  ) : (
+    <EntityElement element={element} source={source} />
+  );
+  return element.accent ? <ElementColors accent={element.accent}>{content}</ElementColors> : content;
 }
 
 export const placementStyle = (placement: { x: number; y: number; w: number; h: number }): CSSProperties => ({
@@ -792,16 +796,38 @@ export const getCardPalette = (card: Pick<SmartHomeLayoutCard, "colors">) =>
  */
 export function CardColors({ card, children }: { card: SmartHomeLayoutCard; children: ReactNode }) {
   const color = card.colors === "accent" ? (card.accent ?? DEFAULT_CARD_ACCENT) : null;
-  const theme = useMantineTheme();
-  const ownAccent = useMemo(() => {
-    if (!color) return null;
-    const shade = color.startsWith("#") ? color : theme.colors[color]?.[6];
-    return { accent: layoutColor(color), onAccent: getContrastColor({ color: shade, theme, autoContrast: true }) };
-  }, [color, theme]);
+  const ownAccent = useOwnAccent(color);
   return (
     <PaletteProvider value={getCardPalette(card)}>
       <OwnAccentProvider value={ownAccent}>{children}</OwnAccentProvider>
     </PaletteProvider>
+  );
+}
+
+/** A layout color as an accent with readable text on it; null keeps the primary color. */
+const useOwnAccent = (color: SmartHomeLayoutColor | null) => {
+  const theme = useMantineTheme();
+  return useMemo(() => {
+    if (!color) return null;
+    if (color === "primary") return { accent: layoutColor(color), onAccent: "var(--mantine-primary-color-contrast)" };
+    const shade = color.startsWith("#") ? color : theme.colors[color === "secondary" ? "secondaryColor" : color]?.[6];
+    const onAccent = shade ? getContrastColor({ color: shade, theme, autoContrast: true }) : "#fff";
+    return { accent: layoutColor(color), onAccent };
+  }, [color, theme]);
+};
+
+/**
+ * An element with its own color: the primary color ("neutral") or one color, over whatever its card uses. The
+ * wrapper carries the palette for the control styles and adds no box of its own.
+ */
+function ElementColors({ accent, children }: { accent: SmartHomeLayoutColor | "neutral"; children: ReactNode }) {
+  const ownAccent = useOwnAccent(accent === "neutral" ? null : accent);
+  return (
+    <div data-palette="boring" style={{ display: "contents" }}>
+      <PaletteProvider value="boring">
+        <OwnAccentProvider value={ownAccent}>{children}</OwnAccentProvider>
+      </PaletteProvider>
+    </div>
   );
 }
 

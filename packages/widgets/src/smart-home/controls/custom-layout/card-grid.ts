@@ -95,6 +95,32 @@ export const getElementPlacements = (card: SmartHomeLayoutCard, columns = card.w
   return card.elements.flatMap((element) => placed.get(element.id) ?? []);
 };
 
+/**
+ * A new element dropped on a cell of the card: it starts there and takes the rest of that row's free width and its
+ * usual height, shrinking down to what it needs. Elsewhere on the card when that cell is taken; without a position
+ * (stacked below, the card grows) when the card has no room at all.
+ */
+export const placeNewElement = (
+  card: SmartHomeLayoutCard,
+  element: SmartHomeLayoutElement,
+  at?: { x: number; y: number },
+): SmartHomeLayoutElement => {
+  const placed = getElementPlacements(card);
+  const rows = getCardInnerRows(card);
+  const minRows = getElementMinRows(element);
+  const wanted = { w: card.w, h: getElementDefaultRows(element) };
+  if (at && at.x >= 0 && at.y >= 0 && at.x < card.w && at.y < rows) {
+    for (let h = Math.min(wanted.h, rows - at.y); h >= minRows; h--) {
+      for (let w = card.w - at.x; w >= 1; w--) {
+        const candidate = { id: element.id, x: at.x, y: at.y, w, h };
+        if (!placed.some((other) => doGridPlacementsOverlap(candidate, other))) return { ...element, ...candidate };
+      }
+    }
+  }
+  const slot = findFreeGridSlot(placed, { columns: card.w, rows }, wanted, { w: 1, h: minRows });
+  return slot ? { ...element, x: slot.x, y: slot.y, w: slot.w, h: slot.h } : element;
+};
+
 /** For a card shown narrower than it was laid out: elements stack at full width in reading order. */
 export const stackElementPlacements = (card: SmartHomeLayoutCard, columns: number): GridPlacement[] => {
   let y = 0;

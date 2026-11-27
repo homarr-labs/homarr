@@ -57,6 +57,8 @@ export interface SmartHomeEntitySelectProps extends SmartHomePickerBaseProps, Sm
   clearable?: boolean;
   /** Entities to tag in the list, e.g. those already on the card. */
   marked?: { ids: ReadonlySet<string>; label: string };
+  /** Focuses the field with its list open, for an element that was just added and needs its entity. */
+  openOnMount?: boolean;
 }
 
 const buildEntityData = (
@@ -231,6 +233,7 @@ export const SmartHomeEntitySelect = ({
   includeHidden,
   limit = DEFAULT_OPTION_LIMIT,
   marked,
+  openOnMount,
 }: SmartHomeEntitySelectProps) => {
   const t = useI18n();
   const status = useSmartHomePickerStatus(catalog, placeholder);
@@ -261,6 +264,10 @@ export const SmartHomeEntitySelect = ({
       leftSection={isMissing && <IconAlertTriangle size={14} color="var(--mantine-color-orange-6)" aria-hidden />}
       searchable
       clearable={clearable && !status.unavailable}
+      // The user just added an element and picks its entity next; nothing else competes for focus then.
+      // oxlint-disable-next-line jsx-a11y/no-autofocus
+      autoFocus={openOnMount}
+      defaultDropdownOpened={openOnMount}
       maxDropdownHeight={360}
       nothingFoundMessage={t("common.noResults")}
       renderOption={(input) => <EntityOption index={index} marked={marked} {...input} />}

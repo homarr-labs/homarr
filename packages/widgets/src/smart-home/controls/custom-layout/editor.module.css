@@ -202,8 +202,10 @@
 }
 
 .panel {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
   min-width: 0;
-  padding-right: 4px;
+
   overflow-y: auto;
 }
 
@@ -221,4 +223,51 @@
 .swatchOption[aria-pressed="true"] {
   outline: 2px solid var(--mantine-color-text);
   outline-offset: 2px;
+}
+
+/* The insert bar: element types to drag onto a card, in Homarr's toolbar look. */
+.insertBar {
+  padding: 4px;
+  background: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+}
+
+.insertItem {
+  touch-action: none;
+  cursor: grab;
+}
+
+/* The inspector's head, like the head of Homarr's settings panels. */
+.inspectorHeader {
+  padding: var(--mantine-spacing-md);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.styleSwatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--mantine-color-text);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 20%);
+}
+
+.styleSwatch[aria-pressed="true"] {
+  border-color: var(--mantine-color-text);
+}
+
+.canvasElement[data-selected="true"] {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 1px;
+  border-radius: var(--el-radius, 8px);
+}
+
+.canvasCard[data-drop-target="true"] {
+  outline: 2px dashed var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--e-radius, 12px);
 }

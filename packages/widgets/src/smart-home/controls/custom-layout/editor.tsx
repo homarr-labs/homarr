@@ -2,24 +2,30 @@
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import { DndContext, KeyboardSensor, PointerSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import type { DragEndEvent, DragMoveEvent, DragStartEvent, KeyboardSensorOptions } from "@dnd-kit/core";
 import {
   ActionIcon,
   Box,
   Button,
   CopyButton,
-  Divider,
   Group,
   Menu,
   Popover,
   SegmentedControl,
   Select,
   Stack,
-  Switch,
   Text,
   Textarea,
-  TextInput,
+  ThemeIcon,
   Tooltip,
 } from "@mantine/core";
 import { useElementSize, useHotkeys, useMergedRef } from "@mantine/hooks";
@@ -34,7 +40,6 @@ import {
   IconShare,
   IconTemplate,
   IconTrash,
-  IconX,
 } from "@tabler/icons-react";
 
 import {
@@ -52,11 +57,8 @@ import { createId } from "@homarr/common";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
-import { SmartHomeEntitySelect, useSmartHomeCatalog } from "../../_inputs";
-import type { SmartHomeCatalogState } from "../../_inputs";
+import { useSmartHomeCatalog } from "../../_inputs";
 import { createEntityBlockId } from "../configuration";
-import { haDomains } from "../types";
-import type { HaDomain } from "../types";
 import controlClasses from "../control-center/styles.module.css";
 import { SmartHomeLiveProvider } from "../live";
 import { SmartHomeInteractionProvider } from "../store";
@@ -70,16 +72,18 @@ import {
   getElementPlacements,
   getCardScaledMinSize,
   getInnerGridId,
+  placeNewElement,
   resizeCardWithElements,
   scaleElementPlacements,
 } from "./card-grid";
 import type { SmartHomeLayoutEditorProps } from "./editor-modal";
 import classes from "./editor.module.css";
-import { ColorSelect, ElementRow, OptionSections } from "./element-row";
+import { CardInspector, ElementInspector, INSERT_DRAG_PREFIX, InsertBar } from "./inspector";
 import layoutClasses from "./layout.module.css";
 import { buildPresetElements, createCard, getDefaultView, smartHomeLayoutPresets } from "./presets";
 import type { SmartHomeLayoutPreset } from "./presets";
 import { findFreeSlot, getMinimumRowHeight, LAYOUT_GAP } from "./responsive";
+import { viewIcons } from "./view-icons";
 import {
   getLayoutEntityIds,
   getLayoutGraphEntityIds,
@@ -90,12 +94,12 @@ import {
   SMART_HOME_LAYOUT_MAX_CARDS,
   SMART_HOME_LAYOUT_MAX_ELEMENTS,
   SMART_HOME_LAYOUT_MAX_TEMPLATES,
-  SMART_HOME_LAYOUT_MAX_TEXT,
   SMART_HOME_LAYOUT_ROWS,
   SMART_HOME_LAYOUT_VERSION,
+  staticElementViews,
 } from "./schema";
 import type {
-  SmartHomeCardColors,
+  SmartHomeElementView,
   SmartHomeLayout,
   SmartHomeLayoutCard,
   SmartHomeLayoutElement,
@@ -107,13 +111,14 @@ import CustomLayoutView, {
   CardColors,
   cardBodyStyle,
   CardTint,
-  DEFAULT_CARD_ACCENT,
   getCardPalette,
   LayoutElement,
   placementStyle,
 } from "./view";
 
 const GRID_ID = "smart-home-layout";
+// Drags that bring a new element from the insert bar, not move a card or an element.
+const isInsert = (id: string) => id.startsWith(INSERT_DRAG_PREFIX);
 // Used when the widget's size is unknown (e.g. a widget not yet placed on the board).
 const FALLBACK_CANVAS_HEIGHT = 420;
 const CANVAS_PADDING = 8;
@@ -241,11 +246,12 @@ interface CanvasElementProps {
   element: SmartHomeLayoutElement;
   placement: GridPlacement;
   source: string;
+  selected: boolean;
   onSelect: () => void;
   onResizeStart: (id: string, event: ResizeEvent) => void;
 }
 
-function CanvasElement({ element, placement, source, onSelect, onResizeStart }: CanvasElementProps) {
+function CanvasElement({ element, placement, source, selected, onSelect, onResizeStart }: CanvasElementProps) {
   const t = useI18n("widget.smartHome-controls.layout.editor");
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, isDragging } = useDraggable({ id: element.id });
   const name = element.label || element.entityId || t(`views.${element.view}`);
@@ -255,8 +261,8 @@ function CanvasElement({ element, placement, source, onSelect, onResizeStart }: 
       data-element-id={element.id}
       className={`${layoutClasses.elementCell} ${classes.canvasElement}`}
       data-dragging={isDragging}
+      data-selected={selected}
       style={placementStyle(placement)}
-      onFocus={onSelect}
     >
       <button
         type="button"
@@ -265,6 +271,9 @@ function CanvasElement({ element, placement, source, onSelect, onResizeStart }: 
         {...listeners}
         className={classes.elementHandle}
         aria-label={t("moveElement", { name })}
+        aria-pressed={selected}
+        onClick={onSelect}
+        onFocus={onSelect}
       />
       {/* The real element, inert: nothing in it can reach a device while editing. */}
       <div className={classes.elementPreview} inert>
@@ -289,7 +298,11 @@ interface CanvasCardProps {
   elements: ReadonlyMap<string, SmartHomeLayoutElement>;
   source: string;
   selected: boolean;
+  selectedElementId: string | null;
+  /** An element type from the insert bar is being dragged over this card. */
+  dropTarget: boolean;
   onSelect: (id: string) => void;
+  onSelectElement: (id: string) => void;
   onResizeStart: (id: string, event: ResizeEvent) => void;
   onElementResizeStart: (id: string, event: ResizeEvent) => void;
 }
@@ -301,7 +314,10 @@ function CanvasCard({
   elements,
   source,
   selected,
+  selectedElementId,
+  dropTarget,
   onSelect,
+  onSelectElement,
   onResizeStart,
   onElementResizeStart,
 }: CanvasCardProps) {
@@ -314,7 +330,8 @@ function CanvasCard({
       ref={setNodeRef}
       className={classes.canvasCard}
       onPointerDown={() => onSelect(card.id)}
-      data-selected={selected}
+      data-selected={selected && selectedElementId === null}
+      data-drop-target={dropTarget}
       data-dragging={isDragging}
       style={placementStyle(placement)}
     >
@@ -345,7 +362,8 @@ function CanvasCard({
                   element={element}
                   placement={elementPlacement}
                   source={source}
-                  onSelect={() => onSelect(card.id)}
+                  selected={element.id === selectedElementId}
+                  onSelect={() => onSelectElement(element.id)}
                   onResizeStart={onElementResizeStart}
                 />
               ) : null;
@@ -363,247 +381,6 @@ function CanvasCard({
         aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"
       />
     </div>
-  );
-}
-
-interface CardPropertiesProps {
-  cardOptions: { value: string; label: string }[];
-  onMoveElement: (element: SmartHomeLayoutElement, cardId: string) => void;
-  card: SmartHomeLayoutCard;
-  catalog: SmartHomeCatalogState;
-  source: string;
-  onChange: (card: SmartHomeLayoutCard) => void;
-  onDuplicate: () => void;
-  onSaveTemplate: (name: string) => void;
-  onRemove: () => void;
-}
-
-function CardProperties({
-  cardOptions,
-  onMoveElement,
-  card,
-  catalog,
-  source,
-  onChange,
-  onDuplicate,
-  onSaveTemplate,
-  onRemove,
-}: CardPropertiesProps) {
-  const t = useI18n("widget.smartHome-controls.layout.editor");
-  const [pickerKey, setPickerKey] = useState(0);
-  const [templateName, setTemplateName] = useState<string | null>(null);
-  const tDomain = useI18n("widget.smartHome-controls.domain");
-  // Narrows the add picker to one kind of entity; the list is long on a big smart home.
-  const [addDomain, setAddDomain] = useState<HaDomain | null>(null);
-  const entities = catalog.status === "ready" ? catalog.index.entitiesById : null;
-  const domainOptions = useMemo(() => {
-    const present = new Set(catalog.status === "ready" ? catalog.index.domains : []);
-    return haDomains
-      .filter((domain) => present.has(domain))
-      .map((domain) => ({ value: domain, label: tDomain(domain) }));
-  }, [catalog, tDomain]);
-  const onCard = useMemo(
-    () => ({ ids: new Set(card.elements.map((element) => element.entityId)), label: t("onCard") }),
-    [card.elements, t],
-  );
-  // New or bigger elements grow the card so nothing is cut off; shrinking stays a manual choice.
-  const setElements = (elements: SmartHomeLayoutElement[]) => {
-    const next = { ...card, elements };
-    onChange({ ...next, h: Math.max(card.h, getCardMinSize(next).h) });
-  };
-  const full = card.elements.length >= SMART_HOME_LAYOUT_MAX_ELEMENTS;
-
-  const addElement = (entityId: string | null) => {
-    setPickerKey((key) => key + 1);
-    const entity = entityId ? entities?.get(entityId) : undefined;
-    if (!entity || full) return;
-    setElements([...card.elements, { id: createId(), source, entityId: entity.id, view: getDefaultView(entity) }]);
-  };
-
-  const addStatic = (view: "heading" | "divider" | "spacer") => {
-    if (full) return;
-    setElements([...card.elements, { id: createId(), source, entityId: "", view }]);
-  };
-
-  // A copy has no position of its own, so it takes free space on the card and never covers what is there.
-  const duplicateElement = (element: SmartHomeLayoutElement) => {
-    if (full) return;
-    const { x: _x, y: _y, ...rest } = element;
-    setElements([...card.elements, { ...rest, id: createId() }]);
-  };
-
-  // The list follows the card: top to bottom, then left to right, so it reads like the preview.
-  const ordered = useMemo(() => {
-    const placements = new Map(getElementPlacements(card).map((placement) => [placement.id, placement]));
-    const position = (id: string) => placements.get(id) ?? { x: 0, y: 0 };
-    return card.elements.toSorted(
-      (left, right) => position(left.id).y - position(right.id).y || position(left.id).x - position(right.id).x,
-    );
-  }, [card]);
-
-  return (
-    <Stack gap="sm">
-      <TextInput
-        label={t("cardTitle")}
-        placeholder={t("untitledCard")}
-        value={card.title ?? ""}
-        maxLength={SMART_HOME_LAYOUT_MAX_TEXT}
-        onChange={(event) => {
-          const next = { ...card, title: event.currentTarget.value || undefined };
-          // A new title takes a row, so the card grows instead of squeezing its elements.
-          onChange({ ...next, h: Math.max(card.h, getCardMinSize(next).h) });
-        }}
-      />
-      <OptionSections
-        sections={[
-          {
-            value: "style",
-            label: t("sectionStyle"),
-            content: (
-              <Stack gap="xs">
-                <Stack gap={4}>
-                  <Text size="sm" fw={500}>
-                    {t("cardColors")}
-                  </Text>
-                  <SegmentedControl
-                    size="xs"
-                    fullWidth
-                    aria-label={t("cardColors")}
-                    value={card.colors ?? "neutral"}
-                    onChange={(value) =>
-                      onChange({ ...card, colors: value === "neutral" ? undefined : (value as SmartHomeCardColors) })
-                    }
-                    data={[
-                      { value: "neutral", label: t("colorsNeutral") },
-                      { value: "state", label: t("colorsState") },
-                      { value: "accent", label: t("colorsAccent") },
-                    ]}
-                  />
-                </Stack>
-                {card.colors === "accent" ? (
-                  <ColorSelect
-                    label={t("accent")}
-                    value={card.accent ?? DEFAULT_CARD_ACCENT}
-                    onChange={(accent) => onChange({ ...card, accent })}
-                  />
-                ) : null}
-                <Switch
-                  label={t("tint")}
-                  description={t("tintHint")}
-                  checked={card.tint === true}
-                  onChange={(event) => onChange({ ...card, tint: event.currentTarget.checked || undefined })}
-                />
-              </Stack>
-            ),
-          },
-          {
-            value: "visibility",
-            label: t("sectionVisibility"),
-            content: (
-              <Switch
-                label={t("readOnly")}
-                description={t("readOnlyCardHint")}
-                checked={card.readOnly === true}
-                onChange={(event) => onChange({ ...card, readOnly: event.currentTarget.checked || undefined })}
-              />
-            ),
-          },
-        ]}
-      />
-      <Divider label={t("elements")} labelPosition="left" />
-      {ordered.map((element) => (
-        <ElementRow
-          key={element.id}
-          element={element}
-          cardId={card.id}
-          cardOptions={cardOptions}
-          onMoveToCard={(id) => onMoveElement(element, id)}
-          entity={entities?.get(element.entityId)}
-          catalog={catalog}
-          source={source}
-          onChange={(next) =>
-            setElements(card.elements.map((candidate) => (candidate.id === next.id ? next : candidate)))
-          }
-          onDuplicate={() => duplicateElement(element)}
-          onRemove={() => setElements(card.elements.filter((candidate) => candidate.id !== element.id))}
-        />
-      ))}
-      <Group gap="xs" wrap="nowrap" align="flex-end">
-        <Box flex={1} miw={0}>
-          <SmartHomeEntitySelect
-            key={pickerKey}
-            catalog={catalog}
-            label={t("addElement")}
-            placeholder={t("addElementPlaceholder")}
-            value={null}
-            onChange={addElement}
-            clearable={false}
-            disabled={full}
-            domains={addDomain ? [addDomain] : undefined}
-            marked={onCard}
-          />
-        </Box>
-        <Select
-          w={150}
-          aria-label={t("addElementType")}
-          placeholder={t("addElementAllTypes")}
-          data={domainOptions}
-          value={addDomain}
-          onChange={(value) => setAddDomain(value as HaDomain | null)}
-          clearable
-          searchable
-          disabled={full}
-        />
-      </Group>
-      <Group gap="xs" grow>
-        {(["heading", "divider", "spacer"] as const).map((view) => (
-          <Button key={view} size="sm" variant="light" disabled={full} onClick={() => addStatic(view)}>
-            {t(`views.${view}`)}
-          </Button>
-        ))}
-      </Group>
-      <Divider />
-      {templateName === null ? (
-        <Group gap="xs" grow>
-          <Button variant="default" leftSection={<IconCopy size={16} />} onClick={onDuplicate}>
-            {t("duplicateCard")}
-          </Button>
-          <Button
-            variant="default"
-            leftSection={<IconTemplate size={16} />}
-            onClick={() => setTemplateName(card.title ?? "")}
-          >
-            {t("saveTemplate")}
-          </Button>
-        </Group>
-      ) : (
-        <Group gap="xs" wrap="nowrap" align="flex-end">
-          <TextInput
-            flex={1}
-            label={t("templateName")}
-            value={templateName}
-            maxLength={80}
-            data-autofocus
-            onChange={(event) => setTemplateName(event.currentTarget.value)}
-          />
-          <Button
-            disabled={templateName.trim() === ""}
-            onClick={() => {
-              onSaveTemplate(templateName.trim());
-              setTemplateName(null);
-            }}
-          >
-            {t("save")}
-          </Button>
-          <ActionIcon variant="subtle" size="input-sm" aria-label={t("cancel")} onClick={() => setTemplateName(null)}>
-            <IconX size={16} />
-          </ActionIcon>
-        </Group>
-      )}
-      <Button variant="subtle" color="red" leftSection={<IconTrash size={16} />} onClick={onRemove}>
-        {t("removeCard")}
-      </Button>
-    </Stack>
   );
 }
 
@@ -651,6 +428,19 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     ["mod+Y", redo],
   ]);
   const [selectedId, setSelectedId] = useState<string | null>(cards[0]?.id ?? null);
+  // An element of the selected card shown in the panel instead of the card.
+  const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
+  // An element just added without an entity: its picker opens right away.
+  const [pickEntityId, setPickEntityId] = useState<string | null>(null);
+  // An element type dragged from the insert bar, and the card and cell under the pointer.
+  const [insertDrag, setInsertDrag] = useState<{
+    view: SmartHomeElementView;
+    target: { cardId: string; x: number; y: number } | null;
+  } | null>(null);
+  const selectCard = (id: string | null) => {
+    setSelectedId(id);
+    setSelectedElementId(null);
+  };
   const [shareOpened, setShareOpened] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState(false);
@@ -716,7 +506,20 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     const scaled = shown.w !== card.w || shown.h !== card.h ? scaleElementPlacements(card, shown.w, shown.h) : null;
     return scaled ?? getElementPlacements(card);
   };
+  const cardOptions = cards.map((card, position) => ({
+    value: card.id,
+    label: card.title || t("numberedCard", { number: position + 1 }),
+  }));
   const selected = cards.find((card) => card.id === selectedId) ?? null;
+  const selectedElement = selected?.elements.find((element) => element.id === selectedElementId) ?? null;
+  const ownerOf = (elementId: string) =>
+    cards.find((card) => card.elements.some((element) => element.id === elementId));
+  const selectElement = (elementId: string) => {
+    const owner = ownerOf(elementId);
+    if (!owner) return;
+    setSelectedId(owner.id);
+    setSelectedElementId(elementId);
+  };
   const index = catalog.status === "ready" ? catalog.index : null;
   const deviceOptions = useMemo(
     () => (index?.catalog.devices ?? []).map((device) => ({ value: device.id, label: device.name })),
@@ -783,6 +586,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     stopTracking();
     transaction.current = null;
     setPreview(null);
+    setInsertDrag(null);
   };
 
   const isCard = (id: string) => cards.some((card) => card.id === id);
@@ -802,6 +606,22 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   };
 
   const cardBodies = () => [...(canvasNode.current?.querySelectorAll<HTMLElement>("[data-card-body]") ?? [])];
+
+  /** The card under a point on screen and the cell of its grid there. */
+  const cellAt = (point: { x: number; y: number }) => {
+    const body = cardBodies().find((candidate) => {
+      const rect = candidate.getBoundingClientRect();
+      return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
+    });
+    const card = cards.find((candidate) => candidate.id === body?.dataset.cardBody);
+    if (!body || !card) return null;
+    const cell = cardCellSize(body, card);
+    return {
+      cardId: card.id,
+      x: Math.floor((point.x - cell.rect.left) / cell.width),
+      y: Math.floor((point.y - cell.rect.top) / cell.height),
+    };
+  };
 
   /** Moves the element to the card under the pointer, keeping the spot where it was grabbed under the pointer. */
   const previewElementMove = (point: { x: number; y: number }) => {
@@ -877,10 +697,22 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     transaction.current = result.transaction;
     finish();
     setSelectedId(targetId);
+    setSelectedElementId(element.id);
   };
 
   const onDragStart = ({ active, activatorEvent }: DragStartEvent) => {
     const id = String(active.id);
+    if (isInsert(id)) {
+      // A new element: no grid gesture, only where the pointer goes.
+      if (!(activatorEvent instanceof PointerEvent)) return;
+      const last = { x: activatorEvent.clientX, y: activatorEvent.clientY };
+      pointer.current = { origin: last, last };
+      gestureCleanup.current = stopTracking;
+      window.addEventListener("pointermove", trackPointer, { capture: true, passive: true });
+      window.addEventListener("pointerup", trackPointer, { capture: true, passive: true });
+      setInsertDrag({ view: id.slice(INSERT_DRAG_PREFIX.length) as SmartHomeElementView, target: null });
+      return;
+    }
     const card = isCard(id);
     transaction.current = beginGesture(id, !card);
     if (!transaction.current) return;
@@ -894,14 +726,14 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     window.addEventListener("pointermove", trackPointer, { capture: true, passive: true });
     window.addEventListener("pointerup", trackPointer, { capture: true, passive: true });
     if (card) {
-      setSelectedId(id);
+      selectCard(id);
       return;
     }
     const owner = cards.find((candidate) => candidate.elements.some((element) => element.id === id));
     const node = canvasNode.current?.querySelector(`[data-element-id="${CSS.escape(id)}"]`);
     const body = node?.parentElement;
     if (!owner || !node || !body) return;
-    setSelectedId(owner.id);
+    selectElement(id);
     const cell = cardCellSize(body, owner);
     const elementRect = node.getBoundingClientRect();
     grab.current = {
@@ -927,10 +759,27 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     }
   };
 
-  const onDragMove = ({ active, delta }: DragMoveEvent) => settle(String(active.id), delta);
+  const onDragMove = ({ active, delta }: DragMoveEvent) => {
+    const id = String(active.id);
+    if (!isInsert(id)) return settle(id, delta);
+    const target = pointer.current ? cellAt(pointer.current.last) : null;
+    setInsertDrag((current) =>
+      current &&
+      (current.target?.cardId !== target?.cardId || current.target?.x !== target?.x || current.target?.y !== target?.y)
+        ? { ...current, target }
+        : current,
+    );
+  };
 
   const onDragEnd = ({ active, delta }: DragEndEvent) => {
     const id = String(active.id);
+    if (isInsert(id)) {
+      const target = pointer.current ? cellAt(pointer.current.last) : null;
+      stopTracking();
+      setInsertDrag(null);
+      if (target) addElement(id.slice(INSERT_DRAG_PREFIX.length) as SmartHomeElementView, target.cardId, target);
+      return;
+    }
     if (pointer.current) settle(id, delta);
     // An element dropped on another card selects that card, so its settings show the element.
     const owner = transaction.current?.preview.grids.find(
@@ -938,7 +787,10 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     )?.ownerPlacementId;
     stopTracking();
     finish();
-    if (owner) setSelectedId(owner);
+    if (owner) {
+      setSelectedId(owner);
+      setSelectedElementId(id);
+    }
   };
 
   /** Corner resize for cards (cells of the widget grid) and elements (cells of their card's grid). */
@@ -1088,6 +940,34 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     });
   };
 
+  /** Changes the selected card's elements; new or bigger ones grow the card so nothing is cut off. */
+  const setCardElements = (card: SmartHomeLayoutCard, nextElements: SmartHomeLayoutElement[]) => {
+    const next = { ...card, elements: nextElements };
+    updateCard({ ...next, h: Math.max(card.h, getCardMinSize(next).h) });
+  };
+
+  /** A new element on a card: where it was dropped, else in free space; the panel then shows it. */
+  const addElement = (
+    view: SmartHomeElementView,
+    cardId: string | null = selectedId,
+    at?: { x: number; y: number },
+    entityId = "",
+  ) => {
+    const card = cards.find((candidate) => candidate.id === cardId);
+    if (!card) return notApplied(t("selectCardFirst"));
+    if (card.elements.length >= SMART_HOME_LAYOUT_MAX_ELEMENTS) return notApplied(t("noRoom"));
+    const element = placeNewElement(card, { id: createId(), source: integrationId, entityId, view }, at);
+    setCardElements(card, [...card.elements, element]);
+    setSelectedId(card.id);
+    setSelectedElementId(element.id);
+    setPickEntityId(entityId || staticElementViews.has(view) ? null : element.id);
+  };
+
+  const addEntityElement = (entityId: string) => {
+    const entity = index?.entitiesById.get(entityId);
+    if (entity) addElement(getDefaultView(entity), selectedId, undefined, entity.id);
+  };
+
   // A new card needs at least the minimum card size free inside the widget.
   const isFull =
     cards.length >= SMART_HOME_LAYOUT_MAX_CARDS ||
@@ -1101,7 +981,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       return;
     }
     setCards((existing) => [...existing, created]);
-    setSelectedId(created.id);
+    selectCard(created.id);
   };
 
   const templateTarget = () => {
@@ -1141,7 +1021,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
 
   const switchVariant = (next: LayoutVariant) => {
     setVariant(next);
-    setSelectedId(null);
+    selectCard(null);
     cancel();
   };
 
@@ -1188,213 +1068,212 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     setShareOpened(false);
     setImportText("");
     setImportError(false);
-    setSelectedId(null);
+    selectCard(null);
   };
 
   return (
-    <Stack gap="md">
-      <Group justify="space-between" wrap="wrap" gap="xs">
-        <Group gap="xs" wrap="wrap">
-          <Button
-            leftSection={<IconPlus size={16} />}
-            onClick={() => addCards(createCard(cards, []))}
-            disabled={isFull}
-          >
-            {t("addCard")}
-          </Button>
-          <Select
-            w={240}
-            placeholder={t("templateDevice")}
-            aria-label={t("templateDevice")}
-            data={deviceOptions}
-            value={templateDevice}
-            onChange={setTemplateDevice}
-            searchable
-            clearable
-            disabled={!index}
-          />
-          <Menu position="bottom-start" withinPortal>
-            <Menu.Target>
-              <Button
-                variant="light"
-                leftSection={<IconTemplate size={16} />}
-                disabled={(!templateDevice || isFull) && templates.length === 0}
-              >
-                {t("addTemplate")}
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {smartHomeLayoutPresets.map((preset) => (
-                <Menu.Item key={preset} disabled={!templateDevice || isFull} onClick={() => addPreset(preset)}>
-                  {t(`preset.${preset}`)}
-                </Menu.Item>
-              ))}
-              {templates.length > 0 && (
-                <>
-                  <Menu.Divider />
-                  <Menu.Label>{t("myTemplates")}</Menu.Label>
-                  {templates.map((template) => (
-                    <Fragment key={template.id}>
-                      <Menu.Item disabled={!templateDevice || isFull} onClick={() => addOwnTemplate(template)}>
-                        {template.name}
-                      </Menu.Item>
-                      <Menu.Item
-                        color="red"
-                        leftSection={<IconTrash size={14} />}
-                        onClick={() => removeTemplate(template.id)}
-                      >
-                        {t("deleteTemplate", { name: template.name })}
-                      </Menu.Item>
-                    </Fragment>
-                  ))}
-                </>
-              )}
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-        <Group gap="xs" wrap="wrap">
-          <SegmentedControl
-            size="sm"
-            aria-label={t("variant")}
-            value={variant}
-            onChange={(value) => switchVariant(value as LayoutVariant)}
-            data={[
-              { value: "wide", label: t("variants.wide") },
-              { value: "narrow", label: t("variants.narrow") },
-            ]}
-          />
-          <Tooltip label={t("undo")}>
-            <ActionIcon
-              variant="default"
-              size="input-sm"
-              disabled={!history.canUndo}
-              onClick={undo}
-              aria-label={t("undo")}
-            >
-              <IconArrowBackUp size={16} />
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label={t("redo")}>
-            <ActionIcon
-              variant="default"
-              size="input-sm"
-              disabled={!history.canRedo}
-              onClick={redo}
-              aria-label={t("redo")}
-            >
-              <IconArrowForwardUp size={16} />
-            </ActionIcon>
-          </Tooltip>
-          <Popover
-            opened={shareOpened}
-            onChange={setShareOpened}
-            position="bottom-end"
-            width="min(340px, calc(100vw - 16px))"
-            shadow="md"
-            trapFocus
-            returnFocus
-          >
-            <Popover.Target>
-              <Button
-                size="sm"
+    <DndContext
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragMove={onDragMove}
+      onDragEnd={onDragEnd}
+      onDragCancel={cancel}
+    >
+      <Stack gap="md">
+        <Group justify="space-between" wrap="wrap" gap="xs">
+          <Group gap="xs" wrap="wrap">
+            <InsertBar
+              canAddCard={!isFull}
+              canAddElement={cards.length > 0}
+              onAddCard={() => addCards(createCard(cards, []))}
+              onAddElement={(view) => addElement(view)}
+            />
+            <Select
+              w={240}
+              placeholder={t("templateDevice")}
+              aria-label={t("templateDevice")}
+              data={deviceOptions}
+              value={templateDevice}
+              onChange={setTemplateDevice}
+              searchable
+              clearable
+              disabled={!index}
+            />
+            <Menu position="bottom-start" withinPortal>
+              <Menu.Target>
+                <Button
+                  variant="light"
+                  leftSection={<IconTemplate size={16} />}
+                  disabled={(!templateDevice || isFull) && templates.length === 0}
+                >
+                  {t("addTemplate")}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {smartHomeLayoutPresets.map((preset) => (
+                  <Menu.Item key={preset} disabled={!templateDevice || isFull} onClick={() => addPreset(preset)}>
+                    {t(`preset.${preset}`)}
+                  </Menu.Item>
+                ))}
+                {templates.length > 0 && (
+                  <>
+                    <Menu.Divider />
+                    <Menu.Label>{t("myTemplates")}</Menu.Label>
+                    {templates.map((template) => (
+                      <Fragment key={template.id}>
+                        <Menu.Item disabled={!templateDevice || isFull} onClick={() => addOwnTemplate(template)}>
+                          {template.name}
+                        </Menu.Item>
+                        <Menu.Item
+                          color="red"
+                          leftSection={<IconTrash size={14} />}
+                          onClick={() => removeTemplate(template.id)}
+                        >
+                          {t("deleteTemplate", { name: template.name })}
+                        </Menu.Item>
+                      </Fragment>
+                    ))}
+                  </>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+          <Group gap="xs" wrap="wrap">
+            <SegmentedControl
+              size="sm"
+              aria-label={t("variant")}
+              value={variant}
+              onChange={(value) => switchVariant(value as LayoutVariant)}
+              data={[
+                { value: "wide", label: t("variants.wide") },
+                { value: "narrow", label: t("variants.narrow") },
+              ]}
+            />
+            <Tooltip label={t("undo")}>
+              <ActionIcon
                 variant="default"
-                leftSection={<IconShare size={16} />}
-                onClick={() => setShareOpened((opened) => !opened)}
+                size="input-sm"
+                disabled={!history.canUndo}
+                onClick={undo}
+                aria-label={t("undo")}
               >
-                {t("share")}
-              </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Stack gap="xs">
-                <Text size="xs" c="dimmed">
-                  {t("shareHint")}
-                </Text>
-                <Group gap="xs" grow>
-                  <CopyButton value={JSON.stringify(draft)}>
-                    {({ copied, copy }) => (
-                      <Button
-                        size="sm"
-                        variant="light"
-                        color={copied ? "teal" : undefined}
-                        leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                        onClick={copy}
-                      >
-                        {copied ? t("copied") : t("copyLayout")}
-                      </Button>
-                    )}
-                  </CopyButton>
-                  <Button size="sm" variant="light" leftSection={<IconDownload size={16} />} onClick={download}>
-                    {t("download")}
-                  </Button>
-                </Group>
-                <Textarea
-                  size="sm"
-                  data-autofocus
-                  label={t("importLayout")}
-                  placeholder={t("importPlaceholder")}
-                  autosize
-                  minRows={2}
-                  maxRows={6}
-                  value={importText}
-                  error={importError ? t("importInvalid") : undefined}
-                  onChange={(event) => {
-                    setImportText(event.currentTarget.value);
-                    setImportError(false);
-                  }}
-                />
-                <Button size="sm" disabled={importText.trim() === ""} onClick={importLayout}>
-                  {t("importApply")}
-                </Button>
-              </Stack>
-            </Popover.Dropdown>
-          </Popover>
-          <Button
-            size="sm"
-            variant="subtle"
-            color="red"
-            onClick={() => {
-              setCards([]);
-              setSelectedId(null);
-            }}
-            disabled={cards.length === 0}
-          >
-            {t("clear")}
-          </Button>
-        </Group>
-      </Group>
-
-      <div className={classes.editor}>
-        <div className={`${controlClasses.root} ${classes.canvasScroll}`}>
-          {variant === "narrow" ? (
-            <Group className={classes.canvasHint} gap="xs" justify="space-between" wrap="nowrap">
-              <span>{t("narrowHint", { width: NARROW_WIDGET_WIDTH })}</span>
-              {cards.length === 0 && history.value.cards.length > 0 && (
-                <Button size="compact-xs" variant="light" onClick={() => setCards(history.value.cards)}>
-                  {t("copyWide")}
-                </Button>
-              )}
-            </Group>
-          ) : (
-            previewSize && (
-              <div className={classes.canvasHint}>
-                {t("previewHint", { width: Math.round(previewSize.width), height: Math.round(previewSize.height) })}
-              </div>
-            )
-          )}
-          <SmartHomeInteractionProvider blocked="editing">
-            <SmartHomeLiveProvider
-              integrationId={integrationId}
-              blockIds={blockIds}
-              roomDomains={[]}
-              excludedEntityIds={[]}
-              historyEntityIds={graphIds}
+                <IconArrowBackUp size={16} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={t("redo")}>
+              <ActionIcon
+                variant="default"
+                size="input-sm"
+                disabled={!history.canRedo}
+                onClick={redo}
+                aria-label={t("redo")}
+              >
+                <IconArrowForwardUp size={16} />
+              </ActionIcon>
+            </Tooltip>
+            <Popover
+              opened={shareOpened}
+              onChange={setShareOpened}
+              position="bottom-end"
+              width="min(340px, calc(100vw - 16px))"
+              shadow="md"
+              trapFocus
+              returnFocus
             >
-              <DndContext
-                sensors={sensors}
-                onDragStart={onDragStart}
-                onDragMove={onDragMove}
-                onDragEnd={onDragEnd}
-                onDragCancel={cancel}
+              <Popover.Target>
+                <Button
+                  size="sm"
+                  variant="default"
+                  leftSection={<IconShare size={16} />}
+                  onClick={() => setShareOpened((opened) => !opened)}
+                >
+                  {t("share")}
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Stack gap="xs">
+                  <Text size="xs" c="dimmed">
+                    {t("shareHint")}
+                  </Text>
+                  <Group gap="xs" grow>
+                    <CopyButton value={JSON.stringify(draft)}>
+                      {({ copied, copy }) => (
+                        <Button
+                          size="sm"
+                          variant="light"
+                          color={copied ? "teal" : undefined}
+                          leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                          onClick={copy}
+                        >
+                          {copied ? t("copied") : t("copyLayout")}
+                        </Button>
+                      )}
+                    </CopyButton>
+                    <Button size="sm" variant="light" leftSection={<IconDownload size={16} />} onClick={download}>
+                      {t("download")}
+                    </Button>
+                  </Group>
+                  <Textarea
+                    size="sm"
+                    data-autofocus
+                    label={t("importLayout")}
+                    placeholder={t("importPlaceholder")}
+                    autosize
+                    minRows={2}
+                    maxRows={6}
+                    value={importText}
+                    error={importError ? t("importInvalid") : undefined}
+                    onChange={(event) => {
+                      setImportText(event.currentTarget.value);
+                      setImportError(false);
+                    }}
+                  />
+                  <Button size="sm" disabled={importText.trim() === ""} onClick={importLayout}>
+                    {t("importApply")}
+                  </Button>
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
+            <Button
+              size="sm"
+              variant="subtle"
+              color="red"
+              onClick={() => {
+                setCards([]);
+                selectCard(null);
+              }}
+              disabled={cards.length === 0}
+            >
+              {t("clear")}
+            </Button>
+          </Group>
+        </Group>
+
+        <div className={classes.editor}>
+          <div className={`${controlClasses.root} ${classes.canvasScroll}`}>
+            {variant === "narrow" ? (
+              <Group className={classes.canvasHint} gap="xs" justify="space-between" wrap="nowrap">
+                <span>{t("narrowHint", { width: NARROW_WIDGET_WIDTH })}</span>
+                {cards.length === 0 && history.value.cards.length > 0 && (
+                  <Button size="compact-xs" variant="light" onClick={() => setCards(history.value.cards)}>
+                    {t("copyWide")}
+                  </Button>
+                )}
+              </Group>
+            ) : (
+              previewSize && (
+                <div className={classes.canvasHint}>
+                  {t("previewHint", { width: Math.round(previewSize.width), height: Math.round(previewSize.height) })}
+                </div>
+              )
+            )}
+            <SmartHomeInteractionProvider blocked="editing">
+              <SmartHomeLiveProvider
+                integrationId={integrationId}
+                blockIds={blockIds}
+                roomDomains={[]}
+                excludedEntityIds={[]}
+                historyEntityIds={graphIds}
               >
                 <div
                   ref={canvasRef}
@@ -1432,7 +1311,10 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                       elements={elements}
                       source={integrationId}
                       selected={card.id === selectedId}
-                      onSelect={setSelectedId}
+                      selectedElementId={card.id === selectedId ? selectedElementId : null}
+                      dropTarget={insertDrag?.target?.cardId === card.id}
+                      onSelect={selectCard}
+                      onSelectElement={selectElement}
                       onResizeStart={onCardResizeStart}
                       onElementResizeStart={onElementResizeStart}
                     />
@@ -1462,54 +1344,95 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                     </Stack>
                   )}
                 </div>
-              </DndContext>
-            </SmartHomeLiveProvider>
-          </SmartHomeInteractionProvider>
+              </SmartHomeLiveProvider>
+            </SmartHomeInteractionProvider>
+          </div>
+
+          <div className={classes.panel}>
+            {selected && selectedElement ? (
+              <ElementInspector
+                key={selectedElement.id}
+                element={selectedElement}
+                card={selected}
+                entity={index?.entitiesById.get(selectedElement.entityId)}
+                catalog={catalog}
+                source={integrationId}
+                cardOptions={cardOptions}
+                autoFocusEntity={pickEntityId === selectedElement.id}
+                onChange={(next) => {
+                  if (next.entityId) setPickEntityId(null);
+                  setCardElements(
+                    selected,
+                    selected.elements.map((candidate) => (candidate.id === next.id ? next : candidate)),
+                  );
+                }}
+                onBack={() => setSelectedElementId(null)}
+                onMoveToCard={(cardId) => moveElementToCard(selectedElement, cardId)}
+                onDuplicate={() => {
+                  if (selected.elements.length >= SMART_HOME_LAYOUT_MAX_ELEMENTS) return notApplied(t("noRoom"));
+                  // A copy has no position of its own, so it takes free space and never covers what is there.
+                  const { x: _x, y: _y, ...rest } = selectedElement;
+                  const copy = { ...rest, id: createId() };
+                  setCardElements(selected, [...selected.elements, copy]);
+                  setSelectedElementId(copy.id);
+                }}
+                onRemove={() => {
+                  setCardElements(
+                    selected,
+                    selected.elements.filter((candidate) => candidate.id !== selectedElement.id),
+                  );
+                  setSelectedElementId(null);
+                }}
+              />
+            ) : selected ? (
+              <CardInspector
+                key={selected.id}
+                card={selected}
+                catalog={catalog}
+                entities={index?.entitiesById ?? null}
+                onChange={updateCard}
+                onSelectElement={setSelectedElementId}
+                onAddEntity={addEntityElement}
+                onDuplicate={() => addCards(duplicateCard(selected, cards))}
+                onSaveTemplate={(name) => saveTemplate(selected, name)}
+                onRemove={() => {
+                  setCards((existing) => existing.filter((card) => card.id !== selected.id));
+                  selectCard(null);
+                }}
+              />
+            ) : (
+              <Text size="sm" c="dimmed" p="md">
+                {t("noSelection")}
+              </Text>
+            )}
+          </div>
         </div>
 
-        <div className={classes.panel}>
-          {selected ? (
-            <CardProperties
-              key={selected.id}
-              card={selected}
-              onMoveElement={moveElementToCard}
-              cardOptions={cards.map((card, position) => ({
-                value: card.id,
-                label: card.title || t("numberedCard", { number: position + 1 }),
-              }))}
-              catalog={catalog}
-              source={integrationId}
-              onChange={updateCard}
-              onDuplicate={() => {
-                addCards(duplicateCard(selected, cards));
-              }}
-              onSaveTemplate={(name) => saveTemplate(selected, name)}
-              onRemove={() => {
-                setCards((existing) => existing.filter((card) => card.id !== selected.id));
-                setSelectedId(null);
-              }}
-            />
-          ) : (
-            <Text size="sm" c="dimmed">
-              {t("noSelection")}
-            </Text>
-          )}
-        </div>
-      </div>
+        <Group justify="flex-end">
+          <Button variant="default" onClick={onClose}>
+            {tCommon("common.action.cancel")}
+          </Button>
+          <Button
+            onClick={() => {
+              onSave(draft);
+              onClose();
+            }}
+          >
+            {tCommon("common.action.apply")}
+          </Button>
+        </Group>
+      </Stack>
+      {/* The dragged element type follows the pointer. */}
+      <DragOverlay dropAnimation={null}>{insertDrag ? <InsertDragPreview view={insertDrag.view} /> : null}</DragOverlay>
+    </DndContext>
+  );
+}
 
-      <Group justify="flex-end">
-        <Button variant="default" onClick={onClose}>
-          {tCommon("common.action.cancel")}
-        </Button>
-        <Button
-          onClick={() => {
-            onSave(draft);
-            onClose();
-          }}
-        >
-          {tCommon("common.action.apply")}
-        </Button>
-      </Group>
-    </Stack>
+function InsertDragPreview({ view }: { view: SmartHomeElementView }) {
+  const Icon = viewIcons[view];
+  return (
+    <ThemeIcon size={40} radius="md">
+      <Icon size={22} />
+    </ThemeIcon>
   );
 }

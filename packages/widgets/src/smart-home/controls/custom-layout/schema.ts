@@ -116,8 +116,13 @@ export const getElementParts = (view: SmartHomeElementView, domain: string | und
 /** Views that show a number the user can format and color by rules. */
 export const valueElementViews = new Set<SmartHomeElementView>(["value", "group", "status", "graph"]);
 
-/** Colors a rule or a card accent can use; Mantine's palette, so they follow the theme. */
+/**
+ * Colors a rule, a card or an element can use: the board's primary and secondary color, then Mantine's palette, so
+ * they all follow the theme.
+ */
 export const smartHomeLayoutColors = [
+  "primary",
+  "secondary",
   "red",
   "orange",
   "yellow",
@@ -176,6 +181,8 @@ const conditionSchema = comparisonSchema.extend({
 /** Everything about an element except where it is and which entity it shows. */
 const elementOptionsSchema = z.object({
   view: z.enum(smartHomeElementViews),
+  /** The element's own color, over its card's: "neutral" for the primary color, or one color. Unset: the card's. */
+  accent: z.union([z.literal("neutral"), colorSchema]).optional(),
   label: z.string().max(SMART_HOME_LAYOUT_MAX_TEXT).optional(),
   hideLabel: z.boolean().optional(),
   icon: iconNameSchema.optional(),
