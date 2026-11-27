@@ -41,7 +41,7 @@ import {
   useSmartHomeInteractionBlock,
 } from "../store";
 import type { HaEntity } from "../types";
-import { getHistoryStats, HistoryGraph, HistoryLegend } from "../../../common/history-graph";
+import { getHistoryDomains, getHistoryStats, HistoryGraph, HistoryLegend } from "../../../common/history-graph";
 import type { HistoryGraphLine } from "../../../common/history-graph";
 import { useCameraLive } from "../camera-live";
 import { PillSlider } from "../control-center/controls";
@@ -245,7 +245,7 @@ function TileElement({ entity, element, label }: ElementProps) {
   }
   if (!slider && fullTileDomains.has(entity.domain)) {
     return (
-      <div ref={ref} className={`${classes.tileElement} ${controlClasses.embeddedTile}`}>
+      <div ref={ref} className={`${classes.tileElement} ${controlClasses.embeddedTile}`} data-embedded>
         {width > 0 && height > 0 ? (
           // Embedded, the tile has no padding of its own: its size counts as if it had, so its parts fit the element.
           <EntityControl
@@ -712,6 +712,18 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
     [ids, own, history.data, entity, map, color, theme.accent],
   );
 
+  // A fixed scale holds for the lines in the first line's unit; an end left open follows the values as before.
+  const { scaleMin, scaleMax } = element;
+  const scaledLines = useMemo(() => {
+    if (scaleMin === undefined && scaleMax === undefined) return lines;
+    const unit = lines[0]?.unit ?? "";
+    const auto = getHistoryDomains(lines).get(unit);
+    const low = scaleMin ?? auto?.[0] ?? 0;
+    const high = scaleMax ?? auto?.[1] ?? low + 1;
+    if (!(high > low)) return lines;
+    return lines.map((line) => ((line.unit ?? "") === unit ? { ...line, domain: [low, high] as const } : line));
+  }, [lines, scaleMin, scaleMax]);
+
   // Each line by its own entity; the element's label names the whole graph.
   const lineLabels = useMemo(() => {
     const short = lines.map((line) => (line.entity ? getShortName(line.entity) : line.id));
@@ -755,7 +767,7 @@ function GraphView({ entity, element, label, source, ids }: ElementProps & { ids
         ) : null}
       </div>
       <div className={classes.graphArea}>
-        <HistoryGraph lines={lines} formatValue={format} formatTime={(time) => timeFormat.format(time)} />
+        <HistoryGraph lines={scaledLines} formatValue={format} formatTime={(time) => timeFormat.format(time)} />
       </div>
       {element.showMinMax && stats && primary ? (
         <div className={classes.graphRange}>

@@ -117,9 +117,8 @@ import {
 const GRID_ID = "smart-home-layout";
 // Drags that bring a new element from the insert bar, not move a card or an element.
 const isInsert = (id: string) => id.startsWith(INSERT_DRAG_PREFIX);
-// Used when the widget's size is unknown (e.g. a widget not yet placed on the board).
-const FALLBACK_CANVAS_HEIGHT = 420;
 const CANVAS_PADDING = 8;
+const DEFAULT_PREVIEW_SIZE = { width: 350, height: 350 };
 /** What the editor changes, with undo: the cards and the saved templates. */
 interface EditorDraft {
   cards: SmartHomeLayoutCard[];
@@ -428,7 +427,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   const [shareOpened, setShareOpened] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState(false);
-  const shownSize = previewSize;
+  // A widget that is not on the board yet has no size: it is shown as a square, like a typical new card.
+  const shownSize = previewSize ?? DEFAULT_PREVIEW_SIZE;
   const [templateDevice, setTemplateDevice] = useState<string | null>(null);
   const [templateOpened, setTemplateOpened] = useState(false);
   // Positions while dragging or resizing; the cards themselves change once, when the gesture ends.
@@ -449,7 +449,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       })),
     [layoutRows],
   );
-  const canvasHeight = shownSize?.height ?? FALLBACK_CANVAS_HEIGHT;
+  const canvasHeight = shownSize.height;
   const rowHeight = Math.max(getMinimumRowHeight(cards), (canvasHeight + LAYOUT_GAP) / layoutRows - LAYOUT_GAP);
   const gridHeight = rowHeight * layoutRows + LAYOUT_GAP * (layoutRows - 1);
   const pitchY = rowHeight + LAYOUT_GAP;
@@ -1248,11 +1248,9 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
 
         <div className={classes.editor}>
           <div className={`${controlClasses.root} ${classes.canvasScroll}`}>
-            {previewSize && (
-              <div className={classes.canvasHint}>
-                {t("previewHint", { width: Math.round(previewSize.width), height: Math.round(previewSize.height) })}
-              </div>
-            )}
+            <div className={classes.canvasHint}>
+              {t("previewHint", { width: Math.round(shownSize.width), height: Math.round(shownSize.height) })}
+            </div>
             <SmartHomeInteractionProvider blocked="editing">
               <SmartHomeLiveProvider
                 integrationId={integrationId}
@@ -1269,7 +1267,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                     {
                       "--opacity": (board?.opacity ?? 100) / 100,
                       // Exactly the widget's width: a larger widget scrolls here rather than being previewed narrower.
-                      width: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
+                      width: shownSize.width + CANVAS_PADDING * 2,
                       // Explicit, because the canvas is a size container and so does not grow with its rows.
                       height: gridHeight + CANVAS_PADDING * 2,
                       gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,

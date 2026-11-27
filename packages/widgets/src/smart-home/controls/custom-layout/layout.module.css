@@ -85,6 +85,12 @@
   overflow: hidden;
 }
 
+/* An embedded tile fits itself to the cell; its buttons' hover growth and shadow may show past the cell's edge. */
+/* (Not only a direct child: an element with its own color wraps its content once more.) */
+.elementCell:has([data-embedded]) {
+  overflow: visible;
+}
+
 .elementHead {
   display: flex;
   gap: var(--el-gap);

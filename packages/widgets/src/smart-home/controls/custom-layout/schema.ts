@@ -224,6 +224,9 @@ const elementOptionsSchema = z.object({
     .refine((value) => (smartHomeGraphRanges as readonly number[]).includes(value))
     .optional(),
   showMinMax: z.boolean().optional(),
+  /** Graph: a fixed scale (in the first line's unit), e.g. 0 to 300 °C; an unset end follows the values. */
+  scaleMin: z.number().finite().optional(),
+  scaleMax: z.number().finite().optional(),
   /** Parts of the element that are switched off, e.g. a player's cover or a thermostat's mode buttons. */
   hide: z.array(z.enum(smartHomeElementParts)).max(smartHomeElementParts.length).optional(),
   /** Camera: false shows only the snapshot, even when the camera can stream. */

@@ -464,6 +464,24 @@ export function ElementSettings({
             checked={element.showMinMax === true}
             onChange={(event) => set({ showMinMax: event.currentTarget.checked || undefined })}
           />
+          <Input.Wrapper label={t("graphScale")} description={t("graphScaleHint")}>
+            <Group gap="xs" grow mt={4}>
+              <NumberInput
+                size="sm"
+                aria-label={t("graphScaleMin")}
+                placeholder={t("graphScaleMin")}
+                value={element.scaleMin ?? ""}
+                onChange={(value) => set({ scaleMin: typeof value === "number" ? value : undefined })}
+              />
+              <NumberInput
+                size="sm"
+                aria-label={t("graphScaleMax")}
+                placeholder={t("graphScaleMax")}
+                value={element.scaleMax ?? ""}
+                onChange={(value) => set({ scaleMax: typeof value === "number" ? value : undefined })}
+              />
+            </Group>
+          </Input.Wrapper>
         </Stack>
       ),
     });
@@ -531,8 +549,8 @@ export function ElementSettings({
   // A full tile (thermostat, player, ...) draws its own name and icon.
   const fullTile = element.view === "tile" && entity !== undefined && fullTileDomains.has(entity.domain);
   const canHideLabel = labelledElementViews.has(element.view) && !fullTile;
-  // A large control's icon is its switch, so it always shows.
-  const canHideIcon = iconElementViews.has(element.view) && element.view !== "tile";
+  // A large control's icon is its switch, so it always shows; a percentage's ring has none.
+  const canHideIcon = iconElementViews.has(element.view) && (element.view !== "tile" || ringTile);
   if (parts.length > 0) {
     const hidden = new Set(element.hide ?? []);
     const togglePart = (part: SmartHomeElementPart, shown: boolean) => {

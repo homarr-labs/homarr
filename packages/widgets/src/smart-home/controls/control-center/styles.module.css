@@ -368,9 +368,11 @@
   height: 100%;
 }
 
-/* The card around an embedded tile already pads it; the tile's own padding would leave its controls less room. */
+/* The card around an embedded tile already pads it; the tile's own padding would leave its controls less room.
+   The tile fits its parts to its size, so a button's hover growth and shadow may reach into the card's padding. */
 .embeddedTile .tile {
   padding: 0;
+  overflow: visible;
 }
 
 button.tile {
@@ -1322,6 +1324,13 @@ button.tile:not(:disabled):active {
   max-width: 100%;
 }
 
+/* Without cover and artist the tile is short: the title keeps to one line. */
+.mediaMiniHead[data-single="true"] .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* The time bar spans the tile; centered like the rest, it would shrink to its two times and run them together. */
 .mediaMini .progress {
   align-self: stretch;
@@ -1329,11 +1338,15 @@ button.tile:not(:disabled):active {
 
 .mediaMiniHead {
   display: flex;
+  /* When the tile is too short, the title row gives way, never the play button. */
+  flex: 0 1 auto;
   gap: 8px;
   align-items: center;
   justify-content: center;
   align-self: stretch;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .mediaMiniText {
@@ -1446,6 +1459,8 @@ button.tile:not(:disabled):active {
   display: flex;
   justify-content: space-between;
   font-size: 11px;
+  /* Bar, gap and times add up to the row height the media tile plans with (22px). */
+  line-height: 14px;
   font-variant-numeric: tabular-nums;
   color: var(--secondary-ink);
 }

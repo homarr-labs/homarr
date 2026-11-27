@@ -959,7 +959,8 @@ function MediaControl({ entity, width, height }: ControlProps) {
           : null;
     // The cover needs its own height besides the playback row; a short tile drops it rather than clip the buttons.
     const miniArt = showsCover && miniWidth >= MINI_ART_MIN_WIDTH && miniHeight >= MINI_ART_MIN + MINI_GAP + miniMain;
-    const miniSubtitle = !idle && subtitle !== "";
+    // The artist line goes before the play button would be cut off at the bottom.
+    const miniSubtitle = !idle && subtitle !== "" && (miniArt || miniHeight >= MINI_ART_MIN + MINI_GAP + miniMain);
     const headHeight = miniArt || miniSubtitle ? MINI_ART_MIN : MINI_TITLE_HEIGHT;
     // The time bar takes a row when the player reports where it is and the tile has the height.
     const miniProgress =
@@ -977,7 +978,7 @@ function MediaControl({ entity, width, height }: ControlProps) {
     return (
       <Tile theme={theme} className={classes.mediaTile}>
         <div className={classes.mediaMini}>
-          <div className={classes.mediaMiniHead} data-art={miniArt}>
+          <div className={classes.mediaMiniHead} data-art={miniArt} data-single={!miniArt && !miniSubtitle}>
             {miniArt ? art(miniArtSize, volumeButton(true)) : null}
             <div className={classes.mediaMiniText}>
               <span className={classes.name} title={title} data-entity-name={title === entity.name}>
