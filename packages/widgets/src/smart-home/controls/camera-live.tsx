@@ -61,14 +61,18 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
   // The stream that failed last; a new stream (or coming back on screen) tries again.
   const [failedKey, setFailedKey] = useState<string | null>(null);
   // WebRTC first; when it fails, the integration is asked for HLS once (Home Assistant has both).
-  const [prefer, setPrefer] = useState<"hls" | undefined>(undefined);
+  // Kept with the camera it was learned for, so another camera in the same view starts from WebRTC again.
+  const [preferred, setPreferred] = useState<{ camera: string; prefer: "hls" } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [restarting, setRestarting] = useState<{ frame?: string; waiting: boolean } | null>(null);
   const drops = useRef(0);
+  const shownCamera = useRef<string | null>(null);
   const playingSince = useRef<number | null>(null);
   // Live only once the picture actually runs; until then the view is connecting.
   const [playing, setPlaying] = useState(false);
   const restartTimer = useRef<number | undefined>(undefined);
+  // Asks the integration for the stream again: an HLS address is a short-lived token for one stream.
+  const refetchStream = useRef<() => Promise<unknown>>(() => Promise.resolve());
   const scheduleRestart = (frame?: string) => {
     if (playingSince.current !== null && Date.now() - playingSince.current > STABLE_STREAM_MS) drops.current = 0;
     playingSince.current = null;
@@ -78,33 +82,41 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
     setRestarting((current) => ({ frame: frame ?? current?.frame, waiting: true }));
     window.clearTimeout(restartTimer.current);
     restartTimer.current = window.setTimeout(() => {
-      setRestarting((current) => (current ? { ...current, waiting: false } : current));
-      setAttempt((value) => value + 1);
+      // The player stays away until the new address is there, so a reconnect never reuses an expired one.
+      void refetchStream.current().finally(() => {
+        setRestarting((current) => (current ? { ...current, waiting: false } : current));
+        setAttempt((value) => value + 1);
+      });
     }, delay);
   };
   useEffect(() => () => window.clearTimeout(restartTimer.current), []);
 
+  const cameraKey = `${integrationId ?? ""}:${entity.id}`;
+  const prefer = preferred?.camera === cameraKey ? preferred.prefer : undefined;
   const wantsLive = enabled && inViewport && pageVisible && entity.state !== "unavailable" && integrationId !== null;
   const stream = clientApi.widget.smartHome.cameraStream.useQuery(
     { integrationId: integrationId ?? "", entityId: entity.id, ...(prefer ? { prefer } : {}) },
     { enabled: wantsLive, staleTime: 60_000, gcTime: 0, refetchOnWindowFocus: false, retry: false },
   );
+  refetchStream.current = stream.refetch;
   const kind = wantsLive ? stream.data?.kind : undefined;
   const url = stream.data?.kind === "hls" ? stream.data.url : null;
   const streamKey = kind === "hls" ? url : kind === "webrtc" ? `webrtc:${entity.id}` : null;
   const live = streamKey !== null && streamKey !== failedKey;
+  // Back on screen, or showing another camera: everything is tried again from the best stream, and nothing (a
+  // preferred HLS, a pending restart, a kept frame) carries over from before.
   useEffect(() => {
-    if (wantsLive) return;
-    // Back on screen, everything is tried again from the best stream.
+    if (wantsLive && cameraKey === shownCamera.current) return;
+    shownCamera.current = cameraKey;
     setFailedKey(null);
-    setPrefer(undefined);
+    setPreferred(null);
     setRestarting(null);
     drops.current = 0;
     // A new view starts without a drop to recover from: failing before its first frame falls back instead.
     playingSince.current = null;
     setPlaying(false);
     window.clearTimeout(restartTimer.current);
-  }, [wantsLive]);
+  }, [wantsLive, cameraKey]);
 
   // Waiting for the stream address, a player that has not shown a frame yet, or a restart.
   const connecting = !playing && wantsLive && (stream.isLoading || live || restarting !== null);
@@ -149,7 +161,7 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
             if (reason === "dropped" || restarting) scheduleRestart(frame);
             else {
               setPlaying(false);
-              setPrefer("hls");
+              setPreferred({ camera: cameraKey, prefer: "hls" });
             }
           }}
         />
