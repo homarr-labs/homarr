@@ -310,9 +310,8 @@ const templateSchema = z.object({
 
 export const smartHomeLayoutSchema = z.object({
   version: z.literal(SMART_HOME_LAYOUT_VERSION),
+  /** One arrangement for every size: a widget too narrow for it stacks its cards automatically. */
   cards: z.array(cardSchema).max(SMART_HOME_LAYOUT_MAX_CARDS),
-  /** A separate arrangement for narrow widgets (phones); without it, cards stack automatically. */
-  narrowCards: z.array(cardSchema).max(SMART_HOME_LAYOUT_MAX_CARDS).optional(),
   templates: z.array(templateSchema).max(SMART_HOME_LAYOUT_MAX_TEMPLATES).optional(),
 });
 
@@ -371,11 +370,9 @@ export const parseSmartHomeLayout = (value: unknown): SmartHomeLayout => {
     return {
       ...parsed.data,
       cards: parsed.data.cards.map((card) => fitCard(withUniqueElements(card))),
-      narrowCards: parsed.data.narrowCards?.map((card) => fitCard(withUniqueElements(card))),
     };
   }
   if (typeof value !== "object" || value === null || !("cards" in value)) return emptySmartHomeLayout;
-  const narrowCards = "narrowCards" in value && Array.isArray(value.narrowCards) ? salvageCards(value.narrowCards) : [];
   const templates =
     "templates" in value && Array.isArray(value.templates)
       ? value.templates.flatMap((template: unknown) => templateSchema.safeParse(template).data ?? [])
@@ -383,19 +380,9 @@ export const parseSmartHomeLayout = (value: unknown): SmartHomeLayout => {
   return {
     version: SMART_HOME_LAYOUT_VERSION,
     cards: salvageCards(value.cards),
-    ...(narrowCards.length > 0 ? { narrowCards } : {}),
     ...(templates.length > 0 ? { templates: templates.slice(0, SMART_HOME_LAYOUT_MAX_TEMPLATES) } : {}),
   };
 };
-
-const allCards = (layout: SmartHomeLayout) => [...layout.cards, ...(layout.narrowCards ?? [])];
-
-/** Below this width a layout with its own narrow arrangement uses that one; without one, its cards stack. */
-export const NARROW_WIDGET_WIDTH = 400;
-
-/** The cards a widget of this width shows: the narrow arrangement when there is one and the widget is narrow. */
-export const getShownCards = (layout: SmartHomeLayout, width: number) =>
-  width < NARROW_WIDGET_WIDTH && layout.narrowCards?.length ? layout.narrowCards : layout.cards;
 
 // The live selection's limit (entities per widget) and the shared history's (entities per request).
 export const SMART_HOME_LAYOUT_MAX_LIVE_ENTITIES = 200;
@@ -415,7 +402,7 @@ export const getElementEntityIds = (element: SmartHomeLayoutElement) =>
 export const getLayoutEntityIds = (
   layout: SmartHomeLayout,
   source: string | null,
-  cards: readonly SmartHomeLayoutCard[] = allCards(layout),
+  cards: readonly SmartHomeLayoutCard[] = layout.cards,
 ) =>
   [
     ...new Set(
@@ -436,7 +423,7 @@ export const hasOwnGraphHistory = (element: SmartHomeLayoutElement) =>
 export const getLayoutGraphEntityIds = (
   layout: SmartHomeLayout,
   source: string | null,
-  cards: readonly SmartHomeLayoutCard[] = allCards(layout),
+  cards: readonly SmartHomeLayoutCard[] = layout.cards,
 ) => [
   ...new Set(
     inReadingOrder(cards).flatMap((card) =>

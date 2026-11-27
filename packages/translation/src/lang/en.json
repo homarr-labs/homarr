@@ -3740,11 +3740,6 @@
           "cancel": "Cancel",
           "myTemplates": "My templates",
           "deleteTemplate": "Delete template {name}",
-          "variant": "Arrangement",
-          "variants": {
-            "wide": "Wide",
-            "narrow": "Narrow"
-          },
           "undo": "Undo",
           "redo": "Redo",
           "share": "Share",
@@ -3760,8 +3755,6 @@
           "invalidPlacement": "Check the layout for overlapping items, duplicate IDs, or items outside their grid.",
           "importInvalid": "This is not a smart home layout.",
           "importApply": "Import and replace",
-          "narrowHint": "Shown when the widget is narrower than {width} px. Without cards here, the wide cards stack.",
-          "copyWide": "Copy wide layout",
           "color": "Color",
           "noColor": "No color",
           "colorSaturation": "Saturation",

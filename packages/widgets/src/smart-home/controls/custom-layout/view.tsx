@@ -88,7 +88,6 @@ import {
 } from "./rules";
 import {
   fullTileDomains,
-  getShownCards,
   hasOwnGraphHistory,
   SMART_HOME_LAYOUT_COLUMNS,
   SMART_HOME_LAYOUT_ROWS,
@@ -1055,15 +1054,10 @@ interface CustomLayoutViewProps {
 export function CustomLayoutView({ layout, source, width }: CustomLayoutViewProps) {
   const t = useI18n("widget.smartHome-controls.layout");
   const editing = useSmartHomeInteractionBlock() === "editing";
-  const shownCards = getShownCards(layout, width);
-  // A narrow arrangement is made for this width, so it keeps all 12 columns. Otherwise the board shows what the
-  // editor previewed at this size, and stacks the cards only when one of them would be too thin to use.
-  const columns =
-    shownCards !== layout.cards
-      ? SMART_HOME_LAYOUT_COLUMNS
-      : needsStacking(shownCards, width)
-        ? getStackColumns(width)
-        : getLayoutColumns(width);
+  const shownCards = layout.cards;
+  // The board shows what the editor previewed at this size, and stacks the cards only when one of them would be too
+  // thin to use.
+  const columns = needsStacking(shownCards, width) ? getStackColumns(width) : getLayoutColumns(width);
   // Depends only on the stored layout and the column count, so live updates never recompute placements.
   const placements = useMemo(() => deriveLayout(shownCards, columns, width), [shownCards, columns, width]);
   const cards = useMemo(() => new Map(shownCards.map((card) => [card.id, card])), [shownCards]);

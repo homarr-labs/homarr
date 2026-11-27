@@ -13,12 +13,7 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps } from "../../definition";
 import { createEntityBlockId, parseBlockId, parseSourceBlocks } from "./configuration";
 import { CustomLayoutEditButton } from "./custom-layout/inline-button";
-import {
-  getLayoutEntityIds,
-  getLayoutGraphEntityIds,
-  getShownCards,
-  parseSmartHomeLayout,
-} from "./custom-layout/schema";
+import { getLayoutEntityIds, getLayoutGraphEntityIds, parseSmartHomeLayout } from "./custom-layout/schema";
 import classes from "./configuration.module.css";
 import { getDeviceEntityLabel, getReadingRank, toPanelItems } from "./device-groups";
 import type { DevicePanelItem, PanelItem } from "./device-groups";
@@ -709,9 +704,8 @@ function ConfigurableContent({
   const blocked = useInteractionBlock(configuration, props.isEditMode);
   const { integrationId, customLayout } = configuration;
   const custom = configuration.layoutMode === "custom";
-  // A custom layout subscribes to exactly the entities its shown arrangement (wide or narrow) shows, each once, and
-  // to history only for its graphs; the other arrangement costs nothing until the widget changes width.
-  const shownCards = getShownCards(customLayout, props.width - CUSTOM_LAYOUT_INSET);
+  // A custom layout subscribes to exactly the entities its cards show, each once, and to history only for its graphs.
+  const shownCards = customLayout.cards;
   const layoutBlockIds = useMemo(
     () =>
       custom

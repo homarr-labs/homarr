@@ -15,12 +15,10 @@ import {
 import type { DragEndEvent, DragMoveEvent, DragStartEvent, KeyboardSensorOptions } from "@dnd-kit/core";
 import {
   ActionIcon,
-  Box,
   Button,
   CopyButton,
   Group,
   Popover,
-  SegmentedControl,
   Select,
   Stack,
   Text,
@@ -87,7 +85,6 @@ import { viewIcons } from "./view-icons";
 import {
   getLayoutEntityIds,
   getLayoutGraphEntityIds,
-  NARROW_WIDGET_WIDTH,
   smartHomeLayoutSchema,
   SMART_HOME_CARD_MIN,
   SMART_HOME_LAYOUT_COLUMNS,
@@ -107,14 +104,7 @@ import type {
 } from "./schema";
 import { cardFromTemplate, cardToTemplate, duplicateCard } from "./templates";
 import { useUndoable } from "./use-undoable";
-import CustomLayoutView, {
-  CardColors,
-  cardBodyStyle,
-  CardTint,
-  getCardPalette,
-  LayoutElement,
-  placementStyle,
-} from "./view";
+import { CardColors, cardBodyStyle, CardTint, getCardPalette, LayoutElement, placementStyle } from "./view";
 
 const GRID_ID = "smart-home-layout";
 // Drags that bring a new element from the insert bar, not move a card or an element.
@@ -122,16 +112,9 @@ const isInsert = (id: string) => id.startsWith(INSERT_DRAG_PREFIX);
 // Used when the widget's size is unknown (e.g. a widget not yet placed on the board).
 const FALLBACK_CANVAS_HEIGHT = 420;
 const CANVAS_PADDING = 8;
-// The narrow arrangement is previewed at a phone-sized widget width.
-const NARROW_PREVIEW_WIDTH = 360;
-const noCards: SmartHomeLayoutCard[] = [];
-
-type LayoutVariant = "wide" | "narrow";
-
-/** What the editor changes, with undo: both arrangements and the saved templates. */
+/** What the editor changes, with undo: the cards and the saved templates. */
 interface EditorDraft {
   cards: SmartHomeLayoutCard[];
-  narrowCards: SmartHomeLayoutCard[] | undefined;
   templates: SmartHomeLayoutTemplate[] | undefined;
 }
 
@@ -396,25 +379,17 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   // Elements stored outside their card (old or hand-written layouts) move back into free space.
   const history = useUndoable<EditorDraft>(() => ({
     cards: layout.cards.map((card) => fitElementsIntoCard(card) ?? card),
-    narrowCards: layout.narrowCards?.map((card) => fitElementsIntoCard(card) ?? card),
     templates: layout.templates,
   }));
   const { update: updateDraft } = history;
-  // A narrow widget opens on its narrow cards; without any it shows the wide cards stacked, so those are what to edit.
-  const [variant, setVariant] = useState<LayoutVariant>(() =>
-    previewSize && previewSize.width < NARROW_WIDGET_WIDTH && layout.narrowCards?.length ? "narrow" : "wide",
-  );
-  const cards = variant === "wide" ? history.value.cards : (history.value.narrowCards ?? noCards);
-  // Changes the arrangement being edited, wide or narrow.
+  const cards = history.value.cards;
   const setCards = useCallback(
     (next: SmartHomeLayoutCard[] | ((current: SmartHomeLayoutCard[]) => SmartHomeLayoutCard[])) =>
       updateDraft((draft) => {
-        const current = variant === "wide" ? draft.cards : (draft.narrowCards ?? noCards);
-        const value = typeof next === "function" ? next(current) : next;
-        if (value === current) return draft;
-        return variant === "wide" ? { ...draft, cards: value } : { ...draft, narrowCards: value };
+        const value = typeof next === "function" ? next(draft.cards) : next;
+        return value === draft.cards ? draft : { ...draft, cards: value };
       }),
-    [updateDraft, variant],
+    [updateDraft],
   );
   // No undo while a drag or resize is running: the gesture would end on the old arrangement and undo the undo.
   const undo = () => {
@@ -445,14 +420,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
   const [shareOpened, setShareOpened] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState(false);
-  // The narrow arrangement is shown at a phone-sized width; the height stays the widget's.
-  const shownSize =
-    variant === "narrow"
-      ? {
-          width: Math.min(NARROW_PREVIEW_WIDTH, previewSize?.width ?? NARROW_PREVIEW_WIDTH),
-          height: previewSize?.height ?? FALLBACK_CANVAS_HEIGHT,
-        }
-      : previewSize;
+  const shownSize = previewSize;
   const [templateDevice, setTemplateDevice] = useState<string | null>(null);
   const [templateOpened, setTemplateOpened] = useState(false);
   // Positions while dragging or resizing; the cards themselves change once, when the gesture ends.
@@ -473,7 +441,6 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       })),
     [layoutRows],
   );
-  const showStackedPreview = variant === "narrow" && !cards.length && history.value.cards.length > 0;
   const canvasHeight = shownSize?.height ?? FALLBACK_CANVAS_HEIGHT;
   const rowHeight = Math.max(getMinimumRowHeight(cards), (canvasHeight + LAYOUT_GAP) / layoutRows - LAYOUT_GAP);
   const gridHeight = rowHeight * layoutRows + LAYOUT_GAP * (layoutRows - 1);
@@ -483,7 +450,6 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
     (): SmartHomeLayout => ({
       version: SMART_HOME_LAYOUT_VERSION,
       cards: history.value.cards,
-      ...(history.value.narrowCards?.length ? { narrowCards: history.value.narrowCards } : {}),
       ...(history.value.templates?.length ? { templates: history.value.templates } : {}),
     }),
     [history.value],
@@ -1021,12 +987,6 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       return { ...current, templates: next.length > 0 ? next : undefined };
     });
 
-  const switchVariant = (next: LayoutVariant) => {
-    setVariant(next);
-    selectCard(null);
-    cancel();
-  };
-
   const download = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(draft, null, 2)], { type: "application/json" }));
     const link = document.createElement("a");
@@ -1044,13 +1004,12 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       setImportError(true);
       return;
     }
-    if (parsed.cards.length === 0 && !parsed.narrowCards?.length && !parsed.templates?.length) {
+    if (parsed.cards.length === 0 && !parsed.templates?.length) {
       setImportError(true);
       return;
     }
     // Cards on top of each other, or elements outside their card, cannot be edited; such a layout is refused.
-    const arrangements = [parsed.cards, ...(parsed.narrowCards ? [parsed.narrowCards] : [])];
-    if (!arrangements.every(isValidArrangement)) {
+    if (!isValidArrangement(parsed.cards)) {
       setImportError(true);
       return;
     }
@@ -1063,7 +1022,6 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
       ].slice(-SMART_HOME_LAYOUT_MAX_TEMPLATES);
       return {
         cards: withSource(parsed.cards, integrationId),
-        narrowCards: parsed.narrowCards ? withSource(parsed.narrowCards, integrationId) : undefined,
         templates: mergedTemplates.length > 0 ? mergedTemplates : undefined,
       };
     });
@@ -1180,16 +1138,6 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
             </Popover>
           </Group>
           <Group gap="xs" wrap="wrap">
-            <SegmentedControl
-              size="sm"
-              aria-label={t("variant")}
-              value={variant}
-              onChange={(value) => switchVariant(value as LayoutVariant)}
-              data={[
-                { value: "wide", label: t("variants.wide") },
-                { value: "narrow", label: t("variants.narrow") },
-              ]}
-            />
             <Tooltip label={t("undo")}>
               <ActionIcon
                 variant="default"
@@ -1292,21 +1240,10 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
 
         <div className={classes.editor}>
           <div className={`${controlClasses.root} ${classes.canvasScroll}`}>
-            {variant === "narrow" ? (
-              <Group className={classes.canvasHint} gap="xs" justify="space-between" wrap="nowrap">
-                <span>{t("narrowHint", { width: NARROW_WIDGET_WIDTH })}</span>
-                {cards.length === 0 && history.value.cards.length > 0 && (
-                  <Button size="compact-xs" variant="light" onClick={() => setCards(history.value.cards)}>
-                    {t("copyWide")}
-                  </Button>
-                )}
-              </Group>
-            ) : (
-              previewSize && (
-                <div className={classes.canvasHint}>
-                  {t("previewHint", { width: Math.round(previewSize.width), height: Math.round(previewSize.height) })}
-                </div>
-              )
+            {previewSize && (
+              <div className={classes.canvasHint}>
+                {t("previewHint", { width: Math.round(previewSize.width), height: Math.round(previewSize.height) })}
+              </div>
             )}
             <SmartHomeInteractionProvider blocked="editing">
               <SmartHomeLiveProvider
@@ -1326,7 +1263,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                       // Exactly the widget's width: a larger widget scrolls here rather than being previewed narrower.
                       width: shownSize ? shownSize.width + CANVAS_PADDING * 2 : undefined,
                       // Explicit, because the canvas is a size container and so does not grow with its rows.
-                      height: (showStackedPreview ? canvasHeight : gridHeight) + CANVAS_PADDING * 2,
+                      height: gridHeight + CANVAS_PADDING * 2,
                       gridTemplateColumns: `repeat(${SMART_HOME_LAYOUT_COLUMNS}, minmax(0, 1fr))`,
                       gridTemplateRows: `repeat(${layoutRows}, ${rowHeight}px)`,
                       gap: LAYOUT_GAP,
@@ -1334,15 +1271,14 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                   }
                 >
                   {/* The widget's grid, cell by cell: shows how big the widget is and where cards snap to. */}
-                  {!showStackedPreview &&
-                    gridCells.map(({ key, column, row }) => (
-                      <div
-                        key={key}
-                        className={classes.canvasCell}
-                        style={{ gridColumn: column, gridRow: row }}
-                        aria-hidden
-                      />
-                    ))}
+                  {gridCells.map(({ key, column, row }) => (
+                    <div
+                      key={key}
+                      className={classes.canvasCell}
+                      style={{ gridColumn: column, gridRow: row }}
+                      aria-hidden
+                    />
+                  ))}
                   {cards.map((card) => (
                     <CanvasCard
                       key={card.id}
@@ -1360,16 +1296,7 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
                       onElementResizeStart={onElementResizeStart}
                     />
                   ))}
-                  {showStackedPreview && (
-                    <Box style={{ gridColumn: "1 / -1", gridRow: "1 / -1" }} mih={0}>
-                      <CustomLayoutView
-                        layout={draft}
-                        source={integrationId}
-                        width={shownSize?.width ?? NARROW_PREVIEW_WIDTH}
-                      />
-                    </Box>
-                  )}
-                  {cards.length === 0 && !showStackedPreview && (
+                  {cards.length === 0 && (
                     <Stack className={classes.canvasEmpty} gap="sm" align="center">
                       <Text size="sm" c="dimmed" ta="center">
                         {t("canvasEmpty")}
