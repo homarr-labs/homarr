@@ -1317,6 +1317,11 @@ button.tile:not(:disabled):active {
   max-width: 100%;
 }
 
+/* The time bar spans the tile; centered like the rest, it would shrink to its two times and run them together. */
+.mediaMini .progress {
+  align-self: stretch;
+}
+
 .mediaMiniHead {
   display: flex;
   gap: 8px;

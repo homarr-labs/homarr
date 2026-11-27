@@ -40,7 +40,6 @@ export const cardToTemplate = (
     h: card.h,
     colors: card.colors,
     accent: card.accent,
-    tint: card.tint,
     readOnly: card.readOnly,
     elements: card.elements.flatMap((element): SmartHomeLayoutTemplateElement[] => {
       const { id: _id, source: _source, entityId, entityIds: _entityIds, condition, ...options } = element;
@@ -116,7 +115,6 @@ export const cardFromTemplate = (
     title: title?.slice(0, SMART_HOME_LAYOUT_MAX_TEXT),
     colors: template.colors,
     accent: template.accent,
-    tint: template.tint,
     readOnly: template.readOnly,
     elements,
   });

@@ -155,7 +155,8 @@ export const smartHomeLayoutColors = [
 export type SmartHomeLayoutNamedColor = (typeof smartHomeLayoutColors)[number];
 /** A palette color by name (follows the theme), or a custom one as #rrggbb. */
 export type SmartHomeLayoutColor = SmartHomeLayoutNamedColor | `#${string}`;
-const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+// #rrggbb, or #rrggbbaa for a see-through color.
+const HEX_COLOR = /^#[0-9a-f]{6}([0-9a-f]{2})?$/i;
 export const isNamedLayoutColor = (color: string): color is SmartHomeLayoutNamedColor =>
   (smartHomeLayoutColors as readonly string[]).includes(color);
 
@@ -274,8 +275,6 @@ const cardSchema = z.object({
   /** How the card colors what is on: the primary color (unset), each entity's own color, or the card's accent. */
   colors: z.enum(smartHomeCardColors).optional(),
   accent: colorSchema.optional(),
-  /** Tints the card in its first entity's color while that entity is on. */
-  tint: z.boolean().optional(),
   /** Nothing on this card can be controlled; the widget's own read-only setting covers every card. */
   readOnly: z.boolean().optional(),
   elements: z.array(elementSchema).max(SMART_HOME_LAYOUT_MAX_ELEMENTS),
@@ -303,7 +302,6 @@ const templateSchema = z.object({
   h: z.number().int().min(1).max(SMART_HOME_LAYOUT_ROWS),
   colors: z.enum(smartHomeCardColors).optional(),
   accent: colorSchema.optional(),
-  tint: z.boolean().optional(),
   readOnly: z.boolean().optional(),
   elements: z.array(templateElementSchema).max(SMART_HOME_LAYOUT_MAX_ELEMENTS),
 });

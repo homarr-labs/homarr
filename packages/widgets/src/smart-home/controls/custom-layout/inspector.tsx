@@ -302,12 +302,6 @@ export function CardInspector({
             <Accordion.Panel>
               <Stack gap="sm">
                 <Switch
-                  label={t("tint")}
-                  description={t("tintHint")}
-                  checked={card.tint === true}
-                  onChange={(event) => onChange({ ...card, tint: event.currentTarget.checked || undefined })}
-                />
-                <Switch
                   label={t("readOnly")}
                   description={t("readOnlyCardHint")}
                   checked={card.readOnly === true}

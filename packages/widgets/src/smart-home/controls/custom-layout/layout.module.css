@@ -37,6 +37,15 @@
   /* The device card's 12px at the base size. */
   padding: 0.92em;
   font-size: clamp(11px, 2.9cqmin, 20px);
+  transition:
+    background 0.35s,
+    border-color 0.35s;
+}
+
+/* A card with its own color, tinted like a device card that is on. */
+.card[data-color] {
+  background: color-mix(in srgb, var(--card-color) 17%, var(--tile-bg));
+  border-color: color-mix(in srgb, var(--card-color) 40%, var(--tile-border));
 }
 
 /* Like a device card's name. */

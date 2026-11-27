@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
   Accordion,
   ActionIcon,
   Button,
+  ColorInput,
   ColorPicker,
   ColorSwatch,
+  convertHsvaTo,
+  isColorValid,
+  parseColor,
   Divider,
   Group,
   Input,
@@ -140,6 +144,88 @@ export function ColorSelect({
   );
 }
 
+type ColorTextFormat = "hexa" | "rgba";
+
+/** Any color as stored: #rrggbb, or #rrggbbaa when it is see-through. */
+const toStoredColor = (color: string) => {
+  const hsva = parseColor(color);
+  return convertHsvaTo(hsva.a < 1 ? "hexa" : "hex", hsva).toLowerCase() as `#${string}`;
+};
+
+/** A color as text in the chosen format; an opaque color in HEX keeps the short #rrggbb. */
+const colorText = (color: string, format: ColorTextFormat) => {
+  const hsva = parseColor(color);
+  return convertHsvaTo(format === "hexa" && hsva.a >= 1 ? "hex" : format, hsva);
+};
+
+/**
+ * Any color: the picker with a transparency slider, and the same color as text (HEX or RGBA) to type or paste, with
+ * the browser's eyedropper where it has one.
+ */
+function CustomColorPicker({ value, onChange }: { value: string; onChange: (color: `#${string}`) => void }) {
+  const t = useI18n("widget.smartHome-controls.layout.editor");
+  const [color, setColor] = useState(value);
+  const [format, setFormat] = useState<ColorTextFormat>("hexa");
+  // The text field keeps what is typed until it is a color; the picker and the eyedropper write to it.
+  const [text, setText] = useState(() => colorText(value, format));
+  useEffect(() => {
+    setColor(value);
+  }, [value]);
+  const show = (next: string, nextFormat = format) => {
+    setColor(next);
+    setText(colorText(next, nextFormat));
+  };
+  const commit = (next: string) => {
+    if (isColorValid(next)) onChange(toStoredColor(next));
+  };
+  return (
+    <Stack gap="xs">
+      <ColorPicker
+        size="sm"
+        format="hexa"
+        fullWidth
+        value={color}
+        saturationLabel={t("colorSaturation")}
+        hueLabel={t("colorHue")}
+        alphaLabel={t("colorAlpha")}
+        onChange={(next) => show(next)}
+        onChangeEnd={commit}
+      />
+      <Group gap="xs" wrap="nowrap">
+        <SegmentedControl
+          size="xs"
+          aria-label={t("colorFormat")}
+          value={format}
+          onChange={(next) => {
+            setFormat(next as ColorTextFormat);
+            show(color, next as ColorTextFormat);
+          }}
+          data={[
+            { value: "hexa", label: "HEX" },
+            { value: "rgba", label: "RGBA" },
+          ]}
+        />
+        <ColorInput
+          size="xs"
+          flex={1}
+          aria-label={t("customColor")}
+          format={format}
+          withPicker={false}
+          withEyeDropper
+          value={text}
+          onChange={(next) => {
+            setText(next);
+            if (isColorValid(next)) setColor(next);
+          }}
+          // The eyedropper and Enter end here; typing ends when the field is left.
+          onChangeEnd={commit}
+          onBlur={() => commit(text)}
+        />
+      </Group>
+    </Stack>
+  );
+}
+
 /**
  * A color as a round swatch; a tap opens the palette (theme colors) and a picker for any other color. Takes little
  * room beside a rule's value.
@@ -206,14 +292,11 @@ export function ColorSwatchPicker({
             ))}
           </SimpleGrid>
           <Divider label={t("customColor")} labelPosition="left" />
-          <ColorPicker
-            size="sm"
-            format="hex"
-            fullWidth
-            value={custom ?? theme.colors[value && isNamedLayoutColor(value) ? value : theme.primaryColor]?.[6]}
-            saturationLabel={t("colorSaturation")}
-            hueLabel={t("colorHue")}
-            onChangeEnd={(hex) => onChange(hex.toLowerCase() as `#${string}`)}
+          <CustomColorPicker
+            value={
+              custom ?? theme.colors[value && isNamedLayoutColor(value) ? value : theme.primaryColor]?.[6] ?? "#228be6"
+            }
+            onChange={onChange}
           />
         </Stack>
       </Popover.Dropdown>

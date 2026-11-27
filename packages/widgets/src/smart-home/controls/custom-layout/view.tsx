@@ -862,6 +862,18 @@ export const getCardPalette = (card: Pick<SmartHomeLayoutCard, "colors">) =>
   card.colors === "state" ? "colorful" : "boring";
 
 /**
+ * A card with its own color takes it on its surface too, like a device card that is on: the color mixed into the
+ * card's background and border. `data-color` switches the CSS on.
+ */
+export const getCardSurface = (card: Pick<SmartHomeLayoutCard, "colors" | "accent">) =>
+  card.colors === "accent"
+    ? {
+        "data-color": true,
+        style: { "--card-color": layoutColor(card.accent ?? DEFAULT_CARD_ACCENT) } as CSSProperties,
+      }
+    : { "data-color": undefined, style: undefined };
+
+/**
  * The card's colors for everything inside it. The palette is also set on the card's element (`data-palette`),
  * where the control styles read it.
  */
@@ -881,7 +893,10 @@ const useOwnAccent = (color: SmartHomeLayoutColor | null) => {
   return useMemo(() => {
     if (!color) return null;
     if (color === "primary") return { accent: layoutColor(color), onAccent: "var(--mantine-primary-color-contrast)" };
-    const shade = color.startsWith("#") ? color : theme.colors[color === "secondary" ? "secondaryColor" : color]?.[6];
+    // Readable text depends on the color itself, not on how see-through it is.
+    const shade = color.startsWith("#")
+      ? color.slice(0, 7)
+      : theme.colors[color === "secondary" ? "secondaryColor" : color]?.[6];
     const onAccent = shade ? getContrastColor({ color: shade, theme, autoContrast: true }) : "#fff";
     return { accent: layoutColor(color), onAccent };
   }, [color, theme]);
@@ -902,7 +917,7 @@ function ElementColors({ accent, children }: { accent: SmartHomeLayoutColor | "n
   );
 }
 
-/** While the card's first entity is on, the card takes on its color. Only this layer re-renders for it. */
+/** "By device": the card takes on its first entity's color while that entity is on. Only this layer re-renders for it. */
 export function CardTint({ card, source }: { card: SmartHomeLayoutCard; source: string | null }) {
   const first = card.elements.find((element) => element.entityId && element.source === source);
   const entity = useSmartHomeEntity(first?.entityId ?? "");
@@ -1031,12 +1046,13 @@ const LayoutCard = memo(function LayoutCard({ card, source, x, y, w, h }: Layout
   return (
     <section
       className={classes.card}
-      style={placementStyle({ x, y, w, h })}
+      style={{ ...placementStyle({ x, y, w, h }), ...getCardSurface(card).style }}
+      data-color={getCardSurface(card)["data-color"]}
       data-palette={getCardPalette(card)}
       aria-label={card.title}
     >
       <CardColors card={card}>
-        {card.tint ? <CardTint card={card} source={source} /> : null}
+        {card.colors === "state" ? <CardTint card={card} source={source} /> : null}
         {card.title ? <h4 className={classes.cardTitle}>{card.title}</h4> : null}
         {card.readOnly ? <ReadOnlyScope>{body}</ReadOnlyScope> : body}
       </CardColors>

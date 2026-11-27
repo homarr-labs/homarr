@@ -104,7 +104,15 @@ import type {
 } from "./schema";
 import { cardFromTemplate, cardToTemplate, duplicateCard } from "./templates";
 import { useUndoable } from "./use-undoable";
-import { CardColors, cardBodyStyle, CardTint, getCardPalette, LayoutElement, placementStyle } from "./view";
+import {
+  CardColors,
+  cardBodyStyle,
+  CardTint,
+  getCardPalette,
+  getCardSurface,
+  LayoutElement,
+  placementStyle,
+} from "./view";
 
 const GRID_ID = "smart-home-layout";
 // Drags that bring a new element from the insert bar, not move a card or an element.
@@ -318,9 +326,9 @@ function CanvasCard({
       data-dragging={isDragging}
       style={placementStyle(placement)}
     >
-      <section className={layoutClasses.card} data-palette={getCardPalette(card)}>
+      <section className={layoutClasses.card} data-palette={getCardPalette(card)} {...getCardSurface(card)}>
         <CardColors card={card}>
-          {card.tint ? <CardTint card={card} source={source} /> : null}
+          {card.colors === "state" ? <CardTint card={card} source={source} /> : null}
           <div
             ref={setActivatorNodeRef}
             {...attributes}
