@@ -7410,6 +7410,17 @@
               "search": "Caută",
               "firstDayOfWeek": "Prima zi a săptămâni",
               "accessibility": "Accesibilitate",
+              "signInInformation": {
+                "title": "",
+                "provider": "Furnizor",
+                "subject": "Subiect",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Copiază",
+                "copied": "Copiat"
+              },
               "oauthConnections": {
                 "title": "Conexiuni OAuth",
                 "description": "Acești clienți au obținut acreditări API pentru contul tău prin OAuth. Acreditările funcționează cu HTTP API HTTP și MCP, nu expiră automat și rămân valide după ce te deconectezi.",

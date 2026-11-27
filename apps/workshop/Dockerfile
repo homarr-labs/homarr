@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS bun-tool
+FROM oven/bun:1.4.5-alpine@sha256:da816670775f4c2b4e990b6b1847cf5540dcdc721a42033dd331ce7a88ba6a3b AS bun-tool
 
 FROM node:24.22.3-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
