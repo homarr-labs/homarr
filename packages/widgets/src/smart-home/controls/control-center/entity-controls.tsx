@@ -55,6 +55,7 @@ import {
 
 import {
   formatEntityState,
+  formatOption,
   formatNumber,
   formatRelativeTime,
   getForecastMessage,
@@ -1757,7 +1758,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
       <Tile
         theme={theme}
         className={classes.center}
-        label={`${entity.name}, ${entity.state}`}
+        label={`${entity.name}, ${formatEntityState(entity)}`}
         onClick={next ? () => void run({ type: "selectOption", value: next }) : undefined}
       >
         <span className={classes.bigRound} data-active data-pending={pending}>
@@ -1766,7 +1767,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
         <span className={classes.name} title={entity.name}>
           {entity.name}
         </span>
-        <span className={classes.state}>{entity.state}</span>
+        <span className={classes.state}>{formatEntityState(entity)}</span>
       </Tile>
     );
   }
@@ -1775,7 +1776,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
     <Tile theme={theme}>
       <Head
         name={entity.name}
-        state={entity.state}
+        state={formatEntityState(entity)}
         leading={
           <span className={classes.miniIconStatic} data-active data-pending={pending}>
             <Icon size={18} stroke={1.8} />
@@ -1800,7 +1801,7 @@ function SelectControl({ entity, width, height }: ControlProps) {
               disabled={disabled}
               onClick={() => void run({ type: "selectOption", value: option })}
             >
-              {option}
+              {formatOption(entity, option)}
             </button>
           ))}
         </Box>

@@ -28,6 +28,7 @@ const elementRows: Record<SmartHomeElementView, { initial: number; min: number }
   graph: { initial: 3, min: 2 },
   status: { initial: 1, min: 1 },
   battery: { initial: 1, min: 1 },
+  progress: { initial: 1, min: 1 },
   heading: { initial: 1, min: 1 },
   divider: { initial: 1, min: 1 },
   spacer: { initial: 1, min: 1 },

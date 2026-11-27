@@ -39,6 +39,7 @@ export const smartHomeElementViews = [
   "graph",
   "status",
   "battery",
+  "progress",
   "heading",
   "divider",
   "spacer",
@@ -59,6 +60,7 @@ export const labelledElementViews = new Set<SmartHomeElementView>([
   "graph",
   "status",
   "battery",
+  "progress",
 ]);
 /**
  * Entities a tile shows as their full control center tile (dial, player, ...), named and drawn by that tile, unless
@@ -100,7 +102,15 @@ export const smartHomeElementParts = [
 ] as const;
 export type SmartHomeElementPart = (typeof smartHomeElementParts)[number];
 
-const iconPartViews = new Set<SmartHomeElementView>(["control", "value", "group", "graph", "status", "battery"]);
+const iconPartViews = new Set<SmartHomeElementView>([
+  "control",
+  "value",
+  "group",
+  "graph",
+  "status",
+  "battery",
+  "progress",
+]);
 const climateDomains = new Set(["climate", "water_heater"]);
 
 /** The parts an element can hide, in the order the editor lists them. */
@@ -114,7 +124,7 @@ export const getElementParts = (view: SmartHomeElementView, domain: string | und
 };
 
 /** Views that show a number the user can format and color by rules. */
-export const valueElementViews = new Set<SmartHomeElementView>(["value", "group", "status", "graph"]);
+export const valueElementViews = new Set<SmartHomeElementView>(["value", "group", "status", "graph", "progress"]);
 
 /** Colors a rule or a card accent can use; Mantine's palette, so they follow the theme. */
 export const smartHomeLayoutColors = [

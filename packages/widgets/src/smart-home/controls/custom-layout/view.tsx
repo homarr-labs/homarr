@@ -2,7 +2,16 @@
 
 import { memo, useMemo, useState } from "react";
 import type { ComponentType, CSSProperties, ReactNode } from "react";
-import { Center, Divider, getContrastColor, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
+import {
+  Center,
+  Divider,
+  getContrastColor,
+  Progress,
+  Stack,
+  Text,
+  UnstyledButton,
+  useMantineTheme,
+} from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import {
   IconAlertTriangle,
@@ -691,6 +700,31 @@ function BatteryElement({ entity, element, label }: ElementProps) {
   );
 }
 
+/** A percentage as a bar under its label and value, e.g. a 3D print or a washing program; rules color the bar. */
+function ProgressElement({ entity, element, label }: ElementProps) {
+  const theme = useEntityTheme(entity);
+  const value = getNumericState(entity);
+  const ruleColor = getRuleColor(entity.state, element.rules);
+  return (
+    <Stack gap="var(--el-gap-tight)" style={accentVars(theme.accent, theme.onAccent)}>
+      <div className={classes.elementHead}>
+        <ElementLabel element={element} fallback={theme.Icon} label={label} />
+        <span className={classes.elementValue} style={{ color: ruleColor }}>
+          {formatElementState(entity, element)}
+        </span>
+      </div>
+      <Progress
+        value={value === null ? 0 : Math.min(100, Math.max(0, value))}
+        color={ruleColor ?? "var(--accent)"}
+        size="0.45em"
+        radius="xl"
+        aria-label={label}
+        styles={{ root: { backgroundColor: "var(--track)" } }}
+      />
+    </Stack>
+  );
+}
+
 function MissingElement({ element }: { element: SmartHomeLayoutElement }) {
   const t = useI18n("widget.smartHome-controls.layout");
   return (
@@ -731,6 +765,7 @@ const views = {
   graph: GraphElement,
   status: StatusElement,
   battery: BatteryElement,
+  progress: ProgressElement,
 } satisfies Record<EntityView, (props: ElementProps) => ReactNode>;
 
 function EntityElement({ element, source }: { element: SmartHomeLayoutElement; source: string | null }) {

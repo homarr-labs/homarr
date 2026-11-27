@@ -96,6 +96,7 @@ export interface HaAttributes {
   mediaPositionUpdatedAt?: number;
   batteryLevel?: number;
   options?: string[];
+  optionLabels?: Record<string, string>;
   min?: number;
   max?: number;
   step?: number;

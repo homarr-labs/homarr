@@ -138,6 +138,13 @@ const percent = (capability: HomeyCapability | undefined) => {
   return value === undefined ? undefined : Math.round(value * 100);
 };
 const optionIds = (capability: HomeyCapability | undefined) => capability?.values?.map((option) => option.id);
+/** The names Homey shows for enum values whose ids are codes, e.g. the Bambu Lab app's print speed "2" = "Standard". */
+const optionLabels = (capability: HomeyCapability) => {
+  const named = (capability.values ?? []).flatMap((option) =>
+    option.title && option.title !== option.id ? [[option.id, option.title] as const] : [],
+  );
+  return named.length > 0 ? Object.fromEntries(named) : undefined;
+};
 
 const timestamp = (value: HomeyCapability["lastUpdated"]) => {
   if (typeof value === "number") return value;
@@ -738,14 +745,21 @@ const buildSecondary = (capability: HomeyCapability): SecondaryEntity | null => 
         },
       };
     case "enum":
-      if (!capability.setable) return sensor();
+      // A read-only enum is a status (e.g. a washing machine's program phase); like Home Assistant's enum sensors.
+      if (!capability.setable) {
+        return {
+          ...sensor(),
+          deviceClass: "enum",
+          attributes: { options: optionIds(capability), optionLabels: optionLabels(capability) },
+        };
+      }
       return {
         domain: "select",
         state: capabilityState(capability),
         deviceClass: null,
         stateClass: null,
         unit: null,
-        attributes: { options: optionIds(capability) },
+        attributes: { options: optionIds(capability), optionLabels: optionLabels(capability) },
       };
     case "string":
       return sensor();
