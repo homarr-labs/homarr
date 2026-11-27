@@ -11,7 +11,7 @@ import type {
 } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import type { SmartHomeCatalogDevice } from "@homarr/integrations/types";
+import type { SmartHomeCatalogDevice, SmartHomeCatalogEntity } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import { getCatalogEntityIcon } from "../controls/semantics";
@@ -77,13 +77,25 @@ const buildEntityData = (
     (index?.areas ?? []).map((area) => [area.id, { group: area.name, items: [] }]),
   );
 
+  // A name several entities share ("Temperature") reads with its device or room in a chosen pill or field, where
+  // the list's second line does not show.
+  const nameCounts = new Map<string, number>();
+  for (const entity of index?.entities ?? []) nameCounts.set(entity.name, (nameCounts.get(entity.name) ?? 0) + 1);
+  const labelOf = (entity: SmartHomeCatalogEntity) => {
+    if ((nameCounts.get(entity.name) ?? 0) < 2 || !index) return entity.name;
+    const device = getCatalogDevice(index, entity.deviceId);
+    const area = entity.areaId ? index.areasById.get(entity.areaId) : undefined;
+    const place = device && !entity.name.includes(device.name) ? device.name : area?.name;
+    return place ? `${entity.name} · ${place}` : entity.name;
+  };
+
   for (const entity of index?.entities ?? []) {
     const inScope =
       (includeHidden || !entity.hidden) &&
       (!domainSet || domainSet.has(entity.domain)) &&
       (!areaSet || (entity.areaId !== null && areaSet.has(entity.areaId)));
     if (!inScope && !selectedSet.has(entity.id)) continue;
-    const item = { value: entity.id, label: entity.name };
+    const item = { value: entity.id, label: labelOf(entity) };
     const group = entity.areaId ? groups.get(entity.areaId) : undefined;
     if (group) group.items.push(item);
     else ungrouped.push(item);
