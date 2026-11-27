@@ -504,6 +504,83 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+  getSignInInformation: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .output(
+      z.object({
+        provider: z.enum(supportedAuthProviders),
+        email: z.string().nullable(),
+        subject: z.string().nullable(),
+        homarrGroups: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          }),
+        ),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/{userId}/sign-in-information",
+        tags: ["users"],
+        protect: true,
+        summary: "Get sign-in information",
+        description:
+          "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
+      },
+    })
+    .query(async ({ input, ctx }) => {
+      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view other users details",
+        });
+      }
+
+      const user = await ctx.db.query.users.findFirst({
+        columns: {
+          email: true,
+          provider: true,
+        },
+        with: {
+          accounts: {
+            columns: {
+              provider: true,
+              providerAccountId: true,
+            },
+          },
+          groups: {
+            with: {
+              group: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const oidcAccount = user.accounts.find((entry) => entry.provider === "oidc");
+      const account = oidcAccount ?? user.accounts.find((entry) => entry.provider === user.provider);
+
+      return {
+        provider: oidcAccount ? "oidc" : user.provider,
+        email: user.email,
+        subject: account?.providerAccountId ?? null,
+        homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+      };
+    }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
     .output(z.void())

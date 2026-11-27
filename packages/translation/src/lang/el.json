@@ -7410,6 +7410,17 @@
               "search": "Αναζήτηση",
               "firstDayOfWeek": "Πρώτη ημέρα της εβδομάδας",
               "accessibility": "Προσβασιμότητα",
+              "signInInformation": {
+                "title": "",
+                "provider": "Πάροχος",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Αντιγραφή",
+                "copied": "Αντιγράφηκε"
+              },
               "oauthConnections": {
                 "title": "OAuth συνδέσεις",
                 "description": "Αυτοί οι πελάτες απέκτησαν διαπιστευτήρια API για το λογαριασμό σας μέσω του OAuth. Τα διαπιστευτήρια λειτουργούν με το API HTTP του Homarr, καθώς και με το MCP, δεν λήγουν αυτόματα και παραμένουν έγκυρα αφού αποσυνδεθείτε.",
