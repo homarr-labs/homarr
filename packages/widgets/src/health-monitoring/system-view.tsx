@@ -13,6 +13,7 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { HealthOptions } from "./display";
 import { isStaleReading, needsAttention } from "./display";
+import { createSystemNameFormatter } from "./format";
 import { projectHealthSystem } from "./model";
 import type { HealthSystem } from "./model";
 import { HealthAttentionFilter, SystemFleet } from "./system-fleet";
@@ -62,6 +63,7 @@ export function SystemHealthView({
   const [dialogHeight, setDialogHeight] = useState(760);
   const modalBounds = useHealthBounds();
   const { visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold, systemSort } = options;
+  const systemDisplayName = useMemo(() => createSystemNameFormatter(systems), [systems]);
   const projected = useMemo(
     () =>
       systems.map((system) =>
@@ -154,6 +156,7 @@ export function SystemHealthView({
           <Box flex={1} mih={0}>
             <SystemHistoryComparison
               snapshots={chartSystems}
+              systemDisplayName={systemDisplayName}
               width={width - 16}
               height={height - 16 - filterHeight - 4}
               options={options}
@@ -169,6 +172,7 @@ export function SystemHealthView({
     content = (
       <SystemAdvanced
         snapshots={snapshots}
+        systemDisplayName={systemDisplayName}
         width={width}
         height={height}
         options={options}
@@ -191,9 +195,9 @@ export function SystemHealthView({
         title={
           <Group gap="sm" wrap="nowrap">
             <Text size="sm" fw={600} truncate>
-              {dialog?.system.name}
+              {dialog && systemDisplayName(dialog.system)}
             </Text>
-            {dialog && (
+            {dialog && systemDisplayName(dialog.system) === dialog.system.name && (
               <Text size="xs" c="dimmed" truncate>
                 {getIntegrationName(dialog.system.kind)}
               </Text>

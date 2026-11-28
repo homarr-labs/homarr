@@ -1,6 +1,6 @@
 "use client";
 
-import { cloneElement, isValidElement, useRef } from "react";
+import { cloneElement, isValidElement, useLayoutEffect, useRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
 import { ActionIcon, Button, Group, Select, Stack, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
@@ -14,7 +14,7 @@ import type { HealthMetric } from "./configuration";
 
 type MetricInput = SortableItemListInput<HealthMetric, HealthMetric>;
 
-export const MetricOrderItem: MetricInput["ItemComponent"] = ({ item, handle, removeItem, rootAttributes }) => {
+const MetricOrderItem: MetricInput["ItemComponent"] = ({ item, handle, removeItem, rootAttributes }) => {
   const t = useI18n("widget.healthMonitoring");
   const name = t(`rework.${healthMetricLabels[item]}`);
   const form = useFormContext();
@@ -85,12 +85,23 @@ export const MetricOrderItem: MetricInput["ItemComponent"] = ({ item, handle, re
   );
 };
 
-export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values }) => {
+const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values }) => {
   const t = useI18n("widget.healthMonitoring");
   const form = useFormContext();
   const automatic = getHealthMetricOrder({ ...form.values.options, metricOrder: [] });
   const choices = healthMetrics.filter((metric) => !values.includes(metric));
   const isAutomatic = values.length === 0;
+  const focusAfterCustomize = useRef<HTMLFormElement | null>(null);
+
+  useLayoutEffect(() => {
+    const editor = focusAfterCustomize.current;
+    if (!editor || isAutomatic) return;
+    focusAfterCustomize.current = null;
+    const focused = document.activeElement;
+    if (focused !== document.body && !focused?.hasAttribute("data-health-metric-customize")) return;
+    editor.querySelector<HTMLElement>("[data-health-metric-handle]")?.focus();
+  }, [isAutomatic]);
+
   return (
     <Stack gap="xs">
       {choices.length > 0 && (
@@ -118,9 +129,8 @@ export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values })
             w="fit-content"
             data-health-metric-customize
             onClick={(event) => {
-              const editor = event.currentTarget.form;
+              focusAfterCustomize.current = event.currentTarget.form;
               form.setFieldValue("options.metricOrder", automatic);
-              requestAnimationFrame(() => editor?.querySelector<HTMLElement>("[data-health-metric-handle]")?.focus());
             }}
           >
             {t("option.metricOrder.customize")}
@@ -149,3 +159,9 @@ export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values })
     </Stack>
   );
 };
+
+// Loading the picker also loads its rows, so switching from automatic to custom can focus the first row on mount.
+export function MetricOrderInput(props: Parameters<MetricInput["ItemComponent"] | MetricInput["AddButton"]>[0]) {
+  if ("item" in props) return <MetricOrderItem {...props} />;
+  return <MetricOrderPicker {...props} />;
+}

@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
+import { getIntegrationName } from "@homarr/definitions";
 import type { SystemHealthMonitoring } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 
 import { isSameStorageDevice, storageDeviceNamesMatch } from "../filter-storage-volumes";
+import type { HealthSystem } from "./model";
 
 dayjs.extend(duration);
 type SmartStatusReason = SystemHealthMonitoring["smart"][number]["statusReason"];
@@ -68,3 +70,36 @@ export const matchFileSystemAndSmart = (fileSystems: FileSystem[], smartData: Sm
     })
     .toSorted((fileSystemA, fileSystemB) => fileSystemA.deviceName.localeCompare(fileSystemB.deviceName));
 };
+
+export function createSystemNameFormatter(systems: readonly HealthSystem[]) {
+  const counts = new Map<string, number>();
+  for (const { name } of systems) counts.set(name, (counts.get(name) ?? 0) + 1);
+
+  const idsByLabel = new Map<string, string[]>();
+  for (const { id, name, kind } of systems) {
+    if (counts.get(name) === 1) continue;
+    const label = `${getIntegrationName(kind)} · ${name}`;
+    const ids = idsByLabel.get(label);
+    if (ids) ids.push(id);
+    else idsByLabel.set(label, [id]);
+  }
+
+  const labels = new Map<string, string>();
+  const usedLabels = new Set(counts.keys());
+  for (const [label, ids] of idsByLabel) {
+    // Number identical provider/name pairs by stable integration ID, independent of rank or page.
+    let ordinal = 0;
+    for (const id of ids.toSorted()) {
+      let displayName = label;
+      if (ids.length > 1 || usedLabels.has(label)) {
+        do {
+          ordinal++;
+          displayName = `#${ordinal} ${label}`;
+        } while (usedLabels.has(displayName));
+      }
+      labels.set(id, displayName);
+      usedLabels.add(displayName);
+    }
+  }
+  return ({ id, name }: HealthSystem) => labels.get(id) ?? name;
+}

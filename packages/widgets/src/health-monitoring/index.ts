@@ -19,12 +19,11 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 import { healthMetrics } from "./configuration";
 import type { HealthMetric } from "./configuration";
 
-const MetricOrderItem = dynamic(() => import("./metric-order-input").then((module) => module.MetricOrderItem));
-const MetricOrderPicker = dynamic(() => import("./metric-order-input").then((module) => module.MetricOrderPicker));
+const MetricOrderInput = dynamic(() => import("./metric-order-input").then((module) => module.MetricOrderInput));
 
 const metricOrderInput: SortableItemListInput<HealthMetric, HealthMetric> = {
-  ItemComponent: (props) => createElement(MetricOrderItem, props),
-  AddButton: (props) => createElement(MetricOrderPicker, props),
+  ItemComponent: (props) => createElement(MetricOrderInput, props),
+  AddButton: (props) => createElement(MetricOrderInput, props),
   uniqueIdentifier: (metric) => metric,
   useData: () => ({ data: [...healthMetrics], isLoading: false, error: null }),
 };

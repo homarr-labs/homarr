@@ -5,8 +5,8 @@ import { createHealthSystemFixtures } from "./fixtures";
 type Board = RouterOutputs["board"]["getBoardByName"];
 type Placement = { xOffset: number; yOffset: number; width: number; height: number };
 
-/** A native board fixture, derived without writing boards or integrations to the database. */
-export function createHealthDashboardFixture(baseline: Board): Board {
+/** A self-contained board for the development preview. */
+export function createHealthDashboardFixture(): Board {
   const boardId = "health-monitoring-preview";
   const sectionId = boardId + "-main";
   const baseLayoutId = boardId + "-base";
@@ -34,10 +34,12 @@ export function createHealthDashboardFixture(baseline: Board): Board {
   }
 
   return {
-    ...baseline,
     id: boardId,
     name: boardId,
     pageTitle: "Infrastructure",
+    metaTitle: null,
+    logoImageUrl: null,
+    faviconImageUrl: null,
     isPublic: true,
     creatorId: null,
     creator: null,
@@ -48,7 +50,12 @@ export function createHealthDashboardFixture(baseline: Board): Board {
     itemRadius: "md",
     opacity: 100,
     customCss: "",
+    iconColor: null,
+    disableStatus: false,
     backgroundImageUrl: null,
+    backgroundImageAttachment: "scroll",
+    backgroundImageRepeat: "no-repeat",
+    backgroundImageSize: "cover",
     layouts: [
       {
         id: mobileLayoutId,

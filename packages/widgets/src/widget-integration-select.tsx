@@ -220,7 +220,7 @@ export const WidgetIntegrationSelect = ({
             {collapsible && (
               <Button
                 size="compact-xs"
-                variant="light"
+                variant="default"
                 type="button"
                 aria-expanded={expanded}
                 onMouseDown={(event) => event.stopPropagation()}
