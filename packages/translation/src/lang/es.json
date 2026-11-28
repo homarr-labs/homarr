@@ -7410,6 +7410,17 @@
               "search": "Buscar",
               "firstDayOfWeek": "Primer día de la semana",
               "accessibility": "Accesibilidad",
+              "signInInformation": {
+                "title": "",
+                "provider": "Proveedor",
+                "subject": "Sujeto",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ninguno",
+                "copy": "Copiar",
+                "copied": "Copiado"
+              },
               "oauthConnections": {
                 "title": "Conexiones OAuth",
                 "description": "Estos clientes obtuvieron credenciales API para su cuenta a través de OAuth. Las credenciales funcionan con la API HTTP de Homarr, así como con MCP, no expiran automáticamente y permanecen válidas después de cerrar sesión.",

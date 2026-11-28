@@ -7410,6 +7410,17 @@
               "search": "Rechercher",
               "firstDayOfWeek": "Premier jour de la semaine",
               "accessibility": "Accessibilité",
+              "signInInformation": {
+                "title": "",
+                "provider": "Fournisseur",
+                "subject": "Sujet",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Aucun",
+                "copy": "Copie",
+                "copied": "Copié"
+              },
               "oauthConnections": {
                 "title": "Connexions OAuth",
                 "description": "Ces clients ont obtenu des identifiants API pour votre compte via OAuth. Les identifiants fonctionnent avec l'API HTTP d'Homarr, ainsi que MCP, n'expirent pas automatiquement, et restent valides après votre déconnexion.",

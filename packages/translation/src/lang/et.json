@@ -7410,6 +7410,17 @@
               "search": "Otsing",
               "firstDayOfWeek": "Nädala esimene päev",
               "accessibility": "Hõlbustus",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Pole",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

@@ -43,7 +43,7 @@ const SHARED_REFRESH_MAX_WAIT_MS = 30_000;
 // Must remain comfortably below REFRESH_LOCK_TTL_SECONDS in shared-cache.ts.
 const SHARED_REFRESH_LOCK_RENEW_MS = 5_000;
 
-class RequestHandlerTimeoutError extends Error {
+export class RequestHandlerTimeoutError extends Error {
   constructor() {
     super("Request handler deadline exceeded");
     this.name = RequestHandlerTimeoutError.name;

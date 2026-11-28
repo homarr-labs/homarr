@@ -1435,7 +1435,7 @@ export async function POST(request: Request) {
           },
         };
       },
-      onError: getAssistantStreamErrorMessage,
+      onError: (error) => getAssistantStreamErrorMessage(error, configuration.provider === "homarr"),
     });
   } catch (error) {
     logger.error("Assistant response could not start", {

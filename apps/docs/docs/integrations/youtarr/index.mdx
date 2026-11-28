@@ -1,0 +1,44 @@
+---
+title: "Youtarr"
+description: "A self-hosted YouTube downloader that archives channels and playlists for Plex, Jellyfin and Emby."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { youtarrIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={youtarrIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) displays subscribed channels, downloaded videos and the storage they use, the
+downloaded and failed counts of the last run, and the Youtarr and yt-dlp versions. The counts are empty until Youtarr
+reports a finished run and can both be zero after a first empty check or a run-level error. A later successful check
+that finds nothing new can leave the previous counts unchanged.
+
+Requires Youtarr 1.94.0 or newer.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Youtarr's Settings > API Keys & Bookmarklet and select Create Key.",
+        "Tick Read-only status key. With authentication enabled, Youtarr refuses download keys for status requests and restricts status keys to read-only access.",
+        "Copy the key, which is shown only once, into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>

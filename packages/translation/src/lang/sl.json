@@ -7410,6 +7410,17 @@
               "search": "Iskanje",
               "firstDayOfWeek": "Prvi dan v tednu",
               "accessibility": "Dostopnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

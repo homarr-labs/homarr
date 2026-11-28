@@ -110,18 +110,13 @@ export const createAxiosCertificateInstanceAsync = async (
 
 export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
-  options?: RequestInit & { timeout?: number; bodyTimeout?: number },
+  options?: RequestInit & { timeout?: number; bodyTimeout?: number; logOriginOnly?: boolean },
 ): Promise<Response> => {
+  const { timeout, bodyTimeout, logOriginOnly, dispatcher, ...fetchOptions } = options ?? {};
   const requestSignal = getHttpRequestSignal(options?.signal);
   requestSignal?.throwIfAborted();
-  const agent =
-    options?.dispatcher ??
-    (await createCertificateAgentAsync(
-      undefined,
-      options?.bodyTimeout !== undefined ? { bodyTimeout: options.bodyTimeout } : undefined,
-    ));
-  if (options?.timeout) {
-    const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options;
+  const agent = dispatcher ?? (await createCertificateAgentAsync(undefined, { bodyTimeout, logOriginOnly }));
+  if (timeout) {
     return await withTimeoutAsync(
       async (signal) =>
         fetch(url, {
@@ -129,11 +124,10 @@ export const fetchWithTrustedCertificatesAsync = async (
           signal: AbortSignal.any([signal, requestSignal ?? signal]),
           dispatcher: agent,
         }),
-      options.timeout,
+      timeout,
     );
   }
 
-  const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
   return fetch(url, {
     ...fetchOptions,
     signal: requestSignal,

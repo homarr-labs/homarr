@@ -17,7 +17,7 @@ COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
-RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.22.3-bun-1.4.4,target=/root/.bun/install/cache,sharing=locked \
+RUN --mount=type=cache,id=homarr-bun-${TARGETPLATFORM}-glibc-2.41-node-24.22.3-bun-1.4.5,target=/root/.bun/install/cache,sharing=locked \
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 
 # Runtime configuration changes do not invalidate the application build.

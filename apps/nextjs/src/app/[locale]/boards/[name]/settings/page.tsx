@@ -60,7 +60,7 @@ export default async function BoardSettingsPage(props: Props) {
           board={board}
           permissions={permissions}
           hasFullAccess={hasFullAccess}
-          hideVisibility={boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id}
+          isInstanceHomeBoard={boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id}
         />
       </Stack>
     </Container>
