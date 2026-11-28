@@ -3,6 +3,13 @@
   max-width: min(24rem, calc(100vw - 2rem));
 }
 
+@media (max-width: $mantine-breakpoint-sm) {
+  .root {
+    position: static;
+    margin: var(--mantine-spacing-xs) auto;
+  }
+}
+
 .panel {
   width: min(24rem, calc(100vw - 2rem));
 }

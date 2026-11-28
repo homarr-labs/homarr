@@ -890,6 +890,7 @@
       "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{name}\"? Ova se radnja ne može poništiti.",
       "duplicate": "Dupliciraj",
       "aiPrompt": "Dizajniraj pomoću umjetne inteligencije",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiraj AI upit",
       "enable": "Omogući",
       "disable": "Onemogući",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfiguriraj",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Odjeljci prilagođenog widgeta",
       "widgetPreview": "Pretpregled widgeta",
       "generalInformation": "Opće informacije",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Izradite ili popravite uz bilo koji AI",
         "description": "Najprije dodajte URL dokumentacije API-ja ako ga imate. Za popravke po mogućnosti pokrenite pretpregled. Kopirajte upit u bilo koji AI; može zatražiti podatke koji nedostaju. Ovdje zalijepite njegov konačni JSON.",
+        "assistedDescription": "",
         "request": "Što bi ovaj widget trebao raditi?",
         "documentationUrl": "URL dokumentacije API-ja (neobavezno)",
         "paste": "Zalijepi",
+        "pasteResponse": "",
         "response": "Odgovor AI-ja",
         "manualCopyDescription": "Pristup međuspremniku nije dostupan. Odaberite upit u nastavku i ručno ga kopirajte.",
         "manualPasteDescription": "Pristup međuspremniku nije dostupan ili je potrebno ispraviti kopirani odgovor. Ovdje zalijepite JSON odgovor AI-ja.",
@@ -1245,6 +1262,20 @@
       "username": "Korisničko ime",
       "password": "Lozinka",
       "savedPlaceholder": "••••••• (spremljeno, ostavite prazno za zadržavanje)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "Uvezi CSS",
     "importCss": "Uvezi CSS iz radionice",
     "importCssConfirm": "Zamijeniti trenutni prilagođeni CSS s „{title}”? Ništa se ne sprema dok ne spremite postavke ploče.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Opis",
+      "published": ""
+    },
     "screenshotAlt": "Snimka zaslona {title}, {count, number}",
     "screenshotViewer": "Preglednik snimki zaslona za {title}",
     "screenshotsLabel": "Snimke zaslona za {title}",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Sakrij minijature snimki zaslona",
     "closeScreenshotViewer": "Zatvori preglednik snimki zaslona",
     "technicalDetails": "Tehnički detalji",
+    "integrations": "",
     "sourceCode": "Unos radionice",
     "report": "Prijavi",
     "reportTitle": "Prijavi unos",
@@ -1318,6 +1382,12 @@
       "copyright": "Autorska prava",
       "inappropriate": "Neprimjereno",
       "other": "Ostalo"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Objavi u radionici",
@@ -1921,7 +1991,8 @@
       "copy": "Kopiraj",
       "copied": "Kopirano",
       "refresh": "Osvježi",
-      "export": "Izvezi"
+      "export": "Izvezi",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": "Izmjena"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Opasna zona",
     "noResults": "Nije pronađen nijedan rezultat",
     "unsavedChanges": "Imate nespremljene promjene!",
@@ -2106,6 +2186,159 @@
         "sm": "Suptilno",
         "xl": "Blagi"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Raspored",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "traži",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Pozadina",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Veličina datoteke",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Pomicanje",
         "description": "Zadrži ovaj spremnik na postavljenoj veličini i pomiči njegov sadržaj umjesto da ga povećavaš kako bi mu odgovarao."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Boja obruba"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Ukloniti ovaj spremnik? Njegov sadržaj premjestit će se u okolno područje."
+      },
+      "editBar": {
+        "edit": "Uredi"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Prilagođeni widget",
       "standalone": "Samostalan",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Najprije povežite uslugu",
         "noPermission": "Ovaj widget zahtijeva kompatibilnu vezu s uslugom. Zatražite od administratora da je poveže, a zatim pokušajte ponovno."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Stavke nije moguće ažurirati",
       "saveErrorMessage": "Promjene nije moguće spremiti. Ploča je osvježena.",
       "moveUnavailableTitle": "Odabrane stavke nije moguće premjestiti",
-      "moveUnavailableMessage": "Odredište nema dovoljno prostora za cijeli odabir."
+      "moveUnavailableMessage": "Odredište nema dovoljno prostora za cijeli odabir.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Premjesti / promijeni veličinu stavke",
+      "sizeOverlap": "",
       "entryLabel": "{name}, stupac {column}, redak {row}",
       "target": {
         "numbered": "{name}, odredište {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Uredi integraciju"
       },
       "app": {
-        "propagationNotice": "Promjene ove aplikacije primijenit će se svugdje gdje se koristi na svim pločama."
+        "propagationNotice": "Promjene ove aplikacije primijenit će se svugdje gdje se koristi na svim pločama.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Uredi vezu",
@@ -2322,6 +2596,36 @@
       "open": "Otvori napredni prikaz",
       "close": "Zatvori napredni prikaz",
       "label": "Napredni prikaz widgeta {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgeti",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stanje entiteta",
       "description": "Prikaži stanje entiteta i po želji ga prebacite",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID entiteta"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Nije moguće učitati entitet",
         "toggleFailed": "Nije moguće ažurirati entitet"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Naslov",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "velika"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Vremenska prognoza",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Dodaj",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Grad / Poštanski broj",
         "latitude": "Geografska širina",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Prikaži lokaciju",
           "description": "Prikaži je li stream na vašoj LAN ili WAN mreži"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Napredak preuzimanja",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopiraj naziv",
         "copyId": "Kopiraj ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Očisti filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtriraj preuzimanja"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Sakrij opis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Prikaži sliku plakata"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Otvori uslugu obavijesti",
       "deleteNotification": "Izbriši obavijest iz Gotifyja",
+      "dismissNotification": "",
       "deleteFailed": "Obavijest nije moguće izbrisati",
       "deleteFailedMessage": "Obavijest nije moguće izbrisati. Pokušajte ponovno."
     },
@@ -5446,6 +5921,23 @@
       "name": "Resursi sustava",
       "description": "Upotreba CPU-a, memorije, diska i drugog hardvera vašeg sustava",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Omogući sjenčanje grafikona"
         },
@@ -5453,6 +5945,7 @@
           "label": "Vidljivi grafikoni",
           "description": "Odaberite grafikone koje želite prikazati.",
           "option": {
+            "cpuCores": "",
             "memory": "Memorija",
             "network": "Mreža"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Dom",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Platno nadzorne ploče",
       "leftRail": "Lijeva traka nadzorne ploče",
@@ -6647,6 +7160,11 @@
           "description": "Administrator poslužitelja još nije postavio početnu ploču.",
           "link": "Prikaži javne ploče",
           "notice": "Da biste uklonili ovu stranicu, zamolite administratora poslužitelja da postavi početnu ploču za poslužitelj"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Dokumentacija",
             "submitIssue": "Pošaljite prijavu problema",
             "discord": "Nesloga u zajednici",
-            "sourceCode": "Izvorni kod"
+            "sourceCode": "Izvorni kod",
+            "changelog": ""
           }
         },
         "about": "O aplikaciji",
+        "updateAvailable": "",
         "assistant": "Asistent"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Autentifikacija",
           "authorization": "Autorizacija"
         },
-        "heroBanner": {
-          "title": "Dobro došli natrag na svoju",
-          "subtitle": "Ploča {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Još nema ploča",
-          "description": "Kreirajte ploču za organiziranje aplikacija i widgeta na jednom mjestu."
+          "description": "Kreirajte ploču za organiziranje aplikacija i widgeta na jednom mjestu.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Sve ugrađene kontrole već su u vašem zaglavlju.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Prečac ploče",
+                "widget": "",
                 "chooseBoard": "Odaberite ploču"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Ova kontrola ostaje iste veličine kao u zaglavlju uživo.",
                 "searchDisplay": {
                   "input": "Traka za pretraživanje",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Samo logotip",
                   "logoAndText": "Logotip + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "traži",
                 "home": "Početna ploča",
                 "boardSwitcher": "Daske",
+                "boardTabs": "",
                 "assistant": "Asistent",
                 "docker": "Docker",
                 "boardEdit": "Uredi ploču",
@@ -6847,7 +7393,9 @@
                 "settings": "Vaše postavke",
                 "themeToggle": "Promijeni temu",
                 "user": "Račun",
-                "boardUnavailable": "Ploča nije dostupna"
+                "boardUnavailable": "Ploča nije dostupna",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Traži",
               "firstDayOfWeek": "Prvi dan u tjednu",
               "accessibility": "Pristupačnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
@@ -7071,6 +7630,10 @@
             "title": "Izgled",
             "defaultColorScheme": {
               "label": "Zadana shema boja"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Otvori pretraživanje aplikacija",
               "openSpotlightAssistant": "Otvori način rada asistenta",
               "openSpotlightPreferences": "Otvori način rada postavki",
-              "openAssistant": "Otvori asistenta"
+              "openAssistant": "Otvori asistenta",
+              "switchBoardTab": ""
             },
             "note": "Savjet: Mod označava i tipku Ctrl i tipku ⌘ na sustavu macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Promijenite shemu boja, jezik, početnu ploču i preferencije. Odavde također možete otići u upravljačko područje."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Nadzorna ploča na vlastitom poslužitelju za *arr skup i cijeli vaš kućni laboratorij. Integrira se s više od 50 usluga, widgetima u stvarnom vremenu i ne zahtijeva konfiguracijske datoteke.",

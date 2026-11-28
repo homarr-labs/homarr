@@ -1,13 +1,14 @@
 "use client";
 
-import type { WidgetKind } from "@homarr/definitions";
-import { loadWidgetResources } from "@homarr/widgets/manifest";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useActiveBoardTabId } from "@homarr/boards/tabs";
 
-// This sibling can hydrate before pending widget data. Start only the visible
-// board's retryable, deduplicated module imports without awaiting the results.
-export const WidgetResourcePreload = ({ kinds }: { kinds: WidgetKind[] }) => {
-  if (typeof window !== "undefined") {
-    for (const kind of kinds) void loadWidgetResources(kind).catch(() => undefined);
-  }
+import { preloadBoardTabWidgets } from "~/components/board/tabs/preload-board-tab-widgets";
+
+export const WidgetResourcePreload = () => {
+  const board = useRequiredBoard();
+  const layoutId = useCurrentLayout();
+  const tabId = useActiveBoardTabId();
+  if (typeof window !== "undefined") preloadBoardTabWidgets(board, layoutId, tabId);
   return null;
 };

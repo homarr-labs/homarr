@@ -6,6 +6,8 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { getWidgetRefreshInterval } from "../refresh-interval";
+import { useDemoReadOnly } from "../demo-read-only";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -25,9 +27,14 @@ export function SystemHealthMonitoring(
   },
 ) {
   const t = useI18n("widget.healthMonitoring.rework");
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
-    integrationIds: props.integrationIds,
-  });
+  const refreshInterval = getWidgetRefreshInterval(props.options, 10);
+  const demoReadOnly = useDemoReadOnly();
+  let pollInterval: number | false = refreshInterval * 1000;
+  if (demoReadOnly) pollInterval = false;
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(
+    { integrationIds: props.integrationIds, refreshInterval },
+    { refetchInterval: pollInterval },
+  );
   const results = getUsableWidgetQueryData(healthQuery) ?? emptyResults;
   const histories = useHealthHistory(results, healthQuery.dataUpdatedAt, props.widgetStateRef);
   const onPreferences = useHealthPreferences(props);

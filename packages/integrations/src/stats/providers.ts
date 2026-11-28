@@ -29,6 +29,8 @@ import { tubearchivistStatsProvider } from "./providers/tubearchivist";
 import { unmanicStatsProvider } from "./providers/unmanic";
 import { xteveStatsProvider } from "./providers/xteve";
 import { yourSpotifyStatsProvider } from "./providers/your-spotify";
+import { youtarrStatsProvider } from "./providers/youtarr";
+import { yuvomiStatsProvider } from "./providers/yuvomi";
 
 export const statsProviders = {
   autobrr: autobrrStatsProvider,
@@ -61,4 +63,6 @@ export const statsProviders = {
   unmanic: unmanicStatsProvider,
   xteve: xteveStatsProvider,
   yourSpotify: yourSpotifyStatsProvider,
+  youtarr: youtarrStatsProvider,
+  yuvomi: yuvomiStatsProvider,
 } satisfies Record<string, StatsProvider>;

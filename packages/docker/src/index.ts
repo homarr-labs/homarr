@@ -28,4 +28,5 @@ export interface DockerEndpointStatus {
 }
 
 export * from "./labels";
+export * from "./icon-match";
 export * from "./discovery";

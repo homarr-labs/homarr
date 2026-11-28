@@ -1,4 +1,6 @@
 import { COLLAPSED_SECTION_ROW_COUNT } from "./constants";
+import { doGridPlacementsOverlap } from "@homarr/boards/grid";
+
 import { normalizeGridPlacement } from "./geometry";
 import type { GridPlacement } from "./types";
 
@@ -18,11 +20,7 @@ interface CollapsedLayoutOptions {
   collapsedRowCountById?: ReadonlyMap<string, number>;
 }
 
-export const doGridPlacementsOverlap = (first: GridPlacement, second: GridPlacement) =>
-  first.x < second.x + second.w &&
-  first.x + first.w > second.x &&
-  first.y < second.y + second.h &&
-  first.y + first.h > second.y;
+export { doGridPlacementsOverlap };
 
 /**
  * Resolves overlaps and vertically compacts items. Ordering is based on the
@@ -77,8 +75,8 @@ export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
   const displayPlacements = normalized.map((placement) => {
     if (!collapsedItemIds.has(placement.id)) return placement;
     const height = collapsedRowCountById?.get(placement.id) ?? collapsedRowCount;
-    if (!Number.isFinite(height) || height <= 0) {
-      throw new RangeError("collapsedRowCount must be positive and finite");
+    if (!Number.isFinite(height) || height < 0) {
+      throw new RangeError("collapsed row counts must be zero or positive and finite");
     }
     return { ...placement, h: height };
   });

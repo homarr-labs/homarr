@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tooltip } from "@mantine/core";
@@ -10,20 +10,25 @@ import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { hasUnsavedBoardDrafts } from "@homarr/boards/draft-changes";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
+import { env } from "@homarr/common/env-client";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useBoardPermissions } from "~/components/board/permissions/client";
+import { loadBoardEditorToolsAsync } from "~/components/board/editor-tools";
+import { getAddInPlaceState } from "~/components/board/in-place-editor/store";
 import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
-import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
+import { useBoardPermissions } from "~/components/board/permissions/client";
+import { loadGridEditorAsync } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
+import type { Board } from "../_types";
 import { registerBoardDirtyLeaveGuard } from "./board-dirty-leave-guard";
+import { loadBoardSetupPanelsAsync } from "./board-setup-panels-loader";
 import type * as EditActionsModule from "./_edit-actions";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
@@ -38,7 +43,7 @@ const loadBoardEditorAsync = async () =>
   await Promise.all([
     loadGridEditorAsync(),
     loadEditActionsAsync(),
-    import("~/components/board/items/item-menu"),
+    loadBoardEditorToolsAsync(),
     import("~/components/board/sections/container/container-menu"),
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
@@ -78,7 +83,7 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
 
 const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
-  const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
+  const [editorLoadState, setEditorLoadState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
   const { updateBoard } = useUpdateBoard();
@@ -132,6 +137,8 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [utils, board.name, close]);
 
   const prepareEditorAsync = useCallback(async () => {
+    // Start optional panels alongside the editor and let their boundary handle failures.
+    void loadBoardSetupPanelsAsync().catch(() => undefined);
     if (editorLoadState === "ready") return;
 
     setEditorLoadState("loading");
@@ -144,23 +151,12 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     }
   }, [editorLoadState]);
 
-  useEffect(() => {
-    return scheduleGridEditorWarmup(async () => {
-      setEditorLoadState("loading");
-      try {
-        await loadBoardEditorAsync();
-        setEditorLoadState("ready");
-      } catch {
-        setEditorLoadState("error");
-      }
-    });
-  }, []);
-
   const prewarmEditor = useCallback(() => {
+    if (isEditMode) return;
     void prepareEditorAsync().catch(() => {
       // A click or hotkey retries and reports the error.
     });
-  }, [prepareEditorAsync]);
+  }, [isEditMode, prepareEditorAsync]);
 
   const toggle = useCallback(async () => {
     if (isEditMode) {
@@ -197,7 +193,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [board.name, close, openConfirmModal, router, tBoardSetting, tCommon, utils.board.getBoardByName]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
-  usePreventLeaveWithDirty(isEditMode);
+  usePreventLeaveWithUnsavedChanges(isEditMode, board);
 
   if (returnToLayoutSettings) {
     return (
@@ -250,17 +246,43 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   );
 };
 
-const usePreventLeaveWithDirty = (isDirty: boolean) => {
+const usePreventLeaveWithUnsavedChanges = (isEditMode: boolean, board: Board) => {
+  const contentSnapshot = useMemo(
+    () => JSON.stringify({ items: board.items, sections: board.sections }),
+    [board.items, board.sections],
+  );
+  const [editSession, setEditSession] = useState({
+    boardId: board.id,
+    isEditMode,
+    initialContent: contentSnapshot,
+  });
+
+  // Capture only at session boundaries so cancelling a staged dialog cannot
+  // clear changes made earlier in the same edit session.
+  if (editSession.boardId !== board.id || editSession.isEditMode !== isEditMode) {
+    setEditSession({ boardId: board.id, isEditMode, initialContent: contentSnapshot });
+  }
+
+  const utils = clientApi.useUtils();
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isDirty) return;
+  useLayoutEffect(() => {
+    if (!isEditMode) return;
 
     return registerBoardDirtyLeaveGuard({
       guardBeforeUnload: env.NODE_ENV !== "development",
+      isDirty() {
+        const currentBoard = utils.board.getBoardByName.getData({ name: board.name }) ?? board;
+        const session = getAddInPlaceState().session;
+        if (hasUnsavedBoardDrafts(board.id)) return true;
+        if (session?.dirty && currentBoard.sections.some((section) => section.id === session.sectionId)) return true;
+        return (
+          JSON.stringify({ items: currentBoard.items, sections: currentBoard.sections }) !== editSession.initialContent
+        );
+      },
       confirmLeave(href) {
         openConfirmModal({
           title: tBoard("action.edit.confirmLeave.title"),
@@ -274,5 +296,5 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
         });
       },
     });
-  }, [isDirty, openConfirmModal, router, tBoard, tCommon]);
+  }, [isEditMode, board, editSession.initialContent, utils, openConfirmModal, router, tBoard, tCommon]);
 };

@@ -33,6 +33,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
+import { validateAppDockerContainerAsync } from "../app/docker-container-link";
 import type { IntegrationInstanceOfKind } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
@@ -274,7 +275,7 @@ export const integrationRouter = createTRPCRouter({
         };
       }
 
-      const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
+      const appId = await createAppIfNecessaryAsync(ctx.db, input.app, ctx.session.user);
 
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
@@ -888,9 +889,14 @@ const addSecretAsync = async (db: Database, input: AddSecretInput) => {
   });
 };
 
-const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integrationCreateSchema>["app"]) => {
+const createAppIfNecessaryAsync = async (
+  db: Database,
+  app: z.infer<typeof integrationCreateSchema>["app"],
+  user: Session["user"],
+) => {
   if (!app) return null;
   if ("id" in app) return app.id;
+  if (app.dockerContainer) await validateAppDockerContainerAsync(app.dockerContainer, user);
 
   logger.info("Creating app", {
     name: app.name,
@@ -900,6 +906,7 @@ const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integ
   await db.insert(apps).values({
     id: appId,
     name: app.name,
+    dockerContainer: app.dockerContainer ?? null,
     description: app.description,
     iconUrl: app.iconUrl,
     href: app.href,

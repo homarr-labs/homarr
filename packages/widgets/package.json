@@ -35,6 +35,7 @@
     "./errors/classes": "./src/errors/index.ts",
     "./widget-integration-select": "./src/widget-integration-select.tsx",
     "./modals": "./src/modals/index.ts",
+    "./modals/styles": "./src/modals/styles.ts",
     "./prefetch": "./src/prefetch.ts",
     "./refetch-intervals": "./src/refetch-intervals.ts",
     "./widget-card-shell": "./src/widget-card-shell.tsx",
@@ -49,6 +50,7 @@
   "dependencies": {
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
+    "@floating-ui/dom": "catalog:",
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/boards": "workspace:^0.1.0",
@@ -112,9 +114,6 @@
     "react-markdown": "catalog:",
     "react-quill-new": "catalog:",
     "recharts": "catalog:",
-    "rehype-raw": "catalog:",
-    "rehype-sanitize": "catalog:",
-    "remark-gfm": "catalog:",
     "three": "catalog:",
     "video.js": "catalog:",
     "zod": "catalog:"

@@ -1,4 +1,7 @@
 export * from "./interfaces/calendar/calendar-types";
+export * from "./interfaces/smart-home/smart-home-types";
+export * from "./interfaces/smart-home/smart-home-optimistic";
+export * from "./interfaces/smart-home/smart-home-capabilities";
 export * from "./interfaces/media-organizer/media-organizer-types";
 export type { IMediaOrganizerIntegration } from "./interfaces/media-organizer/media-organizer-integration";
 export * from "./interfaces/dns-hole-summary/dns-hole-summary-types";
@@ -15,6 +18,7 @@ export * from "./homeassistant/homeassistant-types";
 export * from "./proxmox/proxmox-types";
 export * from "./unifi-controller/unifi-controller-types";
 export * from "./opnsense/opnsense-types";
+export * from "./pfsense/pfsense-types";
 export * from "./interfaces/media-releases";
 export * from "./coolify/coolify-types";
 export * from "./anchor/anchor-types";

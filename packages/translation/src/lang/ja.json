@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "AIによるデザイン",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "設定",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "高度な設定",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "カスタム ウィジェットセクション",
       "widgetPreview": "ウィジェットのプレビュー",
       "generalInformation": "一般情報",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "任意のAIで作成または修正する",
         "description": "API ドキュメントの URL を最初に追加します。修正については、可能な場合はプレビューを実行してください。 プロンプトを任意のAIにコピーします。詳細を確認することができます。最後のJSONをここに貼り付けてください。",
+        "assistedDescription": "",
         "request": "このウィジェットは何をすべきですか?",
         "documentationUrl": "API ドキュメント URL (オプション)",
         "paste": "貼り付け",
+        "pasteResponse": "",
         "response": "AI応答",
         "manualCopyDescription": "クリップボードへのアクセスは利用できません。以下のプロンプトを選択し、手動でコピーしてください。",
         "manualPasteDescription": "クリップボードへのアクセスが利用できないか、コピーされた応答に修正が必要です。ここにAIのJSON応答を貼り付けます。",
@@ -1245,6 +1262,20 @@
       "username": "",
       "password": "",
       "savedPlaceholder": ""
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "アップデートがあります",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "",
     "importCss": "ワークショップからCSSをインポート",
     "importCssConfirm": "現在のカスタム CSS を \"{title}\" に置き換えますか？ボードの設定を保存するまで何も保存されません。",
+    "theme": {
+      "label": "テーマ",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "デフォルト",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "説明",
+      "published": ""
+    },
     "screenshotAlt": "{title}のスクリーンショット {count, number}",
     "screenshotViewer": "{title} スクリーンショットビューアー",
     "screenshotsLabel": "{title} スクリーン ショット",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "スクリーンショットのサムネイルを非表示",
     "closeScreenshotViewer": "スクリーンショットビューアを閉じる",
     "technicalDetails": "技術的な詳細",
+    "integrations": "連携機能",
     "sourceCode": "ワークショップのエントリ",
     "report": "レポート",
     "reportTitle": "提出を報告",
@@ -1318,6 +1382,12 @@
       "copyright": "著作権",
       "inappropriate": "不適切です",
       "other": "その他"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "ワークショップに公開",
@@ -1921,7 +1991,8 @@
       "copy": "コピー",
       "copied": "コピーしました",
       "refresh": "更新",
-      "export": "エクスポート"
+      "export": "エクスポート",
+      "advanced": "高度な設定"
     },
     "hidden": "非表示",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "ノート",
+        "tip": "",
+        "important": "",
+        "warning": "警告",
+        "caution": ""
+      }
+    },
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
@@ -2106,6 +2186,159 @@
         "sm": "",
         "xl": "ソフト"
       }
+    },
+    "customTheme": {
+      "label": "テーマ",
+      "nothingFound": "",
+      "custom": "カスタム",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "レイアウト",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "間隔",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "セカンダリアクセントformat@@0"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "コピーしました",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "プレビュー",
+        "sampleText": "",
+        "sampleInput": "検索",
+        "sampleValue": "アプリを探す",
+        "sampleButton": "開く"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "間隔",
+          "radius": "",
+          "compact": "コンパクト化",
+          "normal": "標準",
+          "roomy": "",
+          "preset": "",
+          "none": "なし",
+          "rounded": "",
+          "full": "フル",
+          "custom": "カスタム",
+          "advanced": ""
+        },
+        "previewSurface": "プレビュー",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "コンポーネント",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "モバイル",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "間隔",
+          "radius": "",
+          "breakpoint": "ブレークポイント",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "セカンダリアクセントformat@@0",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "背景",
+          "surfaceText": "",
+          "surfaceBorder": "境界線の色",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "ファイルサイズ",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "コントロールを表示"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "スクロール可能",
         "description": "このコンテナをセットサイズに保ち、サイズに合うように成長するのではなく、内容をスクロールします。"
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "境界線の色"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "非表示"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "このコンテナを削除しますか？その内容は周囲に移動します。"
+      },
+      "editBar": {
+        "edit": "編集"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "カスタム ウィジェット",
       "standalone": "スタンドアロン版",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "ワークショップウィジェット",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "サービスを最初に接続する",
         "noPermission": "このウィジェットには互換性のあるサービス接続が必要です。管理者に接続を依頼して、もう一度お試しください。"
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "アイテムを更新できません",
       "saveErrorMessage": "変更を保存できませんでした。ボードが更新されました。",
       "moveUnavailableTitle": "選択したアイテムを移動できません",
-      "moveUnavailableMessage": "宛先には、選択範囲全体のための十分なスペースがありません。"
+      "moveUnavailableMessage": "宛先には、選択範囲全体のための十分なスペースがありません。",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "アイテムの移動/サイズ変更",
+      "sizeOverlap": "",
       "entryLabel": "{name}, 列 {column}, 行 {row}",
       "target": {
         "numbered": "{name}, 宛先 {index}",
@@ -2279,7 +2548,12 @@
         "integration": "連携を編集"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "コネクションを編集",
@@ -2322,6 +2596,36 @@
       "open": "詳細表示を開く",
       "close": "詳細ビューを閉じる",
       "label": "{widget} の高度な表示"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "ウィジェット",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "移動",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "エンティティ状態",
       "description": "エンティティの状態を表示し、オプションで切り替えます",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "エンティティID"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "エンティティを読み込めません",
         "toggleFailed": "エンティティを更新できません"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "タイトル",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "自動",
+            "compact": "コンパクト化",
+            "large": "大きい"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "人",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "天気",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "追加",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "見つかりません",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "オン",
+          "off": "オフ",
+          "sensors": "",
+          "offline": "オフライン"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "都市／郵便番号",
         "latitude": "緯度",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "ダウンロードの進捗状況",
+          "endsAt": "",
+          "episode": "",
+          "album": "アルバム ID",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "詳細を非表示"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "ポスターの画像を表示"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "通知サービスを開く",
       "deleteNotification": "Goティフィスから通知を削除",
+      "dismissNotification": "",
       "deleteFailed": "通知を削除できませんでした",
       "deleteFailedMessage": "通知を削除できませんでした。もう一度やり直してください。"
     },
@@ -5446,6 +5921,23 @@
       "name": "システムリソース",
       "description": "CPU、メモリ、ディスクなどのシステムハードウェアの使用",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "割合 (例 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "グラフのシェーディングを有効にする"
         },
@@ -5453,6 +5945,7 @@
           "label": "グラフの表示",
           "description": "表示するグラフを選択します。",
           "option": {
+            "cpuCores": "",
             "memory": "メモリ",
             "network": "ネットワーク"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "ホーム",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "ダッシュボードのキャンバス",
       "leftRail": "左のダッシュボードレール",
@@ -6647,6 +7160,11 @@
           "description": "サーバー管理者は、まだホームボードを設定していません。",
           "link": "公開ボードを表示",
           "notice": "このページを見えなくするためには、サーバーの管理者にサーバーのホームボードを設定するよう問い合わせてください"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "ドキュメンテーション",
             "submitIssue": "問題を送信する",
             "discord": "コミュニティ・ディスコード",
-            "sourceCode": "ソースコード"
+            "sourceCode": "ソースコード",
+            "changelog": ""
           }
         },
         "about": "このアプリについて",
+        "updateAvailable": "アップデートがあります",
         "assistant": "アシスタント"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "認証",
           "authorization": "認可"
         },
-        "heroBanner": {
-          "title": "おかえりなさい",
-          "subtitle": "{app} ボード"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "",
-          "description": "アプリやウィジェットを一箇所に並べ替えるボードを作成します。"
+          "description": "アプリやウィジェットを一箇所に並べ替えるボードを作成します。",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "すべての組み込み制御は、すでにヘッダーにあります。",
                 "add": "{item} を追加",
                 "boardShortcut": "ボードショートカット",
+                "widget": "ウィジェット",
                 "chooseBoard": "ボードを選択"
               },
               "configuration": {
+                "widgetKind": "ウィジェット",
+                "widgetOptions": "オプション",
+                "boardOnly": "",
                 "description": "このコントロールは、ライブヘッダーと同じサイズを維持します。",
                 "searchDisplay": {
                   "input": "検索バー",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "ロゴのみ",
                   "logoAndText": "ロゴ + テキスト"
+                },
+                "tabsDisplay": {
+                  "wide": "幅広い順",
+                  "compact": "コンパクト化",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "検索",
                 "home": "ホームボード",
                 "boardSwitcher": "ボード",
+                "boardTabs": "",
                 "assistant": "アシスタント",
                 "docker": "Docker",
                 "boardEdit": "ボードを編集",
@@ -6847,7 +7393,9 @@
                 "settings": "設定",
                 "themeToggle": "テーマの切り替え",
                 "user": "アカウント",
-                "boardUnavailable": "ボードが利用できません"
+                "boardUnavailable": "ボードが利用できません",
+                "notifications": "通知",
+                "widget": "ウィジェット"
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "検索",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ",
+              "signInInformation": {
+                "title": "",
+                "provider": "プロバイダー",
+                "subject": "Subject",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "なし",
+                "copy": "コピー",
+                "copied": "コピーしました"
+              },
               "oauthConnections": {
                 "title": "OAuth接続",
                 "description": "これらのクライアントは、OAuth を通じてアカウントの API 資格情報を取得しました。 認証情報は Homarr の HTTP API と MCP で動作します。自動的に失効することはなく、サインアウト後も有効になります。",
@@ -7071,6 +7630,10 @@
             "title": "外観",
             "defaultColorScheme": {
               "label": "既定の配色設定"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "アプリ検索を開く",
               "openSpotlightAssistant": "アシスタントモードを開く",
               "openSpotlightPreferences": "設定モードを開く",
-              "openAssistant": "オープンアシスタント"
+              "openAssistant": "オープンアシスタント",
+              "switchBoardTab": ""
             },
             "note": "ヒント：CtrlキーとMacOSの⌘キーの両方を参照します"
           }
@@ -8823,6 +9387,12 @@
         "description": ""
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "*arrスタックとホームラブ全体のセルフホスト型ダッシュボード。50以上のサービス、リアルタイムウィジェット、設定ファイルなしと統合できます。",

@@ -1,19 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ButtonProps } from "@mantine/core";
-import { ActionIcon, Button, Group, Loader, Modal, Pagination, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Loader,
+  Modal,
+  Pagination,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react";
 
-import { modalSizeSelect, useConfirmModal } from "@homarr/modals";
+import { modalSizeSelect } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
-import { validateWorkshopContent } from "@homarr/workshop/schema";
+import { readWorkshopTheme } from "@homarr/workshop/schema";
 
 import { NoResults } from "@homarr/ui";
+import type { ThemeImportHandler } from "~/components/theme/theme-import-form";
+import { ThemeImportForm } from "~/components/theme/theme-import-form";
 import { getWorkshopWebUrl } from "./workshop-client";
 import { useWorkshopSession } from "./workshop-session";
 import { WorkshopSubmissionGrid } from "./workshop-submission-grid";
@@ -31,66 +45,83 @@ export function WorkshopCssImportButton({
   onImport(css: string): void;
   size?: ButtonProps["size"];
 }) {
+  return <WorkshopAppearanceImportButton type="customCss" size={size} onImport={onImport} />;
+}
+
+export function WorkshopThemeImportButton({ onImport }: { onImport: ThemeImportHandler }) {
+  return <WorkshopAppearanceImportButton type="customTheme" onImport={onImport} />;
+}
+
+type AppearanceImport =
+  | { type: "customCss"; onImport(css: string): void }
+  | { type: "customTheme"; onImport: ThemeImportHandler };
+
+function WorkshopAppearanceImportButton(props: AppearanceImport & { size?: ButtonProps["size"] }) {
   const t = useI18n("workshop");
+  const actions = useI18n("common.action");
   const [opened, controls] = useDisclosure(false);
+  const title = t(props.type === "customTheme" ? "theme.browse" : "importCss");
 
   return (
     <>
       <Button
         type="button"
-        size={size}
+        size={props.size}
         variant="light"
         leftSection={<IconDownload size={16} />}
         onClick={controls.open}
       >
-        {t("importCss")}
+        {title}
       </Button>
-      <Modal opened={opened} onClose={controls.close} title={t("importCss")} size={modalSizeSelect} radius="md">
-        <WorkshopCssPicker
-          onImport={(css) => {
-            onImport(css);
-            controls.close();
-          }}
-        />
+      <Modal
+        opened={opened}
+        onClose={controls.close}
+        title={title}
+        closeButtonProps={{ "aria-label": actions("close") }}
+        size={modalSizeSelect}
+        radius="md"
+      >
+        {opened && <WorkshopAppearancePicker {...props} onClose={controls.close} />}
       </Modal>
     </>
   );
 }
 
-function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
+function WorkshopAppearancePicker(props: AppearanceImport & { onClose(): void }) {
   const t = useI18n("workshop");
   const session = useWorkshopSession();
-  const { openConfirmModal } = useConfirmModal();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 250);
   const [page, setPage] = useState(1);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [review, setReview] = useState<{ title: string; json: string; css?: string } | null>(null);
+  const searchInput = useRef<HTMLInputElement>(null);
+  const isTheme = props.type === "customTheme";
+  const searchLabel = t(isTheme ? "theme.search" : "searchCss");
 
   const query = useWorkshopQuery(session.client, {
     page,
     perPage: 8,
-    type: "customCss",
+    type: "appearance",
     sort: "top",
     search: debouncedSearch,
   });
   const totalPages = query.data?.totalPages ?? 1;
 
-  const useTheme = async (item: WorkshopSubmissionSummary) => {
+  const reviewSubmission = async (item: WorkshopSubmissionSummary) => {
     setPendingId(item.id);
     try {
       const submission = await session.client.get(item.id);
-      const validation = validateWorkshopContent("customCss", submission.content);
+      const validation = readWorkshopTheme(submission);
       if (!validation.success) throw new Error(validation.error);
-      const css = validation.data;
-      if (typeof css !== "string") throw new Error(t("loadError"));
-      openConfirmModal({
-        title: t("importCss"),
-        children: t("importCssConfirm", { title: item.title }),
-        onConfirm: () => onImport(css),
+      setReview({
+        title: submission.title,
+        json: JSON.stringify(validation.data, null, 2),
+        css: validation.data.customCss,
       });
     } catch (cause) {
       showErrorNotification({
-        title: t("importCss"),
+        title: t(isTheme ? "theme.browse" : "importCss"),
         message: cause instanceof Error ? cause.message : t("loadError"),
       });
     } finally {
@@ -98,14 +129,69 @@ function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
     }
   };
 
+  const backToList = () => {
+    setReview(null);
+    requestAnimationFrame(() => searchInput.current?.focus());
+  };
+
+  if (review && props.type === "customCss") {
+    const css = review.css;
+    return (
+      <Stack gap="md">
+        <Text fw={600}>{review.title}</Text>
+        {css?.trim() ? (
+          <Textarea label={t("theme.cssContent")} readOnly value={css} rows={8} />
+        ) : (
+          <Text>{t("theme.noCss")}</Text>
+        )}
+        <Group justify="space-between">
+          <Button type="button" variant="default" ref={focusOnMount} onClick={backToList}>
+            {t("theme.backToThemes")}
+          </Button>
+          {css?.trim() && (
+            <Button
+              type="button"
+              onClick={() => {
+                props.onImport(css);
+                props.onClose();
+              }}
+            >
+              {t("useCss")}
+            </Button>
+          )}
+        </Group>
+      </Stack>
+    );
+  }
+
+  if (review && props.type === "customTheme") {
+    return (
+      <Stack gap="md">
+        <Text fw={600}>{review.title}</Text>
+        <ThemeImportForm
+          value={review.json}
+          onImport={(patch, options) => {
+            const error = props.onImport(patch, options);
+            if (!error) props.onClose();
+            return error;
+          }}
+          onBack={backToList}
+          backLabel={t("theme.backToThemes")}
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Stack gap="md">
       <Text size="sm" c="dimmed">
-        {t("securityNoticeCss")}
+        {t(isTheme ? "theme.browseHint" : "securityNoticeCss")}
       </Text>
       <TextInput
-        aria-label={t("searchCss")}
-        placeholder={`${t("searchCss")}...`}
+        ref={searchInput}
+        data-autofocus
+        aria-label={searchLabel}
+        placeholder={`${searchLabel}...`}
         leftSection={<IconSearch size={16} />}
         rightSection={query.isFetching ? <Loader size={16} /> : undefined}
         value={search}
@@ -117,9 +203,9 @@ function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
       <WorkshopSubmissionGrid
         client={session.client}
         query={query}
-        ariaLabel={t("listAriaLabelCss")}
+        ariaLabel={t(isTheme ? "theme.listLabel" : "listAriaLabelCss")}
         cols={{ base: 1, sm: 2 }}
-        emptyState={<NoResults icon={IconSearch} title={t("emptyCss")} />}
+        emptyState={<NoResults icon={IconSearch} title={t(isTheme ? "theme.empty" : "emptyCss")} />}
         renderActions={(item) => (
           <>
             <WorkshopVoteControl
@@ -144,8 +230,13 @@ function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
                   <IconExternalLink size={16} stroke={1.5} />
                 </ActionIcon>
               </Tooltip>
-              <Button size="sm" loading={pendingId === item.id} onClick={() => void useTheme(item)}>
-                {t("useCss")}
+              <Button
+                size="sm"
+                disabled={pendingId !== null && pendingId !== item.id}
+                loading={pendingId === item.id}
+                onClick={() => void reviewSubmission(item)}
+              >
+                {t(isTheme ? "theme.review" : "theme.reviewCss")}
               </Button>
             </Group>
           </>
@@ -154,4 +245,8 @@ function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
       {totalPages > 1 && <Pagination total={totalPages} value={page} onChange={setPage} mx="auto" />}
     </Stack>
   );
+}
+
+function focusOnMount(element: HTMLButtonElement | null) {
+  element?.focus();
 }

@@ -890,6 +890,7 @@
       "deleteConfirm": "Vai tiešām vēlaties dzēst \"{name}\"? Šo darbību nevar atsaukt.",
       "duplicate": "Dublēt",
       "aiPrompt": "Veidot ar MI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopēt MI uzvedni",
       "enable": "Iespējot",
       "disable": "Atspējot",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurēt",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Pielāgotā logrīka sadaļas",
       "widgetPreview": "Logrīka priekšskatījums",
       "generalInformation": "Vispārīga informācija",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Izveidojiet vai labojiet ar jebkuru MI",
         "description": "Vispirms pievienojiet API dokumentācijas URL, ja tāds ir. Labojumu gadījumā, ja iespējams, palaidiet priekšskatījumu. Kopējiet uzvedni jebkurā MI; tas var lūgt trūkstošo informāciju. Ielīmējiet tā galīgo JSON šeit.",
+        "assistedDescription": "",
         "request": "Ko šim logrīkam vajadzētu darīt?",
         "documentationUrl": "API dokumentācijas URL (neobligāti)",
         "paste": "Ielīmēt",
+        "pasteResponse": "",
         "response": "MI atbilde",
         "manualCopyDescription": "Starpliktuves piekļuve nav pieejama. Atlasiet tālāk redzamo uzvedni un kopējiet to manuāli.",
         "manualPasteDescription": "Starpliktuves piekļuve nav pieejama vai nokopētā atbilde ir jālabo. Ielīmējiet MI JSON atbildi šeit.",
@@ -1245,6 +1262,20 @@
       "username": "Lietotājvārds",
       "password": "Parole",
       "savedPlaceholder": "••••••• (saglabāts, atstājiet tukšu, lai saglabātu)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "Importēt CSS",
     "importCss": "Importēt CSS no Workshop",
     "importCssConfirm": "Vai aizstāt pašreizējo pielāgoto CSS ar “{title}”? Nekas netiek saglabāts, kamēr nesaglabājat paneļa iestatījumus.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Apraksts",
+      "published": ""
+    },
     "screenshotAlt": "{title} ekrānuzņēmums {count, number}",
     "screenshotViewer": "{title} ekrānuzņēmumu skatītājs",
     "screenshotsLabel": "{title} ekrānuzņēmumi",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Paslēpt ekrānuzņēmumu sīktēlus",
     "closeScreenshotViewer": "Aizvērt ekrānuzņēmumu skatītāju",
     "technicalDetails": "Tehniskā informācija",
+    "integrations": "Integrācijas",
     "sourceCode": "Workshop ieraksts",
     "report": "Ziņot",
     "reportTitle": "Ziņot par iesniegumu",
@@ -1318,6 +1382,12 @@
       "copyright": "Autortiesības",
       "inappropriate": "Nepiemērots",
       "other": "Cits"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicēt Workshop",
@@ -1921,7 +1991,8 @@
       "copy": "Kopēt",
       "copied": "Nokopēts",
       "refresh": "Atsvaidzināt",
-      "export": "Eksportēt"
+      "export": "Eksportēt",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": "Moderators"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Bīstamā zona",
     "noResults": "Nav atrasts neviens rezultāts",
     "unsavedChanges": "Jums ir nesaglabātas izmaiņas!",
@@ -2106,6 +2186,159 @@
         "sm": "Smalks",
         "xl": "Maigs"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Izkārtojums",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "Meklēt",
+        "sampleValue": "Atrast aplikāciju",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Fons",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Faila lielums",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Ritināms",
         "description": "Saglabāt šī konteinera iestatīto izmēru un ritināt tā saturu, nevis palielināt konteineru, lai saturs ietilptu."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Apmales krāsa"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Noņemt šo konteineru? Tā saturs tiks pārvietots apkārtējā apgabalā."
+      },
+      "editBar": {
+        "edit": "Rediģēt"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Pielāgots logrīks",
       "standalone": "Patstāvīgs",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Vispirms savienojiet pakalpojumu",
         "noPermission": "Šim logrīkam nepieciešams saderīgs pakalpojuma savienojums. Lūdziet administratoram to savienot un pēc tam mēģiniet vēlreiz."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Neizdevās atjaunināt vienumus",
       "saveErrorMessage": "Izmaiņas neizdevās saglabāt. Panelis tika atsvaidzināts.",
       "moveUnavailableTitle": "Neizdevās pārvietot atlasītos vienumus",
-      "moveUnavailableMessage": "Galamērķī nepietiek vietas visai atlasei."
+      "moveUnavailableMessage": "Galamērķī nepietiek vietas visai atlasei.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Pārvietot / mainīt izmēru vienumam",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolonna {column}, rinda {row}",
       "target": {
         "numbered": "{name}, galamērķis {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Rediģēt integrāciju"
       },
       "app": {
-        "propagationNotice": "Izmaiņas šajā lietotnē tiks piemērotas visur, kur tā tiek izmantota visos informācijas paneļos."
+        "propagationNotice": "Izmaiņas šajā lietotnē tiks piemērotas visur, kur tā tiek izmantota visos informācijas paneļos.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Rediģēt savienojumu",
@@ -2322,6 +2596,36 @@
       "open": "Atvērt paplašināto skatu",
       "close": "Aizvērt paplašināto skatu",
       "label": "{widget} paplašinātais skats"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Vienības stāvoklis",
       "description": "Parādīt vienības stāvokli un pēc izvēles to pārslēgt",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Vienības ID"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Nevar ielādēt entītiju",
         "toggleFailed": "Nevar atjaunināt entītiju"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Tituls",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": "Liels"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Laikapstākļi",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Pievienot",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Pilsēta / pasta indekss",
         "latitude": "Platums",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Rādīt atrašanās vietu",
           "description": "Rādīt, vai straume atrodas jūsu LAN vai WAN tīklā"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Lejupielādes progress",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopēt nosaukumu",
         "copyId": "Kopēt ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Notīrīt filtrus"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrēt lejupielādes"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Paslēpt aprakstu"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Rādīt plakāta attēlu"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Atvērt paziņojumu pakalpojumu",
       "deleteNotification": "Dzēst paziņojumu no Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Neizdevās dzēst paziņojumu",
       "deleteFailedMessage": "Paziņojumu nevarēja izdzēst. Lūdzu, mēģiniet vēlreiz."
     },
@@ -5446,6 +5921,23 @@
       "name": "Sistēmas resursi",
       "description": "Jūsu sistēmas CPU, atmiņas, diska un citas aparatūras lietojums",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Iespējot diagrammas ēnojumu"
         },
@@ -5453,6 +5945,7 @@
           "label": "Redzamās diagrammas",
           "description": "Atlasiet diagrammas, kuras vēlaties redzēt.",
           "option": {
+            "cpuCores": "",
             "memory": "Atmiņa",
             "network": "Tīkls"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Sākums",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Informācijas paneļa kanva",
       "leftRail": "Informācijas paneļa kreisā josla",
@@ -6647,6 +7160,11 @@
           "description": "Servera administrators vēl nav iestatījis sākumlapas tāfeli.",
           "link": "Skatīt publiskās tāfeles",
           "notice": "Lai šī lapa pazustu, lūdziet servera administratoram iestatīt servera sākumlapas tāfeli"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Dokumentācija",
             "submitIssue": "Iesniegt problēmu",
             "discord": "Kopienas Discord",
-            "sourceCode": "Avota kods"
+            "sourceCode": "Avota kods",
+            "changelog": ""
           }
         },
         "about": "Par Programmu",
+        "updateAvailable": "",
         "assistant": "Asistents"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Autentifikācija",
           "authorization": "Autorizācija"
         },
-        "heroBanner": {
-          "title": "Laipni lūdzam atpakaļ jūsu",
-          "subtitle": "{app} dēlis"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Pagaidām nav dēļu",
-          "description": "Izveidojiet paneli, lai sakārtotu savas lietotnes un logrīkus vienuviet."
+          "description": "Izveidojiet paneli, lai sakārtotu savas lietotnes un logrīkus vienuviet.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Visas iebūvētās vadīklas jau atrodas jūsu galvenē.",
                 "add": "Pievienot {item}",
                 "boardShortcut": "Paneļa saīsne",
+                "widget": "",
                 "chooseBoard": "Izvēlēties paneli"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Šī vadīkla saglabā tādu pašu izmēru kā aktīvajā galvenē.",
                 "searchDisplay": {
                   "input": "Meklēšanas josla",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Tikai logotips",
                   "logoAndText": "Logotips + teksts"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Meklēt",
                 "home": "Sākuma panelis",
                 "boardSwitcher": "Dēļi",
+                "boardTabs": "",
                 "assistant": "Asistents",
                 "docker": "Docker",
                 "boardEdit": "Rediģēt paneli",
@@ -6847,7 +7393,9 @@
                 "settings": "Jūsu iestatījumi",
                 "themeToggle": "Pārslēgt motīvu",
                 "user": "Konts",
-                "boardUnavailable": "Panelis nav pieejams"
+                "boardUnavailable": "Panelis nav pieejams",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Meklēšana",
               "firstDayOfWeek": "Nedēļas pirmā diena",
               "accessibility": "Piekļūstamība",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
@@ -7071,6 +7630,10 @@
             "title": "Izskats",
             "defaultColorScheme": {
               "label": "Noklusējuma krāsu shēma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Atvērt lietotņu meklēšanu",
               "openSpotlightAssistant": "Atvērt asistenta režīmu",
               "openSpotlightPreferences": "Atvērt preferenču režīmu",
-              "openAssistant": "Atvērt Asistentu"
+              "openAssistant": "Atvērt Asistentu",
+              "switchBoardTab": ""
             },
             "note": "Padoms: Mod attiecas gan uz taustiņu Ctrl, gan uz taustiņu ⌘ operētājsistēmā macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Mainiet savu krāsu shēmu, valodu, sākuma dēli un preferences. No šejienes varat arī pāriet uz pārvaldības apgabalu."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Paša mitināta informācijas panelis *arr stekam un visai jūsu mājas laboratorijai. Integrējas ar vairāk nekā 50 pakalpojumiem, logrīki reāllaikā, bez konfigurācijas failiem.",

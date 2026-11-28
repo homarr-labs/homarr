@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createIntegrationAsync } from "@homarr/integrations/factory";
@@ -9,16 +10,16 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const notificationsRouter = createTRPCRouter({
   deleteNotification: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "gotify"))
+    .concat(createOneIntegrationMiddleware("interact", "gotify", "homeAssistant"))
     .input(
       z.object({
-        notificationId: z
-          .string()
-          .regex(/^[1-9]\d*$/)
-          .max(20),
+        notificationId: z.string().min(1).max(512),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (ctx.integration.kind === "gotify" && !/^[1-9]\d{0,19}$/.test(input.notificationId)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid Gotify notification ID" });
+      }
       const integration = await createIntegrationAsync(ctx.integration);
       await integration.deleteNotificationAsync(input.notificationId);
       await notificationsRequestHandler.invalidateCacheAsync([ctx.integration.id]);

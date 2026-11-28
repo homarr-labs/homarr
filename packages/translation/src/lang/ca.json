@@ -890,6 +890,7 @@
       "deleteConfirm": "Segur que vols eliminar «{name}»? Aquesta acció no es pot desfer.",
       "duplicate": "Duplica",
       "aiPrompt": "Dissenya amb IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copia la indicació per a la IA",
       "enable": "Activa",
       "disable": "Desactiva",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configura",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Seccions dels ginys personalitzats",
       "widgetPreview": "Vista prèvia del giny",
       "generalInformation": "Informació general",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Crea o corregeix amb qualsevol IA",
         "description": "Afegiu primer una URL de documentació de l'API si en teniu una. Per a les correccions, executeu la vista prèvia si és possible. Copieu la sol·licitud a qualsevol IA; pot demanar els detalls que faltin. Enganxeu aquí el JSON final.",
+        "assistedDescription": "",
         "request": "Què hauria de fer aquest giny?",
         "documentationUrl": "URL de la documentació de l'API (opcional)",
         "paste": "Enganxa",
+        "pasteResponse": "",
         "response": "Resposta de la IA",
         "manualCopyDescription": "L'accés al porta-retalls no està disponible. Seleccioneu la sol·licitud següent i copieu-la manualment.",
         "manualPasteDescription": "L'accés al porta-retalls no està disponible o cal corregir la resposta copiada. Enganxeu aquí la resposta JSON de la IA.",
@@ -1245,6 +1262,20 @@
       "username": "Nom d'usuari",
       "password": "Contrasenya",
       "savedPlaceholder": "••••••• (desat, deixa-ho buit per conservar-ho)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "Importa CSS",
     "importCss": "Importa CSS del taller",
     "importCssConfirm": "Voleu reemplaçar el CSS personalitzat actual per «{title}»? No es desa res fins que no deseu la configuració del tauler.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descripció",
+      "published": ""
+    },
     "screenshotAlt": "Captura de pantalla de {title}, {count, number}",
     "screenshotViewer": "Visor de captures de pantalla de {title}",
     "screenshotsLabel": "Captures de pantalla de {title}",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Amaga les miniatures de les captures de pantalla",
     "closeScreenshotViewer": "Tanca el visor de captures de pantalla",
     "technicalDetails": "Detalls tècnics",
+    "integrations": "Integracions",
     "sourceCode": "Entrada del taller",
     "report": "Informa",
     "reportTitle": "Informa de l'enviament",
@@ -1318,6 +1382,12 @@
       "copyright": "Drets d'autor",
       "inappropriate": "Inadequat",
       "other": "Altres"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publica al taller",
@@ -1921,7 +1991,8 @@
       "copy": "Copia",
       "copied": "Copiat",
       "refresh": "Actualitza",
-      "export": "Exporta"
+      "export": "Exporta",
+      "advanced": ""
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "",
+        "caution": ""
+      }
+    },
     "dangerZone": "Zona de perill",
     "noResults": "No s'han trobat resultats",
     "unsavedChanges": "Tens canvis sense desar!",
@@ -2106,6 +2186,159 @@
         "sm": "Subtil",
         "xl": "Suau"
       }
+    },
+    "customTheme": {
+      "label": "",
+      "nothingFound": "",
+      "custom": "",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": ""
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "",
+        "sampleText": "",
+        "sampleInput": "",
+        "sampleValue": "",
+        "sampleButton": ""
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "",
+          "radius": "",
+          "compact": "",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "",
+          "custom": "",
+          "advanced": ""
+        },
+        "previewSurface": "",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "",
+          "surfaceText": "",
+          "surfaceBorder": "",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Mida",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Desplaçable",
         "description": "Mantén aquest contenidor amb la mida establerta i desplaça'n el contingut en lloc d'ampliar-lo per encabir-lo."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Color de la vora"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Voleu eliminar aquest contenidor? El contingut es mourà a l'àrea circumdant."
+      },
+      "editBar": {
+        "edit": ""
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Giny personalitzat",
       "standalone": "Independent",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Connecteu primer un servei",
         "noPermission": "Aquest giny necessita una connexió de servei compatible. Demaneu a un administrador que en connecti una i torneu-ho a provar."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "No s'han pogut actualitzar els elements",
       "saveErrorMessage": "No s'han pogut desar els canvis. S'ha actualitzat el tauler.",
       "moveUnavailableTitle": "No s'han pogut moure els elements seleccionats",
-      "moveUnavailableMessage": "La destinació no té prou espai per a tota la selecció."
+      "moveUnavailableMessage": "La destinació no té prou espai per a tota la selecció.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Mou / redimensiona element",
+      "sizeOverlap": "",
       "entryLabel": "{name}, columna {column}, fila {row}",
       "target": {
         "numbered": "{name}, destinació {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Edita la integració"
       },
       "app": {
-        "propagationNotice": "Els canvis d'aquesta aplicació s'aplicaran a tot arreu on s'utilitzi, en tots els taulers."
+        "propagationNotice": "Els canvis d'aquesta aplicació s'aplicaran a tot arreu on s'utilitzi, en tots els taulers.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Edita la connexió",
@@ -2322,6 +2596,36 @@
       "open": "Obre la vista avançada",
       "close": "Tanca la vista avançada",
       "label": "Vista avançada de {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Estat de l'entitat",
       "description": "Mostra l'estat d'una entitat i, opcionalment, commuta-la",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de l'entitat"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "No s'ha pogut carregar l'entitat",
         "toggleFailed": "No s'ha pogut actualitzar l'entitat"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Títol",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "",
+            "compact": "",
+            "large": ""
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "",
+          "off": "",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ciutat / Codi postal",
         "latitude": "Latitud",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Mostra la ubicació",
           "description": "Mostra si la transmissió és a la vostra LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progrés de la descàrrega",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Copia el nom",
         "copyId": "Copia l'ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Esborra els filtres"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtra les baixades"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Amaga la descripció"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostra la imatge del pòster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Obre el servei de notificacions",
       "deleteNotification": "Elimina la notificació de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "No s'ha pogut eliminar la notificació",
       "deleteFailedMessage": "No s'ha pogut eliminar la notificació. Torna-ho a provar."
     },
@@ -5446,6 +5921,23 @@
       "name": "Recursos del sistema",
       "description": "Ús de la CPU, la memòria, el disc i altre maquinari del sistema",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Activa l'ombrejat dels gràfics"
         },
@@ -5453,6 +5945,7 @@
           "label": "Gràfics visibles",
           "description": "Selecciona els gràfics que vols que siguin visibles.",
           "option": {
+            "cpuCores": "",
             "memory": "Memòria",
             "network": "Xarxa"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Àrea del tauler",
       "leftRail": "Barra lateral esquerra del tauler",
@@ -6647,6 +7160,11 @@
           "description": "L'administrador del servidor encara no ha establert un tauler d'inici.",
           "link": "Visualitzar taulers públics",
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Documentació",
             "submitIssue": "Envieu un problema",
             "discord": "Discord de la comunitat",
-            "sourceCode": "Codi font"
+            "sourceCode": "Codi font",
+            "changelog": ""
           }
         },
         "about": "Quant a",
+        "updateAvailable": "",
         "assistant": "Assistent"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Autenticació",
           "authorization": "Autorització"
         },
-        "heroBanner": {
-          "title": "Ben tornat al teu",
-          "subtitle": "Tauler de {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Encara no hi ha taulers",
-          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc."
+          "description": "Crea un tauler per organitzar les teves aplicacions i ginys en un sol lloc.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Tots els controls integrats ja són a la teva capçalera.",
                 "add": "Afegeix {item}",
                 "boardShortcut": "Drecera del tauler",
+                "widget": "",
                 "chooseBoard": "Tria un tauler"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Aquest control manté la mateixa mida que té a la capçalera activa.",
                 "searchDisplay": {
                   "input": "Barra de cerca",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Només el logotip",
                   "logoAndText": "Logotip + text"
+                },
+                "tabsDisplay": {
+                  "wide": "",
+                  "compact": "",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Cerca",
                 "home": "Panell d'inici",
                 "boardSwitcher": "Taulers",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Edita el tauler",
@@ -6847,7 +7393,9 @@
                 "settings": "La teva configuració",
                 "themeToggle": "Canvia el tema",
                 "user": "Compte",
-                "boardUnavailable": "Tauler no disponible"
+                "boardUnavailable": "Tauler no disponible",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Cerca",
               "firstDayOfWeek": "Primer dia de la setmana",
               "accessibility": "Accessibilitat",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",
@@ -7071,6 +7630,10 @@
             "title": "Aparença",
             "defaultColorScheme": {
               "label": "Esquema de color per defecte"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Obre la cerca d'aplicacions",
               "openSpotlightAssistant": "Obre el mode Assistent",
               "openSpotlightPreferences": "Obre el mode de preferències",
-              "openAssistant": "Obre l'Assistent"
+              "openAssistant": "Obre l'Assistent",
+              "switchBoardTab": ""
             },
             "note": "Consell: Mod fa referència tant a la tecla Ctrl com a la tecla ⌘ de macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Canvia l'esquema de colors, l'idioma, el tauler d'inici i les preferències. També pots anar a l'àrea de gestió des d'aquí."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Un tauler autoallotjat per a la pila *arr i tot el teu homelab. S'integra amb més de 50 serveis, ginys en temps real i no necessita fitxers de configuració.",

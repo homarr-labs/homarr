@@ -12,9 +12,10 @@ export async function insertCustomWidgetDefinition(
   definition: HomarrCustomWidgetV2,
   creatorId: string,
   secrets: CustomWidgetCreateInput["secrets"],
+  workshop?: string,
 ) {
   const id = createId();
-  const definitionRow = { id, ...serializeCustomWidgetDefinition(definition), creatorId };
+  const definitionRow = { id, ...serializeCustomWidgetDefinition(definition), creatorId, workshop };
   const updatedAt = new Date();
   const secretRows = secrets.map((secret) => ({
     definitionId: id,

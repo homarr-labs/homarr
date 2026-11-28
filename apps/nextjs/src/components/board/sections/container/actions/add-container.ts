@@ -1,6 +1,6 @@
 import { getBoardLayouts } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
-import { getRootSectionLane } from "@homarr/definitions";
+import { getBoardTabs } from "@homarr/boards/tabs";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
 import type { Board, ContainerSection, ContainerSectionLayout, EmptySection } from "~/app/[locale]/boards/_types";
@@ -8,13 +8,9 @@ import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
 import { getSectionElements } from "~/components/board/items/actions/section-elements";
 
-export const addContainerCallback = () => (board: Board) => {
-  const firstSection = board.sections
-    .filter(
-      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
-    )
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
-    .at(0);
+export const addContainerCallback = (mainSectionId?: string) => (board: Board) => {
+  const tabs = getBoardTabs(board);
+  const firstSection = tabs.find((tab) => tab.id === mainSectionId) ?? tabs.at(0);
 
   if (!firstSection) return board;
 

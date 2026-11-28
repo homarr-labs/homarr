@@ -29,9 +29,9 @@ describe("grid resize outline", () => {
     frame.callback?.(0);
     const outline = shell.querySelector<HTMLElement>("[data-grid-resize-outline]");
     expect(outline?.style.left).toBe("0px");
-    expect(outline?.style.top).toBe("0px");
+    expect(outline?.style.top).toBe("calc(0px * var(--board-grid-row-scale, 1))");
     expect(outline?.style.width).toBe(`${getLogicalGridSize(1)}px`);
-    expect(outline?.style.height).toBe(`${getLogicalGridSize(2)}px`);
+    expect(outline?.style.height).toBe(`calc(${getLogicalGridSize(2)}px * var(--board-grid-row-scale, 1))`);
     expect(outline?.dataset.gridResizeValid).toBe("false");
 
     controller.schedule(null);

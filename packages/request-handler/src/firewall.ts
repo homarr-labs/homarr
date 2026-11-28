@@ -1,4 +1,5 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
+import type { PfSenseIntegration } from "@homarr/integrations";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type {
   FirewallCpuSummary,
@@ -9,9 +10,9 @@ import type {
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
 
-export const firewallCpuRequestHandler = createIntegrationRequestHandler<
+const opnsenseCpuRequestHandler = createIntegrationRequestHandler<
   FirewallCpuSummary,
-  IntegrationKindByCategory<"firewall">,
+  "opnsense",
   Record<string, never>
 >({
   cacheNamespace: "firewall:cpu",
@@ -21,9 +22,9 @@ export const firewallCpuRequestHandler = createIntegrationRequestHandler<
   },
 });
 
-export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
+const opnsenseMemoryRequestHandler = createIntegrationRequestHandler<
   FirewallMemorySummary,
-  IntegrationKindByCategory<"firewall">,
+  "opnsense",
   Record<string, never>
 >({
   cacheNamespace: "firewall:memory",
@@ -32,6 +33,42 @@ export const firewallMemoryRequestHandler = createIntegrationRequestHandler<
     return await integrationInstance.getFirewallMemoryAsync();
   },
 });
+
+type PfSenseUsage = Awaited<ReturnType<PfSenseIntegration["getFirewallUsageAsync"]>>;
+
+const pfSenseUsageRequestHandler = createIntegrationRequestHandler<PfSenseUsage, "pfsense", Record<string, never>>({
+  cacheNamespace: "firewall:pfsense-usage",
+  async requestAsync(integration) {
+    const client = await createIntegrationAsync(integration);
+    return await client.getFirewallUsageAsync();
+  },
+});
+
+type FirewallIntegration = Omit<Parameters<typeof opnsenseCpuRequestHandler.handler>[0], "kind"> & {
+  kind: IntegrationKindByCategory<"firewall">;
+};
+
+const withPfSenseUsage = <TMetric extends keyof PfSenseUsage>(
+  metric: TMetric,
+  opnsenseHandler: ReturnType<
+    typeof createIntegrationRequestHandler<NonNullable<PfSenseUsage[TMetric]>, "opnsense", Record<string, never>>
+  >,
+) => ({
+  handler({ kind, ...integration }: FirewallIntegration, input: Record<string, never>) {
+    if (kind === "opnsense") return opnsenseHandler.handler({ ...integration, kind }, input);
+
+    const request = pfSenseUsageRequestHandler.handler({ ...integration, kind }, input);
+    return {
+      async getDataAsync(options: { maxAgeMs?: number }) {
+        const { data, timestamp } = await request.getDataAsync(options);
+        return { data: data[metric], timestamp };
+      },
+    };
+  },
+});
+
+export const firewallCpuRequestHandler = withPfSenseUsage("cpu", opnsenseCpuRequestHandler);
+export const firewallMemoryRequestHandler = withPfSenseUsage("memory", opnsenseMemoryRequestHandler);
 
 export const firewallInterfacesRequestHandler = createIntegrationRequestHandler<
   FirewallInterfacesSummary[],

@@ -47,6 +47,7 @@ describe("getAvailableUpdatesAsync", () => {
     expect(listReleasesSpy).toHaveBeenCalledWith({
       owner: "homarr-labs",
       repo: "homarr",
+      per_page: 100,
     });
   });
 
@@ -71,6 +72,7 @@ describe("getAvailableUpdatesAsync", () => {
     expect(listReleasesSpy).toHaveBeenCalledWith({
       owner: "homarr-labs",
       repo: "homarr",
+      per_page: 100,
       query: undefined,
     });
   });

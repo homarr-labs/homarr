@@ -1,3 +1,14 @@
+.containerControls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.root:hover .containerControls,
+.root:focus-within .containerControls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .appText {
   min-height: 0;
   min-width: 0;

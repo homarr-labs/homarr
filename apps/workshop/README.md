@@ -101,6 +101,9 @@ WORKSHOP_IMAGE_TEST_IMAGE=homarr-workshop:candidate bun run test:workshop-image
 PocketBase data lives in `/pb_data`. Normal start, stop, and down operations retain the named volume. Back up the
 database before migrations or image promotion, and test restores in a separate empty volume.
 
+The integration-tag migration is additive for databases on the current v2 migration chain. It preserves content and
+advances submission revisions; reload open edits after upgrading.
+
 The v2 branch consolidates the unreleased Workshop migrations. Volumes that ran an earlier v2 migration chain are
 unsupported and must be backed up and recreated. The following command permanently removes the local Workshop volume:
 
@@ -115,3 +118,26 @@ Never run that reset against production.
 The production image serves the documentation site and PocketBase from one origin. See the
 [Workshop operator guide](../docs/docs/advanced/development/workshop-operator.mdx) for environment variables, proxying, staging, backups,
 and promotion. Publish by immutable digest, validate that exact digest in staging, then promote it.
+
+### Convert legacy CSS listings
+
+Back up the deployed Workshop's `pb_data` volume before starting the upgraded Workshop to add the theme type.
+Keep legacy CSS listings in place while releasing the updated Homarr client. Once supported clients can import both
+formats, schedule a maintenance window. These commands apply only to deployments using this repository's
+`apps/workshop/docker-compose.yml` and the same Compose project name. Back up that project's `pb_data` volume again
+before running the commands from `apps/workshop`:
+
+```sh
+docker compose stop workshop
+docker compose run --rm --no-deps --user pocketbase --entrypoint pocketbase \
+  -v "$PWD/pb_rollout_migrations:/pb_rollout_migrations:ro" workshop \
+  migrate up --dir=/pb_data --hooksDir=/pb_hooks --migrationsDir=/pb_rollout_migrations
+docker compose up -d workshop
+```
+
+The conversion preserves listing IDs and copies CSS into the Default theme. Clients from before the theme release cannot
+import the converted listings. Restore the pre-conversion backup if you need to undo the conversion.
+
+For another deployment, stop the deployed Workshop, back up its actual `/pb_data` volume, and run the same `migrate up`
+command using the updated Workshop image with that volume mounted at `/pb_data`. Restart that Workshop only after the
+conversion succeeds.

@@ -84,7 +84,7 @@ export class SonarrIntegration
       return {
         title: event.title,
         subTitle: event.series?.title ?? null,
-        description: event.series?.overview ?? null,
+        description: event.overview?.trim() || (event.series?.overview ?? null),
         startDate: event.airDateUtc,
         endDate: null,
         image: imageSrc
@@ -349,6 +349,7 @@ const sonarrCalendarEventImageSchema = z.array(
 
 export const sonarrCalendarEventSchema = z.object({
   title: z.string(),
+  overview: z.string().nullish(),
   airDateUtc: z.string().transform((value) => new Date(value)),
   seasonNumber: z.number().min(0),
   episodeNumber: z.number().min(0),

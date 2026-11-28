@@ -1,6 +1,27 @@
 import { isRecord } from "@homarr/common";
-import { NoSuchToolError } from "ai";
+import { APICallError, NoSuchToolError, RetryError } from "ai";
 import type { TextStreamPart, ToolSet } from "ai";
+
+interface AssistantProviderErrorLogMetadata {
+  providerHttpStatus?: number;
+  providerRequestAttempts?: number;
+}
+
+export const getAssistantProviderErrorLogMetadata = (error: unknown): AssistantProviderErrorLogMetadata => {
+  const metadata: AssistantProviderErrorLogMetadata = {};
+  let providerError = error;
+  if (RetryError.isInstance(error)) {
+    metadata.providerRequestAttempts = error.errors.length;
+    providerError = error.lastError;
+  }
+  if (!APICallError.isInstance(providerError)) return metadata;
+
+  const status = providerError.statusCode;
+  if (status !== undefined && Number.isInteger(status) && status >= 100 && status <= 599) {
+    metadata.providerHttpStatus = status;
+  }
+  return metadata;
+};
 
 export const createAssistantAbortErrorTransform =
   <TOOLS extends ToolSet>(clientSignal: AbortSignal) =>
@@ -76,14 +97,32 @@ const hasUnavailableToolError = (error: unknown, seen = new Set<object>()): bool
   );
 };
 
-export const getAssistantStreamErrorMessage = (error: unknown) => {
+const genericWorkshopGatewayMessages = new Set([
+  "Upstream model service returned HTTP 502.",
+  "Upstream model service returned HTTP 502. Bad Gateway",
+  "Upstream model service returned HTTP 502. Bad Gateway.",
+  "Upstream model service returned HTTP 502. No readable error details were returned.",
+  "Upstream model service returned HTTP 502. The response was not a structured JSON error.",
+  "Upstream model service returned HTTP 502. No error message was returned.",
+]);
+
+export const getAssistantStreamErrorMessage = (error: unknown, isHomarrProvider = false) => {
+  if (isHomarrProvider && RetryError.isInstance(error)) error = error.lastError;
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
   // Workshop has already bounded/redacted this message. Preserve its actual
   // upstream status and detail instead of guessing a cause from the proxy status.
   const upstreamMessage = getWorkshopUpstreamError(error);
-  if (upstreamMessage) return upstreamMessage;
+  if (isHomarrProvider && statusCode === 402) {
+    return "The Homarr Assistant has run out of shared credits. Please try again later.";
+  }
+  if (
+    upstreamMessage &&
+    !(isHomarrProvider && statusCode === 502 && genericWorkshopGatewayMessages.has(upstreamMessage))
+  ) {
+    return upstreamMessage;
+  }
 
   if (hasUnavailableToolError(error)) {
     return "The requested tool is unavailable at this step. Homarr did not run the action. Try again.";
@@ -113,6 +152,9 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   }
   if (statusCode === 429) {
     return "The model endpoint is rate limited. Wait a moment and try again.";
+  }
+  if (isHomarrProvider && statusCode === 502) {
+    return "The Homarr Assistant couldn’t respond. During periods of high usage, the service may run out of shared credits. Please try again later.";
   }
   if (statusCode !== undefined && statusCode >= 500) {
     return "The model provider is temporarily unavailable. Try again later.";

@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { useCurrentLayout } from "@homarr/boards/context";
+import { useActiveBoardTabId } from "@homarr/boards/tabs";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
@@ -33,14 +34,19 @@ interface UpdateItemIntegrations {
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
   const currentLayoutId = useCurrentLayout();
+  const activeTabId = useActiveBoardTabId();
 
-  const createItem = useCallback((input: CreateItemInput) => updateBoard(createItemCallback(input)), [updateBoard]);
+  const createItem = useCallback(
+    (input: CreateItemInput) =>
+      updateBoard(createItemCallback({ ...input, targetSectionId: input.targetSectionId ?? activeTabId })),
+    [activeTabId, updateBoard],
+  );
 
   const duplicateItem = useCallback(
     ({ itemId }: DuplicateItemInput) => {
-      updateBoard(duplicateItemCallback({ itemId }));
+      updateBoard(duplicateItemCallback({ itemId, fallbackSectionId: activeTabId }));
     },
-    [updateBoard],
+    [activeTabId, updateBoard],
   );
 
   const updateItemOptions = useCallback(

@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { getRequestedLayoutId } from "@homarr/boards/layout-selection";
+import { boardTabSearchParam, BoardTabsProvider } from "@homarr/boards/tabs";
 
 import type { Board } from "./_types";
 
@@ -23,20 +25,19 @@ export const BoardProviders = ({
   canModify,
 }: PropsWithChildren<Props>) => {
   const searchParams = useSearchParams();
-  const requestedLayoutId = searchParams.get("layout");
-  const isRequestedLayoutValid = initialBoard.layouts.some((layout) => layout.id === requestedLayoutId);
-  const isLayoutEditRequest = canModify && searchParams.get("edit") === "true" && isRequestedLayoutValid;
-  const layoutOverrideId = isLayoutEditRequest ? requestedLayoutId : null;
+  const layoutOverrideId = canModify
+    ? getRequestedLayoutId(initialBoard.layouts, searchParams.get("layout"), searchParams.get("edit"))
+    : null;
 
   return (
-    <EditModeProvider initialOpen={isLayoutEditRequest}>
+    <EditModeProvider initialOpen={layoutOverrideId !== null}>
       <BoardProvider
         initialBoard={initialBoard}
         initialLayoutId={initialLayoutId}
         initialViewportWidth={initialViewportWidth}
         layoutOverrideId={layoutOverrideId}
       >
-        {children}
+        <BoardTabsProvider initialTabKey={searchParams.get(boardTabSearchParam)}>{children}</BoardTabsProvider>
       </BoardProvider>
     </EditModeProvider>
   );

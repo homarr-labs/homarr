@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -9,7 +9,6 @@ import { clientApi } from "@homarr/api/client";
 
 import { useEditMode } from "./edit-mode";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
-import { updateBoardName } from "./updater";
 
 type Board = RouterOutputs["board"]["getBoardByName"];
 
@@ -91,9 +90,6 @@ export const BoardProvider = ({
     () => layoutOverrideId ?? initialLayoutId,
   );
 
-  // Update the board name so it can be used within updateBoard method
-  updateBoardName(initialBoard.name);
-
   const pathname = usePathname();
   const utils = clientApi.useUtils();
 
@@ -116,18 +112,12 @@ export const BoardProvider = ({
   useEffect(() => {
     persistViewportWidth(getViewportWidth());
   }, []);
-  return (
-    <BoardContext.Provider
-      value={{
-        board: data,
-        layoutOverrideId,
-        currentLayout,
-        initialViewportWidth,
-      }}
-    >
-      {children}
-    </BoardContext.Provider>
+  const value = useMemo(
+    () => ({ board: data, layoutOverrideId, currentLayout, initialViewportWidth }),
+    [currentLayout, data, initialViewportWidth, layoutOverrideId],
   );
+
+  return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>;
 };
 
 export const useRequiredBoard = () => {

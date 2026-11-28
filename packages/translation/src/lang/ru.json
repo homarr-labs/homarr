@@ -890,6 +890,7 @@
       "deleteConfirm": "Вы уверены, что хотите удалить \"{name}\"? Это действие нельзя отменить.",
       "duplicate": "Создать копию",
       "aiPrompt": "Создать с помощью ИИ",
+      "createAssisted": "",
       "copyAiPrompt": "Копировать промпт для ИИ",
       "enable": "Включить",
       "disable": "Выключить",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Настройка",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Дополнительно",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Разделы пользовательского виджета",
       "widgetPreview": "Предпросмотр виджета",
       "generalInformation": "Основная информация",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Создавайте или исправляйте с помощью любого ИИ",
         "description": "Если есть ссылка на документацию API, сначала добавьте её. Для исправления по возможности запустите предпросмотр. Скопируйте промпт в любой ИИ — он может уточнить недостающие детали. Итоговый JSON вставьте сюда.",
+        "assistedDescription": "",
         "request": "Что должен делать этот виджет?",
         "documentationUrl": "URL документации API (необязательно)",
         "paste": "Вставить",
+        "pasteResponse": "",
         "response": "Ответ ИИ",
         "manualCopyDescription": "Нет доступа к буферу обмена. Выделите промпт ниже и скопируйте его вручную.",
         "manualPasteDescription": "Нет доступа к буферу обмена, или скопированный ответ нужно исправить. Вставьте сюда JSON-ответ ИИ.",
@@ -1245,6 +1262,20 @@
       "username": "Имя пользователя",
       "password": "Пароль",
       "savedPlaceholder": "••••••• (сохранено; оставьте пустым, чтобы не менять)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "Установить обновление",
+      "available": "Доступно обновление",
+      "check": "Проверить обновления",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "Импорт CSS",
     "importCss": "Импорт CSS из Мастерской",
     "importCssConfirm": "Заменить текущий пользовательский CSS на \"{title}\"? Ничего не сохранится, пока вы не сохраните настройки панели.",
+    "theme": {
+      "label": "Тема",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "Пользовательский CSS",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "По умолчанию",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Описание",
+      "published": ""
+    },
     "screenshotAlt": "{title}: скриншот {count, number}",
     "screenshotViewer": "Просмотр скриншотов: {title}",
     "screenshotsLabel": "Скриншоты: {title}",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Скрыть миниатюры скриншотов",
     "closeScreenshotViewer": "Закрыть просмотр скриншотов",
     "technicalDetails": "Технические подробности",
+    "integrations": "Интеграции",
     "sourceCode": "Содержимое публикации",
     "report": "Пожаловаться",
     "reportTitle": "Жалоба на публикацию",
@@ -1318,6 +1382,12 @@
       "copyright": "Нарушение авторских прав",
       "inappropriate": "Неприемлемое содержимое",
       "other": "Прочее"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Публикация в Мастерской",
@@ -1921,7 +1991,8 @@
       "copy": "Копировать",
       "copied": "Скопировано",
       "refresh": "Обновить",
-      "export": "Экспорт"
+      "export": "Экспорт",
+      "advanced": "Дополнительно"
     },
     "hidden": "Скрыто",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": "Mod"
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Заметка",
+        "tip": "Совет",
+        "important": "Важно",
+        "warning": "Предупреждение",
+        "caution": ""
+      }
+    },
     "dangerZone": "Опасная зона",
     "noResults": "Ничего не найдено",
     "unsavedChanges": "У вас есть несохранённые изменения!",
@@ -2106,6 +2186,159 @@
         "sm": "Лёгкое",
         "xl": "Мягкое"
       }
+    },
+    "customTheme": {
+      "label": "Тема",
+      "nothingFound": "Темы не найдены",
+      "custom": "Свой",
+      "customize": "Редактировать тему",
+      "editor": {
+        "title": "Настроить тему",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "Предварительный просмотр цветовой схемы",
+        "layout": "Вид",
+        "typography": "",
+        "colors": "Цвета",
+        "json": "",
+        "defaultRadius": "Закругление по-умолчанию",
+        "radiusHint": "",
+        "scale": "Масштаб интерфейса",
+        "spacing": "Интервалы",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "Фон страницы",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "Текст",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Второй акцентный цвет"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "Копировать JSON",
+        "copied": "Скопировано",
+        "discardJson": "",
+        "reset": "Сбросить изменения",
+        "apply": "",
+        "sampleTitle": "Панель",
+        "sampleBadge": "Предпросмотр",
+        "sampleText": "",
+        "sampleInput": "Поиск",
+        "sampleValue": "Поиск приложений",
+        "sampleButton": "Открыть"
+      },
+      "studio": {
+        "title": "Редактор тем",
+        "saveTheme": "Сохранить тему",
+        "searchControls": "",
+        "component": "Компонент",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Интервалы",
+          "radius": "",
+          "compact": "Компактно",
+          "normal": "Норма",
+          "roomy": "",
+          "preset": "",
+          "none": "Ничего",
+          "rounded": "",
+          "full": "Полный",
+          "custom": "Свой",
+          "advanced": ""
+        },
+        "previewSurface": "Предпросмотр",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Компоненты",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Мобильный",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": "Пользовательский CSS"
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Интервалы",
+          "radius": "",
+          "breakpoint": "Точка перехода",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Второй акцентный цвет",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Фон",
+          "surfaceText": "",
+          "surfaceBorder": "Цвет границы",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Показывать рамку",
+          "componentPadding": "",
+          "componentSize": "Размер",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": "Пользовательский CSS"
+        },
+        "expandPreview": "",
+        "showControls": "Показывать элементы управления"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Прокрутка",
         "description": "Сохранять заданный размер контейнера и прокручивать содержимое, а не растягивать контейнер под него."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Цвет границы"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Скрыто"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Удалить контейнер? Его содержимое перейдёт в окружающую область."
+      },
+      "editBar": {
+        "edit": "Редактировать"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Пользовательский виджет",
       "standalone": "Без интеграций",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Виджеты Мастерской",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Сначала подключите сервис",
         "noPermission": "Этому виджету нужно подключение к совместимому сервису. Попросите администратора подключить его и повторите попытку."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Не удалось обновить элементы",
       "saveErrorMessage": "Не удалось сохранить изменения. Панель обновлена.",
       "moveUnavailableTitle": "Не удалось переместить выбранные элементы",
-      "moveUnavailableMessage": "Все выделенные элементы не помещаются в выбранное место."
+      "moveUnavailableMessage": "Все выделенные элементы не помещаются в выбранное место.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Переместить / изменить размер элемента",
+      "sizeOverlap": "",
       "entryLabel": "{name}, столбец {column}, ряд {row}",
       "target": {
         "numbered": "{name}, место {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Изменить интеграцию"
       },
       "app": {
-        "propagationNotice": "Изменения приложения применятся везде, где оно используется, на всех панелях."
+        "propagationNotice": "Изменения приложения применятся везде, где оно используется, на всех панелях.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Изменить подключение",
@@ -2322,6 +2596,36 @@
       "open": "Открыть расширенный вид",
       "close": "Закрыть расширенный вид",
       "label": "Расширенный вид: {widget}"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Виджеты",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "переместить",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Состояние объекта",
       "description": "Отображает состояние объекта и позволяет управлять им при необходимости",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID объекта"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Не удалось загрузить объект",
         "toggleFailed": "Не удалось обновить объект"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Заголовок",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": "Показывать сводку"
+        },
+        "readOnly": {
+          "label": "Только чтение",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Автоматически",
+            "compact": "Компактно",
+            "large": "Большое"
+          }
+        },
+        "palette": {
+          "label": "Цвета",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Люди",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Погода",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Сущность",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Добавить",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Сущность",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Не найдено",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "вкл",
+          "off": "выкл",
+          "sensors": "",
+          "offline": "не в сети"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "Повторить",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Город / Почтовый индекс",
         "latitude": "Широта",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Показывать местоположение",
           "description": "Показывать, идёт поток в локальной сети (LAN) или во внешней (WAN)"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "Транскодирование в {target}",
           "containerChanged": "{container} (ремукс)",
           "position": "{position} / {duration}",
+          "progress": "Прогресс",
+          "endsAt": "",
+          "episode": "Серия",
+          "album": "Альбом",
           "unknown": "неизвестный формат"
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Копировать название",
         "copyId": "Копировать ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Сбросить фильтры"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Фильтровать загрузки"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Скрывать описание"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Показывать постер"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Открыть сервис уведомлений",
       "deleteNotification": "Удалить уведомление из Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Не удалось удалить уведомление",
       "deleteFailedMessage": "Не удалось удалить уведомление. Попробуйте ещё раз."
     },
@@ -5446,6 +5921,23 @@
       "name": "Системные ресурсы",
       "description": "Использование ЦП, памяти, дисков и другого оборудования вашей системы",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "В процентах (например, 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Включить затенение графиков"
         },
@@ -5453,6 +5945,7 @@
           "label": "Видимые графики",
           "description": "Выберите графики, которые вы хотите отображать.",
           "option": {
+            "cpuCores": "",
             "memory": "Память",
             "network": "Сеть"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Главная",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Основная область панели",
       "leftRail": "Левая боковая панель",
@@ -6647,6 +7160,11 @@
           "description": "Администратор сервера ещё не установил домашнюю панель.",
           "link": "Посмотреть публичные панели",
           "notice": "Чтобы убрать эту страницу, попросите администратора сервера установить домашнюю панель"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Документация",
             "submitIssue": "Сообщить о проблеме",
             "discord": "Сообщество Discord",
-            "sourceCode": "Исходный код"
+            "sourceCode": "Исходный код",
+            "changelog": ""
           }
         },
         "about": "О программе",
+        "updateAvailable": "Доступно обновление",
         "assistant": "Ассистент"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Аутентификация",
           "authorization": "Авторизация"
         },
-        "heroBanner": {
-          "title": "С возвращением на вашу",
-          "subtitle": "Панель {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Панелей ещё нет",
-          "description": "Создайте панель, чтобы разместить приложения и виджеты в одном месте."
+          "description": "Создайте панель, чтобы разместить приложения и виджеты в одном месте.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Все встроенные элементы уже есть в вашей шапке.",
                 "add": "Добавить {item}",
                 "boardShortcut": "Ярлык панели",
+                "widget": "Виджет",
                 "chooseBoard": "Выберите панель"
               },
               "configuration": {
+                "widgetKind": "Виджет",
+                "widgetOptions": "Опции",
+                "boardOnly": "",
                 "description": "В макете этот элемент того же размера, что и в настоящей шапке.",
                 "searchDisplay": {
                   "input": "Строка поиска",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Только логотип",
                   "logoAndText": "Логотип + текст"
+                },
+                "tabsDisplay": {
+                  "wide": "Широкий",
+                  "compact": "Компактно",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Поиск",
                 "home": "Домашняя панель",
                 "boardSwitcher": "Панели",
+                "boardTabs": "",
                 "assistant": "Ассистент",
                 "docker": "Docker",
                 "boardEdit": "Изменить панель",
@@ -6847,7 +7393,9 @@
                 "settings": "Ваши настройки",
                 "themeToggle": "Переключить тему",
                 "user": "Учётная запись",
-                "boardUnavailable": "Панель недоступна"
+                "boardUnavailable": "Панель недоступна",
+                "notifications": "Уведомления",
+                "widget": "Виджет"
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Поиск",
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности",
+              "signInInformation": {
+                "title": "",
+                "provider": "Провайдер",
+                "subject": "Субъект",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ничего",
+                "copy": "Копировать",
+                "copied": "Скопировано"
+              },
               "oauthConnections": {
                 "title": "Подключения OAuth",
                 "description": "Эти клиенты получили учётные данные API для вашей учётной записи через OAuth. Учётные данные работают с HTTP API Homarr и MCP, не истекают автоматически и остаются действительными после выхода.",
@@ -7071,6 +7630,10 @@
             "title": "Внешний вид",
             "defaultColorScheme": {
               "label": "Цветовая схема по умолчанию"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Открыть поиск приложений",
               "openSpotlightAssistant": "Открыть режим Ассистента",
               "openSpotlightPreferences": "Открыть режим настроек",
-              "openAssistant": "Открыть Ассистента"
+              "openAssistant": "Открыть Ассистента",
+              "switchBoardTab": ""
             },
             "note": "Подсказка: Mod — это клавиша Ctrl или ⌘ на macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Меняйте цветовую схему, язык, домашнюю панель и другие настройки. Отсюда же можно перейти в раздел управления."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Панель на вашем сервере для стека *arr и всей домашней инфраструктуры. Интеграция с 50+ сервисами, виджеты в реальном времени, без конфигурационных файлов.",

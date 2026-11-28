@@ -12,6 +12,7 @@ import { CustomWidgetSourceSetupDialog } from "~/components/custom-widgets/custo
 import { ManageCollectionItem, ManageCollectionList } from "~/components/manage/manage-collection";
 
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
+import { WorkshopWidgetUpdate } from "./_workshop-widget-update";
 
 interface CustomWidgetListProps {
   definitions: RouterOutputs["customWidget"]["list"];
@@ -89,6 +90,7 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
         }
         actions={
           <Group gap="xs" wrap="nowrap">
+            {widget.valid && widget.workshop && <WorkshopWidgetUpdate definitionId={widget.id} />}
             {widget.valid && (
               <Button
                 component={Link}

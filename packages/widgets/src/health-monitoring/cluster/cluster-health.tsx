@@ -14,6 +14,8 @@ import { thresholdColor } from "../../beszel/_shared/colors";
 import { formatPercent } from "../../beszel/_shared/format";
 import { isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
+import { getWidgetRefreshInterval } from "../../refresh-interval";
+import { useDemoReadOnly } from "../../demo-read-only";
 import type { WidgetComponentProps } from "../../definition";
 import { uptime } from "../display";
 import { getClusterVisibleSections } from "./accordion-state";
@@ -28,9 +30,14 @@ export function ClusterHealthMonitoring(
   const t = useI18n("widget.healthMonitoring");
   const tr = useI18n("widget.healthMonitoring.rework");
   const { data: session } = useSession();
-  const query = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({
-    integrationId: props.integrationId,
-  });
+  const refreshInterval = getWidgetRefreshInterval(props.options, 10);
+  const demoReadOnly = useDemoReadOnly();
+  let pollInterval: number | false = refreshInterval * 1000;
+  if (demoReadOnly) pollInterval = false;
+  const query = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery(
+    { integrationId: props.integrationId, refreshInterval },
+    { refetchInterval: pollInterval },
+  );
   const sections = getClusterVisibleSections(props.displayMode, props.options.visibleClusterSections);
   const [savedSection, setSection] = useLocalStorage<string>({
     key:

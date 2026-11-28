@@ -890,6 +890,7 @@
       "deleteConfirm": "Er du sikker på at du vil slette \"{name}\"? Handlingen kan ikke angres.",
       "duplicate": "",
       "aiPrompt": "Design med AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopier AI ledetekst",
       "enable": "Aktiver",
       "disable": "Deaktiver",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurer",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avansert",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Tilpassede widget-seksjoner",
       "widgetPreview": "Forhåndsvisning av widget",
       "generalInformation": "Generell informasjon",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Opprette eller løse med en AI",
         "description": "Legg til en URL for API-dokumentasjon først hvis du har en. For fikser, kjør forhåndsvisning om mulig. Kopier ledeteksten til en AI; det kan be om manglende detaljer. Lim inn den endelige JSONen.",
+        "assistedDescription": "",
         "request": "Hva skal denne widgeten?",
         "documentationUrl": "API dokumentasjonsURL (valgfritt)",
         "paste": "Lim",
+        "pasteResponse": "",
         "response": "AI respons",
         "manualCopyDescription": "Tilgang på utklippstavle er utilgjengelig. Velg ledeteksten nedenfor og kopier det manuelt.",
         "manualPasteDescription": "Utklippstavletilgang er ikke tilgjengelig, eller det kopierte svaret trenger korreksjon. Lim inn AIs JSON-svar her.",
@@ -1245,6 +1262,20 @@
       "username": "Brukernavn",
       "password": "Passord",
       "savedPlaceholder": "•••••• (lagret, la være tom for å beholde)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Oppdatering tilgjengelig",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importer CSS fra Workshop",
     "importCssConfirm": "Erstatte gjeldende CSS med \"{title}\"? Ingenting er lagret inntil du lagrer styrets innstillinger.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beskrivelse",
+      "published": ""
+    },
     "screenshotAlt": "{title} skjermbilde {count, number}",
     "screenshotViewer": "{title} skjermbilde viser",
     "screenshotsLabel": "{title} skjermbilder",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skjul miniatyrbilder for skjermbilde",
     "closeScreenshotViewer": "Lukk skjermbilde",
     "technicalDetails": "Tekniske detaljer",
+    "integrations": "Integrasjoner",
     "sourceCode": "Verksted oppføring",
     "report": "Rapporter",
     "reportTitle": "Rapporter innsending",
@@ -1318,6 +1382,12 @@
       "copyright": "Opphavsrett",
       "inappropriate": "Upassende",
       "other": "Andre"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publiser til Verksted",
@@ -1921,7 +1991,8 @@
       "copy": "Kopier",
       "copied": "Kopiert",
       "refresh": "Oppdater",
-      "export": "Eksporter"
+      "export": "Eksporter",
+      "advanced": "Avansert"
     },
     "hidden": "Skjult",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "Notat",
+        "tip": "",
+        "important": "",
+        "warning": "Advarsel",
+        "caution": ""
+      }
+    },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "unsavedChanges": "Du har ulagrede endringer!",
@@ -2106,6 +2186,159 @@
         "sm": "Lilla",
         "xl": "Myk"
       }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Egendefinert",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Oppsett",
+        "typography": "",
+        "colors": "Farger",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Avstand",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær aksent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopiert",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "Kontrollpanel",
+        "sampleBadge": "Forhåndsvisning",
+        "sampleText": "",
+        "sampleInput": "Søk",
+        "sampleValue": "Finn en app",
+        "sampleButton": "Åpne"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Avstand",
+          "radius": "",
+          "compact": "Kompakt",
+          "normal": "Vanlig",
+          "roomy": "",
+          "preset": "",
+          "none": "Ingen",
+          "rounded": "",
+          "full": "",
+          "custom": "Egendefinert",
+          "advanced": ""
+        },
+        "previewSurface": "Forhåndsvisning",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponenter",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Avstand",
+          "radius": "",
+          "breakpoint": "Stoppunkt",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundær aksent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Bakgrunn",
+          "surfaceText": "",
+          "surfaceBorder": "Grensefarge",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "Vis kantlinje",
+          "componentPadding": "",
+          "componentSize": "Filstørrelse",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": "Vis kontroller"
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Rullbar",
         "description": "Behold denne beholderen i settets størrelse, og bland innholdet sitt i stedet for å vokse for å passe det."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Grensefarge"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Skjult"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Fjern denne beholderen? Innholdet flytter seg inn i området rundt."
+      },
+      "editBar": {
+        "edit": "Rediger"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Egendefinert widget",
       "standalone": "Frittstående",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Verksted widgets",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Koble til en tjeneste først",
         "noPermission": "Denne widgeten trenger en kompatibel tjenestetilkobling. Be en administrator om å koble til, og prøv på nytt."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Kan ikke oppdatere elementer",
       "saveErrorMessage": "Endringene kunne ikke lagres. Tavlen ble oppdatert.",
       "moveUnavailableTitle": "Kan ikke flytte valgte elementer",
-      "moveUnavailableMessage": "Målet har ikke nok plass til hele utvalget."
+      "moveUnavailableMessage": "Målet har ikke nok plass til hele utvalget.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Flytt / endre størrelse på element",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolonne {column}, rad {row}",
       "target": {
         "numbered": "{name}, destinasjon {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Rediger integrasjon"
       },
       "app": {
-        "propagationNotice": "Endringer i denne appen vil bli brukt overalt det brukes på tvers av alle dashbord."
+        "propagationNotice": "Endringer i denne appen vil bli brukt overalt det brukes på tvers av alle dashbord.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Rediger forbindelse",
@@ -2322,6 +2596,36 @@
       "open": "Åpne avansert visning",
       "close": "Lukk avansert visning",
       "label": "{widget} avansert visning"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Moduler",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "flytt",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Enhet status",
       "description": "Vis status for en enhet og aktiver det valgfritt",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Enhets-ID"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Kan ikke laste inn enhet",
         "toggleFailed": "Kan ikke oppdatere enhet"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Tittel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisk",
+            "compact": "Kompakt",
+            "large": "Stor"
+          }
+        },
+        "palette": {
+          "label": "Farger",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Folk",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Vær",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "Enhet",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Legg til",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "Enhet",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "Ikke funnet",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "på",
+          "off": "av",
+          "sensors": "",
+          "offline": "offline"
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "By / Postnummer",
         "latitude": "Breddegrad",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Vis posisjon",
           "description": "Vis om strømmen er på din LAN eller WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Nedlastings fremdrift",
+          "endsAt": "",
+          "episode": "",
+          "album": "Album ID",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopier navn",
         "copyId": "Kopier ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Nullstill filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrer nedlastinger"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Skjul beskrivelse"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Vis plakatbilde"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Åpen varslingstjeneste",
       "deleteNotification": "Slett varsel fra Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kan ikke slette varsel",
       "deleteFailedMessage": "Varselet kunne ikke slettes. Vennligst prøv igjen."
     },
@@ -5446,6 +5921,23 @@
       "name": "Systemressurser",
       "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "Prosentandel (f.eks. 76%)",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Aktiver skyggelegging i diagram"
         },
@@ -5453,6 +5945,7 @@
           "label": "Synlige diagrammer",
           "description": "Velg diagrammene du vil vise.",
           "option": {
+            "cpuCores": "",
             "memory": "Minne",
             "network": "Nettverk"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Hjem",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Dashbord lerret",
       "leftRail": "Venstre dashbordskinne",
@@ -6647,6 +7160,11 @@
           "description": "Serveradministratoren har ikke angitt en hjemtavle enda.",
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Dokumentasjon",
             "submitIssue": "Send inn en sak",
             "discord": "Discord",
-            "sourceCode": "Kildekode"
+            "sourceCode": "Kildekode",
+            "changelog": ""
           }
         },
         "about": "Info",
+        "updateAvailable": "Oppdatering tilgjengelig",
         "assistant": "Assistent"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Autentisering",
           "authorization": "Autorisasjon"
         },
-        "heroBanner": {
-          "title": "Velkommen tilbake til din",
-          "subtitle": "{app} tavle"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Ingen tavler ennå",
-          "description": "Opprett en tavle for å ordne apper og widgets på et sted."
+          "description": "Opprett en tavle for å ordne apper og widgets på et sted.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Alle innebygde kontroller finnes allerede i hodet.",
                 "add": "Legg til {item}",
                 "boardShortcut": "Snarvei for tavle",
+                "widget": "Moduler",
                 "chooseBoard": "Velg en tavle"
               },
               "configuration": {
+                "widgetKind": "Moduler",
+                "widgetOptions": "Alternativer",
+                "boardOnly": "",
                 "description": "Denne kontrollen forblir den samme størrelsen som den gjør i live header.",
                 "searchDisplay": {
                   "input": "Søk i bar",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Bare logoen",
                   "logoAndText": "Logo + tekst"
+                },
+                "tabsDisplay": {
+                  "wide": "Bred",
+                  "compact": "Kompakt",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Søk",
                 "home": "Hjem tavle",
                 "boardSwitcher": "Tavler",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Rediger tavle",
@@ -6847,7 +7393,9 @@
                 "settings": "Dine innstillinger",
                 "themeToggle": "Veksle tema",
                 "user": "Konto",
-                "boardUnavailable": "Styret er utilgjengelig"
+                "boardUnavailable": "Styret er utilgjengelig",
+                "notifications": "Varsler",
+                "widget": "Moduler"
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Søk",
               "firstDayOfWeek": "Første dag i uken",
               "accessibility": "Hjelpemidler",
+              "signInInformation": {
+                "title": "",
+                "provider": "Leverandør",
+                "subject": "Emne",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ingen",
+                "copy": "Kopier",
+                "copied": "Kopiert"
+              },
               "oauthConnections": {
                 "title": "OAuth tilkoblinger",
                 "description": "Disse klientene skaffet API-legitimasjon for kontoen din gjennom OAuth. legitimasjonen fungerer med Homarrs HTTP API og MCP, går ikke ut automatisk, og forblir gyldig etter at du er logget ut.",
@@ -7071,6 +7630,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standard fargetema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Åpne appsøk",
               "openSpotlightAssistant": "Åpne assistent modus",
               "openSpotlightPreferences": "Åpne preferanse-modus",
-              "openAssistant": "Åpne Assistent"
+              "openAssistant": "Åpne Assistent",
+              "switchBoardTab": ""
             },
             "note": "Tips: Mod refererer til både Ctrl-tasten og ⌘ på macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Endre fargetemaet, språket, tavlen og preferansene dine. Du kan også hoppe til området herfra."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Et selvbetjent dashbord for *arr stack og hele hjemmelaget. Integrerer med mer enn 50 tjenester, sanntid widgets, ingen konfigurasjonsfiler.",

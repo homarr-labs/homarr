@@ -4,12 +4,14 @@ import type { InferSelectModel } from "drizzle-orm";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import {
+  collectCustomWidgetRequestReferences,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
 } from "@homarr/custom-widgets/core";
 
 import { safeParseStoredCustomWidgetDefinition } from "./stored-definition";
+import { parseWorkshopOrigin } from "./workshop-origin";
 
 const logger = createLogger({ module: "custom-widget:management" });
 
@@ -42,6 +44,7 @@ export function mapCustomWidgetListItem(
       valid: false as const,
       migrationRequired: false as const,
       validationIssues: result.issues,
+      workshop: null,
     };
   }
 
@@ -69,10 +72,13 @@ export function mapCustomWidgetListItem(
     valid: true as const,
     migrationRequired: false as const,
     validationIssues: [],
+    workshop: parseWorkshopOrigin(definition.workshop),
   };
 }
 
-export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
+export function mapLegacyCustomWidgetListItem(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "url" | "authType" | "updatedAt">,
+) {
   return {
     id: definition.id,
     managementPath: "/manage/custom-widgets",
@@ -88,6 +94,7 @@ export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
     valid: false as const,
     migrationRequired: true as const,
     validationIssues: [],
+    workshop: null,
   };
 }
 
@@ -112,6 +119,14 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
       options: widget.options,
       defaultOptions: getCustomWidgetDefaultOptions(widget.options),
       template: widget.template,
+      integrationKinds: [
+        ...new Set(
+          Object.values(widget.sources).flatMap((source) => {
+            if (source.type === "integration") return [source.integrationKind];
+            return [];
+          }),
+        ),
+      ],
       sources: Object.entries(widget.sources).map(([id, source]) => ({
         id,
         name: source.name,
@@ -129,7 +144,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
         }),
       ),
       optionRequests: Object.entries(widget.requests).flatMap(([id, request]) =>
-        request.kind === "query" ? [{ id }] : [],
+        request.kind === "query"
+          ? [{ id, configurationKeys: [...collectCustomWidgetRequestReferences(request).options] }]
+          : [],
       ),
       updatedAt: definition.updatedAt,
       migrationRequired: false as const,
@@ -137,7 +154,9 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
   ];
 }
 
-export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
+export function mapLegacyAvailableCustomWidget(
+  definition: Pick<LegacyDefinition, "id" | "name" | "description" | "iconUrl" | "updatedAt">,
+) {
   return {
     id: definition.id,
     name: definition.name,
@@ -146,6 +165,7 @@ export function mapLegacyAvailableCustomWidget(definition: LegacyDefinition) {
     options: {},
     defaultOptions: {},
     template: "",
+    integrationKinds: [],
     sources: [],
     requestCapabilities: [],
     optionRequests: [],

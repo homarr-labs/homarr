@@ -8,14 +8,24 @@ import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
+import { useIsMobile } from "@homarr/ui/hooks";
 
+import { BoardEmptyState } from "./board-empty-state";
 import { getBoardSetupProgress } from "./board-setup-progress";
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-setup-checklist.module.css";
 
-export const BoardSetupChecklist = () => {
+export const BoardSetupPanels = () => (
+  <>
+    <BoardEmptyState />
+    <BoardSetupChecklist />
+  </>
+);
+
+const BoardSetupChecklist = () => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
+  const isMobile = useIsMobile();
   const integrations = useIntegrationsWithUseAccess();
   const { addWidget, addApp, connectService, canConnectService } = useBoardAddActions();
   const [collapsed, setCollapsed] = useLocalStorage({
@@ -37,7 +47,7 @@ export const BoardSetupChecklist = () => {
 
   if (collapsed) {
     return (
-      <Affix position={{ bottom: 16, left: 16 }} className={classes.root}>
+      <Affix position={{ bottom: 16, left: 16 }} withinPortal={!isMobile} className={classes.root}>
         <Button
           variant="default"
           leftSection={<IconChecklist size={18} />}
@@ -52,7 +62,7 @@ export const BoardSetupChecklist = () => {
   }
 
   return (
-    <Affix position={{ bottom: 16, left: 16 }} className={classes.root}>
+    <Affix position={{ bottom: 16, left: 16 }} withinPortal={!isMobile} className={classes.root}>
       <Paper className={classes.panel} shadow="md" radius="md" p="md">
         <Stack gap="sm">
           <Group justify="space-between" wrap="nowrap">

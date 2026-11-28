@@ -17,7 +17,8 @@
     "./server": "./src/server.ts",
     "./encryption": "./src/encryption.ts",
     "./client": "./src/client.ts",
-    "./env": "./env.ts"
+    "./env": "./env.ts",
+    "./env-client": "./env-client.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

@@ -32,8 +32,10 @@ interface CreateBoardLayoutProps<TParams extends Params> {
   headerBoardEditAction?: JSX.Element;
   headerBoardSettingsAction?: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  notFoundComponent?: () => Promise<JSX.Element>;
   withTour?: boolean;
   withCustomCss?: boolean;
+  withBoardTabs?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
@@ -41,8 +43,10 @@ export const createBoardLayout = <TParams extends Params>({
   headerBoardEditAction,
   headerBoardSettingsAction,
   getInitialBoardAsync: getInitialBoard,
+  notFoundComponent: NotFoundComponent,
   withTour = false,
   withCustomCss = true,
+  withBoardTabs = false,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -84,6 +88,8 @@ export const createBoardLayout = <TParams extends Params>({
           redirect("/auth/login");
         }
 
+        if (NotFoundComponent) return <NotFoundComponent />;
+
         logger.warn(error);
         notFound();
       }
@@ -117,6 +123,7 @@ export const createBoardLayout = <TParams extends Params>({
                   boardEditAction={headerBoardEditAction}
                   boardSettingsAction={headerBoardSettingsAction}
                   hasNavigation={false}
+                  withBoardTabs={withBoardTabs}
                 />
                 <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
               </ClientShell>

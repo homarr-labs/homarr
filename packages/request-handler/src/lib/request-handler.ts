@@ -43,7 +43,7 @@ const SHARED_REFRESH_MAX_WAIT_MS = 30_000;
 // Must remain comfortably below REFRESH_LOCK_TTL_SECONDS in shared-cache.ts.
 const SHARED_REFRESH_LOCK_RENEW_MS = 5_000;
 
-class RequestHandlerTimeoutError extends Error {
+export class RequestHandlerTimeoutError extends Error {
   constructor() {
     super("Request handler deadline exceeded");
     this.name = RequestHandlerTimeoutError.name;
@@ -133,7 +133,8 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   }
 
   const cache = new Map<string, CacheEntry<TData>>();
-  const inflight = new Map<string, Promise<CacheEntry<TData>>>();
+  type RequestResult = { entry: CacheEntry<TData>; cacheHit: boolean };
+  const inflight = new Map<string, Promise<RequestResult>>();
   const sharedCacheResolutions = new Map<string, Promise<SharedCacheAdapter<TData>>>();
   const upstreamSettlements = new Map<string, Promise<void>>();
   let expiryTimer: ReturnType<typeof setTimeout> | undefined;
@@ -257,9 +258,15 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       expiryTimerAt = undefined;
     },
     handler: (input: TInput) => ({
-      async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+      async getDataAsync({ maxAgeMs = Infinity }: { maxAgeMs?: number } = {}): Promise<{
+        data: TData;
+        timestamp: Date;
+      }> {
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
+        // A caller can require fresher data while sharing the same cache and refresh lock.
+        const isFresh = (entry: CacheEntry<TData>) =>
+          Date.now() < Math.min(entry.expiresAt, entry.timestamp.getTime() + maxAgeMs);
         const isCacheEnabled = typeof ttl === "function" || ttl > 0;
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
         const requestGeneration = generation;
@@ -274,12 +281,20 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
         const key = `${sharedCache?.generation ?? "local"}:${baseKey}`;
         const inflightKey = `${requestGeneration}:${key}`;
-        const existing = inflight.get(inflightKey);
-        if (existing) return existing;
+        let existing = inflight.get(inflightKey);
+        while (existing) {
+          const result = await existing;
+          // Upstream refreshes and stale-on-error fallbacks remain shared. Cache hits
+          // must satisfy the joining caller's freshness limit before being reused.
+          if (!result.cacheHit || isFresh(result.entry)) return result.entry;
+          throwIfDeadlineExceeded(deadlineAt);
+          if (inflight.get(inflightKey) === existing) inflight.delete(inflightKey);
+          existing = inflight.get(inflightKey);
+        }
 
         let cached = getFromMemory(key);
         const now = Date.now();
-        if (cached && now < cached.expiresAt) return cached;
+        if (cached && isFresh(cached)) return cached;
         if (cached && now >= cached.staleUntil) {
           cache.delete(key);
           scheduleExpiry();
@@ -291,16 +306,16 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         }
 
         let cleanupAfterUpstreamAsync: Promise<void> | undefined;
-        let promise: Promise<CacheEntry<TData>>;
+        let promise: Promise<RequestResult>;
         promise = (async () => {
           let stale = cached;
           let lockToken: string | null | undefined;
 
           if (sharedCache?.isShared) {
             const sharedEntry = await sharedCache.getAsync();
-            if (sharedEntry && Date.now() < sharedEntry.expiresAt) {
+            if (sharedEntry && isFresh(sharedEntry)) {
               storeInMemory(key, sharedEntry, requestGeneration);
-              return sharedEntry;
+              return { entry: sharedEntry, cacheHit: true };
             }
             if (sharedEntry && Date.now() < sharedEntry.staleUntil) stale = sharedEntry;
 
@@ -312,14 +327,14 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               while (lockToken === null && sharedCache.isShared) {
                 await delayAsync(SHARED_REFRESH_POLL_MS, waitDeadlineAt);
                 const refreshedEntry = await sharedCache.getAsync();
-                if (refreshedEntry && Date.now() < refreshedEntry.expiresAt) {
+                if (refreshedEntry && isFresh(refreshedEntry)) {
                   storeInMemory(key, refreshedEntry, requestGeneration);
-                  return refreshedEntry;
+                  return { entry: refreshedEntry, cacheHit: true };
                 }
                 if (refreshedEntry && Date.now() < refreshedEntry.staleUntil) stale = refreshedEntry;
                 if (Date.now() >= returnStaleAt && options.fallbackToStaleOnError && stale) {
                   storeInMemory(key, stale, requestGeneration);
-                  return stale;
+                  return { entry: stale, cacheHit: false };
                 }
                 if (Date.now() >= retryLockAt) {
                   lockToken = await sharedCache.acquireRefreshLockAsync();
@@ -358,7 +373,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               }
               if (canStoreInMemory) storeInMemory(key, entry, requestGeneration);
             }
-            return entry;
+            return { entry, cacheHit: false };
           } catch (error) {
             if (
               options.fallbackToStaleOnError &&
@@ -367,7 +382,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               generation === requestGeneration
             ) {
               storeInMemory(key, stale, requestGeneration);
-              return stale;
+              return { entry: stale, cacheHit: false };
             }
             throw error;
           } finally {
@@ -399,7 +414,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
           );
         };
         void promise.then(removeInflight, removeInflight);
-        return promise;
+        return (await promise).entry;
       },
     }),
   };

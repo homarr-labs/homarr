@@ -46,13 +46,12 @@ export const SystemResourceMemoryChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey={"index"}
       series={[{ name: "usage", color: "red.6" }]}
       title={t("memory")}
       icon={IconBrain}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      yAxisProps={{ domain: [0, totalCapacityInBytes] }}
+      yDomain={[0, totalCapacityInBytes]}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
       chartType={hasShadow ? "area" : "line"}
       tooltipLabel={tooltipLabel}

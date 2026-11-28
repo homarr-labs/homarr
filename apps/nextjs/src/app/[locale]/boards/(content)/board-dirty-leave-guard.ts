@@ -3,6 +3,7 @@ const sameTabAnchorSelector = "a[href]:not([target='_blank'])";
 export interface BoardDirtyLeaveGuard {
   confirmLeave: (href: string) => void;
   guardBeforeUnload: boolean;
+  isDirty?: () => boolean;
 }
 
 interface RegisteredBoardDirtyLeaveGuard extends BoardDirtyLeaveGuard {
@@ -19,10 +20,13 @@ const findSameTabAnchor = (event: MouseEvent) => {
   return eventTarget?.closest<HTMLAnchorElement>(sameTabAnchorSelector) ?? null;
 };
 
+const isGuardDirty = (guard: BoardDirtyLeaveGuard) => guard.isDirty?.() ?? true;
+
 const handleClick = (event: MouseEvent) => {
   const anchor = findSameTabAnchor(event);
-  const guard = registeredGuards[0];
-  if (!anchor || !guard) return;
+  if (!anchor) return;
+  const guard = registeredGuards.find(isGuardDirty);
+  if (!guard) return;
 
   // preventDefault stops the navigation. Leave the event to reach the link so
   // callers such as the board switcher can still close themselves.
@@ -31,13 +35,13 @@ const handleClick = (event: MouseEvent) => {
 };
 
 const handlePopState = (event: Event) => {
-  if (registeredGuards.length === 0) return;
+  if (!registeredGuards.some(isGuardDirty)) return;
   window.history.pushState(null, document.title, window.location.href);
   event.preventDefault();
 };
 
 const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-  if (!registeredGuards.some((guard) => guard.guardBeforeUnload)) return;
+  if (!registeredGuards.some((guard) => guard.guardBeforeUnload && isGuardDirty(guard))) return;
   event.preventDefault();
   event.returnValue = true;
 };

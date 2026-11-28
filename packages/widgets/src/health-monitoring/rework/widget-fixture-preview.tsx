@@ -48,7 +48,7 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
     if (system.kind === "mock") {
       clusters.push({ integrationId: system.id, integrationName: system.name });
       cache.setQueryData(
-        getQueryKey(clientApi.widget.healthMonitoring.getClusterHealthStatus, { integrationId: system.id }, "query"),
+        getQueryKey(clientApi.widget.healthMonitoring.getClusterHealthStatus, { integrationId: system.id, refreshInterval: 10 }, "query"),
         { nodes: [], vms: [], lxcs: [], storages: [] },
       );
     }
@@ -60,7 +60,7 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
     cache.setQueryData(
       getQueryKey(
         clientApi.widget.healthMonitoring.getClusterHealthStatus,
-        { integrationId: "fixture-proxmox" },
+        { integrationId: "fixture-proxmox", refreshInterval: 10 },
         "query",
       ),
       data.cluster,
@@ -79,7 +79,7 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
   cache.setQueryData(
     getQueryKey(
       clientApi.widget.healthMonitoring.getSystemHealthStatus,
-      { integrationIds: data.systems.map((system) => system.id) },
+      { integrationIds: data.systems.map((system) => system.id), refreshInterval: 10 },
       "query",
     ),
     data.systems.map((system) => ({
@@ -141,7 +141,7 @@ export function useWidgetFixtureRuntime(data: HealthPreviewData) {
     failRefresh: () => {
       const queryKey = getQueryKey(
         clientApi.widget.healthMonitoring.getSystemHealthStatus,
-        { integrationIds: data.systems.map((system) => system.id) },
+        { integrationIds: data.systems.map((system) => system.id), refreshInterval: 10 },
         "query",
       );
       cache

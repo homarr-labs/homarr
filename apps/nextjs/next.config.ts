@@ -26,6 +26,11 @@ const getDevelopmentServiceAliases = () => {
   };
 };
 
+const getDevelopmentAllowedOrigins = () => {
+  if (process.env.NODE_ENV !== "development" || !process.env.BASE_URL) return undefined;
+  return [new URL(process.env.BASE_URL).hostname];
+};
+
 const contentSecurityPolicy = `
   default-src 'self';
   script-src * 'unsafe-inline' 'unsafe-eval';
@@ -50,6 +55,7 @@ const mcpConsentContentSecurityPolicy = mcpContentSecurityPolicy.replace(
 );
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: getDevelopmentAllowedOrigins(),
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
@@ -57,6 +63,12 @@ const nextConfig: NextConfig = {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },
   output: "standalone",
+  outputFileTracingIncludes: {
+    "/*": [
+      "../../node_modules/bcrypt/prebuilds/linux-*/*.node",
+      "../../node_modules/better-sqlite3/prebuilds/linux-*.node",
+    ],
+  },
   reactStrictMode: true,
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
@@ -65,13 +77,16 @@ const nextConfig: NextConfig = {
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
    * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
+   * ws must resolve optional native addons at runtime so missing addons use its JavaScript fallback.
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3", "ws"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     preloadEntriesOnStart: true,
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
+    webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),

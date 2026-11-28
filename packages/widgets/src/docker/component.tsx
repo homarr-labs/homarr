@@ -40,13 +40,15 @@ import { useTimeAgo } from "@homarr/common";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
-import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
+import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection/docker";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
+import { getWidgetRefreshInterval } from "../refresh-interval";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
@@ -91,10 +93,10 @@ const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" |
 
 const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
 
-const getContainersQueryInput = (endpointIds: string[]) => {
-  if (endpointIds.length === 0) return undefined;
-  return { endpointIds };
-};
+const getContainersQueryInput = (endpointIds: string[], refreshInterval: number) => ({
+  ...(endpointIds.length > 0 && { endpointIds }),
+  refreshInterval,
+});
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useI18n("docker.field.state.option");
@@ -263,7 +265,12 @@ export default function DockerWidget({
   const responsiveWidth = width * displayScale;
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
+  const demoReadOnly = useDemoReadOnly();
+  const refreshInterval = getWidgetRefreshInterval(options, 30);
+  const containersQuery = clientApi.docker.getContainers.useQuery(
+    getContainersQueryInput(options.endpointIds, refreshInterval),
+    { refetchInterval: demoReadOnly ? false : refreshInterval * 1000 },
+  );
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({

@@ -31,6 +31,7 @@ import { transferProcedures } from "./transfer-procedures";
 import { assertSecretSources } from "./secret-policy";
 import { secretProcedures } from "./secret-procedures";
 import { workshopProcedures } from "./workshop-procedures";
+import { workshopUpdateProcedures } from "./workshop-update-procedures";
 
 const logger = createLogger({ module: "custom-widget" });
 
@@ -70,6 +71,7 @@ export const customWidgetRouter = createTRPCRouter({
 
   ...secretProcedures,
   ...workshopProcedures,
+  ...workshopUpdateProcedures,
 
   toggleEnabled: permissionRequiredProcedure
     .requiresPermission("admin")

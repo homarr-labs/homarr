@@ -58,7 +58,7 @@ export function VpnIntegrationCard({
     return (
       <Card
         withBorder
-        radius={board.itemRadius}
+        radius={board.itemRadius ?? undefined}
         p={dense ? 6 : "xs"}
         w="100%"
         bg="transparent"

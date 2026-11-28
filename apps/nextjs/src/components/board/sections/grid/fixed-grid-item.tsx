@@ -47,8 +47,16 @@ export const FixedGridItem = ({
   const runtimeStatus = useGridEditorRuntimeStatus();
   const currentLayoutId = useCurrentLayout();
   const t = useI18n();
-  const { section, columnCount, maxRowCount, placements, interactionDisabled, announce, entryElementStore } =
-    useSectionContext();
+  const {
+    section,
+    columnCount,
+    maxRowCount,
+    placements,
+    displayPlacementById,
+    interactionDisabled,
+    announce,
+    entryElementStore,
+  } = useSectionContext();
   const { commitSectionGrid } = useGridLayoutActions();
   const [isKeyboardEditing, setIsKeyboardEditing] = useState(false);
   const { isSelected, toggleSelectItem } = useBoardSelection();
@@ -202,7 +210,7 @@ export const FixedGridItem = ({
         isEditorActive && "board-grid-entry",
         isEditorActive && classes.editorEntry,
       )}
-      style={getLogicalItemStyle(placement, "var(--board-grid-row-scale, 1)")}
+      style={getLogicalItemStyle(displayPlacementById?.get(item.id) ?? placement, "var(--board-grid-row-scale, 1)")}
       data-grid-item-id={item.id}
       data-grid-item-type={item.type}
       data-grid-x={placement.x}

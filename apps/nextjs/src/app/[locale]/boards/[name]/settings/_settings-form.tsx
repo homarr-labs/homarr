@@ -7,7 +7,7 @@ import type { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
+import { env } from "@homarr/common/env-client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
@@ -18,6 +18,7 @@ import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { SectionCard } from "@homarr/ui";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
+import { AdvancedSettings } from "~/components/manage/advanced-settings";
 
 import type { Board } from "../../_types";
 import { ColorSettingsContent } from "./_appereance";
@@ -84,10 +85,15 @@ interface BoardSettingsFormProps {
   board: Board;
   permissions: RouterOutputs["board"]["getBoardPermissions"];
   hasFullAccess: boolean;
-  hideVisibility: boolean;
+  isInstanceHomeBoard: boolean;
 }
 
-export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisibility }: BoardSettingsFormProps) => {
+export const BoardSettingsForm = ({
+  board,
+  permissions,
+  hasFullAccess,
+  isInstanceHomeBoard,
+}: BoardSettingsFormProps) => {
   const t = useI18n("common");
   const tSection = useI18n("board.setting.section");
   const { branding } = useSettings();
@@ -189,8 +195,10 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
           />
           <BackgroundSettingsContent form={form} />
           <ColorSettingsContent form={form} />
-          <CustomCssSettingsContent form={form} />
           <BehaviorSettingsContent form={form} />
+          <AdvancedSettings>
+            <CustomCssSettingsContent form={form} />
+          </AdvancedSettings>
 
           {form.isDirty() && (
             <UnsavedChangesBar>
@@ -211,7 +219,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
         </SectionCard>
       )}
 
-      {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+      {hasFullAccess && <DangerZoneSettingsContent isInstanceHomeBoard={isInstanceHomeBoard} />}
     </Stack>
   );
 };

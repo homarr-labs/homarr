@@ -7,7 +7,7 @@ import { IconClock, IconExternalLink, IconTrash } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { showErrorNotification } from "@homarr/notifications";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
@@ -38,7 +38,7 @@ export default function NotificationsWidget({
   const t = useI18n("widget.notifications");
   const tCommon = useI18n("common");
 
-  const board = useRequiredBoard();
+  const board = useOptionalBoard();
   const interactIntegrations = useIntegrationsWithInteractAccess();
   const utils = clientApi.useUtils();
   const deleteNotification = clientApi.widget.notifications.deleteNotification.useMutation({
@@ -105,11 +105,13 @@ export default function NotificationsWidget({
           <SimpleGrid cols={columns} spacing={spacing} verticalSpacing={spacing}>
             {sortedNotifications.map((notification) => {
               const href = getSafeApplicationUrl(notification.href);
+              let actionLabel = t("deleteNotification");
+              if (notification.integrationKind === "homeAssistant") actionLabel = t("dismissNotification");
               return (
                 <Card
                   key={notification.compositeKey}
                   className={isAdvanced ? (columns > 1 ? classes.card : classes.row) : undefined}
-                  radius={board.itemRadius}
+                  radius={board?.itemRadius ?? undefined}
                   w="100%"
                   p={isDense ? 6 : "sm"}
                   style={{
@@ -123,7 +125,7 @@ export default function NotificationsWidget({
                         src={notification.source.iconUrl}
                         alt={notification.source.name}
                         size={isDense ? "xs" : "sm"}
-                        radius={board.itemRadius}
+                        radius={board?.itemRadius ?? undefined}
                       />
                     )}
 
@@ -150,7 +152,7 @@ export default function NotificationsWidget({
                       <InfoDisplay
                         date={notification.time}
                         source={
-                          notificationDisplay.showSource
+                          notificationDisplay.showSource || notificationIntegrations.length > 1
                             ? (notification.source?.name ?? notification.integrationName)
                             : undefined
                         }
@@ -172,13 +174,14 @@ export default function NotificationsWidget({
                           <IconExternalLink style={iconSizes.md} />
                         </ActionIcon>
                       )}
-                      {notification.integrationKind === "gotify" &&
+                      {(notification.integrationKind === "gotify" ||
+                        notification.integrationKind === "homeAssistant") &&
                         interactIntegrations.some(({ id }) => id === notification.integrationId) && (
                           <ActionIcon
                             variant="subtle"
                             color="red"
-                            aria-label={t("deleteNotification")}
-                            title={t("deleteNotification")}
+                            aria-label={actionLabel}
+                            title={actionLabel}
                             disabled={deleteNotification.isPending}
                             onClick={() =>
                               deleteNotification.mutate({

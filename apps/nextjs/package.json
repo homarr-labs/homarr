@@ -12,7 +12,7 @@
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "build:compiled": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node ../../node_modules/next/dist/bin/next build && node scripts/compile-standalone.mjs",
+    "build:compiled": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node scripts/build-next.mjs && node scripts/compile-standalone.mjs",
     "build:dependencies": "node scripts/cache-standalone.mjs"
   },
   "dependencies": {
@@ -123,6 +123,7 @@
     "sass": "catalog:",
     "sql.js": "catalog:",
     "superjson": "catalog:",
+    "three": "catalog:",
     "use-deep-compare-effect": "catalog:",
     "yaml": "catalog:",
     "zod": "catalog:"
@@ -136,6 +137,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/three": "catalog:",
     "concurrently": "catalog:",
     "node-loader": "catalog:",
     "typescript": "catalog:"

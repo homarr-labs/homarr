@@ -54,16 +54,16 @@ import Alert from "@/components/mdx/admonition";
       credentials: ["username", "password"],
       steps: [
         "Create a dedicated DSM user with a strong password for Homarr.",
-        "Add the user to the default Administrators group so Homarr can read `SYNO.Core.System` metrics.",
+        "Grant System Monitoring permissions where DSM supports delegation, or use the default Administrators group.",
         "Under User Groups and Permissions, deny access to shared folders and most applications.",
         "Allow login to DSM only, optionally restricted by source IP address.",
         "Log in once with the service account in DSM to accept terms and conditions.",
       ],
       body: (
         <>
-          <Alert type="caution" title="Administrators group required">
-            Homarr reads system, storage, and utilization data from APIs that require membership in the default
-            Administrators group.
+          <Alert type="caution" title="Metric permissions vary">
+            Depending on the DSM version, delegated System Monitoring permissions may allow CPU, memory, network, and
+            volume usage monitoring. Other metrics may still require membership in the default Administrators group.
           </Alert>
           <Alert type="warning" title="Two-factor authentication is not supported">
             Accounts with 2-step verification enabled cannot authenticate with this integration. Use a dedicated service

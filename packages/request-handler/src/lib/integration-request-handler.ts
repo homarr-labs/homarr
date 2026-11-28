@@ -1,5 +1,6 @@
 import { createKeyedFingerprint } from "@homarr/common/server";
 import type { Modify } from "@homarr/common/types";
+import { withHttpRequestSignalAsync } from "@homarr/core/infrastructure/http";
 import type { Integration, IntegrationSecret } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
@@ -84,7 +85,7 @@ export const createIntegrationRequestHandler = <
 
   const inner = createRequestHandler<TData, { integration: IntegrationOfKind<TKind>; options: TInput }>({
     requestAsync: async ({ integration, options: itemOptions }, signal) =>
-      options.requestAsync(integration, itemOptions, signal),
+      await withHttpRequestSignalAsync(signal, () => options.requestAsync(integration, itemOptions, signal)),
     getCacheKey: getIntegrationCacheIdentity,
     cacheTtlMs: options.cacheTtlMs,
     fallbackToStaleOnError: options.fallbackToStaleOnError,

@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { MantineRadius } from "@mantine/core";
 import { Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 
 import { OnboardingBackdrop } from "./onboarding-backdrop";
@@ -22,7 +23,7 @@ interface OnboardingAuthShellProps {
   backgroundImageUrl?: string;
   backgroundOverlay?: number;
   showMarquee?: boolean;
-  radius?: "xs" | "sm" | "md" | "lg" | "xl";
+  radius?: MantineRadius;
   width?: CSSProperties["width"];
 }
 

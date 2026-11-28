@@ -1,7 +1,10 @@
+import { z } from "zod/v4";
+
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { SystemHealthMonitoring } from "@homarr/integrations";
 import { healthMonitoringClusterIntegrationKinds, healthMonitoringSystemIntegrationKinds } from "@homarr/definitions";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
+import { widgetRefreshIntervalSchema } from "@homarr/validation/widget-refresh-interval";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
@@ -32,12 +35,19 @@ export const healthMonitoringRouter = createTRPCRouter({
           "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Synology/Unraid/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
       },
     })
+    .input(
+      z.object({
+        refreshInterval: widgetRefreshIntervalSchema.default(10),
+      }),
+    )
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringSystemIntegrationKinds))
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], SystemHealthQueryResult>(
         ctx.integrations,
         async (integration) => {
-          const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
+          const { data, timestamp } = await systemInfoRequestHandler
+            .handler(integration, {})
+            .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
             integrationId: integration.id,
             integrationName: integration.name,
@@ -77,10 +87,15 @@ export const healthMonitoringRouter = createTRPCRouter({
           "Get Proxmox cluster health status including nodes, VMs, and resource usage. REQUIRED: integrationId (single Proxmox integration ID from integration_all)",
       },
     })
+    .input(
+      z.object({
+        refreshInterval: widgetRefreshIntervalSchema.default(10),
+      }),
+    )
     .concat(createOneIntegrationMiddleware("query", ...healthMonitoringClusterIntegrationKinds))
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
-      const { data } = await innerHandler.getDataAsync();
+      const { data } = await innerHandler.getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
       return data;
     }),
 });

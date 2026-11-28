@@ -38,6 +38,13 @@ const integrationCreators = {
     ]);
     return new StatsIntegration(input, tubearchivistStatsProvider);
   },
+  youtarr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { youtarrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/youtarr"),
+    ]);
+    return new StatsIntegration(input, youtarrStatsProvider);
+  },
   frigate: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { frigateStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
@@ -139,6 +146,14 @@ const integrationCreators = {
       import("../stats/providers/plantit"),
     ]);
     return new StatsIntegration(input, plantitStatsProvider);
+  },
+
+  yuvomi: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { yuvomiStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/yuvomi"),
+    ]);
+    return new StatsIntegration(input, yuvomiStatsProvider);
   },
 
   netdata: async (input: IntegrationInput) => {
@@ -255,6 +270,7 @@ const integrationCreators = {
     (await import("../technitium/technitium-integration-factory")).createTechnitiumDnsIntegrationAsync(input),
   homeAssistant: async (input: IntegrationInput) =>
     new (await import("../homeassistant/homeassistant-integration")).HomeAssistantIntegration(input),
+  homey: async (input: IntegrationInput) => new (await import("../homey/homey-integration")).HomeyIntegration(input),
   jellyfin: async (input: IntegrationInput) =>
     new (await import("../jellyfin/jellyfin-integration")).JellyfinIntegration(input),
   plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),
@@ -306,6 +322,8 @@ const integrationCreators = {
     new (await import("../unifi-controller/unifi-controller-integration")).UnifiControllerIntegration(input),
   opnsense: async (input: IntegrationInput) =>
     new (await import("../opnsense/opnsense-integration")).OPNsenseIntegration(input),
+  pfsense: async (input: IntegrationInput) =>
+    new (await import("../pfsense/pfsense-integration")).PfSenseIntegration(input),
   ical: async (input: IntegrationInput) => new (await import("../ical/ical-integration")).ICalIntegration(input),
   ntfy: async (input: IntegrationInput) => new (await import("../ntfy/ntfy-integration")).NTFYIntegration(input),
   gotify: async (input: IntegrationInput) =>

@@ -33,7 +33,7 @@ jobs:
 
       - name: Obtain token
         id: obtainToken
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
           client-id: ${{ vars.CROWDIN_CLIENT_ID }}
@@ -41,7 +41,7 @@ jobs:
           permission-pull-requests: write # required to create pull request
 
       - name: Download Crowdin translations
-        uses: crowdin/github-action@5b9790df740c85af5412a3a3a91b24988d5d324f # v3.5.1
+        uses: crowdin/github-action@d651c77756acbe11a31d77a6fb79d8a239e1e05a # v3.6.0
         with:
           # Refresh the source even when an earlier upload was skipped or superseded.
           upload_sources: true
@@ -56,7 +56,7 @@ jobs:
 
       - name: Create or update translation pull request
         id: create-pull-request
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ steps.obtainToken.outputs.token }}
           # Rebuild from dev instead of retaining already squash-merged Crowdin commits.

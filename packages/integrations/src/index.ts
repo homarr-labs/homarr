@@ -38,6 +38,7 @@ export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { SynologyIntegration } from "./synology/synology-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export { PfSenseIntegration } from "./pfsense/pfsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
@@ -68,7 +69,6 @@ export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/heal
 export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
-export type { EntityState } from "./interfaces/smart-home/smart-home-types";
 export type {
   TdarrQueue,
   TdarrPieSegment,

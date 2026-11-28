@@ -890,6 +890,7 @@
       "deleteConfirm": "Är du säker på att du vill ta bort \"{name}\"? Den här åtgärden kan inte ångras.",
       "duplicate": "Duplicera",
       "aiPrompt": "Designa med AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiera AI-prompt",
       "enable": "Aktivera",
       "disable": "Inaktivera",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurera",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avancerat",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Anpassade widgetsektioner",
       "widgetPreview": "Förhandsgranskning av widget",
       "generalInformation": "Allmän information",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Skapa eller fixa med någon AI",
         "description": "Lägg till en API-docs URL först om du har en. För korrigeringar, kör Förhandsgranska om möjligt. Kopiera prompten till någon AI; den kan be om saknade detaljer. Klistra in dess slutliga JSON här.",
+        "assistedDescription": "",
         "request": "Vad ska denna widget göra?",
         "documentationUrl": "API dokumentations-URL (valfritt)",
         "paste": "Klistra in",
+        "pasteResponse": "",
         "response": "AI svar",
         "manualCopyDescription": "Åtkomst till urklipp är inte tillgänglig. Välj prompten nedan och kopiera den manuellt.",
         "manualPasteDescription": "Åtkomst till urklipp är otillgänglig eller det kopierade svaret behöver korrigeras. Klistra in AI: s JSON svar här.",
@@ -1245,6 +1262,20 @@
       "username": "Användarnamn",
       "password": "Lösenord",
       "savedPlaceholder": "••••••• (sparad, lämna tomt för att behålla)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "Uppdatering tillgänglig",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importera CSS från Workshop",
     "importCssConfirm": "Ersätt nuvarande anpassade CSS med \"{title}\"? Ingenting sparas tills du sparar foruminställningarna.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beskrivning",
+      "published": ""
+    },
     "screenshotAlt": "{title} skärmdump {count, number}",
     "screenshotViewer": "{title} skärmdump visare",
     "screenshotsLabel": "{title} skärmdumpar",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Dölj miniatyrer för skärmdump",
     "closeScreenshotViewer": "Stäng skärmdump viewer",
     "technicalDetails": "Tekniska detaljer",
+    "integrations": "Integrationer",
     "sourceCode": "Verkstad post",
     "report": "Rapportera",
     "reportTitle": "Rapportera inlämning",
@@ -1318,6 +1382,12 @@
       "copyright": "Upphovsrätt",
       "inappropriate": "Olämplig",
       "other": "Annat"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicera till Workshop",
@@ -1921,7 +1991,8 @@
       "copy": "Kopiera",
       "copied": "Kopierad",
       "refresh": "Uppdatera",
-      "export": "Exportera"
+      "export": "Exportera",
+      "advanced": "Avancerat"
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varning",
+        "caution": ""
+      }
+    },
     "dangerZone": "Kritiska inställningar",
     "noResults": "Hittade inga resultat",
     "unsavedChanges": "Du har osparade ändringar!",
@@ -2106,6 +2186,159 @@
         "sm": "Subtila",
         "xl": "Mjuk"
       }
+    },
+    "customTheme": {
+      "label": "Tema",
+      "nothingFound": "",
+      "custom": "Anpassad",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Avstånd",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundär accent"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Kopierad",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Förhandsgranska",
+        "sampleText": "",
+        "sampleInput": "Sökning",
+        "sampleValue": "Sök efter en applikation",
+        "sampleButton": "Öppna"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Avstånd",
+          "radius": "",
+          "compact": "Kompakt",
+          "normal": "",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "Fullt",
+          "custom": "Anpassad",
+          "advanced": ""
+        },
+        "previewSurface": "Förhandsgranska",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Komponenter",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Avstånd",
+          "radius": "",
+          "breakpoint": "Gränsvärde",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundär accent",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Bakgrund",
+          "surfaceText": "",
+          "surfaceBorder": "Färg på kantlinje",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Filstorlek",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Rullbar",
         "description": "Håll den här behållaren på sin fastställda storlek och bläddra dess innehåll i stället för att växa för att passa dem."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Färg på kantlinje"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Ta bort denna behållare? Dess innehåll kommer att flytta in i det omgivande området."
+      },
+      "editBar": {
+        "edit": "Redigera"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Anpassad widget",
       "standalone": "",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Verkstad widgetar",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Anslut en tjänst först",
         "noPermission": "Denna widget behöver en kompatibel serviceanslutning. Be en administratör att ansluta en, försök sedan igen."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Det gick inte att uppdatera objekt",
       "saveErrorMessage": "Ändringarna kunde inte sparas. Tavlan har uppdaterats.",
       "moveUnavailableTitle": "Kunde inte flytta valda objekt",
-      "moveUnavailableMessage": "Destinationen har inte tillräckligt med utrymme för hela urvalet."
+      "moveUnavailableMessage": "Destinationen har inte tillräckligt med utrymme för hela urvalet.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Flytta/ändra storlek på objekt",
+      "sizeOverlap": "",
       "entryLabel": "{name}, kolumn {column}, rad {row}",
       "target": {
         "numbered": "",
@@ -2279,7 +2548,12 @@
         "integration": "Redigera integration"
       },
       "app": {
-        "propagationNotice": "Ändringar av denna app tillämpas överallt där den används på alla instrumentpaneler."
+        "propagationNotice": "Ändringar av denna app tillämpas överallt där den används på alla instrumentpaneler.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Redigera kontakt",
@@ -2322,6 +2596,36 @@
       "open": "Öppna avancerad vy",
       "close": "Stäng avancerad vy",
       "label": "{widget} avancerad vy"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgetar",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "flytta",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entitetstillstånd",
       "description": "Visa en entitets tillstånd och gör det valfritt möjligt att växla det",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID för entitet"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Det går inte att ladda enheten",
         "toggleFailed": "Det går inte att uppdatera enheten"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Titel",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automatisk",
+            "compact": "Kompakt",
+            "large": "Stor"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Personer",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Väder",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Lägg till",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "på",
+          "off": "av",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stad/postnummer",
         "latitude": "Latitud",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Visa plats",
           "description": "Visa om strömmen finns på ditt LAN eller WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Nedladdningsförlopp",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopiera namn",
         "copyId": "Kopiera ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Rensa filter"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrera nedladdningar"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Dölj beskrivning"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Visa affischbild"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Öppna meddelandetjänst",
       "deleteNotification": "Ta bort avisering från Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Kunde inte ta bort avisering",
       "deleteFailedMessage": "Meddelandet kunde inte raderas. Försök igen."
     },
@@ -5446,6 +5921,23 @@
       "name": "Systemresurser",
       "description": "CPU-, minnes-, disk- och annan maskinvaruanvändning i systemet",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Aktivera diagrammets skuggning"
         },
@@ -5453,6 +5945,7 @@
           "label": "Synliga diagram",
           "description": "Välj de diagram som ska vara synliga.",
           "option": {
+            "cpuCores": "",
             "memory": "Minne",
             "network": "Nätverk"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Hem",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "Instrumentpanel duk",
       "leftRail": "Vänster instrumentpanel räls",
@@ -6647,6 +7160,11 @@
           "description": "Serveradministratören har inte angett någon startsida ännu.",
           "link": "Visa offentliga tavlor",
           "notice": "För att dölja den här sidan ber du serveradministratören ange en startsida för servern"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Dokumentation",
             "submitIssue": "Skicka in ett ärende",
             "discord": "Community Discord",
-            "sourceCode": "Källkod"
+            "sourceCode": "Källkod",
+            "changelog": ""
           }
         },
         "about": "Om",
+        "updateAvailable": "Uppdatering tillgänglig",
         "assistant": "Assistent"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Autentisering",
           "authorization": "Auktorisering"
         },
-        "heroBanner": {
-          "title": "Välkommen tillbaka till din",
-          "subtitle": "{app}-tavla"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Inga tavlor än",
-          "description": "Skapa en tavla för att ordna dina appar och widgetar på ett ställe."
+          "description": "Skapa en tavla för att ordna dina appar och widgetar på ett ställe.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Varje inbyggd kontroll finns redan i ditt huvud.",
                 "add": "Lägg till {item}",
                 "boardShortcut": "Genväg till tavlan",
+                "widget": "",
                 "chooseBoard": "Välj en tavla"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Alternativ",
+                "boardOnly": "",
                 "description": "Denna kontroll förblir samma storlek som den gör i live-huvudet.",
                 "searchDisplay": {
                   "input": "Sök i fältet",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Endast logotyp",
                   "logoAndText": "Logotyp + text"
+                },
+                "tabsDisplay": {
+                  "wide": "Bred",
+                  "compact": "Kompakt",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Sökning",
                 "home": "Starttavla",
                 "boardSwitcher": "Tavlor",
+                "boardTabs": "",
                 "assistant": "Assistent",
                 "docker": "Docker",
                 "boardEdit": "Redigera tavla",
@@ -6847,7 +7393,9 @@
                 "settings": "Dina inställningar",
                 "themeToggle": "Växla tema",
                 "user": "Konto",
-                "boardUnavailable": "Brädan är inte tillgänglig"
+                "boardUnavailable": "Brädan är inte tillgänglig",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Sökning",
               "firstDayOfWeek": "Första dag på veckan",
               "accessibility": "Tillgänglighet",
+              "signInInformation": {
+                "title": "",
+                "provider": "Leverantör",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Kopiera",
+                "copied": "Kopierad"
+              },
               "oauthConnections": {
                 "title": "OAuth anslutningar",
                 "description": "Dessa klienter erhöll API-uppgifter för ditt konto genom OAuth. Referenserna fungerar med Homarr's HTTP API såväl som MCP, upphör inte automatiskt och förblir giltiga efter att du loggat ut.",
@@ -7071,6 +7630,10 @@
             "title": "Utseende",
             "defaultColorScheme": {
               "label": "Standardfärgschema"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Öppna appsökning",
               "openSpotlightAssistant": "Öppet assistentläge",
               "openSpotlightPreferences": "Öppna inställningsläge",
-              "openAssistant": "Öppen assistent"
+              "openAssistant": "Öppen assistent",
+              "switchBoardTab": ""
             },
             "note": "Tips: Mod syftar både på Ctrl-tangenten och ⌘-tangenten i macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Ändra ditt färgschema, språk, starttavla och inställningar. Du kan också hoppa till administrationsområdet härifrån."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "En egen instrumentbräda för *arr stack och hela ditt hem. Integrerar med 50 + tjänster, realtids-widgets, inga konfigurationsfiler.",

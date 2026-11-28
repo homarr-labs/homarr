@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -11,16 +12,19 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import type { HeaderItem } from "@homarr/validation/user";
-import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
+import type { HeaderItem, HeaderTabsDisplay } from "@homarr/validation/user";
+import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/header-preferences-model";
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 import { BoardSwitcher } from "~/components/board/board-switcher";
+import { HeaderBoardTabs } from "~/components/board/tabs/header-board-tabs";
 import type { BoardSwitcherControls } from "~/components/board/board-switcher";
 import { ClientBurger } from "./burger";
 import { HeaderButton } from "./button";
 import { DockerQuickAccessModal } from "./docker-quick-access-modal";
 import { HeaderLogo } from "./header-logo";
+import { HeaderWidget } from "./header-widget";
+import { HeaderWidgetPreferencesProvider, useHeaderWidgetPreferences } from "./header-widget-preferences";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
@@ -34,6 +38,7 @@ interface ConfigurableHeaderProps {
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
   hasNavigation: boolean;
+  withBoardTabs: boolean;
   avatar: ReactNode;
   userId: string | null;
   isAdmin: boolean;
@@ -45,19 +50,30 @@ type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
 const floatingControlsIntroDurationMs = 5_000;
 const floatingControlsDismissDelayMs = 900;
 
-export const ConfigurableHeader = ({
+export const ConfigurableHeader = (props: ConfigurableHeaderProps) => {
+  const { headerPreferences } = useSettings();
+  return (
+    <HeaderWidgetPreferencesProvider key={props.userId} initialPreferences={headerPreferences} userId={props.userId}>
+      <ConfigurableHeaderContent {...props} />
+    </HeaderWidgetPreferencesProvider>
+  );
+};
+
+const ConfigurableHeaderContent = ({
   logo,
   logoWithTitle,
   actions,
   boardEditAction,
   boardSettingsAction,
   hasNavigation,
+  withBoardTabs,
   avatar,
   userId,
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
-  const { headerPreferences } = useSettings();
+  const { preferences: headerPreferences } = useHeaderWidgetPreferences();
+  const isMobile = useMediaQuery("(max-width: 48em)");
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
@@ -75,7 +91,7 @@ export const ConfigurableHeader = ({
       {(boardSwitcher) => {
         const renderItems = (
           items: HeaderItem[],
-          display: { search: "input" | "icon"; logo: "logo" | "logoAndText" },
+          display: { search: "input" | "icon"; logo: "logo" | "logoAndText"; tabs: HeaderTabsDisplay; active: boolean },
         ) =>
           items.map((item) => (
             <HeaderItem
@@ -87,11 +103,14 @@ export const ConfigurableHeader = ({
               boardSettingsAction={boardSettingsAction}
               avatar={avatar}
               userId={userId}
+              isActive={display.active}
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
               searchDisplay={display.search}
               logoDisplay={display.logo}
+              tabsDisplay={display.tabs}
+              withBoardTabs={withBoardTabs}
               boardSwitcher={boardSwitcher}
               assistant={assistant}
               openDockerModal={openDockerModal}
@@ -104,8 +123,10 @@ export const ConfigurableHeader = ({
         const desktopDisplay = {
           search: headerPreferences.searchDisplay,
           logo: headerPreferences.logoDisplay,
+          tabs: headerPreferences.tabsDisplay,
+          active: !isMobile,
         };
-        const mobileDisplay = { search: "icon", logo: "logo" } as const;
+        const mobileDisplay = { search: "icon", logo: "logo", tabs: "indicator", active: isMobile } as const;
 
         return (
           <>
@@ -147,6 +168,9 @@ export const ConfigurableHeader = ({
             {!headerPreferences.visible ? (
               <FloatingHeaderControls>
                 {hasNavigation ? <ClientBurger /> : null}
+                {withBoardTabs && allHeaderItems.some((item) => item.type === "builtin" && item.id === "boardTabs") && (
+                  <HeaderBoardTabs display="indicator" />
+                )}
                 <UserButtonClient
                   avatar={avatar}
                   isAdmin={isAdmin}
@@ -244,6 +268,7 @@ const FloatingHeaderControls = ({ children }: { children: ReactNode }) => {
 
 interface HeaderItemProps {
   item: HeaderItem;
+  isActive: boolean;
   logo: ReactNode;
   logoWithTitle: ReactNode;
   boardEditAction: ReactNode;
@@ -255,6 +280,8 @@ interface HeaderItemProps {
   board: HeaderBoard | undefined;
   searchDisplay: "input" | "icon";
   logoDisplay: "logo" | "logoAndText";
+  tabsDisplay: HeaderTabsDisplay;
+  withBoardTabs: boolean;
   boardSwitcher: BoardSwitcherControls;
   assistant: ReturnType<typeof useOptionalHomarrAssistant>;
   openDockerModal: () => void;
@@ -265,6 +292,7 @@ interface HeaderItemProps {
 
 const HeaderItem = ({
   item,
+  isActive,
   logo,
   logoWithTitle,
   boardEditAction,
@@ -276,6 +304,8 @@ const HeaderItem = ({
   board,
   searchDisplay,
   logoDisplay,
+  tabsDisplay,
+  withBoardTabs,
   boardSwitcher,
   assistant,
   openDockerModal,
@@ -283,6 +313,7 @@ const HeaderItem = ({
   label,
   boardUnavailableLabel,
 }: HeaderItemProps) => {
+  if (item.type === "widget") return <HeaderWidget item={item} userId={userId} isActive={isActive} />;
   if (item.type === "board") {
     if (!board) {
       return (
@@ -312,6 +343,7 @@ const HeaderItem = ({
 
   if (item.id === "boardEdit") return boardEditAction;
   if (item.id === "boardSettings") return boardSettingsAction;
+  if (item.id === "boardTabs") return withBoardTabs ? <HeaderBoardTabs display={tabsDisplay} /> : null;
 
   if (item.id === "search") {
     return (

@@ -200,6 +200,33 @@ body {
   letter-spacing: -0.035em;
 }
 
+.homarr-docs-header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.homarr-docs-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1.25rem;
+  row-gap: 0.75rem;
+}
+
+.homarr-docs-heading-row .homarr-docs-title {
+  flex: 1 1 max-content;
+  margin-block: 0;
+}
+
+.homarr-docs-heading-row .homarr-page-actions {
+  flex: 0 0 auto;
+  margin-top: 0;
+  margin-left: auto;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 .homarr-docs-description {
   max-width: 62ch;
   color: var(--color-fd-muted-foreground);

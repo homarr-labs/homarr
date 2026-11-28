@@ -890,6 +890,7 @@
       "deleteConfirm": "Opravdu chcete odstranit „{name}“? Tuto akci nelze vrátit zpět.",
       "duplicate": "Duplikovat",
       "aiPrompt": "Návrh s AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopírovat výzvu AI",
       "enable": "Povolit",
       "disable": "Zakázat",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurace",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Rozšířené",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Vlastní sekce widgetů",
       "widgetPreview": "Náhled widgetu",
       "generalInformation": "Obecné informace",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Vytvořit nebo opravit s jakýmkoliv AI",
         "description": "Nejdříve přidejte API dokumentaci URL, pokud ji máte. Pro opravy spusťte náhled, pokud je to možné. Zkopírujte výzvu do jakéhokoli A; může požádat o chybějící podrobnosti. Sem vložte svůj finální JSON.",
+        "assistedDescription": "",
         "request": "Co by měl tento widget dělat?",
         "documentationUrl": "URL API dokumentace (volitelné)",
         "paste": "Vložit",
+        "pasteResponse": "",
         "response": "Odpověď AI",
         "manualCopyDescription": "Přístup ke schránce je nedostupný. Vyberte výzvu níže a zkopírujte ji ručně.",
         "manualPasteDescription": "Přístup do schránky není k dispozici nebo kopírovaná odpověď vyžaduje korekci. Sem vložte JSON odpověď.",
@@ -1245,6 +1262,20 @@
       "username": "Uživatelské jméno",
       "password": "Heslo",
       "savedPlaceholder": "••••••• (uloženo, ponechte prázdné pro zachování)"
+    },
+    "workshopUpdate": {
+      "title": "",
+      "apply": "",
+      "available": "K dispozici je aktualizace",
+      "check": "",
+      "description": "",
+      "approvePermissions": "",
+      "pendingDescription": "",
+      "overwriteLocalChanges": "",
+      "installSeparate": "",
+      "communityWarning": "",
+      "updated": "",
+      "changedBeforeInstall": ""
     }
   },
   "workshop": {
@@ -1290,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importovat CSS z Workshopu",
     "importCssConfirm": "Nahradit aktuální vlastní CSS \"{title}\"? Nic není uloženo, dokud neuložíte nastavení tabule.",
+    "theme": {
+      "label": "Téma",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Výchozí",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Popis",
+      "published": ""
+    },
     "screenshotAlt": "Snímek obrazovky {title} {count, number}",
     "screenshotViewer": "{title} prohlížeč snímků obrazovky",
     "screenshotsLabel": "{title} snímky obrazovky",
@@ -1300,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skrýt miniatury snímku obrazovky",
     "closeScreenshotViewer": "Zavřít prohlížeč snímků obrazovky",
     "technicalDetails": "Technické podrobnosti",
+    "integrations": "Integrace",
     "sourceCode": "Vstup do dílny",
     "report": "Nahlásit",
     "reportTitle": "Odeslání zprávy",
@@ -1318,6 +1382,12 @@
       "copyright": "Autorská práva",
       "inappropriate": "Nevhodné",
       "other": "Ostatní"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publikovat do Workshopu",
@@ -1921,7 +1991,8 @@
       "copy": "Kopírovat",
       "copied": "Zkopírováno",
       "refresh": "Aktualizovat",
-      "export": "Export"
+      "export": "Export",
+      "advanced": "Rozšířené"
     },
     "hidden": "",
     "pagination": {
@@ -2016,6 +2087,15 @@
         "modifier": ""
       }
     },
+    "markdown": {
+      "alert": {
+        "note": "",
+        "tip": "",
+        "important": "",
+        "warning": "Varování",
+        "caution": ""
+      }
+    },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
     "unsavedChanges": "Máte neuložené změny!",
@@ -2106,6 +2186,159 @@
         "sm": "Jemný",
         "xl": "Měkké"
       }
+    },
+    "customTheme": {
+      "label": "Téma",
+      "nothingFound": "",
+      "custom": "Vlastní",
+      "customize": "",
+      "editor": {
+        "title": "",
+        "basedOn": "",
+        "preview": "",
+        "previewColorScheme": "",
+        "layout": "Rozložení",
+        "typography": "",
+        "colors": "",
+        "json": "",
+        "defaultRadius": "",
+        "radiusHint": "",
+        "scale": "",
+        "spacing": "Mezera",
+        "radius": "",
+        "fontFamily": "",
+        "headingFont": "",
+        "monoFont": "",
+        "fontSizes": "",
+        "palette": {
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundární zvýraznění"
+        },
+        "lockedPrimary": "",
+        "pickColor": "",
+        "autoContrast": "",
+        "luminanceThreshold": "",
+        "jsonHint": "",
+        "invalidJson": "",
+        "tooLong": "",
+        "copyJson": "",
+        "copied": "Zkopírováno",
+        "discardJson": "",
+        "reset": "",
+        "apply": "",
+        "sampleTitle": "",
+        "sampleBadge": "Náhled",
+        "sampleText": "",
+        "sampleInput": "Vyhledat",
+        "sampleValue": "Najít aplikaci",
+        "sampleButton": "Otevřít"
+      },
+      "studio": {
+        "title": "",
+        "saveTheme": "",
+        "searchControls": "",
+        "component": "",
+        "inheritedValue": "",
+        "resetControl": "",
+        "decreaseControl": "",
+        "increaseControl": "",
+        "chooseControl": "",
+        "layout": {
+          "spacing": "Mezera",
+          "radius": "",
+          "compact": "Kompaktní",
+          "normal": "Normální",
+          "roomy": "",
+          "preset": "",
+          "none": "",
+          "rounded": "",
+          "full": "Plné",
+          "custom": "Vlastní",
+          "advanced": ""
+        },
+        "previewSurface": "Náhled",
+        "previewFrame": "",
+        "loadingPreview": "",
+        "previewFailed": "",
+        "sampleBoard": "",
+        "components": "Součásti",
+        "overlays": "",
+        "typography": "",
+        "liveBoard": "",
+        "viewport": "",
+        "responsive": "",
+        "tablet": "",
+        "mobile": "Mobil",
+        "includeCustomCss": "",
+        "customCssHint": "",
+        "groups": {
+          "layout": "",
+          "typography": "",
+          "colors": "",
+          "surfaces": "",
+          "overlays": "",
+          "accessibility": "",
+          "css": ""
+        },
+        "controls": {
+          "defaultRadius": "",
+          "scale": "",
+          "spacing": "Mezera",
+          "radius": "",
+          "breakpoint": "",
+          "fontSizes": "",
+          "lineHeight": "",
+          "shadow": "",
+          "fontFamily": "",
+          "headingFont": "",
+          "monoFont": "",
+          "headingWeight": "",
+          "headingSize": "",
+          "fontSmoothing": "",
+          "body": "",
+          "surface": "",
+          "hover": "",
+          "border": "",
+          "text": "",
+          "dimmed": "",
+          "primary": "",
+          "secondary": "Sekundární zvýraznění",
+          "autoContrast": "",
+          "luminanceThreshold": "",
+          "primaryShade": "",
+          "componentRadius": "",
+          "borderWidth": "",
+          "surfaceBackground": "Pozadí",
+          "surfaceText": "",
+          "surfaceBorder": "Barva ohraničení",
+          "hoverBackground": "",
+          "hoverText": "",
+          "componentShadow": "",
+          "componentBorder": "",
+          "componentPadding": "",
+          "componentSize": "Velikost souboru",
+          "componentVariant": "",
+          "overlayBlur": "",
+          "overlayOpacity": "",
+          "overlayColor": "",
+          "transitionDuration": "",
+          "headerBackground": "",
+          "respectReducedMotion": "",
+          "focusRing": "",
+          "cursorType": "",
+          "customCss": ""
+        },
+        "expandPreview": "",
+        "showControls": ""
+      },
+      "instanceDefault": "",
+      "useInstanceDefault": ""
     }
   },
   "section": {
@@ -2125,6 +2358,10 @@
       "scrollable": {
         "label": "Posunout",
         "description": "Uchovávejte tento kontejner na nastavené velikosti a posouvejte jeho obsah místo pěstování, aby se jej přizpůsobil."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2149,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Barva ohraničení"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstranit tento kontejner? Jeho obsah se přesune do okolí."
+      },
+      "editBar": {
+        "edit": "Upravit"
       }
     }
   },
@@ -2201,6 +2455,18 @@
       },
       "customWidget": "Vlastní widget",
       "standalone": "Samostatné",
+      "integrationFilter": "",
+      "integrationNotConnected": "",
+      "workshop": {
+        "title": "Widgety Workshopu",
+        "back": "",
+        "empty": "",
+        "noMatches": "",
+        "loading": "",
+        "integrationError": "",
+        "searchMore": "",
+        "installAndAdd": ""
+      },
       "missingIntegration": {
         "title": "Nejdříve připojte službu",
         "noPermission": "Tento widget vyžaduje kompatibilní připojení k službě. Požádejte správce o připojení a zkuste to znovu."
@@ -2236,10 +2502,13 @@
       "saveErrorTitle": "Položky nelze aktualizovat",
       "saveErrorMessage": "Změny nelze uložit. Tabule byla obnovena.",
       "moveUnavailableTitle": "Nelze přesunout vybrané položky",
-      "moveUnavailableMessage": "Cíl nemá dostatek místa pro celý výběr."
+      "moveUnavailableMessage": "Cíl nemá dostatek místa pro celý výběr.",
+      "moveToTab": "",
+      "movedToTab": ""
     },
     "moveResize": {
       "title": "Přesunout / změnit velikost",
+      "sizeOverlap": "",
       "entryLabel": "{name}, sloupec {column}, řádek {row}",
       "target": {
         "numbered": "{name}, cíl {index}",
@@ -2279,7 +2548,12 @@
         "integration": "Upravit integraci"
       },
       "app": {
-        "propagationNotice": "Změny této aplikace se projeví všude, kde je použita na všech plochách."
+        "propagationNotice": "Změny této aplikace se projeví všude, kde je použita na všech plochách.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Upravit připojení",
@@ -2322,6 +2596,36 @@
       "open": "Otevřít rozšířené zobrazení",
       "close": "Zavřít rozšířené zobrazení",
       "label": "{widget} pokročilý pohled"
+    },
+    "inPlace": {
+      "widgetLoadError": "",
+      "search": "",
+      "bestFit": "",
+      "moreWidgets": "",
+      "widgets": "Widgety",
+      "yourApps": "",
+      "createApp": "",
+      "addAppLink": "",
+      "createWidget": "",
+      "createWidgetDescription": "",
+      "createAppDescription": "",
+      "defaultFit": "",
+      "defaultFitDescription": "",
+      "defaultSize": "",
+      "defaultSizeDescription": "",
+      "emptyCells": "",
+      "preview": {
+        "error": "",
+        "loading": ""
+      },
+      "keyboard": {
+        "move": "přesunout",
+        "resize": "",
+        "pick": "",
+        "browse": "",
+        "moveDescription": "",
+        "resizeDescription": ""
+      }
     }
   },
   "widget": {
@@ -3114,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stav entity",
       "description": "Zobrazí stav entity a volitelně jej umožní přepínat",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID entity"
@@ -3146,6 +3451,141 @@
       "error": {
         "loadFailed": "Nelze načíst entitu",
         "toggleFailed": "Nelze aktualizovat entitu"
+      }
+    },
+    "smartHome-controls": {
+      "name": "",
+      "description": "",
+      "option": {
+        "presentation": {
+          "label": "",
+          "option": {
+            "entities": "",
+            "controlPanel": ""
+          }
+        },
+        "title": {
+          "label": "Název",
+          "description": ""
+        },
+        "blocks": {
+          "label": "",
+          "remove": ""
+        },
+        "roomDomains": {
+          "label": "",
+          "description": ""
+        },
+        "excludedEntityIds": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
+        "showSummary": {
+          "label": ""
+        },
+        "readOnly": {
+          "label": "",
+          "description": ""
+        },
+        "controlSize": {
+          "label": "",
+          "option": {
+            "auto": "Automaticky",
+            "compact": "Kompaktní",
+            "large": "Velké"
+          }
+        },
+        "palette": {
+          "label": "",
+          "option": {
+            "boring": "",
+            "colorful": ""
+          }
+        }
+      },
+      "domain": {
+        "light": "",
+        "switch": "",
+        "fan": "",
+        "climate": "",
+        "humidifier": "",
+        "cover": "",
+        "valve": "",
+        "lock": "",
+        "alarm_control_panel": "",
+        "media_player": "",
+        "camera": "",
+        "vacuum": "",
+        "scene": "",
+        "script": "",
+        "automation": "",
+        "button": "",
+        "input_boolean": "",
+        "input_select": "",
+        "person": "Lidi",
+        "binary_sensor": "",
+        "sensor": "",
+        "weather": "Počasí",
+        "sun": "",
+        "update": ""
+      },
+      "block": {
+        "add": {
+          "rooms": "",
+          "entity": "",
+          "roomsLabel": "",
+          "roomsPlaceholder": "",
+          "entityLabel": "",
+          "entityPlaceholder": "",
+          "merge": "",
+          "submit": "Přidat",
+          "duplicate": "",
+          "covered": ""
+        },
+        "kind": {
+          "entity": "",
+          "room": "",
+          "mergedRooms": "",
+          "unknown": ""
+        },
+        "entityCount": "",
+        "noArea": "",
+        "issue": {
+          "missing": "",
+          "otherSource": "",
+          "empty": ""
+        }
+      },
+      "preview": {
+        "empty": "",
+        "noMatches": "",
+        "summary": {
+          "lights": "",
+          "on": "zapnuto",
+          "off": "vypnuto",
+          "sensors": "",
+          "offline": ""
+        },
+        "otherSource": ""
+      },
+      "live": {
+        "loading": "",
+        "error": "",
+        "retry": "",
+        "actionFailed": "",
+        "actionUnconfirmed": "",
+        "unconfirmed": "",
+        "selectionLimit": "",
+        "unknownError": ""
+      },
+      "inline": {
+        "open": "",
+        "title": "",
+        "handle": "",
+        "empty": "",
+        "add": "",
+        "close": ""
       }
     },
     "smartHome-executeAutomation": {
@@ -3882,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Město / PSČ",
         "latitude": "Šířka",
@@ -4013,6 +4456,10 @@
         "showLocation": {
           "label": "Zobrazit umístění",
           "description": "Zobrazit, zda je stream ve vaší síti LAN nebo WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4045,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Průběh stahování",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4598,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopírovat název",
         "copyId": "Kopírovat ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Vymazat filtry"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrovat stahované položky"
@@ -4812,8 +5274,20 @@
         "hideDescription": {
           "label": "Skrýt popis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Zobrazit obrázek plakátu"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5188,6 +5662,7 @@
       },
       "openService": "Otevřít službu oznámení",
       "deleteNotification": "Odstranit oznámení z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Nelze odstranit oznámení",
       "deleteFailedMessage": "Oznámení nelze odstranit. Zkuste to prosím znovu."
     },
@@ -5446,6 +5921,23 @@
       "name": "Systémové prostředky",
       "description": "Využití CPU, paměti, disku a dalšího hardwaru systému",
       "option": {
+        "diskDisplayMode": {
+          "label": "",
+          "option": {
+            "percentage": "",
+            "free": "",
+            "absolute": "",
+            "combined": ""
+          }
+        },
+        "resourceLayout": {
+          "label": "",
+          "description": ""
+        },
+        "subresourceLayout": {
+          "label": "",
+          "description": ""
+        },
         "hasShadow": {
           "label": "Povolit stínování grafu"
         },
@@ -5453,6 +5945,7 @@
           "label": "Viditelné grafy",
           "description": "Vyberte grafy, které chcete zobrazit.",
           "option": {
+            "cpuCores": "",
             "memory": "Paměť",
             "network": "Síť"
           }
@@ -6381,6 +6874,26 @@
         }
       }
     },
+    "tabs": {
+      "label": "",
+      "indicator": "",
+      "home": "Domovská stránka",
+      "untitled": "",
+      "add": "",
+      "actions": "",
+      "rename": "",
+      "namePlaceholder": "",
+      "moveLeft": "",
+      "moveRight": "",
+      "remove": {
+        "action": "",
+        "confirm": ""
+      },
+      "limitReached": "",
+      "hotkeyHint": "",
+      "destination": "",
+      "containerDestination": ""
+    },
     "landmark": {
       "canvas": "plátno hlavního panelu",
       "leftRail": "Kolejnice levého hlavního panelu",
@@ -6647,6 +7160,11 @@
           "description": "Správce serveru zatím nenastavil domovskou plochu.",
           "link": "Zobrazit veřejné plochy",
           "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
+        },
+        "noAccess": {
+          "title": "",
+          "description": "",
+          "notice": ""
         }
       }
     }
@@ -6718,10 +7236,12 @@
             "documentation": "Dokumentace",
             "submitIssue": "Nahlásit problém",
             "discord": "Komunitní Discord",
-            "sourceCode": "Zdrojový kód"
+            "sourceCode": "Zdrojový kód",
+            "changelog": ""
           }
         },
         "about": "O aplikaci",
+        "updateAvailable": "K dispozici je aktualizace",
         "assistant": "Asistent"
       }
     },
@@ -6733,9 +7253,23 @@
           "authentication": "Ověřování",
           "authorization": "Autorizace"
         },
-        "heroBanner": {
-          "title": "Vítejte zpět na své",
-          "subtitle": "Plocha {app}"
+        "hero": {
+          "greeting": "",
+          "greetingWithoutName": "",
+          "description": ""
+        },
+        "lobster": {
+          "label": "",
+          "prompt": "",
+          "pokeCount": "",
+          "reaction": {
+            "hey": "",
+            "ow": "",
+            "snip": "",
+            "careful": "",
+            "stillHere": "",
+            "okay": ""
+          }
         }
       },
       "board": {
@@ -6780,7 +7314,9 @@
         },
         "noResults": {
           "title": "Zatím žádné plochy",
-          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě."
+          "description": "Vytvořte desku pro uspořádání aplikací a widgetů na jednom místě.",
+          "noAccessTitle": "",
+          "noAccessDescription": ""
         }
       },
       "media": {
@@ -6822,9 +7358,13 @@
                 "allAdded": "Každé vestavěné ovládání je již v záhlaví.",
                 "add": "Přidat {item}",
                 "boardShortcut": "Zástupce desky",
+                "widget": "",
                 "chooseBoard": "Vybrat desku"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Možnosti",
+                "boardOnly": "",
                 "description": "Tento ovládací prvek zůstává ve stejné velikosti jako v živém záhlaví.",
                 "searchDisplay": {
                   "input": "Vyhledávací lišta",
@@ -6833,6 +7373,11 @@
                 "logoDisplay": {
                   "logo": "Pouze logo",
                   "logoAndText": ""
+                },
+                "tabsDisplay": {
+                  "wide": "Široký",
+                  "compact": "Kompaktní",
+                  "indicator": ""
                 }
               },
               "items": {
@@ -6840,6 +7385,7 @@
                 "search": "Vyhledat",
                 "home": "Domovský panel",
                 "boardSwitcher": "Plochy",
+                "boardTabs": "",
                 "assistant": "Asistent",
                 "docker": "Dokovací modul",
                 "boardEdit": "Upravit desku",
@@ -6847,7 +7393,9 @@
                 "settings": "Vaše nastavení",
                 "themeToggle": "Přepnout motiv",
                 "user": "Účet",
-                "boardUnavailable": "Board není k dispozici"
+                "boardUnavailable": "Board není k dispozici",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -6862,6 +7410,17 @@
               "search": "Vyhledávání",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "Poskytovatel",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Kopírovat",
+                "copied": "Zkopírováno"
+              },
               "oauthConnections": {
                 "title": "OAuth připojení",
                 "description": "Tito klienti získali API přihlašovací údaje k vašemu účtu prostřednictvím OAuth. Přihlašovací údaje fungují s HTTP API aplikace Homarr, stejně jako MCP, nevyprší automaticky a zůstávají platné po odhlášení.",
@@ -7071,6 +7630,10 @@
             "title": "Vzhled",
             "defaultColorScheme": {
               "label": "Výchozí barevné schéma"
+            },
+            "whatsNew": {
+              "label": "",
+              "description": ""
             }
           },
           "branding": {
@@ -7653,7 +8216,8 @@
               "openSpotlightApps": "Otevřít vyhledávání aplikací",
               "openSpotlightAssistant": "Otevřený režim asistenta",
               "openSpotlightPreferences": "Otevřít režim předvoleb",
-              "openAssistant": "Otevřít asistenta"
+              "openAssistant": "Otevřít asistenta",
+              "switchBoardTab": ""
             },
             "note": "Tip: Mod označuje klávesu Ctrl i klávesu ⌘ v systému macOS"
           }
@@ -8823,6 +9387,12 @@
         "description": "Změňte barevné schéma, jazyk, domovskou plochu a předvolby. Můžete také odtud přejít do správy."
       }
     }
+  },
+  "whatsNew": {
+    "title": "",
+    "empty": "",
+    "allReleases": "",
+    "dismiss": ""
   },
   "metadata": {
     "description": "Samostatně hostovaná nástěnka pro *arr stack a celou vaši domovskou elab. Integruje se s 50 + službami, widgety, bez konfiguračních souborů.",

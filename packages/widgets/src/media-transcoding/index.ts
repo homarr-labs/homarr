@@ -6,6 +6,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 import { views } from "./views";
 
 export { views };
@@ -20,6 +21,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaTran
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      ...createWidgetRefreshIntervalOptions(10),
       defaultView: factory.select({
         defaultValue: "statistics",
         options: views.map((view) => ({ label: capitalize(view), value: view })),
