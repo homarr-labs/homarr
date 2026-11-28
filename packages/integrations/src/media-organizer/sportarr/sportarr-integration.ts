@@ -9,7 +9,9 @@ import { sonarrCalendarEventSchema, sonarrMissingEpisodeSchema, SonarrIntegratio
  */
 export class SportarrIntegration extends SonarrIntegration {
   protected override get calendarEventSchema() {
-    return sonarrCalendarEventSchema.extend({ series: sonarrCalendarEventSchema.shape.series.nullable() });
+    return sonarrCalendarEventSchema
+      .omit({ overview: true })
+      .extend({ series: sonarrCalendarEventSchema.shape.series.nullable() });
   }
 
   protected override get missingEpisodeSchema() {

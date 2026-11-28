@@ -38,6 +38,13 @@ const integrationCreators = {
     ]);
     return new StatsIntegration(input, tubearchivistStatsProvider);
   },
+  youtarr: async (input: IntegrationInput) => {
+    const [{ StatsIntegration }, { youtarrStatsProvider }] = await Promise.all([
+      import("../stats/stats-integration"),
+      import("../stats/providers/youtarr"),
+    ]);
+    return new StatsIntegration(input, youtarrStatsProvider);
+  },
   frigate: async (input: IntegrationInput) => {
     const [{ StatsIntegration }, { frigateStatsProvider }] = await Promise.all([
       import("../stats/stats-integration"),
@@ -315,6 +322,8 @@ const integrationCreators = {
     new (await import("../unifi-controller/unifi-controller-integration")).UnifiControllerIntegration(input),
   opnsense: async (input: IntegrationInput) =>
     new (await import("../opnsense/opnsense-integration")).OPNsenseIntegration(input),
+  pfsense: async (input: IntegrationInput) =>
+    new (await import("../pfsense/pfsense-integration")).PfSenseIntegration(input),
   ical: async (input: IntegrationInput) => new (await import("../ical/ical-integration")).ICalIntegration(input),
   ntfy: async (input: IntegrationInput) => new (await import("../ntfy/ntfy-integration")).NTFYIntegration(input),
   gotify: async (input: IntegrationInput) =>

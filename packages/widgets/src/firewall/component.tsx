@@ -190,8 +190,8 @@ export default function FirewallWidget({
                 name={metadata?.name ?? firewallId}
                 kind={metadata?.kind}
                 version={version?.error ? undefined : version?.summary.version}
-                cpu={cpu?.error ? undefined : cpu?.summary.total}
-                memory={memory?.error ? undefined : memory?.summary.percent}
+                cpu={cpu?.error ? undefined : cpu?.summary?.total}
+                memory={memory?.error ? undefined : memory?.summary?.percent}
                 interfaces={interfaces?.summary}
                 interfacesLoaded={interfaces !== undefined}
                 interfacesError={interfacesQuery.isError || Boolean(interfaces?.error)}

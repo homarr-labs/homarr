@@ -470,6 +470,7 @@ export const apps = pgTable("app", {
   iconUrl: text().notNull(),
   href: text(),
   pingUrl: text(),
+  dockerContainer: text(),
 });
 
 export const integrationItems = pgTable(

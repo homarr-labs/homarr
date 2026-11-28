@@ -116,6 +116,16 @@ export const integrationDefs = {
     documentationSlug: "tubearchivist",
     defaultPort: 8000,
   },
+  youtarr: {
+    httpAuth: { type: "apiKeyHeader", name: "x-api-key" },
+    name: "Youtarr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/youtarr.png",
+    category: ["miscellaneous"],
+    documentationSlug: "youtarr",
+    defaultPort: 3087,
+    apiKeySettingsPath: "/settings/api-keys",
+  },
   frigate: {
     httpAuth: { type: "adapter" },
     name: "Frigate",
@@ -744,6 +754,16 @@ export const integrationDefs = {
     documentationSlug: "opnsense",
     defaultPort: 443,
     apiKeySettingsPath: "/system_usermanager.php",
+  },
+  pfsense: {
+    httpAuth: { type: "apiKeyHeader", name: "x-api-key" },
+    name: "pfSense",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pfsense.svg",
+    category: ["firewall"],
+    documentationSlug: "pfsense",
+    defaultPort: 443,
+    apiKeySettingsPath: "/system_restapi_key.php",
   },
   ntfy: {
     httpAuth: {

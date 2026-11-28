@@ -7410,6 +7410,17 @@
               "search": "搜尋",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務",
+              "signInInformation": {
+                "title": "",
+                "provider": "提供者",
+                "subject": "主體",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "無",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

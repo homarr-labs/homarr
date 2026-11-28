@@ -43,12 +43,13 @@ const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: (
       settleIntegrationQueries(
         ctx.integrations,
         async (integration): Promise<FirewallQueryResult<TData>> => {
-          if (integration.kind === "mock") {
+          const { kind } = integration;
+          if (kind === "mock") {
             return {
               integration: {
                 id: integration.id,
                 name: integration.name,
-                kind: integration.kind,
+                kind,
                 updatedAt: new Date(mockWidgetData.timestamp),
               },
               summary: getMockData(),
@@ -56,7 +57,7 @@ const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: (
             };
           }
           const { data, timestamp } = await handler
-            .handler({ ...integration, kind: "opnsense" }, {})
+            .handler({ ...integration, kind }, {})
             .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },

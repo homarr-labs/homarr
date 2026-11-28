@@ -2,8 +2,8 @@
 
 /* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
 
-import { use, useCallback, useState } from "react";
-import { ActionIcon, Affix, Card } from "@mantine/core";
+import { Suspense, use, useCallback, useState } from "react";
+import { ActionIcon, Affix, Card, Loader } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
@@ -17,22 +17,37 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { WidgetError } from "@homarr/widgets/errors";
+import type { WidgetResources } from "@homarr/widgets/manifest";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
 import type { Dimensions } from "./_dimension-popover";
 import { PreviewDimensionsPopover } from "./_dimension-popover";
 
-interface WidgetPreviewPageContentProps {
-  kind: WidgetKind;
-}
+export const WidgetPreviewContent = ({ kind }: { kind: WidgetKind }) => {
+  // Keep the same promise across Suspense retries, including when the loader evicts a failure.
+  const [resources, setResources] = useState(() => loadWidgetResources(kind));
 
-export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps) => {
+  return (
+    <ErrorBoundary
+      onReset={() => setResources(loadWidgetResources(kind))}
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        <WidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
+      )}
+    >
+      <Suspense fallback={<Loader size="sm" />}>
+        <WidgetPreviewPageContent kind={kind} resources={resources} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+const WidgetPreviewPageContent = ({ kind, resources }: { kind: WidgetKind; resources: Promise<WidgetResources> }) => {
   const settings = useSettings();
   const t = useI18n();
   const utils = clientApi.useUtils();
   const { openModal: openWidgetEditModal } = useModalAction(LazyWidgetEditModal);
-  const { definition: currentDefinition, Component } = use(loadWidgetResources(kind));
+  const { definition: currentDefinition, Component } = use(resources);
   const [editMode, setEditMode] = useState(false);
   const [isEditorLoading, setIsEditorLoading] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({

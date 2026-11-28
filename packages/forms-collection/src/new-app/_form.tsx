@@ -2,15 +2,17 @@
 
 import type { ChangeEventHandler } from "react";
 import { useCallback, useEffect, useImperativeHandle, useRef } from "react";
-import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { Button, Checkbox, Collapse, Group, Select, Stack, Textarea, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-import { appManageSchema } from "@homarr/validation/app";
+import { appManageSchema, formatLinkedDockerContainer } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";
 import { AppUrlLabel } from "./_url-label";
@@ -23,6 +25,7 @@ const toFormValues = (values: FormType | undefined): FormType => ({
   iconUrl: values?.iconUrl ?? "",
   href: values?.href ?? "",
   pingUrl: values?.pingUrl ?? "",
+  dockerContainer: values?.dockerContainer ?? undefined,
 });
 
 export interface AppFormHandle {
@@ -54,6 +57,16 @@ export const AppForm = ({
 }: AppFormProps) => {
   const tApp = useI18n("app");
   const tCommon = useI18n("common");
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+  const {
+    data: docker,
+    isPending: isDockerPending,
+    error: dockerError,
+  } = clientApi.docker.getContainers.useQuery(undefined, {
+    enabled: isAdmin,
+    retry: false,
+  });
 
   const form = useZodForm(appManageSchema, {
     initialValues: toFormValues(initialValues),
@@ -65,6 +78,7 @@ export const AppForm = ({
     initialValues?.iconUrl,
     initialValues?.href,
     initialValues?.pingUrl,
+    initialValues?.dockerContainer,
   ].join("\0");
 
   useEffect(() => {
@@ -150,6 +164,22 @@ export const AppForm = ({
         />
         <TextInput {...form.getInputProps("href")} label={<AppUrlLabel />} aria-label={invariantTechnicalLabels.url} />
 
+        {isAdmin && (
+          <Select
+            label={tApp("field.dockerContainer.label")}
+            description={tApp("field.dockerContainer.description")}
+            placeholder={tApp("field.dockerContainer.placeholder")}
+            clearable
+            searchable
+            disabled={isDockerPending}
+            error={dockerError ? tApp("field.dockerContainer.unavailable") : undefined}
+            data={getDockerContainerOptions(docker?.containers ?? [], form.values.dockerContainer)}
+            value={form.values.dockerContainer ?? null}
+            onChange={(value) => form.setFieldValue("dockerContainer", value)}
+            comboboxProps={{ withinPortal: false }}
+          />
+        )}
+
         <Checkbox
           checked={opened}
           onChange={handleClickDifferentUrlPing}
@@ -213,4 +243,17 @@ export const AppForm = ({
       {formFields}
     </form>
   );
+};
+
+const getDockerContainerOptions = (
+  containers: { endpointId: string; endpointName: string; name: string }[],
+  current: string | null | undefined,
+) => {
+  const options = containers.map((container) => ({
+    value: formatLinkedDockerContainer(container),
+    label: `${container.name} (${container.endpointName})`,
+  }));
+  // Keep the saved choice visible when its endpoint is offline or the container was renamed.
+  if (current && !options.some(({ value }) => value === current)) options.unshift({ value: current, label: current });
+  return options;
 };

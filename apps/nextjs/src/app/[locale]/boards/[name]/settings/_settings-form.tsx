@@ -85,10 +85,15 @@ interface BoardSettingsFormProps {
   board: Board;
   permissions: RouterOutputs["board"]["getBoardPermissions"];
   hasFullAccess: boolean;
-  hideVisibility: boolean;
+  isInstanceHomeBoard: boolean;
 }
 
-export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisibility }: BoardSettingsFormProps) => {
+export const BoardSettingsForm = ({
+  board,
+  permissions,
+  hasFullAccess,
+  isInstanceHomeBoard,
+}: BoardSettingsFormProps) => {
   const t = useI18n("common");
   const tSection = useI18n("board.setting.section");
   const { branding } = useSettings();
@@ -214,7 +219,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
         </SectionCard>
       )}
 
-      {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+      {hasFullAccess && <DangerZoneSettingsContent isInstanceHomeBoard={isInstanceHomeBoard} />}
     </Stack>
   );
 };

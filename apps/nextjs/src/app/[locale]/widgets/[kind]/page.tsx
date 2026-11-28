@@ -1,6 +1,5 @@
-import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { Center, Loader } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 import { getHomeBoardAsync } from "@homarr/api/board-server";
 import { IntegrationProvider } from "@homarr/auth/client";
@@ -8,10 +7,10 @@ import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { BoardPreviewProvider } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
+import { widgetKinds } from "@homarr/definitions";
 import { ModalProvider } from "@homarr/modals";
-import { widgetKinds } from "@homarr/widgets/manifest";
 
-import { WidgetPreviewPageContent } from "./_content";
+import { WidgetPreviewContent } from "./_content";
 
 interface Props {
   params: Promise<{ kind: string }>;
@@ -34,9 +33,7 @@ export default async function WidgetPreview(props: Props) {
       <BoardPreviewProvider board={board}>
         <ModalProvider>
           <Center h="100vh">
-            <Suspense fallback={<Loader size="sm" />}>
-              <WidgetPreviewPageContent key={kind} kind={kind as WidgetKind} />
-            </Suspense>
+            <WidgetPreviewContent key={kind} kind={kind as WidgetKind} />
           </Center>
         </ModalProvider>
       </BoardPreviewProvider>

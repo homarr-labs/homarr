@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Fragment, Suspense, useState } from "react";
+import { Fragment, Suspense, useRef } from "react";
 import { Box, Flex, rem, Stack, Text, Tooltip } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -19,7 +19,6 @@ import type { WidgetComponentProps } from "../definition";
 import { AppLink } from "./_app-link";
 import classes from "./app.module.css";
 import { parseLinkedDockerContainer } from "./docker/container-option";
-import type { ContainerSwitch } from "./docker/container-toggle";
 import { DockerContainerToggle } from "./docker/container-toggle";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
@@ -38,7 +37,7 @@ function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale 
   const settings = useSettings();
   const board = useRequiredBoard();
   const { data: session } = useSession();
-  const [containerSwitch, setContainerSwitch] = useState<ContainerSwitch | null>(null);
+  const revealControlsOnClick = useRef(false);
   const [app] = clientApi.app.byId.useSuspenseQuery({ id: options.appId });
   const href = app?.href ?? undefined;
 
@@ -64,15 +63,41 @@ function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale 
   if (isColumnLayout) gap = 0;
 
   // Docker routes are admin only, so other viewers see the plain tile.
-  const linkedContainer =
-    options.dockerContainer && session?.user.permissions.includes("admin")
-      ? parseLinkedDockerContainer(options.dockerContainer.value)
-      : null;
-  const showPing =
-    options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && Boolean(app.pingUrl ?? app.href);
+  const dockerContainerValue = options.dockerContainer?.value ?? app.dockerContainer;
+  let linkedContainer = null;
+  if (dockerContainerValue && session?.user.permissions.includes("admin")) {
+    linkedContainer = parseLinkedDockerContainer(dockerContainerValue);
+  }
+  const showStatus = options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus;
+  const showPing = showStatus && !linkedContainer && Boolean(app.pingUrl ?? app.href);
 
   return (
-    <Box h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
+    <Box
+      className={classes.root}
+      h="100%"
+      w="100%"
+      pos="relative"
+      tabIndex={linkedContainer && !isEditMode ? -1 : undefined}
+      style={{ "--mantine-scale": 1 / layoutScale }}
+      onPointerDownCapture={(event) => {
+        revealControlsOnClick.current =
+          Boolean(linkedContainer) &&
+          !isEditMode &&
+          event.pointerType === "touch" &&
+          !event.currentTarget.contains(event.currentTarget.ownerDocument.activeElement);
+      }}
+      onPointerCancelCapture={() => {
+        revealControlsOnClick.current = false;
+      }}
+      onClickCapture={(event) => {
+        if (!revealControlsOnClick.current) return;
+        revealControlsOnClick.current = false;
+        const control = event.currentTarget.querySelector<HTMLButtonElement>(`button.${classes.containerToggle}`);
+        if (!control || control.disabled || control.getAttribute("aria-disabled") === "true") return;
+        event.preventDefault();
+        event.currentTarget.focus({ preventScroll: true });
+      }}
+    >
       <AppLink href={href} openIn={options.openIn} enabled={Boolean(href) && !isEditMode}>
         <AppDescriptionTooltip
           description={app.description}
@@ -138,17 +163,12 @@ function ConfiguredAppWidget({ options, isEditMode, height, width, displayScale 
         </AppDescriptionTooltip>
         {showPing ? (
           <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${tCommon("action.loading")}…`} />}>
-            <PingIndicator appId={app.id} containerSwitch={containerSwitch} />
+            <PingIndicator appId={app.id} />
           </Suspense>
         ) : null}
       </AppLink>
       {linkedContainer && (
-        <DockerContainerToggle
-          container={linkedContainer}
-          pingAppId={showPing ? app.id : null}
-          isEditMode={isEditMode}
-          onSwitchChange={setContainerSwitch}
-        />
+        <DockerContainerToggle container={linkedContainer} showStatus={showStatus} isEditMode={isEditMode} />
       )}
     </Box>
   );

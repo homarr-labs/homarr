@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Group, Menu } from "@mantine/core";
+import { Group, Menu, Tooltip } from "@mantine/core";
 import {
   IconBox,
   IconBrowserPlus,
@@ -31,6 +31,7 @@ export default function BoardEditActions() {
 }
 
 const AddMenu = () => {
+  const [menuOpened, setMenuOpened] = useState(false);
   const { data: session } = useSession();
   const board = useRequiredBoard();
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
@@ -86,16 +87,20 @@ const AddMenu = () => {
     openIntegrationSelectModal({ completionBoardId: board.id });
   };
 
+  const addContentLabel = tBoard("action.addContent");
+
   return (
-    <Menu position="bottom-end">
-      <Menu.Target>
-        <HeaderButton w="auto" px={4} aria-label={tBoard("action.addContent")}>
-          <Group gap={4} wrap="nowrap">
-            <IconPlus stroke={1.5} />
-            <IconChevronDown color="gray" size={16} />
-          </Group>
-        </HeaderButton>
-      </Menu.Target>
+    <Menu position="bottom-end" opened={menuOpened} onChange={setMenuOpened}>
+      <Tooltip label={addContentLabel} disabled={menuOpened} events={{ hover: true, focus: true, touch: false }}>
+        <Menu.Target>
+          <HeaderButton w="auto" px={4} aria-label={addContentLabel}>
+            <Group gap={4} wrap="nowrap">
+              <IconPlus stroke={1.5} />
+              <IconChevronDown color="gray" size={16} />
+            </Group>
+          </HeaderButton>
+        </Menu.Target>
+      </Tooltip>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
         <Menu.Item leftSection={<IconResize size={20} />} onClick={handleSelectItem}>
           {tBoard("emptyState.addWidget")}

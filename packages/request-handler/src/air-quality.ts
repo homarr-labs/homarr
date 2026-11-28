@@ -3,10 +3,8 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { z } from "zod";
 
-import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
+import { fetchOpenMeteoJsonAsync } from "./open-meteo";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -57,10 +55,7 @@ export const airQualityRequestHandler = createWidgetRequestHandler({
     url.searchParams.set("forecast_days", FORECAST_DAYS.toString());
     url.searchParams.set("timezone", "auto");
 
-    const response = await fetchWithTrustedCertificatesAsync(url.toString(), { signal });
-    if (!response.ok) throw new ResponseError(response);
-
-    const json: unknown = await response.json();
+    const json = await fetchOpenMeteoJsonAsync(url, signal);
     const airQuality = await atLocationOutput.parseAsync(json);
     const hourly = airQuality.hourly.time.map((value, index) => {
       return normalizePoint(airQuality.hourly, index, toUtcInstant(value, airQuality.timezone));

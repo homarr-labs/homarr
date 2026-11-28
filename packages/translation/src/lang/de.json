@@ -7410,6 +7410,17 @@
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit",
+              "signInInformation": {
+                "title": "",
+                "provider": "Anbieter",
+                "subject": "Thema",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Keine",
+                "copy": "Kopieren",
+                "copied": "Kopiert"
+              },
               "oauthConnections": {
                 "title": "OAuth Verbindungen",
                 "description": "Diese Clients erhielten API-Zugangsdaten für Ihr Konto über OAuth. Die Anmeldedaten funktionieren sowohl mit Homarrs HTTP API als auch mit MCP, verfallen nicht automatisch und bleiben gültig, nachdem Sie sich abgemeldet haben.",

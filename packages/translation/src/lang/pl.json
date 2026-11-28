@@ -7410,6 +7410,17 @@
               "search": "Szukaj",
               "firstDayOfWeek": "Pierwszy dzień tygodnia",
               "accessibility": "Ułatwienia dostępu",
+              "signInInformation": {
+                "title": "",
+                "provider": "Dostawca",
+                "subject": "Temat",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "None",
+                "copy": "Kopiuj",
+                "copied": "Skopiowano"
+              },
               "oauthConnections": {
                 "title": "Połączenia OAuth",
                 "description": "Klienci uzyskali poświadczenia API dla Twojego konta za pośrednictwem OAuth. Dane logowania działają z API HTTP Homarra, a także MCP, nie wygasają automatycznie i pozostają ważne po wylogowaniu.",
