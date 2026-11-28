@@ -8,8 +8,11 @@ import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 
+import { WorkshopIntegrationBadges } from "./workshop-integration-badges";
+
 /** Aspect-ratio-preserving preview strip. Large enough to actually judge a widget by. */
 const PREVIEW_HEIGHT = 168;
+const codeTypeLabels = { customCss: "CSS", customWidget: "JSX" } as const;
 
 interface WorkshopSubmissionCardProps {
   client: WorkshopBackend;
@@ -43,7 +46,7 @@ export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmis
             <Stack gap={4} align="center">
               <IconPhoto size={28} stroke={1.5} opacity={0.5} />
               <Text size="xs" c="dimmed" fw={600}>
-                {item.type === "customCss" ? "CSS" : "JSX"}
+                {item.type === "customTheme" ? t("theme.label") : codeTypeLabels[item.type]}
               </Text>
             </Stack>
           </Box>
@@ -73,6 +76,7 @@ export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmis
             {t("author", { name: item.authorName || t("communityMember") })}
           </Text>
         </Box>
+        <WorkshopIntegrationBadges kinds={item.integrationKinds} />
         <Text size="sm" c="dimmed" lineClamp={2} style={{ flex: 1 }}>
           {item.description || t("noDescription")}
         </Text>

@@ -104,7 +104,7 @@ jobs:
     outputs:
       sha: ${{ steps.image.outputs.sha }}
       tags: ${{ steps.image.outputs.tags }}
-      publish: ${{ !env.ACT && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft)) }}
+      publish: ${{ !env.ACT && github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: "!env.ACT"
@@ -114,14 +114,11 @@ jobs:
       - name: Image tags
         id: image
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           sha=$(git rev-parse HEAD)
           tags=dev
-          if [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
-            tags="pr-$PR_NUMBER"
-          elif [[ "$GITHUB_EVENT_NAME" == release || "$GITHUB_REF_NAME" == main ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == release || "$GITHUB_REF_NAME" == main ]]; then
             version=$(jq -r .version package.json)
             [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
             if [[ "$GITHUB_EVENT_NAME" == release ]]; then test "$RELEASE_TAG" = "v$version"; fi
@@ -131,7 +128,7 @@ jobs:
 
   production-smoke:
     needs: validate
-    if: github.event_name == 'pull_request' && needs.validate.outputs.publish != 'true'
+    if: github.event_name == 'pull_request'
     name: Production image smoke (${{ matrix.arch }})
     strategy:
       fail-fast: false
@@ -151,7 +148,7 @@ jobs:
           ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.13.0
+          node-version: 26.13.1
           package-manager-cache: false
       - name: Set up Docker Buildx
         if: "!env.ACT"
@@ -205,7 +202,7 @@ jobs:
           ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.13.0
+          node-version: 26.13.1
           package-manager-cache: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
@@ -252,7 +249,7 @@ jobs:
           ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.13.0
+          node-version: 26.13.1
           package-manager-cache: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
@@ -290,7 +287,6 @@ jobs:
       actions: read
       contents: read
       packages: write
-      pull-requests: write
     env:
       WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
     steps:
@@ -305,7 +301,6 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
-          EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
         with:
           script: |
             const publish = () => core.setOutput("publish", "true");
@@ -313,15 +308,6 @@ jobs:
               core.notice(`${reason} Skipping publication.`);
               core.setOutput("publish", "false");
             };
-            if (context.eventName === "pull_request") {
-              const { data: pull } = await github.rest.pulls.get({
-                ...context.repo, pull_number: context.payload.pull_request.number,
-              });
-              if (pull.state !== "open" || pull.draft || pull.head.sha !== process.env.EXPECTED_PR_HEAD) {
-                return skip("PR closed, became a draft, or changed while building.");
-              }
-              return publish();
-            }
             const expected = process.env.EXPECTED_SHA;
             const branchName = context.eventName === "release" ? "main" : context.ref.replace("refs/heads/", "");
             const { data: branch } = await github.rest.repos.getBranch({ ...context.repo, branch: branchName });
@@ -391,36 +377,3 @@ jobs:
             if [[ -n "$expected_manifest" ]]; then test "$manifest" = "$expected_manifest"; fi
             expected_manifest="$manifest"
           done
-
-      - name: Comment with preview image
-        if: github.event_name == 'pull_request' && !env.ACT && steps.source.outputs.publish == 'true'
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const marker = "<!-- workshop-preview-image -->";
-            const image = `${process.env.WORKSHOP_IMAGE}:pr-${context.issue.number}`;
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = [
-              marker,
-              "**Workshop preview image published**",
-              "",
-              `\`${image}\` — available for Linux amd64 and arm64.`,
-              "",
-              "```sh",
-              `docker pull ${image}`,
-              "```",
-              "",
-              `[Build details](${runUrl}) · Commit \`${context.sha.slice(0, 7)}\``,
-              "This comment updates when a new preview is published.",
-            ].join("\n");
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              ...context.repo, issue_number: context.issue.number, per_page: 100,
-            });
-            const existing = comments.find((comment) =>
-              comment.user?.login === "github-actions[bot]" && comment.body?.includes(marker),
-            );
-            if (existing) {
-              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
-            } else {
-              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
-            }

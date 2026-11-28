@@ -32,6 +32,17 @@ const getPreviewDimensions = (size: WidgetEditModalSize) => ({
   height: getLogicalGridSize(size.height),
 });
 
+const createPreviewRuntimeWrapper = (Wrapper: WidgetEditModalProps<WidgetKind>["previewWrapper"]) => {
+  if (!Wrapper) return PreviewRuntimeWrapper;
+  return function ComposedPreviewRuntimeWrapper({ children }: PropsWithChildren) {
+    return (
+      <PreviewRuntimeWrapper>
+        <Wrapper>{children}</Wrapper>
+      </PreviewRuntimeWrapper>
+    );
+  };
+};
+
 export const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
   const previewAssistant = useMemo(() => {
@@ -123,6 +134,10 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const Component = WidgetEditModal.component;
   const utils = clientApi.useUtils();
   const [createdIntegrations, setCreatedIntegrations] = useState<IntegrationSelectOption[]>([]);
+  const previewWrapper = useMemo(
+    () => createPreviewRuntimeWrapper(props.innerProps.previewWrapper),
+    [props.innerProps.previewWrapper],
+  );
 
   const supportedKinds = useMemo(() => {
     if (!("supportedIntegrations" in props.innerProps.definition)) return [];
@@ -160,7 +175,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   }, [props.innerProps.kind, props.innerProps.previewDimensions]);
   let previewResize = props.innerProps.previewResize;
   if (previewResize) {
-    previewResize = { ...previewResize, getDimensions: getPreviewDimensions };
+    previewResize = { ...previewResize, getDimensions: previewResize.getDimensions ?? getPreviewDimensions };
   }
 
   return (
@@ -173,7 +188,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         previewComponent: PreviewComponent,
         previewDimensions,
         previewResize,
-        previewWrapper: PreviewRuntimeWrapper,
+        previewWrapper,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}
     />

@@ -5,6 +5,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { createWidgetDefinition } from "../definition";
 import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
+import { createWidgetRefreshIntervalOptions } from "../refresh-interval";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
@@ -16,6 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        ...createWidgetRefreshIntervalOptions(10),
         showTemperatureIfAvailable: factory.switch({ defaultValue: true }),
         displayMode: factory.select({
           options: (["percentage", "absolute", "free"] as const).map((value) => ({

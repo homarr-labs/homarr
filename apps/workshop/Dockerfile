@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS bun-tool
+FROM oven/bun:1.4.5-alpine@sha256:da816670775f4c2b4e990b6b1847cf5540dcdc721a42033dd331ce7a88ba6a3b AS bun-tool
 
 FROM node:24.22.3-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
@@ -51,6 +51,9 @@ COPY packages/ui ./packages/ui
 COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
+COPY apps/workshop/generate-integration-kinds.mts ./apps/workshop/generate-integration-kinds.mts
+COPY apps/workshop/pb_hooks/http-integration-kinds.json ./apps/workshop/pb_hooks/http-integration-kinds.json
+RUN bun apps/workshop/generate-integration-kinds.mts --check
 
 FROM dependencies AS website
 ARG TARGETPLATFORM
@@ -94,6 +97,7 @@ ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
 COPY --from=website /app/apps/docs/out /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
+COPY apps/workshop/pb_rollout_migrations /pb_rollout_migrations
 COPY apps/workshop/pb_hooks /pb_hooks
 RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public
 EXPOSE 8090

@@ -890,6 +890,7 @@
       "deleteConfirm": "Naozaj chcete odstrániť \"{name}\"? Táto akcia sa nedá vrátiť späť.",
       "duplicate": "Duplikovať",
       "aiPrompt": "Navrhovať pomocou AI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopírovať AI prompt",
       "enable": "Povoliť",
       "disable": "Zakázať",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfigurovať",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Sekcie vlastnej miniaplikácie",
       "widgetPreview": "Náhľad miniaplikácie",
       "generalInformation": "Všeobecné informácie",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Vytvoriť alebo opraviť pomocou ľubovoľnej AI",
         "description": "Ak máte URL dokumentácie API, najprv ju pridajte. Pri opravách, ak je to možné, spustite náhľad. Skopírujte výzvu do ľubovoľnej AI; môže si vyžiadať chýbajúce údaje. Sem vložte jej výsledný JSON.",
+        "assistedDescription": "",
         "request": "Čo má táto miniaplikácia robiť?",
         "documentationUrl": "URL dokumentácie API (voliteľné)",
         "paste": "Vložiť",
+        "pasteResponse": "",
         "response": "Odpoveď AI",
         "manualCopyDescription": "Prístup k schránke nie je k dispozícii. Vyberte výzvu nižšie a skopírujte ju manuálne.",
         "manualPasteDescription": "Prístup k schránke nie je k dispozícii alebo skopírovaná odpoveď vyžaduje opravu. Sem vložte odpoveď AI vo formáte JSON.",
@@ -1304,6 +1321,38 @@
     "useCss": "Importovať CSS",
     "importCss": "Importovať CSS z dielne",
     "importCssConfirm": "Nahradiť aktuálne vlastné CSS za „{title}“? Nič sa neuloží, kým neuložíte nastavenia nástenky.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Popis",
+      "published": ""
+    },
     "screenshotAlt": "Snímka obrazovky {title} {count, number}",
     "screenshotViewer": "Prehliadač snímok obrazovky {title}",
     "screenshotsLabel": "Snímky obrazovky {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skryť miniatúry snímok obrazovky",
     "closeScreenshotViewer": "Zavrieť prehliadač snímok obrazovky",
     "technicalDetails": "Technické podrobnosti",
+    "integrations": "Integrácie",
     "sourceCode": "Položka dielne",
     "report": "Nahlásiť",
     "reportTitle": "Nahlásiť odoslanie",
@@ -1332,6 +1382,12 @@
       "copyright": "Autorské práva",
       "inappropriate": "Nevhodné",
       "other": "Iné"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publikovať v dielni",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobilná",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Posúvateľné",
         "description": "Ponechať tento kontajner v nastavenej veľkosti a namiesto jeho zväčšovania posúvať jeho obsah."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Farba okraja"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstrániť tento kontajner? Jeho obsah sa presunie do okolitého priestoru."
+      },
+      "editBar": {
+        "edit": "Upraviť"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Upraviť integráciu"
       },
       "app": {
-        "propagationNotice": "Zmeny tejto aplikácie sa prejavia všade, kde sa používa na všetkých nástenkách."
+        "propagationNotice": "Zmeny tejto aplikácie sa prejavia všade, kde sa používa na všetkých nástenkách.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Upraviť pripojenie",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stav subjektu",
       "description": "Zobrazenie stavu entity a jej voliteľné prepínanie",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID subjektu"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Mesto / PSČ",
         "latitude": "Zemepisná šírka",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Priebeh sťahovania",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5168,7 +5274,19 @@
         "hideDescription": {
           "label": ""
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
+          "label": ""
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
           "label": ""
         }
       },
@@ -5544,6 +5662,7 @@
       },
       "openService": "Otvoriť službu oznámení",
       "deleteNotification": "Odstrániť oznámenie z Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Oznámenie sa nepodarilo odstrániť",
       "deleteFailedMessage": "Oznámenie sa nepodarilo odstrániť. Skúste to znova."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Všetky vstavané ovládacie prvky už máte v hlavičke.",
                 "add": "Pridajte {item}",
                 "boardShortcut": "Skratka dosky",
+                "widget": "",
                 "chooseBoard": "Vybrať dosku"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Tento ovládací prvok zostáva rovnako veľký ako v aktívnej hlavičke.",
                 "searchDisplay": {
                   "input": "Panel vyhľadávania",
@@ -7270,7 +7393,9 @@
                 "settings": "Vaše nastavenia",
                 "themeToggle": "Prepnúť tému",
                 "user": "Účet",
-                "boardUnavailable": "Doska nie je k dispozícii"
+                "boardUnavailable": "Doska nie je k dispozícii",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Hladať",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť",
+              "signInInformation": {
+                "title": "",
+                "provider": "Poskytovateľ",
+                "subject": "Predmet",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Žiadne",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

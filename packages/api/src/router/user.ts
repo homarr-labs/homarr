@@ -13,10 +13,15 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
+import { serializeHeaderPreferences } from "@homarr/validation/header-preferences";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
   defaultHeaderPreferences,
+  getHeaderItems,
   headerPreferencesMutationSchema,
+  headerPreferencesSchema,
+  headerWidgetItemSchema,
+  parseHeaderPreferences,
   userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
@@ -44,7 +49,11 @@ import {
   publicProcedure,
 } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
-import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
+import {
+  getUserPreferencesAsync,
+  throwIfHeaderWidgetIntegrationsForbiddenAsync,
+  updateUserPreferencesAsync,
+} from "./user/preferences";
 
 const logger = createLogger({ module: "userRouter" });
 
@@ -495,6 +504,83 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+  getSignInInformation: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .output(
+      z.object({
+        provider: z.enum(supportedAuthProviders),
+        email: z.string().nullable(),
+        subject: z.string().nullable(),
+        homarrGroups: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          }),
+        ),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/{userId}/sign-in-information",
+        tags: ["users"],
+        protect: true,
+        summary: "Get sign-in information",
+        description:
+          "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
+      },
+    })
+    .query(async ({ input, ctx }) => {
+      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to view other users details",
+        });
+      }
+
+      const user = await ctx.db.query.users.findFirst({
+        columns: {
+          email: true,
+          provider: true,
+        },
+        with: {
+          accounts: {
+            columns: {
+              provider: true,
+              providerAccountId: true,
+            },
+          },
+          groups: {
+            with: {
+              group: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        where: eq(users.id, input.userId),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const oidcAccount = user.accounts.find((entry) => entry.provider === "oidc");
+      const account = oidcAccount ?? user.accounts.find((entry) => entry.provider === user.provider);
+
+      return {
+        provider: oidcAccount ? "oidc" : user.provider,
+        email: user.email,
+        subject: account?.providerAccountId ?? null,
+        homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+      };
+    }),
   editProfile: protectedProcedure
     .input(userEditProfileSchema)
     .output(z.void())
@@ -680,12 +766,12 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Update user preferences",
         description:
-          "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
+          "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Newly assigned widget integrations require Use access. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
       },
       mcp: {
         enabled: true,
         description:
-          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
+          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Newly assigned widget integrations require Use access. Optional userId defaults to yourself; changing another user requires admin permission.",
       },
     })
     .input(
@@ -821,13 +907,51 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Update header preferences",
         description:
-          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
+          "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Newly assigned widget integrations require Use access. Users can update themselves; updating another user requires admin permission.",
       },
     })
     .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await updateUserPreferencesAsync(ctx, input.id, { headerPreferences: input.headerPreferences });
+    }),
+  changeHeaderWidgetPreferences: protectedProcedure
+    .input(z.object({ id: z.string(), item: headerWidgetItemSchema }))
+    .output(headerPreferencesSchema)
+    .mutation(async ({ input, ctx }) => {
+      // Reuse the owner/admin authorization for user preferences.
+      await getUserPreferencesAsync(ctx, input.id);
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const row = await ctx.db.query.users.findFirst({
+          where: eq(users.id, input.id),
+          columns: { headerPreferences: true },
+        });
+        if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+
+        const current = parseHeaderPreferences(row.headerPreferences);
+        const existing = getHeaderItems(current.zones).find(
+          (item) => item.type === "widget" && item.id === input.item.id,
+        );
+        if (!existing || existing.type !== "widget" || existing.kind !== input.item.kind)
+          throw new TRPCError({ code: "CONFLICT", message: "Header widget was removed or changed kind" });
+        await throwIfHeaderWidgetIntegrationsForbiddenAsync(ctx, [input.item], [existing]);
+
+        const zones = { ...current.zones };
+        for (const zone of ["left", "center", "right"] as const) {
+          zones[zone] = zones[zone].map((item) => {
+            if (item.type === "widget" && item.id === input.item.id) return input.item;
+            return item;
+          });
+        }
+        const next = { ...current, zones };
+        const updated = await ctx.db
+          .update(users)
+          .set({ headerPreferences: serializeHeaderPreferences(next) })
+          .where(and(eq(users.id, input.id), eq(users.headerPreferences, row.headerPreferences)))
+          .returning({ id: users.id });
+        if (updated.length > 0) return next;
+      }
+      throw new TRPCError({ code: "CONFLICT", message: "Header preferences changed too often to update" });
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))

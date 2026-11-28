@@ -890,6 +890,7 @@
       "deleteConfirm": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"{name}\"; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
       "duplicate": "Αντιγραφή",
       "aiPrompt": "Σχεδιασμός με τεχνητή νοημοσύνη",
+      "createAssisted": "",
       "copyAiPrompt": "Αντιγραφή προτροπής AI",
       "enable": "Ενεργοποίηση",
       "disable": "Απενεργοποίηση",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Ρύθμιση",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Προχωρημένα",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Προσαρμοσμένες ενότητες widget",
       "widgetPreview": "Προεπισκόπηση widget",
       "generalInformation": "Γενικές πληροφορίες",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Δημιουργία ή διόρθωση με οποιοδήποτε τεχνητή νοημοσύνη",
         "description": "Προσθέστε πρώτα μια διεύθυνση URL docs API αν διαθέτετε. Για επιδιορθώσεις, εκτελέστε προεπισκόπηση αν είναι δυνατόν. Αντιγράψτε την προτροπή σε οποιοδήποτε AI: μπορεί να ζητήσει τις πληροφορίες που λείπουν. Επικολλήστε την τελική της JSON εδώ.",
+        "assistedDescription": "",
         "request": "Τι πρέπει να κάνει αυτό το widget?",
         "documentationUrl": "URL τεκμηρίωσης API (προαιρετικό)",
         "paste": "Επικόλληση",
+        "pasteResponse": "",
         "response": "AI απάντηση",
         "manualCopyDescription": "Η πρόσβαση στο πρόχειρο δεν είναι διαθέσιμη. Επιλέξτε την παρακάτω προτροπή και αντιγράψτε την χειροκίνητα.",
         "manualPasteDescription": "Η πρόσβαση στο πρόχειρο δεν είναι διαθέσιμη ή η αντιγραμμένη απάντηση χρειάζεται διόρθωση. Επικολλήστε την απόκριση JSON της AI εδώ.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Εισαγωγή CSS από το Workshop",
     "importCssConfirm": "Αντικαταστήστε το τρέχον προσαρμοσμένο CSS με το \"{title}\"? Τίποτα δεν αποθηκεύεται μέχρι να αποθηκεύσετε τις ρυθμίσεις του πίνακα.",
+    "theme": {
+      "label": "Θέμα",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Προεπιλογή",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Περιγραφή",
+      "published": ""
+    },
     "screenshotAlt": "{title} στιγμιότυπο οθόνης {count, number}",
     "screenshotViewer": "Πρόγραμμα προβολής στιγμιότυπων οθόνης για {title}",
     "screenshotsLabel": "Στιγμιότυπα οθόνης του {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Απόκρυψη εικόνων επισκόπησης οθόνης",
     "closeScreenshotViewer": "Κλείσιμο προβολέα στιγμιότυπου οθόνης",
     "technicalDetails": "Τεχνικές λεπτομέρειες",
+    "integrations": "Ενσωματώσεις",
     "sourceCode": "Καταχώρηση εργαστηρίου",
     "report": "Αναφορά",
     "reportTitle": "Υποβολή έκθεσης",
@@ -1332,6 +1382,12 @@
       "copyright": "Πνευματικά δικαιώματα",
       "inappropriate": "Ακατάλληλο",
       "other": "Άλλο"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Δημοσίευση στο Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Κινητό",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Κύλιση",
         "description": "Κρατήστε αυτό το δοχείο στο καθορισμένο του μέγεθος και μετακινηθείτε τα περιεχόμενά του αντί να μεγαλώσετε για να τα χωρέσετε."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Χρώμα περιγράμματος"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Αφαιρέστε αυτό το εμπορευματοκιβώτιο? Το περιεχόμενό του θα κινηθεί στη γύρω περιοχή."
+      },
+      "editBar": {
+        "edit": "Επεξεργασία"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Επεξεργασία ενσωμάτωσης"
       },
       "app": {
-        "propagationNotice": "Οι αλλαγές σε αυτήν την εφαρμογή θα εφαρμοστούν παντού όπου χρησιμοποιείται σε όλους τους πίνακες."
+        "propagationNotice": "Οι αλλαγές σε αυτήν την εφαρμογή θα εφαρμοστούν παντού όπου χρησιμοποιείται σε όλους τους πίνακες.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Επεξεργασία σύνδεσης",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Κατάσταση οντότητας",
       "description": "Εμφανίζει την κατάσταση μιας οντότητας και επιτρέπει προαιρετικά την εναλλαγή της",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Αναγνωριστικό οντότητας"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Πόλη / Ταχυδρομικός κώδικας",
         "latitude": "Γεωγραφικό πλάτος",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Εμφάνιση τοποθεσίας",
           "description": "Εμφάνιση αν η ροή βρίσκεται στο LAN ή στο WAN σας"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Πρόοδος λήψης",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Αντιγραφή ονόματος",
         "copyId": "Αντιγραφή αναγνωριστικού",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Εκκαθάριση φίλτρων"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Φιλτράρισμα λήψεων"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Απόκρυψη περιγραφής"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Εμφάνιση εικόνας αφίσας"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Άνοιγμα υπηρεσίας ειδοποιήσεων",
       "deleteNotification": "Διαγραφή ειδοποίησης από Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Αδυναμία διαγραφής ειδοποίησης",
       "deleteFailedMessage": "Δεν ήταν δυνατή η διαγραφή της ειδοποίησης. Παρακαλώ δοκιμάστε ξανά."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Κάθε ενσωματωμένο χειριστήριο είναι ήδη στην κεφαλίδα σας.",
                 "add": "Προσθήκη {item}",
                 "boardShortcut": "Συντόμευση σκακιέρας",
+                "widget": "",
                 "chooseBoard": "Επιλέξτε έναν πίνακα"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Επιλογές",
+                "boardOnly": "",
                 "description": "Αυτός ο έλεγχος παραμένει το ίδιο μέγεθος με το live header.",
                 "searchDisplay": {
                   "input": "Μπάρα αναζήτησης",
@@ -7270,7 +7393,9 @@
                 "settings": "Οι ρυθμίσεις σας",
                 "themeToggle": "Εναλλαγή θέματος",
                 "user": "Λογαριασμός",
-                "boardUnavailable": "Μη διαθέσιμη σκακιέρα"
+                "boardUnavailable": "Μη διαθέσιμη σκακιέρα",
+                "notifications": "Ειδοποιήσεις",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Αναζήτηση",
               "firstDayOfWeek": "Πρώτη ημέρα της εβδομάδας",
               "accessibility": "Προσβασιμότητα",
+              "signInInformation": {
+                "title": "",
+                "provider": "Πάροχος",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "Αντιγραφή",
+                "copied": "Αντιγράφηκε"
+              },
               "oauthConnections": {
                 "title": "OAuth συνδέσεις",
                 "description": "Αυτοί οι πελάτες απέκτησαν διαπιστευτήρια API για το λογαριασμό σας μέσω του OAuth. Τα διαπιστευτήρια λειτουργούν με το API HTTP του Homarr, καθώς και με το MCP, δεν λήγουν αυτόματα και παραμένουν έγκυρα αφού αποσυνδεθείτε.",

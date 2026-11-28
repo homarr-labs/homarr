@@ -890,6 +890,7 @@
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
       "duplicate": "Dupliquer",
       "aiPrompt": "Design avec IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copier le prompt IA",
       "enable": "Activer",
       "disable": "Désactiver",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurer",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avancé",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Sections de widget personnalisées",
       "widgetPreview": "Aperçu du widget",
       "generalInformation": "Informations générales",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Créer ou réparer avec une IA",
         "description": "Ajoutez d'abord une URL API docs si vous en avez une. Pour les correctifs, exécutez si possible. Copiez l'invite dans n'importe quelle AI; il peut demander des détails manquants. Collez son JSON final ici.",
+        "assistedDescription": "",
         "request": "Que doit faire ce widget ?",
         "documentationUrl": "URL de la documentation de l'API (facultatif)",
         "paste": "Coller",
+        "pasteResponse": "",
         "response": "Réponse IA",
         "manualCopyDescription": "L'accès au presse-papier n'est pas disponible. Sélectionnez l'invite ci-dessous et copiez-le manuellement.",
         "manualPasteDescription": "L'accès au presse-papiers n'est pas disponible ou la réponse copiée a besoin de correction. Collez la réponse JSON de l'IA ici.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importer CSS depuis un atelier",
     "importCssConfirm": "Remplacer le CSS personnalisé actuel par \"{title}\" ? Rien n'est sauvegardé tant que vous n'enregistrez pas les paramètres du forum.",
+    "theme": {
+      "label": "Thème",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Par défaut",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Description",
+      "published": ""
+    },
     "screenshotAlt": "Capture d'écran {title} {count, number}",
     "screenshotViewer": "Visionneuse de capture d'écran {title}",
     "screenshotsLabel": "Captures d'écran {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Masquer les vignettes de la capture d'écran",
     "closeScreenshotViewer": "Fermer la visionneuse de capture d'écran",
     "technicalDetails": "Détails techniques",
+    "integrations": "Intégrations",
     "sourceCode": "Entrée d'atelier",
     "report": "Rapporter",
     "reportTitle": "Signaler la soumission",
@@ -1332,6 +1382,12 @@
       "copyright": "Droit d'auteur",
       "inappropriate": "Inapproprié",
       "other": "Autre"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publier dans l'atelier",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobile",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Défilement",
         "description": "Gardez ce conteneur à sa taille définie et faites défiler son contenu au lieu de grandir pour les ajuster."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Couleur de la bordure"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Masquer"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Supprimer ce conteneur ? Son contenu se déplacera dans la zone environnante."
+      },
+      "editBar": {
+        "edit": "Modifier"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Modifier l'intégration"
       },
       "app": {
-        "propagationNotice": "Les modifications apportées à cette application seront appliquées partout où elle est utilisée sur tous les tableaux de bord."
+        "propagationNotice": "Les modifications apportées à cette application seront appliquées partout où elle est utilisée sur tous les tableaux de bord.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Modifier la connexion",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "État de l'entité",
       "description": "Affichez l'état d'une entité et optionnellement activez la",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de l’entité"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ville / Code Postal",
         "latitude": "Latitude",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Afficher la localisation",
           "description": "Indiquez si le flux se trouve sur votre réseau local (LAN) ou sur votre réseau étendu (WAN)"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progression du téléchargement",
+          "endsAt": "",
+          "episode": "Épisode",
+          "album": "Identifiant de l'album",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Masquer la description"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Afficher l'image de l'affiche"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Ouvrir le service de notification",
       "deleteNotification": "Supprimer la notification de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Impossible de supprimer la notification",
       "deleteFailedMessage": "La notification n'a pas pu être supprimée. Veuillez réessayer."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Chaque contrôle intégré est déjà dans votre en-tête.",
                 "add": "Ajouter {item}",
                 "boardShortcut": "Raccourci de la carte",
+                "widget": "",
                 "chooseBoard": "Choisir un tableau"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Options",
+                "boardOnly": "",
                 "description": "Ce contrôle reste la même taille que dans l'en-tête en direct.",
                 "searchDisplay": {
                   "input": "Barre de recherche",
@@ -7270,7 +7393,9 @@
                 "settings": "Vos paramètres",
                 "themeToggle": "Basculer le thème",
                 "user": "Compte client",
-                "boardUnavailable": "Tableau indisponible"
+                "boardUnavailable": "Tableau indisponible",
+                "notifications": "Notifications",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Rechercher",
               "firstDayOfWeek": "Premier jour de la semaine",
               "accessibility": "Accessibilité",
+              "signInInformation": {
+                "title": "",
+                "provider": "Fournisseur",
+                "subject": "Sujet",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Aucun",
+                "copy": "Copie",
+                "copied": "Copié"
+              },
               "oauthConnections": {
                 "title": "Connexions OAuth",
                 "description": "Ces clients ont obtenu des identifiants API pour votre compte via OAuth. Les identifiants fonctionnent avec l'API HTTP d'Homarr, ainsi que MCP, n'expirent pas automatiquement, et restent valides après votre déconnexion.",

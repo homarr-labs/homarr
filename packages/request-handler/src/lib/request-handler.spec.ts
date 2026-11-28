@@ -81,6 +81,36 @@ describe("createRequestHandler", () => {
     expect(sharedCache.acquireRefreshLockAsync).not.toHaveBeenCalled();
   });
 
+  it("refreshes a joined cache hit that exceeds the caller's maximum age", async () => {
+    vi.useFakeTimers();
+    const sharedEntry = deferred<CacheEntry<string>>();
+    const requestAsync = vi.fn(async () => "upstream");
+    const handler = createRequestHandler({
+      requestAsync,
+      getSharedCacheAsync: async () => ({
+        generation: "shared-1",
+        isShared: true,
+        getAsync: async () => await sharedEntry.promise,
+        setAsync: async () => undefined,
+        acquireRefreshLockAsync: async () => "lock",
+        renewRefreshLockAsync: async () => true,
+        releaseRefreshLockAsync: async () => undefined,
+      }),
+    });
+
+    const first = handler.handler({ id: "same" }).getDataAsync({ maxAgeMs: 60_000 });
+    const second = handler.handler({ id: "same" }).getDataAsync({ maxAgeMs: 1_000 });
+    sharedEntry.resolve({
+      data: "shared",
+      timestamp: new Date(Date.now() - 5_000),
+      expiresAt: Date.now() + 10_000,
+      staleUntil: Date.now() + 10_000,
+    });
+
+    await expect(Promise.all([first, second])).resolves.toMatchObject([{ data: "shared" }, { data: "upstream" }]);
+    expect(requestAsync).toHaveBeenCalledTimes(1);
+  });
+
   it("renews the refresh lock while the upstream request is still running", async () => {
     vi.useFakeTimers();
     const upstreamRequest = deferred<string>();
@@ -181,7 +211,7 @@ describe("createRequestHandler", () => {
     await expect(Promise.all([first, second])).resolves.toMatchObject([{ data: "value" }, { data: "value" }]);
   });
 
-  it("keeps in-flight deduplication but retains no payload when ttl is zero", async () => {
+  it("shares in-flight upstream work across freshness limits without caching when ttl is zero", async () => {
     let calls = 0;
     const request = deferred<{ call: number }>();
     const handler = createRequestHandler({
@@ -193,8 +223,8 @@ describe("createRequestHandler", () => {
       },
     });
 
-    const first = handler.handler({ id: "same" }).getDataAsync();
-    const second = handler.handler({ id: "same" }).getDataAsync();
+    const first = handler.handler({ id: "same" }).getDataAsync({ maxAgeMs: 60_000 });
+    const second = handler.handler({ id: "same" }).getDataAsync({ maxAgeMs: 1_000 });
     expect(calls).toBe(1);
 
     request.resolve({ call: 1 });

@@ -890,6 +890,7 @@
       "deleteConfirm": "¿Está seguro de que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
       "duplicate": "Duplicar",
       "aiPrompt": "Diseño con IA",
+      "createAssisted": "",
       "copyAiPrompt": "Copiar prompt de IA",
       "enable": "Activar",
       "disable": "Desactivar",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configurar",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Avanzado",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Secciones de widget personalizadas",
       "widgetPreview": "Vista previa del widget",
       "generalInformation": "Información general",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Crear o arreglar con cualquier IA",
         "description": "Añade primero una URL de la API docs si tienes una. Para correcciones, ejecuta la vista previa si es posible. Copie el indicador en cualquier AI; puede pedir detalles faltantes. Pegue su JSON final aquí.",
+        "assistedDescription": "",
         "request": "¿Qué debería hacer este widget?",
         "documentationUrl": "URL de documentación API (opcional)",
         "paste": "Pegar",
+        "pasteResponse": "",
         "response": "Respuesta IA",
         "manualCopyDescription": "El acceso al portapapeles no está disponible. Seleccione el siguiente mensaje y cópielo manualmente.",
         "manualPasteDescription": "El acceso al portapapeles no está disponible o la respuesta copiada necesita corrección. Pegue la respuesta JSON de la IA aquí.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "Importar CSS del taller",
     "importCssConfirm": "Reemplazar el CSS personalizado actual con \"{title}\"? Nada se guarda hasta que guarde la configuración del foro.",
+    "theme": {
+      "label": "Tema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Por defecto",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Descripción",
+      "published": ""
+    },
     "screenshotAlt": "{title}, captura de pantalla {count, number}",
     "screenshotViewer": "Visor de captura de pantalla {title}",
     "screenshotsLabel": "Capturas de pantalla {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ocultar miniaturas de captura de pantalla",
     "closeScreenshotViewer": "Cerrar visor de captura de pantalla",
     "technicalDetails": "Detalles técnicos",
+    "integrations": "Integraciones",
     "sourceCode": "Entrada del taller",
     "report": "Reporte",
     "reportTitle": "Envío del informe",
@@ -1332,6 +1382,12 @@
       "copyright": "",
       "inappropriate": "Inapropiado",
       "other": "Otros"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publicar en el taller",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Móvil",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Desplazable",
         "description": "Mantenga este contenedor en su tamaño establecido y despliegue su contenido en lugar de crecer para ajustarse a ellos."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Color del borde"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Oculto"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "¿Eliminar este contenedor? Su contenido se moverá a la zona circundante."
+      },
+      "editBar": {
+        "edit": "Editar"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Editar integración"
       },
       "app": {
-        "propagationNotice": "Los cambios a esta aplicación se aplicarán en cualquier lugar donde se utilice en todos los tableros."
+        "propagationNotice": "Los cambios a esta aplicación se aplicarán en cualquier lugar donde se utilice en todos los tableros.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Editar conexión",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Estado de la entidad",
       "description": "Mostrar el estado de una entidad y cambiarlo opcionalmente",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID de la entidad"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Ciudad / Código postal",
         "latitude": "Latitud",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Mostrar ubicación",
           "description": "Mostrar si la retransmisión está en su LAN o WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Progreso de Descarga",
+          "endsAt": "",
+          "episode": "Episodio",
+          "album": "ID de álbum",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Copiar nombre",
         "copyId": "Copiar ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Limpiar filtros"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtrar descargas"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Ocultar descripción"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Mostrar imagen del póster"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Abrir servicio de notificación",
       "deleteNotification": "Eliminar notificación de Gotify",
+      "dismissNotification": "",
       "deleteFailed": "No se pudo eliminar la notificación",
       "deleteFailedMessage": "La notificación no pudo ser eliminada. Por favor, inténtalo de nuevo."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Cada control integrado ya está en el encabezado.",
                 "add": "Añadir {item}",
                 "boardShortcut": "Atajo del tablero",
+                "widget": "",
                 "chooseBoard": "Elige un tablero"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Opciones",
+                "boardOnly": "",
                 "description": "Este control permanece del mismo tamaño que en la cabecera en vivo.",
                 "searchDisplay": {
                   "input": "Barra de búsqueda",
@@ -7270,7 +7393,9 @@
                 "settings": "Tus ajustes",
                 "themeToggle": "Cambiar tema",
                 "user": "Cuenta",
-                "boardUnavailable": "Tablero no disponible"
+                "boardUnavailable": "Tablero no disponible",
+                "notifications": "Notificaciones",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Buscar",
               "firstDayOfWeek": "Primer día de la semana",
               "accessibility": "Accesibilidad",
+              "signInInformation": {
+                "title": "",
+                "provider": "Proveedor",
+                "subject": "Sujeto",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Ninguno",
+                "copy": "Copiar",
+                "copied": "Copiado"
+              },
               "oauthConnections": {
                 "title": "Conexiones OAuth",
                 "description": "Estos clientes obtuvieron credenciales API para su cuenta a través de OAuth. Las credenciales funcionan con la API HTTP de Homarr, así como con MCP, no expiran automáticamente y permanecen válidas después de cerrar sesión.",

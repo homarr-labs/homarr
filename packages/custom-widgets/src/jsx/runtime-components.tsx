@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
-import { createContext, createElement, useContext, useEffect, useId, useRef } from "react";
+import { createContext, createElement, useContext, useEffect, useId, useMemo, useRef } from "react";
 import * as Core from "@mantine/core";
 import * as Charts from "@mantine/charts";
 import * as Dates from "@mantine/dates";
@@ -56,11 +56,11 @@ export function CustomJsxInputsProvider({
   setInputValue,
   resetInput,
 }: CustomJsxInputsContextValue & { children: ReactNode }) {
-  return (
-    <CustomJsxInputsContext.Provider value={{ scopeId, inputs, inputTypes, registerInput, setInputValue, resetInput }}>
-      {children}
-    </CustomJsxInputsContext.Provider>
+  const value = useMemo(
+    () => ({ scopeId, inputs, inputTypes, registerInput, setInputValue, resetInput }),
+    [scopeId, inputs, inputTypes, registerInput, setInputValue, resetInput],
   );
+  return <CustomJsxInputsContext.Provider value={value}>{children}</CustomJsxInputsContext.Provider>;
 }
 
 const checkedComponents = new Set(["Checkbox", "Switch"]);

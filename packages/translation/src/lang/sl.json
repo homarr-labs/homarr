@@ -890,6 +890,7 @@
       "deleteConfirm": "Ali ste prepričani, da želite izbrisati »{name}«? Tega dejanja ni mogoče razveljaviti.",
       "duplicate": "Podvoji",
       "aiPrompt": "Oblikuj z UI",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiraj poziv AI",
       "enable": "Omogoči",
       "disable": "Onemogoči",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfiguriraj",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Razdelki prilagojenega gradnika",
       "widgetPreview": "Predogled gradnika",
       "generalInformation": "Splošne informacije",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Ustvarite ali popravite s katerim koli UI",
         "description": "Najprej dodajte URL dokumentacije API, če ga imate. Za popravke po možnosti zaženite predogled. Poziv kopirajte v kateri koli UI; ta lahko zahteva manjkajoče podrobnosti. Končni JSON prilepite sem.",
+        "assistedDescription": "",
         "request": "Kaj naj ta gradnik počne?",
         "documentationUrl": "URL dokumentacije API (izbirno)",
         "paste": "Prilepi",
+        "pasteResponse": "",
         "response": "Odgovor UI",
         "manualCopyDescription": "Dostop do odložišča ni na voljo. Izberite spodnji poziv in ga ročno kopirajte.",
         "manualPasteDescription": "Dostop do odložišča ni na voljo ali pa je treba kopirani odgovor popraviti. Sem prilepite odgovor UI v obliki JSON.",
@@ -1304,6 +1321,38 @@
     "useCss": "Uvozi CSS",
     "importCss": "Uvozi CSS iz delavnice",
     "importCssConfirm": "Zamenjam trenutni CSS z »{title}«? Nič ni shranjeno, dokler ne shranite nastavitev nadzorne plošče.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Opis",
+      "published": ""
+    },
     "screenshotAlt": "Posnetek zaslona {title}, {count, number}",
     "screenshotViewer": "Pregledovalnik posnetkov zaslona {title}",
     "screenshotsLabel": "Posnetki zaslona {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Skrij sličice posnetkov zaslona",
     "closeScreenshotViewer": "Zapri pregledovalnik posnetkov zaslona",
     "technicalDetails": "Tehnične podrobnosti",
+    "integrations": "",
     "sourceCode": "Vnos v delavnici",
     "report": "Prijavi",
     "reportTitle": "Prijavi prispevek",
@@ -1332,6 +1382,12 @@
       "copyright": "Avtorske pravice",
       "inappropriate": "Neprimerno",
       "other": "Drugo"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Objavi v delavnici",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Z drsnim trakom",
         "description": "Ohrani nastavljeno velikost vsebnika in pomikaj njegovo vsebino, namesto da bi vsebnik zrasel, da bi jo vseboval."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Barva obrobe"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Odstranim ta vsebnik? Njegova vsebina bo premaknjena v okoliško območje."
+      },
+      "editBar": {
+        "edit": "Uredi"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Uredi integracijo"
       },
       "app": {
-        "propagationNotice": "Spremembe te aplikacije bodo uporabljene povsod, kjer se uporablja na vseh nadzornih ploščah."
+        "propagationNotice": "Spremembe te aplikacije bodo uporabljene povsod, kjer se uporablja na vseh nadzornih ploščah.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Uredi povezavo",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stanje entitete",
       "description": "Prikažite stanje entitete in jo po želji preklopite",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID subjekta"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Mesto / poštna številka",
         "latitude": "Zemljepisna širina",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Prikaži lokacijo",
           "description": "Prikaži, ali je tok v vašem omrežju LAN ali WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Napredek prenosa",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopiraj ime",
         "copyId": "Kopiraj ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Počisti filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtriraj prenose"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Skrij opis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Prikaži sliko plakata"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Odpri storitev obvestil",
       "deleteNotification": "Izbriši obvestilo iz Gotifyja",
+      "dismissNotification": "",
       "deleteFailed": "Obvestila ni mogoče izbrisati",
       "deleteFailedMessage": "Obvestila ni bilo mogoče izbrisati. Poskusite znova."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Vsi vgrajeni kontrolniki so že v vaši glavi.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Bližnjica do nadzorne plošče",
+                "widget": "",
                 "chooseBoard": "Izberite nadzorno ploščo"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Ta kontrolnik ostane enako velik kot v glavi v živo.",
                 "searchDisplay": {
                   "input": "Iskalna vrstica",
@@ -7270,7 +7393,9 @@
                 "settings": "Vaše nastavitve",
                 "themeToggle": "Preklopi temo",
                 "user": "Račun",
-                "boardUnavailable": "Nadzorna plošča ni na voljo"
+                "boardUnavailable": "Nadzorna plošča ni na voljo",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Iskanje",
               "firstDayOfWeek": "Prvi dan v tednu",
               "accessibility": "Dostopnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

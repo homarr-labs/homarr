@@ -52,14 +52,12 @@ export const CombinedNetworkTrafficChart = ({
   return (
     <CommonChart
       data={chartData}
-      dataKey={"index"}
       series={[
         { name: "up", color: "orange.5" },
         { name: "down", color: "yellow.5" },
       ]}
       title={t("network")}
       icon={IconNetwork}
-      yAxisProps={{ domain: [0, "dataMax"] }}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}

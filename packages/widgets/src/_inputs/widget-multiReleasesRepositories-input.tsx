@@ -22,6 +22,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
@@ -182,8 +183,10 @@ export const WidgetMultiReleasesRepositoriesInput = ({
             <Button
               disabled={!isAdmin}
               leftSection={<IconBrandDocker stroke={1.25} />}
-              onClick={() =>
+              onClick={() => {
+                if (!session) return;
                 openImportModal({
+                  userId: session.user.id,
                   repositories,
                   hiddenSourceTokens,
                   versionFilterPrecisionOptions,
@@ -201,8 +204,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     });
                   },
                   isAdmin,
-                })
-              }
+                });
+              }}
             >
               {tRepository("importRepositories.label")}
             </Button>
@@ -793,6 +796,7 @@ const ImportRepositorySelect = ({
 };
 
 interface RepositoryImportProps {
+  userId: string;
   repositories: ReleasesRepository[];
   hiddenSourceTokens: string[];
   versionFilterPrecisionOptions: string[];
@@ -804,6 +808,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   const tRepository = useI18n("widget.releases.option.repositories");
   const tCommon = useI18n("common");
   const actionT = useI18n("common.action");
+  const [sections, setSections] = useLocalStorage<{ images?: string | null; hidden?: string | null }>({
+    key: `releases-docker-import-sections:${innerProps.userId}`,
+    defaultValue: {},
+    getInitialValueInEffect: false,
+  });
   const [loading, setLoading] = useState(false);
   const [selectedSourceTokens, setSelectedSourceTokens] = useState<string[]>([]);
   const [hiddenSourceTokens, setHiddenSourceTokens] = useState(innerProps.hiddenSourceTokens);
@@ -887,9 +896,16 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     () => visibleRepositories.some((repository) => repository.alreadyImported),
     [visibleRepositories],
   );
-  let initialSection = "";
-  if (anyImagesImported) initialSection = "alreadyImported";
-  if (!allImagesImported) initialSection = "foundImages";
+  let imageSection: string | null = null;
+  if (anyImagesImported) imageSection = "alreadyImported";
+  if (!allImagesImported) imageSection = "foundImages";
+  if (
+    sections?.images === null ||
+    (sections?.images === "alreadyImported" && anyImagesImported) ||
+    (sections?.images === "foundImages" && !allImagesImported)
+  ) {
+    imageSection = sections.images;
+  }
 
   return (
     <Stack>
@@ -906,7 +922,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
       ) : (
         <Stack>
           {visibleRepositories.length > 0 && (
-            <Accordion defaultValue={initialSection}>
+            <Accordion value={imageSection} onChange={(images) => setSections((previous) => ({ ...previous, images }))}>
               <Accordion.Item value="foundImages">
                 <Accordion.Control disabled={allImagesImported} icon={<IconZoomScan />}>
                   <Group>
@@ -995,7 +1011,10 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
       )}
 
       {hiddenSourceTokens.length > 0 && (
-        <Accordion defaultValue="hidden">
+        <Accordion
+          value={sections?.hidden === null ? null : "hidden"}
+          onChange={(hidden) => setSections((previous) => ({ ...previous, hidden }))}
+        >
           <Accordion.Item value="hidden">
             <Accordion.Control icon={<IconEyeOff />}>
               {tCommon("hidden")} ({hiddenSourceTokens.length})
@@ -1044,6 +1063,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     return t("widget.releases.option.repositories.importForm.title");
   },
   size: "xl",
+  styles: { inner: { insetInline: 0 } },
 });
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {

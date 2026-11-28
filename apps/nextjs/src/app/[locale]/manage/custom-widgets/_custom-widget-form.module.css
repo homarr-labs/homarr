@@ -64,6 +64,31 @@
   min-width: 0;
 }
 
+.visuallyHiddenLegend {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (min-width: 48em) {
+  .compactSource {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    > .sourceType,
+    > .sourceUrl {
+      grid-column: auto;
+    }
+  }
+}
+
 .previewPane {
   display: flex;
   flex-direction: column;
@@ -71,13 +96,6 @@
 }
 
 .actionBar {
-  position: sticky;
-  bottom: var(--mantine-spacing-sm);
-  z-index: 10;
-  background: var(--mantine-color-body);
-}
-
-.mobileSaveBar {
   position: sticky;
   bottom: var(--mantine-spacing-sm);
   z-index: 10;

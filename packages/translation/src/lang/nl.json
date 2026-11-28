@@ -890,6 +890,7 @@
       "deleteConfirm": "",
       "duplicate": "",
       "aiPrompt": "Ontwerp met AI",
+      "createAssisted": "",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Configureren",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "Geavanceerd",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Aangepaste widget secties",
       "widgetPreview": "Widget voorbeeld",
       "generalInformation": "Algemene informatie",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Maak of repareer met een AI",
         "description": "Voeg eerst een URL van een API documentatie toe als u die hebt. Voor fixes, voer indien mogelijk een voorbeeld uit. Kopieer de prompt in een AI; het kan om ontbrekende gegevens vragen. Plak de laatste JSON hier.",
+        "assistedDescription": "",
         "request": "Wat moet deze widget doen?",
         "documentationUrl": "API documentatie-URL (optioneel)",
         "paste": "Plakken",
+        "pasteResponse": "",
         "response": "AI antwoord",
         "manualCopyDescription": "Toegang tot klembord is niet beschikbaar. Selecteer de onderstaande prompt en kopieer deze handmatig.",
         "manualPasteDescription": "Clipboard toegang is niet beschikbaar of het gekopieerde antwoord moet worden gecorrigeerd. Plak de JSON reactie van de AI's JSON hier.",
@@ -1304,6 +1321,38 @@
     "useCss": "",
     "importCss": "CSS importeren uit Workshop",
     "importCssConfirm": "Vervang de huidige aangepaste CSS met \"{title}\"? Niets opgeslagen totdat u de board instellingen opslaat.",
+    "theme": {
+      "label": "Thema",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "Standaard",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Beschrijving",
+      "published": ""
+    },
     "screenshotAlt": "{title} schermafbeelding {count, number}",
     "screenshotViewer": "{title} schermafbeelding bekijken",
     "screenshotsLabel": "{title} schermafbeeldingen",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Verberg schermafbeelding miniaturen",
     "closeScreenshotViewer": "Schermafbeelding weergeven sluiten",
     "technicalDetails": "Technische details",
+    "integrations": "Integraties",
     "sourceCode": "Werkplaats invoer",
     "report": "Rapporteren",
     "reportTitle": "Rapport indienen",
@@ -1332,6 +1382,12 @@
       "copyright": "Auteursrecht",
       "inappropriate": "Ongepast",
       "other": "Andere"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Publiceer naar de Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "Mobiel",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Schuifbaar",
         "description": "Houd deze container aan de ingestelde grootte en scroll zijn inhoud in plaats van te groeien."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Randkleur"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": "Verborgen"
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Deze container verwijderen? De inhoud zal naar het omliggende gebied gaan."
+      },
+      "editBar": {
+        "edit": "Bewerken"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Integratie bewerken"
       },
       "app": {
-        "propagationNotice": "Wijzigingen aan deze app worden overal toegepast waar deze wordt gebruikt op alle dashboards."
+        "propagationNotice": "Wijzigingen aan deze app worden overal toegepast waar deze wordt gebruikt op alle dashboards.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Contact bewerken",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Entiteitsstatus",
       "description": "Status van een entiteit weergeven en optioneel omschakelen",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "Entiteits-ID"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Stad / postcode",
         "latitude": "Breedtegraad",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "",
           "description": ""
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Downloadvoortgang",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "",
         "copyId": "",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": ""
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": ""
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Beschrijving verbergen"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Posterafbeelding weergeven"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Melding service openen",
       "deleteNotification": "Melding bij Gotify verwijderen",
+      "dismissNotification": "",
       "deleteFailed": "Kan melding niet verwijderen",
       "deleteFailedMessage": "De notificatie kon niet worden verwijderd. Probeer het opnieuw."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Elke ingebouwde controle staat al in je header.",
                 "add": "{item} toevoegen",
                 "boardShortcut": "Snelkoppeling op bord",
+                "widget": "",
                 "chooseBoard": "Kies een bord"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "Instellingen",
+                "boardOnly": "",
                 "description": "Deze controle blijft even groot als in de live header.",
                 "searchDisplay": {
                   "input": "Zoek balk",
@@ -7270,7 +7393,9 @@
                 "settings": "Uw instellingen",
                 "themeToggle": "Thema aan/uit",
                 "user": "Rekening",
-                "boardUnavailable": "Bord niet beschikbaar"
+                "boardUnavailable": "Bord niet beschikbaar",
+                "notifications": "Meldingen",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Zoeken",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid",
+              "signInInformation": {
+                "title": "",
+                "provider": "Aanbieder",
+                "subject": "Onderwerp",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "Geen",
+                "copy": "Kopiëren",
+                "copied": "Gekoppeld"
+              },
               "oauthConnections": {
                 "title": "OAuth verbindingen",
                 "description": "Deze cliënten hebben API-referenties voor uw account verkregen via OAuth. De inloggegevens werken met de HTTP-API van Homarr en MCP, verlopen niet automatisch, en blijven geldig na uitloggen.",

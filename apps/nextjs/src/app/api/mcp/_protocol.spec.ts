@@ -126,7 +126,12 @@ describe("MCP v2 protocol", () => {
     expect(formatToolError).toHaveBeenCalledWith(expect.any(Error), "echo");
     expect(response.result).toMatchObject({
       isError: true,
-      content: [{ type: "text", text: '{"error":"echo input was invalid"}' }],
+      content: [
+        {
+          type: "text",
+          text: '{"error":"echo input was invalid","code":"INTERNAL_SERVER_ERROR","toolName":"echo"}',
+        },
+      ],
     });
   });
 

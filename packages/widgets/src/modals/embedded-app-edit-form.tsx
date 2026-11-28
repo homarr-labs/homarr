@@ -11,6 +11,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 
 export interface EmbeddedAppEditFormHandle {
+  appId: string;
   isDirty: () => boolean;
   submitIfDirty: () => Promise<boolean>;
 }
@@ -18,16 +19,22 @@ export interface EmbeddedAppEditFormHandle {
 interface EmbeddedAppEditFormProps {
   appId: string;
   handleRef: React.Ref<EmbeddedAppEditFormHandle>;
+  active?: boolean;
 }
 
-export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormProps) => {
+export const EmbeddedAppEditForm = ({ appId, handleRef, active = true }: EmbeddedAppEditFormProps) => {
   const tCommon = useI18n("common");
   const tAppEdit = useI18n("app.page.edit");
   const tAppSelect = useI18n("app.action.select");
   const tItemApp = useI18n("item.edit.app");
   const utils = clientApi.useUtils();
   const appFormRef = useRef<AppFormHandle>(null);
-  const { data: app, isPending: isLoadingApp, isError, refetch } = clientApi.app.byId.useQuery({ id: appId });
+  const {
+    data: app,
+    isPending: isLoadingApp,
+    isError,
+    refetch,
+  } = clientApi.app.byId.useQuery({ id: appId }, { enabled: active });
 
   const { mutateAsync, isPending: isMutating } = clientApi.app.update.useMutation({
     onSuccess: async () => {
@@ -48,6 +55,7 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
   useImperativeHandle(
     handleRef,
     () => ({
+      appId,
       isDirty: () => appFormRef.current?.isDirty() ?? false,
       submitIfDirty: async () => {
         if (!appFormRef.current) return true;
@@ -58,7 +66,7 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
         return appFormRef.current.submit();
       },
     }),
-    [],
+    [appId],
   );
 
   if (isLoadingApp) {

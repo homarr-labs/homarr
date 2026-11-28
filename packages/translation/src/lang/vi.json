@@ -890,6 +890,7 @@
       "deleteConfirm": "Bạn có chắc muốn xóa \"{name}\" không? Không thể hoàn tác thao tác này.",
       "duplicate": "Nhân bản",
       "aiPrompt": "Thiết kế bằng AI",
+      "createAssisted": "",
       "copyAiPrompt": "Sao chép lời nhắc AI",
       "enable": "Bật",
       "disable": "Tắt",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Cấu hình",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Các phần tiện ích tùy chỉnh",
       "widgetPreview": "Bản xem trước tiện ích",
       "generalInformation": "Thông tin chung",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Tạo hoặc sửa bằng bất kỳ AI nào",
         "description": "Trước tiên, hãy thêm URL tài liệu API nếu có. Để sửa lỗi, hãy chạy Xem trước nếu có thể. Sao chép lời nhắc vào bất kỳ AI nào; AI có thể yêu cầu thêm thông tin. Dán JSON cuối cùng của AI vào đây.",
+        "assistedDescription": "",
         "request": "Tiện ích này nên làm gì?",
         "documentationUrl": "URL tài liệu API (tùy chọn)",
         "paste": "Dán",
+        "pasteResponse": "",
         "response": "Phản hồi của AI",
         "manualCopyDescription": "Không thể truy cập bảng nhớ tạm. Hãy chọn lời nhắc bên dưới và sao chép thủ công.",
         "manualPasteDescription": "Không thể truy cập bảng nhớ tạm hoặc phản hồi đã sao chép cần được sửa. Hãy dán phản hồi JSON của AI vào đây.",
@@ -1304,6 +1321,38 @@
     "useCss": "Nhập CSS",
     "importCss": "Nhập CSS từ Workshop",
     "importCssConfirm": "Thay thế CSS tùy chỉnh hiện tại bằng \"{title}\"? Chưa có gì được lưu cho đến khi bạn lưu cài đặt bảng.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Mô tả",
+      "published": ""
+    },
     "screenshotAlt": "Ảnh chụp màn hình {title} {count, number}",
     "screenshotViewer": "Trình xem ảnh chụp màn hình {title}",
     "screenshotsLabel": "Ảnh chụp màn hình {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Ẩn hình thu nhỏ ảnh chụp màn hình",
     "closeScreenshotViewer": "Đóng trình xem ảnh chụp màn hình",
     "technicalDetails": "Chi tiết kỹ thuật",
+    "integrations": "Tích hợp",
     "sourceCode": "Mục Workshop",
     "report": "Báo cáo",
     "reportTitle": "Báo cáo nội dung gửi",
@@ -1332,6 +1382,12 @@
       "copyright": "Bản quyền",
       "inappropriate": "Không phù hợp",
       "other": "Khác"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Đăng lên Workshop",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Có thể cuộn",
         "description": "Giữ vùng chứa này ở kích thước đã đặt và cuộn nội dung thay vì mở rộng để vừa với nội dung."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Màu viền"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Xóa vùng chứa này? Nội dung của vùng chứa sẽ chuyển vào khu vực xung quanh."
+      },
+      "editBar": {
+        "edit": "Sửa"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Chỉnh sửa tích hợp"
       },
       "app": {
-        "propagationNotice": "Thay đổi ứng dụng này sẽ áp dụng cho mọi nơi nó được dùng trên tất cả bảng."
+        "propagationNotice": "Thay đổi ứng dụng này sẽ áp dụng cho mọi nơi nó được dùng trên tất cả bảng.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Chỉnh sửa kết nối",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Trạng thái Thực thể",
       "description": "Hiển thị trạng thái của một thực thể và có thể bật/tắt nó",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID thực thể"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Thành phố / Mã bưu chính",
         "latitude": "Vĩ độ",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Hiển thị vị trí",
           "description": "Hiển thị luồng phát trên mạng LAN hay WAN"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Tiến độ tải xuống",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Sao chép tên",
         "copyId": "Sao chép ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Xóa bộ lọc"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Lọc nội dung tải xuống"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Ẩn mô tả"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Hiển thị ảnh áp phích"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Mở dịch vụ thông báo",
       "deleteNotification": "Xóa thông báo khỏi Gotify",
+      "dismissNotification": "",
       "deleteFailed": "Không thể xóa thông báo",
       "deleteFailedMessage": "Không thể xóa thông báo. Vui lòng thử lại."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Mọi điều khiển tích hợp đều đã có trong tiêu đề của bạn.",
                 "add": "Thêm {item}",
                 "boardShortcut": "Phím tắt bảng",
+                "widget": "",
                 "chooseBoard": "Chọn một bảng"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Điều khiển này giữ nguyên kích thước như trong tiêu đề trực tiếp.",
                 "searchDisplay": {
                   "input": "Thanh tìm kiếm",
@@ -7270,7 +7393,9 @@
                 "settings": "Cài đặt của bạn",
                 "themeToggle": "Chuyển đổi giao diện",
                 "user": "Tài khoản",
-                "boardUnavailable": "Bảng không khả dụng"
+                "boardUnavailable": "Bảng không khả dụng",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Tìm",
               "firstDayOfWeek": "Ngày đầu tiên trong tuần",
               "accessibility": "Trợ năng",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

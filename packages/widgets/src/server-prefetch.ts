@@ -2,8 +2,9 @@ import { setImmediate } from "node:timers/promises";
 
 import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-query";
 
-import type { RouterInputs, RouterOutputs } from "@homarr/api";
+import type { RouterInputs } from "@homarr/api";
 import { api, trpc } from "@homarr/api/server";
+import type { SectionItem } from "@homarr/boards/layout-data";
 import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
@@ -14,6 +15,7 @@ import {
 } from "./beszel-system-stats/selection";
 import { resolveDownloadsQueryInput } from "./downloads/query-input";
 import { ALL_PHOTOS_ALBUM_ID } from "./immich/album-carousel/constants";
+import { getWidgetRefreshInterval } from "./refresh-interval";
 
 const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   queryClient: QueryClient,
@@ -37,32 +39,13 @@ const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
   });
 };
 
-type Board = RouterOutputs["board"]["getHomeBoard"];
-type Item = Board["items"][number];
 type BeszelStatsInput = RouterInputs["widget"]["beszel"]["getSystemStats"];
 const mediaRequestStatuses = ["pending", "approved", "declined", "failed", "completed"] as const;
 
-const isInitiallyVisible = (board: Board, item: Item, layoutId: string) => {
-  const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-  if (!layout) return false;
-  let sectionId: string | undefined = layout.sectionId;
-  const visited = new Set<string>();
-  while (sectionId && !visited.has(sectionId)) {
-    visited.add(sectionId);
-    const section = board.sections.find((candidate) => candidate.id === sectionId);
-    if (!section) return false;
-    if (section.kind !== "empty" && section.collapsed) return false;
-    if (section.kind !== "container") break;
-    sectionId = section.layouts.find((candidate) => candidate.layoutId === layoutId)?.parentSectionId;
-  }
-  return true;
-};
+const getBeszelSystemsQueryOptions = (integrationIds: string[]) =>
+  trpc.widget.beszel.getSystems.queryOptions({ integrationIds }, { meta: { rscWidgetPrefetch: true } });
 
-export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) => [
-  ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
-];
-
-const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
+const prefetchBeszelStats = (queryClient: QueryClient, item: SectionItem) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
   const selection = resolveStoredBeszelQuerySelection(storedValue, integrationIds);
@@ -73,21 +56,19 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     (key) => (options[key] ?? true) === true,
   );
   if (!selection) {
-    // An unset system or an ambiguous legacy ID needs discovery first. Stream
-    // its exact stats query from a separate boundary as soon as discovery ends.
-    return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
+    return queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds)).then(
       (systems) => {
         const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
         if (!selected) return;
-        prefetchQuery(queryClient, {
-          ...trpc.widget.beszel.getSystemStats.queryOptions({
+        prefetchQuery(
+          queryClient,
+          trpc.widget.beszel.getSystemStats.queryOptions({
             integrationIds: [selected.integrationId],
             systemId: selected.systemId,
             timePeriod,
             includeDocker,
           }),
-          meta: { streamedBeszelSelection: true },
-        });
+        );
       },
       () => undefined,
     );
@@ -98,12 +79,10 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     includeDocker,
   };
   const query = trpc.widget.beszel.getSystemStats.queryOptions(input);
-  // Register the dependent promise before dehydration. Resolve the selection on
-  // the server rather than waiting for a client discovery/render round trip.
   prefetchQuery(queryClient, {
     ...query,
     queryFn: async () => {
-      const systems = await queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+      const systems = await queryClient.fetchQuery(getBeszelSystemsQueryOptions(integrationIds));
       const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
       if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
         throw new Error("The selected Beszel system is no longer available");
@@ -126,15 +105,13 @@ const getUnambiguousCalendarMonth = () => {
 
 export const prefetchInitialWidgetData = (
   queryClient: QueryClient,
-  board: Board,
-  layoutId: string,
+  visibleItems: readonly SectionItem[],
   isAuthenticated: boolean,
 ) => {
   const dependentQueries: Promise<void>[] = [];
   const calendarMonth = getUnambiguousCalendarMonth();
   if (isAuthenticated) prefetchQuery(queryClient, trpc.integration.all.queryOptions());
-  for (const item of board.items) {
-    if (!isInitiallyVisible(board, item, layoutId)) continue;
+  for (const item of visibleItems) {
     const { integrationIds, options } = item;
     // These are the consumers' exact inputs, including order and defaults. Calls
     // go through the API middleware and share its request-scoped auth/context.
@@ -142,13 +119,19 @@ export const prefetchInitialWidgetData = (
       case "dnsHoleSummary":
       case "dnsHoleControls":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
+          prefetchQuery(
+            queryClient,
+            trpc.widget.dnsHole.summary.queryOptions({
+              integrationIds,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
+            }),
+          );
         break;
       case "beszelSystemStats":
       case "beszelSystemTable":
       case "beszelSystemGrid":
         if (!integrationIds.length) break;
-        prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+        prefetchQuery(queryClient, getBeszelSystemsQueryOptions(integrationIds));
         if (item.kind === "beszelSystemStats") {
           const discovery = prefetchBeszelStats(queryClient, item);
           if (discovery) dependentQueries.push(discovery);
@@ -176,6 +159,7 @@ export const prefetchInitialWidgetData = (
             trpc.widget.mediaServer.getCurrentStreams.queryOptions({
               integrationIds,
               showOnlyPlaying: (options.showOnlyPlaying ?? true) === true,
+              refreshInterval: getWidgetRefreshInterval(options, 10),
             }),
           );
         break;
@@ -228,13 +212,15 @@ export const prefetchInitialWidgetData = (
         break;
       }
       case "dockerContainers": {
-        let input: RouterInputs["docker"]["getContainers"];
+        const input: RouterInputs["docker"]["getContainers"] = {
+          refreshInterval: getWidgetRefreshInterval(options, 30),
+        };
         if (
           Array.isArray(options.endpointIds) &&
           options.endpointIds.length > 0 &&
           options.endpointIds.every((id) => typeof id === "string")
         )
-          input = { endpointIds: options.endpointIds };
+          input.endpointIds = options.endpointIds;
         prefetchQuery(queryClient, trpc.docker.getContainers.queryOptions(input));
         break;
       }

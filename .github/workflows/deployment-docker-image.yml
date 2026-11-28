@@ -53,7 +53,7 @@ jobs:
       - name: Obtain token
         if: env.SKIP_RELEASE == 'false'
         id: obtainToken
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}
@@ -68,7 +68,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         if: env.SKIP_RELEASE == 'false'
         with:
-          bun-version: 1.4.4
+          bun-version: 1.4.5
       - name: Verify major release intent
         if: env.SKIP_RELEASE == 'false'
         run: |
@@ -313,7 +313,7 @@ jobs:
       - name: Obtain token
         if: needs.release.outputs.skipped == 'false'
         id: obtainToken
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}

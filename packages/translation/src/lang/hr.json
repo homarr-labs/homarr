@@ -890,6 +890,7 @@
       "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{name}\"? Ova se radnja ne može poništiti.",
       "duplicate": "Dupliciraj",
       "aiPrompt": "Dizajniraj pomoću umjetne inteligencije",
+      "createAssisted": "",
       "copyAiPrompt": "Kopiraj AI upit",
       "enable": "Omogući",
       "disable": "Onemogući",
@@ -955,6 +956,20 @@
     },
     "workbench": {
       "configure": "Konfiguriraj",
+      "assisted": {
+        "modeLabel": "",
+        "mode": "",
+        "advancedMode": "",
+        "description": "",
+        "test": "",
+        "testDescription": "",
+        "importRequired": "",
+        "previewRequired": "",
+        "finalPreview": "",
+        "evidenceHelp": "",
+        "invalidSources": "",
+        "incompatibleSources": ""
+      },
       "sectionNavigation": "Odjeljci prilagođenog widgeta",
       "widgetPreview": "Pretpregled widgeta",
       "generalInformation": "Opće informacije",
@@ -1097,9 +1112,11 @@
       "ai": {
         "title": "Izradite ili popravite uz bilo koji AI",
         "description": "Najprije dodajte URL dokumentacije API-ja ako ga imate. Za popravke po mogućnosti pokrenite pretpregled. Kopirajte upit u bilo koji AI; može zatražiti podatke koji nedostaju. Ovdje zalijepite njegov konačni JSON.",
+        "assistedDescription": "",
         "request": "Što bi ovaj widget trebao raditi?",
         "documentationUrl": "URL dokumentacije API-ja (neobavezno)",
         "paste": "Zalijepi",
+        "pasteResponse": "",
         "response": "Odgovor AI-ja",
         "manualCopyDescription": "Pristup međuspremniku nije dostupan. Odaberite upit u nastavku i ručno ga kopirajte.",
         "manualPasteDescription": "Pristup međuspremniku nije dostupan ili je potrebno ispraviti kopirani odgovor. Ovdje zalijepite JSON odgovor AI-ja.",
@@ -1304,6 +1321,38 @@
     "useCss": "Uvezi CSS",
     "importCss": "Uvezi CSS iz radionice",
     "importCssConfirm": "Zamijeniti trenutni prilagođeni CSS s „{title}”? Ništa se ne sprema dok ne spremite postavke ploče.",
+    "theme": {
+      "label": "",
+      "browse": "",
+      "browseHint": "",
+      "search": "",
+      "listLabel": "",
+      "empty": "",
+      "review": "",
+      "reviewCss": "",
+      "cssContent": "",
+      "importConfirm": "",
+      "cssWarning": "",
+      "useCss": "",
+      "usePreset": "",
+      "defaultPreset": "",
+      "noCss": "",
+      "noChanges": "",
+      "json": "",
+      "copyJson": "",
+      "pasteJson": "",
+      "copied": "",
+      "clipboardEmpty": "",
+      "manualPaste": "",
+      "manualCopy": "",
+      "backToThemes": "",
+      "loadDraft": "",
+      "share": "",
+      "shareHint": "",
+      "title": "",
+      "description": "Opis",
+      "published": ""
+    },
     "screenshotAlt": "Snimka zaslona {title}, {count, number}",
     "screenshotViewer": "Preglednik snimki zaslona za {title}",
     "screenshotsLabel": "Snimke zaslona za {title}",
@@ -1314,6 +1363,7 @@
     "hideScreenshotThumbnails": "Sakrij minijature snimki zaslona",
     "closeScreenshotViewer": "Zatvori preglednik snimki zaslona",
     "technicalDetails": "Tehnički detalji",
+    "integrations": "",
     "sourceCode": "Unos radionice",
     "report": "Prijavi",
     "reportTitle": "Prijavi unos",
@@ -1332,6 +1382,12 @@
       "copyright": "Autorska prava",
       "inappropriate": "Neprimjereno",
       "other": "Ostalo"
+    },
+    "share": {
+      "title": "",
+      "description": "",
+      "action": "",
+      "dismiss": ""
     },
     "publish": {
       "title": "Objavi u radionici",
@@ -2220,6 +2276,7 @@
         "tablet": "",
         "mobile": "",
         "includeCustomCss": "",
+        "customCssHint": "",
         "groups": {
           "layout": "",
           "typography": "",
@@ -2301,6 +2358,10 @@
       "scrollable": {
         "label": "Pomicanje",
         "description": "Zadrži ovaj spremnik na postavljenoj veličini i pomiči njegov sadržaj umjesto da ga povećavaš kako bi mu odgovarao."
+      },
+      "autoExpand": {
+        "label": "",
+        "description": ""
       }
     },
     "action": {
@@ -2325,10 +2386,27 @@
         },
         "borderColor": {
           "label": "Boja obruba"
+        },
+        "autoExpand": {
+          "item": {
+            "label": "",
+            "placeholder": ""
+          },
+          "inactiveDisplay": {
+            "collapsed": "",
+            "hidden": ""
+          },
+          "fitToContent": {
+            "label": "",
+            "description": ""
+          }
         }
       },
       "remove": {
         "message": "Ukloniti ovaj spremnik? Njegov sadržaj premjestit će se u okolno područje."
+      },
+      "editBar": {
+        "edit": "Uredi"
       }
     }
   },
@@ -2470,7 +2548,12 @@
         "integration": "Uredi integraciju"
       },
       "app": {
-        "propagationNotice": "Promjene ove aplikacije primijenit će se svugdje gdje se koristi na svim pločama."
+        "propagationNotice": "Promjene ove aplikacije primijenit će se svugdje gdje se koristi na svim pločama.",
+        "confirmDiscard": {
+          "title": "",
+          "message": "",
+          "confirm": ""
+        }
       },
       "integration": {
         "action": "Uredi vezu",
@@ -3335,6 +3418,7 @@
     "smartHome-entityState": {
       "name": "Stanje entiteta",
       "description": "Prikaži stanje entiteta i po želji ga prebacite",
+      "selectEntity": "",
       "option": {
         "entityId": {
           "label": "ID entiteta"
@@ -4238,6 +4322,9 @@
       }
     },
     "common": {
+      "refreshInterval": {
+        "label": ""
+      },
       "location": {
         "query": "Grad / Poštanski broj",
         "latitude": "Geografska širina",
@@ -4369,6 +4456,10 @@
         "showLocation": {
           "label": "Prikaži lokaciju",
           "description": "Prikaži je li stream na vašoj LAN ili WAN mreži"
+        },
+        "detailedSessionLimit": {
+          "label": "",
+          "description": ""
         }
       },
       "footer": {
@@ -4401,6 +4492,10 @@
           "transcode": "",
           "containerChanged": "",
           "position": "",
+          "progress": "Napredak preuzimanja",
+          "endsAt": "",
+          "episode": "",
+          "album": "",
           "unknown": ""
         },
         "metadata": {
@@ -4954,7 +5049,18 @@
       "contextMenu": {
         "copyName": "Kopiraj naziv",
         "copyId": "Kopiraj ID",
+        "setCategory": "",
+        "setLabels": "",
         "clearFilters": "Očisti filtre"
+      },
+      "setCategory": {
+        "none": "",
+        "loadFailed": "",
+        "labels": "",
+        "labelsDescription": "",
+        "labelsLoadFailed": "",
+        "delugePluginRequired": "",
+        "transmissionUnsupported": ""
       },
       "footer": {
         "filter": "Filtriraj preuzimanja"
@@ -5168,8 +5274,20 @@
         "hideDescription": {
           "label": "Sakrij opis"
         },
+        "hideFeedTitle": {
+          "label": ""
+        },
+        "hideBackgroundImage": {
+          "label": ""
+        },
         "showPosterImage": {
           "label": "Prikaži sliku plakata"
+        },
+        "thumbnailWidth": {
+          "label": ""
+        },
+        "thumbnailHeight": {
+          "label": ""
         }
       },
       "error": {
@@ -5544,6 +5662,7 @@
       },
       "openService": "Otvori uslugu obavijesti",
       "deleteNotification": "Izbriši obavijest iz Gotifyja",
+      "dismissNotification": "",
       "deleteFailed": "Obavijest nije moguće izbrisati",
       "deleteFailedMessage": "Obavijest nije moguće izbrisati. Pokušajte ponovno."
     },
@@ -7239,9 +7358,13 @@
                 "allAdded": "Sve ugrađene kontrole već su u vašem zaglavlju.",
                 "add": "Dodaj {item}",
                 "boardShortcut": "Prečac ploče",
+                "widget": "",
                 "chooseBoard": "Odaberite ploču"
               },
               "configuration": {
+                "widgetKind": "",
+                "widgetOptions": "",
+                "boardOnly": "",
                 "description": "Ova kontrola ostaje iste veličine kao u zaglavlju uživo.",
                 "searchDisplay": {
                   "input": "Traka za pretraživanje",
@@ -7270,7 +7393,9 @@
                 "settings": "Vaše postavke",
                 "themeToggle": "Promijeni temu",
                 "user": "Račun",
-                "boardUnavailable": "Ploča nije dostupna"
+                "boardUnavailable": "Ploča nije dostupna",
+                "notifications": "",
+                "widget": ""
               }
             },
             "item": {
@@ -7285,6 +7410,17 @@
               "search": "Traži",
               "firstDayOfWeek": "Prvi dan u tjednu",
               "accessibility": "Pristupačnost",
+              "signInInformation": {
+                "title": "",
+                "provider": "",
+                "subject": "",
+                "email": "",
+                "homarrGroups": "",
+                "empty": "",
+                "noGroups": "",
+                "copy": "",
+                "copied": ""
+              },
               "oauthConnections": {
                 "title": "",
                 "description": "",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tooltip } from "@mantine/core";
@@ -19,10 +19,11 @@ import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useBoardPermissions } from "~/components/board/permissions/client";
+import { loadBoardEditorToolsAsync } from "~/components/board/editor-tools";
 import { getAddInPlaceState } from "~/components/board/in-place-editor/store";
 import { normalizeBoardLayoutBounds } from "~/components/board/layout/normalize-board-layout-bounds";
-import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
+import { useBoardPermissions } from "~/components/board/permissions/client";
+import { loadGridEditorAsync } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
 import type { Board } from "../_types";
@@ -41,7 +42,7 @@ const loadBoardEditorAsync = async () =>
   await Promise.all([
     loadGridEditorAsync(),
     loadEditActionsAsync(),
-    import("~/components/board/items/item-menu"),
+    loadBoardEditorToolsAsync(),
     import("~/components/board/sections/container/container-menu"),
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
@@ -81,7 +82,7 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
 
 const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
-  const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
+  const [editorLoadState, setEditorLoadState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
   const { updateBoard } = useUpdateBoard();
@@ -147,23 +148,12 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     }
   }, [editorLoadState]);
 
-  useEffect(() => {
-    return scheduleGridEditorWarmup(async () => {
-      setEditorLoadState("loading");
-      try {
-        await loadBoardEditorAsync();
-        setEditorLoadState("ready");
-      } catch {
-        setEditorLoadState("error");
-      }
-    });
-  }, []);
-
   const prewarmEditor = useCallback(() => {
+    if (isEditMode) return;
     void prepareEditorAsync().catch(() => {
       // A click or hotkey retries and reports the error.
     });
-  }, [prepareEditorAsync]);
+  }, [isEditMode, prepareEditorAsync]);
 
   const toggle = useCallback(async () => {
     if (isEditMode) {

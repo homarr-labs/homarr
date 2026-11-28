@@ -66,7 +66,7 @@ jobs:
           args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }}-beta (new behaviour: ${{ steps.semver.outputs.bump }})"
       - name: Obtain token
         id: obtainApprovalToken
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_APPROVE_CLIENT_ID }}
@@ -79,7 +79,7 @@ jobs:
           gh pr review "$PR_URL" --approve --body "Automatically approved by GitHub Action"
       - name: Obtain token
         id: obtainMergeToken
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           client-id: ${{ vars.RENOVATE_MERGE_CLIENT_ID }}

@@ -184,12 +184,15 @@ export const getEntityIcon = (entity: HaEntity): TablerIcon => {
   }
 };
 
-export const isUnavailable = (entity: HaEntity) => entity.state === "unavailable" || entity.state === "unknown";
+export const isUnavailable = (entity: HaEntity) =>
+  entity.state === "unavailable" || (entity.state === "unknown" && !entity.attributes.coverPositionUnknown);
 
 export const isEntityActive = (entity: HaEntity): boolean => {
   if (isUnavailable(entity)) return false;
   switch (entity.domain) {
     case "cover":
+      if (entity.attributes.coverPositionUnknown) return entity.state === "opening" || entity.state === "closing";
+      return entity.state !== "closed";
     case "valve":
       return entity.state !== "closed";
     case "lock":
@@ -448,6 +451,7 @@ export const getPrimaryAction = (entity: HaEntity): HaAction | null => {
     case "valve":
       return { type: "toggle" };
     case "cover": {
+      if (entity.attributes.coverPositionUnknown) return null;
       if (["opening", "closing"].includes(entity.state) && supportsSmartHomeAction(entity, { type: "stop" }))
         return { type: "stop" };
       let action: HaAction = { type: "close" };

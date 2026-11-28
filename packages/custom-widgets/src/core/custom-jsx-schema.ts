@@ -222,7 +222,7 @@ const previewTemplateSchema = z
   .transform(prepareCustomJsxTemplate)
   .superRefine((analysis, ctx) => {
     for (const diagnostic of analysis.diagnostics) {
-      if (diagnostic.severity === "error") {
+      if (diagnostic.severity === "error" || diagnostic.message.startsWith("UNSUPPORTED_HELPER_PROP:")) {
         ctx.addIssue({
           code: "custom",
           message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
