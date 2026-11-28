@@ -272,7 +272,7 @@ export const BoardContainerSection = ({ section }: Props) => {
     </Box>
   );
   return (
-    <SmartContainerSurface section={section} collapsed={isVisuallyCollapsed}>
+    <SmartContainerSurface section={section} collapsed={isVisuallyCollapsed} hasHeader={hasHeader}>
       {content}
     </SmartContainerSurface>
   );

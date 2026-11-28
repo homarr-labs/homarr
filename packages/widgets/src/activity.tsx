@@ -3,6 +3,15 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import type { WidgetKind } from "@homarr/definitions";
+
+/** These widgets report activity even when their state is not on screen. */
+export const smartContainerActivityKinds: ReadonlySet<WidgetKind> = new Set([
+  "mediaServer",
+  "downloads",
+  "mediaRequests-requestList",
+]);
+
 export interface WidgetActivity extends WidgetActivityFacts {
   status: "ready" | "partial" | "unknown";
   requestedRows: number;

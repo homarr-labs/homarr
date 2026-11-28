@@ -1,3 +1,7 @@
+.editor {
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
+}
+
 .editorPanel {
   min-width: 0;
 }

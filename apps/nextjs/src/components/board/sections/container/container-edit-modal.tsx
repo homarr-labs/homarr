@@ -78,6 +78,13 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const smart = form.values.smart ?? initialSmart;
   const [selectedStateId, setSelectedStateId] = useState(initialSmart.states[0]?.id ?? "");
   const [isPlayingPreview, setPlayingPreview] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (document.activeElement !== document.body) return;
+    const editor = editorRef.current;
+    const target = editor?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"], [data-autofocus]');
+    target?.focus();
+  }, []);
   const isTabbed = useMediaQuery("(max-width: 68em)");
   const [newItems, setNewItems] = useState<Item[]>([]);
   const [editedItems, setEditedItems] = useState<Map<string, Item>>(() => new Map());
@@ -405,7 +412,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         />
         {smart.enabled ? (
           <Tabs defaultValue="states" keepMounted>
-            <Tabs.List grow className={classes.tabsList}>
+            <Tabs.List grow aria-label={t("editorSettings")} className={classes.tabsList}>
               <Tabs.Tab className={classes.tab} value="states">
                 {t("states")}
               </Tabs.Tab>
@@ -450,13 +457,13 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
     </form>
   );
   return (
-    <Stack gap={0} mih={0} flex={1}>
+    <Stack ref={editorRef} className={classes.editor} gap={0} mih={0} flex={1}>
       <Box p="md" pt={0} mih={0} flex={1} style={{ overflowY: "auto" }}>
         {!smart.enabled ? (
           settingsPanel
         ) : isTabbed ? (
           <Tabs defaultValue="widgets" keepMounted keepMountedMode="display-none">
-            <Tabs.List grow mb="sm">
+            <Tabs.List grow mb="sm" aria-label={t("edit")}>
               <Tabs.Tab value="widgets" className={classes.tab}>
                 {t("editorContent")}
               </Tabs.Tab>

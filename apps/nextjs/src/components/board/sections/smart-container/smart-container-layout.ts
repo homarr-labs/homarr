@@ -83,7 +83,27 @@ export const projectSmartContainerState = ({
   const heights = demands.map((demand) => demand.min);
   const weights = demands.map((demand) => demand.max - demand.min);
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-  const minimumRows = heights.reduce((total, height) => total + height, 0);
+  // Adjacent widgets that keep their authored widths can share their original row.
+  // A full-width activity widget starts its own row, as does an overlapping placement.
+  const rows: number[][] = [];
+  for (const [index, item] of selectedItems.entries()) {
+    const previousRow = rows.at(-1);
+    const canShare =
+      demands[index]?.authoredWidth &&
+      previousRow?.every((otherIndex) => {
+        const other = selectedItems[otherIndex];
+        return (
+          other &&
+          demands[otherIndex]?.authoredWidth &&
+          other.yOffset === item.yOffset &&
+          (item.xOffset >= other.xOffset + other.width || other.xOffset >= item.xOffset + item.width)
+        );
+      });
+    if (canShare && previousRow) previousRow.push(index);
+    else rows.push([index]);
+  }
+  const rowHeight = (row: number[]) => Math.max(...row.map((index) => heights[index] ?? 1));
+  const minimumRows = rows.reduce((sum, row) => sum + rowHeight(row), 0);
   let remaining = Math.min(totalWeight, Math.max(0, rowBudget - minimumRows));
 
   if (totalWeight > 0) {
@@ -105,15 +125,19 @@ export const projectSmartContainerState = ({
   }
 
   let rowOffset = 0;
-  selectedItems.forEach((item, index) => {
-    const height = heights[index] ?? 1;
-    if (demands[index]?.authoredWidth) {
-      placements.set(item.id, { x: item.xOffset, y: rowOffset, w: item.width, h: height });
-    } else {
-      placements.set(item.id, { x: 0, y: rowOffset, w: columnCount, h: height });
+  for (const row of rows) {
+    for (const index of row) {
+      const item = selectedItems[index];
+      if (!item) continue;
+      const height = heights[index] ?? 1;
+      if (demands[index]?.authoredWidth) {
+        placements.set(item.id, { x: item.xOffset, y: rowOffset, w: item.width, h: height });
+      } else {
+        placements.set(item.id, { x: 0, y: rowOffset, w: columnCount, h: height });
+      }
     }
-    rowOffset += height;
-  });
+    rowOffset += rowHeight(row);
+  }
 
   return { placements, itemIds, rowCount: Math.max(rowOffset, 1) };
 };

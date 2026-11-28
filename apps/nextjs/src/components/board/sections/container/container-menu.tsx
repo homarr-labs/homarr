@@ -1,17 +1,17 @@
 import type { CSSProperties } from "react";
+import { useRef } from "react";
 import { Button, Menu } from "@mantine/core";
 import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmMenuItem } from "@homarr/ui";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useContainerActions } from "./container-actions";
-import { LazyContainerEditModal } from "./lazy-container-edit-modal";
+import { useOpenContainerEditor } from "./lazy-container-edit-modal";
 import classes from "./container-menu.module.css";
 
 interface ContainerEditBarProps {
@@ -23,7 +23,8 @@ interface ContainerEditBarProps {
 export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEditBarProps) => {
   const tContainer = useI18n("section.container");
   const tItem = useI18n("item");
-  const { openModal } = useModalAction(LazyContainerEditModal);
+  const openEditor = useOpenContainerEditor(section);
+  const editButton = useRef<HTMLButtonElement>(null);
   const openMoveModal = useOpenItemMoveModal();
   const { removeContainer } = useContainerActions();
   const [isEditMode] = useEditMode();
@@ -33,13 +34,6 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
   const label = section.options.title.trim() || tContainer("untitled");
   const isSmart = section.options.smart?.enabled;
   const isNarrow = isSmart && section.width === 1;
-
-  const openEditModal = () => {
-    openModal({
-      containerId: section.id,
-      value: section.options,
-    });
-  };
 
   return (
     <div
@@ -57,6 +51,7 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
         <Menu withinPortal position="bottom-end">
           <Menu.Target>
             <Button
+              ref={editButton}
               size="compact-xs"
               variant="subtle"
               color="blue"
@@ -69,7 +64,7 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
             </Button>
           </Menu.Target>
           <Menu.Dropdown miw={128} maw="min(26rem, calc(100vw - 2rem))">
-            <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
+            <Menu.Item leftSection={<IconPencil size={16} />} onClick={() => openEditor(editButton.current)}>
               {tItem("action.edit")}
             </Menu.Item>
             <Menu.Item

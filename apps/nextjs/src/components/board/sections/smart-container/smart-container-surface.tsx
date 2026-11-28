@@ -16,7 +16,6 @@ import {
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 import type { SmartContainerOptions } from "@homarr/validation/smart-container";
@@ -27,7 +26,7 @@ import { getLogicalGridSize } from "~/components/board/layout";
 import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import { getSmartContainerChromeHeight, getSmartContainerStateLabel } from "./constants";
 import { useSectionItems } from "../use-section-items";
-import { LazyContainerEditModal } from "../container/lazy-container-edit-modal";
+import { useOpenContainerEditor } from "../container/lazy-container-edit-modal";
 import { projectSmartContainerState } from "./smart-container-layout";
 import {
   SmartContainerProjectionProvider,
@@ -37,14 +36,10 @@ import {
 import { useSmartContainerRuntime } from "./use-smart-container-runtime";
 import classes from "./smart-container-surface.module.css";
 
-const useOpenContainerEditor = (section: ContainerSectionItem) => {
-  const { openModal } = useModalAction(LazyContainerEditModal);
-  return () => openModal({ containerId: section.id, value: section.options });
-};
-
 interface SurfaceProps extends PropsWithChildren {
   section: ContainerSectionItem;
   collapsed: boolean;
+  hasHeader: boolean;
 }
 
 export const SmartContainerSurface = (props: SurfaceProps) => {
@@ -68,6 +63,7 @@ const ReelSurface = ({
   options,
   children,
   collapsed,
+  hasHeader,
   items,
   innerSections,
 }: SurfaceProps & { options: SmartContainerOptions } & ReturnType<typeof useSectionItems>) => {
@@ -206,7 +202,7 @@ const ReelSurface = ({
         onPointerLeave={(event) => {
           if (event.pointerType === "mouse") runtime.setHovered(false);
         }}
-        onPointerDownCapture={(event) => {
+        onPointerUpCapture={(event) => {
           if (
             collapsed ||
             isEditMode ||
@@ -275,14 +271,21 @@ const ReelSurface = ({
             projection.itemIds.length === 0 &&
             innerSections.length === 0 &&
             (!isEditMode || items.length === 0) && (
-              <div className={classes.empty} data-narrow={section.width === 1 || undefined}>
+              <div
+                className={classes.empty}
+                data-labeled={hasHeader || undefined}
+                data-narrow={section.width === 1 || undefined}
+              >
                 {(!isEditMode || section.width > 1) && (
-                  <Text size="sm" c="dimmed">
-                    {section.width === 1 ? t("emptyShort") : t("empty")}
-                  </Text>
+                  <Text size="sm">{section.width === 1 ? t("emptyShort") : t("empty")}</Text>
                 )}
                 {isEditMode && (
-                  <Button variant="light" size="compact-sm" maw="100%" onClick={openEditor}>
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    maw="100%"
+                    onClick={(event) => openEditor(event.currentTarget)}
+                  >
                     {t("addWidget")}
                   </Button>
                 )}
@@ -346,6 +349,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
   return (
     <Group
       className={classes.toolbar}
+      fz="md"
       gap={3}
       wrap="nowrap"
       data-grid-no-drag
@@ -369,7 +373,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
             {stateName}
           </Text>
         ) : (
-          <Menu position="bottom-start" shadow="md" returnFocus>
+          <Menu position="bottom-start" shadow="md" returnFocus withInitialFocusPlaceholder={false}>
             <Menu.Target>
               <UnstyledButton
                 className={classes.statePicker}
@@ -379,11 +383,14 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
                   <Text component="span" size="sm" fw={650} truncate>
                     {stateName}
                   </Text>
-                  <Text component="span" size="xs" c="dimmed" className={classes.position} truncate>
+                  <Text component="span" size="xs" className={classes.position} truncate>
                     {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
                     {isEditMode ? t("allStatesInEdit") : activityLabel}
                   </Text>
                 </span>
+                {runtime.rotationDeadline !== undefined && (
+                  <RotationCountdown key={runtime.rotationDeadline} deadline={runtime.rotationDeadline} />
+                )}
                 <IconChevronDown size={14} aria-hidden />
               </UnstyledButton>
             </Menu.Target>
@@ -394,6 +401,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
                   key={state.id}
                   mih={44}
                   styles={{ itemLabel: { whiteSpace: "normal", overflowWrap: "anywhere" } }}
+                  data-autofocus={state.id === runtime.selectedStateId || undefined}
                   aria-current={state.id === runtime.selectedStateId || undefined}
                   rightSection={state.id === runtime.selectedStateId ? <IconCheck size={16} /> : null}
                   onClick={() => runtime.selectState(state.id)}
@@ -415,9 +423,6 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           <IconChevronRight style={iconSizes.md} />
         </ActionIcon>
       </Group>
-      {runtime.rotationDeadline !== undefined && (
-        <RotationCountdown key={runtime.rotationDeadline} deadline={runtime.rotationDeadline} />
-      )}
       {hasMultipleStates && !isEditMode && !preview && section.options.smart?.mode !== "manual" && (
         <ActionIcon
           data-smart-resume
@@ -449,7 +454,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           variant="light"
           style={zoomCompensatedSize(44)}
           aria-label={t("edit")}
-          onClick={openEditor}
+          onClick={(event) => openEditor(event.currentTarget)}
         >
           <IconPencil style={iconSizes.sm} />
         </ActionIcon>
@@ -476,7 +481,7 @@ const RotationCountdown = ({ deadline }: { deadline: number }) => {
   }, [deadline]);
 
   return (
-    <Text size="xs" c="dimmed" className={classes.countdown}>
+    <Text component="span" size="xs" className={classes.countdown}>
       {remainingSeconds}s
     </Text>
   );

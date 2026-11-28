@@ -85,6 +85,7 @@ export const ContainerStateSettings = ({
             key={state.id}
             aria-pressed={state.id === selected.id}
             className={classes.stateButton}
+            c="var(--mantine-color-text)"
             variant={state.id === selected.id ? "light" : "default"}
             onClick={() => onSelectState(state.id)}
             fullWidth
@@ -155,6 +156,7 @@ export const ContainerStateSettings = ({
       <Group gap="xs" grow>
         <Button
           variant="light"
+          c="var(--mantine-color-text)"
           mih={44}
           leftSection={<IconPlus size={16} />}
           disabled={smart.states.length >= smartContainerStateLimit}
@@ -164,6 +166,7 @@ export const ContainerStateSettings = ({
         </Button>
         <Button
           variant="light"
+          c="var(--mantine-color-text)"
           mih={44}
           leftSection={<IconPlus size={16} />}
           disabled={smart.states.length >= smartContainerStateLimit}
@@ -236,6 +239,7 @@ export const ContainerStatePreview = ({
       <Group grow gap="xs" wrap="nowrap">
         <Button
           variant="default"
+          px="xs"
           mih={44}
           leftSection={<IconChevronLeft size={18} />}
           disabled={smart.states.length < 2}
@@ -248,6 +252,7 @@ export const ContainerStatePreview = ({
         </Button>
         <Button
           variant="default"
+          px="xs"
           mih={44}
           rightSection={<IconChevronRight size={18} />}
           disabled={smart.states.length < 2}

@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { Button, Center, Group, Loader, Stack } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { createModal } from "@homarr/modals";
+import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { WidgetError } from "@homarr/widgets/errors";
 import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
@@ -65,3 +65,13 @@ export const LazyContainerEditModal = createModal<ModalProps["innerProps"]>((pro
   styles: widgetEditorModalStyles,
   closeOnClickOutside: false,
 });
+
+export const useOpenContainerEditor = (section: { id: string; options: ModalProps["innerProps"]["value"] }) => {
+  const { openModal } = useModalAction(LazyContainerEditModal);
+  return (trigger: HTMLElement | null) => {
+    openModal(
+      { containerId: section.id, value: section.options },
+      { onClose: () => requestAnimationFrame(() => trigger?.focus({ preventScroll: true })) },
+    );
+  };
+};

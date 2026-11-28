@@ -8,6 +8,7 @@ import combineClasses from "clsx";
 import { useCurrentLayout } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
+import { smartContainerActivityKinds } from "@homarr/widgets/activity";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
@@ -70,8 +71,12 @@ export const FixedGridItem = ({
   );
 
   const isSmartMember = smart?.sectionId === section.id && item.type === "item";
-  const isInSelectedState = isSmartMember && smart.projection.itemIds.includes(item.id);
+  const isInSelectedState = isSmartMember && smart.projection.placements.has(item.id);
   const isSmartHidden = !isEditMode && isSmartMember && !isInSelectedState;
+
+  // Mount passive widgets on their first visit, then preserve their native state across switches.
+  const [wasVisible, setWasVisible] = useState(!isSmartHidden);
+  if (!wasVisible && !isSmartHidden) setWasVisible(true);
 
   const handleClickCapture = (event: React.MouseEvent) => {
     if (!isEditorActive || item.type !== "item" || (!event.metaKey && !event.ctrlKey)) return;
@@ -205,6 +210,8 @@ export const FixedGridItem = ({
       setKeyboardEditing(false);
     }
   };
+
+  if (isSmartHidden && !wasVisible && item.type === "item" && !smartContainerActivityKinds.has(item.kind)) return null;
 
   return (
     <Box
