@@ -26,7 +26,9 @@ import (
 const (
 	homarrProviderModelID    = "homarr/model"
 	homarrProviderModelName  = "Homarr model"
-	defaultOpenRouterModelID = "openai/gpt-6.1-sol"
+	defaultOpenRouterModelID = terraOpenRouterModelID
+	terraOpenRouterModelID   = "openai/gpt-6.1-terra"
+	solOpenRouterModelID     = "openai/gpt-6.1-sol"
 	lunaOpenRouterModelID    = "openai/gpt-5.6-luna"
 	maxChatInputTokens       = 256 * 1024
 	maxChatOutputTokens      = 32 * 1024
@@ -491,12 +493,16 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 	providerPreferences := map[string]any{
 		"allow_fallbacks": false,
 	}
-	if upstreamModelID == defaultOpenRouterModelID {
+	if upstreamModelID == terraOpenRouterModelID || upstreamModelID == solOpenRouterModelID {
 		delete(payload, "reasoning_effort")
 		delete(payload, "include_reasoning")
 		delete(payload, "temperature")
 		delete(payload, "top_p")
-		payload["reasoning"] = map[string]any{"effort": "low", "exclude": false}
+		effort := "high"
+		if upstreamModelID == solOpenRouterModelID {
+			effort = "low"
+		}
+		payload["reasoning"] = map[string]any{"effort": effort, "exclude": false}
 	} else if upstreamModelID == lunaOpenRouterModelID {
 		delete(payload, "reasoning")
 		payload["reasoning_effort"] = "high"
