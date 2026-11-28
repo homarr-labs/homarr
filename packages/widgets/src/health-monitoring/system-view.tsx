@@ -63,14 +63,19 @@ export function SystemHealthView({
   const [dialogHeight, setDialogHeight] = useState(760);
   const modalBounds = useHealthBounds();
   const { visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold, systemSort } = options;
-  const systemDisplayName = useMemo(() => createSystemNameFormatter(systems), [systems]);
-  const projected = useMemo(
-    () =>
-      systems.map((system) =>
-        projectHealthSystem(system, visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold),
+  const projected = useMemo(() => {
+    const formatName = createSystemNameFormatter(systems);
+    return systems.map((system) =>
+      projectHealthSystem(
+        system,
+        visibleStorageVolumes,
+        cpuThreshold,
+        memoryThreshold,
+        storageThreshold,
+        formatName(system),
       ),
-    [systems, visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold],
-  );
+    );
+  }, [systems, visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold]);
   const snapshots = useMemo(() => {
     if (systemSort === "configured") return projected;
     return projected.toSorted((left, right) => {
@@ -156,7 +161,6 @@ export function SystemHealthView({
           <Box flex={1} mih={0}>
             <SystemHistoryComparison
               snapshots={chartSystems}
-              systemDisplayName={systemDisplayName}
               width={width - 16}
               height={height - 16 - filterHeight - 4}
               options={options}
@@ -172,7 +176,6 @@ export function SystemHealthView({
     content = (
       <SystemAdvanced
         snapshots={snapshots}
-        systemDisplayName={systemDisplayName}
         width={width}
         height={height}
         options={options}
@@ -195,9 +198,9 @@ export function SystemHealthView({
         title={
           <Group gap="sm" wrap="nowrap">
             <Text size="sm" fw={600} truncate>
-              {dialog && systemDisplayName(dialog.system)}
+              {dialog?.displayName}
             </Text>
-            {dialog && systemDisplayName(dialog.system) === dialog.system.name && (
+            {dialog && dialog.displayName === dialog.system.name && (
               <Text size="xs" c="dimmed" truncate>
                 {getIntegrationName(dialog.system.kind)}
               </Text>

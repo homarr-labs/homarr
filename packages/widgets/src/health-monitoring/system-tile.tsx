@@ -38,7 +38,6 @@ export function SystemTile({
   const t = useI18n("widget.healthMonitoring.rework");
   const glance = useGlanceReadings(options);
   const status = glance.status(snapshot, stale);
-  const provider = getIntegrationName(snapshot.system.kind);
   const readings = getHealthMetricOrder(options).flatMap((metric) => {
     const reading = glance.read(snapshot, metric);
     if (!reading) return [];
@@ -58,7 +57,8 @@ export function SystemTile({
   if (roomy && height >= 250) capacity *= 2;
   const primary = readings.slice(0, capacity);
   const supporting = readings.slice(capacity);
-  const details: string[] = [provider];
+  const details: string[] = [];
+  if (snapshot.displayName === snapshot.system.name) details.push(getIntegrationName(snapshot.system.kind));
   if (
     options.showUptime &&
     snapshot.system.health &&
@@ -92,7 +92,7 @@ export function SystemTile({
         event.stopPropagation();
         onInspect();
       }}
-      aria-label={t("inspectSystem", { name: snapshot.system.name })}
+      aria-label={t("inspectSystem", { name: snapshot.displayName })}
       aria-description={description}
     >
       <Stack h="100%" gap={compact ? 2 : 6} justify="space-between" miw={0} mih={0}>
@@ -104,7 +104,7 @@ export function SystemTile({
               aria-hidden
             />
             <Text size="sm" lh={1.2} fw={650} truncate flex={1}>
-              {snapshot.system.name}
+              {snapshot.displayName}
             </Text>
             <IconArrowUpRight style={zoomCompensatedSize(14)} color="var(--mantine-color-dimmed)" aria-hidden />
           </Group>

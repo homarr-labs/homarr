@@ -61,6 +61,7 @@ export interface HealthAlert {
 
 export interface HealthSystemSnapshot {
   system: HealthSystem;
+  displayName: string;
   capabilities: SystemCapabilities;
   available: boolean;
   cpuPercent: number | null;
@@ -162,6 +163,7 @@ export function projectHealthSystem(
   cpuThreshold = 90,
   memoryThreshold = 90,
   storageThreshold = 90,
+  displayName = system.name,
 ): HealthSystemSnapshot {
   const health = system.health;
   const providerCapabilities = getSystemCapabilities(system.kind);
@@ -207,6 +209,7 @@ export function projectHealthSystem(
   if (memory && memory.percent >= memoryThreshold) alerts.push({ type: "memory", count: 1 });
   return {
     system,
+    displayName,
     capabilities: providerCapabilities,
     available: health !== null,
     cpuPercent,

@@ -37,7 +37,7 @@ import { getHealthMetricOrder } from "./configuration";
 import { comparisonHistory, comparisonTimeDomain } from "./comparison-history";
 import type { HistoryMetric } from "./comparison-history";
 import { isVolumeFull } from "./model";
-import type { HealthSystem, HealthSystemSnapshot, HealthVolume } from "./model";
+import type { HealthSystemSnapshot, HealthVolume } from "./model";
 import classes from "./system-advanced.module.css";
 
 type AnalysisView = "compare" | "history" | "storage";
@@ -45,7 +45,6 @@ type Sort = "configured" | "cpu" | "memory" | "attention";
 
 export interface SystemAdvancedProps {
   snapshots: HealthSystemSnapshot[];
-  systemDisplayName: (system: HealthSystem) => string;
   width: number;
   height: number;
   options: HealthOptions;
@@ -65,7 +64,7 @@ const palette = [
 const percent = (value: number) => value.toFixed(1) + "%";
 
 export function SystemAdvanced(props: SystemAdvancedProps) {
-  const { snapshots, systemDisplayName, width, height, options, isEditMode, onPreferences, onInspect } = props;
+  const { snapshots, width, height, options, isEditMode, onPreferences, onInspect } = props;
   const t = useI18n("widget.healthMonitoring.rework");
   const [view, setView] = useState<AnalysisView>("compare");
   const now = useWidgetNow()?.getTime();
@@ -107,7 +106,6 @@ export function SystemAdvanced(props: SystemAdvancedProps) {
         {view === "compare" && (
           <Compare
             snapshots={snapshots}
-            systemDisplayName={systemDisplayName}
             width={panelWidth}
             height={panelHeight}
             isEditMode={isEditMode}
@@ -119,7 +117,6 @@ export function SystemAdvanced(props: SystemAdvancedProps) {
         {view === "history" && (
           <SystemHistoryComparison
             snapshots={snapshots}
-            systemDisplayName={systemDisplayName}
             width={panelWidth}
             height={panelHeight}
             options={options}
@@ -131,7 +128,6 @@ export function SystemAdvanced(props: SystemAdvancedProps) {
         {view === "storage" && (
           <Storage
             snapshots={snapshots}
-            systemDisplayName={systemDisplayName}
             width={panelWidth}
             height={panelHeight}
             options={options}
@@ -146,7 +142,6 @@ export function SystemAdvanced(props: SystemAdvancedProps) {
 
 function Compare({
   snapshots,
-  systemDisplayName,
   width,
   height,
   isEditMode,
@@ -173,7 +168,7 @@ function Compare({
   const currentPage = Math.min(page, pages - 1);
   const visible = ordered.slice(currentPage * capacity, (currentPage + 1) * capacity);
   const chartData = visible.map((snapshot) => ({
-    name: systemDisplayName(snapshot.system),
+    name: snapshot.displayName,
     cpu: snapshot.cpuPercent,
     memory: snapshot.memory?.percent ?? null,
   }));
@@ -259,7 +254,7 @@ function Compare({
           flex={1}
           miw={0}
           value={inspect?.system.id ?? null}
-          data={visible.map((snapshot) => ({ value: snapshot.system.id, label: systemDisplayName(snapshot.system) }))}
+          data={visible.map((snapshot) => ({ value: snapshot.system.id, label: snapshot.displayName }))}
           onChange={(value) => {
             if (value) setInspectId(value);
           }}
@@ -291,7 +286,6 @@ function isolatedHistoryDot({ points, index, cx, cy, stroke }: DotItemDotProps) 
 
 export function SystemHistoryComparison({
   snapshots,
-  systemDisplayName,
   width,
   height,
   options,
@@ -387,7 +381,7 @@ export function SystemHistoryComparison({
   if (selectedMetric === "cpu") maximum = 100;
   const series = visible.map((snapshot) => ({
     name: snapshot.system.id,
-    label: systemDisplayName(snapshot.system),
+    label: snapshot.displayName,
     color: palette[Math.max(0, snapshots.indexOf(snapshot)) % palette.length] ?? monitoringChartColors.cpu,
   }));
   let guidance;
@@ -476,11 +470,11 @@ export function SystemHistoryComparison({
               disabled={isEditMode}
               onClick={() => onInspect(snapshot.system.id)}
               className={classes.legendButton}
-              title={systemDisplayName(snapshot.system)}
+              title={snapshot.displayName}
             >
               <Box w={6} h={6} bg={series[index]?.color} style={{ borderRadius: "50%", flexShrink: 0 }} />
               <Text size="xs" truncate>
-                {systemDisplayName(snapshot.system)}
+                {snapshot.displayName}
               </Text>
             </UnstyledButton>
           ))}
@@ -493,7 +487,6 @@ export function SystemHistoryComparison({
 
 function Storage({
   snapshots,
-  systemDisplayName,
   width,
   height,
   options,
@@ -558,7 +551,7 @@ function Storage({
                 {volume.name}
               </Text>
               <Text size="xs" c="dimmed" truncate>
-                {systemDisplayName(snapshot.system)}
+                {snapshot.displayName}
               </Text>
               {width < 500 && (
                 <Text size="xs" c={verdictColor(volume)}>
@@ -582,7 +575,7 @@ function Storage({
                   size={4}
                   value={volume.percent}
                   color={pressureColor(volume.percent, options.storageThreshold, "teal")}
-                  aria-label={systemDisplayName(snapshot.system) + " " + volume.name}
+                  aria-label={snapshot.displayName + " " + volume.name}
                 />
               )}
               {isVolumeFull(volume, options.storageThreshold) && (

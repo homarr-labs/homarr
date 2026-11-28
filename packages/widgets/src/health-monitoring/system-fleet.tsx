@@ -202,8 +202,8 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
         visible.map((snapshot) => {
           const stale = isStale(snapshot);
           const status = glance.status(snapshot, stale);
-          const provider = getIntegrationName(snapshot.system.kind);
-          const details: string[] = [provider];
+          const details: string[] = [];
+          if (snapshot.displayName === snapshot.system.name) details.push(getIntegrationName(snapshot.system.kind));
           if (
             options.showUptime &&
             snapshot.system.health &&
@@ -237,7 +237,7 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
               />
               <Stack gap={1} miw={0} flex={1}>
                 <Text size="sm" lh={1.15} fw={600} truncate>
-                  {snapshot.system.name}
+                  {snapshot.displayName}
                 </Text>
                 {(!narrow || renderedRowHeight >= 60 || statusBelowName) && (
                   <Text size="xs" lh={1.1} c="dimmed" truncate>
@@ -291,7 +291,7 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
               className={classes.fleetRow}
               data-selected={snapshot.system.id === options.selectedSystem || undefined}
               disabled={isEditMode}
-              aria-label={t("inspectSystem", { name: snapshot.system.name })}
+              aria-label={t("inspectSystem", { name: snapshot.displayName })}
               aria-description={description}
               onClick={(event) => {
                 event.stopPropagation();
