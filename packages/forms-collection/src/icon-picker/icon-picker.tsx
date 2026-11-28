@@ -83,7 +83,7 @@ export const IconPicker = ({
   const [previewState, setPreviewState] = useState<PreviewState>("idle");
   const { data: session } = useSession();
   const tCommon = useI18n("common");
-  const [debouncedDraft] = useDebouncedValue(draft, 250);
+  const [debouncedDraft] = useDebouncedValue(draft, 150);
 
   const directUrl = isDirectImageUrl(draft) ? draft.trim() : null;
   const isCommittedValueDraft = debouncedDraft === (value ?? "");
@@ -98,7 +98,11 @@ export const IconPicker = ({
 
   const query = clientApi.icon.findIcons.useQuery(
     { searchText, limitPerGroup: 24 },
-    { enabled: combobox.dropdownOpened && directUrl === null, placeholderData: (previous) => previous },
+    {
+      enabled: combobox.dropdownOpened && directUrl === null,
+      placeholderData: (previous) => previous,
+      trpc: { abortOnUnmount: true },
+    },
   );
   const faviconSource = faviconSourceUrl?.trim() ?? "";
   const faviconPage = isHttpUrl(faviconSource) ? new URL(faviconSource) : null;

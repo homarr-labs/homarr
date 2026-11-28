@@ -1,5 +1,4 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
@@ -19,13 +18,17 @@ export class GitHubIconRepository extends IconRepository {
     super(name, slug, license, repositoryUrl, repositoryIndexingUrl, repositoryBlobUrlTemplate);
   }
 
-  protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
+  protected async getAllIconsInternalAsync(etag?: string): Promise<RepositoryIconGroup> {
     const url = this.repositoryIndexingUrl;
     if (!url || !this.repositoryBlobUrlTemplate) {
       throw new Error("Repository URLs are required for this repository");
     }
 
-    const response = await withTimeoutAsync(async (signal) => fetchWithTrustedCertificatesAsync(url, { signal }));
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      signal: AbortSignal.timeout(10_000),
+      headers: etag === undefined ? undefined : { "If-None-Match": etag },
+    });
+    if (response.status === 304 && etag !== undefined) return { status: "unchanged", slug: this.slug };
     if (!response.ok) {
       await response.body?.cancel();
       throw new ErrorWithMetadata("GitHub icon index request failed", {
@@ -53,7 +56,7 @@ export class GitHubIconRepository extends IconRepository {
       if (icon) icons.push(icon);
     }
 
-    return { success: true, icons, slug: this.slug };
+    return { status: "updated", icons, slug: this.slug, etag: response.headers.get("etag") ?? undefined };
   }
 }
 

@@ -17,7 +17,7 @@ export class LocalIconRepository extends IconRepository {
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
     const medias = await db.query.medias.findMany({ where: (media) => like(media.contentType, "image/%") });
     return {
-      success: true,
+      status: "updated",
       icons: medias.map(mapMediaToIcon),
       slug: LOCAL_ICON_REPOSITORY_SLUG,
     };

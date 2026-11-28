@@ -1,7 +1,5 @@
 import type { RepositoryIcon } from "./repository-icon";
 
-export interface RepositoryIconGroup {
-  icons: RepositoryIcon[];
-  success: boolean;
-  slug: string;
-}
+export type RepositoryIconGroup =
+  | { slug: string; status: "updated"; icons: RepositoryIcon[]; etag?: string }
+  | { slug: string; status: "unchanged" | "failed" };
