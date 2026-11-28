@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
+import { getDefaultZIndex, Paper, px, Stack, Tabs, Text, useMantineTheme, VisuallyHidden } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
@@ -193,6 +193,7 @@ export const ClientBoard = () => {
           <BoardSelectionToolbar />
           <BoardInPlaceEditorHost key={`${board.id}-${mainSection.id}`} />
           <FloatingTip
+            zIndex={getDefaultZIndex("app")}
             opened={isEditMode}
             showDelay={2_000}
             dismissAfter={3_000}

@@ -32,18 +32,18 @@ const getPreviewDimensions = (size: WidgetEditModalSize) => ({
   height: getLogicalGridSize(size.height),
 });
 
-const createPreviewRuntimeWrapper = (Wrapper: WidgetEditModalProps<WidgetKind>["previewWrapper"]) => {
-  if (!Wrapper) return PreviewRuntimeWrapper;
-  return function ComposedPreviewRuntimeWrapper({ children }: PropsWithChildren) {
+const createWidgetPreviewRuntime = (Wrapper: WidgetEditModalProps<WidgetKind>["previewWrapper"]) => {
+  if (!Wrapper) return WidgetPreviewRuntime;
+  return function ComposedWidgetPreviewRuntime({ children }: PropsWithChildren) {
     return (
-      <PreviewRuntimeWrapper>
+      <WidgetPreviewRuntime>
         <Wrapper>{children}</Wrapper>
-      </PreviewRuntimeWrapper>
+      </WidgetPreviewRuntime>
     );
   };
 };
 
-export const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
+export const WidgetPreviewRuntime = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
   const previewAssistant = useMemo(() => {
     if (!assistant) return null;
@@ -62,6 +62,8 @@ export const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
   if (!previewAssistant) return children;
   return <AssistantContext.Provider value={previewAssistant}>{children}</AssistantContext.Provider>;
 };
+
+export const PreviewRuntimeWrapper = WidgetPreviewRuntime;
 
 let widgetEditModalPromise: Promise<typeof WidgetModalsModule> | undefined;
 
@@ -135,7 +137,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const utils = clientApi.useUtils();
   const [createdIntegrations, setCreatedIntegrations] = useState<IntegrationSelectOption[]>([]);
   const previewWrapper = useMemo(
-    () => createPreviewRuntimeWrapper(props.innerProps.previewWrapper),
+    () => createWidgetPreviewRuntime(props.innerProps.previewWrapper),
     [props.innerProps.previewWrapper],
   );
 

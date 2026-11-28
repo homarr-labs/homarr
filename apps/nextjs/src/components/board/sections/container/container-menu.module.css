@@ -62,6 +62,7 @@
 
 .editButton {
   flex-shrink: 0;
+  min-height: calc(44px * var(--ui-scale));
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
@@ -81,4 +82,14 @@
     box-shadow: none;
     backdrop-filter: none;
   }
+}
+
+.anchor[data-narrow] .bar {
+  padding-inline: 0;
+}
+.anchor[data-narrow] .editLabel {
+  display: none;
+}
+.anchor[data-narrow] .editSection {
+  margin: 0;
 }

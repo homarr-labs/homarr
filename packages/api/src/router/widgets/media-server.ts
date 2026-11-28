@@ -22,7 +22,7 @@ export const mediaServerRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-          const { data } = await mediaServerRequestHandler
+          const { data, timestamp } = await mediaServerRequestHandler
             .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
             .getDataAsync({ maxAgeMs: input.refreshInterval * 1000 });
           return {
@@ -30,6 +30,7 @@ export const mediaServerRouter = createTRPCRouter({
             integrationName: integration.name,
             integrationKind: integration.kind,
             sessions: data,
+            updatedAt: timestamp,
             error: undefined,
           };
         },

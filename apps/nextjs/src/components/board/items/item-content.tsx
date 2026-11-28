@@ -37,12 +37,14 @@ import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
 import { useBoardEditorTools } from "../editor-tools";
 import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
+import { useSmartContainerPreviewState } from "../sections/smart-container/smart-container-context";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
 
 interface BoardItemContentProps {
+  deferRuntime?: boolean;
   item: SectionItem;
 }
 
@@ -100,7 +102,7 @@ const subscribeToHydration = () => () => undefined;
 const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
 
-export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+export const BoardItemContent = ({ item, deferRuntime = false }: BoardItemContentProps) => {
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const { ref, width: measuredWidth, height: measuredHeight } = useDeferredElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -110,7 +112,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 
   // App and bookmark HTML is already in the initial document. Other widget
   // modules render after hydration while their server queries already run.
-  if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
+  if ((!hydrated || deferRuntime) && item.kind !== "app" && item.kind !== "bookmarks") {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
@@ -383,7 +385,7 @@ const ResolvedBoardItemContent = ({
           )}
         >
           <InnerContent
-            item={item}
+            item={menuItem}
             width={advancedSize?.width ?? width}
             height={advancedSize?.height ?? height}
             displayScale={boardCanvasScale}
@@ -496,13 +498,11 @@ interface InnerContentProps {
 }
 
 const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
-  const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
+  const isContainerPreview = Boolean(useSmartContainerPreviewState());
+  const options = item.options;
   const { removeItem, updateItemOptions } = useItemActions();
-  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
-    updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
@@ -546,18 +546,20 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
               Component={Component}
               options={options as never}
               integrationIds={item.integrationIds}
-              isEditMode={isEditMode}
-              boardId={board.id}
-              itemId={item.id}
-              removeItem={() => removeItem({ itemId: item.id })}
-              setOptions={(partialNewOptions) =>
-                updateOptions({
+              isEditMode={isEditMode || (isContainerPreview && item.kind === "customApi")}
+              boardId={isContainerPreview ? undefined : board.id}
+              itemId={isContainerPreview && item.kind === "assistant" ? undefined : item.id}
+              removeItem={isContainerPreview ? undefined : () => removeItem({ itemId: item.id })}
+              setOptions={(partialNewOptions) => {
+                if (isContainerPreview) return;
+                updateItemOptions({
+                  itemId: item.id,
                   newOptions: {
                     ...options,
                     ...partialNewOptions.newOptions,
                   },
-                })
-              }
+                });
+              }}
               {...dimensions}
             />
           </div>

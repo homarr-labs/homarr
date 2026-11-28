@@ -141,6 +141,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
       trapFocus={modal.id === state.current?.id}
       classNames={presentationClassNames}
       {...otherModalProps}
+      closeButtonProps={{ "aria-label": t("common.action.close"), ...otherModalProps.closeButtonProps }}
       title={translateIfNecessary(t, modal.props.defaultTitle)}
       opened={opened}
       onClose={handleClose}

@@ -223,7 +223,7 @@ export const NotebookReadMode = ({
                   backgroundColor: "transparent",
                   fontSize: "var(--mantine-font-size-md)",
                   height: "100%",
-                  padding: "var(--mantine-spacing-md)",
+                  padding: compactSurface ? 4 : "var(--mantine-spacing-md)",
                 }}
                 dangerouslySetInnerHTML={initialInnerHtml}
               />

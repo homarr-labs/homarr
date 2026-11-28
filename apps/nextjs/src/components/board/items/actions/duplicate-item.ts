@@ -1,6 +1,7 @@
 import { createId } from "@homarr/common";
 import { getBoardTabs } from "@homarr/boards/tabs";
 import { getRootSectionLane } from "@homarr/definitions";
+import { canPlaceSmartContainerItem } from "@homarr/validation/smart-container";
 
 import type { Board, ItemLayout, Section } from "~/app/[locale]/boards/_types";
 import { getBoardLaneColumnCount } from "~/components/board/layout";
@@ -40,7 +41,7 @@ const getNextPosition = (
   fallbackSectionId: string | undefined,
 ): { xOffset: number; yOffset: number; sectionId: string } => {
   const currentSection = board.sections.find((section) => section.id === layout.sectionId);
-  if (currentSection) {
+  if (currentSection && canPlaceSmartContainerItem(currentSection, board.items)) {
     const emptySectionPosition = getEmptySectionPosition(board, layout, currentSection);
     if (emptySectionPosition) {
       return {

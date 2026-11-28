@@ -1,175 +1,513 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  CloseButton,
-  ColorInput,
-  Select,
-  SegmentedControl,
-  Stack,
-  Switch,
-  TextInput,
-  useMantineTheme,
-} from "@mantine/core";
-import type { z } from "zod/v4";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Box, Button, Stack, Switch, Tabs, Text, TextInput } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
-import type { WidgetKind } from "@homarr/definitions";
+import { clientApi } from "@homarr/api/client";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useUpdateBoard } from "@homarr/boards/updater";
+import { createId } from "@homarr/common";
 import { getWidgetName } from "@homarr/definitions";
+import type { WidgetKind } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
-import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
+import { createModal, ModalFormFooter, useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { TextMultiSelect } from "@homarr/ui";
+import type { ContainerSectionOptions, SmartContainerOptions } from "@homarr/validation/shared";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
-import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
+import { getSmartContainerStateCapacity, smartContainerStateLimit } from "@homarr/validation/smart-container";
+import { WidgetEditFooter, WidgetEditWorkspace } from "@homarr/widgets/edit-workspace";
+import { widgetEditorModalStyles } from "@homarr/widgets/modals/styles";
+import { loadAllWidgetDefinitions, loadWidgetDefinition } from "@homarr/widgets/manifest";
 
-import { useSectionItems } from "../use-section-items";
-
-const containerEditFormSchema = containerSectionOptionsSchema.unwrap().superRefine((options, context) => {
-  if (!options.autoExpand.enabled || options.autoExpand.itemId !== null) return;
-  context.addIssue({ code: "invalid_type", expected: "string", input: null, path: ["autoExpand", "itemId"] });
-});
+import type { Item } from "~/app/[locale]/boards/_types";
+import { getLogicalGridSize } from "~/components/board/layout";
+import { NoItemPlacementSpaceError } from "../../items/actions/create-item";
+import { ItemSelectModal } from "../../items/item-select-modal";
+import { LazyWidgetEditModal } from "../../items/lazy-widget-edit-modal";
+import {
+  applyContainerEditorDraft,
+  createContainerEditorItem,
+  getContainerEditorSmartOptions,
+} from "./container-editor-draft";
+import { ContainerStatePreview, ContainerStateSettings } from "./container-state-editor";
+import classes from "./container-editor.module.css";
+import { ContainerAppearanceSettings, ContainerRotationSettings, editorSwitchStyles } from "./container-option-fields";
+import { SmartContainerEditorPreview } from "../smart-container/smart-container-editor-preview";
 
 interface ModalProps {
-  sectionId: string;
-  value: z.infer<typeof containerSectionOptionsSchema>;
-  onSuccessfulEdit: (value: z.infer<typeof containerSectionOptionsSchema>) => void;
+  containerId: string;
+  value: ContainerSectionOptions;
 }
 
 export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
-  const t = useI18n();
-  const tSection = useI18n("section");
-  const tCommon = useI18n("common");
-  const theme = useMantineTheme();
-  const { items } = useSectionItems(innerProps.sectionId);
+  const t = useI18n("section.container.smart");
+  const translate = useI18n();
+  const board = useRequiredBoard();
+  const [initialBoard] = useState(board);
+  const currentLayoutId = useCurrentLayout();
+  const { updateBoard } = useUpdateBoard();
+  const settings = useSettings();
+  const formId = useId();
+  const [capacityWarning, setCapacityWarning] = useState(false);
+  const utils = clientApi.useUtils();
+  const [initialSmart] = useState(() =>
+    getContainerEditorSmartOptions(
+      innerProps.value,
+      board.items,
+      board.sections.find((section) => section.id === innerProps.containerId && section.kind === "container") ?? {
+        id: innerProps.containerId,
+        kind: "container",
+        layouts: [],
+      },
+      t("state"),
+    ),
+  );
+  const form = useZodForm(
+    containerSectionOptionsSchema.unwrap().superRefine((options, context) => {
+      if (options.smart?.enabled || !options.autoExpand.enabled || options.autoExpand.itemId !== null) return;
+      context.addIssue({ code: "invalid_type", expected: "string", input: null, path: ["autoExpand", "itemId"] });
+    }),
+    {
+      mode: "controlled",
+      initialValues: { ...innerProps.value, smart: initialSmart },
+    },
+  );
+  const smart = form.values.smart ?? initialSmart;
+  const [selectedStateId, setSelectedStateId] = useState(initialSmart.states[0]?.id ?? "");
+  const [isPlayingPreview, setPlayingPreview] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (document.activeElement !== document.body) return;
+    const editor = editorRef.current;
+    const target = editor?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"], [data-autofocus]');
+    target?.focus({ preventScroll: true });
+  }, []);
+  const isTabbed = useMediaQuery("(max-width: 68em)", undefined, { getInitialValueInEffect: false });
+  const [newItems, setNewItems] = useState<Item[]>([]);
+  const [editedItems, setEditedItems] = useState<Map<string, Item>>(() => new Map());
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(() => new Set());
+  const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
+  const editorActive = useRef(true);
   const [activityCapableKinds, setActivityCapableKinds] = useState<ReadonlySet<WidgetKind>>(() => new Set());
-
   useEffect(() => {
     let cancelled = false;
     void loadAllWidgetDefinitions().then((definitions) => {
       if (cancelled) return;
-      const kinds = [...definitions.entries()]
-        .filter(([, definition]) => definition.activitySignal !== undefined)
-        .map(([kind]) => kind);
-      setActivityCapableKinds(new Set(kinds));
+      setActivityCapableKinds(
+        new Set(
+          [...definitions.entries()]
+            .filter(([, definition]) => definition.activitySignal !== undefined)
+            .map(([kind]) => kind),
+        ),
+      );
     });
     return () => {
       cancelled = true;
     };
   }, []);
-
-  const activityCapableItems = items.filter((item) => activityCapableKinds.has(item.kind));
-  const form = useZodForm(containerEditFormSchema, {
-    mode: "controlled",
-    initialValues: {
-      ...innerProps.value,
-      collapsible:
-        innerProps.value.collapsible ||
-        (innerProps.value.autoExpand.enabled && innerProps.value.autoExpand.inactiveDisplay === "collapsed"),
-    },
-  });
-
-  return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        const newOptions = { ...values };
-        if (newOptions.autoExpand.enabled && newOptions.autoExpand.inactiveDisplay === "collapsed") {
-          newOptions.collapsible = true;
+  const { openModal: openItemPicker } = useModalAction(ItemSelectModal);
+  const { openModal: openWidgetEditor } = useModalAction(LazyWidgetEditModal);
+  const items = useMemo(
+    () =>
+      [
+        ...board.items.map((item) => editedItems.get(item.id) ?? item),
+        ...newItems.map((item) => editedItems.get(item.id) ?? item),
+      ].filter((item) => !deletedIds.has(item.id)),
+    [board.items, newItems, editedItems, deletedIds],
+  );
+  const latestEditor = useRef({ items, currentLayoutId });
+  latestEditor.current = { items, currentLayoutId };
+  const { setCloseInterceptor } = actions;
+  useEffect(() => {
+    editorActive.current = true;
+    setCloseInterceptor?.(() => {
+      editorActive.current = false;
+      return true;
+    });
+    return () => {
+      editorActive.current = false;
+      setCloseInterceptor?.(null);
+    };
+  }, [setCloseInterceptor]);
+  const closeEditor = () => {
+    editorActive.current = false;
+    actions.closeModal();
+  };
+  const activityItems = items.filter(
+    (item) =>
+      activityCapableKinds.has(item.kind) &&
+      item.layouts.some((layout) => layout.layoutId === currentLayoutId && layout.sectionId === innerProps.containerId),
+  );
+  const setSmart = (value: SmartContainerOptions) => {
+    setCapacityWarning(false);
+    form.setFieldValue("smart", value);
+  };
+  const setSmartOption = <K extends keyof SmartContainerOptions>(key: K, value: SmartContainerOptions[K]) =>
+    setSmart({ ...smart, [key]: value });
+  const changeStateItems = (stateId: string, itemIds: string[]) =>
+    setSmart({
+      ...smart,
+      states: smart.states.map((state) => {
+        if (state.id !== stateId) return state;
+        return { ...state, itemIds };
+      }),
+    });
+  const addState = (offset: number) => {
+    if (smart.states.length >= smartContainerStateLimit) return;
+    const index = Math.max(
+      0,
+      smart.states.findIndex((state) => state.id === selectedStateId),
+    );
+    const state = {
+      id: createId(),
+      title: `${t("state")} ${smart.states.length + 1}`,
+      priority: 50,
+      enabled: true,
+      itemIds: [],
+    };
+    const states = [...smart.states];
+    states.splice(index + offset, 0, state);
+    setSmart({ ...smart, states });
+    setSelectedStateId(state.id);
+  };
+  const deleteState = () => {
+    if (smart.states.length <= 1) return;
+    const index = smart.states.findIndex((state) => state.id === selectedStateId);
+    const deleted = smart.states[index];
+    if (!deleted) return;
+    const states = smart.states.filter((state) => state.id !== selectedStateId);
+    const destination = states[Math.min(index, states.length - 1)];
+    if (!destination) return;
+    if (deleted.itemIds.length > getSmartContainerStateCapacity(destination)) {
+      notifyStateFull();
+      return;
+    }
+    if (!states.some((state) => state.enabled)) {
+      states[states.indexOf(destination)] = { ...destination, enabled: true };
+    }
+    setSmart({
+      ...smart,
+      fallbackStateId: smart.fallbackStateId === deleted.id ? undefined : smart.fallbackStateId,
+      states: states.map((state) => {
+        if (state.id !== destination.id) return state;
+        return { ...state, itemIds: [...state.itemIds, ...deleted.itemIds] };
+      }),
+    });
+    setSelectedStateId(destination.id);
+  };
+  const notifyStateFull = () => setCapacityWarning(true);
+  const addItem = (index: number) => {
+    const stateId = selectedStateId;
+    const destination = smart.states.find((entry) => entry.id === stateId);
+    if (!destination) return;
+    if (getSmartContainerStateCapacity(destination) <= 0) {
+      notifyStateFull();
+      return;
+    }
+    openItemPicker({
+      boardId: board.id,
+      initialTargetSectionId: innerProps.containerId,
+      onConfiguredItem: (input) => {
+        let item: ReturnType<typeof createContainerEditorItem>;
+        try {
+          item = createContainerEditorItem(board, items, input, innerProps.containerId, smart, stateId);
+        } catch (error) {
+          if (error instanceof NoItemPlacementSpaceError) return false;
+          throw error;
         }
-        innerProps.onSuccessfulEdit(newOptions);
-        actions.closeModal();
-      })}
-    >
-      <Stack>
-        <TextInput label={tCommon("field.title")} data-autofocus {...form.getInputProps("title")} />
-        <Switch
-          label={tSection("option.showLabel.label")}
-          description={tSection("option.showLabel.description")}
-          {...form.getInputProps("showLabel", { type: "checkbox" })}
+        if (!item) return false;
+        setNewItems((previous) => [...previous, item]);
+        form.setFieldValue("smart", (previous) => {
+          const options = previous ?? initialSmart;
+          return {
+            ...options,
+            states: options.states.map((state) => {
+              if (state.id !== stateId) return state;
+              const itemIds = [...state.itemIds];
+              itemIds.splice(index, 0, item.id);
+              return { ...state, itemIds };
+            }),
+          };
+        });
+        return true;
+      },
+    });
+  };
+  const editItem = async (item: Item) => {
+    if (loadingItemId) return;
+    setLoadingItemId(item.id);
+    try {
+      const [definition, integrationData] = await Promise.all([
+        loadWidgetDefinition(item.kind),
+        utils.integration.all.ensureData(),
+      ]);
+      if (!editorActive.current) return;
+      const currentItem = latestEditor.current.items.find((entry) => entry.id === item.id);
+      if (!currentItem || currentItem.kind !== item.kind) return;
+      const layout =
+        currentItem.layouts.find((entry) => entry.layoutId === latestEditor.current.currentLayoutId) ??
+        currentItem.layouts[0];
+      openWidgetEditor(
+        {
+          kind: item.kind,
+          allowResourceEditing: false,
+          definition,
+          value: {
+            options: currentItem.options,
+            integrationIds: currentItem.integrationIds,
+            advancedOptions: currentItem.advancedOptions,
+          },
+          onSuccessfulEdit: (value) =>
+            setEditedItems((previous) => new Map(previous).set(item.id, { ...currentItem, ...value })),
+          integrationData: integrationData.filter(
+            (integration) =>
+              integration.permissions.hasUseAccess &&
+              (definition.supportedIntegrations ?? []).some((kind) => kind === integration.kind),
+          ),
+          integrationSupport: "supportedIntegrations" in definition,
+          settings,
+          boardId: board.id,
+          itemId: item.id,
+          previewSectionId: innerProps.containerId,
+          previewDimensions: {
+            width: getLogicalGridSize(layout?.width ?? 2),
+            height: getLogicalGridSize(layout?.height ?? 2),
+          },
+          appId: currentItem.kind === "app" ? (currentItem.options.appId as string | undefined) : undefined,
+        },
+        { title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(item.kind, titleT)}` },
+      );
+    } catch (error) {
+      if (!editorActive.current) return;
+      showErrorNotification({
+        title: translate("common.error"),
+        message: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      if (editorActive.current) setLoadingItemId(null);
+    }
+  };
+  const deleteItem = (itemId: string) => {
+    setDeletedIds((previous) => new Set(previous).add(itemId));
+    setSmart({
+      ...smart,
+      states: smart.states.map((state) => ({ ...state, itemIds: state.itemIds.filter((id) => id !== itemId) })),
+    });
+  };
+  const moveItem = (itemId: string, direction: number) => {
+    const selected = smart.states.find((state) => state.id === selectedStateId);
+    if (!selected) return;
+    const index = selected.itemIds.indexOf(itemId);
+    const nextIndex = index + direction;
+    if (index < 0 || nextIndex < 0 || nextIndex >= selected.itemIds.length) return;
+    const itemIds = [...selected.itemIds];
+    itemIds.splice(index, 1);
+    itemIds.splice(nextIndex, 0, itemId);
+    changeStateItems(selected.id, itemIds);
+  };
+  const moveItemToState = (itemId: string, stateId: string) => {
+    const target = smart.states.find((state) => state.id === stateId);
+    if (!target || target.itemIds.includes(itemId)) return;
+    if (getSmartContainerStateCapacity(target) <= 0) {
+      notifyStateFull();
+      return;
+    }
+    setSmart({
+      ...smart,
+      states: smart.states.map((state) => {
+        const itemIds = state.itemIds.filter((id) => id !== itemId);
+        if (state.id === stateId) itemIds.push(itemId);
+        return { ...state, itemIds };
+      }),
+    });
+  };
+  const submit = form.onSubmit(
+    (values) => {
+      let conflict = false;
+      const updated = updateBoard((previous) => {
+        const result = applyContainerEditorDraft(
+          previous,
+          initialBoard,
+          innerProps.containerId,
+          innerProps.value,
+          {
+            ...values,
+            smart: !innerProps.value.smart && !values.smart?.enabled ? undefined : values.smart,
+            collapsible:
+              values.collapsible ||
+              (!values.smart?.enabled &&
+                values.autoExpand.enabled &&
+                values.autoExpand.inactiveDisplay === "collapsed"),
+          },
+          newItems,
+          editedItems,
+          deletedIds,
+        );
+        if (!result) conflict = true;
+        return result ?? previous;
+      });
+      if (conflict || !updated) {
+        showErrorNotification({ title: translate("common.error"), message: t("concurrentChange") });
+        return;
+      }
+      closeEditor();
+    },
+    () => {
+      showErrorNotification({ title: translate("common.error"), message: t("invalidSettings") });
+    },
+  );
+  const previewBoard = {
+    ...board,
+    items,
+    sections: board.sections.map((section) => {
+      if (section.id !== innerProps.containerId || section.kind !== "container") return section;
+      return { ...section, options: form.values };
+    }),
+  };
+  const preview = (
+    <ContainerStatePreview
+      smart={smart}
+      selectedStateId={selectedStateId}
+      items={items}
+      title={form.values.title}
+      loadingItemId={loadingItemId}
+      preview={
+        <Stack gap="xs">
+          {smart.enabled && smart.mode !== "manual" && (
+            <Button
+              variant="light"
+              c="var(--mantine-color-text)"
+              mih={44}
+              onClick={() => setPlayingPreview((current) => !current)}
+            >
+              {isPlayingPreview ? t("stopPreview") : t("playPreview")}
+            </Button>
+          )}
+          <SmartContainerEditorPreview
+            key={isPlayingPreview && smart.mode !== "manual" ? "automatic" : "arrangement"}
+            board={previewBoard}
+            containerId={innerProps.containerId}
+            selectedStateId={isPlayingPreview && smart.mode !== "manual" ? undefined : selectedStateId}
+            onSelectState={setSelectedStateId}
+            layoutId={currentLayoutId}
+          />
+        </Stack>
+      }
+      onSelectState={setSelectedStateId}
+      onAddItem={addItem}
+      onEditItem={(item) => void editItem(item)}
+      onDeleteItem={deleteItem}
+      onMoveItem={moveItem}
+      onMoveItemToState={moveItemToState}
+    />
+  );
+  const settingsPanel = (
+    <form id={formId} className={classes.settings} onSubmit={submit}>
+      <Stack gap="md">
+        <TextInput
+          label={translate("common.field.title")}
+          data-autofocus={!isTabbed || !smart.enabled || undefined}
+          {...form.getInputProps("title")}
         />
         <Switch
-          label={tSection("option.collapsible.label")}
-          description={tSection("option.collapsible.description")}
-          {...form.getInputProps("collapsible", { type: "checkbox" })}
-          disabled={form.values.autoExpand.enabled && form.values.autoExpand.inactiveDisplay === "collapsed"}
+          styles={editorSwitchStyles}
+          label={t("enabled")}
+          description={t("enabledDescription")}
+          checked={smart.enabled}
+          onChange={(event) => setSmartOption("enabled", event.currentTarget.checked)}
         />
-        <Switch
-          label={tSection("option.showOpenAll.label")}
-          description={tSection("option.showOpenAll.description")}
-          {...form.getInputProps("showOpenAll", { type: "checkbox" })}
-        />
-        <Switch
-          label={tSection("option.scrollable.label")}
-          description={tSection("option.scrollable.description")}
-          {...form.getInputProps("scrollable", { type: "checkbox" })}
-        />
-        <Switch
-          label={tSection("option.autoExpand.label")}
-          description={tSection("option.autoExpand.description")}
-          disabled={activityCapableItems.length === 0 && !form.values.autoExpand.enabled}
-          {...form.getInputProps("autoExpand.enabled", { type: "checkbox" })}
-          onChange={(event) => {
-            const enabled = event.currentTarget.checked;
-            form.setFieldValue("autoExpand.enabled", enabled);
-            if (enabled && form.values.autoExpand.inactiveDisplay === "collapsed") {
-              form.setFieldValue("collapsible", true);
-            }
-          }}
-        />
-        {form.values.autoExpand.enabled && (
-          <>
-            <Select
-              label={tSection("container.option.autoExpand.item.label")}
-              placeholder={tSection("container.option.autoExpand.item.placeholder")}
-              data={activityCapableItems.map((item) => ({
-                value: item.id,
-                label: item.advancedOptions.title?.trim() || getWidgetName(item.kind, t),
-              }))}
-              {...form.getInputProps("autoExpand.itemId")}
-            />
-            <SegmentedControl
-              data={[
-                {
-                  value: "collapsed",
-                  label: tSection("container.option.autoExpand.inactiveDisplay.collapsed"),
-                },
-                { value: "hidden", label: tSection("container.option.autoExpand.inactiveDisplay.hidden") },
-              ]}
-              {...form.getInputProps("autoExpand.inactiveDisplay")}
-              onChange={(value) => {
-                form.setFieldValue("autoExpand.inactiveDisplay", value as "collapsed" | "hidden");
-                if (value === "collapsed") form.setFieldValue("collapsible", true);
-              }}
-            />
-            <Switch
-              label={tSection("container.option.autoExpand.fitToContent.label")}
-              description={tSection("container.option.autoExpand.fitToContent.description")}
-              {...form.getInputProps("autoExpand.fitToContent", { type: "checkbox" })}
-            />
-          </>
+        {smart.enabled ? (
+          <Tabs defaultValue="states" keepMounted>
+            <Tabs.List grow aria-label={t("editorSettings")} className={classes.tabsList}>
+              <Tabs.Tab className={classes.tab} value="states">
+                {t("states")}
+              </Tabs.Tab>
+              <Tabs.Tab className={classes.tab} value="rotation">
+                {t("rotation")}
+              </Tabs.Tab>
+              <Tabs.Tab className={classes.tab} value="appearance">
+                {t("appearance")}
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="states" pt="md">
+              <ContainerStateSettings
+                smart={smart}
+                selectedStateId={selectedStateId}
+                onSelectState={setSelectedStateId}
+                onChange={setSmart}
+                onAddState={addState}
+                onDeleteState={deleteState}
+              />
+            </Tabs.Panel>
+            <Tabs.Panel value="rotation" pt="md">
+              <ContainerRotationSettings smart={smart} setSmartOption={setSmartOption} />
+            </Tabs.Panel>
+            <Tabs.Panel value="appearance" pt="md">
+              <ContainerAppearanceSettings
+                form={form}
+                smart={smart}
+                setSmartOption={setSmartOption}
+                activityItems={activityItems}
+              />
+            </Tabs.Panel>
+          </Tabs>
+        ) : (
+          <ContainerAppearanceSettings
+            form={form}
+            smart={smart}
+            setSmartOption={setSmartOption}
+            activityItems={activityItems}
+          />
         )}
-        <TextMultiSelect
-          label={tSection("container.option.customCssClasses.label")}
-          {...form.getInputProps("customCssClasses")}
-        />
-        <ColorInput
-          label={tSection("container.option.borderColor.label")}
-          format="hex"
-          swatches={Object.values(theme.colors).map((color) => color[6])}
-          rightSection={
-            <CloseButton
-              onClick={() => form.setFieldValue("borderColor", "")}
-              style={{ display: form.getInputProps("borderColor").value ? undefined : "none" }}
-            />
-          }
-          {...form.getInputProps("borderColor")}
-        />
-        <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>
     </form>
   );
+  return (
+    <Stack ref={editorRef} className={classes.editor} gap={0} mih={0} flex={1}>
+      <Box p="md" pt={0} mih={0} flex={1} style={{ overflowY: "auto" }}>
+        {!smart.enabled ? (
+          settingsPanel
+        ) : isTabbed ? (
+          <Tabs defaultValue="widgets" keepMounted keepMountedMode="display-none">
+            <Tabs.List grow mb="sm" aria-label={t("edit")}>
+              <Tabs.Tab value="widgets" className={classes.tab} data-autofocus>
+                {t("editorContent")}
+              </Tabs.Tab>
+              <Tabs.Tab value="settings" className={classes.tab}>
+                {t("editorSettings")}
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="widgets" className={classes.editorPanel}>
+              {preview}
+            </Tabs.Panel>
+            <Tabs.Panel value="settings" className={classes.editorPanel}>
+              {settingsPanel}
+            </Tabs.Panel>
+          </Tabs>
+        ) : (
+          <WidgetEditWorkspace preview={preview}>{settingsPanel}</WidgetEditWorkspace>
+        )}
+      </Box>
+      <WidgetEditFooter>
+        {capacityWarning && (
+          <Text role="alert" size="sm" c="red" mb="xs">
+            {t("stateFull")}
+          </Text>
+        )}
+        <div className={classes.formActions}>
+          <ModalFormFooter onCancel={closeEditor} form={formId} />
+        </div>
+      </WidgetEditFooter>
+    </Stack>
+  );
 }).withOptions({
-  defaultTitle(t) {
-    return t("item.edit.title");
-  },
-  size: modalSizeForm,
+  defaultTitle: (t) => t("section.container.smart.edit"),
+  size: "100rem",
+  keepMounted: true,
+  withCloseButton: false,
+  styles: widgetEditorModalStyles,
+  closeOnClickOutside: false,
 });

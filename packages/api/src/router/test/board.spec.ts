@@ -25,6 +25,7 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
+import { containerSectionOptionsDefaults } from "@homarr/validation/shared";
 
 import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
@@ -1107,6 +1108,80 @@ describe("savePartialBoardSettings should save general settings", () => {
 });
 
 describe("saveBoard should save full board", () => {
+  it.each([false, true])(
+    "preserves omitted placements unless replacement is requested (Smart Container: %s)",
+    async (smart) => {
+      const db = createDb();
+      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+      const name = "layout-subset";
+      const { boardId, sectionId, itemId } = await createFullBoardAsync(db, name);
+      const board = await caller.getBoardByName({ name });
+      const containerId = createId();
+      await caller.saveBoard({
+        id: boardId,
+        sections: [
+          ...board.sections,
+          {
+            id: containerId,
+            kind: "container",
+            options: smart ? { smart: { enabled: true, states: [{ id: "state", itemIds: [itemId] }] } } : {},
+            layouts: board.layouts.map(({ id }) => ({
+              layoutId: id,
+              parentSectionId: sectionId,
+              xOffset: 0,
+              yOffset: 0,
+              width: 2,
+              height: 2,
+            })),
+          },
+        ],
+        items: [
+          {
+            id: itemId,
+            kind: "clock",
+            options: {},
+            integrationIds: [],
+            advancedOptions: {},
+            layouts: board.layouts.map(({ id }) => ({
+              layoutId: id,
+              sectionId: containerId,
+              xOffset: 0,
+              yOffset: 0,
+              width: 1,
+              height: 1,
+            })),
+          },
+        ],
+      });
+
+      const saved = await caller.getBoardByName({ name });
+      const container = saved.sections.find((section) => section.id === containerId);
+      expect(container).toMatchObject({
+        kind: "container",
+        layouts: expect.arrayContaining([
+          expect.objectContaining({ layoutId: board.layouts.find((layout) => layout.role === "mobile")?.id }),
+        ]),
+      });
+      const partialSave = {
+        id: boardId,
+        sections: saved.sections.map((section) => {
+          if (section.kind !== "container") return section;
+          return { ...section, layouts: [] };
+        }),
+        items: saved.items.map((item) => ({ ...item, layouts: [] })),
+      };
+      await caller.saveBoard(partialSave);
+      const preserved = await caller.getBoardByName({ name });
+      expect(preserved.sections.find((section) => section.id === containerId)).toEqual(container);
+      expect(preserved.items[0]?.layouts).toEqual(saved.items[0]?.layouts);
+
+      await caller.saveBoard({ ...partialSave, replaceLayouts: true });
+      const replaced = await caller.getBoardByName({ name });
+      expect(replaced.sections.find((section) => section.id === containerId)).toMatchObject({ layouts: [] });
+      expect(replaced.items[0]?.layouts).toEqual([]);
+    },
+  );
+
   it("should remove section when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -1410,6 +1485,7 @@ describe("saveBoard should save full board", () => {
       collapsible: false,
       showOpenAll: false,
       scrollable: false,
+      autoExpand: containerSectionOptionsDefaults.autoExpand,
     });
     expect(
       await db.query.sectionLayouts.findFirst({

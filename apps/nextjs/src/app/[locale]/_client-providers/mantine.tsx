@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { DirectionProvider, MantineProvider } from "@mantine/core";
+import { DirectionProvider, MantineProvider, Notification } from "@mantine/core";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
@@ -11,6 +11,7 @@ import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
 import type { ServerSettings } from "@homarr/server-settings";
 
 import { createAppearanceTheme } from "~/theme/branding";
@@ -25,10 +26,21 @@ export const CustomMantineProvider = ({
   const settings = useSettings();
   const preview = useThemePreview();
   const configuredBranding = preview?.branding ?? branding ?? settings.branding;
-  const { theme, cssVariablesResolver } = useMemo(
-    () => createAppearanceTheme(configuredBranding, preview ?? undefined),
-    [configuredBranding, preview],
-  );
+  const t = useI18n("common.action");
+  const closeLabel = t("close");
+  const { theme, cssVariablesResolver } = useMemo(() => {
+    const appearance = createAppearanceTheme(configuredBranding, preview ?? undefined);
+    return {
+      ...appearance,
+      theme: {
+        ...appearance.theme,
+        components: {
+          ...appearance.theme.components,
+          Notification: Notification.extend({ defaultProps: { closeButtonProps: { "aria-label": closeLabel } } }),
+        },
+      },
+    };
+  }, [configuredBranding, preview, closeLabel]);
   return (
     <DirectionProvider>
       <MantineProvider

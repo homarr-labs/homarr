@@ -59,12 +59,18 @@ import {
   unlockSelection,
 } from "./item-select-data";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
+import type { CreateItemInput } from "./actions/create-item";
 import { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
 import { WorkshopWidgetSection, useFilteredWorkshopCatalog } from "./workshop-widget-section";
 
 export { ConnectionStatusBadge, SupportedIntegrations } from "./widget-card-connection";
 
-interface ItemSelectModalContentProps {
+interface ItemSelectPlacementProps {
+  initialTargetSectionId?: string;
+  onConfiguredItem?: (item: CreateItemInput) => boolean;
+}
+
+interface ItemSelectModalContentProps extends ItemSelectPlacementProps {
   actions: { closeModal: () => void };
   integrationData: RouterOutputs["integration"]["all"] | undefined;
   integrationError: boolean;
@@ -113,6 +119,8 @@ const ItemSelectModalContent = ({
   isAdmin,
   canCreateIntegration,
   initialSearch = "",
+  initialTargetSectionId,
+  onConfiguredItem,
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState(initialSearch);
   const [integrationFilter, setIntegrationFilter] = useState<IntegrationKind | null>(null);
@@ -155,7 +163,9 @@ const ItemSelectModalContent = ({
     ],
     [board, currentLayout, currentLayoutId, getTabLabel, mainCanvasSection, t, tabs],
   );
-  const [targetSectionId, setTargetSectionId] = useState<string | null>(placementOptions[0]?.value ?? null);
+  const [targetSectionId, setTargetSectionId] = useState<string | null>(
+    initialTargetSectionId ?? placementOptions[0]?.value ?? null,
+  );
   const effectiveSectionId = placementOptions.some(({ value }) => value === targetSectionId)
     ? targetSectionId
     : (placementOptions[0]?.value ?? null);
@@ -177,6 +187,20 @@ const ItemSelectModalContent = ({
     };
   }, []);
   const { createItem, removeItem } = useItemActions();
+  const saveConfiguredItem = (input: CreateItemInput, name: string) => {
+    if (onConfiguredItem) {
+      const staged = onConfiguredItem(input);
+      if (!staged) {
+        showErrorNotification({
+          title: t("item.create.notification.error.title"),
+          message: t("item.create.notification.error.noSpace"),
+        });
+      }
+      return staged;
+    }
+    const updatedBoard = createItem(input);
+    return notifyCreated(updatedBoard, input.id ?? "", name);
+  };
 
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
@@ -193,7 +217,7 @@ const ItemSelectModalContent = ({
   }, [integrationData]);
   const searchQuery = search.trim().toLowerCase();
   const workshop = useFilteredWorkshopCatalog({
-    enabled: isAdmin,
+    enabled: isAdmin && !onConfiguredItem,
     searchQuery,
     integrationFilter,
     availableKinds: workshopAvailableKinds,
@@ -331,6 +355,7 @@ const ItemSelectModalContent = ({
       openEditModal(
         {
           kind: "customApi",
+          allowResourceEditing: !onConfiguredItem,
           definition,
           value: {
             advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
@@ -338,16 +363,18 @@ const ItemSelectModalContent = ({
             integrationIds: [],
           },
           onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }, selectedSize) => {
-            const updatedBoard = createItem({
-              id: itemId,
-              kind: "customApi",
-              integrationIds: [],
-              options: configuredOptions,
-              targetSectionId: effectiveSectionId ?? undefined,
-              advancedOptions,
-              size: selectedSize ?? initialSize,
-            });
-            notifyCreated(updatedBoard, itemId, customWidgetDefinition.name);
+            return saveConfiguredItem(
+              {
+                id: itemId,
+                kind: "customApi",
+                integrationIds: [],
+                options: configuredOptions,
+                targetSectionId: effectiveSectionId ?? undefined,
+                advancedOptions,
+                size: selectedSize ?? initialSize,
+              },
+              customWidgetDefinition.name,
+            );
           },
           integrationData: [],
           integrationSupport: false,
@@ -415,6 +442,7 @@ const ItemSelectModalContent = ({
         openEditModal(
           {
             kind,
+            allowResourceEditing: !onConfiguredItem,
             definition,
             value: {
               advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
@@ -422,16 +450,18 @@ const ItemSelectModalContent = ({
               integrationIds: selectedIntegrationIds,
             },
             onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }, selectedSize) => {
-              const updatedBoard = createItem({
-                id: itemId,
-                kind,
-                options,
-                integrationIds: newIntegrationIds,
-                targetSectionId: effectiveSectionId ?? undefined,
-                advancedOptions,
-                size: selectedSize ?? initialSize,
-              });
-              if (!notifyCreated(updatedBoard, itemId, getWidgetName(kind, t))) return;
+              return saveConfiguredItem(
+                {
+                  id: itemId,
+                  kind,
+                  options,
+                  integrationIds: newIntegrationIds,
+                  targetSectionId: effectiveSectionId ?? undefined,
+                  advancedOptions,
+                  size: selectedSize ?? initialSize,
+                },
+                getWidgetName(kind, t),
+              );
             },
             integrationData: availableIntegrations,
             integrationSupport: hasIntegrationSupport,
@@ -448,6 +478,13 @@ const ItemSelectModalContent = ({
         hasIntegrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
 
       if (integrationsRequired && matchingIntegrationCount === 0) {
+        if (onConfiguredItem) {
+          showErrorNotification({
+            title: t("item.create.missingIntegration.title"),
+            message: t("item.create.missingIntegration.containerDraft"),
+          });
+          return;
+        }
         if (!canCreateIntegration) {
           showErrorNotification({
             title: t("item.create.missingIntegration.title"),
@@ -527,7 +564,7 @@ const ItemSelectModalContent = ({
                 filteredItems.length === 1 &&
                 filteredItems[0] &&
                 filteredCustomWidgets.length === 0 &&
-                (!isAdmin || (!workshop.isPending && workshop.items.length === 0))
+                (!isAdmin || Boolean(onConfiguredItem) || (!workshop.isPending && workshop.items.length === 0))
               ) {
                 void handleAdd(filteredItems[0].kind);
               }
@@ -557,7 +594,7 @@ const ItemSelectModalContent = ({
           }}
         />
 
-        {placementOptions.length > 1 && (
+        {placementOptions.length > 1 && !onConfiguredItem && (
           <Box style={{ flex: "0 1 280px", minWidth: 200 }}>
             <Select
               label={t("item.create.destination.label")}
@@ -640,7 +677,7 @@ const ItemSelectModalContent = ({
             ))}
           </>
         )}
-        {isAdmin && (
+        {isAdmin && !onConfiguredItem && (
           <WorkshopWidgetSection
             catalog={workshop}
             availableKinds={workshopAvailableKinds}
@@ -653,11 +690,13 @@ const ItemSelectModalContent = ({
         )}
       </SimpleGrid>
 
-      {!isAdmin && filteredItems.length === 0 && (
-        <Center p="xl">
-          <Text c="dimmed">{t("common.noResults")}</Text>
-        </Center>
-      )}
+      {(!isAdmin || onConfiguredItem) &&
+        filteredItems.length === 0 &&
+        (!isAdmin || filteredCustomWidgets.length === 0) && (
+          <Center p="xl">
+            <Text c="dimmed">{t("common.noResults")}</Text>
+          </Center>
+        )}
     </Stack>
   );
 };
@@ -710,7 +749,11 @@ const ItemSelectModalFrame = ({
   innerProps,
 }: {
   actions: { closeModal: () => void };
-  innerProps: { boardId: string; initialIntegrationKind?: IntegrationKind; initialWidgetKind?: WidgetKind };
+  innerProps: {
+    boardId: string;
+    initialIntegrationKind?: IntegrationKind;
+    initialWidgetKind?: WidgetKind;
+  } & ItemSelectPlacementProps;
 }) => {
   const utils = clientApi.useUtils();
   const { data: session } = useSession();
@@ -732,6 +775,8 @@ const ItemSelectModalFrame = ({
       ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
       isAdmin={isAdmin}
       canCreateIntegration={canCreateIntegration}
+      initialTargetSectionId={innerProps.initialTargetSectionId}
+      onConfiguredItem={innerProps.onConfiguredItem}
       initialSearch={
         innerProps.initialWidgetKind
           ? getWidgetName(innerProps.initialWidgetKind, t)
@@ -743,11 +788,13 @@ const ItemSelectModalFrame = ({
   );
 };
 
-export const ItemSelectModal = createModal<{
-  boardId: string;
-  initialIntegrationKind?: IntegrationKind;
-  initialWidgetKind?: WidgetKind;
-}>((props) => <ItemSelectModalFrame {...props} />).withOptions({
+export const ItemSelectModal = createModal<
+  {
+    boardId: string;
+    initialIntegrationKind?: IntegrationKind;
+    initialWidgetKind?: WidgetKind;
+  } & ItemSelectPlacementProps
+>((props) => <ItemSelectModalFrame {...props} />).withOptions({
   defaultTitle: (t) => t("item.create.title"),
   size: modalSizeSelect,
 });

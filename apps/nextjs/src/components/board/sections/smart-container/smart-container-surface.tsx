@@ -1,0 +1,509 @@
+"use client";
+
+import type { PropsWithChildren } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ActionIcon, Box, Button, Group, Menu, Text, UnstyledButton } from "@mantine/core";
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronUp,
+  IconCheck,
+  IconPencil,
+  IconPlayerPause,
+  IconPlayerPlay,
+} from "@tabler/icons-react";
+
+import { useMounted } from "@mantine/hooks";
+
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { useI18n } from "@homarr/translation/client";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
+import type { SmartContainerOptions } from "@homarr/validation/smart-container";
+import { WidgetActivityProvider } from "@homarr/widgets/activity";
+
+import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
+import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { canShowSmartContainerPeeks, getSmartContainerStateLabel } from "./constants";
+import { useSectionItems } from "../use-section-items";
+import { useOpenContainerEditor } from "../container/lazy-container-edit-modal";
+import { projectSmartContainerState } from "./smart-container-layout";
+import {
+  SmartContainerProjectionProvider,
+  useSmartContainerPreviewState,
+  useSmartContainerProjection,
+} from "./smart-container-context";
+import { useSmartContainerRuntime } from "./use-smart-container-runtime";
+import classes from "./smart-container-surface.module.css";
+
+interface SurfaceProps extends PropsWithChildren {
+  section: ContainerSectionItem;
+  collapsed: boolean;
+  hasHeader: boolean;
+}
+
+export const SmartContainerSurface = (props: SurfaceProps) => {
+  const smart = props.section.options.smart;
+  if (!smart?.enabled || smart.states.length === 0) return props.children;
+  return <ObservedContainer {...props} options={smart} />;
+};
+
+const ObservedContainer = (props: SurfaceProps & { options: SmartContainerOptions }) => {
+  const { items, innerSections } = useSectionItems(props.section.id);
+  const watchedItemIds = useMemo(() => new Set(items.map((item) => item.id)), [items]);
+  return (
+    <WidgetActivityProvider watchedItemIds={watchedItemIds}>
+      <ReelSurface {...props} items={items} innerSections={innerSections} />
+    </WidgetActivityProvider>
+  );
+};
+
+const ReelSurface = ({
+  section,
+  options,
+  children,
+  collapsed,
+  hasHeader,
+  items,
+  innerSections,
+}: SurfaceProps & { options: SmartContainerOptions } & ReturnType<typeof useSectionItems>) => {
+  const board = useRequiredBoard();
+  const layoutId = useCurrentLayout();
+  const [isEditMode] = useEditMode();
+  const inheritedPreview = useSmartContainerPreviewState();
+  const preview = inheritedPreview?.containerId === section.id ? inheritedPreview : undefined;
+  const previewStateId = preview?.stateId;
+  const interactive = useMounted();
+  const runtime = useSmartContainerRuntime({
+    sectionId: section.id,
+    options,
+    items,
+    isEditMode,
+    isCollapsed: collapsed,
+    isPreview: Boolean(preview),
+    previewStateId,
+  });
+  const { selectedState, selectedStateId, states } = runtime;
+  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
+  const original = board.sections.find((entry) => entry.id === section.id);
+  let savedRows = section.height;
+  if (original?.kind === "container")
+    savedRows = original.layouts.find((layout) => layout.layoutId === layoutId)?.height ?? savedRows;
+  const liveProjection = useMemo(
+    () =>
+      projectSmartContainerState({
+        state: selectedState,
+        items,
+        columnCount: section.width,
+        rowBudget: savedRows,
+        options,
+        authored: isEditMode,
+        expandedItemId,
+        activities: runtime.activities,
+        now: runtime.now,
+      }),
+    [
+      selectedState,
+      items,
+      section.width,
+      savedRows,
+      options,
+      isEditMode,
+      expandedItemId,
+      runtime.activities,
+      runtime.now,
+    ],
+  );
+  const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
+  const [focusedProjection, setFocusedProjection] = useState<typeof liveProjection | null>(null);
+  const projection = (!isEditMode && focusedProjection) || liveProjection;
+  const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
+  const canvasScale = useBoardCanvasScale();
+  const showPeeks = !collapsed && canShowSmartContainerPeeks(options, savedRows, hasHeader, canvasScale);
+  const previous = states[(selectedIndex - 1 + states.length) % states.length];
+  const next = states[(selectedIndex + 1) % states.length];
+  const openEditor = useOpenContainerEditor(section);
+  const t = useI18n("section.container.smart");
+  const stateLabel = t("state");
+  const previousLabel = getSmartContainerStateLabel(
+    previous?.title,
+    stateLabel,
+    (selectedIndex - 1 + states.length) % states.length,
+  );
+  const nextLabel = getSmartContainerStateLabel(next?.title, stateLabel, (selectedIndex + 1) % states.length);
+  const surfaceRef = useRef<HTMLElement>(null);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(isEditMode || Boolean(preview));
+  useEffect(() => {
+    const surface = surfaceRef.current;
+    if (!surface || hasEnteredViewport) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setHasEnteredViewport(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) setHasEnteredViewport(true);
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(surface);
+    return () => observer.disconnect();
+  }, [hasEnteredViewport]);
+  const priorStateId = useRef(selectedStateId);
+  const { setHovered } = runtime;
+  useEffect(() => {
+    if (!collapsed) return;
+    setHovered(false);
+    setFocusedProjection(null);
+    setFocusedItemId(null);
+  }, [collapsed, setHovered]);
+  useEffect(() => {
+    if (priorStateId.current === selectedStateId) return;
+    const direction = states.findIndex((state) => state.id === priorStateId.current) < selectedIndex ? 1 : -1;
+    priorStateId.current = selectedStateId;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const body = surfaceRef.current?.querySelector("[data-board-container-body]");
+    const animation = body?.animate(
+      [
+        { opacity: 0, transform: `translateY(${direction * 14}px)` },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      { duration: 240, easing: "ease-out" },
+    );
+    return () => animation?.cancel();
+  }, [selectedStateId, selectedIndex, states]);
+
+  const previousState = () => {
+    if (preview?.onSelectState && previous) preview.onSelectState(previous.id);
+    else runtime.previousState();
+  };
+  const nextState = () => {
+    if (preview?.onSelectState && next) preview.onSelectState(next.id);
+    else runtime.nextState();
+  };
+  const value = {
+    sectionId: section.id,
+    projection,
+    now: runtime.now,
+    savedRows,
+    interactive,
+    showPeeks,
+    deferPassiveWidgets: !hasEnteredViewport && !isEditMode && !preview,
+    compactQuiet: options.compactQuiet && !isEditMode,
+    expandedItemId,
+    toggleCompactWidget: (itemId: string) => {
+      runtime.holdForFocus();
+      setFocusedProjection(null);
+      setFocusedItemId(null);
+      setExpandedItemId((current) => (current === itemId ? null : itemId));
+    },
+    focusedItemId,
+    runtime: { ...runtime, selectState: preview?.onSelectState ?? runtime.selectState, previousState, nextState },
+  };
+  return (
+    <SmartContainerProjectionProvider value={value}>
+      <Box
+        component="section"
+        ref={surfaceRef}
+        className={classes.reel}
+        aria-roledescription="carousel"
+        aria-label={section.options.title || t("state")}
+        data-smart-container={section.id}
+        data-selected-state={selectedStateId}
+        data-multiple-states={showPeeks || undefined}
+        onPointerEnter={(event) => {
+          if (!collapsed && event.pointerType === "mouse") runtime.setHovered(true);
+        }}
+        onPointerLeave={(event) => {
+          if (event.pointerType === "mouse") runtime.setHovered(false);
+        }}
+        onPointerUpCapture={(event) => {
+          if (
+            collapsed ||
+            isEditMode ||
+            !(event.target instanceof Element) ||
+            event.target.closest("[data-smart-resume], [data-board-container-label]")
+          )
+            return;
+          if (
+            !event.target.closest(
+              'button, a[href], input, select, textarea, [contenteditable="true"], [role="button"], [role="slider"], [role="switch"], [role="menuitem"], [role="option"], [role="row"][tabindex]',
+            )
+          )
+            return;
+          runtime.holdForFocus();
+        }}
+        onFocusCapture={(event) => {
+          setHasEnteredViewport(true);
+          if (
+            collapsed ||
+            isEditMode ||
+            (event.target instanceof Element && event.target.closest("[data-board-container-label]"))
+          )
+            return;
+          runtime.holdForFocus();
+          if (!(event.target instanceof Element) || !event.target.closest('[data-grid-item-type="item"]')) return;
+          if (event.target.closest("[data-smart-compact-control]")) return;
+          setFocusedItemId(
+            event.target.closest<HTMLElement>('[data-grid-item-type="item"]')?.dataset.gridItemId ?? null,
+          );
+          setFocusedProjection((current) => current ?? liveProjection);
+        }}
+        onBlurCapture={(event) => {
+          const nextTarget = event.relatedTarget;
+          if (
+            nextTarget instanceof Element &&
+            nextTarget.closest('[data-grid-item-type="item"]') &&
+            event.currentTarget.contains(nextTarget)
+          )
+            return;
+          if (nextTarget instanceof Element && focusedItemId) {
+            const widget = event.currentTarget.querySelector(`[data-grid-item-id="${CSS.escape(focusedItemId)}"]`);
+            const controls = widget?.querySelectorAll("[aria-controls]") ?? [];
+            for (const control of controls) {
+              const controlledIds = control.getAttribute("aria-controls")?.split(/\s+/) ?? [];
+              if (controlledIds.some((id) => document.getElementById(id)?.contains(nextTarget))) return;
+            }
+          }
+          setFocusedProjection(null);
+          setFocusedItemId(null);
+        }}
+      >
+        {showPeeks && previous && (
+          <UnstyledButton
+            type="button"
+            className={classes.peek}
+            disabled={!interactive}
+            data-direction="previous"
+            aria-label={t("previousState") + ": " + previousLabel}
+            onClick={previousState}
+          >
+            <IconChevronUp />
+            <span className={classes.peekTitle}>{previousLabel}</span>
+          </UnstyledButton>
+        )}
+        <div className={classes.content}>
+          {children}
+          {!collapsed &&
+            projection.itemIds.length === 0 &&
+            innerSections.length === 0 &&
+            (!isEditMode || items.length === 0) && (
+              <div
+                className={classes.empty}
+                data-labeled={hasHeader || undefined}
+                data-narrow={section.width === 1 || undefined}
+              >
+                {(!isEditMode || section.width > 1) && (
+                  <Text size="sm">{section.width === 1 ? t("emptyShort") : t("empty")}</Text>
+                )}
+                {isEditMode && (
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    maw="100%"
+                    onClick={(event) => openEditor(event.currentTarget)}
+                  >
+                    {t("addWidget")}
+                  </Button>
+                )}
+              </div>
+            )}
+        </div>
+        {showPeeks && next && (
+          <UnstyledButton
+            type="button"
+            className={classes.peek}
+            disabled={!interactive}
+            data-direction="next"
+            aria-label={t("nextState") + ": " + nextLabel}
+            onClick={nextState}
+          >
+            <IconChevronDown />
+            <span className={classes.peekTitle}>{nextLabel}</span>
+          </UnstyledButton>
+        )}
+        <span
+          className={classes.liveRegion}
+          aria-live={runtime.pauseReason === "manual" ? "polite" : "off"}
+          aria-atomic="true"
+        >
+          {getSmartContainerStateLabel(selectedState?.title, stateLabel, selectedIndex)} ·{" "}
+          {t("position", { current: selectedIndex + 1, total: states.length })}
+        </span>
+      </Box>
+    </SmartContainerProjectionProvider>
+  );
+};
+
+export const SmartContainerToolbar = ({ section }: { section: ContainerSectionItem }) => {
+  const context = useSmartContainerProjection();
+  const inheritedPreview = useSmartContainerPreviewState();
+  const [isEditMode] = useEditMode();
+  const openEditor = useOpenContainerEditor(section);
+  const t = useI18n("section.container.smart");
+  const pointerWasHeld = useRef(false);
+  if (!context || context.sectionId !== section.id) return null;
+  const { runtime } = context;
+  const preview = inheritedPreview?.containerId === section.id && inheritedPreview.stateId;
+  const selectedIndex = runtime.states.findIndex((state) => state.id === runtime.selectedStateId);
+  const stateName = getSmartContainerStateLabel(runtime.selectedState?.title, t("state"), selectedIndex);
+  const hasMultipleStates = runtime.states.length > 1;
+  const position = t("position", { current: selectedIndex + 1, total: runtime.states.length });
+  const relevance = runtime.selectedState?.relevance ?? "unknown";
+  const activityLabel = {
+    playback: t("activityPlayback"),
+    ongoing: t("activityOngoing"),
+    background: t("activityBackground"),
+    quiet: t("activityQuiet"),
+    unknown: t("activityUnknown"),
+  }[relevance];
+  const containerTitle = section.options.showLabel && !section.options.collapsible && section.options.title;
+  let pauseLabel = t("pause");
+  let pauseIcon = <IconPlayerPause style={iconSizes.sm} />;
+  if (runtime.pauseReason === "manual" || runtime.pauseReason === "focus" || runtime.pauseReason === "paused") {
+    pauseLabel = t("resume");
+    pauseIcon = <IconPlayerPlay style={iconSizes.sm} />;
+  }
+  return (
+    <Group
+      className={classes.toolbar}
+      fz="md"
+      gap={3}
+      wrap="nowrap"
+      data-grid-no-drag
+      data-editing={isEditMode || undefined}
+      data-narrow={section.width === 1 || undefined}
+      data-single-state={!hasMultipleStates || undefined}
+    >
+      <Group className={classes.navigation} gap={2} wrap="nowrap">
+        <ActionIcon
+          className={classes.step}
+          variant="default"
+          style={zoomCompensatedSize(44)}
+          aria-label={t("previousState")}
+          onClick={runtime.previousState}
+          disabled={!context.interactive || runtime.states.length < 2}
+        >
+          <IconChevronLeft style={iconSizes.md} />
+        </ActionIcon>
+        {!hasMultipleStates ? (
+          <Text size="sm" fw={650} lineClamp={2} title={stateName}>
+            {stateName}
+          </Text>
+        ) : (
+          <Menu position="bottom-start" shadow="md" returnFocus withInitialFocusPlaceholder={false}>
+            <Menu.Target>
+              <UnstyledButton
+                disabled={!context.interactive}
+                className={classes.statePicker}
+                aria-label={`${t("chooseState", { stateName, position })} · ${activityLabel}`}
+              >
+                <span className={classes.stateTitle}>
+                  <Text component="span" size="sm" fw={650} truncate>
+                    {stateName}
+                  </Text>
+                  <Text component="span" size="xs" className={classes.position} truncate>
+                    {containerTitle && <span className={classes.containerName}>{containerTitle} · </span>}
+                    {isEditMode ? t("allStatesInEdit") : activityLabel}
+                  </Text>
+                </span>
+                {runtime.rotationDeadline !== undefined && (
+                  <RotationCountdown key={runtime.rotationDeadline} deadline={runtime.rotationDeadline} />
+                )}
+                <IconChevronDown size={14} aria-hidden />
+              </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown mah="min(60dvh, 20rem)" maw="min(24rem, calc(100vw - 2rem))" style={{ overflowY: "auto" }}>
+              <Menu.Label>{t("states")}</Menu.Label>
+              {runtime.states.map((state, index) => (
+                <Menu.Item
+                  key={state.id}
+                  mih={44}
+                  styles={{ itemLabel: { whiteSpace: "normal", overflowWrap: "anywhere" } }}
+                  data-autofocus={state.id === runtime.selectedStateId || undefined}
+                  aria-current={state.id === runtime.selectedStateId || undefined}
+                  rightSection={state.id === runtime.selectedStateId ? <IconCheck size={16} /> : null}
+                  onClick={() => runtime.selectState(state.id)}
+                >
+                  {getSmartContainerStateLabel(state.title, t("state"), index)}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        )}
+        <ActionIcon
+          className={classes.step}
+          variant="default"
+          style={zoomCompensatedSize(44)}
+          aria-label={t("nextState")}
+          onClick={runtime.nextState}
+          disabled={!context.interactive || runtime.states.length < 2}
+        >
+          <IconChevronRight style={iconSizes.md} />
+        </ActionIcon>
+      </Group>
+      {hasMultipleStates && !isEditMode && !preview && section.options.smart?.mode !== "manual" && (
+        <ActionIcon
+          data-smart-resume
+          disabled={!context.interactive}
+          variant="subtle"
+          style={zoomCompensatedSize(44)}
+          aria-label={pauseLabel}
+          title={pauseLabel}
+          onPointerDown={() => {
+            pointerWasHeld.current =
+              runtime.pauseReason === "manual" || runtime.pauseReason === "focus" || runtime.pauseReason === "paused";
+          }}
+          onClick={(event) => {
+            const held =
+              event.detail > 0
+                ? pointerWasHeld.current
+                : runtime.pauseReason === "manual" ||
+                  runtime.pauseReason === "focus" ||
+                  runtime.pauseReason === "paused";
+            if (held) runtime.resume();
+            else runtime.pause();
+          }}
+        >
+          {pauseIcon}
+        </ActionIcon>
+      )}
+      {isEditMode && (
+        <ActionIcon
+          className={classes.edit}
+          variant="light"
+          style={zoomCompensatedSize(44)}
+          aria-label={t("edit")}
+          onClick={(event) => openEditor(event.currentTarget)}
+        >
+          <IconPencil style={iconSizes.sm} />
+        </ActionIcon>
+      )}
+    </Group>
+  );
+};
+
+// Only the countdown label renders on each tick. Rotation runs on its own deadline.
+const RotationCountdown = ({ deadline }: { deadline: number }) => {
+  const [remainingSeconds, setRemainingSeconds] = useState(() =>
+    Math.max(0, Math.ceil((deadline - Date.now()) / 1_000)),
+  );
+  useEffect(() => {
+    let timeout: number;
+    const update = () => {
+      const remainingMs = Math.max(0, deadline - Date.now());
+      const seconds = Math.ceil(remainingMs / 1_000);
+      setRemainingSeconds(seconds);
+      if (seconds > 0) timeout = window.setTimeout(update, remainingMs - (seconds - 1) * 1_000);
+    };
+    update();
+    return () => window.clearTimeout(timeout);
+  }, [deadline]);
+
+  return (
+    <Text component="span" size="xs" className={classes.countdown}>
+      {remainingSeconds}s
+    </Text>
+  );
+};

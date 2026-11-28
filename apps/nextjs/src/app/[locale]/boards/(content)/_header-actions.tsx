@@ -161,7 +161,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(async () => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(latestBoardRef.current);
+      return saveBoard({ ...latestBoardRef.current, replaceLayouts: true });
     }
     setIsEnteringEditMode(true);
     try {
@@ -200,7 +200,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       <>
         <Tooltip label={tBoardSetting("section.layout.edit.save")} events={{ hover: true, focus: true, touch: false }}>
           <HeaderButton
-            onClick={() => saveBoard(board)}
+            onClick={() => saveBoard({ ...board, replaceLayouts: true })}
             loading={isPending}
             aria-label={tBoardSetting("section.layout.edit.save")}
           >

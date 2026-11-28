@@ -2730,7 +2730,7 @@
       "put": {
         "operationId": "boardRouter-saveBoard",
         "summary": "Save dashboard content",
-        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
+        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Omitted placements for retained items and containers are preserved unless replaceLayouts is true. Placements must fit their parent section's columns in each layout. Requires modify access; Custom Widget placement changes require admin access.",
         "tags": [
           "boards"
         ],
@@ -2756,6 +2756,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "replaceLayouts": {
+                    "type": "boolean"
+                  },
                   "sections": {
                     "type": "array",
                     "items": {
@@ -2858,6 +2861,115 @@
                                 "scrollable": {
                                   "default": false,
                                   "type": "boolean"
+                                },
+                                "smart": {
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    },
+                                    "mode": {
+                                      "default": "smart",
+                                      "type": "string",
+                                      "enum": [
+                                        "manual",
+                                        "timed",
+                                        "smart",
+                                        "hybrid"
+                                      ]
+                                    },
+                                    "intervalSeconds": {
+                                      "default": 12,
+                                      "type": "integer",
+                                      "minimum": 5,
+                                      "maximum": 3600
+                                    },
+                                    "skipInactive": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "pauseOnHover": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "reclaimSpace": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "compactQuiet": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "minActiveRows": {
+                                      "default": 1,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 24
+                                    },
+                                    "maxActiveRows": {
+                                      "default": 12,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 24
+                                    },
+                                    "appearance": {
+                                      "default": "reel",
+                                      "type": "string",
+                                      "enum": [
+                                        "reel",
+                                        "compact"
+                                      ]
+                                    },
+                                    "fallbackStateId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 128
+                                    },
+                                    "states": {
+                                      "default": [],
+                                      "maxItems": 32,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "title": {
+                                            "default": "",
+                                            "type": "string",
+                                            "maxLength": 64
+                                          },
+                                          "priority": {
+                                            "default": 50,
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                          },
+                                          "enabled": {
+                                            "default": true,
+                                            "type": "boolean"
+                                          },
+                                          "itemIds": {
+                                            "default": [],
+                                            "maxItems": 128,
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 128
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "id"
+                                        ]
+                                      }
+                                    }
+                                  }
                                 },
                                 "autoExpand": {
                                   "default": {
@@ -3007,6 +3119,115 @@
                                 "scrollable": {
                                   "default": false,
                                   "type": "boolean"
+                                },
+                                "smart": {
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": false,
+                                      "type": "boolean"
+                                    },
+                                    "mode": {
+                                      "default": "smart",
+                                      "type": "string",
+                                      "enum": [
+                                        "manual",
+                                        "timed",
+                                        "smart",
+                                        "hybrid"
+                                      ]
+                                    },
+                                    "intervalSeconds": {
+                                      "default": 12,
+                                      "type": "integer",
+                                      "minimum": 5,
+                                      "maximum": 3600
+                                    },
+                                    "skipInactive": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "pauseOnHover": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "reclaimSpace": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "compactQuiet": {
+                                      "default": true,
+                                      "type": "boolean"
+                                    },
+                                    "minActiveRows": {
+                                      "default": 1,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 24
+                                    },
+                                    "maxActiveRows": {
+                                      "default": 12,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 24
+                                    },
+                                    "appearance": {
+                                      "default": "reel",
+                                      "type": "string",
+                                      "enum": [
+                                        "reel",
+                                        "compact"
+                                      ]
+                                    },
+                                    "fallbackStateId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 128
+                                    },
+                                    "states": {
+                                      "default": [],
+                                      "maxItems": 32,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "title": {
+                                            "default": "",
+                                            "type": "string",
+                                            "maxLength": 64
+                                          },
+                                          "priority": {
+                                            "default": 50,
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                          },
+                                          "enabled": {
+                                            "default": true,
+                                            "type": "boolean"
+                                          },
+                                          "itemIds": {
+                                            "default": [],
+                                            "maxItems": 128,
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 128
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "id"
+                                        ]
+                                      }
+                                    }
+                                  }
                                 },
                                 "autoExpand": {
                                   "default": {
@@ -3349,7 +3570,7 @@
       "post": {
         "operationId": "boardRouter-addItem",
         "summary": "Add an item to a board",
-        "description": "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
+        "description": "Add a widget or app to the main canvas or a Smart Container state. Requires board modify access and use access to linked integrations. Placing Custom Widgets requires admin permission.",
         "tags": [
           "boards"
         ],
@@ -3466,6 +3687,27 @@
                     "required": [
                       "width",
                       "height"
+                    ]
+                  },
+                  "smartContainerTarget": {
+                    "type": "object",
+                    "properties": {
+                      "sectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Container section ID from board_getBoardByName"
+                      },
+                      "stateId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "State ID from that section's options.smart.states"
+                      }
+                    },
+                    "required": [
+                      "sectionId",
+                      "stateId"
                     ]
                   },
                   "integrationIds": {

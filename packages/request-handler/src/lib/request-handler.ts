@@ -258,10 +258,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       expiryTimerAt = undefined;
     },
     handler: (input: TInput) => ({
-      async getDataAsync({ maxAgeMs = Infinity }: { maxAgeMs?: number } = {}): Promise<{
-        data: TData;
-        timestamp: Date;
-      }> {
+      async getDataAsync({ maxAgeMs = Infinity }: { maxAgeMs?: number } = {}): Promise<
+        Pick<CacheEntry<TData>, "data" | "timestamp" | "expiresAt">
+      > {
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
         // A caller can require fresher data while sharing the same cache and refresh lock.

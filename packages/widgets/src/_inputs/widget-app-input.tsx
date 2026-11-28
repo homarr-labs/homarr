@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useContext, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
@@ -15,7 +15,7 @@ import { Link } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
-import { useFormContext } from "./form";
+import { useFormContext, WidgetResourceEditingContext } from "./form";
 
 const renderHereLink = (children: React.ReactNode) => (
   <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
@@ -30,7 +30,8 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   const form = useFormContext();
   const { data: apps, isPending, refetch } = clientApi.app.selectable.useQuery();
   const { data: session } = useSession();
-  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
+  const allowResourceEditing = useContext(WidgetResourceEditingContext);
+  const canCreateApps = allowResourceEditing && (session?.user.permissions.includes("app-create") ?? false);
 
   const { openModal } = useModalAction(QuickAddAppModal);
 

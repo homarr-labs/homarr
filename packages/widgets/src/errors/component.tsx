@@ -18,12 +18,13 @@ export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErr
     return <BaseWidgetError {...error.getErrorBoundaryData()} onRetry={resetErrorBoundary} />;
   }
 
-  const widgetTrpcErrorData = definition ? handleWidgetTrpcError(error, definition) : null;
+  const data: DefaultErrorData | undefined = error instanceof TRPCClientError ? error.data : undefined;
+  const widgetTrpcErrorData = data && definition ? handleWidgetTrpcError(data, definition) : null;
   if (widgetTrpcErrorData) {
     return <BaseWidgetError {...widgetTrpcErrorData} onRetry={resetErrorBoundary} />;
   }
 
-  const trpcErrorData = handleCommonTrpcError(error);
+  const trpcErrorData = data && handleCommonTrpcError(data);
   if (trpcErrorData) {
     return <BaseWidgetError {...trpcErrorData} onRetry={resetErrorBoundary} />;
   }
@@ -39,13 +40,9 @@ export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErr
 };
 
 const handleWidgetTrpcError = (
-  error: unknown,
+  errorData: DefaultErrorData,
   currentDefinition: WidgetDefinition,
 ): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
-
-  const errorData = error.data as DefaultErrorData;
-
   if (!("errors" in currentDefinition) || currentDefinition.errors === undefined) return null;
 
   const errors: Exclude<WidgetDefinition["errors"], undefined> = currentDefinition.errors;
@@ -59,11 +56,7 @@ const handleWidgetTrpcError = (
   };
 };
 
-const handleCommonTrpcError = (error: unknown): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
-
-  const errorData = error.data as DefaultErrorData;
-
+const handleCommonTrpcError = (errorData: DefaultErrorData): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
   if (errorData.code === "UNAUTHORIZED" || errorData.code === "FORBIDDEN") {
     return {
       icon: IconShield,
