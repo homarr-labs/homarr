@@ -28,6 +28,7 @@ describe("normalizeEntity", () => {
       domain: "camera",
       name: "Front door",
       areaId: "outside",
+      device: null,
       state: "streaming",
       icon: "mdi:cctv",
       deviceClass: null,

@@ -298,20 +298,83 @@ const buildClimate = (cap: DeviceCapabilities): PrimaryEntity | null => {
   };
 };
 
-const buildFan = (cap: DeviceCapabilities): PrimaryEntity | null => {
+/**
+ * Homey's own `fan_speed` runs from 0 to 1, but apps add stepped variants such as `fanSpeed0to12` (0–12).
+ * Any settable number whose id starts with `fan_speed` or `fanSpeed` drives the fan's speed slider.
+ */
+const FAN_SPEED_ID = /^fan_?speed/i;
+
+export const getHomeyFanSpeedCapability = (capabilities: Record<string, HomeyCapability>) => {
+  const standard = capabilities.fan_speed;
+  if (standard?.setable) return standard;
+  return Object.values(capabilities)
+    .filter((capability) => FAN_SPEED_ID.test(capability.id) && capability.type === "number" && capability.setable)
+    .toSorted((left, right) => left.id.localeCompare(right.id))
+    .at(0);
+};
+
+const speedRange = (capability: HomeyCapability) => {
+  const min = capability.min ?? 0;
+  const max = capability.max ?? 1;
+  return { min, max: max > min ? max : min + 1 };
+};
+
+/** The step between speed levels: the declared one, or whole levels for a range wider than one. */
+const speedStep = (capability: HomeyCapability) => {
+  const { min, max } = speedRange(capability);
+  return capability.step ?? (max - min > 1 ? 1 : undefined);
+};
+
+/**
+ * Where 0 % lies. Zero on the slider means "off"; a range that starts above zero (1 to 3) keeps its lowest speed
+ * as a running speed above 0 %, a range from zero starts at its own zero.
+ */
+const speedOrigin = (capability: HomeyCapability) => Math.min(0, speedRange(capability).min);
+
+const fanSpeedPercent = (capability: HomeyCapability | undefined) => {
+  const value = number(capability);
+  if (!capability || value === undefined) return undefined;
+  const { max } = speedRange(capability);
+  const origin = speedOrigin(capability);
+  return Math.round(((value - origin) / (max - origin)) * 100);
+};
+
+/** The slider distance between two speed levels, e.g. 8.33 % for a fan with twelve levels. */
+const fanSpeedStepPercent = (capability: HomeyCapability | undefined) => {
+  if (!capability) return undefined;
+  const step = speedStep(capability);
+  if (!step) return undefined;
+  const { max } = speedRange(capability);
+  return (step / (max - speedOrigin(capability))) * 100;
+};
+
+/** Converts a 0–100 slider value back to the capability's own range, snapped to its step (the same step as above). */
+export const toHomeyFanSpeed = (capability: HomeyCapability, percentage: number) => {
+  const { min, max } = speedRange(capability);
+  const origin = speedOrigin(capability);
+  const raw = origin + (Math.min(100, Math.max(0, percentage)) / 100) * (max - origin);
+  const step = speedStep(capability);
+  if (!step) return Math.max(min, raw);
+  // Any request still turns the fan: a range from zero rounds up to its first step, one above zero to its minimum.
+  const lowest = min > 0 ? min : min + step;
+  return Math.min(max, Math.max(lowest, Math.round((raw - min) / step) * step + min));
+};
+
+const buildFan = (cap: DeviceCapabilities, capabilities: Record<string, HomeyCapability>): PrimaryEntity | null => {
   const onoff = cap("onoff");
   if (!onoff?.setable) return null;
-  const speed = cap("fan_speed");
+  const speed = getHomeyFanSpeedCapability(capabilities);
   const oscillating = cap("oscillating");
   return {
     domain: "fan",
     state: capabilityState(onoff),
     attributes: {
-      supportedFeatures: (speed?.setable ? 1 : 0) | (oscillating?.setable ? 2 : 0),
-      percentage: percent(speed),
+      supportedFeatures: (speed ? 1 : 0) | (oscillating?.setable ? 2 : 0),
+      percentage: fanSpeedPercent(speed),
+      percentageStep: fanSpeedStepPercent(speed),
       oscillating: boolean(oscillating),
     },
-    consumed: ["onoff", "fan_speed", "oscillating"],
+    consumed: ["onoff", "fan_speed", "oscillating", ...(speed ? [speed.id] : [])],
   };
 };
 
@@ -499,7 +562,7 @@ const buildPrimary = (device: HomeyDevice, role: HomeyPrimaryRole, cap: DeviceCa
     case "climate":
       return buildClimate(cap);
     case "fan":
-      return buildFan(cap);
+      return buildFan(cap, device.capabilitiesObj ?? {});
     case "media_player":
       return buildMediaPlayer(cap, device);
     case "vacuum":
@@ -681,6 +744,7 @@ export const normalizeHomeyDevices = (devices: HomeyDevice[]): HomeyEntityRecord
           domain: primary.domain,
           name: device.name,
           areaId: device.zone ?? null,
+          device: { id: device.id, name: device.name, entityName: null },
           state: available ? primary.state : "unavailable",
           icon: null,
           deviceClass: primary.deviceClass ?? null,
@@ -709,6 +773,7 @@ export const normalizeHomeyDevices = (devices: HomeyDevice[]): HomeyEntityRecord
           // The capability comes first so truncated names of one device's sensors stay distinguishable.
           name: `${capability.title ?? capability.id} · ${device.name}`,
           areaId: device.zone ?? null,
+          device: { id: device.id, name: device.name, entityName: capability.title ?? capability.id },
           state: available ? secondary.state : "unavailable",
           icon: null,
           deviceClass: secondary.deviceClass,
