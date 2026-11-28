@@ -45,13 +45,13 @@ const zeroBasedUnits = new Set(["bytesPerSecond", "watts", "W", "kW", "VA", "A",
  * series whose source reports slightly after the window starts still draws from edge to edge.
  * Longer gaps stay empty because they mean no data was recorded.
  */
-export const fillEdges = (values: readonly (number | null)[], maxSamples = 2) => {
+export const fillEdges = (values: readonly (number | null)[], maxSamples = 2, { fillEnd = true } = {}) => {
   const filled = [...values];
   const first = filled.findIndex((value) => value !== null);
   if (first === -1) return filled;
   if (first <= maxSamples) filled.fill(filled[first] ?? null, 0, first);
   const last = filled.findLastIndex((value) => value !== null);
-  if (filled.length - 1 - last <= maxSamples) filled.fill(filled[last] ?? null, last + 1);
+  if (fillEnd && filled.length - 1 - last <= maxSamples) filled.fill(filled[last] ?? null, last + 1);
   return filled;
 };
 
