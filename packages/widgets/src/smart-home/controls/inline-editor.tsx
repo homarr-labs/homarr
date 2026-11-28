@@ -35,7 +35,7 @@ import { IconGripVertical, IconLayoutGridAdd } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 
-import { BlockAdder, BlockRow, countCatalogBlocks, useBlockCatalog } from "./configuration";
+import { applyDeviceVisibility, BlockAdder, BlockRow, countCatalogBlocks, useBlockCatalog } from "./configuration";
 import type { BlockContentFilter, BlockCatalog } from "./configuration";
 import classes from "./configuration.module.css";
 import type { SmartHomeOptionsPatch, SmartHomePresentation } from "./types";
@@ -193,7 +193,18 @@ export function SmartHomeInlineEditor({
               </DndContext>
             </ScrollArea.Autosize>
             <Divider label={t("inline.add")} labelPosition="left" />
-            <BlockAdder catalog={catalog} values={blocks} onAdd={(ids) => setBlocks([...blocks, ...ids])} />
+            <BlockAdder
+              catalog={catalog}
+              values={blocks}
+              onAdd={(ids, visibility) =>
+                onChange({
+                  blocks: [...blocks, ...ids],
+                  ...(visibility && {
+                    excludedEntityIds: applyDeviceVisibility(filter.excludedEntityIds, visibility),
+                  }),
+                })
+              }
+            />
           </Stack>
         </Popover.Dropdown>
       </Popover>

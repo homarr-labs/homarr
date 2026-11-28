@@ -75,6 +75,7 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   position: attributes.position,
   coverPositionUnknown: attributes.coverPositionUnknown,
   percentage: attributes.percentage,
+  percentageStep: attributes.percentageStep,
   mediaTitle: attributes.mediaTitle,
   mediaArtist: attributes.mediaArtist,
   mediaAlbum: attributes.mediaAlbum,
@@ -86,6 +87,9 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   mediaPositionUpdatedAt: attributes.mediaPositionUpdatedAt,
   batteryLevel: attributes.batteryLevel,
   options: attributes.options,
+  min: attributes.min,
+  max: attributes.max,
+  step: attributes.step,
   humidity: attributes.humidity,
   windSpeed: attributes.windSpeed,
   windSpeedUnit: attributes.windSpeedUnit,
@@ -125,6 +129,7 @@ const toSmartHomeEntity = (integrationId: string, entity: SmartHomeEntity, histo
     history,
     sourceDomain: entity.domain,
     sourceAreaId: entity.areaId,
+    device: entity.device ?? null,
     readOnly,
   };
 };
@@ -290,6 +295,10 @@ const createIntent = (action: HaAction, optimistic: SmartHomeEntity): Intent => 
     case "setHvacMode":
     case "selectOption":
       return { keys: ["state"], matches: stateIn(action.value) };
+    case "setValue": {
+      const tolerance = (optimistic.attributes.step ?? 0) / 2;
+      return { keys: ["state"], matches: (confirmed) => Math.abs(Number(confirmed.state) - action.value) <= tolerance };
+    }
     case "setPresetMode":
       return { keys: ["presetMode"], matches: (confirmed) => confirmed.attributes.presetMode === action.value };
     case "lock":
@@ -849,13 +858,15 @@ const toSelection = (
 ): LiveSelection | null => {
   const entityIds = new Set<string>();
   const areaIds = new Set<string>();
+  const deviceIds = new Set<string>();
   const blocks = blockIds.flatMap((id) => parseBlockId(id) ?? []).filter((block) => block.source === integrationId);
   for (const block of blocks) {
     if (block.kind === "entity" && ENTITY_ID_PATTERN.test(block.entityId)) entityIds.add(block.entityId);
     if (block.kind === "areas") block.areaIds.forEach((areaId) => areaIds.add(areaId));
+    if (block.kind === "device") deviceIds.add(block.deviceId);
   }
   const exclusions = [...new Set(excludedEntityIds)].toSorted();
-  if (entityIds.size > 200 || areaIds.size > 50 || exclusions.length > 400) return null;
+  if (entityIds.size > 200 || areaIds.size > 50 || deviceIds.size > 100 || exclusions.length > 400) return null;
   const domains = new Set(roomDomains);
   if (domains.has("input_select")) domains.add("select");
   if (domains.has("button")) domains.add("input_button");
@@ -869,6 +880,7 @@ const toSelection = (
   return {
     entityIds: [...entityIds].toSorted(),
     areaIds: [...areaIds].toSorted(),
+    deviceIds: [...deviceIds].toSorted(),
     domains: [...domains].toSorted(),
     excludedEntityIds: exclusions,
   };
@@ -1049,7 +1061,9 @@ export function SmartHomeLiveProvider({
     [integrationId, blockIds, roomDomains, excludedEntityIds, catalogEntities],
   );
   const hasSelection =
-    catalogReady && selection !== null && (selection.entityIds.length > 0 || selection.areaIds.length > 0);
+    catalogReady &&
+    selection !== null &&
+    (selection.entityIds.length > 0 || selection.areaIds.length > 0 || selection.deviceIds.length > 0);
   const inactiveStatus = useMemo<SmartHomeLiveStatus>(() => {
     if (!catalogReady) {
       if (catalog.status === "error")

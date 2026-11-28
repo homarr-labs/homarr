@@ -93,11 +93,21 @@ export interface SmartHomeEntityAttributes {
   pictureUrl?: string;
 }
 
+export interface SmartHomeEntityDevice {
+  id: string;
+  name: string;
+  /** Name of the entity within its device, or null when the entity represents the device itself. */
+  entityName: string | null;
+  /** Manufacturer and model when the smart home server knows them. */
+  model?: string | null;
+}
+
 export interface SmartHomeEntity {
   id: string;
   domain: string;
   name: string;
   areaId: string | null;
+  device?: SmartHomeEntityDevice | null;
   state: string;
   icon: string | null;
   deviceClass: string | null;
@@ -134,13 +144,23 @@ export interface SmartHomeCatalogEntity {
   domain: string;
   name: string;
   areaId: string | null;
+  deviceId?: string | null;
   icon: string | null;
   deviceClass: string | null;
   hidden: boolean;
 }
 
+export interface SmartHomeCatalogDevice {
+  id: string;
+  name: string;
+  areaId: string | null;
+  /** Manufacturer and model when the smart home server knows them, e.g. "Shelly Plus 2PM". */
+  model?: string | null;
+}
+
 export interface SmartHomeCatalog {
   entities: SmartHomeCatalogEntity[];
+  devices?: SmartHomeCatalogDevice[];
   areas: SmartHomeArea[];
   floors: SmartHomeFloor[];
 }
@@ -148,6 +168,8 @@ export interface SmartHomeCatalog {
 export interface SmartHomeEntitySelection {
   entityIds?: string[];
   areaIds?: string[];
+  /** Every visible entity of these devices, regardless of the domain filter that applies to rooms. */
+  deviceIds?: string[];
   domains?: string[];
   excludedEntityIds?: string[];
 }

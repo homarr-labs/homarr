@@ -1,9 +1,11 @@
 import type {
   SmartHomeArea,
   SmartHomeCatalog,
+  SmartHomeCatalogDevice,
   SmartHomeCatalogEntity,
   SmartHomeEntity,
   SmartHomeEntityAttributes,
+  SmartHomeEntityDevice,
   SmartHomeFloor,
 } from "../interfaces/smart-home/smart-home-types";
 import type { HomeAssistantRegistry, RawEntityState } from "./homeassistant-types";
@@ -199,17 +201,50 @@ const domainAttributes = (domain: string, attributes: Record<string, unknown>): 
 
 export const getEntityDomain = (entityId: string) => entityId.split(".")[0] ?? entityId;
 
+export interface EntityDeviceContext {
+  id: string;
+  name: string;
+  /** Home Assistant `has_entity_name`: the registry name is relative to the device. */
+  hasEntityName: boolean;
+  model: string | null;
+}
+
+// Mirrors how Home Assistant composes friendly names: "<device> <entity>" when the entity has its own name.
+const toEntityName = (fullName: string, device: EntityDeviceContext, registryName: string | undefined) => {
+  if (device.hasEntityName && registryName) return registryName;
+  if (fullName === device.name) return null;
+  const prefix = `${device.name} `;
+  if (!fullName.startsWith(prefix)) return fullName;
+  return fullName.slice(prefix.length).trim() || null;
+};
+
+const toDevice = (
+  fullName: string,
+  device: EntityDeviceContext | undefined,
+  registryName: string | undefined,
+): SmartHomeEntityDevice | null => {
+  if (!device) return null;
+  return {
+    id: device.id,
+    name: device.name,
+    entityName: toEntityName(fullName, device, registryName),
+    model: device.model,
+  };
+};
+
 export const normalizeEntity = (
   raw: RawEntityState,
-  context: { areaId: string | null; registryName?: string; registryIcon?: string },
+  context: { areaId: string | null; registryName?: string; registryIcon?: string; device?: EntityDeviceContext },
 ): SmartHomeEntity => {
   const domain = getEntityDomain(raw.entityId);
   const attributes = raw.attributes;
+  const name = text(attributes.friendly_name) ?? context.registryName ?? raw.entityId;
   return {
     id: raw.entityId,
     domain,
-    name: text(attributes.friendly_name) ?? context.registryName ?? raw.entityId,
+    name,
     areaId: context.areaId,
+    device: toDevice(name, context.device, context.registryName),
     state: raw.state,
     icon: text(attributes.icon) ?? context.registryIcon ?? null,
     deviceClass: text(attributes.device_class) ?? null,
@@ -230,21 +265,30 @@ export interface EntityRegistryContext {
   areaId: string | null;
   registryName?: string;
   registryIcon?: string;
+  device?: EntityDeviceContext;
   hidden: boolean;
 }
 
 export const createRegistryLookup = (registry: HomeAssistantRegistry | null) => {
-  const deviceAreas = new Map((registry?.devices ?? []).map((device) => [device.id, device.area_id ?? null]));
+  const devices = new Map((registry?.devices ?? []).map((device) => [device.id, device]));
   const entries = new Map(
-    (registry?.entities.entities ?? []).map((entry): [string, EntityRegistryContext] => [
-      entry.ei,
-      {
-        areaId: entry.ai ?? (entry.di ? (deviceAreas.get(entry.di) ?? null) : null),
-        registryName: entry.en,
-        registryIcon: entry.ic,
-        hidden: entry.hb === true || entry.ec !== undefined,
-      },
-    ]),
+    (registry?.entities.entities ?? []).map((entry): [string, EntityRegistryContext] => {
+      const device = entry.di ? devices.get(entry.di) : undefined;
+      const deviceName = device?.name_by_user ?? device?.name;
+      return [
+        entry.ei,
+        {
+          areaId: entry.ai ?? device?.area_id ?? null,
+          registryName: entry.en,
+          registryIcon: entry.ic,
+          device:
+            device && deviceName
+              ? { id: device.id, name: deviceName, hasEntityName: entry.hn === true, model: toModel(device) }
+              : undefined,
+          hidden: entry.hb === true || entry.ec !== undefined,
+        },
+      ];
+    }),
   );
   return (entityId: string): EntityRegistryContext => entries.get(entityId) ?? { areaId: null, hidden: false };
 };
@@ -267,19 +311,37 @@ export const normalizeFloors = (registry: HomeAssistantRegistry | null): SmartHo
     icon: floor.icon ?? null,
   }));
 
+const toModel = (device: { manufacturer?: string | null; model?: string | null } | undefined) => {
+  const parts = [device?.manufacturer, device?.model].filter((part): part is string => Boolean(part));
+  // Models often repeat the manufacturer ("Shelly" + "Shelly Plus 2PM").
+  if (parts.length === 2 && parts[1]?.startsWith(parts[0] ?? "")) return parts[1] ?? null;
+  return parts.join(" ") || null;
+};
+
 export const createCatalog = (
   states: Iterable<RawEntityState>,
   registry: HomeAssistantRegistry | null,
 ): SmartHomeCatalog => {
   const lookup = createRegistryLookup(registry);
+  const devices = new Map<string, SmartHomeCatalogDevice>();
+  const registryDevices = new Map((registry?.devices ?? []).map((device) => [device.id, device]));
   const entities = [...states].map((raw): SmartHomeCatalogEntity => {
     const context = lookup(raw.entityId);
     const entity = normalizeEntity(raw, context);
+    if (entity.device && !context.hidden && !devices.has(entity.device.id)) {
+      devices.set(entity.device.id, {
+        id: entity.device.id,
+        name: entity.device.name,
+        areaId: registryDevices.get(entity.device.id)?.area_id ?? entity.areaId,
+        model: toModel(registryDevices.get(entity.device.id)),
+      });
+    }
     return {
       id: entity.id,
       domain: entity.domain,
       name: entity.name,
       areaId: entity.areaId,
+      deviceId: entity.device?.id ?? null,
       icon: entity.icon,
       deviceClass: entity.deviceClass,
       hidden: context.hidden,
@@ -287,6 +349,7 @@ export const createCatalog = (
   });
   return {
     entities: entities.toSorted((left, right) => left.name.localeCompare(right.name)),
+    devices: [...devices.values()].toSorted((left, right) => left.name.localeCompare(right.name)),
     areas: normalizeAreas(registry),
     floors: normalizeFloors(registry),
   };
