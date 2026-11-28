@@ -231,7 +231,8 @@ const MetricCard = ({
 
   return (
     <CommonChart
-      data={fillEdges(values).map((value) => ({ value }))}
+      // A sensor that is unavailable now ends its line there instead of repeating the last cached value.
+      data={fillEdges(values, 2, { fillEnd: getCurrent(item) !== null }).map((value) => ({ value }))}
       positions={positions}
       series={[{ name: "value", color: `${entry.color}.5` }]}
       title={getTitle(item, fallbackLabel)}
@@ -322,7 +323,8 @@ const CombinedGraph = ({
           formatTime={(time) => timeFormatter.format(time)}
         />
       ) : null}
-      {labelDisplayMode !== "hidden" && !hovered && (
+      {/* Hovering swaps the legend for the graph's own readout; without a graph the legend stays. */}
+      {labelDisplayMode !== "hidden" && !(hovered && hasData) && (
         <Stack
           pos="absolute"
           top={0}

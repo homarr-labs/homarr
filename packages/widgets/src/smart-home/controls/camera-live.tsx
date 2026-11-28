@@ -73,6 +73,9 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
   const restartTimer = useRef<number | undefined>(undefined);
   // Asks the integration for the stream again: an HLS address is a short-lived token for one stream.
   const refetchStream = useRef<() => Promise<unknown>>(() => Promise.resolve());
+  // Counts live views: a reset (hidden, another camera) or unmount starts a new one, and a restart that was still
+  // fetching for an older view is ignored instead of remounting the current player.
+  const viewGeneration = useRef(0);
   const scheduleRestart = (frame?: string) => {
     if (playingSince.current !== null && Date.now() - playingSince.current > STABLE_STREAM_MS) drops.current = 0;
     playingSince.current = null;
@@ -83,13 +86,21 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
     window.clearTimeout(restartTimer.current);
     restartTimer.current = window.setTimeout(() => {
       // The player stays away until the new address is there, so a reconnect never reuses an expired one.
+      const generation = viewGeneration.current;
       void refetchStream.current().finally(() => {
+        if (generation !== viewGeneration.current) return;
         setRestarting((current) => (current ? { ...current, waiting: false } : current));
         setAttempt((value) => value + 1);
       });
     }, delay);
   };
-  useEffect(() => () => window.clearTimeout(restartTimer.current), []);
+  useEffect(
+    () => () => {
+      viewGeneration.current += 1;
+      window.clearTimeout(restartTimer.current);
+    },
+    [],
+  );
 
   const cameraKey = `${integrationId ?? ""}:${entity.id}`;
   const prefer = preferred?.camera === cameraKey ? preferred.prefer : undefined;
@@ -108,6 +119,7 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
   useEffect(() => {
     if (wantsLive && cameraKey === shownCamera.current) return;
     shownCamera.current = cameraKey;
+    viewGeneration.current += 1;
     setFailedKey(null);
     setPreferred(null);
     setRestarting(null);
@@ -131,7 +143,8 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
     player = (
       <Suspense fallback={null}>
         <HlsPlayer
-          key={attempt}
+          // A new camera gets a new player (peer, offer); attempts restart it for the same camera.
+          key={`${cameraKey}:${attempt}`}
           url={url}
           onPlaying={startPlaying}
           onError={(frame) => {
@@ -150,7 +163,8 @@ export function useCameraLive({ integrationId, entity, enabled }: CameraLiveOpti
     player = (
       <Suspense fallback={null}>
         <WebRtcPlayer
-          key={attempt}
+          // A new camera gets a new player (peer, offer); attempts restart it for the same camera.
+          key={`${cameraKey}:${attempt}`}
           iceServers={stream.data?.kind === "webrtc" ? stream.data.iceServers : undefined}
           signaling={(offer, handlers) => (
             <SmartHomeWebRtcSignaling integrationId={integrationId} entityId={entity.id} offer={offer} {...handlers} />
