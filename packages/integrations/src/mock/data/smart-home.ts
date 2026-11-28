@@ -160,12 +160,14 @@ export class SmartHomeMockService implements ISmartHomeIntegration {
     const domains = selection.domains?.length ? new Set(selection.domains) : null;
     const areaIds = selection.areaIds?.length ? new Set(selection.areaIds) : null;
     const excludedIds = new Set(selection.excludedEntityIds ?? []);
-    const includeAll = !areaIds && (selection.entityIds ?? []).length === 0;
+    const deviceIds = selection.deviceIds?.length ? new Set(selection.deviceIds) : null;
+    const includeAll = !areaIds && !deviceIds && (selection.entityIds ?? []).length === 0;
     const ambientIds = mockSmartHomeAreas
       .filter((area) => areaIds?.has(area.id))
       .flatMap((area) => [area.temperatureEntityId, area.humidityEntityId]);
     const implicit = all.filter((entity) => {
       if (excludedIds.has(entity.id)) return false;
+      if (deviceIds && entity.device && deviceIds.has(entity.device.id)) return true;
       if (domains && !domains.has(entity.domain)) return false;
       if (areaIds) return (entity.areaId !== null && areaIds.has(entity.areaId)) || ambientIds.includes(entity.id);
       return includeAll;

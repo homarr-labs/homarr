@@ -13,9 +13,11 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps } from "../../definition";
 import { parseBlockId, parseSourceBlocks } from "./configuration";
 import classes from "./configuration.module.css";
+import { getDeviceEntityLabel, getReadingRank, toPanelItems } from "./device-groups";
+import type { DevicePanelItem, PanelItem } from "./device-groups";
 import { SmartHomeInlineEditor } from "./inline-editor";
 import { SmartHomeLiveProvider, useSmartHomeLiveStatus } from "./live";
-import { isUnavailable } from "./semantics";
+import { formatEntityState, isUnavailable } from "./semantics";
 import { SmartHomeEntitiesProvider, SmartHomeInteractionProvider, useSmartHomeEntities } from "./store";
 import { haDomains } from "./types";
 import type {
@@ -26,6 +28,7 @@ import type {
   SmartHomeOptionsPatch,
 } from "./types";
 import { getColumnCount, getLevel, getOverviewTier } from "./technical/layout";
+import type { Level } from "./technical/layout";
 import { ChipButton } from "./technical/list";
 import type { ChipDef } from "./technical/list";
 import { getColorVars, isOn, isPassive, isSensorLike } from "./technical/meta";
@@ -34,6 +37,7 @@ import { EntityRow } from "./technical/row";
 import technicalClasses from "./technical/styles.module.css";
 import { EntityTile, StatCells } from "./technical/tile";
 import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./control-center/details";
+import { DeviceControl } from "./control-center/device-control";
 import controlCenterClasses from "./control-center/styles.module.css";
 
 const getSourceAreaId = (entity: HaEntity) => entity.sourceAreaId ?? entity.areaId;
@@ -52,6 +56,15 @@ const resolveEntities = (configuration: SmartHomeConfiguration, entities: Record
       if (!entity || placed.has(entity.id)) return [];
       placed.add(entity.id);
       return [entity];
+    }
+
+    if (block.kind === "device") {
+      const members = all
+        .filter((entity) => entity.device?.id === block.deviceId)
+        .filter((entity) => !claimed.has(entity.id) && !placed.has(entity.id) && !excluded.has(entity.id))
+        .toSorted((a, b) => domainRank(a) - domainRank(b) || a.id.localeCompare(b.id, "en"));
+      members.forEach((entity) => placed.add(entity.id));
+      return members;
     }
 
     const areaRank = (entity: HaEntity) => block.areaIds.indexOf(getSourceAreaId(entity) ?? "");
@@ -92,6 +105,10 @@ const tileProfiles: TileProfile[] = [
   { minWidth: 224, maxWidth: Infinity, minHeight: 224, maxHeight: 320 },
 ];
 
+// Just under the width where tiles switch from their compact to their row layout.
+const COMPACT_MAX_WIDTH = 160;
+const COMPACT_MAX_HEIGHT = 152;
+
 const targetSizes: Record<SmartHomeControlSize, { width: number; height: number }> = {
   compact: { width: 144, height: 132 },
   auto: { width: 196, height: 176 },
@@ -103,6 +120,7 @@ export const getControlPanelLayout = (
   height: number,
   count: number,
   size: SmartHomeControlSize,
+  stretch = size !== "compact",
 ): ControlPanelLayout => {
   let best: ControlPanelLayout = { columns: 1, rows: 0, width: 0, height: 0, capacity: 0 };
   if (!Number.isFinite(width) || !Number.isFinite(height) || count <= 0) return best;
@@ -114,6 +132,18 @@ export const getControlPanelLayout = (
   if (height < 116 && size !== "large") {
     profiles.push({ minWidth: 224, maxWidth: Infinity, minHeight: 80, maxHeight: 115 });
   }
+  // Compact tiles keep their size instead of stretching to fill the widget; the grid centers them.
+  const compact = !stretch;
+  if (compact) {
+    profiles = profiles
+      .filter((profile) => profile.minWidth <= COMPACT_MAX_WIDTH)
+      .map((profile) => ({
+        ...profile,
+        maxWidth: Math.min(profile.maxWidth, COMPACT_MAX_WIDTH),
+        maxHeight: Math.min(profile.maxHeight, COMPACT_MAX_HEIGHT),
+      }));
+  }
+  const fillWeight = compact ? 0 : 2;
 
   for (const profile of profiles) {
     for (let columns = 1; columns <= Math.min(count, 8); columns++) {
@@ -129,15 +159,15 @@ export const getControlPanelLayout = (
         Math.abs(cellWidth - target.width) / target.width +
         Math.abs(cellHeight - target.height) / target.height +
         (capacity - visible) / capacity +
-        (2 * (width - columns * cellWidth - GAP * (columns - 1))) / width +
-        (2 * (height - rows * cellHeight - GAP * (rows - 1))) / height;
+        (fillWeight * (width - columns * cellWidth - GAP * (columns - 1))) / width +
+        (fillWeight * (height - rows * cellHeight - GAP * (rows - 1))) / height;
       if (visible < bestVisible || (visible === bestVisible && score >= bestScore)) continue;
       bestVisible = visible;
       bestScore = score;
       best = { columns, rows, width: cellWidth, height: cellHeight, capacity };
     }
   }
-  if (best.capacity === 0 && size === "large") return getControlPanelLayout(width, height, count, "auto");
+  if (best.capacity === 0 && size !== "auto") return getControlPanelLayout(width, height, count, "auto");
   return best;
 };
 
@@ -269,8 +299,39 @@ function SingleEntityRow({ entity, width, height }: { entity: HaEntity; width: n
   );
 }
 
+const DEVICE_ROW_READINGS = 3;
+
+/** A device in the technical list: its main entity's row, with its top readings as the second line. */
+function DeviceRow({ device, level }: { device: DevicePanelItem; level: Level }) {
+  const entity = useMemo(() => ({ ...device.primary, name: device.name }), [device.primary, device.name]);
+  const ranked = device.readings.toSorted(
+    (left, right) => getReadingRank(device, left) - getReadingRank(device, right),
+  );
+  const parts = ranked
+    .slice(0, DEVICE_ROW_READINGS)
+    .map((reading) => `${getDeviceEntityLabel(reading)} ${formatEntityState(reading)}`);
+  const more = ranked.length - parts.length;
+  const secondary = [formatEntityState(device.primary), ...parts, more > 0 ? `+${more}` : null]
+    .filter(Boolean)
+    .join(" · ");
+  return <EntityRow entity={entity} level={level} secondary={secondary} />;
+}
+
+/** Custom card names from device blocks, by device id. */
+const useDeviceLabels = (configuration: SmartHomeConfiguration) =>
+  useMemo(
+    () =>
+      new Map(
+        parseSourceBlocks(configuration.blockIds, configuration.integrationId).flatMap((block) =>
+          block.kind === "device" && block.label ? [[block.deviceId, block.label] as const] : [],
+        ),
+      ),
+    [configuration.blockIds, configuration.integrationId],
+  );
+
 function EntitiesPresentation({ entities, configuration, width, height }: PresentationProps) {
   const t = useI18n("widget.smartHome-controls.preview");
+  const deviceLabels = useDeviceLabels(configuration);
   const [filter, setFilter] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const groups = getSummaryGroups(entities);
@@ -323,12 +384,27 @@ function EntitiesPresentation({ entities, configuration, width, height }: Presen
 
   const active = configuration.showSummary && summary.find(({ chip }) => chip.key === filter);
   const visible = active ? active.entities : entities;
+  // A filter keeps whole devices: a plug that is on stays together with its power reading.
+  const matching = active ? new Set(active.entities.map((entity) => entity.id)) : null;
+  const rows = toPanelItems(
+    entities,
+    configuration.groupByDevice,
+    configuration.readingOrder,
+    false,
+    deviceLabels,
+  ).filter(
+    (item) =>
+      !matching ||
+      (item.kind === "entity"
+        ? matching.has(item.entity.id)
+        : matching.has(item.primary.id) || item.readings.some((reading) => matching.has(reading.id))),
+  );
   const chips = configuration.showSummary && summary.length > 0;
-  const { columns, capacity, overflowing } = getTechnicalPageLayout(width, height, visible.length, chips);
-  const pages = Math.max(1, Math.ceil(visible.length / Math.max(1, capacity)));
+  const { columns, capacity, overflowing } = getTechnicalPageLayout(width, height, rows.length, chips);
+  const pages = Math.max(1, Math.ceil(rows.length / Math.max(1, capacity)));
   const page = Math.min(pageIndex, pages - 1);
   const start = page * capacity;
-  const shown = visible.slice(start, start + capacity);
+  const shown = rows.slice(start, start + capacity);
   const showArea = new Set(visible.map((entity) => entity.areaId)).size > 1;
 
   return (
@@ -356,16 +432,20 @@ function EntitiesPresentation({ entities, configuration, width, height }: Presen
           data-list
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gridAutoRows: ROW_HEIGHT }}
         >
-          {shown.map((entity) => (
-            <div key={entity.id} className={classes.rowSlot}>
-              <EntityRow entity={entity} level={getLevel(width / columns)} showArea={showArea} />
+          {shown.map((row) => (
+            <div key={row.id} className={classes.rowSlot}>
+              {row.kind === "device" ? (
+                <DeviceRow device={row} level={getLevel(width / columns)} />
+              ) : (
+                <EntityRow entity={row.entity} level={getLevel(width / columns)} showArea={showArea} />
+              )}
             </div>
           ))}
         </Box>
       )}
       {overflowing && (
         <PageControls
-          count={visible.length - shown.length}
+          count={rows.length - shown.length}
           page={page}
           pages={capacity > 0 ? pages : 1}
           onChange={setPageIndex}
@@ -377,24 +457,62 @@ function EntitiesPresentation({ entities, configuration, width, height }: Presen
   );
 }
 
+interface PanelItemControlProps {
+  item: PanelItem;
+  width: number;
+  height: number;
+  compact: boolean;
+}
+
+function PanelItemControl({ item, width, height, compact }: PanelItemControlProps) {
+  if (item.kind === "device") return <DeviceControl device={item} width={width} height={height} compact={compact} />;
+  return <EntityControl entity={item.entity} width={width} height={height} />;
+}
+
 function ControlPanelPresentation({ entities, configuration, width, height }: PresentationProps) {
   const [pageIndex, setPageIndex] = useState(0);
+  const deviceLabels = useDeviceLabels(configuration);
+  const items = useMemo(
+    () =>
+      toPanelItems(
+        entities,
+        configuration.groupByDevice,
+        configuration.readingOrder,
+        configuration.showDeviceGraph,
+        deviceLabels,
+        configuration.showDeviceKeyValue,
+      ),
+    [
+      entities,
+      configuration.groupByDevice,
+      configuration.readingOrder,
+      configuration.showDeviceGraph,
+      deviceLabels,
+      configuration.showDeviceKeyValue,
+    ],
+  );
   const [single] = entities;
   if (entities.length === 1 && single && width >= 40 && height >= 36) {
     if (width < 96 || height < 64) return <EntityTile entity={single} />;
     return <EntityControl entity={single} width={width} height={height} />;
   }
+  const [singleItem] = items;
+  const compactDevices = configuration.controlSize === "compact" && !configuration.advanced;
+  if (items.length === 1 && singleItem && width >= 96 && height >= 64) {
+    return <PanelItemControl item={singleItem} width={width} height={height} compact={compactDevices} />;
+  }
   const size = configuration.advanced ? "compact" : configuration.controlSize;
-  const layout = getControlPanelLayout(width, height, entities.length, size);
-  const overflowing = layout.capacity < entities.length;
+  // The focus view prefers small tiles but should still fill its large dialog.
+  const layout = getControlPanelLayout(width, height, items.length, size, configuration.advanced || size !== "compact");
+  const overflowing = layout.capacity < items.length;
   const capacity = Math.max(0, layout.capacity - Number(overflowing));
-  const pages = Math.max(1, Math.ceil(entities.length / Math.max(1, capacity)));
+  const pages = Math.max(1, Math.ceil(items.length / Math.max(1, capacity)));
   const page = Math.min(pageIndex, pages - 1);
   const start = page * capacity;
-  const shown = entities.slice(start, start + capacity);
+  const shown = items.slice(start, start + capacity);
   const navigation = (
     <PageControls
-      count={entities.length - shown.length}
+      count={items.length - shown.length}
       page={page}
       pages={capacity > 0 ? pages : 1}
       onChange={setPageIndex}
@@ -416,9 +534,9 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
         gridTemplateRows: `repeat(${layout.rows}, ${layout.height}px)`,
       }}
     >
-      {shown.map((entity) => (
-        <div key={entity.id} className={classes.cell}>
-          <EntityControl entity={entity} width={layout.width} height={layout.height} />
+      {shown.map((item) => (
+        <div key={item.id} className={classes.cell}>
+          <PanelItemControl item={item} width={layout.width} height={layout.height} compact={compactDevices} />
         </div>
       ))}
       {overflowing && <div className={classes.overflowCell}>{navigation}</div>}
@@ -608,6 +726,10 @@ export default function SmartHomeControlsWidget({
       showSummary: options.showSummary,
       controlSize: options.controlSize,
       palette: options.palette,
+      groupByDevice: options.groupByDevice,
+      readingOrder: options.readingOrder,
+      showDeviceGraph: options.showDeviceGraph,
+      showDeviceKeyValue: options.showDeviceKeyValue,
       readOnly: options.readOnly,
     }),
     [
@@ -621,6 +743,10 @@ export default function SmartHomeControlsWidget({
       options.showSummary,
       options.controlSize,
       options.palette,
+      options.groupByDevice,
+      options.readingOrder,
+      options.showDeviceGraph,
+      options.showDeviceKeyValue,
       options.readOnly,
     ],
   );

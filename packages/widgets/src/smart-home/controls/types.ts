@@ -17,6 +17,7 @@ export const haDomains = [
   "button",
   "input_boolean",
   "input_select",
+  "number",
   "person",
   "binary_sensor",
   "sensor",
@@ -28,7 +29,11 @@ export const haDomains = [
 export type HaDomain = (typeof haDomains)[number];
 
 const knownDomains = new Set<string>(haDomains);
-const domainAliases: Partial<Record<string, HaDomain>> = { select: "input_select", input_button: "button" };
+const domainAliases: Partial<Record<string, HaDomain>> = {
+  select: "input_select",
+  input_button: "button",
+  input_number: "number",
+};
 
 const isHaDomain = (domain: string): domain is HaDomain => knownDomains.has(domain);
 
@@ -76,6 +81,7 @@ export interface HaAttributes {
   position?: number;
   coverPositionUnknown?: boolean;
   percentage?: number;
+  percentageStep?: number;
   mediaTitle?: string;
   mediaArtist?: string;
   mediaAlbum?: string;
@@ -88,6 +94,9 @@ export interface HaAttributes {
   mediaPositionUpdatedAt?: number;
   batteryLevel?: number;
   options?: string[];
+  min?: number;
+  max?: number;
+  step?: number;
   forecast?: HaForecastDay[];
   forecastStatus?: "loading" | "ready" | "unsupported" | "error";
   humidity?: number;
@@ -122,7 +131,15 @@ export interface HaEntity {
   history: (number | null)[] | null;
   sourceDomain?: string;
   sourceAreaId?: string | null;
+  device?: HaDevice | null;
   readOnly?: boolean;
+}
+
+export interface HaDevice {
+  id: string;
+  name: string;
+  entityName: string | null;
+  model?: string | null;
 }
 
 export interface HaArea {
@@ -158,6 +175,7 @@ export type HaAction =
   | { type: "setVolume"; value: number }
   | { type: "trigger" }
   | { type: "selectOption"; value: string }
+  | { type: "setValue"; value: number }
   | { type: "setFanPercentage"; value: number }
   | { type: "vacuumStart" }
   | { type: "vacuumReturn" }
@@ -174,9 +192,13 @@ export type SmartHomeControlSize = (typeof smartHomeControlSizes)[number];
 export const smartHomeControlPalettes = ["boring", "colorful"] as const;
 export type SmartHomeControlPalette = (typeof smartHomeControlPalettes)[number];
 
+export const smartHomeReadingOrders = ["automatic", "manual"] as const;
+export type SmartHomeReadingOrder = (typeof smartHomeReadingOrders)[number];
+
 export type SmartHomeBlock =
   | { kind: "entity"; id: string; source: string | null; entityId: string }
-  | { kind: "areas"; id: string; source: string | null; areaIds: string[] };
+  | { kind: "areas"; id: string; source: string | null; areaIds: string[] }
+  | { kind: "device"; id: string; source: string | null; deviceId: string; label: string | null };
 
 export interface SmartHomeConfiguration {
   integrationId: string | null;
@@ -188,12 +210,17 @@ export interface SmartHomeConfiguration {
   showSummary: boolean;
   controlSize: SmartHomeControlSize;
   palette: SmartHomeControlPalette;
+  groupByDevice: boolean;
+  readingOrder: SmartHomeReadingOrder;
+  showDeviceGraph: boolean;
+  showDeviceKeyValue: boolean;
   readOnly: boolean;
   advanced: boolean;
 }
 
 export interface SmartHomeOptionsPatch {
   blocks?: string[];
+  excludedEntityIds?: string[];
   presentation?: SmartHomePresentation;
 }
 

@@ -31,6 +31,7 @@ const entityIdSchema = z
 const selectionSchema = z.object({
   entityIds: z.array(entityIdSchema).max(200).default([]),
   areaIds: z.array(z.string().max(255)).max(50).default([]),
+  deviceIds: z.array(z.string().max(255)).max(100).default([]),
   domains: z.array(z.string().max(64)).max(400).default([]),
   excludedEntityIds: z.array(entityIdSchema).max(400).default([]),
 });

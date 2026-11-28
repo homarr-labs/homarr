@@ -95,6 +95,8 @@ export const deviceRegistrySchema = z.array(
     area_id: z.string().nullish(),
     name: z.string().nullish(),
     name_by_user: z.string().nullish(),
+    manufacturer: z.string().nullish(),
+    model: z.string().nullish(),
   }),
 );
 
@@ -109,6 +111,7 @@ export const entityDisplayRegistrySchema = z.object({
       ic: z.string().optional(),
       ec: z.number().optional(),
       hb: z.boolean().optional(),
+      hn: z.boolean().optional(),
     }),
   ),
 });

@@ -513,13 +513,15 @@ const resolveSelection = (
   const explicit = (selection.entityIds ?? []).filter((id) => states.has(id));
   const domains = selection.domains && selection.domains.length > 0 ? new Set(selection.domains) : null;
   const areaIds = selection.areaIds && selection.areaIds.length > 0 ? new Set(selection.areaIds) : null;
+  const deviceIds = selection.deviceIds && selection.deviceIds.length > 0 ? new Set(selection.deviceIds) : null;
   const excludedIds = new Set(selection.excludedEntityIds ?? []);
-  const includeAll = explicit.length === 0 && !areaIds && (selection.entityIds ?? []).length === 0;
+  const includeAll = explicit.length === 0 && !areaIds && !deviceIds && (selection.entityIds ?? []).length === 0;
 
   const implicit = [...states.keys()].filter((id) => {
     const context = lookup(id);
     if (context.hidden) return false;
     if (excludedIds.has(id)) return false;
+    if (deviceIds && context.device && deviceIds.has(context.device.id)) return true;
     if (domains && !domains.has(getEntityDomain(id))) return false;
     if (areaIds) return context.areaId !== null && areaIds.has(context.areaId);
     return includeAll;

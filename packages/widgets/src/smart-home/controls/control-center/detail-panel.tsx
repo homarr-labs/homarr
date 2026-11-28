@@ -7,6 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { getClimateTemperatureMode } from "@homarr/integrations/types";
 
+import { getDeviceEntityLabel } from "../device-groups";
 import {
   formatEntityState,
   formatNumber,
@@ -213,7 +214,13 @@ function FactList({ facts }: { facts: Fact[] }) {
   );
 }
 
-function RelatedRow({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: string) => void }) {
+interface RelatedRowProps {
+  entity: HaEntity;
+  label?: string;
+  onOpen: (entityId: string) => void;
+}
+
+function RelatedRow({ entity, label = entity.name, onOpen }: RelatedRowProps) {
   const theme = useEntityTheme(entity);
   const { run, pending } = useRunner(entity);
   const action = getPrimaryAction(entity);
@@ -235,10 +242,10 @@ function RelatedRow({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: s
       <button
         type="button"
         className={classes.relatedName}
-        aria-label={`${entity.name}, ${state}, show details`}
+        aria-label={`${label}, ${state}, show details`}
         onClick={() => onOpen(entity.id)}
       >
-        <span className={classes.name}>{entity.name}</span>
+        <span className={classes.name}>{label}</span>
         <span className={classes.state}>{state}</span>
       </button>
       {action !== null && direct ? <RelatedAction entity={entity} action={action} run={run} pending={pending} /> : null}
@@ -270,11 +277,35 @@ function RelatedAction({ entity, action, run, pending }: RelatedActionProps) {
   );
 }
 
+function DeviceEntities({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: string) => void }) {
+  const t = useI18n("widget.smartHome-controls.device");
+  const entities = useSmartHomeEntities();
+  const deviceId = entity.device?.id;
+  if (!deviceId) return null;
+  const siblings = Object.values(entities).filter(
+    (candidate) => candidate.device?.id === deviceId && candidate.id !== entity.id,
+  );
+  if (siblings.length === 0) return null;
+
+  return (
+    <details className={classes.detailDisclosure} open>
+      <summary>{t("onThisDevice")}</summary>
+      <ul className={classes.relatedList}>
+        {siblings.map((candidate) => (
+          <RelatedRow key={candidate.id} entity={candidate} label={getDeviceEntityLabel(candidate)} onOpen={onOpen} />
+        ))}
+      </ul>
+    </details>
+  );
+}
+
 function RelatedEntities({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: string) => void }) {
   const entities = useSmartHomeEntities();
   if (!entity.areaId) return null;
+  const deviceId = entity.device?.id;
   const related = Object.values(entities)
     .filter((candidate) => candidate.areaId === entity.areaId && candidate.id !== entity.id)
+    .filter((candidate) => !deviceId || candidate.device?.id !== deviceId)
     .toSorted((a, b) => Number(getPrimaryAction(b) !== null) - Number(getPrimaryAction(a) !== null))
     .slice(0, RELATED_LIMIT);
   if (related.length === 0) return null;
@@ -305,6 +336,7 @@ export function DetailMeta({ entity }: { entity: HaEntity }) {
 
 export function DetailPanel({ entity, onOpen }: { entity: HaEntity; onOpen: (entityId: string) => void }) {
   const t = useI18n("widget.smartHome-controls.live");
+  const tDevice = useI18n("widget.smartHome-controls.device");
   const error = useSmartHomeEntityError(entity.id);
   const areas = useSmartHomeAreas();
   const area = areas.find((candidate) => candidate.id === entity.areaId);
@@ -318,6 +350,7 @@ export function DetailPanel({ entity, onOpen }: { entity: HaEntity; onOpen: (ent
     ["Raw state", entity.state === formatted ? undefined : entity.state],
     ["Device class", entity.deviceClass ?? undefined],
     ["Unit", entity.unit ?? undefined],
+    [tDevice("device"), entity.device?.name],
     ["Area", area?.name],
     ["Last changed", new Date(entity.lastChanged).toLocaleString()],
     ["Entity ID", entity.id],
@@ -350,6 +383,7 @@ export function DetailPanel({ entity, onOpen }: { entity: HaEntity; onOpen: (ent
         <summary>Technical details</summary>
         <FactList facts={technicalFacts} />
       </details>
+      <DeviceEntities entity={entity} onOpen={onOpen} />
       <RelatedEntities entity={entity} onOpen={onOpen} />
     </>
   );
