@@ -195,9 +195,9 @@ export const WidgetEditorFields = ({
       }
     : undefined;
 
-  const selectedIntegrationKinds = integrationData
-    .filter(({ id }) => form.values.integrationIds.includes(id))
-    .map(({ kind: integrationKind }) => integrationKind);
+  const byId = new Map(integrationData.map((integration) => [integration.id, integration]));
+  const selectedIntegrations = form.values.integrationIds.flatMap((id) => byId.get(id) ?? []);
+  const selectedIntegrationKinds = selectedIntegrations.map(({ kind: integrationKind }) => integrationKind);
   const visibleOptions = Object.entries(options).filter(([, value]) => {
     const Input = getInputForType(value.type);
     if (!Input) {
@@ -221,6 +221,7 @@ export const WidgetEditorFields = ({
           kind={kind}
           property={key}
           options={value as never}
+          selectedIntegrations={selectedIntegrations}
           initialOptions={initialOptions}
           itemId={itemId}
           boardId={boardId ?? board?.id}
@@ -248,6 +249,7 @@ export const WidgetEditorFields = ({
                   label={tItem("field.integrations.label")}
                   data={integrationData}
                   canSelectMultiple={maxIntegrations > 1}
+                  fleetSelection={kind === "healthMonitoring"}
                   withAsterisk={integrationsRequired}
                   onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
                   {...form.getInputProps("integrationIds")}

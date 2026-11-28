@@ -6,7 +6,7 @@ import { autoUpdate, computePosition, flip, hide, offset, shift } from "@floatin
 import type { AreaChartProps } from "@mantine/charts";
 import { getDefaultZIndex } from "@mantine/core";
 
-export function createBeszelTooltipProps(
+export function createMonitoringTooltipProps(
   original: AreaChartProps["tooltipProps"],
   portal: HTMLDivElement | null,
   chartRef: RefObject<HTMLDivElement | null>,
@@ -26,21 +26,21 @@ export function createBeszelTooltipProps(
       zIndex: getDefaultZIndex("popover"),
     },
     content: (props: Parameters<typeof content>[0]) => (
-      <BeszelTooltipPosition active={props.active} chartRef={chartRef} coordinate={props.coordinate}>
+      <MonitoringTooltipPosition active={props.active} chartRef={chartRef} coordinate={props.coordinate}>
         {content(props)}
-      </BeszelTooltipPosition>
+      </MonitoringTooltipPosition>
     ),
   };
 }
 
-interface BeszelTooltipPositionProps {
+interface MonitoringTooltipPositionProps {
   active: boolean;
   chartRef: RefObject<HTMLDivElement | null>;
   coordinate: { x: number; y: number } | undefined;
   children: ReactNode;
 }
 
-function BeszelTooltipPosition({ active, chartRef, coordinate, children }: BeszelTooltipPositionProps) {
+function MonitoringTooltipPosition({ active, chartRef, coordinate, children }: MonitoringTooltipPositionProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const x = coordinate?.x;
   const y = coordinate?.y;

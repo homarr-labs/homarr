@@ -14,6 +14,7 @@ interface SparklineProps {
   variant?: "line" | "area";
   fillOpacity?: number;
   strokeWidth?: number;
+  connectNulls?: boolean;
 }
 
 interface Point {
@@ -35,6 +36,7 @@ export const Sparkline = ({
   variant = "line",
   fillOpacity = 0.3,
   strokeWidth = 2,
+  connectNulls = true,
 }: SparklineProps) => {
   const theme = useMantineTheme();
   const idPrefix = useId().replace(/[^\w-]/g, "");
@@ -56,10 +58,15 @@ export const Sparkline = ({
       aria-hidden
     >
       {series.map((item, seriesIndex) => {
-        const points = toPoints(item.values, min, range);
-        if (points.length === 0) return null;
+        const segments = toPointSegments(item.values, min, range, connectNulls);
+        if (segments.length === 0) return null;
         const color = getThemeColor(item.color, theme);
-        const line = createMonotonePath(points);
+        const lines = segments.map((points) => {
+          const line = createMonotonePath(points);
+          // A round zero-length stroke shows an isolated reading on either side of a gap.
+          if (!connectNulls && points.length === 1) return `${line} l0,0`;
+          return line;
+        });
         const gradientId = `${idPrefix}-${seriesIndex}`;
 
         return (
@@ -73,14 +80,19 @@ export const Sparkline = ({
                   </linearGradient>
                 </defs>
                 <path
-                  d={`${line} L${format(points.at(-1)?.x ?? 0)},${VIEWBOX_SIZE} L${format(points[0]?.x ?? 0)},${VIEWBOX_SIZE} Z`}
+                  d={segments
+                    .map(
+                      (points, index) =>
+                        `${lines[index]} L${format(points.at(-1)?.x ?? 0)},${VIEWBOX_SIZE} L${format(points[0]?.x ?? 0)},${VIEWBOX_SIZE} Z`,
+                    )
+                    .join(" ")}
                   fill={`url(#${gradientId})`}
                   stroke="none"
                 />
               </>
             )}
             <path
-              d={line}
+              d={lines.join(" ")}
               fill="none"
               stroke={color}
               strokeWidth={strokeWidth}
@@ -109,18 +121,25 @@ const resolveDomain = (values: number[], domain: SparklineProps["yDomain"]): [nu
   return max > min ? [min, max] : [min, min + 1];
 };
 
-// Missing values are skipped and their neighbours connected, matching Mantine charts' `connectNulls` default.
-const toPoints = (values: SparklineSeries["values"], min: number, range: number) => {
+const toPointSegments = (values: SparklineSeries["values"], min: number, range: number, connectNulls: boolean) => {
   const lastIndex = Math.max(values.length - 1, 1);
-  const points: Point[] = [];
+  const segments: Point[][] = [];
+  let segment: Point[] | undefined;
   for (const [index, value] of values.entries()) {
-    if (!isFiniteNumber(value)) continue;
-    points.push({
+    if (!isFiniteNumber(value)) {
+      if (!connectNulls) segment = undefined;
+      continue;
+    }
+    if (!segment) {
+      segment = [];
+      segments.push(segment);
+    }
+    segment.push({
       x: (index / lastIndex) * VIEWBOX_SIZE,
       y: VIEWBOX_SIZE - ((value - min) / range) * VIEWBOX_SIZE,
     });
   }
-  return points;
+  return segments;
 };
 
 const format = (value: number) => Number(value.toFixed(2)).toString();

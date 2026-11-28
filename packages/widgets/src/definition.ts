@@ -190,6 +190,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   width: number;
   height: number;
   displayScale?: number;
+  openAdvancedView?: () => void;
   widgetRuntimeRef?: WidgetRuntimeRef;
   widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
   removeItem?: () => void;

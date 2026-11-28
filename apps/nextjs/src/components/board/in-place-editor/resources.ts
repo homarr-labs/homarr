@@ -9,6 +9,7 @@ import { loadWidgetComponent, loadWidgetDefinition, reduceWidgetOptionsWithDefin
 import type { WidgetEditModalState } from "@homarr/widgets/modals";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
+import { getInitialIntegrationIds } from "../items/item-select-data";
 import { getTargetKind } from "./store";
 import type { PickTarget } from "./types";
 
@@ -112,7 +113,7 @@ export const useTargetResources = (target: PickTarget | undefined): TargetResour
     }
     if (target.type === "app") options = { ...defaultOptions, appId: target.appId };
 
-    const integrationIds = integrationData.slice(0, maxIntegrations).map((integration) => integration.id);
+    const integrationIds = getInitialIntegrationIds(kind, integrationData, maxIntegrations);
 
     return {
       status: "ready",

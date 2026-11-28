@@ -31,6 +31,8 @@ export const getWidgetOptionDescriptionTranslationNamespace = (
   kind: WidgetKind,
   property: string,
 ): string | undefined => {
+  if (kind === "healthMonitoring" && property === "visibleStorageVolumes")
+    return "widget.healthMonitoring.option.visibleStorageVolumes";
   if (kind !== "patchmon") return undefined;
   if (PATCHMON_SHARED_WARNING_PROPERTIES.has(property)) return "widget.patchmon.option.threshold.warningAt";
   if (PATCHMON_SHARED_CRITICAL_PROPERTIES.has(property)) return "widget.patchmon.option.threshold.criticalAt";

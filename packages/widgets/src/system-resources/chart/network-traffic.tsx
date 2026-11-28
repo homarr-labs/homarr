@@ -13,7 +13,7 @@ export const NetworkTrafficChart = ({
   labelDisplayMode,
   advanced = false,
 }: {
-  usageOverTime: number[];
+  usageOverTime: (number | null)[];
   isUp: boolean;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
@@ -23,9 +23,9 @@ export const NetworkTrafficChart = ({
   const t = useI18n("widget.systemResources.card");
   const { formatByteRate } = useByteFormatter();
 
-  const max = Math.max(...usageOverTime);
+  const max = Math.max(0, ...usageOverTime.filter((value) => value !== null));
   const upperBound = max + max * 0.2;
-  const latest = usageOverTime.at(-1) ?? 0;
+  const latest = usageOverTime.at(-1);
 
   return (
     <CommonChart
@@ -34,11 +34,14 @@ export const NetworkTrafficChart = ({
       title={isUp ? t("up") : t("down")}
       icon={isUp ? IconArrowUp : IconArrowDown}
       yDomain={[0, upperBound]}
-      lastValue={formatByteRate(Math.round(latest))}
+      lastValue={latest == null ? undefined : formatByteRate(Math.round(latest))}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      tooltipLabel={(index) => formatByteRate(Math.round(usageOverTime[index] ?? 0))}
+      tooltipLabel={(index) => {
+        const value = usageOverTime[index];
+        if (value != null) return formatByteRate(Math.round(value));
+      }}
     />
   );
 };

@@ -232,8 +232,23 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
                 headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
               }),
               false: splitLink({
-                // Release batches can exceed the URL limit even as a single operation.
-                condition: ({ path }) => path === "widget.releases.getLatest",
+                // One fleet query can exceed the URL limit before tRPC has a chance to split a batch.
+                condition: ({ path, input }) => {
+                  if (path === "widget.releases.getLatest") return true;
+                  if (path === "integration.byIds") return Array.isArray(input) && input.length > 1;
+                  if (
+                    path !== "widget.healthMonitoring.getSystemHealthStatus" &&
+                    path !== "widget.healthMonitoring.getClusterIntegrationNames"
+                  )
+                    return false;
+                  return (
+                    typeof input === "object" &&
+                    input !== null &&
+                    "integrationIds" in input &&
+                    Array.isArray(input.integrationIds) &&
+                    input.integrationIds.length > 1
+                  );
+                },
                 true: httpBatchStreamLink({
                   transformer: superjson,
                   url: getTrpcUrl(),

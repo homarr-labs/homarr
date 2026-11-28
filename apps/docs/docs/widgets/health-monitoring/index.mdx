@@ -10,60 +10,34 @@ import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { IconAd } from "@tabler/icons-react";
-import Tabs from "@/components/mdx/legacy-tabs";
-import { TabItem } from "@/components/mdx/legacy-tabs";
 import { healthMonitoringWidget } from ".";
 import { dashDotIntegration } from "@site/docs/integrations/dash-dot";
 import { openMediaVaultIntegration } from "@site/docs/integrations/open-media-vault";
 import { proxmoxIntegration } from "@site/docs/integrations/proxmox";
 import { glancesIntegration } from "@site/docs/integrations/glances";
+import { synologyIntegration } from "@site/docs/integrations/synology";
+import { truenasIntegration } from "@site/docs/integrations/truenas";
+import { unraidIntegration } from "@site/docs/integrations/unraid";
 
 <WidgetHeader widget={healthMonitoringWidget} categories={["Health monitoring"]} />
 
-This widget displays information about the health and status of your system(s), including CPU, memory, disk usage, and more.
+Select a server or NAS integration to see its latest readings. Add more integrations to compare hosts. Each host shows the metrics its integration reports. Proxmox has a separate cluster view for nodes, VMs, containers, and storage.
 
-CPU usage, CPU temperature, memory usage, and GPU utilization are shown as compact gauges with threshold colors and their original units.
-
-Advanced view is a complete health workspace: it shows every available CPU, temperature, memory, GPU, filesystem, update, reboot, and system-information section even when compact visibility switches hide some of them on the board. Proxmox clusters likewise show uptime, CPU, memory, and every node, VM, container, and storage section. Storage-volume filters, units, and permissions remain in effect.
-
-### Screenshots
-
-import systemView from "./img/system-view.png";
-import clusterView from "./img/cluster-view.png";
-import { truenasIntegration } from "@site/docs/integrations/truenas";
-import { synologyIntegration } from "@site/docs/integrations/synology";
-
-<img src={systemView.src} alt="health-monitoring system-view" width={256} height={256} />
-<img src={clusterView.src} alt="health-monitoring cluster-view" width={256} height={256} />
+Open a host for its individual readings, or use **Advanced view** from the widget menu to compare systems. System history builds from readings the widget receives while the board is open. Choose a history window longer than the refresh interval so it can contain at least two readings. Reloading the page starts a new history. Gaps indicate missing readings.
 
 ### Supported Integrations
 
 <WidgetIntegrations
   items={[
-    {
-      integration: dashDotIntegration,
-      note: "Will display information on the system tab",
-    },
-    {
-      integration: openMediaVaultIntegration,
-      note: "Will display information on the system tab",
-    },
-    {
-      integration: truenasIntegration,
-      note: "Will display information on the system tab",
-    },
-    {
-      integration: synologyIntegration,
-      note: "Will display information on the system tab",
-    },
-    {
-      integration: glancesIntegration,
-      note: "Will display information on the system tab",
-    },
+    { integration: dashDotIntegration },
+    { integration: glancesIntegration },
+    { integration: openMediaVaultIntegration },
+    { integration: synologyIntegration },
+    { integration: truenasIntegration },
+    { integration: unraidIntegration },
     {
       integration: proxmoxIntegration,
-      note: "Will display information on the cluster tab, only supports one integration at a time",
+      note: "If several Proxmox integrations are selected, use the cluster selector to switch between them.",
     },
   ]}
 />
@@ -75,5 +49,11 @@ import { synologyIntegration } from "@site/docs/integrations/synology";
 <AddingWidget />
 
 ### Configuration
+
+Set shared defaults in the widget configuration and save the board. Changes made while inspecting readings apply to the current view.
+
+A custom metric order selects which readings appear first when space is tight. Leave the list empty to use the automatic order and the widget’s existing metric switches.
+
+**Needs attention** includes unavailable or stale systems, reported storage faults, pending updates or reboots, and CPU, memory, or volume usage at or above the configured threshold. Each usage threshold defaults to 90%. A healthy disk can still trigger a capacity warning. On Synology and OpenMediaVault, selecting volumes limits storage warnings to those volumes.
 
 <WidgetConfig configuration={healthMonitoringWidget.configuration} />

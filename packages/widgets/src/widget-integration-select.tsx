@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import type { FocusEventHandler } from "react";
 import {
   Anchor,
   Avatar,
+  Button,
   CheckIcon,
   CloseButton,
   Combobox,
@@ -17,7 +19,7 @@ import {
 } from "@mantine/core";
 
 import type { IntegrationKind } from "@homarr/definitions";
-import { getIconUrl } from "@homarr/definitions";
+import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -31,6 +33,7 @@ interface WidgetIntegrationSelectProps {
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   canSelectMultiple?: boolean;
+  fleetSelection?: boolean;
   data: IntegrationSelectOption[];
   withAsterisk?: boolean;
   onOpenNewIntegration?: () => void;
@@ -41,6 +44,7 @@ export const WidgetIntegrationSelect = ({
   value: valueProp,
   label,
   canSelectMultiple = true,
+  fleetSelection = false,
   withAsterisk = false,
   onOpenNewIntegration,
   ...props
@@ -48,6 +52,9 @@ export const WidgetIntegrationSelect = ({
   const tItem = useI18n("item.edit.field.integrations");
   const tIntegration = useI18n("widget.common.integration");
   const tCommon = useI18n("common");
+  const tSources = useI18n("widget.healthMonitoring.option.sources");
+  const [search, setSearch] = useState("");
+  const [expanded, setExpanded] = useState(false);
   const multiSelectValues = valueProp ?? [];
   const selectedIds = new Set(multiSelectValues);
   const optionsById = new Map<string, IntegrationSelectOption>();
@@ -56,7 +63,10 @@ export const WidgetIntegrationSelect = ({
   }
 
   const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+      setSearch("");
+    },
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
@@ -77,7 +87,10 @@ export const WidgetIntegrationSelect = ({
   const handleValueRemove = (valueToRemove: string) =>
     onChange(multiSelectValues.filter((value) => value !== valueToRemove));
 
-  const values = multiSelectValues.map((item) => {
+  const collapsible = fleetSelection && multiSelectValues.length > 4;
+  let displayedIds = multiSelectValues;
+  if (collapsible && !expanded) displayedIds = multiSelectValues.slice(0, 2);
+  const values = displayedIds.map((item) => {
     const option = optionsById.get(item);
     if (!option) {
       return (
@@ -107,7 +120,16 @@ export const WidgetIntegrationSelect = ({
     );
   });
 
-  const options = data.map((item) => {
+  let matches = data;
+  if (fleetSelection) {
+    const query = search.trim().toLowerCase();
+    if (!combobox.dropdownOpened) matches = [];
+    else if (query)
+      matches = data.filter((item) =>
+        [item.name, item.url, getIntegrationName(item.kind)].some((value) => value.toLowerCase().includes(query)),
+      );
+  }
+  const options = matches.map((item) => {
     const isSelected = selectedIds.has(item.id);
     return (
       <Combobox.Option value={item.id} key={item.id} active={isSelected}>
@@ -127,37 +149,65 @@ export const WidgetIntegrationSelect = ({
     );
   });
 
+  let placeholder;
+  if (fleetSelection) placeholder = tSources("search");
+  else if (values.length === 0) placeholder = tCommon("multiSelect.placeholder");
+
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
       <Combobox.DropdownTarget>
         <PillsInput
           inputWrapperOrder={["label", "input", "description", "error"]}
           description={
-            onOpenNewIntegration ? (
-              <Text size="xs" span>
-                <Anchor
-                  size="xs"
-                  c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
-                  component="button"
-                  type="button"
-                  onClick={onOpenNewIntegration}
-                >
-                  {tCommon("action.create")}
-                </Anchor>
-              </Text>
-            ) : (
-              <Text size="xs" span>
-                <Anchor
-                  size="xs"
-                  c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
-                  component={Link}
-                  target="_blank"
-                  href="/manage/integrations"
-                >
-                  {tIntegration("manage")}
-                </Anchor>
-              </Text>
-            )
+            <>
+              {onOpenNewIntegration ? (
+                <Text size="xs" span>
+                  <Anchor
+                    size="xs"
+                    c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
+                    component="button"
+                    type="button"
+                    onClick={onOpenNewIntegration}
+                  >
+                    {tCommon("action.create")}
+                  </Anchor>
+                </Text>
+              ) : (
+                <Text size="xs" span>
+                  <Anchor
+                    size="xs"
+                    c="light-dark(var(--mantine-primary-color-8), var(--mantine-primary-color-3))"
+                    component={Link}
+                    target="_blank"
+                    href="/manage/integrations"
+                  >
+                    {tIntegration("manage")}
+                  </Anchor>
+                </Text>
+              )}
+              {fleetSelection && data.length > 1 && (
+                <Group component="span" gap="xs" mt={4}>
+                  <Button
+                    type="button"
+                    size="compact-xs"
+                    variant="subtle"
+                    disabled={data.every(({ id }) => selectedIds.has(id))}
+                    onClick={() => onChange([...new Set([...multiSelectValues, ...optionsById.keys()])])}
+                  >
+                    {tSources("selectAll")}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="compact-xs"
+                    variant="subtle"
+                    disabled={multiSelectValues.length === 0}
+                    onClick={() => onChange([])}
+                  >
+                    {tSources("clear")}
+                  </Button>
+                </Group>
+              )}
+            </>
           }
           pointer
           onClick={() => combobox.openDropdown()}
@@ -167,16 +217,40 @@ export const WidgetIntegrationSelect = ({
         >
           <Pill.Group>
             {values}
+            {collapsible && (
+              <Button
+                size="compact-xs"
+                variant="default"
+                type="button"
+                aria-expanded={expanded}
+                onMouseDown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  combobox.closeDropdown();
+                  setExpanded(!expanded);
+                }}
+              >
+                {expanded
+                  ? tSources("collapse")
+                  : tSources("more", { count: multiSelectValues.length - displayedIds.length })}
+              </Button>
+            )}
 
-            <Combobox.EventsTarget>
+            <Combobox.EventsTarget withExpandedAttribute={fleetSelection}>
               <PillsInput.Field
-                readOnly
+                readOnly={!fleetSelection}
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.currentTarget.value);
+                  combobox.openDropdown();
+                  combobox.updateSelectedOptionIndex();
+                }}
                 aria-label={label}
-                placeholder={values.length === 0 ? tCommon("multiSelect.placeholder") : undefined}
+                placeholder={placeholder}
                 onFocus={() => combobox.openDropdown()}
                 onBlur={() => combobox.closeDropdown()}
                 onKeyDown={(event) => {
-                  if (["ArrowDown", "Enter", " "].includes(event.key)) {
+                  if (!fleetSelection && ["ArrowDown", "Enter", " "].includes(event.key)) {
                     event.preventDefault();
                     combobox.openDropdown();
                     return;
@@ -185,7 +259,12 @@ export const WidgetIntegrationSelect = ({
                     combobox.closeDropdown();
                     return;
                   }
-                  if (event.key === "Backspace" && canSelectMultiple && multiSelectValues.length > 0) {
+                  if (
+                    event.key === "Backspace" &&
+                    search.length === 0 &&
+                    canSelectMultiple &&
+                    multiSelectValues.length > 0
+                  ) {
                     event.preventDefault();
                     const lastValue = multiSelectValues.at(-1);
                     if (lastValue) handleValueRemove(lastValue);

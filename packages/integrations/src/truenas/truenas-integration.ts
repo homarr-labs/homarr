@@ -57,14 +57,13 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     ]);
 
     const cpuData = this.extractLatestReportingData(reporting, "cpu");
-    const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
+    const temperatures = Object.values(this.extractLatestReportingData(reporting, "cputemp"));
     const memoryData = this.extractLatestReportingData(reporting, "memory");
     if (Object.values(memoryData).some((value) => value < 0)) {
       throw new ParseError("TrueNAS returned negative memory reporting values");
     }
 
-    const upload = this.extractNetworkTrafficData(netdata, "sent");
-    const download = this.extractNetworkTrafficData(netdata, "received");
+    const network = this.extractNetworkTrafficData(netdata);
 
     let memoryUsed: number;
     if (memoryData.available !== undefined) {
@@ -88,25 +87,25 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: Math.min(100, Math.max(0, cpuUtilization)),
-      cpuTemp: Math.max(...Object.values(cpuTempData)),
+      cpuTemp: temperatures.length ? Math.max(...temperatures) : undefined,
       memAvailableInBytes,
       memUsedInBytes,
-      fileSystem: datasets.map((dataset) => {
+      fileSystem: datasets.flatMap((dataset) => {
+        if (dataset.used === null || dataset.available === null) return [];
         const total = dataset.used + dataset.available;
         let percentage = 0;
         if (total > 0) percentage = (dataset.used / total) * 100;
-        return {
-          deviceName: dataset.name,
-          available: `${dataset.available}`,
-          used: `${dataset.used}`,
-          percentage,
-        };
+        return [
+          {
+            deviceName: dataset.name,
+            available: `${dataset.available}`,
+            used: `${dataset.used}`,
+            percentage,
+          },
+        ];
       }),
-      availablePkgUpdates: 0,
-      network: {
-        up: upload * NETWORK_MULTIPLIER,
-        down: download * NETWORK_MULTIPLIER,
-      },
+      availablePkgUpdates: null,
+      network,
       loadAverage: null,
       smart: datasets.map((dataset) => ({
         deviceName: dataset.name,
@@ -117,7 +116,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       uptime: systemInformation.uptime_seconds,
       version: systemInformation.version,
       cpuModelName: systemInformation.model,
-      rebootRequired: false,
+      rebootRequired: null,
       gpu: [],
     };
   }
@@ -150,37 +149,14 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       },
     ]);
     const result = await poolSchema.parseAsync(response);
-    // Offline / exported pools have null values for allocated, size and free, so we filter them out
-    // See https://github.com/homarr-labs/homarr/issues/5194
-    const activePools = result
-      .map((pool) => {
-        if (pool.allocated !== null && pool.size !== null && pool.free !== null) {
-          return {
-            name: pool.name,
-            status: pool.status,
-            healthy: pool.healthy,
-            allocated: pool.allocated,
-            free: pool.free,
-          };
-        }
-
-        return null;
-      })
-      .filter((pool) => pool !== null);
-
-    logger.debug("Retrieved pools", {
-      url: this.integration.url,
-      totalCount: result.length,
-      activeCount: activePools.length,
-    });
-
-    if (activePools.length === 0) return [];
-
-    const usableSpaceByPool = await this.getUsableSpaceByPoolAsync(activePools.map((pool) => pool.name));
-
-    return activePools.map((pool) => {
+    // Offline pools still report a health verdict even when their capacity is missing.
+    const activePools = result.filter((pool) => pool.allocated !== null && pool.size !== null && pool.free !== null);
+    let usableSpaceByPool = new Map<string, { used: number; available: number }>();
+    if (activePools.length)
+      usableSpaceByPool = await this.getUsableSpaceByPoolAsync(activePools.map((pool) => pool.name));
+    return result.map((pool) => {
       const usableSpace = usableSpaceByPool.get(pool.name);
-      if (!usableSpace) {
+      if (!usableSpace && pool.allocated !== null && pool.free !== null) {
         logger.warn("Falling back to physical pool space, the root dataset reported no usable space", {
           url: this.integration.url,
           pool: pool.name,
@@ -335,17 +311,31 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     return result;
   }
 
-  private extractNetworkTrafficData = (data: z.infer<typeof reportingNetDataSchema>, column: "sent" | "received") => {
-    return data.reduce((total, report) => {
-      const value = report.data.at(-1)?.[report.legend.indexOf(column)] ?? 0;
-      return total + value;
-    }, 0);
-  };
+  private extractNetworkTrafficData(data: z.infer<typeof reportingNetDataSchema>) {
+    if (data.length === 0) return null;
+    let up = 0;
+    let down = 0;
+    for (const report of data) {
+      const sample = report.data.at(-1);
+      const sent = sample?.[report.legend.indexOf("sent")];
+      const received = sample?.[report.legend.indexOf("received")];
+      if (sent == null || received == null) return null;
+      up += sent * NETWORK_MULTIPLIER;
+      down += received * NETWORK_MULTIPLIER;
+    }
+    return { up, down };
+  }
 
-  private extractLatestReportingData(data: ReportingItem[], identifier: ReportingItem["identifier"]) {
+  private extractLatestReportingData(
+    data: ReportingItem[],
+    identifier: ReportingItem["identifier"],
+  ): Record<string, number> {
     const item = data.find((reportingItem) => reportingItem.identifier === identifier);
     const latest = item?.data.at(-1);
-    if (!item || !latest?.length) throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
+    if (!item || !latest?.length) {
+      if (identifier === "cputemp") return {};
+      throw new ParseError(`TrueNAS returned no "${identifier}" reporting data`);
+    }
     if (new Set(item.legend).size !== item.legend.length) {
       throw new ParseError(`TrueNAS returned duplicate "${identifier}" reporting columns`);
     }
@@ -353,10 +343,14 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     for (const [index, column] of item.legend.entries()) {
       if (column === "time") continue;
       const value = latest[index];
-      if (value === undefined) throw new ParseError(`TrueNAS returned no "${identifier}.${column}" reporting value`);
+      if (value == null) {
+        if (identifier === "cputemp") continue;
+        throw new ParseError(`TrueNAS returned no "${identifier}.${column}" reporting value`);
+      }
       values[column] = value;
     }
-    if (Object.keys(values).length === 0) throw new ParseError(`TrueNAS returned no "${identifier}" reporting values`);
+    if (identifier !== "cputemp" && Object.keys(values).length === 0)
+      throw new ParseError(`TrueNAS returned no "${identifier}" reporting values`);
     return values;
   }
 }
@@ -372,7 +366,7 @@ const reportingItemSchema = z.object({
   start: z.number().min(0),
   end: z.number().min(0),
   legend: z.array(z.string()),
-  data: z.array(z.array(z.number())),
+  data: z.array(z.array(z.number().nullable())),
 });
 
 type ReportingItem = z.infer<typeof reportingItemSchema>;
@@ -408,7 +402,7 @@ const reportingNetDataSchema = z.array(
     name: z.string(),
     identifier: z.string(),
     legend: z.array(z.string()),
-    data: z.array(z.array(z.number())),
+    data: z.array(z.array(z.number().nullable())),
   }),
 );
 

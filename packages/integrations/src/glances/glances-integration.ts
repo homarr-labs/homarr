@@ -41,16 +41,20 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       this.getSmartAsync(),
     ]);
 
+    let network = null;
+    if (stats.network.length > 0) {
+      network = {
+        down: stats.network.reduce((sum, net) => sum + net.bytes_recv_rate_per_sec, 0),
+        up: stats.network.reduce((sum, net) => sum + net.bytes_sent_rate_per_sec, 0),
+      };
+    }
     return {
-      cpuUtilization: stats.cpu.total,
+      cpuUtilization: stats.cpu?.total ?? null,
       cpuCores: stats.percpu.map((core) => ({ id: core.cpu_number, utilization: core.total })),
-      memUsedInBytes: stats.mem.used,
-      memAvailableInBytes: stats.mem.total - stats.mem.used,
-      network: {
-        down: stats.network.reduce((acc, net) => net.bytes_recv_rate_per_sec + acc, 0),
-        up: stats.network.reduce((acc, net) => net.bytes_sent_rate_per_sec + acc, 0),
-      },
-      availablePkgUpdates: 0,
+      memUsedInBytes: stats.mem?.used ?? null,
+      memAvailableInBytes: stats.mem ? stats.mem.total - stats.mem.used : null,
+      network,
+      availablePkgUpdates: null,
       version: session.version,
       fileSystem: stats.fs.map((fileSystem) => ({
         deviceName: fileSystem.device_name,
@@ -60,7 +64,7 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
         percentage: fileSystem.percent,
       })),
       uptime: stats.uptime.as("seconds"),
-      rebootRequired: false,
+      rebootRequired: null,
       cpuModelName: stats.quicklook?.cpu_name ?? "Unknown",
       loadAverage: null,
       smart,
@@ -68,8 +72,8 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
       gpu: stats.gpu.map((gpu) => ({
         gpuId: gpu.gpu_id,
         name: gpu.name,
-        memoryUtilization: gpu.mem ?? 0,
-        processorUtilization: gpu.proc ?? 0,
+        memoryUtilization: gpu.mem ?? null,
+        processorUtilization: gpu.proc ?? null,
         temperature: gpu.temperature ?? null,
         fanSpeed: gpu.fan_speed ?? null,
       })),
@@ -161,29 +165,36 @@ const allSchema = z.object({
     .array(z.object({ cpu_number: z.number().int().min(0), total: z.number().min(0).max(100) }))
     .catch([])
     .default([]),
-  cpu: z.object({
-    total: z.number().min(0).max(100),
-  }),
-  mem: z.object({
-    total: z.number().min(0),
-    used: z.number().min(0),
-    free: z.number().min(0),
-  }),
-  network: z.array(
-    z.object({
-      bytes_sent_rate_per_sec: z.number().min(0),
-      bytes_recv_rate_per_sec: z.number().min(0),
-    }),
-  ),
-  fs: z.array(
-    z.object({
-      device_name: z.string(),
+  cpu: z
+    .object({
+      total: z.number().min(0).max(100),
+    })
+    .nullish(),
+  mem: z
+    .object({
+      total: z.number().min(0),
       used: z.number().min(0),
-      free: z.number().min(0),
-      size: z.number().min(0).optional().catch(undefined),
-      percent: z.number().min(0).max(100),
-    }),
-  ),
+    })
+    .nullish(),
+  network: z
+    .array(
+      z.object({
+        bytes_sent_rate_per_sec: z.number().min(0),
+        bytes_recv_rate_per_sec: z.number().min(0),
+      }),
+    )
+    .catch([]),
+  fs: z
+    .array(
+      z.object({
+        device_name: z.string(),
+        used: z.number().min(0),
+        free: z.number().min(0),
+        size: z.number().min(0).optional().catch(undefined),
+        percent: z.number().min(0).max(100),
+      }),
+    )
+    .default([]),
   uptime: z
     .string()
     .regex(new RegExp(regex))

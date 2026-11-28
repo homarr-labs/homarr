@@ -1,0 +1,25 @@
+.rowGrid {
+  display: grid;
+  gap: var(--mantine-spacing-sm);
+  align-items: center;
+  min-width: 0;
+}
+
+.rowGrid[data-narrow] {
+  display: block;
+}
+
+.resource {
+  display: block;
+  min-width: 0;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.resource:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.resource:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}

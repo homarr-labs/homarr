@@ -1,11 +1,13 @@
 import { clientApi } from "@homarr/api/client";
 
-import { toScopedStorageVolumeValue } from "./filter-storage-volumes";
+import type { WidgetInputIntegration } from "./options";
+import { canSelectStorageVolumes, toScopedStorageVolumeValue } from "./filter-storage-volumes";
 
 export const createStorageVolumeMultiSelectOptions = () => ({
   defaultValue: [] as string[],
   withDescription: true,
-  useOptions: (integrationIds: string[]) => {
+  useOptions: (integrations: WidgetInputIntegration[]) => {
+    const integrationIds = integrations.filter(({ kind }) => canSelectStorageVolumes(kind)).map(({ id }) => id);
     const queryResults = clientApi.useQueries((queryBuilder) =>
       integrationIds.map((integrationId) =>
         queryBuilder.widget.healthMonitoring.listStorageVolumes({

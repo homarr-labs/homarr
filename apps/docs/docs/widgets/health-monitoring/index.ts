@@ -28,7 +28,7 @@ export const healthMonitoringWidget: WidgetDefinition = {
       },
       {
         name: "Show Uptime",
-        description: "Show uptime in the cluster tab",
+        description: "Show reported uptime for a system or cluster",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
@@ -41,13 +41,13 @@ export const healthMonitoringWidget: WidgetDefinition = {
       {
         name: "Visible storage volumes",
         description:
-          "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "Choose volumes from Synology and OpenMediaVault. An empty selection includes all detected volumes. Other integrations always include all their volumes.",
         values: "List of storage volumes",
         defaultValue: "Empty list",
       },
       {
         name: "Default tab",
-        description: "Tab that should be visible by default. Only used when multiple integrations are available.",
+        description: "Initial tab when the widget has both system and cluster integrations.",
         values: {
           type: "select",
           options: ["System", "Cluster"],

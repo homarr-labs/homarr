@@ -86,16 +86,16 @@ const mapComputeResource = (resource: Proxmox.clusterResourcesResources): Omit<C
   return {
     id: resource.id,
     cpu: {
-      utilization: resource.cpu ?? 0,
-      cores: resource.maxcpu ?? 0,
+      utilization: resource.cpu ?? null,
+      cores: resource.maxcpu ?? null,
     },
     memory: {
-      used: resource.mem ?? 0,
-      total: resource.maxmem ?? 0,
+      used: resource.mem ?? null,
+      total: resource.maxmem ?? null,
     },
     storage: {
-      used: resource.disk ?? 0,
-      total: resource.maxdisk ?? 0,
+      used: resource.disk ?? null,
+      total: resource.maxdisk ?? null,
       read: (resource.diskread as number | null) ?? null,
       write: (resource.diskwrite as number | null) ?? null,
     },
@@ -105,10 +105,10 @@ const mapComputeResource = (resource: Proxmox.clusterResourcesResources): Omit<C
     },
     haState: resource.hastate ?? null,
     isRunning: resource.status === "running" || resource.status === "online",
-    name: resource.name ?? "",
+    name: resource.name ?? resource.id,
     node: resource.node ?? "",
-    status: resource.status ?? (resource.type === "node" ? "offline" : "stopped"),
-    uptime: resource.uptime ?? 0,
+    status: resource.status ?? "unknown",
+    uptime: resource.uptime ?? null,
   };
 };
 
@@ -116,14 +116,14 @@ const mapNodeResource = (resource: Proxmox.clusterResourcesResources): NodeResou
   return {
     type: "node",
     ...mapComputeResource(resource),
-    name: resource.node ?? "",
+    name: resource.node ?? resource.id,
   };
 };
 
 const mapVmResource = (resource: Proxmox.clusterResourcesResources): LxcResource | QemuResource => {
   return {
     type: resource.type as "lxc" | "qemu",
-    vmId: resource.vmid ?? 0,
+    vmId: resource.vmid ?? null,
     ...mapComputeResource(resource),
   };
 };
@@ -132,13 +132,13 @@ const mapStorageResource = (resource: Proxmox.clusterResourcesResources): Storag
   return {
     id: resource.id,
     type: "storage",
-    name: resource.storage ?? "",
+    name: resource.storage ?? resource.id,
     node: resource.node ?? "",
     isRunning: resource.status === "available",
-    status: resource.status ?? "offline",
-    storagePlugin: resource.storage ?? "",
-    total: resource.maxdisk ?? 0,
-    used: resource.disk ?? 0,
-    isShared: resource.shared === 1,
+    status: resource.status ?? "unknown",
+    storagePlugin: resource.plugintype ?? null,
+    total: resource.maxdisk ?? null,
+    used: resource.disk ?? null,
+    isShared: resource.shared == null ? null : resource.shared === 1,
   };
 };

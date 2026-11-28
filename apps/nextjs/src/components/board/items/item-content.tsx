@@ -259,14 +259,14 @@ const ResolvedBoardItemContent = ({
 
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
 
-  const openAdvancedView = () => {
+  const openAdvancedView = useCallback(() => {
     if (sourceRef.current)
       open(item.id, sourceRef.current, {
         activation: "manual",
         autofocusClose: true,
         restoreFocusTarget: advancedFocusTriggerRef.current ?? sourceRef.current,
       });
-  };
+  }, [item.id, open]);
 
   useEffect(() => {
     const surface = isManual ? manualSurface : cardRef.current;
@@ -390,6 +390,7 @@ const ResolvedBoardItemContent = ({
             widgetStateRef={widgetStateRef}
             widgetRuntimeRef={widgetRuntimeRef}
             displayMode={isAdvanced ? "advanced" : "compact"}
+            openAdvancedView={supportsAdvancedFocus ? openAdvancedView : undefined}
             definition={definition}
             Component={Component}
           />
@@ -488,6 +489,7 @@ interface InnerContentProps {
   width: number;
   height: number;
   displayScale: number;
+  openAdvancedView?: () => void;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   displayMode: "compact" | "advanced";

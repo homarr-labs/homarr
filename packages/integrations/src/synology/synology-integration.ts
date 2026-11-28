@@ -68,8 +68,10 @@ export class SynologyIntegration extends Integration implements ISystemHealthMon
     const network = mapNetworkTraffic(utilization);
     const loadAverage = mapLoadAverage(utilization);
     const smart = mapVolumeSmartEntries(volumes, diskRecords);
-    const rebootRequired = Boolean(systemStatus?.reboot_required ?? upgradeStatus?.reboot_required ?? false);
-    const availablePkgUpdates = upgradeCheck?.update_count ?? (upgradeCheck?.available ? 1 : 0);
+    const rebootRequired = systemStatus?.reboot_required ?? upgradeStatus?.reboot_required ?? null;
+    let availablePkgUpdates = upgradeCheck?.update_count ?? null;
+    if (availablePkgUpdates === null && upgradeCheck?.available !== undefined)
+      availablePkgUpdates = Number(upgradeCheck.available);
 
     return {
       version: mapVersion(systemInfo),
@@ -130,9 +132,10 @@ function mapVersion(systemInfo: z.infer<typeof synologySystemInfoDataSchema>): s
   return "Unknown";
 }
 
-function mapCpuUtilization(utilization: z.infer<typeof synologyUtilizationDataSchema>): number {
-  const userLoad = parseSynologyNumber(utilization.cpu?.user_load) ?? 0;
-  const systemLoad = parseSynologyNumber(utilization.cpu?.system_load) ?? 0;
+function mapCpuUtilization(utilization: z.infer<typeof synologyUtilizationDataSchema>) {
+  const userLoad = parseSynologyNumber(utilization.cpu?.user_load);
+  const systemLoad = parseSynologyNumber(utilization.cpu?.system_load);
+  if (userLoad === null || systemLoad === null) return null;
   const totalLoad = userLoad + systemLoad;
   return Math.min(totalLoad, 100);
 }
@@ -152,13 +155,10 @@ function mapMemoryBytes(utilization: z.infer<typeof synologyUtilizationDataSchem
     };
   }
 
-  const availableKib = parseSynologyNumber(memory?.avail_real) ?? 0;
-  const cachedKib = parseSynologyNumber(memory?.cached) ?? 0;
-  const totalKib = totalRealKib ?? availableKib + cachedKib;
-  const usedKib = Math.max(totalKib - availableKib, 0);
-
+  const availableKib = parseSynologyNumber(memory?.avail_real);
+  if (totalRealKib === null || availableKib === null) return { usedBytes: null, availableBytes: null };
   return {
-    usedBytes: usedKib * 1024,
+    usedBytes: Math.max(totalRealKib - availableKib, 0) * 1024,
     availableBytes: availableKib * 1024,
   };
 }
@@ -191,24 +191,24 @@ function mapLoadAverage(utilization: z.infer<typeof synologyUtilizationDataSchem
   }
 
   return {
-    "1min": oneMinute ?? 0,
-    "5min": fiveMinute ?? 0,
-    "15min": fifteenMinute ?? 0,
+    "1min": oneMinute,
+    "5min": fiveMinute,
+    "15min": fifteenMinute,
   };
 }
 
-function mapUptimeSeconds(systemInfo: z.infer<typeof synologySystemInfoDataSchema>): number {
+function mapUptimeSeconds(systemInfo: z.infer<typeof synologySystemInfoDataSchema>) {
   if (typeof systemInfo.uptime === "number") {
     return systemInfo.uptime;
   }
 
   if (!systemInfo.up_time) {
-    return 0;
+    return null;
   }
 
   const parts = systemInfo.up_time.split(":").map((part) => Number.parseInt(part, 10));
   if (parts.length !== 3 || parts.some((part) => Number.isNaN(part))) {
-    return 0;
+    return null;
   }
 
   const [hours = 0, minutes = 0, seconds = 0] = parts;
@@ -243,7 +243,7 @@ function mapVolumeSmartEntries(volumes: SynologyVolumeRecord[], diskRecords: Syn
     return {
       deviceName: volume.name,
       healthy: isHealthyStatus(overallStatus),
-      overallStatus,
+      overallStatus: overallStatus ?? "unknown",
       temperature: temperatures.length > 0 ? Math.max(...temperatures) : null,
     };
   });
@@ -278,16 +278,28 @@ function diskBelongsToVolume(disk: SynologyDiskRecord, volumeName: string): bool
     return false;
   }
 
-  return (
-    disk.volumeName === volumeName ||
-    disk.volumeName.endsWith(volumeName) ||
-    volumeName.endsWith(disk.volumeName) ||
-    disk.volumeName.includes(volumeName) ||
-    volumeName.includes(disk.volumeName)
-  );
+  return normalizeVolumeName(disk.volumeName) === normalizeVolumeName(volumeName);
 }
 
-const UNHEALTHY_STATUS_TOKENS = ["critical", "error", "crash", "failed", "fail", "degraded", "warning"] as const;
+// DSM can identify the same volume as volume_1 or /volume1.
+function normalizeVolumeName(name: string) {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/^volume_(\d+)$/, "volume$1");
+}
+
+const UNHEALTHY_STATUS_TOKENS = [
+  "critical",
+  "error",
+  "crash",
+  "failed",
+  "fail",
+  "degraded",
+  "warning",
+  "attention",
+] as const;
 
 function getStatusSeverityIndex(status: string): number {
   const normalizedStatus = status.toLowerCase();
@@ -295,13 +307,13 @@ function getStatusSeverityIndex(status: string): number {
   return index === -1 ? UNHEALTHY_STATUS_TOKENS.length : index;
 }
 
-function pickWorstDiskStatus(disks: SynologyDiskRecord[]): string {
+function pickWorstDiskStatus(disks: SynologyDiskRecord[]) {
   const statuses = disks
     .map((disk) => disk.status)
     .filter((status): status is string => status !== undefined && status.length > 0);
 
   if (statuses.length === 0) {
-    return "normal";
+    return undefined;
   }
 
   return statuses.reduce((worstStatus, currentStatus) =>
@@ -309,13 +321,12 @@ function pickWorstDiskStatus(disks: SynologyDiskRecord[]): string {
   );
 }
 
-function isHealthyStatus(status: string | undefined): boolean {
+function isHealthyStatus(status: string | undefined): boolean | null {
   if (!status) {
-    return true;
+    return null;
   }
-
   const normalizedStatus = status.toLowerCase();
-  return !["crash", "degraded", "fail", "failed", "warning", "error", "critical"].some((unhealthyToken) =>
-    normalizedStatus.includes(unhealthyToken),
-  );
+  if (["normal", "healthy", "good", "ok"].includes(normalizedStatus)) return true;
+  if (UNHEALTHY_STATUS_TOKENS.some((token) => normalizedStatus.includes(token))) return false;
+  return null;
 }

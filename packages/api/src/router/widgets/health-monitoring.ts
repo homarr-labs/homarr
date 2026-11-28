@@ -14,11 +14,19 @@ interface SystemHealthQueryResult {
   integrationId: string;
   integrationName: string;
   healthInfo: SystemHealthMonitoring | null;
-  updatedAt?: Date;
+  updatedAt: Date;
   error?: string;
 }
 
 export const healthMonitoringRouter = createTRPCRouter({
+  getClusterIntegrationNames: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...healthMonitoringClusterIntegrationKinds))
+    .query(({ ctx }) =>
+      ctx.integrations.map((integration) => ({
+        integrationId: integration.id,
+        integrationName: integration.name,
+      })),
+    ),
   getSystemHealthStatus: publicProcedure
     .meta({
       mcp: {
@@ -52,9 +60,10 @@ export const healthMonitoringRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             healthInfo: null,
+            updatedAt: new Date(),
             error: PUBLIC_INTEGRATION_ERROR,
           }),
-          throwOnAllFailures: true,
+          throwOnAllFailures: false,
         },
       );
     }),

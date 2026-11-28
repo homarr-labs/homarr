@@ -21,14 +21,7 @@ export const statusColorMap: Record<BeszelSystemStatus, string> = {
 };
 
 // Beszel 0.21.0 (ec96c134), internal/site/src/index.css and components/charts/hooks.ts.
-export const beszelChartColors = {
-  cpu: "hsl(220 70% 50%)",
-  memory: "hsl(160 60% 45%)",
-  cache: "hsl(160 60% 45% / 0.5)",
-  disk: "hsl(280 65% 60%)",
-  write: "hsl(30 80% 55%)",
-  sent: "hsl(340 75% 55%)",
-};
+export { monitoringChartColors as beszelChartColors } from "../../common/monitoring-chart-colors";
 
 export const containerChartColor = (rank: number, count: number) =>
-  `hsl(${(rank * 360) / count} var(--beszel-chart-saturation) var(--beszel-chart-lightness))`;
+  `hsl(${(rank * 360) / count} var(--monitoring-chart-saturation) var(--monitoring-chart-lightness))`;
