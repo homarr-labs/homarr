@@ -63,7 +63,8 @@ import {
 } from "../semantics";
 import { useSmartHomeEntity, useSmartHomeInteractionBlock } from "../store";
 import type { HaAction, HaDomain, HaEntity } from "../types";
-import { Dial, HoldButton, KeyButton, PillSlider, RoundButton, Sparkline } from "./controls";
+import { Dial, HoldButton, KeyButton, PillSlider, RoundButton } from "./controls";
+import { EntityHistoryGraph } from "./history-graph";
 import {
   entityNeedsCode,
   gateNotice,
@@ -1179,7 +1180,7 @@ function SensorControl({ entity, width, height }: ControlProps) {
 
   return (
     <Tile theme={theme} bare className={classes.sensorTile}>
-      {history ? <Sparkline values={history} color={theme.accent} /> : null}
+      {history ? <EntityHistoryGraph entity={entity} color={theme.accent} /> : null}
       <div className={classes.sensorBody} data-tier={tier}>
         <Head
           name={entity.name}

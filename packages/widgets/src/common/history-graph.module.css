@@ -1,0 +1,107 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.root[data-scrub="true"] {
+  touch-action: pan-y;
+}
+
+.root:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.line {
+  position: absolute;
+  inset: 0;
+}
+
+/* Scrubbing: a guide at the pointer, a dot on each line and the values at that point. */
+.overlay {
+  position: fixed;
+  z-index: var(--mantine-z-index-popover);
+  pointer-events: none;
+}
+
+.guide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  pointer-events: none;
+  background: var(--mantine-color-dimmed);
+  opacity: 0.6;
+}
+
+.dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  pointer-events: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+}
+
+.readout {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.62);
+  border-radius: 6px;
+}
+
+.readoutRow {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.swatch {
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1em 0.9em;
+  font-size: 0.85em;
+  color: var(--mantine-color-dimmed);
+}
+
+.legendItem {
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+  min-width: 0;
+}
+
+.legendLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legendValue {
+  flex: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-text);
+}
