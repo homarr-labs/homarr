@@ -36,8 +36,14 @@ export const MetricOrderItem: MetricInput["ItemComponent"] = ({ item, handle, re
   }
 
   let dragHandle = handle;
-  if (isValidElement<ButtonHTMLAttributes<HTMLButtonElement>>(handle)) {
-    dragHandle = cloneElement(handle, { ...rootAttributes, "aria-label": t("option.metricOrder.reorder", { name }) });
+  if (
+    isValidElement<ButtonHTMLAttributes<HTMLButtonElement> & { "data-health-metric-handle"?: HealthMetric }>(handle)
+  ) {
+    dragHandle = cloneElement(handle, {
+      ...rootAttributes,
+      "data-health-metric-handle": item,
+      "aria-label": t("option.metricOrder.reorder", { name }),
+    });
   }
   return (
     <Group gap="xs" wrap="nowrap">
@@ -61,7 +67,16 @@ export const MetricOrderItem: MetricInput["ItemComponent"] = ({ item, handle, re
       <ActionIcon
         variant="subtle"
         color="red"
-        onClick={removeItem}
+        onClick={(event) => {
+          const editor = event.currentTarget.form;
+          const next = metrics[index + 1] ?? metrics[index - 1];
+          removeItem();
+          requestAnimationFrame(() => {
+            let selector = "[data-health-metric-customize], [data-health-metric-picker]";
+            if (next) selector = `[data-health-metric-handle="${next}"]`;
+            editor?.querySelector<HTMLElement>(selector)?.focus();
+          });
+        }}
         aria-label={t("option.metricOrder.removeNamed", { name })}
       >
         <IconX size={16} />
@@ -80,6 +95,7 @@ export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values })
     <Stack gap="xs">
       {choices.length > 0 && (
         <Select
+          data-health-metric-picker
           label={t("option.metricOrder.add")}
           data={choices.map((metric) => ({ value: metric, label: t(`rework.${healthMetricLabels[metric]}`) }))}
           value={null}
@@ -100,7 +116,12 @@ export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values })
             variant="default"
             size="compact-sm"
             w="fit-content"
-            onClick={() => form.setFieldValue("options.metricOrder", automatic)}
+            data-health-metric-customize
+            onClick={(event) => {
+              const editor = event.currentTarget.form;
+              form.setFieldValue("options.metricOrder", automatic);
+              requestAnimationFrame(() => editor?.querySelector<HTMLElement>("[data-health-metric-handle]")?.focus());
+            }}
           >
             {t("option.metricOrder.customize")}
           </Button>
@@ -111,7 +132,16 @@ export const MetricOrderPicker: MetricInput["AddButton"] = ({ addItem, values })
           variant="subtle"
           size="compact-sm"
           w="fit-content"
-          onClick={() => form.setFieldValue("options.metricOrder", [])}
+          onClick={(event) => {
+            const editor = event.currentTarget.form;
+            form.setFieldValue("options.metricOrder", []);
+            requestAnimationFrame(() => {
+              const control =
+                editor?.querySelector<HTMLElement>("[data-health-metric-customize]") ??
+                editor?.querySelector<HTMLElement>("[data-health-metric-picker]");
+              control?.focus();
+            });
+          }}
         >
           {t("option.metricOrder.reset")}
         </Button>

@@ -3899,6 +3899,13 @@
         "visibleStorageVolumes": {
           "description": "Choose the OpenMediaVault and Synology volumes to monitor, or leave empty to show all. Other providers always show all reported volumes."
         },
+        "sources": {
+          "selectAll": "Select all sources",
+          "clear": "Clear selection",
+          "search": "Find a source",
+          "more": "Show {count} more",
+          "collapse": "Show fewer"
+        },
         "presentation": {
           "label": "System layout",
           "description": "History charts start with readings received while the board is open. Small tiles show the readings as a list.",
@@ -4068,6 +4075,7 @@
         "history5m": "5 min",
         "history15m": "15 min",
         "waitingHistory": "Collecting samples…",
+        "historyIntervalTooLong": "The refresh interval is {seconds} seconds. Choose a longer history window or shorten the widget’s refresh interval to see a trend.",
         "cpu": "CPU",
         "memory": "Memory",
         "memoryUsed": "Memory used",

@@ -5,7 +5,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { HealthMetric } from "./configuration";
 import { healthMetricLabels } from "./configuration";
-import { healthAlertLabel, percentage, temperature } from "./display";
+import { healthAlertLabel, percentage, pressureColor, temperature } from "./display";
 import type { HealthOptions } from "./display";
 import type { HealthSystemSnapshot } from "./model";
 
@@ -34,6 +34,10 @@ export function hasGlanceReading(snapshot: HealthSystemSnapshot, metric: HealthM
   }
 }
 
+function utilization(value: number, threshold: number, color: string, context?: string): GlanceReading {
+  return { value: percentage(value), percent: value, color: pressureColor(value, threshold, color), context };
+}
+
 export function useGlanceReadings(options: HealthOptions) {
   const t = useI18n("widget.healthMonitoring.rework");
   const { formatBytesPair, formatByteRate } = useByteFormatter();
@@ -47,11 +51,6 @@ export function useGlanceReadings(options: HealthOptions) {
     if (stale) return t("staleShort");
     if (snapshot.alerts[0]) return healthAlertLabel(snapshot.alerts[0], t);
     return "";
-  }
-
-  function utilization(value: number, threshold: number, color: string, context?: string): GlanceReading {
-    if (value >= threshold) color = "red";
-    return { value: percentage(value), percent: value, color, context };
   }
 
   function read(snapshot: HealthSystemSnapshot, metric: HealthMetric): GlanceReading | null {

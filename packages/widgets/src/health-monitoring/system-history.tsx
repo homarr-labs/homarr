@@ -9,6 +9,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { makeTooltipProps, MonitoringChartPanel, monitoringChartColors } from "../common/monitoring-chart";
 import type { MonitoringAreaChartProps } from "../common/monitoring-chart";
 import type { HealthOptions } from "./display";
+import { historyWaitingMessage, historyWindowSeconds } from "./display";
 import { finiteReading } from "./model";
 import type { HealthSystemSnapshot } from "./model";
 
@@ -40,9 +41,7 @@ export function SystemHistory({ snapshot, width, height, options, mode = "system
   const [selectedMetric, setSelectedMetric] = useState("");
   const { system } = snapshot;
   const data = useMemo(() => {
-    let duration = 300_000;
-    if (options.historyWindow === "15m") duration = 900_000;
-    const cutoff = (system.history.at(-1)?.time ?? 0) - duration;
+    const cutoff = (system.history.at(-1)?.time ?? 0) - historyWindowSeconds(options.historyWindow) * 1000;
     const formatTime = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit", second: "2-digit" });
     return system.history
       .filter((point) => point.time >= cutoff)
@@ -166,7 +165,7 @@ export function SystemHistory({ snapshot, width, height, options, mode = "system
     metric.series.some((series) => typeof point[series.name] === "number"),
   ).length;
   let emptyMessage;
-  if (observations < 2) emptyMessage = t("waitingHistory");
+  if (observations < 2) emptyMessage = historyWaitingMessage(options.historyWindow, system.refreshInterval, t);
   let current;
   let currentText;
   if (metric.current !== null) {

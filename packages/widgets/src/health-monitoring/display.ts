@@ -4,6 +4,21 @@ import type { HealthAlert, HealthSystemSnapshot } from "./model";
 
 export type HealthOptions = WidgetComponentProps<"healthMonitoring">["options"];
 
+export function historyWindowSeconds(window: HealthOptions["historyWindow"]) {
+  if (window === "15m") return 15 * 60;
+  return 5 * 60;
+}
+
+export function historyWaitingMessage(
+  window: HealthOptions["historyWindow"],
+  refreshSeconds: number | undefined,
+  t: ScopedTranslationFunction<"widget.healthMonitoring.rework">,
+) {
+  if (refreshSeconds !== undefined && refreshSeconds >= historyWindowSeconds(window))
+    return t("historyIntervalTooLong", { seconds: refreshSeconds });
+  return t("waitingHistory");
+}
+
 export function isStaleReading(
   updatedAt: number | undefined,
   now: number | undefined,
@@ -41,10 +56,9 @@ export function temperature(value: number | null | undefined, fahrenheit: boolea
   return value.toFixed(1) + "°C";
 }
 
-export function pressureColor(value: number | null, normal = "blue") {
+export function pressureColor(value: number | null, threshold: number, normal: string) {
   if (value === null) return "gray";
-  if (value >= 90) return "red";
-  if (value >= 75) return "orange";
+  if (value >= threshold) return "red";
   return normal;
 }
 

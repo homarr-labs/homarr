@@ -23,7 +23,7 @@ import { useWidgetNow } from "../common/use-widget-now";
 import { healthAlertLabel, isStaleReading, percentage, pressureColor, temperature, uptime } from "./display";
 import type { HealthOptions } from "./display";
 import type { HealthSystemSnapshot, HealthVolume } from "./model";
-import { finiteReading } from "./model";
+import { finiteReading, isVolumeFull } from "./model";
 import { SystemHistory } from "./system-history";
 import classes from "./system-view.module.css";
 
@@ -106,9 +106,7 @@ export function SystemDetail({
       </Text>
     );
   if (active === "storage")
-    content = (
-      <StoragePage snapshot={snapshot} width={width - 24} height={bodyHeight} fahrenheit={options.fahrenheit} />
-    );
+    content = <StoragePage snapshot={snapshot} width={width - 24} height={bodyHeight} options={options} />;
   if (active === "info") content = <InformationPage snapshot={snapshot} height={bodyHeight} />;
   if (active === "graphics" && gpu) {
     const facts: string[] = [];
@@ -192,6 +190,7 @@ function Overview({ snapshot, width, height, options, isEditMode, onPreferences 
       value: percentage(snapshot.cpuPercent),
       percent: snapshot.cpuPercent,
       color: "blue",
+      threshold: options.cpuThreshold,
       context: "",
     });
   if (snapshot.memory) {
@@ -201,6 +200,7 @@ function Overview({ snapshot, width, height, options, isEditMode, onPreferences 
       value: percentage(snapshot.memory.percent),
       percent: snapshot.memory.percent,
       color: "teal",
+      threshold: options.memoryThreshold,
       context: memory.used + " / " + memory.total,
     });
   }
@@ -210,6 +210,7 @@ function Overview({ snapshot, width, height, options, isEditMode, onPreferences 
       value: percentage(snapshot.fullestVolume.percent),
       percent: snapshot.fullestVolume.percent,
       color: "teal",
+      threshold: options.storageThreshold,
       context: snapshot.fullestVolume.name,
     });
   const showMetrics = height >= 300 && metrics.length > 0;
@@ -237,7 +238,7 @@ function Overview({ snapshot, width, height, options, isEditMode, onPreferences 
                 <Progress
                   value={metric.percent}
                   size={3}
-                  color={pressureColor(metric.percent, metric.color)}
+                  color={pressureColor(metric.percent, metric.threshold, metric.color)}
                   aria-label={metric.label}
                 />
               )}
@@ -290,12 +291,12 @@ function StoragePage({
   snapshot,
   width,
   height,
-  fahrenheit,
+  options,
 }: {
   snapshot: HealthSystemSnapshot;
   width: number;
   height: number;
-  fahrenheit: boolean;
+  options: HealthOptions;
 }) {
   const t = useI18n("widget.healthMonitoring.rework");
   const [page, setPage] = useState(0);
@@ -313,7 +314,7 @@ function StoragePage({
     <Stack h="100%" gap={8} miw={0} mih={0}>
       <SimpleGrid cols={columns} spacing="lg" verticalSpacing={10} miw={0}>
         {volumes.map((volume) => (
-          <Volume key={volume.id} volume={volume} fahrenheit={fahrenheit} healthTitle={healthTitle} />
+          <Volume key={volume.id} volume={volume} options={options} healthTitle={healthTitle} />
         ))}
       </SimpleGrid>
       <Group justify="space-between" mt="auto" wrap="nowrap" gap={6}>
@@ -328,11 +329,11 @@ function StoragePage({
 
 function Volume({
   volume,
-  fahrenheit,
+  options,
   healthTitle,
 }: {
   volume: HealthVolume;
-  fahrenheit: boolean;
+  options: HealthOptions;
   healthTitle: string;
 }) {
   const t = useI18n("widget.healthMonitoring.rework");
@@ -372,7 +373,7 @@ function Volume({
         <Progress
           value={volume.percent}
           size={5}
-          color={pressureColor(volume.percent, "teal")}
+          color={pressureColor(volume.percent, options.storageThreshold, "teal")}
           aria-label={volume.name + " " + t("capacity")}
         />
       )}
@@ -387,6 +388,11 @@ function Volume({
         )}
       </Group>
       <Group gap="sm" wrap="nowrap" justify="space-between">
+        {isVolumeFull(volume, options.storageThreshold) && (
+          <Text size="xs" c="var(--health-warning)">
+            {t("highStorage", { count: 1 })}
+          </Text>
+        )}
         {volume.smart && (
           <Tooltip label={reason} withArrow events={{ hover: true, focus: true, touch: true }}>
             <Text component="span" tabIndex={0} size="xs" c={color} truncate>
@@ -396,7 +402,7 @@ function Volume({
         )}
         {volume.temperature !== null && (
           <Text size="xs" c="dimmed">
-            {temperature(volume.temperature, fahrenheit)}
+            {temperature(volume.temperature, options.fahrenheit)}
           </Text>
         )}
       </Group>

@@ -246,6 +246,22 @@ export function createHealthSample(time: number, health: SystemHealthMonitoring 
   };
 }
 
+const systemHistoryMetrics = ["cpu", "memory", "networkUp", "networkDown", "temperature"] as const;
+const gpuHistoryMetrics = ["usage", "memory", "temperature"] as const;
+
+function sameAvailableReadings(previous: HealthSample, sample: HealthSample) {
+  if (previous.unavailable !== sample.unavailable) return false;
+  if (systemHistoryMetrics.some((key) => (previous[key] === null) !== (sample[key] === null))) return false;
+
+  const devices = Object.keys(previous.gpu);
+  if (devices.length !== Object.keys(sample.gpu).length) return false;
+  return devices.every((id) => {
+    const before = previous.gpu[id];
+    const after = sample.gpu[id];
+    return before && after && gpuHistoryMetrics.every((key) => (before[key] === null) === (after[key] === null));
+  });
+}
+
 /** Keep real observations only; cached responses do not create extra chart points. */
 export function appendHealthSample(
   history: HealthSample[],
@@ -261,7 +277,7 @@ export function appendHealthSample(
   if (
     previous &&
     Math.floor(previous.time / 5000) === Math.floor(sample.time / 5000) &&
-    previous.unavailable === sample.unavailable
+    sameAvailableReadings(previous, sample)
   ) {
     retained.pop();
   }

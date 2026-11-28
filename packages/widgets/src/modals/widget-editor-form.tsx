@@ -249,6 +249,7 @@ export const WidgetEditorFields = ({
                   label={tItem("field.integrations.label")}
                   data={integrationData}
                   canSelectMultiple={maxIntegrations > 1}
+                  fleetSelection={kind === "healthMonitoring"}
                   withAsterisk={integrationsRequired}
                   onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
                   {...form.getInputProps("integrationIds")}

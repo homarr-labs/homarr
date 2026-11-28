@@ -23,7 +23,9 @@ import { getClusterVisibleSections } from "./accordion-state";
 import { clusterCapacity } from "./resource-data";
 import { ResourceTable } from "./resource-table";
 
-const ClusterAdvanced = dynamic(() => import("./cluster-advanced").then((module) => module.ClusterAdvanced));
+const ClusterAdvanced = dynamic(() => import("./cluster-advanced").then((module) => module.ClusterAdvanced), {
+  loading: WidgetQueryLoadingState,
+});
 
 type Section = Resource["type"];
 

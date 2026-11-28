@@ -8,3 +8,16 @@
   );
   --health-success: light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-4));
 }
+
+@media (pointer: coarse) {
+  .root:global(.mantine-Modal-content) :global(.mantine-SegmentedControl-label) {
+    min-height: 32px;
+    align-content: center;
+  }
+
+  .root:global(.mantine-Modal-content) :global(.mantine-CloseButton-root),
+  .root:global(.mantine-Modal-content) :global(.mantine-ActionIcon-root) {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}

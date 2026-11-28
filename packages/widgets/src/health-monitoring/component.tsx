@@ -1,12 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Box, Select, Stack, Tabs } from "@mantine/core";
+import { ActionIcon, Box, Button, Flex, Group, Select, Stack, Tabs } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { IconArrowsMaximize } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -51,6 +54,10 @@ function HealthMonitoringContent(props: Props) {
   }
   const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds, { refetchInterval: false });
   const t = useI18n("widget.healthMonitoring");
+  const advanced = useI18n("item.advancedFocus");
+  const coarsePointer = useMediaQuery("(any-pointer: coarse)");
+  const showExpand =
+    coarsePointer && props.displayMode !== "advanced" && !props.isEditMode && Boolean(props.openAdvancedView);
   const accessible = getUsableWidgetQueryData(integrationsQuery);
   const { integrations, clusterIntegrationIds, systemIntegrationIds } = useMemo(() => {
     const byId = new Map(accessible?.map((integration) => [integration.id, integration]));
@@ -72,8 +79,46 @@ function HealthMonitoringContent(props: Props) {
     />
   );
   const clusters = <ClusterPanels {...props} integrationIds={clusterIntegrationIds} />;
-  if (clusterIntegrationIds.length === 0) return system;
-  if (systemIntegrationIds.length === 0) return clusters;
+  const expandIcon = (
+    <ActionIcon
+      size={44}
+      variant="subtle"
+      color="gray"
+      aria-label={advanced("open")}
+      aria-haspopup="dialog"
+      onClick={props.openAdvancedView}
+    >
+      <IconArrowsMaximize style={zoomCompensatedSize(18)} aria-hidden />
+    </ActionIcon>
+  );
+  if (clusterIntegrationIds.length === 0 || systemIntegrationIds.length === 0) {
+    let panel = system;
+    if (systemIntegrationIds.length === 0 && clusterIntegrationIds.length > 0) panel = clusters;
+    if (!showExpand) return panel;
+    const short = props.height < 120;
+    return (
+      <Flex h="100%" mih={0} miw={0} direction={short ? "row" : "column"}>
+        <Box flex={1} miw={0} mih={0}>
+          {panel}
+        </Box>
+        {short ? (
+          expandIcon
+        ) : (
+          <Button
+            h={44}
+            aria-haspopup="dialog"
+            variant="subtle"
+            color="gray"
+            onClick={props.openAdvancedView}
+            style={{ flexShrink: 0 }}
+            leftSection={<IconArrowsMaximize style={zoomCompensatedSize(16)} aria-hidden />}
+          >
+            {advanced("open")}
+          </Button>
+        )}
+      </Flex>
+    );
+  }
   const tabs: ("system" | "cluster")[] = ["system", "cluster"];
   if (props.options.tabOrder === "cluster-first") tabs.reverse();
   return (
@@ -85,13 +130,24 @@ function HealthMonitoringContent(props: Props) {
       h="100%"
       style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
     >
-      <Tabs.List grow style={{ flexShrink: 0 }}>
-        {tabs.map((tab) => (
-          <Tabs.Tab key={tab} value={tab} fz="xs" disabled={props.isEditMode}>
-            {t(("tab." + tab) as "tab.system")}
-          </Tabs.Tab>
-        ))}
-      </Tabs.List>
+      <Group gap={0} wrap="nowrap" style={{ flexShrink: 0 }}>
+        <Tabs.List grow flex={1} miw={0} style={{ flexWrap: "nowrap" }}>
+          {tabs.map((tab) => (
+            <Tabs.Tab
+              key={tab}
+              value={tab}
+              fz="xs"
+              miw={0}
+              px={props.width < 240 ? 4 : undefined}
+              mih={showExpand ? 44 : undefined}
+              disabled={props.isEditMode}
+            >
+              {t(("tab." + tab) as "tab.system")}
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+        {showExpand && expandIcon}
+      </Group>
       <Tabs.Panel value="system" style={{ flex: 1, minHeight: 0 }}>
         {system}
       </Tabs.Panel>

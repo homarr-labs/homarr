@@ -1,5 +1,12 @@
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
+
+/** A new health widget starts with one source. An existing widget keeps its saved fleet. */
+export function getInitialIntegrationIds(kind: WidgetKind, available: { id: string }[], maximum: number) {
+  let count = maximum;
+  if (kind === "healthMonitoring") count = Math.min(1, count);
+  return available.slice(0, count).map(({ id }) => id);
+}
 
 export const matchesIntegrationSearch = (kind: IntegrationKind, query: string) =>
   kind.toLowerCase().includes(query) || getIntegrationName(kind).toLowerCase().includes(query);

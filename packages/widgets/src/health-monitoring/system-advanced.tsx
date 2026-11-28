@@ -23,16 +23,24 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { makeTooltipProps, MonitoringChartPanel, monitoringChartColors } from "../common/monitoring-chart";
 import { MonitoringComparisonChart } from "../common/monitoring-comparison-chart";
 import { useWidgetNow } from "../common/use-widget-now";
-import { needsAttention, isStaleReading, percentage, pressureColor, temperature } from "./display";
+import {
+  historyWaitingMessage,
+  needsAttention,
+  isStaleReading,
+  percentage,
+  pressureColor,
+  temperature,
+} from "./display";
 import type { HealthOptions } from "./display";
 import { getHealthMetricOrder } from "./configuration";
-import { finiteReading, isVolumeFull } from "./model";
-import type { HealthSample, HealthSystemSnapshot, HealthVolume } from "./model";
+import { comparisonHistory } from "./comparison-history";
+import type { HistoryMetric } from "./comparison-history";
+import { isVolumeFull } from "./model";
+import type { HealthSystemSnapshot, HealthVolume } from "./model";
 import classes from "./system-advanced.module.css";
 
 type AnalysisView = "compare" | "history" | "storage";
 type Sort = "configured" | "cpu" | "memory" | "attention";
-type HistoryMetric = "cpu" | "memory" | "networkDown" | "networkUp" | "temperature";
 
 export interface SystemAdvancedProps {
   snapshots: HealthSystemSnapshot[];
@@ -358,8 +366,9 @@ export function SystemHistoryComparison({
     color: palette[Math.max(0, snapshots.indexOf(snapshot)) % palette.length] ?? monitoringChartColors.cpu,
   }));
   let emptyMessage;
-  if (chartData.length < 2 || !chartData.some((point) => series.some((entry) => typeof point[entry.name] === "number")))
-    emptyMessage = t("advancedNoHistory");
+  if (visible.length === 0) emptyMessage = t("advancedNoHistory");
+  else if (!series.some((entry) => chartData.filter((point) => typeof point[entry.name] === "number").length >= 2))
+    emptyMessage = historyWaitingMessage(options.historyWindow, visible[0]?.system.refreshInterval, t);
   const plotHeight = Math.max(48, Math.floor(height - 132));
   return (
     <Stack h="100%" gap={8} miw={0} mih={0}>
@@ -532,9 +541,14 @@ function Storage({
                 <Progress
                   size={4}
                   value={volume.percent}
-                  color={pressureColor(volume.percent, "teal")}
+                  color={pressureColor(volume.percent, options.storageThreshold, "teal")}
                   aria-label={snapshot.system.name + " " + volume.name}
                 />
+              )}
+              {isVolumeFull(volume, options.storageThreshold) && (
+                <Text size="xs" c="var(--health-warning)">
+                  {t("highStorage", { count: 1 })}
+                </Text>
               )}
               {volume.percent === null && (
                 <Text size="xs" c="dimmed">
@@ -628,48 +642,6 @@ function currentReading(snapshot: HealthSystemSnapshot, metric: HistoryMetric) {
   if (metric === "networkDown") return snapshot.network?.down ?? null;
   if (metric === "networkUp") return snapshot.network?.up ?? null;
   return snapshot.temperature;
-}
-
-function comparisonHistory(
-  snapshots: HealthSystemSnapshot[],
-  metric: HistoryMetric,
-  historyWindow: HealthOptions["historyWindow"],
-  fahrenheit: boolean,
-  locale: string,
-) {
-  const lastTime = Math.max(
-    0,
-    ...snapshots.flatMap((snapshot) => snapshot.system.history.map((sample) => sample.time)),
-  );
-  let duration = 300_000;
-  if (historyWindow === "15m") duration = 900_000;
-  const cutoff = lastTime - duration;
-  const points = new Map<number, Record<string, number | string | null>>();
-  const formatter = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit", second: "2-digit" });
-  const pointAt = (time: number) => {
-    let point = points.get(time);
-    if (!point) {
-      point = { time: formatter.format(time), rawTime: new Date(time).toISOString() };
-      for (const snapshot of snapshots) point[snapshot.system.id] = null;
-      points.set(time, point);
-    }
-    return point;
-  };
-  for (const snapshot of snapshots) {
-    let previous: HealthSample | undefined;
-    for (const sample of snapshot.system.history) {
-      if (!Number.isFinite(sample.time) || sample.time < cutoff) continue;
-      if (previous && sample.time - previous.time > Math.max(30_000, (snapshot.system.refreshInterval ?? 10) * 3000))
-        pointAt(Math.floor(previous.time / 10_000) * 10_000 + 10_000);
-      previous = sample;
-      const time = Math.floor(sample.time / 10_000) * 10_000;
-      let value = finiteReading(sample[metric]);
-      if (metric === "temperature" && value !== null && fahrenheit) value = value * 1.8 + 32;
-      // A slot holds its latest real observation, never an average or carried value.
-      pointAt(time)[snapshot.system.id] = value;
-    }
-  }
-  return [...points.entries()].toSorted(([leftTime], [rightTime]) => leftTime - rightTime).map(([, point]) => point);
 }
 
 function verdictColor(volume: HealthVolume) {

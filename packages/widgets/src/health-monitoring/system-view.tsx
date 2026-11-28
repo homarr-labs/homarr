@@ -8,6 +8,7 @@ import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { useWidgetNow } from "../common/use-widget-now";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { HealthOptions } from "./display";
 import { isStaleReading, needsAttention } from "./display";
@@ -19,11 +20,16 @@ import { useHealthBounds } from "./use-health-bounds";
 import classes from "./system-view.module.css";
 import healthClasses from "./health-monitoring.module.css";
 
-const SystemHistoryComparison = dynamic(() =>
-  import("./system-advanced").then((module) => module.SystemHistoryComparison),
+const SystemHistoryComparison = dynamic(
+  () => import("./system-advanced").then((module) => module.SystemHistoryComparison),
+  { loading: WidgetQueryLoadingState },
 );
-const SystemDetail = dynamic(() => import("./system-detail").then((module) => module.SystemDetail));
-const SystemAdvanced = dynamic(() => import("./system-advanced").then((module) => module.SystemAdvanced));
+const SystemDetail = dynamic(() => import("./system-detail").then((module) => module.SystemDetail), {
+  loading: WidgetQueryLoadingState,
+});
+const SystemAdvanced = dynamic(() => import("./system-advanced").then((module) => module.SystemAdvanced), {
+  loading: WidgetQueryLoadingState,
+});
 
 export interface SystemHealthViewProps {
   systems: HealthSystem[];

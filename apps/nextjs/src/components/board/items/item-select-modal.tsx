@@ -52,6 +52,7 @@ import { getSectionGridColumnCount } from "../sections/grid/section-grid-placeme
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
+  getInitialIntegrationIds,
   getWidgetConnectionStatus,
   matchesIntegrationSearch,
   resolveMatchingIntegrationsAsync,
@@ -409,9 +410,7 @@ const ItemSelectModalContent = ({
       const openEditor = (
         availableIntegrations: { id: string; name: string; url: string; kind: IntegrationKind }[],
       ) => {
-        const selectedIntegrationIds = availableIntegrations
-          .slice(0, maxIntegrations)
-          .map((integration) => integration.id);
+        const selectedIntegrationIds = getInitialIntegrationIds(kind, availableIntegrations, maxIntegrations);
         openEditModal(
           {
             kind,

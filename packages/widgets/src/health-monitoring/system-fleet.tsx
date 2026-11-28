@@ -55,6 +55,7 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
   const bodyHeight = Math.max(1, height - padding * 2 - targetSize - 4 - headerHeight);
   let rowHeight = 49;
   if (narrow) rowHeight = 70;
+  if (narrow && bodyHeight < 240) rowHeight = 50;
   if (compact) rowHeight = narrow ? 48 : 36;
   if (options.density === "comfortable") rowHeight = narrow ? 84 : 62;
   if (coarsePointer) rowHeight = Math.max(44, rowHeight);
@@ -70,26 +71,32 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
     cardHeight = 174;
   }
   const cardColumns = Math.max(1, Math.min(filtered.length, Math.floor((innerWidth + 6) / (cardWidth + 6))));
-  let pageSize = Math.max(1, Math.floor(bodyHeight / rowHeight));
+  let pageSize = Math.max(1, Math.floor((bodyHeight + 4) / (rowHeight + 4)));
   if (cards) pageSize = cardColumns * Math.max(1, Math.floor((bodyHeight + 6) / (cardHeight + 6)));
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const current = Math.min(page, pages - 1);
   const visible = filtered.slice(current * pageSize, (current + 1) * pageSize);
   const renderedRowHeight = Math.max(40, Math.min(rowHeight, bodyHeight));
   const cardRows = Math.max(1, Math.ceil(Math.min(filtered.length, pageSize) / cardColumns));
-  const renderedCardHeight = Math.max(74, Math.floor((bodyHeight - (cardRows - 1) * 6) / cardRows));
+  const renderedCardHeight = Math.min(
+    cardHeight,
+    Math.max(74, Math.floor((bodyHeight - (cardRows - 1) * 6) / cardRows)),
+  );
   const renderedCardWidth = Math.floor((innerWidth - (cardColumns - 1) * 6) / cardColumns);
 
   let metricSpace = innerWidth - 130;
   if (narrow) metricSpace = innerWidth;
-  const metricLimit = Math.max(1, Math.floor(metricSpace / 90));
+  let metricWidth = 90;
+  if (narrow) metricWidth = 108;
+  const metricLimit = Math.max(1, Math.floor(metricSpace / metricWidth));
   const orderedMetrics = getHealthMetricOrder(options);
   const columns = orderedMetrics
     .filter((metric) => snapshots.some((snapshot) => hasGlanceReading(snapshot, metric)))
     .slice(0, metricLimit);
   const template = "minmax(0, 1.5fr)" + " minmax(0, 1fr)".repeat(columns.length);
-  const compactToolbar = innerWidth < 380 && showFilter;
+  const compactToolbar = showFilter && (innerWidth < 230 || (pages > 1 && innerWidth < 380));
   const showPageNumber = innerWidth >= 240;
+  const singlePager = innerWidth < 230;
   const filterLabel = t("attentionCount", { count: alerting.length });
 
   return (
@@ -142,23 +149,25 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
                 {current + 1}/{pages}
               </Text>
             )}
-            <ActionIcon
-              size={targetSize}
-              variant="subtle"
-              color="gray"
-              aria-label={t("previousPage")}
-              disabled={current === 0 || isEditMode}
-              onClick={() => setPage(current - 1)}
-            >
-              <IconChevronLeft style={zoomCompensatedSize(16)} aria-hidden />
-            </ActionIcon>
+            {!singlePager && (
+              <ActionIcon
+                size={targetSize}
+                variant="subtle"
+                color="gray"
+                aria-label={t("previousPage")}
+                disabled={current === 0 || isEditMode}
+                onClick={() => setPage(current - 1)}
+              >
+                <IconChevronLeft style={zoomCompensatedSize(16)} aria-hidden />
+              </ActionIcon>
+            )}
             <ActionIcon
               size={targetSize}
               variant="subtle"
               color="gray"
               aria-label={t("nextPage")}
-              disabled={current + 1 >= pages || isEditMode}
-              onClick={() => setPage(current + 1)}
+              disabled={(!singlePager && current + 1 >= pages) || isEditMode}
+              onClick={() => setPage((current + 1) % pages)}
             >
               <IconChevronRight style={zoomCompensatedSize(16)} aria-hidden />
             </ActionIcon>
@@ -233,6 +242,7 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
           let stateColor = "teal";
           if (snapshot.alerts.length > 0) stateColor = "orange";
           if (!snapshot.available || stale) stateColor = "gray";
+          const statusBelowName = narrow && width < 260 && Boolean(status);
           const identity = (
             <Group gap={6} wrap="nowrap" miw={0}>
               <Box
@@ -244,13 +254,13 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
                 <Text size="sm" lh={1.15} fw={600} truncate>
                   {snapshot.system.name}
                 </Text>
-                {(!narrow || renderedRowHeight >= 60) && (
+                {(!narrow || renderedRowHeight >= 60 || statusBelowName) && (
                   <Text size="xs" lh={1.1} c="dimmed" truncate>
-                    {context}
+                    {statusBelowName ? status : context}
                   </Text>
                 )}
               </Stack>
-              {narrow && renderedRowHeight < 60 && status && (
+              {narrow && renderedRowHeight < 60 && !statusBelowName && status && (
                 <Text size="xs" lh={1.1} c="dimmed" maw="55%" truncate>
                   {status}
                 </Text>
