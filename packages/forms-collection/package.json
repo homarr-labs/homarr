@@ -14,7 +14,8 @@
   "exports": {
     ".": "./index.ts",
     "./access": "./src/access/index.ts",
-    "./custom-widgets": "./src/custom-widgets/index.ts"
+    "./custom-widgets": "./src/custom-widgets/index.ts",
+    "./tabler-icon-picker": "./src/tabler-icon-picker/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

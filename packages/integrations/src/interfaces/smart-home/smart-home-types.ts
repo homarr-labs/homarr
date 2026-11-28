@@ -61,6 +61,8 @@ export interface SmartHomeEntityAttributes {
   repeat?: string;
   batteryLevel?: number;
   options?: string[];
+  /** Display names of `options` (and of an enum sensor's states) when the server names them, e.g. Homey's "Standard" for "2". */
+  optionLabels?: Record<string, string>;
   min?: number;
   max?: number;
   step?: number;
@@ -147,6 +149,8 @@ export interface SmartHomeCatalogEntity {
   deviceId?: string | null;
   icon: string | null;
   deviceClass: string | null;
+  /** The unit of the entity's state, e.g. "%"; tells which views fit it before its state is loaded. */
+  unit?: string | null;
   hidden: boolean;
 }
 

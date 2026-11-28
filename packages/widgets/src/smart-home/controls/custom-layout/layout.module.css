@@ -1,0 +1,630 @@
+/* The grid is a size container: cards size their text from the widget, so all text scales together with it. */
+.grid {
+  container-type: size;
+  display: grid;
+  align-content: start;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.card {
+  /* The base size for labels, small values and titles: about 13px on a 450px widget, readable on small ones and
+     capped on large ones. Everything below is in em, so spacing, radii and text scale together with it. */
+  --el-gap: 0.5em;
+  --el-gap-tight: 0.25em;
+  --el-radius: 0.8em;
+  /* The device card's weights: names and readings at 650, so a card reads like a device card. */
+  --el-weight-strong: 650;
+  --el-weight-medium: 600;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  /* The device card surface (control center tokens), so cards look like device cards in every theme. */
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  border-radius: var(--e-radius);
+  box-shadow: var(--tile-shadow);
+  backdrop-filter: var(--tile-blur);
+  gap: var(--el-gap);
+  min-height: 0;
+  /* The device card's 12px at the base size. */
+  padding: 0.92em;
+  font-size: clamp(11px, 2.9cqmin, 20px);
+  transition:
+    background 0.35s,
+    border-color 0.35s;
+}
+
+/* A card with its own color, tinted like a device card that is on. */
+.card[data-color] {
+  background: color-mix(in srgb, var(--card-color) 17%, var(--tile-bg));
+  border-color: color-mix(in srgb, var(--card-color) 40%, var(--tile-border));
+}
+
+/* Like a device card's name. */
+.cardTitle {
+  flex: none;
+  margin: 0;
+  overflow: hidden;
+  font-size: 1em;
+  line-height: 1.2;
+  font-weight: var(--el-weight-strong);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardBody {
+  display: grid;
+  flex: 1;
+  gap: var(--el-gap);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Stacked for a narrow widget, the elements can need more rows than the card is high: they scroll. */
+.cardBody[data-stacked="true"] {
+  overflow-y: auto;
+}
+
+/* One element on the card grid; the element fills it or centers in it. The cell is a size container, so element
+   content (numbers, sliders, chips) scales with the space the user gives the element. */
+.elementCell {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* An embedded tile fits itself to the cell; its buttons' hover growth and shadow may show past the cell's edge. */
+/* (Not only a direct child: an element with its own color wraps its content once more.) */
+.elementCell:has([data-embedded]) {
+  overflow: visible;
+}
+
+/* The card body still clips its elements, so the tile keeps a little room inside its cell for that growth. Its
+   measured size excludes this padding, so its controls fit what is left. */
+.tileElement[data-embedded] {
+  padding: 6px;
+}
+
+.elementHead {
+  display: flex;
+  gap: var(--el-gap);
+  align-items: baseline;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.elementLabel {
+  display: inline-flex;
+  gap: 0.4em;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.96em;
+  color: var(--secondary-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The icon keeps its size and the text ends in an ellipsis when the element is narrow. */
+.labelIcon {
+  flex: none;
+}
+
+.labelText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Like a device card's reading value. */
+.elementValue {
+  flex: none;
+  font-size: 0.96em;
+  font-weight: var(--el-weight-strong);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sliderElement {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+}
+
+/* Below the label row (about 24px), the track takes the rest of the element, within readable limits. */
+.sliderTrack {
+  height: clamp(20px, calc(100cqh - 24px), 48px);
+}
+
+/* A bare bar slider: as wide as the element and as tall as it, within readable limits. */
+.barElement {
+  flex: none;
+  width: 100%;
+  height: clamp(16px, 100cqh, 64px);
+}
+
+/* The bar's icon: a square as tall as the bar at its start, so it grows and shrinks with the element. */
+.barIcon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
+/* A vertical pill fills its element; the user shapes it by resizing the element. */
+.pillElement {
+  flex: 1;
+  min-height: 0;
+}
+
+.chipElement {
+  display: flex;
+  flex: none;
+  min-width: 0;
+}
+
+/* Element selectors raise specificity above the chip's own class from the control center styles. */
+.chipElement > :is(div, button) {
+  height: clamp(1.9em, 100cqh, 3.4em);
+  font-size: clamp(0.95em, 40cqh, 1.25em);
+}
+
+.valueElement {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  min-width: 0;
+}
+
+/* The number grows with the element's height (minus the label row) but never gets wider than the element. An
+   average digit is about 0.6em wide; 0.7em per character leaves room between neighbouring values. It stops at the
+   size of a sensor tile's value (twice the base size), so a tall element reads like a device card reading, not a
+   poster. */
+.bigValue {
+  --value-max: 2em;
+
+  overflow: hidden;
+  font-size: clamp(
+    9px,
+    min(calc((100cqh - 20px) * 0.85), calc(100cqw / (var(--value-chars, 8) * 0.7)), var(--value-max)),
+    72px
+  );
+  font-weight: var(--el-weight-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A flat value element (one row) puts the label beside the number, which then uses the full height and the width
+   the label leaves. */
+/* Flat and narrow, a cut-off label ("L…") says nothing: only the icon stays. */
+@container (max-height: 52px) and (max-width: 150px) {
+  .valueElement .labelText {
+    display: none;
+  }
+}
+
+@container (max-height: 52px) {
+  .valueElement {
+    flex-direction: row;
+    gap: var(--el-gap);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* The number has priority; the label gives way and ends in an ellipsis, but always keeps its whole icon. */
+  .valueElement > .elementLabel {
+    flex: 1 1 0;
+    min-width: 1.1em;
+  }
+
+  .valueElement > .bigValue {
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: clamp(
+      9px,
+      min(calc(100cqh * 0.75), calc(60cqw / (var(--value-chars, 8) * 0.7)), var(--value-max)),
+      72px
+    );
+  }
+}
+
+.graphElement {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  min-height: 0;
+}
+
+.tileElement {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* A percentage as a large ring with its label under it, or beside it when the element is flat. */
+.ringTile {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ringTile[data-wide="true"] {
+  flex-direction: row;
+  gap: var(--el-gap);
+  justify-content: flex-start;
+}
+
+/* Aligned, the ring (with its label) moves to the element's start, middle or end. */
+.ringTile[data-wide="true"][data-align="center"] {
+  justify-content: center;
+}
+
+.ringTile[data-wide="true"][data-align="end"] {
+  justify-content: flex-end;
+}
+
+.ringTile[data-wide="false"][data-align="start"] {
+  align-items: flex-start;
+}
+
+.ringTile[data-wide="false"][data-align="end"] {
+  align-items: flex-end;
+}
+
+.ringValue {
+  display: block;
+  font-weight: var(--el-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ringText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ringTile[data-wide="true"] .ringText {
+  align-items: flex-start;
+}
+
+/* The device header sits in the middle of a taller element instead of leaving empty space below it. */
+.tileElement[data-centered] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Takes what the label row leaves; it shrinks with the element instead of being cut off at the bottom. */
+.graphArea {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The label, value and legend lie on the graph's top; the graph's own hover stays reachable through them. */
+.graphOverlay {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  pointer-events: none;
+  /* Readable where a line runs behind the text. */
+  text-shadow: 0 0 0.35em var(--mantine-color-body);
+}
+
+/* A one-line reading: label (icon and text) on the left, the value on the right. */
+.statusElement {
+  display: flex;
+  flex: none;
+  gap: var(--el-gap);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.9em;
+}
+
+.statusElement .elementLabel {
+  flex: 1;
+}
+
+.statusElement[data-active="true"] .labelIcon {
+  color: var(--accent);
+}
+
+.statusElement[data-low="true"] .labelIcon {
+  color: var(--mantine-color-red-6);
+}
+
+.statusElement[data-missing] {
+  opacity: 0.6;
+}
+
+/* Spans the card's whole grid, so it does not wrap inside a single column. */
+.emptyCard {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  place-self: center;
+  font-size: 1em;
+  color: var(--secondary-ink);
+  text-align: center;
+}
+
+/* While the card's first entity is on, its color shines through behind the content. */
+.cardTint {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: calc(var(--opacity, 1) * 0.14);
+  transition: opacity 0.35s;
+}
+
+/* Title and content sit above the tint. Only these two: the editor's grip is positioned on its own. */
+.card > .cardTitle,
+.card > .cardBody {
+  position: relative;
+  z-index: 1;
+}
+
+/* One big button for the entity's main action; it lights up in the entity's color while it is on. */
+.buttonElement {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--el-gap-tight);
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: var(--el-gap);
+  overflow: hidden;
+  font-size: clamp(1em, 22cqh, 1.25em);
+  font-weight: var(--el-weight-medium);
+  color: inherit;
+  background: var(--track);
+  border-radius: var(--el-radius);
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.buttonElement:focus-visible,
+.cameraElement:focus-visible {
+  outline-offset: -3px;
+}
+
+.buttonElement[data-active="true"] {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+.buttonElement:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.buttonElement[data-done="true"] {
+  color: var(--on-accent);
+  background: var(--mantine-color-teal-filled);
+}
+
+.buttonElement[data-failed="true"] {
+  box-shadow: inset 0 0 0 2px var(--mantine-color-red-6);
+}
+
+.buttonElement[data-failed="true"] .buttonIcon {
+  color: var(--mantine-color-red-6);
+}
+
+.spinning {
+  animation: element-spin 0.9s linear infinite;
+}
+
+@keyframes element-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinning {
+    animation: none;
+  }
+}
+
+.buttonIcon {
+  flex: none;
+}
+
+.buttonLabel {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graphRange {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+  color: var(--secondary-ink);
+}
+
+.headingElement {
+  display: flex;
+  gap: 0.4em;
+  align-items: center;
+  min-width: 0;
+  font-size: clamp(1.05em, 45cqh, 1.6em);
+  font-weight: var(--el-weight-strong);
+}
+
+.headingElement[data-align="center"],
+.chipElement[data-align="center"] {
+  justify-content: center;
+}
+
+.headingElement[data-align="end"],
+.chipElement[data-align="end"] {
+  justify-content: flex-end;
+}
+
+/* The alignment moves a value's number; its label stays at the start. Tall, the number moves under the label. */
+@container (min-height: 53px) {
+  .valueElement[data-align="center"] > .bigValue {
+    align-self: center;
+  }
+
+  .valueElement[data-align="end"] > .bigValue {
+    align-self: flex-end;
+  }
+}
+
+/* Flat, the number follows the label (start), sits in the middle of the space after it (center) or at the end. */
+@container (max-height: 52px) {
+  .valueElement[data-align="start"],
+  .valueElement[data-align="center"] {
+    justify-content: flex-start;
+  }
+
+  .valueElement[data-align="start"] > .elementLabel,
+  .valueElement[data-align="center"] > .elementLabel {
+    flex: 0 1 auto;
+  }
+
+  .valueElement[data-align="center"] > .bigValue {
+    margin-inline: auto;
+  }
+}
+
+/* In the editor, an element whose condition does not hold right now is shown faded. */
+.conditionHidden {
+  display: contents;
+}
+
+.conditionHidden > * {
+  opacity: 0.35;
+}
+
+/* A one-line reading in a taller cell may use a second line for its label instead of cutting it off. */
+@container (min-height: 2.8em) {
+  .statusElement .elementLabel {
+    white-space: normal;
+  }
+
+  .statusElement .labelText {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.25;
+  }
+}
+
+/* A camera fills its element: the snapshot, the live video over it, and a small bar with the name. */
+.cameraElement {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--track);
+  border-radius: var(--el-radius);
+}
+
+.cameraImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Centered over the snapshot (or the empty tile) while the live view connects. */
+.cameraLoading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mantine-color-white);
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.cameraEmpty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--secondary-ink);
+  transform: translate(-50%, -50%);
+}
+
+.cameraBar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: var(--el-gap);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6em 0.6em 0.4em;
+  font-weight: var(--el-weight-medium);
+  color: var(--mantine-color-white);
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+}
+
+.cameraLive {
+  flex: none;
+  padding: 0 0.45em;
+  font-size: 0.8em;
+  font-weight: var(--el-weight-strong);
+  color: var(--mantine-color-white);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--mantine-color-red-6);
+  border-radius: 0.3em;
+}
+
+.cameraRestarting {
+  flex: none;
+  padding: 0 0.45em;
+  font-size: 0.8em;
+  font-weight: var(--el-weight-strong);
+  color: var(--mantine-color-white);
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 0.3em;
+}

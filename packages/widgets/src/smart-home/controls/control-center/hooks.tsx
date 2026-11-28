@@ -128,7 +128,8 @@ export function Measured({ children }: MeasuredProps) {
 }
 
 export interface DetailApi {
-  open: (entityId: string) => void;
+  /** `readOnly` keeps a detail opened from a read-only element or card from controlling the entity. */
+  open: (entityId: string, options?: { readOnly?: boolean }) => void;
 }
 
 export const DetailContext = createContext<DetailApi | null | undefined>(undefined);
@@ -154,10 +155,12 @@ export const useDetailsEnabled = () => {
 export const useEntityDetailOpener = (entityId: string | null) => {
   const detail = useContext(DetailContext);
   const enabled = useDetailsEnabled();
+  // The detail opens outside this element, so a read-only scope around it has to travel along.
+  const readOnly = useSmartHomeInteractionBlock() === "readOnly";
   return useMemo(() => {
     if (!enabled || !detail || !entityId) return null;
-    return () => detail.open(entityId);
-  }, [enabled, detail, entityId]);
+    return () => detail.open(entityId, { readOnly });
+  }, [enabled, detail, entityId, readOnly]);
 };
 
 export const useDetailOpener = () => useEntityDetailOpener(useContext(DetailEntityContext));

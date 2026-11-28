@@ -11,7 +11,7 @@ import type {
 } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import type { SmartHomeCatalogDevice } from "@homarr/integrations/types";
+import type { SmartHomeCatalogDevice, SmartHomeCatalogEntity } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import { getCatalogEntityIcon } from "../controls/semantics";
@@ -49,6 +49,8 @@ export interface SmartHomeEntityPickerProps extends SmartHomePickerBaseProps, Sm
   value: readonly string[];
   onChange: (value: string[]) => void;
   maxValues?: number;
+  /** Focuses the field with its list open, for an element that was just added and needs its entities. */
+  openOnMount?: boolean;
 }
 
 export interface SmartHomeEntitySelectProps extends SmartHomePickerBaseProps, SmartHomeEntityScope {
@@ -57,6 +59,8 @@ export interface SmartHomeEntitySelectProps extends SmartHomePickerBaseProps, Sm
   clearable?: boolean;
   /** Entities to tag in the list, e.g. those already on the card. */
   marked?: { ids: ReadonlySet<string>; label: string };
+  /** Focuses the field with its list open, for an element that was just added and needs its entity. */
+  openOnMount?: boolean;
 }
 
 const buildEntityData = (
@@ -73,13 +77,25 @@ const buildEntityData = (
     (index?.areas ?? []).map((area) => [area.id, { group: area.name, items: [] }]),
   );
 
+  // A name several entities share ("Temperature") reads with its device or room in a chosen pill or field, where
+  // the list's second line does not show.
+  const nameCounts = new Map<string, number>();
+  for (const entity of index?.entities ?? []) nameCounts.set(entity.name, (nameCounts.get(entity.name) ?? 0) + 1);
+  const labelOf = (entity: SmartHomeCatalogEntity) => {
+    if ((nameCounts.get(entity.name) ?? 0) < 2 || !index) return entity.name;
+    const device = getCatalogDevice(index, entity.deviceId);
+    const area = entity.areaId ? index.areasById.get(entity.areaId) : undefined;
+    const place = device && !entity.name.includes(device.name) ? device.name : area?.name;
+    return place ? `${entity.name} · ${place}` : entity.name;
+  };
+
   for (const entity of index?.entities ?? []) {
     const inScope =
       (includeHidden || !entity.hidden) &&
       (!domainSet || domainSet.has(entity.domain)) &&
       (!areaSet || (entity.areaId !== null && areaSet.has(entity.areaId)));
     if (!inScope && !selectedSet.has(entity.id)) continue;
-    const item = { value: entity.id, label: entity.name };
+    const item = { value: entity.id, label: labelOf(entity) };
     const group = entity.areaId ? groups.get(entity.areaId) : undefined;
     if (group) group.items.push(item);
     else ungrouped.push(item);
@@ -178,6 +194,7 @@ export const SmartHomeEntityPicker = ({
   areaIds,
   includeHidden,
   limit = DEFAULT_OPTION_LIMIT,
+  openOnMount,
 }: SmartHomeEntityPickerProps) => {
   const t = useI18n();
   const status = useSmartHomePickerStatus(catalog, placeholder);
@@ -208,6 +225,9 @@ export const SmartHomeEntityPicker = ({
       searchable
       clearable={!status.unavailable}
       hidePickedOptions
+      // oxlint-disable-next-line jsx-a11y/no-autofocus
+      autoFocus={openOnMount}
+      defaultDropdownOpened={openOnMount}
       maxDropdownHeight={320}
       nothingFoundMessage={t("common.noResults")}
       renderPill={renderPill}
@@ -231,6 +251,7 @@ export const SmartHomeEntitySelect = ({
   includeHidden,
   limit = DEFAULT_OPTION_LIMIT,
   marked,
+  openOnMount,
 }: SmartHomeEntitySelectProps) => {
   const t = useI18n();
   const status = useSmartHomePickerStatus(catalog, placeholder);
@@ -261,6 +282,10 @@ export const SmartHomeEntitySelect = ({
       leftSection={isMissing && <IconAlertTriangle size={14} color="var(--mantine-color-orange-6)" aria-hidden />}
       searchable
       clearable={clearable && !status.unavailable}
+      // The user just added an element and picks its entity next; nothing else competes for focus then.
+      // oxlint-disable-next-line jsx-a11y/no-autofocus
+      autoFocus={openOnMount}
+      defaultDropdownOpened={openOnMount}
       maxDropdownHeight={360}
       nothingFoundMessage={t("common.noResults")}
       renderOption={(input) => <EntityOption index={index} marked={marked} {...input} />}

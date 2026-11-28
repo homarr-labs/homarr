@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -13,6 +13,7 @@ import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./lay
 type Board = RouterOutputs["board"]["getBoardByName"];
 
 interface BoardContextValue {
+  setEditingLayoutId?: (id: string | null) => void;
   board: Board;
   layoutOverrideId: string | null;
   currentLayout: string;
@@ -84,9 +85,10 @@ export const BoardProvider = ({
       refetchOnReconnect: !isEditMode,
     },
   );
+  const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
   const currentLayout = useSyncExternalStore(
     subscribeToViewport,
-    () => getCurrentLayout(data, layoutOverrideId),
+    () => getCurrentLayout(data, layoutOverrideId ?? editingLayoutId),
     () => layoutOverrideId ?? initialLayoutId,
   );
 
@@ -113,7 +115,7 @@ export const BoardProvider = ({
     persistViewportWidth(getViewportWidth());
   }, []);
   const value = useMemo(
-    () => ({ board: data, layoutOverrideId, currentLayout, initialViewportWidth }),
+    () => ({ board: data, layoutOverrideId, currentLayout, initialViewportWidth, setEditingLayoutId }),
     [currentLayout, data, initialViewportWidth, layoutOverrideId],
   );
 
@@ -134,6 +136,18 @@ export const useOptionalBoard = () => {
   const context = useContext(BoardContext);
 
   return context?.board ?? null;
+};
+
+/** Keep an open configuration form attached to the grid whose coordinates it edits. */
+export const usePreserveEditingLayout = (active: boolean) => {
+  const context = useContext(BoardContext);
+  const setEditingLayoutId = context?.setEditingLayoutId;
+  const layout = context?.currentLayout;
+  useLayoutEffect(() => {
+    if (!active || !layout || !setEditingLayoutId) return;
+    setEditingLayoutId(layout);
+    return () => setEditingLayoutId(null);
+  }, [active, layout, setEditingLayoutId]);
 };
 
 export const useLayoutOverride = () => useContext(BoardContext)?.layoutOverrideId ?? null;

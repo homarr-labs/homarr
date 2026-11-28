@@ -31,6 +31,7 @@ import {
 import type { DevicePanelItem, ReadingControl } from "../device-groups";
 import {
   formatEntityState,
+  formatOption,
   formatRelativeTime,
   getPrimaryAction,
   requiresConfirmation,
@@ -157,6 +158,7 @@ const getFanSteps = (percentageStep: number | undefined) => {
 };
 
 interface StepSliderProps {
+  offIcon?: ReactNode;
   steps: number;
   value: number;
   label: string;
@@ -165,14 +167,26 @@ interface StepSliderProps {
   onSelect: (percentage: number) => void;
   /** Adds an "off" segment before the speeds, for places without a separate power button. */
   onTurnOff?: () => void;
+  /** Side by side (the default), or stacked with the lowest speed at the bottom, for a tall pill. */
+  axis?: "horizontal" | "vertical";
 }
 
 /** One segment per fan speed; tapping a segment sets exactly that speed. */
-export function StepSlider({ steps, value, label, disabled, pending, onSelect, onTurnOff }: StepSliderProps) {
+export function StepSlider({
+  offIcon,
+  steps,
+  value,
+  label,
+  disabled,
+  pending,
+  onSelect,
+  onTurnOff,
+  axis = "horizontal",
+}: StepSliderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const level = Math.round((value / 100) * steps);
   return (
-    <div className={classes.deviceSteps} data-pending={pending}>
+    <div className={classes.deviceSteps} data-pending={pending} data-axis={axis}>
       {onTurnOff ? (
         <button
           type="button"
@@ -183,7 +197,7 @@ export function StepSlider({ steps, value, label, disabled, pending, onSelect, o
           disabled={disabled || level === 0}
           onClick={onTurnOff}
         >
-          <IconPower size="60%" stroke={2} aria-hidden />
+          {offIcon ?? <IconPower size="60%" stroke={2} aria-hidden />}
         </button>
       ) : null}
       {Array.from({ length: steps }, (_, index) => index + 1).map((step) => (
@@ -247,10 +261,23 @@ interface DeviceHeaderProps {
   onOpen: (() => void) | null;
   /** Without its own padding, for use inside another card such as a custom layout card. */
   bare?: boolean;
+  /** Another icon than the entity's own, drawn at the given size. */
+  renderIcon?: (size: number) => ReactNode;
+  /** Only the state below the button, no name (the name still labels the controls). */
+  hideName?: boolean;
 }
 
 /** The same header on every device card: action button, device name, which part it controls and its state. */
-export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open, bare }: DeviceHeaderProps) {
+export function DeviceHeader({
+  device,
+  slider,
+  sliderStyle,
+  density,
+  onOpen: open,
+  bare,
+  renderIcon,
+  hideName,
+}: DeviceHeaderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const { primary } = device;
   const theme = useEntityTheme(primary);
@@ -259,17 +286,20 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
   const disabled = useDeviceControlDisabled(theme.unavailable || primary.readOnly === true);
   const action = getHeaderAction(primary);
   const Icon = theme.Icon;
+  const icon = (size: number, stroke: number) => renderIcon?.(size) ?? <Icon size={size} stroke={stroke} />;
   const offline = isDeviceOffline(device);
   const keyReading = device.showKeyValue && !offline ? getKeyReading(device) : null;
   const state = offline ? t("offline", { time: formatRelativeTime(primary.lastChanged) }) : formatEntityState(primary);
-  const subtitle = [primary.device?.entityName, state, keyReading && formatEntityState(keyReading)]
+  const subtitle = [!hideName && primary.device?.entityName, state, keyReading && formatEntityState(keyReading)]
     .filter(Boolean)
     .join(" · ");
   const text = (
     <>
-      <span className={classes.name} title={device.name}>
-        {device.name}
-      </span>
+      {hideName ? null : (
+        <span className={classes.name} title={device.name}>
+          {device.name}
+        </span>
+      )}
       <span className={classes.state}>{subtitle}</span>
     </>
   );
@@ -303,11 +333,7 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
             onPreview={setPreview}
             onCommit={(value) => void run(slider.toAction(value))}
           >
-            {() => (
-              <div className={classes.bigPillIcon}>
-                <Icon size={26} stroke={1.6} />
-              </div>
-            )}
+            {() => <div className={classes.bigPillIcon}>{icon(26, 1.6)}</div>}
           </PillSlider>
         </div>
         <div className={classes.deviceHeroSide}>
@@ -347,7 +373,7 @@ export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: ope
           disabled={disabled || !action}
           onClick={action ? () => void run(action) : undefined}
         >
-          <Icon size={density.icon} stroke={1.8} />
+          {icon(density.icon, 1.8)}
         </RoundButton>
         {nameBlock}
         <DeviceStatus device={device} />
@@ -394,7 +420,7 @@ function OptionMenu({ entity, disabled, children }: { entity: HaEntity; disabled
             fw={option === entity.state ? 700 : undefined}
             onClick={() => void run({ type: "selectOption", value: option })}
           >
-            {option}
+            {formatOption(entity, option)}
           </Menu.Item>
         ))}
       </Menu.Dropdown>
@@ -484,17 +510,26 @@ function ReadingAction({ entity, control, label }: { entity: HaEntity; control: 
       <button
         type="button"
         className={classes.deviceSelect}
-        aria-label={`${label}: ${entity.state}`}
+        aria-label={`${label}: ${formatEntityState(entity)}`}
         disabled={disabled}
       >
-        <span className={classes.deviceReadingValue}>{entity.state}</span>
+        <span className={classes.deviceReadingValue}>{formatEntityState(entity)}</span>
         <IconChevronDown size={14} stroke={2} aria-hidden />
       </button>
     </OptionMenu>
   );
 }
 
-export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity; label?: string }) {
+interface ReadingRowProps {
+  entity: HaEntity;
+  label?: string;
+  /** Another icon than the entity's own. */
+  icon?: ReactNode;
+  /** Only the icon and the value; the name still labels the row. */
+  hideLabel?: boolean;
+}
+
+export function ReadingRow({ entity, label: labelOverride, icon, hideLabel }: ReadingRowProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
@@ -505,8 +540,10 @@ export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity;
   const highlighted = theme.active && (entity.domain === "binary_sensor" || !isSensorLike(entity));
   const text = (
     <>
-      <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
-      <span className={classes.deviceReadingName}>{label}</span>
+      {/* null hides the icon; undefined shows the entity's own. */}
+      {icon === undefined ? <Icon size={15} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden /> : icon}
+      {/* Kept when hidden, so the value stays on the right. */}
+      <span className={classes.deviceReadingName}>{hideLabel ? null : label}</span>
       {control ? null : <span className={classes.deviceReadingValue}>{state}</span>}
     </>
   );
@@ -537,25 +574,45 @@ export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity;
   );
 }
 
-function ChipFace({ entity, control }: { entity: HaEntity; control: ReadingControl | null }) {
+function ChipFace({
+  entity,
+  control,
+  label,
+  icon,
+}: {
+  entity: HaEntity;
+  control: ReadingControl | null;
+  label?: string;
+  icon?: ReactNode;
+}) {
   const theme = useEntityTheme(entity);
   const Icon = control?.kind === "trigger" ? IconPlayerPlay : theme.Icon;
-  const text = control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity);
+  const text = label ?? (control?.kind === "toggle" ? getDeviceEntityLabel(entity) : formatEntityState(entity));
   return (
     <>
-      <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden />
+      {/* null hides the icon; undefined shows the entity's own. */}
+      {icon === undefined ? <Icon size={14} stroke={1.8} className={classes.deviceReadingIcon} aria-hidden /> : icon}
       <span className={classes.deviceReadingValue}>{text}</span>
     </>
   );
 }
 
-export function ReadingChip({ entity }: { entity: HaEntity }) {
+export function ReadingChip({
+  entity,
+  label: labelOverride,
+  icon,
+}: {
+  entity: HaEntity;
+  label?: string;
+  /** Replaces the entity's own icon, e.g. one chosen in a custom layout. */
+  icon?: ReactNode;
+}) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
   const { run, pending } = useRunner(entity);
   const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
-  const label = getDeviceEntityLabel(entity);
+  const label = labelOverride ?? getDeviceEntityLabel(entity);
   const state = formatEntityState(entity);
   const control = getReadingControl(entity);
   const highlighted = theme.active && (entity.domain === "binary_sensor" || !isSensorLike(entity));
@@ -567,7 +624,7 @@ export function ReadingChip({ entity }: { entity: HaEntity }) {
     "data-pending": pending,
     "data-unavailable": theme.unavailable,
   };
-  const content = <ChipFace entity={entity} control={control} />;
+  const content = <ChipFace entity={entity} control={control} label={labelOverride} icon={icon} />;
 
   if (control?.kind === "select") {
     return (

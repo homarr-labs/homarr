@@ -344,6 +344,7 @@ export const createCatalog = (
       deviceId: entity.device?.id ?? null,
       icon: entity.icon,
       deviceClass: entity.deviceClass,
+      unit: entity.unit,
       hidden: context.hidden,
     };
   });

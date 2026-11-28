@@ -1,0 +1,300 @@
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--mantine-spacing-md);
+  /* The dialog fits the window: its head, the toolbar and the footer take about 200px, the margins 10%. The
+     canvas and the panel scroll inside instead. */
+  height: clamp(360px, calc(90dvh - 210px), 760px);
+}
+
+@media (max-width: 900px) {
+  .editor {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+}
+
+.canvasScroll {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 320px;
+  overflow: auto;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  zoom: 1;
+}
+
+.canvas {
+  position: relative;
+  /* Like the widget's grid, so text in the preview scales exactly as on the board. */
+  container-type: size;
+  display: grid;
+  flex: none;
+  width: 100%;
+  /* The preview has the widget's size; centered both ways, it reads like the widget on the board. Auto margins
+     drop to zero when the preview is larger than the area, so it scrolls instead of being cut off at the top. */
+  margin: auto;
+  padding: 8px;
+  /* The widget's outline: everything inside is what the board shows. */
+  outline: 1px dashed var(--mantine-color-default-border);
+  outline-offset: -1px;
+  border-radius: var(--mantine-radius-md);
+}
+
+/* One cell of the widget's grid; cards cover the cells they take. */
+.canvasCell {
+  pointer-events: none;
+  background: rgb(from var(--mantine-color-text) r g b / 0.025);
+  border-radius: 4px;
+}
+
+.canvas[data-empty="true"] .canvasCell {
+  background: rgb(from var(--mantine-color-text) r g b / 0.045);
+}
+
+.canvasCard {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--e-radius);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s;
+}
+
+.canvasCard[data-selected="true"] {
+  outline-color: var(--mantine-primary-color-filled);
+}
+
+.canvasCard[data-dragging="true"] {
+  z-index: 2;
+  opacity: 0.9;
+}
+
+/* Grip along the card's top edge: the only place that moves the card. */
+.cardHandle {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  width: 40px;
+  height: 14px;
+  place-items: center;
+  color: var(--mantine-color-dimmed);
+  cursor: grab;
+  touch-action: none;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+/* A small grip centered on the card's top edge; it stands out only while pointed at or focused. */
+.cardHandle:hover,
+.cardHandle:focus-visible {
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-default-hover);
+}
+
+.cardHandle:active {
+  cursor: grabbing;
+}
+
+.canvasElement {
+  position: relative;
+  cursor: grab;
+  /* The ring follows the element's own corners, a little outside them, so it never covers the element. */
+  border-radius: var(--el-radius, 8px);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  touch-action: none;
+  transition: outline-color 0.15s;
+}
+
+.elementHandle {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+  background: transparent;
+  border: 0;
+}
+
+.canvasElement:hover,
+.canvasElement:focus-within {
+  outline-color: rgb(from var(--mantine-color-dimmed) r g b / 0.45);
+}
+
+.canvasElement[data-dragging="true"] {
+  z-index: 3;
+  cursor: grabbing;
+  outline-color: var(--mantine-primary-color-filled);
+}
+
+.elementPreview {
+  pointer-events: none;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* A small knob on the ring's corner, like the card's. */
+.elementResize {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  cursor: nwse-resize;
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-color-dimmed);
+  border-radius: 50%;
+  opacity: 0;
+  touch-action: none;
+  transition: opacity 0.15s;
+}
+
+.canvasElement:hover .elementResize,
+.canvasElement:focus-within .elementResize,
+.canvasElement[data-selected="true"] .elementResize {
+  opacity: 1;
+}
+
+.canvasElement[data-selected="true"] .elementResize {
+  border-color: var(--mantine-primary-color-filled);
+}
+
+/* The card's resize grip sits on the card's outer corner, half outside it: a round knob, so it never lands on
+   an element's own corner grip (a small triangle inside the card) when an element fills the card's corner. */
+.resizeHandle {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  z-index: 3;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  cursor: nwse-resize;
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: 50%;
+  opacity: 0;
+  touch-action: none;
+  transition: opacity 0.15s;
+}
+
+/* Like the element handles, the card's resize grip only shows while the card is pointed at or focused. */
+.canvasCard[data-selected="true"] > .resizeHandle,
+.canvasCard:hover:not(:has(.canvasElement:hover)) > .resizeHandle,
+.resizeHandle:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  /* Touch has no hover: keep the grip visible on the selected card. */
+  .canvasCard[data-selected="true"] > .resizeHandle,
+  .canvasCard[data-selected="true"] .elementResize {
+    opacity: 1;
+  }
+}
+
+.canvasEmpty {
+  z-index: 1;
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  place-self: center;
+  max-width: 320px;
+}
+
+.panel {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  min-width: 0;
+
+  overflow-y: auto;
+}
+
+.canvasHint {
+  flex: none;
+  padding: 6px 10px 0;
+  font-size: 12px;
+  color: var(--mantine-color-dimmed);
+}
+
+.swatchOption {
+  cursor: pointer;
+}
+
+.swatchOption[aria-pressed="true"] {
+  outline: 2px solid var(--mantine-color-text);
+  outline-offset: 2px;
+}
+
+/* The insert bar: element types to drag onto a card, in Homarr's toolbar look. */
+/* As tall as the toolbar's inputs and buttons (36px), so the row lines up. */
+.insertBar {
+  padding: 3px;
+  background: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+}
+
+.insertItem {
+  touch-action: none;
+  cursor: grab;
+}
+
+/* The inspector's head, like the head of Homarr's settings panels. */
+.inspectorHeader {
+  padding: var(--mantine-spacing-md);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.styleSwatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--mantine-color-text);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 20%);
+}
+
+.styleSwatch[aria-pressed="true"] {
+  border-color: var(--mantine-color-text);
+}
+
+.canvasElement[data-selected="true"] {
+  outline-color: var(--mantine-primary-color-filled);
+}
+
+.canvasCard[data-drop-target="true"] {
+  outline: 2px dashed var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--e-radius, 12px);
+}
+
+/* In the editor the element ring and its resize knob sit just outside the element, in the card's padding. */
+.canvasCard [data-card-body]:not([data-stacked="true"]) {
+  overflow: visible;
+}
+
+/* The cell lets the knob out; the element's own content is still cut at its edge. */
+.canvas .canvasElement {
+  overflow: visible;
+}
+
+.canvas .elementPreview {
+  overflow: hidden;
+  border-radius: inherit;
+}

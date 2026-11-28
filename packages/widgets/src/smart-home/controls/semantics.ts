@@ -29,8 +29,10 @@ import {
   IconDroplet,
   IconFlame,
   IconCircleDot,
+  IconClock,
   IconGauge,
   IconHome,
+  IconHourglass,
   IconLamp,
   IconLeaf,
   IconLock,
@@ -92,6 +94,8 @@ const sensorIcons: Record<string, TablerIcon> = {
   energy: IconBolt,
   carbon_dioxide: IconLeaf,
   battery: IconBattery3,
+  duration: IconHourglass,
+  timestamp: IconClock,
 };
 
 const binarySensorIcons: Record<string, TablerIcon> = {
@@ -205,8 +209,12 @@ export const getCatalogEntityIcon = (entity: Pick<HaEntity, "id" | "icon" | "dev
     history: null,
   });
 
+// Home Assistant buttons and scenes report when they were last used; one never used is "unknown", yet usable.
+const lastUsedDomains = new Set<string>(["button", "scene"]);
+
 export const isUnavailable = (entity: HaEntity) =>
-  entity.state === "unavailable" || (entity.state === "unknown" && !entity.attributes.coverPositionUnknown);
+  entity.state === "unavailable" ||
+  (entity.state === "unknown" && !entity.attributes.coverPositionUnknown && !lastUsedDomains.has(entity.domain));
 
 export const isEntityActive = (entity: HaEntity): boolean => {
   if (isUnavailable(entity)) return false;
@@ -389,6 +397,60 @@ export const formatRelativeTime = (timestamp: number) => {
   return formatter.format(seconds, "second");
 };
 
+// Home Assistant reports durations in any of these units, and shows them as hours and minutes.
+const durationUnitSeconds: Record<string, number> = { d: 86_400, h: 3_600, min: 60, s: 1, ms: 0.001 };
+
+const formatUnit = (value: number, unit: "day" | "hour" | "minute" | "second") =>
+  new Intl.NumberFormat(undefined, { style: "unit", unit, unitDisplay: "short" }).format(value);
+
+/** A duration as its two largest parts, e.g. "2 hr 5 min" for a print that has 125 minutes left; null for other units. */
+export const formatDuration = (value: number, unit: string | null) => {
+  const scale = durationUnitSeconds[unit ?? ""];
+  if (scale === undefined || !Number.isFinite(value) || value < 0) return null;
+  const seconds = Math.round(value * scale);
+  if (seconds < 60) return formatUnit(seconds, "second");
+  const totalMinutes = Math.round(seconds / 60);
+  const parts = [
+    [Math.floor(totalMinutes / 1_440), "day"],
+    [Math.floor((totalMinutes % 1_440) / 60), "hour"],
+    [totalMinutes % 60, "minute"],
+  ] as const;
+  const first = parts.findIndex(([amount]) => amount > 0);
+  return parts
+    .slice(first, first + 2)
+    .filter(([amount]) => amount > 0)
+    .map(([amount, part]) => formatUnit(amount, part))
+    .join(" ");
+};
+
+/** A point in time as a clock time today, or with its date otherwise, e.g. when a print will be done. */
+export const formatTimestamp = (state: string) => {
+  const time = Date.parse(state);
+  if (Number.isNaN(time)) return null;
+  const date = new Date(time);
+  const today = date.toDateString() === new Date().toDateString();
+  return new Intl.DateTimeFormat(
+    undefined,
+    today
+      ? { hour: "numeric", minute: "2-digit" }
+      : { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" },
+  ).format(date);
+};
+
+const KEY_PATTERN = /^[a-z0-9]+(?:_[a-z0-9]+)*$/;
+
+/**
+ * How an option or an enum state reads: the name the server gives it, a known label, or the key made readable
+ * ("auto_bed_leveling" becomes "Auto bed leveling"). Free text such as "Eco mode" stays as it is.
+ */
+export const formatOption = (entity: Pick<HaEntity, "attributes">, option: string) => {
+  const named = entity.attributes.optionLabels?.[option] ?? stateLabels[option];
+  if (named) return named;
+  if (!KEY_PATTERN.test(option)) return option;
+  const words = option.replaceAll("_", " ");
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+
 export const formatEntityState = (entity: HaEntity): string => {
   if (isUnavailable(entity)) return stateLabels[entity.state] ?? entity.state;
   const attributes = entity.attributes;
@@ -396,8 +458,16 @@ export const formatEntityState = (entity: HaEntity): string => {
     case "number":
     case "sensor": {
       if (attributes.stateLabel) return attributes.stateLabel;
+      if (entity.deviceClass === "timestamp") return formatTimestamp(entity.state) ?? entity.state;
+      if (entity.deviceClass === "enum" || attributes.optionLabels?.[entity.state]) {
+        return formatOption(entity, entity.state);
+      }
       const value = Number(entity.state);
       if (Number.isNaN(value)) return entity.state;
+      if (entity.deviceClass === "duration") {
+        const duration = formatDuration(value, entity.unit);
+        if (duration) return duration;
+      }
       // A number entity shows as many digits as its step has (0.01 shows two), and as its range starts at (from 0.25 in
       // steps of 1 shows 0.25, 1.25), so every step is visible.
       const digits =
@@ -447,6 +517,7 @@ export const formatEntityState = (entity: HaEntity): string => {
       return entity.state === "home" ? "Home" : (attributes.zone ?? "Away");
     case "scene":
     case "button":
+      if (entity.state === "unknown") return "Never used";
       return `Last ${formatRelativeTime(entity.lastChanged)}`;
     case "script":
     case "automation":
@@ -461,7 +532,7 @@ export const formatEntityState = (entity: HaEntity): string => {
     case "humidifier":
       return entity.state === "on" ? `Target ${formatNumber(attributes.targetHumidity)}%` : "Off";
     case "input_select":
-      return entity.state;
+      return formatOption(entity, entity.state);
     default:
       return stateLabels[entity.state] ?? entity.state;
   }

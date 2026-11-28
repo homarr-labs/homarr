@@ -1,0 +1,94 @@
+import { doGridPlacementsOverlap, findFreeGridSlot } from "@homarr/boards/grid";
+import type { GridPlacement } from "@homarr/boards/grid";
+
+import { SMART_HOME_CARD_MIN, SMART_HOME_LAYOUT_COLUMNS, SMART_HOME_LAYOUT_ROWS } from "./schema";
+import type { SmartHomeLayoutCard } from "./schema";
+
+// The control center insets the grid by 4px per side. Its optional title takes one 28px row.
+export const CUSTOM_LAYOUT_INSET = 8;
+export const getLayoutContentSize = (width: number, height: number, hasTitle: boolean) => ({
+  width: Math.max(1, width - CUSTOM_LAYOUT_INSET),
+  height: Math.max(1, height - CUSTOM_LAYOUT_INSET - (hasTitle ? 28 : 0)),
+});
+
+export const LAYOUT_ROW_HEIGHT = 32;
+export const LAYOUT_GAP = 8;
+// Reserve enough space for the title, card padding and a usable control in the shortest card.
+export const getMinimumRowHeight = (cards: readonly SmartHomeLayoutCard[]) =>
+  Math.max(1, ...cards.map((card) => ((card.title ? 72 : 48) + LAYOUT_GAP) / card.h - LAYOUT_GAP));
+
+const MIN_COLUMN_WIDTH = 6;
+const MIN_CARD_WIDTH = 140;
+
+// Below this a card cannot show even one slider or button; only then does the layout stack its cards. (The editor
+// previews the arrangement as designed, so a higher limit would stack layouts that looked fine there, e.g. a
+// 2-column card on a 500px widget.)
+const MIN_SHOWN_CARD_WIDTH = 48;
+
+/**
+ * Whether the widget is too narrow for the layout as designed. The editor previews the layout at the widget's own
+ * size, so the board keeps that arrangement unless one of its cards would become thinner than any control needs.
+ */
+export const needsStacking = (cards: readonly SmartHomeLayoutCard[], width: number) => {
+  const columnWidth = (width - LAYOUT_GAP * (SMART_HOME_LAYOUT_COLUMNS - 1)) / SMART_HOME_LAYOUT_COLUMNS;
+  return cards.some((card) => card.w * columnWidth + (card.w - 1) * LAYOUT_GAP < MIN_SHOWN_CARD_WIDTH);
+};
+
+/** Columns for a narrow widget that stacks its cards: as many as fit side by side at a readable card width. */
+export const getStackColumns = (width: number) =>
+  Math.min(SMART_HOME_LAYOUT_COLUMNS, Math.max(1, Math.floor((width + LAYOUT_GAP) / (MIN_CARD_WIDTH + LAYOUT_GAP))));
+
+/** Columns for the widget's actual width (not the viewport), at most the stored 12. */
+export const getLayoutColumns = (width: number) =>
+  Math.min(SMART_HOME_LAYOUT_COLUMNS, Math.max(1, Math.floor((width + LAYOUT_GAP) / (MIN_COLUMN_WIDTH + LAYOUT_GAP))));
+
+/**
+ * The arrangement for a widget narrower than 12 columns. Cards keep their reading order, widths scale with the
+ * column count and each card takes the first free slot from where the previous one went. Only computed, never
+ * stored, so making a widget smaller does not lose the layout for its full size.
+ */
+export const deriveLayout = (
+  cards: readonly SmartHomeLayoutCard[],
+  columns: number,
+  width = Number.POSITIVE_INFINITY,
+): GridPlacement[] => {
+  if (columns >= SMART_HOME_LAYOUT_COLUMNS) return cards.map(({ id, x, y, w, h }) => ({ id, x, y, w, h }));
+
+  const scale = columns / SMART_HOME_LAYOUT_COLUMNS;
+  const columnWidth = (width - LAYOUT_GAP * (columns - 1)) / columns;
+  // On a narrow widget a card never gets thinner than its content needs; it takes more columns instead.
+  const minColumns = Math.min(columns, Math.ceil((MIN_CARD_WIDTH + LAYOUT_GAP) / (columnWidth + LAYOUT_GAP)));
+  const placed: GridPlacement[] = [];
+  let cursor = 0;
+  for (const card of cards.toSorted((left, right) => left.y - right.y || left.x - right.x)) {
+    const w = Math.min(
+      columns,
+      Math.max(Math.min(SMART_HOME_CARD_MIN.w, columns), minColumns, Math.round(card.w * scale)),
+    );
+    let slot: GridPlacement | null = null;
+    for (let y = cursor; slot === null; y++) {
+      for (let x = 0; x <= columns - w; x++) {
+        const candidate = { id: card.id, x, y, w, h: card.h };
+        if (!placed.some((other) => doGridPlacementsOverlap(candidate, other))) {
+          slot = candidate;
+          break;
+        }
+      }
+    }
+    placed.push(slot);
+    cursor = slot.y;
+  }
+  return placed;
+};
+
+/**
+ * The first free spot inside the widget for a new card. When the wanted size no longer fits, the card gets smaller,
+ * down to the minimum card size; null when not even that fits.
+ */
+export const findFreeSlot = (cards: readonly GridPlacement[], w: number, h: number) =>
+  findFreeGridSlot(
+    cards,
+    { columns: SMART_HOME_LAYOUT_COLUMNS, rows: SMART_HOME_LAYOUT_ROWS },
+    { w, h },
+    SMART_HOME_CARD_MIN,
+  );

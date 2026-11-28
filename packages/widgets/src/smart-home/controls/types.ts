@@ -1,3 +1,5 @@
+import type { SmartHomeLayout, SmartHomeLayoutMode } from "./custom-layout/schema";
+
 export const haDomains = [
   "light",
   "switch",
@@ -94,6 +96,7 @@ export interface HaAttributes {
   mediaPositionUpdatedAt?: number;
   batteryLevel?: number;
   options?: string[];
+  optionLabels?: Record<string, string>;
   min?: number;
   max?: number;
   step?: number;
@@ -216,12 +219,15 @@ export interface SmartHomeConfiguration {
   readingOrder: SmartHomeReadingOrder;
   showDeviceGraph: boolean;
   showDeviceKeyValue: boolean;
+  layoutMode: SmartHomeLayoutMode;
+  customLayout: SmartHomeLayout;
   readOnly: boolean;
   advanced: boolean;
 }
 
 export interface SmartHomeOptionsPatch {
   blocks?: string[];
+  customLayout?: SmartHomeLayout;
   excludedEntityIds?: string[];
   presentation?: SmartHomePresentation;
 }

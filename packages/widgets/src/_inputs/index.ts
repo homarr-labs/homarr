@@ -25,10 +25,12 @@ import { WidgetIntegrationMultiSelectInput } from "./widget-integration-multi-se
 import { WidgetInternalInput } from "./widget-internal-input";
 
 import { WidgetStatsEntriesInput } from "./widget-stats-entries-input";
+import { WidgetSmartHomeLayoutInput } from "./widget-smart-home-layout-input";
 import { WidgetMetricGraphEntriesInput } from "./widget-metric-graph-entries-input";
 
 const mapping = {
   statsEntries: WidgetStatsEntriesInput,
+  smartHomeLayout: WidgetSmartHomeLayoutInput,
   metricGraphEntries: WidgetMetricGraphEntriesInput,
   internal: WidgetInternalInput,
   anchorNote: WidgetAnchorNoteInput,

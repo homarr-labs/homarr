@@ -502,7 +502,7 @@ const toPositiveInteger = (value: number, name: string) => {
   return value;
 };
 
-const validateGridState = <TPlacement extends GridPlacement>(state: TransactionalGridState<TPlacement>) => {
+export const validateGridState = <TPlacement extends GridPlacement>(state: TransactionalGridState<TPlacement>) => {
   const gridIds = new Set<string>();
   const placementIds = new Set<string>();
   const ownerIds = new Set<string>();

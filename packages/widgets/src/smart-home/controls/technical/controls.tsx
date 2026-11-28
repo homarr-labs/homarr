@@ -16,7 +16,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { formatNumber, getPrimaryAction, getStateColor } from "../semantics";
+import { formatNumber, formatOption, getPrimaryAction, getStateColor } from "../semantics";
 import type { HaAction, HaEntity } from "../types";
 import { needsCode, useEntityDetailOpener } from "../control-center/details";
 import classes from "./styles.module.css";
@@ -399,7 +399,7 @@ export function SelectControl({ entity, run }: Pick<ControlProps, "entity" | "ru
     >
       {(entity.attributes.options ?? []).map((option) => (
         <option key={option} value={option}>
-          {option}
+          {formatOption(entity, option)}
         </option>
       ))}
     </select>

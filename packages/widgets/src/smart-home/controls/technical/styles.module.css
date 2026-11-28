@@ -1,10 +1,11 @@
+/* The same theme colors as the device cards (control center `.root`), so the list follows the board theme. */
 .root {
-  --secondary-ink: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
-  --hairline: light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.08));
-  --hover: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
-  --surface: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
-  --surface-strong: light-dark(rgba(255, 255, 255, 0.85), rgba(30, 31, 35, 0.8));
-  --control-bg: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+  --secondary-ink: var(--mantine-color-dimmed);
+  --hairline: rgb(from var(--mantine-color-default-border) r g b / 0.6);
+  --hover: color-mix(in srgb, var(--mantine-color-text) 5%, transparent);
+  --surface: color-mix(in srgb, var(--mantine-color-text) 5%, transparent);
+  --surface-strong: rgb(from var(--mantine-color-body) r g b / 0.85);
+  --control-bg: color-mix(in srgb, var(--mantine-color-text) 10%, transparent);
   position: relative;
   display: flex;
   flex-direction: column;

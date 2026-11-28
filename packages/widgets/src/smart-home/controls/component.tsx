@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Box, Button, Group, Loader, Pagination } from "@mantine/core";
 import { IconAlertTriangle, IconBulb, IconGauge, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
@@ -11,7 +11,9 @@ import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../../definition";
-import { parseBlockId, parseSourceBlocks } from "./configuration";
+import { createEntityBlockId, parseBlockId, parseSourceBlocks } from "./configuration";
+import { CustomLayoutEditButton } from "./custom-layout/inline-button";
+import { getLayoutEntityIds, getLayoutGraphEntityIds, parseSmartHomeLayout } from "./custom-layout/schema";
 import classes from "./configuration.module.css";
 import { getDeviceEntityLabel, getReadingRank, toPanelItems } from "./device-groups";
 import type { DevicePanelItem, PanelItem } from "./device-groups";
@@ -36,7 +38,9 @@ import { ControlListRoot } from "./technical/root";
 import { EntityRow } from "./technical/row";
 import technicalClasses from "./technical/styles.module.css";
 import { EntityTile, StatCells } from "./technical/tile";
-import { DetailProvider, EntityControl, EntityDetail, PaletteProvider } from "./control-center/details";
+import { EntityDetailProvider, EntityControl, PaletteProvider } from "./control-center/details";
+import { CUSTOM_LAYOUT_INSET, getLayoutContentSize } from "./custom-layout/responsive";
+import { Measured } from "./control-center/hooks";
 import { DeviceControl } from "./control-center/device-control";
 import controlCenterClasses from "./control-center/styles.module.css";
 
@@ -526,17 +530,22 @@ function ControlPanelPresentation({ entities, configuration, width, height }: Pr
     return <EntitiesPresentation entities={entities} configuration={configuration} width={width} height={height} />;
   }
 
+  // Cards always fill the panel, so the space they leave never ends up as a wider margin than a single card has.
+  // Compact cards stay compact through their density and because more of them fit side by side.
   return (
     <Box
       className={classes.grid}
       style={{
-        gridTemplateColumns: `repeat(${layout.columns}, ${layout.width}px)`,
-        gridTemplateRows: `repeat(${layout.rows}, ${layout.height}px)`,
+        gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
       }}
     >
       {shown.map((item) => (
         <div key={item.id} className={classes.cell}>
-          <PanelItemControl item={item} width={layout.width} height={layout.height} compact={compactDevices} />
+          {/* Cells stretch to fill the panel; the control lays itself out for the size it really gets. */}
+          <Measured>
+            {(width, height) => <PanelItemControl item={item} width={width} height={height} compact={compactDevices} />}
+          </Measured>
         </div>
       ))}
       {overflowing && <div className={classes.overflowCell}>{navigation}</div>}
@@ -552,29 +561,23 @@ function ControlPanelRoot({
 }: {
   isEditMode: boolean;
   single: boolean;
-  palette: SmartHomeControlPalette;
+  /** Null when the content sets its own palette (custom layout cards). */
+  palette: SmartHomeControlPalette | null;
   children: ReactNode;
 }) {
-  const [detailId, setDetailId] = useState<string | null>(null);
-  const detail = useMemo(() => {
-    if (isEditMode) return null;
-    return { open: setDetailId };
-  }, [isEditMode]);
-
   return (
-    <PaletteProvider value={palette}>
-      <DetailProvider value={detail}>
+    <PaletteProvider value={palette ?? "boring"}>
+      <EntityDetailProvider disabled={isEditMode}>
         <div
           className={controlCenterClasses.root}
           data-edit={isEditMode}
           data-preset={single ? "entity" : undefined}
-          data-palette={palette}
+          data-palette={palette ?? undefined}
           inert={isEditMode}
         >
           {children}
         </div>
-        <EntityDetail entityId={detail && detailId} onClose={() => setDetailId(null)} onOpen={setDetailId} />
-      </DetailProvider>
+      </EntityDetailProvider>
     </PaletteProvider>
   );
 }
@@ -625,9 +628,9 @@ function ConfiguredPreview({ configuration, width, height, isEditMode }: Preview
   const title = configuration.title.trim();
   const single = entities.length === 1;
   const panel = configuration.presentation === "controlPanel";
-  const inset = panel && !single ? 8 : 0;
-  const bodyHeight = height - inset - Number(Boolean(title)) * TITLE_HEIGHT;
-  const props = { entities, configuration, width: width - inset, height: Math.max(0, bodyHeight) };
+  // One card or several, the panel keeps the same inset to the widget's edge: the root's padding, nothing more.
+  const bodyHeight = height - Number(Boolean(title)) * TITLE_HEIGHT;
+  const props = { entities, configuration, width, height: Math.max(0, bodyHeight) };
   const content = (
     <div className={classes.stack}>
       {title && (
@@ -664,14 +667,63 @@ const useInteractionBlock = (configuration: SmartHomeConfiguration, isEditMode: 
   return null;
 };
 
+// Only widgets in custom mode load the layout renderer.
+const CustomLayoutView = lazy(() => import("./custom-layout/view"));
+const noValues: string[] = [];
+
+function CustomPreview({ configuration, width, height, isEditMode }: PreviewProps) {
+  const title = configuration.title.trim();
+  return (
+    // Each card picks its own colors, so the widget sets none.
+    <ControlPanelRoot isEditMode={isEditMode} single={false} palette={null}>
+      <div className={classes.stack} style={{ height: Math.max(0, height - CUSTOM_LAYOUT_INSET) }}>
+        {title && (
+          <h3 className={classes.title} title={title}>
+            {title}
+          </h3>
+        )}
+        <div className={classes.content}>
+          <Suspense fallback={null}>
+            <CustomLayoutView
+              layout={configuration.customLayout}
+              source={configuration.integrationId}
+              width={width - CUSTOM_LAYOUT_INSET}
+            />
+          </Suspense>
+        </div>
+      </div>
+    </ControlPanelRoot>
+  );
+}
+
 function ConfigurableContent({
   configuration,
   onChange,
   ...props
 }: PreviewProps & { onChange: (patch: SmartHomeOptionsPatch) => void }) {
   const blocked = useInteractionBlock(configuration, props.isEditMode);
-  const { integrationId } = configuration;
-  const preview = <ConfiguredPreview {...props} configuration={configuration} />;
+  const { integrationId, customLayout } = configuration;
+  const custom = configuration.layoutMode === "custom";
+  // A custom layout subscribes to exactly the entities its cards show, each once, and to history only for its graphs.
+  const shownCards = customLayout.cards;
+  const layoutBlockIds = useMemo(
+    () =>
+      custom
+        ? getLayoutEntityIds(customLayout, integrationId, shownCards).map((entityId) =>
+            createEntityBlockId(entityId, integrationId),
+          )
+        : null,
+    [custom, customLayout, integrationId, shownCards],
+  );
+  const graphEntityIds = useMemo(
+    () => (custom ? getLayoutGraphEntityIds(customLayout, integrationId, shownCards) : undefined),
+    [custom, customLayout, integrationId, shownCards],
+  );
+  const preview = custom ? (
+    <CustomPreview {...props} configuration={configuration} />
+  ) : (
+    <ConfiguredPreview {...props} configuration={configuration} />
+  );
 
   return (
     <SmartHomeInteractionProvider blocked={blocked}>
@@ -680,14 +732,24 @@ function ConfigurableContent({
           <SmartHomeLiveProvider
             key={integrationId}
             integrationId={integrationId}
-            blockIds={configuration.blockIds}
-            roomDomains={configuration.roomDomains}
-            excludedEntityIds={configuration.excludedEntityIds}
+            blockIds={layoutBlockIds ?? configuration.blockIds}
+            roomDomains={custom ? noValues : configuration.roomDomains}
+            excludedEntityIds={custom ? noValues : configuration.excludedEntityIds}
+            historyEntityIds={graphEntityIds}
           >
             <LiveState>{preview}</LiveState>
           </SmartHomeLiveProvider>
         )}
-        {props.isEditMode && (
+        {props.isEditMode && custom && (
+          <CustomLayoutEditButton
+            integrationId={integrationId}
+            // Same size the custom view gets: inside the control center root, below the optional title.
+            previewSize={getLayoutContentSize(props.width, props.height, Boolean(configuration.title.trim()))}
+            layout={customLayout}
+            onChange={(next) => onChange({ customLayout: next })}
+          />
+        )}
+        {props.isEditMode && !custom && (
           <SmartHomeInlineEditor
             integrationId={integrationId}
             blocks={configuration.blockIds}
@@ -714,6 +776,8 @@ export default function SmartHomeControlsWidget({
   const advanced = displayMode === "advanced";
   const uiScale = advanced ? 1 : calculateBoardUiScale(displayScale);
   const integrationId = integrationIds[0] ?? null;
+  // Parsed once per stored value, so live updates never re-validate the layout.
+  const customLayout = useMemo(() => parseSmartHomeLayout(options.customLayout), [options.customLayout]);
   const configuration = useMemo<SmartHomeConfiguration>(
     () => ({
       advanced,
@@ -730,6 +794,8 @@ export default function SmartHomeControlsWidget({
       readingOrder: options.readingOrder,
       showDeviceGraph: options.showDeviceGraph,
       showDeviceKeyValue: options.showDeviceKeyValue,
+      layoutMode: options.layoutMode,
+      customLayout,
       readOnly: options.readOnly,
     }),
     [
@@ -747,6 +813,8 @@ export default function SmartHomeControlsWidget({
       options.readingOrder,
       options.showDeviceGraph,
       options.showDeviceKeyValue,
+      options.layoutMode,
+      customLayout,
       options.readOnly,
     ],
   );

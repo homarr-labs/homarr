@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { splitToChunksWithNItems } from "@homarr/common";
 import { applySmartHomeAction, supportsSmartHomeAction } from "@homarr/integrations/types";
 import type {
   SmartHomeAction,
@@ -87,6 +88,7 @@ const toAttributes = (domain: string, attributes: SmartHomeEntityAttributes): Ha
   mediaPositionUpdatedAt: attributes.mediaPositionUpdatedAt,
   batteryLevel: attributes.batteryLevel,
   options: attributes.options,
+  optionLabels: attributes.optionLabels,
   min: attributes.min,
   max: attributes.max,
   step: attributes.step,
@@ -958,26 +960,35 @@ interface LiveSnapshotProps {
   integrationId: string;
   selection: LiveSelection;
   source: LiveSmartHomeSource;
+  historyEntityIds?: readonly string[];
   children: ReactNode;
 }
 
-function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapshotProps) {
+function LiveSnapshot({ integrationId, selection, source, historyEntityIds, children }: LiveSnapshotProps) {
   const t = useI18n("widget.smartHome-controls.live");
   const utils = clientApi.useUtils();
   const { mutateAsync } = clientApi.widget.smartHome.executeAction.useMutation();
   const { mutateAsync: mutateProtectedAsync, reset: resetProtected } =
     clientApi.widget.smartHome.executeProtectedAction.useMutation({ gcTime: 0 });
   const snapshot = useSmartHomeSnapshot(integrationId, selection, { live: true });
-  const historyKey = (snapshot.data?.entities ?? [])
-    .filter(isHistoryCandidate)
-    .map((entity) => entity.id)
-    .toSorted()
-    .slice(0, HISTORY_LIMIT)
-    .join(",");
-  const historyIds = useMemo(() => historyKey.split(",").filter(Boolean), [historyKey]);
-  const history = clientApi.widget.smartHome.history.useQuery(
-    { integrationId, entityIds: historyIds, hours: 24, samples: 32 },
-    { enabled: historyIds.length > 0, staleTime: 300_000, refetchInterval: 300_000, refetchOnWindowFocus: false },
+  // Without an explicit list every measured sensor gets a trend; a custom layout asks only for its graphs.
+  const loaded = snapshot.data?.entities ?? [];
+  const loadedIds = new Set(loaded.map((entity) => entity.id));
+  const historyIds = historyEntityIds
+    ? historyEntityIds.filter((id) => loadedIds.has(id))
+    : loaded
+        .filter(isHistoryCandidate)
+        .slice(0, HISTORY_LIMIT)
+        .map((entity) => entity.id);
+  const history = clientApi.useQueries(
+    (api) =>
+      splitToChunksWithNItems(historyIds.toSorted(), HISTORY_LIMIT).map((entityIds) =>
+        api.widget.smartHome.history(
+          { integrationId, entityIds, hours: 24, samples: 32 },
+          { staleTime: 300_000, refetchInterval: 300_000, refetchOnWindowFocus: false },
+        ),
+      ),
+    { combine: (queries) => queries.flatMap((query) => query.data ?? []) },
   );
 
   useEffect(() => {
@@ -1006,8 +1017,8 @@ function LiveSnapshot({ integrationId, selection, source, children }: LiveSnapsh
   }, [snapshot.data, source]);
 
   useEffect(() => {
-    source.setHistory(history.data ?? []);
-  }, [history.data, source]);
+    source.setHistory(history);
+  }, [history, source]);
 
   let status: SmartHomeLiveStatus["status"] = "loading";
   let message: string | undefined;
@@ -1047,6 +1058,8 @@ interface SmartHomeLiveProviderProps {
   blockIds: readonly string[];
   roomDomains: readonly string[];
   excludedEntityIds: readonly string[];
+  /** Limits history to these entities; omitted, every measured sensor gets history. */
+  historyEntityIds?: readonly string[];
   children: ReactNode;
 }
 
@@ -1055,6 +1068,7 @@ export function SmartHomeLiveProvider({
   blockIds,
   roomDomains,
   excludedEntityIds,
+  historyEntityIds,
   children,
 }: SmartHomeLiveProviderProps) {
   const t = useI18n("widget.smartHome-controls.live");
@@ -1096,7 +1110,12 @@ export function SmartHomeLiveProvider({
     <IntegrationIdContext.Provider value={integrationId}>
       <SmartHomeSourceProvider source={source}>
         {hasSelection && selection && (
-          <LiveSnapshot integrationId={integrationId} selection={selection} source={source}>
+          <LiveSnapshot
+            integrationId={integrationId}
+            selection={selection}
+            source={source}
+            historyEntityIds={historyEntityIds}
+          >
             {children}
           </LiveSnapshot>
         )}
