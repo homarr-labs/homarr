@@ -1,8 +1,9 @@
 // Prevent flash of white background when color scheme is "auto" and OS prefers dark.
 // CSS media queries are evaluated synchronously during the browser's initial paint,
 // before any JavaScript executes, so this eliminates the white→dark flicker.
+// Keep these colours equal to pwaPageBackground in theme/pwa-chrome.ts.
 html[data-mantine-color-scheme="auto"] {
-  background-color: #fff;
+  background-color: #f8f9fa;
 }
 
 @media (prefers-color-scheme: dark) {

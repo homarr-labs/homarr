@@ -14,6 +14,7 @@ import { useSettings } from "@homarr/settings";
 import type { ServerSettings } from "@homarr/server-settings";
 
 import { createAppearanceTheme } from "~/theme/branding";
+import { PwaThemeColorSync } from "~/theme/pwa-theme-color-sync";
 import { previewColorSchemeManager, useThemePreview } from "~/components/theme/theme-preview-context";
 
 export const CustomMantineProvider = ({
@@ -38,6 +39,7 @@ export const CustomMantineProvider = ({
         theme={theme}
         cssVariablesResolver={cssVariablesResolver}
       >
+        <PwaThemeColorSync />
         {children}
       </MantineProvider>
     </DirectionProvider>

@@ -1,5 +1,7 @@
 .header {
   overflow: hidden;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header[data-visible="false"] {
@@ -18,7 +20,8 @@
   gap: var(--mantine-spacing-sm);
   width: 100%;
   height: 100%;
-  padding-inline: var(--mantine-spacing-md);
+  padding-inline-start: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-start));
+  padding-inline-end: max(var(--mantine-spacing-md), var(--homarr-safe-area-inline-end));
 }
 
 .zone {
@@ -85,7 +88,8 @@
   gap: var(--mantine-spacing-xs);
   width: 100%;
   height: 100%;
-  padding-inline: var(--mantine-spacing-xs);
+  padding-inline-start: max(var(--mantine-spacing-xs), var(--homarr-safe-area-inline-start));
+  padding-inline-end: max(var(--mantine-spacing-xs), var(--homarr-safe-area-inline-end));
 }
 
 .mobileZone {

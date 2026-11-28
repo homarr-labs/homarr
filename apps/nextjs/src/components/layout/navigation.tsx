@@ -6,6 +6,8 @@ import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
 
+import classes from "./navigation.module.css";
+
 interface MainNavigationProps {
   headerSection?: JSX.Element;
   footerSection?: JSX.Element;
@@ -15,7 +17,7 @@ interface MainNavigationProps {
 
 export const MainNavigation = ({ headerSection, footerSection, afterLinks, links }: MainNavigationProps) => {
   return (
-    <AppShellNavbar p="md">
+    <AppShellNavbar className={classes.navbar}>
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
       <AppShellSection
         grow

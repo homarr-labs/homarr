@@ -1,4 +1,5 @@
-import { getBrandingAppearance, getThemeCustomCss } from "~/theme/branding";
+import { getThemeCustomCss } from "~/theme/branding";
+import { pwaPageBackground, pwaViewportThemeColor } from "~/theme/pwa-chrome";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 
@@ -11,6 +12,7 @@ import "flag-icons/css/flag-icons.min.css";
 import "mantine-datatable/styles.css";
 import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
+import "~/styles/safe-area.scss";
 
 import { notFound } from "next/navigation";
 import { ColorSchemeScript } from "@mantine/core";
@@ -96,8 +98,10 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 export const generateViewport = async (): Promise<Viewport> => {
-  const serverSettings = await getRscServerSettingsAsync();
-  return { themeColor: getBrandingAppearance(serverSettings.branding).primaryColor };
+  const colorScheme = await getCurrentColorSchemeAsync();
+  // A fixed app scheme must win over the system preference, or the chrome would not match the page background.
+  const themeColor = colorScheme === "auto" ? [...pwaViewportThemeColor] : pwaPageBackground[colorScheme];
+  return { themeColor, viewportFit: "cover" };
 };
 
 export default async function Layout(props: {
@@ -193,7 +197,12 @@ export default async function Layout(props: {
       dir={direction}
       className={[fontSans.variable, fontGeist.variable, fontGeistMono.variable].join(" ")}
       style={{
-        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
+        backgroundColor:
+          colorScheme === "dark"
+            ? pwaPageBackground.dark
+            : colorScheme === "auto"
+              ? undefined
+              : pwaPageBackground.light,
       }}
       suppressHydrationWarning
     >

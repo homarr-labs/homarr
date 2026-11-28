@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 
-import { getBrandingAppearance } from "~/theme/branding";
+import { pwaManifestChromeColor } from "~/theme/pwa-chrome";
 
 export const dynamic = "force-dynamic";
 
@@ -54,8 +54,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     description: "Your dashboard for managing your server.",
     start_url: "/",
     display: "standalone",
-    background_color: "#fff",
-    theme_color: getBrandingAppearance(branding).primaryColor,
+    background_color: pwaManifestChromeColor(serverSettings.appearance.defaultColorScheme),
+    theme_color: pwaManifestChromeColor(serverSettings.appearance.defaultColorScheme),
     icons,
   };
 }
