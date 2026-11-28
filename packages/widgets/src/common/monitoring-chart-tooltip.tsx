@@ -57,24 +57,24 @@ const MonitoringTooltipContent = ({ active, label, payload, formatter, showTotal
   const total = sorted.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className={classes.tooltip}>
-      <div className={classes.tooltipHeader}>{tooltipLabel}</div>
-      <div className={classes.tooltipRows}>
+    <output className={classes.tooltip} aria-atomic="true">
+      <span className={classes.tooltipHeader}>{tooltipLabel}</span>
+      <span className={classes.tooltipRows}>
         {sorted.map((item) => (
-          <div key={item.dataKey} className={classes.tooltipRow}>
-            <div className={classes.tooltipIndicator} style={{ background: item.color }} />
+          <span key={item.dataKey} className={classes.tooltipRow}>
+            <span className={classes.tooltipIndicator} style={{ background: item.color }} />
             <span className={classes.tooltipName}>{item.name}</span>
             <span className={classes.tooltipValue}>{formatter(item.value)}</span>
-          </div>
+          </span>
         ))}
         {showTotal && (
-          <div className={classes.tooltipTotal}>
+          <span className={classes.tooltipTotal}>
             <span className={classes.tooltipName}>{t("total")}</span>
             <span className={classes.tooltipValue}>{formatter(total)}</span>
-          </div>
+          </span>
         )}
-      </div>
-    </div>
+      </span>
+    </output>
   );
 };
 

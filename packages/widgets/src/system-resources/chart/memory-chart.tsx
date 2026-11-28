@@ -13,8 +13,8 @@ export const SystemResourceMemoryChart = ({
   labelDisplayMode,
   advanced = false,
 }: {
-  memoryUsageOverTime: number[];
-  totalCapacityInBytes: number;
+  memoryUsageOverTime: (number | null)[];
+  totalCapacityInBytes: number | null;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
@@ -26,16 +26,18 @@ export const SystemResourceMemoryChart = ({
   const t = useI18n("widget.systemResources.card");
   const { formatBytesPair } = useByteFormatter();
 
-  const percentageUsed =
-    memoryUsageOverTime.length > 0 && totalCapacityInBytes > 0
-      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        memoryUsageOverTime[memoryUsageOverTime.length - 1]! / totalCapacityInBytes
-      : undefined;
-
+  const latest = memoryUsageOverTime.at(-1);
+  let percentageUsed;
+  let capacityDomain: [number, number] | undefined;
+  if (totalCapacityInBytes !== null && totalCapacityInBytes > 0) {
+    capacityDomain = [0, totalCapacityInBytes];
+    if (latest != null) percentageUsed = latest / totalCapacityInBytes;
+  }
   const tooltipLabel = (index: number) => {
-    const used = memoryUsageOverTime[index] ?? 0;
+    const used = memoryUsageOverTime[index];
+    if (used == null || totalCapacityInBytes === null || totalCapacityInBytes <= 0) return undefined;
     const memory = formatBytesPair(Math.round(used), totalCapacityInBytes);
-    const percent = totalCapacityInBytes > 0 ? Math.round((used / totalCapacityInBytes) * 100) : 0;
+    const percent = Math.round((used / totalCapacityInBytes) * 100);
     return t("memoryTooltip", {
       used: memory.used,
       available: memory.total,
@@ -51,7 +53,7 @@ export const SystemResourceMemoryChart = ({
       icon={IconBrain}
       labelDisplayMode={labelDisplayMode}
       advanced={advanced}
-      yDomain={[0, totalCapacityInBytes]}
+      yDomain={capacityDomain}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
       chartType={hasShadow ? "area" : "line"}
       tooltipLabel={tooltipLabel}

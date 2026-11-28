@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { Box, Group, Modal, Text } from "@mantine/core";
 
 import { getIntegrationName } from "@homarr/definitions";
@@ -9,16 +10,20 @@ import { useI18n } from "@homarr/translation/client";
 import { useWidgetNow } from "../common/use-widget-now";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { HealthOptions } from "./display";
-import { isStaleReading } from "./display";
+import { isStaleReading, needsAttention } from "./display";
 import { projectHealthSystem } from "./model";
 import type { HealthSystem } from "./model";
-import { SystemDetail } from "./system-detail";
-import { SystemAdvanced } from "./system-advanced";
 import { SystemFleet } from "./system-fleet";
 import { SystemTile } from "./system-tile";
 import { useHealthBounds } from "./use-health-bounds";
 import classes from "./system-view.module.css";
 import healthClasses from "./health-monitoring.module.css";
+
+const SystemHistoryComparison = dynamic(() =>
+  import("./system-advanced").then((module) => module.SystemHistoryComparison),
+);
+const SystemDetail = dynamic(() => import("./system-detail").then((module) => module.SystemDetail));
+const SystemAdvanced = dynamic(() => import("./system-advanced").then((module) => module.SystemAdvanced));
 
 export interface SystemHealthViewProps {
   systems: HealthSystem[];
@@ -48,10 +53,30 @@ export function SystemHealthView({
   const [dialogId, setDialogId] = useState<string | null>(null);
   const [dialogHeight, setDialogHeight] = useState(760);
   const modalBounds = useHealthBounds();
-  const snapshots = useMemo(
-    () => systems.map((system) => projectHealthSystem(system, options.visibleStorageVolumes)),
-    [systems, options.visibleStorageVolumes],
+  const { visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold, systemSort } = options;
+  const projected = useMemo(
+    () =>
+      systems.map((system) =>
+        projectHealthSystem(system, visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold),
+      ),
+    [systems, visibleStorageVolumes, cpuThreshold, memoryThreshold, storageThreshold],
   );
+  const snapshots = useMemo(() => {
+    if (systemSort === "configured") return projected;
+    return projected.toSorted((left, right) => {
+      if (systemSort === "name") return left.system.name.localeCompare(right.system.name);
+      if (systemSort === "provider") {
+        return (
+          getIntegrationName(left.system.kind).localeCompare(getIntegrationName(right.system.kind)) ||
+          left.system.name.localeCompare(right.system.name)
+        );
+      }
+      if (systemSort === "cpu") return (right.cpuPercent ?? -1) - (left.cpuPercent ?? -1);
+      if (systemSort === "memory") return (right.memory?.percent ?? -1) - (left.memory?.percent ?? -1);
+      if (systemSort === "storage") return (right.fullestVolume?.percent ?? -1) - (left.fullestVolume?.percent ?? -1);
+      return Number(needsAttention(right, now)) - Number(needsAttention(left, now));
+    });
+  }, [projected, systemSort, now]);
   const selected = snapshots.find((snapshot) => snapshot.system.id === selectedId) ?? snapshots[0];
   const dialog = snapshots.find((snapshot) => snapshot.system.id === dialogId);
   let dialogSize = 1100;
@@ -76,7 +101,13 @@ export function SystemHealthView({
       onPreferences={onPreferences}
     />
   );
-  if (snapshots.length === 1 && !advanced)
+  if (
+    snapshots.length === 1 &&
+    !advanced &&
+    options.presentation !== "list" &&
+    options.presentation !== "history" &&
+    options.healthFilter !== "attention"
+  )
     content = (
       <SystemTile
         snapshot={selected}
@@ -85,10 +116,30 @@ export function SystemHealthView({
         options={options}
         isEditMode={isEditMode}
         onInspect={() => inspect(selected.system.id)}
-        stale={isStaleReading(selected.system.updatedAt, now)}
+        stale={isStaleReading(selected.system.updatedAt, now, selected.system.refreshInterval)}
         standalone
       />
     );
+  if (!advanced && options.presentation === "history" && width >= 290 && height >= 210) {
+    let chartSystems = snapshots;
+    if (options.healthFilter === "attention")
+      chartSystems = snapshots.filter((snapshot) => needsAttention(snapshot, now));
+    if (chartSystems.length > 0) {
+      content = (
+        <Box p={8} h="100%" miw={0} style={{ overflowY: "auto" }}>
+          <SystemHistoryComparison
+            snapshots={chartSystems}
+            width={width - 16}
+            height={height - 16}
+            options={options}
+            isEditMode={isEditMode}
+            onInspect={inspect}
+            onPreferences={onPreferences}
+          />
+        </Box>
+      );
+    }
+  }
   if (advanced)
     content = (
       <SystemAdvanced

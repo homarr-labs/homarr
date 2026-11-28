@@ -16,6 +16,7 @@ export function useHealthHistory(
   results: Results,
   observedAt: number,
   widgetStateRef: WidgetComponentProps<"healthMonitoring">["widgetStateRef"],
+  refreshInterval: number,
 ) {
   const [histories, setHistories] = useState<Histories>(() => {
     const previous = widgetStateRef?.current?.healthMonitoringHistory;
@@ -34,9 +35,15 @@ export function useHealthHistory(
       let timestamp = observedAt;
       if (result.updatedAt) timestamp = new Date(result.updatedAt).getTime();
       if (!Number.isFinite(timestamp) || timestamp <= 0) continue;
+      const history = stored[result.integrationId] ?? [];
+      if ((history.at(-1)?.time ?? 0) >= timestamp) {
+        next[result.integrationId] = history;
+        continue;
+      }
       next[result.integrationId] = appendHealthSample(
-        stored[result.integrationId] ?? [],
+        history,
         createHealthSample(timestamp, result.healthInfo),
+        refreshInterval,
       );
     }
     const changed =
@@ -48,7 +55,7 @@ export function useHealthHistory(
       widgetStateRef.current.healthMonitoringHistory = next;
     }
     setHistories(next);
-  }, [results, observedAt, widgetStateRef, histories]);
+  }, [results, observedAt, widgetStateRef, histories, refreshInterval]);
 
   return histories;
 }

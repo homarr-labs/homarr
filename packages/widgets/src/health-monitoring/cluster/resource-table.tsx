@@ -14,7 +14,7 @@ import { thresholdColor } from "../../beszel/_shared/colors";
 import { formatPercent, formatUptime } from "../../beszel/_shared/format";
 import type { WidgetComponentProps } from "../../definition";
 import { ResourceDetails } from "./resource-details";
-import { resourcePercentage } from "./resource-data";
+import { resourceCapacity, resourcePercentage } from "./resource-data";
 export { resourcePercentage } from "./resource-data";
 import classes from "./resource.module.css";
 import healthMonitoringClasses from "../health-monitoring.module.css";
@@ -81,6 +81,18 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
     if (metric === "memory") return t("memory");
     return t("storage");
   };
+  function describeResource(resource: Resource, visibleMetrics: Metric[]) {
+    const readings = [resource.status];
+    if (resource.type !== "node") readings.push(resource.node);
+    for (const metric of visibleMetrics) {
+      const value = resourcePercentage(resource, metric);
+      let reading = t("unavailable");
+      if (value !== null) reading = formatPercent(value);
+      readings.push(metricLabel(metric) + " " + reading);
+    }
+    if (showUptime) readings.push(t("uptime") + " " + uptimeLabel(resource));
+    return readings.join(", ");
+  }
   return (
     <Stack gap={0} h="100%" miw={0} mih={0} style={{ overflow: "hidden" }}>
       {!narrow && !micro && (
@@ -107,15 +119,22 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
             miw={0}
             disabled={isEditMode}
             aria-label={t("inspectResource", { name: first.name })}
+            aria-description={describeResource(first, metrics.slice(0, microMetricCount))}
+            aria-haspopup="dialog"
             onClick={(event) => {
               event.stopPropagation();
               setSelectedId(first.id);
             }}
           >
             <Stack gap={4} miw={0}>
-              <Text size="xs" fw={600} truncate>
-                {first.name}
-              </Text>
+              <Group gap={4} wrap="nowrap" miw={0}>
+                <Text size="xs" fw={600} truncate>
+                  {first.name}
+                </Text>
+                <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+                  {first.status}
+                </Text>
+              </Group>
               {height >= 50 && metrics.length > 0 && (
                 <Group gap={10} wrap="nowrap">
                   {metrics.slice(0, microMetricCount).map((metric) => (
@@ -165,22 +184,11 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
               const value = resourcePercentage(resource, metric);
               let context: string | undefined;
               if (width >= 900 && value !== null && metric !== "cpu") {
-                let used = 0;
-                let total = 0;
-                if (metric === "memory" && resource.type !== "storage") {
-                  used = resource.memory.used;
-                  total = resource.memory.total;
+                const size = resourceCapacity(resource, metric);
+                if (size) {
+                  const bytes = formatBytesPair(size.used, size.total);
+                  context = bytes.used + " / " + bytes.total;
                 }
-                if (metric === "storage" && resource.type === "storage") {
-                  used = resource.used;
-                  total = resource.total;
-                }
-                if (metric === "storage" && resource.type !== "storage") {
-                  used = resource.storage.used;
-                  total = resource.storage.total;
-                }
-                const bytes = formatBytesPair(used, total);
-                context = bytes.used + " / " + bytes.total;
               }
               return (
                 <PercentCell key={metric} value={value} context={context} label={metricLabel(metric)} narrow={narrow} />
@@ -192,6 +200,8 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
                 className={classes.resource}
                 disabled={isEditMode}
                 aria-label={t("inspectResource", { name: resource.name })}
+                aria-description={describeResource(resource, metrics)}
+                aria-haspopup="dialog"
                 w="100%"
                 h={rowHeight}
                 onClick={(event) => {
@@ -215,9 +225,16 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
                       aria-hidden
                     />
                     <Stack gap={1} miw={0}>
-                      <Text size="xs" fw={650} truncate>
-                        {resource.name}
-                      </Text>
+                      <Group gap={4} wrap="nowrap" miw={0}>
+                        <Text size="xs" fw={650} truncate>
+                          {resource.name}
+                        </Text>
+                        {dense && (
+                          <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+                            {resource.status}
+                          </Text>
+                        )}
+                      </Group>
                       {!dense && (
                         <Text size="xs" c="dimmed" truncate>
                           {resource.status}
@@ -334,7 +351,13 @@ function PercentCell({
 }
 
 function uptimeLabel(resource: Resource) {
-  if (resource.type === "storage" || !resource.isRunning || !Number.isFinite(resource.uptime) || resource.uptime < 0)
+  if (
+    resource.type === "storage" ||
+    !resource.isRunning ||
+    resource.uptime === null ||
+    !Number.isFinite(resource.uptime) ||
+    resource.uptime < 0
+  )
     return "—";
   return formatUptime(resource.uptime);
 }

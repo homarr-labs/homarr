@@ -3,23 +3,23 @@ import type { LxcResource, NodeResource, QemuResource, StorageResource } from ".
 export interface SystemHealthMonitoring {
   version: string;
   cpuModelName: string;
-  cpuUtilization: number;
+  cpuUtilization: number | null;
   /** Usage per logical CPU, when the integration provides it. */
   cpuCores?: { id: number; utilization: number }[];
-  memUsedInBytes: number;
-  memAvailableInBytes: number;
-  uptime: number;
+  memUsedInBytes: number | null;
+  memAvailableInBytes: number | null;
+  uptime: number | null;
   network: {
     up: number;
     down: number;
   } | null;
   loadAverage: {
-    "1min": number;
-    "5min": number;
-    "15min": number;
+    "1min": number | null;
+    "5min": number | null;
+    "15min": number | null;
   } | null;
-  rebootRequired: boolean;
-  availablePkgUpdates: number;
+  rebootRequired: boolean | null;
+  availablePkgUpdates: number | null;
   cpuTemp: number | undefined;
   fileSystem: {
     deviceName: string;
@@ -33,7 +33,7 @@ export interface SystemHealthMonitoring {
     deviceName: string;
     temperature: number | null;
     overallStatus: string;
-    healthy: boolean;
+    healthy: boolean | null;
     // What the health verdict is based on, shown in the widget's status tooltip.
     statusReason?:
       | { type: "attributesWithinThresholds" }
@@ -44,8 +44,8 @@ export interface SystemHealthMonitoring {
   gpu: {
     gpuId: string;
     name: string;
-    memoryUtilization: number;
-    processorUtilization: number;
+    memoryUtilization: number | null;
+    processorUtilization: number | null;
     temperature: number | null;
     fanSpeed: number | null;
   }[];

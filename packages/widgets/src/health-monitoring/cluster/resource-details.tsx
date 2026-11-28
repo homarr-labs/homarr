@@ -10,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { thresholdColor } from "../../beszel/_shared/colors";
 import { formatPercent, formatUptime } from "../../beszel/_shared/format";
-import { resourcePercentage } from "./resource-data";
+import { resourceCapacity, resourcePercentage } from "./resource-data";
 
 interface Datum {
   label: string;
@@ -48,48 +48,45 @@ export function ResourceDetails({
   let selectedTab = tab;
   if (!choices.some((choice) => choice.value === tab)) selectedTab = "overview";
   const sections: Record<DetailTab, Datum[]> = { overview: [], network: [], storage: [], placement: [] };
-  let storageUsed = 0;
-  let storageTotal = 0;
-  if (item.type === "storage") {
-    storageUsed = item.used;
-    storageTotal = item.total;
-  } else {
-    storageUsed = item.storage.used;
-    storageTotal = item.storage.total;
-  }
+  const storageCapacity = resourceCapacity(item, "storage");
   const storagePercent = resourcePercentage(item, "storage");
-  const storageBytes = formatBytesPair(storageUsed, storageTotal);
   let storageValue = "—";
   let storageContext = t("unknown");
-  if (storagePercent !== null) {
+  if (storagePercent !== null && storageCapacity) {
+    const storageBytes = formatBytesPair(storageCapacity.used, storageCapacity.total);
     storageValue = formatPercent(storagePercent);
     storageContext = storageBytes.used + " / " + storageBytes.total;
   }
   const storage: Datum = { label: t("storage"), value: storageValue, context: storageContext, percent: storagePercent };
   sections.storage.push(storage);
-  sections.placement.push({ label: tc("rightSection.node"), value: item.node });
+  sections.placement.push({ label: tc("rightSection.node"), value: item.node || t("unknown") });
   if (item.type === "storage") {
     sections.overview.push(storage);
-    sections.placement.push({ label: tc("rightSection.plugin"), value: item.storagePlugin });
-    let storageType = tc("detail.storageType.local");
+    sections.placement.push({ label: tc("rightSection.plugin"), value: item.storagePlugin ?? t("unknown") });
+    let storageType = t("unknown");
+    if (item.isShared === false) storageType = tc("detail.storageType.local");
     if (item.isShared) storageType = tc("detail.storageType.shared");
     sections.placement.push({ label: t("storage"), value: storageType });
   } else {
     const cpu = resourcePercentage(item, "cpu");
     const memory = resourcePercentage(item, "memory");
-    const memoryBytes = formatBytesPair(item.memory.used, item.memory.total);
+    const memoryCapacity = resourceCapacity(item, "memory");
+    let cores = t("unknown");
+    if (item.cpu.cores !== null) cores = t("clusterCores", { count: item.cpu.cores });
     let cpuValue = "—";
     let memoryValue = "—";
     let memoryContext = t("unknown");
     let uptime = "—";
     if (cpu !== null) cpuValue = formatPercent(cpu);
-    if (memory !== null) {
+    if (memory !== null && memoryCapacity) {
+      const memoryBytes = formatBytesPair(memoryCapacity.used, memoryCapacity.total);
       memoryValue = formatPercent(memory);
       memoryContext = memoryBytes.used + " / " + memoryBytes.total;
     }
-    if (item.isRunning && Number.isFinite(item.uptime) && item.uptime >= 0) uptime = formatUptime(item.uptime);
+    if (item.isRunning && item.uptime !== null && Number.isFinite(item.uptime) && item.uptime >= 0)
+      uptime = formatUptime(item.uptime);
     sections.overview.push(
-      { label: t("cpu"), value: cpuValue, context: t("clusterCores", { count: item.cpu.cores }), percent: cpu },
+      { label: t("cpu"), value: cpuValue, context: cores, percent: cpu },
       { label: t("memory"), value: memoryValue, context: memoryContext, percent: memory },
       { label: t("uptime"), value: uptime },
     );
@@ -101,10 +98,10 @@ export function ResourceDetails({
       { label: t("read"), value: counter(item.storage.read, formatBytes, item.isRunning) },
       { label: t("written"), value: counter(item.storage.write, formatBytes, item.isRunning) },
     );
-    if (item.type === "qemu" || item.type === "lxc")
+    if ((item.type === "qemu" || item.type === "lxc") && item.vmId !== null)
       sections.placement.push({ label: tc("rightSection.vmId"), value: String(item.vmId) });
     if (item.haState) sections.placement.push({ label: tc("detail.haState"), value: item.haState });
-    sections.placement.push({ label: t("cpu"), value: t("clusterCores", { count: item.cpu.cores }) });
+    sections.placement.push({ label: t("cpu"), value: cores });
   }
   const data = sections[selectedTab];
   const bodyHeight = Math.max(64, height - 82);
@@ -155,6 +152,7 @@ export function ResourceDetails({
           }}
           data={choices}
           fullWidth
+          aria-label={t("details")}
           transitionDuration={0}
           style={{ flexShrink: 0 }}
         />

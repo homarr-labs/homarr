@@ -16,6 +16,7 @@ import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
 import { getHealthPreviewData } from "@homarr/widgets/health-monitoring/rework/fixtures";
 import { seedFixtureQueries } from "@homarr/widgets/health-monitoring/rework/runtime";
 
+import { WidgetResourcePreload } from "../../../_widget-resource-preload";
 import { ClientBoard } from "../../../_client";
 
 type Board = RouterOutputs["board"]["getBoardByName"];
@@ -109,6 +110,7 @@ export function HealthDashboardClient({
   return (
     <HealthDashboardFixtureProvider board={board}>
       <BoardProvider initialBoard={board} initialLayoutId={layoutId} initialViewportWidth={viewportWidth}>
+        <WidgetResourcePreload />
         <ClientBoard />
       </BoardProvider>
     </HealthDashboardFixtureProvider>

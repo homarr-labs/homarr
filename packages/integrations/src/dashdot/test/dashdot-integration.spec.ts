@@ -21,7 +21,7 @@ const mockCreateHistory = vi.mocked(createChannelEventHistoryOld);
 
 const channel = {
   pushAsync: vi.fn(),
-  getSliceUntilTimeAsync: vi.fn(),
+  getSliceAsync: vi.fn(),
 };
 
 const integration = new DashDotIntegration({
@@ -54,9 +54,9 @@ describe("DashDotIntegration", () => {
       await persistenceGate.promise;
       order.push("push-end");
     });
-    channel.getSliceUntilTimeAsync.mockImplementation(async () => {
+    channel.getSliceAsync.mockImplementation(async () => {
       order.push("history");
-      return [cpuLoad];
+      return [{ data: cpuLoad, timestamp: new Date() }];
     });
 
     const resultPromise = integration.getSystemInfoAsync();
@@ -80,7 +80,7 @@ describe("DashDotIntegration", () => {
     requestGates.get("/load/gpu")?.resolve(jsonResponse({ layout: [{ load: 30, memory: 40 }] }));
 
     await vi.waitFor(() => expect(channel.pushAsync).toHaveBeenCalledOnce());
-    expect(channel.getSliceUntilTimeAsync).not.toHaveBeenCalled();
+    expect(channel.getSliceAsync).not.toHaveBeenCalled();
 
     persistenceGate.resolve();
     const result = await resultPromise;

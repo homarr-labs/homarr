@@ -494,8 +494,8 @@ describe("SynologyIntegration.getSystemInfoAsync", () => {
     const result = await integration.getSystemInfoAsync();
 
     expect(result.cpuUtilization).toBe(20);
-    expect(result.rebootRequired).toBe(false);
-    expect(result.availablePkgUpdates).toBe(0);
+    expect(result.rebootRequired).toBeNull();
+    expect(result.availablePkgUpdates).toBeNull();
     expect(result.smart.every((entry) => entry.temperature === null)).toBe(true);
   });
 

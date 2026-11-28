@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Box, Stack, Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -14,7 +15,7 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { HealthSystem } from "./model";
 import { SystemHealthView } from "./system-view";
 import { useHealthHistory } from "./use-health-history";
-import { useHealthPreferences } from "./use-health-preferences";
+import type { HealthOptions } from "./display";
 import { useHealthBounds } from "./use-health-bounds";
 
 export { formatUptime, matchFileSystemAndSmart, progressColor } from "./format";
@@ -23,7 +24,8 @@ const emptyResults: RouterOutputs["widget"]["healthMonitoring"]["getSystemHealth
 
 export function SystemHealthMonitoring(
   props: WidgetComponentProps<"healthMonitoring"> & {
-    integrations?: RouterOutputs["integration"]["byIds"];
+    integrations: RouterOutputs["integration"]["byIds"];
+    onPreferences: (changes: Partial<HealthOptions>) => void;
   },
 ) {
   const t = useI18n("widget.healthMonitoring.rework");
@@ -36,26 +38,29 @@ export function SystemHealthMonitoring(
     { refetchInterval: pollInterval },
   );
   const results = getUsableWidgetQueryData(healthQuery) ?? emptyResults;
-  const histories = useHealthHistory(results, healthQuery.dataUpdatedAt, props.widgetStateRef);
-  const onPreferences = useHealthPreferences(props);
+  const histories = useHealthHistory(results, healthQuery.dataUpdatedAt, props.widgetStateRef, refreshInterval);
   const bounds = useHealthBounds(props.displayScale);
-  const systems: HealthSystem[] = props.integrationIds.flatMap((id) => {
-    const result = results.find((entry) => entry.integrationId === id);
-    if (!result) return [];
-    const integration = props.integrations?.find((entry) => entry.id === id);
-    return [
-      {
-        id,
-        name: result.integrationName,
-        kind: integration?.kind ?? "mock",
-        health: result.healthInfo,
-        updatedAt: result.updatedAt?.getTime(),
-        error: result.error,
-        history: histories[id] ?? [],
-      },
-    ];
-  });
-  const selected = systems.find((system) => system.id === props.options.selectedSystem) ?? systems[0];
+  const systems = useMemo(() => {
+    const byId = new Map(results.map((result) => [result.integrationId, result]));
+    const kinds = new Map(props.integrations.map((integration) => [integration.id, integration.kind]));
+    return props.integrationIds.flatMap<HealthSystem>((id) => {
+      const result = byId.get(id);
+      const kind = kinds.get(id);
+      if (!result || !kind) return [];
+      return [
+        {
+          id,
+          name: result.integrationName,
+          kind,
+          health: result.healthInfo,
+          updatedAt: result.updatedAt?.getTime(),
+          refreshInterval,
+          error: result.error,
+          history: histories[id] ?? [],
+        },
+      ];
+    });
+  }, [results, props.integrationIds, props.integrations, histories, refreshInterval]);
   let layoutScale = 1;
   if (props.displayMode !== "advanced" && Number.isFinite(props.displayScale) && (props.displayScale ?? 0) > 0) {
     layoutScale = props.displayScale ?? 1;
@@ -82,9 +87,9 @@ export function SystemHealthMonitoring(
       <Box ref={bounds.ref} flex={1} mih={0} miw={0}>
         <SystemHealthView
           systems={systems}
-          selectedId={selected?.id ?? ""}
-          onSelect={(id) => onPreferences({ selectedSystem: id })}
-          onPreferences={onPreferences}
+          selectedId={props.options.selectedSystem}
+          onSelect={(id) => props.onPreferences({ selectedSystem: id })}
+          onPreferences={props.onPreferences}
           width={bounds.width || props.width * layoutScale}
           height={bounds.height || props.height * layoutScale}
           advanced={props.displayMode === "advanced"}

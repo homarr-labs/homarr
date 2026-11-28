@@ -38,40 +38,44 @@ const getAdvancedChartColumns = (width: number): number =>
 type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCharts"][number];
 
 type ChartItem = {
-  cpu: number;
+  cpu: number | null;
   cpuCores: NonNullable<SystemHealthMonitoring["cpuCores"]>;
-  memory: number;
-  gpu: number;
+  memory: number | null;
+  gpu: number | null;
   network: { up: number; down: number } | null;
   disks: DiskSample[];
 };
 
 export const toChartItem = (healthInfo: {
-  cpuUtilization: number;
+  cpuUtilization: number | null;
   cpuCores?: SystemHealthMonitoring["cpuCores"];
-  memUsedInBytes: number;
-  gpu: { processorUtilization: number }[];
+  memUsedInBytes: number | null;
+  gpu: { processorUtilization: number | null }[];
   network: { up: number; down: number } | null;
   fileSystem?: DiskSample[];
-}): ChartItem => ({
-  cpu: healthInfo.cpuUtilization,
-  cpuCores: (healthInfo.cpuCores ?? [])
-    .filter((core) => Number.isFinite(core.utilization))
-    .map((core) => ({ ...core, utilization: Math.min(100, Math.max(0, core.utilization)) })),
-  memory: healthInfo.memUsedInBytes,
-  gpu:
-    healthInfo.gpu.length > 0
-      ? healthInfo.gpu.reduce((acc, gpu) => acc + gpu.processorUtilization, 0) / healthInfo.gpu.length
-      : 0,
-  network: healthInfo.network,
-  disks: [
-    ...new Map(
-      (healthInfo.fileSystem ?? [])
-        .filter((disk) => Number.isFinite(disk.percentage))
-        .map((disk) => [disk.deviceName, disk] as const),
-    ).values(),
-  ],
-});
+}): ChartItem => {
+  const gpuSamples = healthInfo.gpu
+    .map(({ processorUtilization }) => processorUtilization)
+    .filter((value) => value !== null);
+  let gpu = null;
+  if (gpuSamples.length > 0) gpu = gpuSamples.reduce((sum, usage) => sum + usage, 0) / gpuSamples.length;
+  return {
+    cpu: healthInfo.cpuUtilization,
+    cpuCores: (healthInfo.cpuCores ?? [])
+      .filter((core) => Number.isFinite(core.utilization))
+      .map((core) => ({ ...core, utilization: Math.min(100, Math.max(0, core.utilization)) })),
+    memory: healthInfo.memUsedInBytes,
+    gpu,
+    network: healthInfo.network,
+    disks: [
+      ...new Map(
+        (healthInfo.fileSystem ?? [])
+          .filter((disk) => Number.isFinite(disk.percentage))
+          .map((disk) => [disk.deviceName, disk] as const),
+      ).values(),
+    ],
+  };
+};
 
 export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limit: number): ChartItem[] =>
   [...history, item].slice(-limit);
@@ -176,13 +180,17 @@ export default function SystemResources({
     const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem, currentItem];
     const history = isAdvanced ? fullHistory : fullHistory.slice(-COMPACT_HISTORY_SIZE);
 
+    const { memAvailableInBytes, memUsedInBytes } = entry.healthInfo;
+    let capacity = null;
+    if (memAvailableInBytes !== null && memUsedInBytes !== null) capacity = memAvailableInBytes + memUsedInBytes;
+
     return (
       <SystemCharts
         key={entry.integrationId}
         integrationName={entry.integrationName}
         items={history}
         hasGpu={entry.healthInfo.gpu.length > 0}
-        memoryCapacityInBytes={entry.healthInfo.memAvailableInBytes + entry.healthInfo.memUsedInBytes}
+        memoryCapacityInBytes={capacity}
         options={options}
         width={availableWidth}
         height={availableHeight}
@@ -238,7 +246,7 @@ interface SystemChartsProps {
   integrationName: string;
   items: ChartItem[];
   hasGpu: boolean;
-  memoryCapacityInBytes: number;
+  memoryCapacityInBytes: number | null;
   options: WidgetComponentProps<"systemResources">["options"];
   width: number;
   height: number;

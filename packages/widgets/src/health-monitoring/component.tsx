@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Box, Select, Stack, Tabs } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -14,7 +14,7 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
 import { partitionHealthMonitoringIntegrations } from "./integration-selection";
 import { SystemHealthMonitoring } from "./system-health";
-import { useHealthPreferences } from "./use-health-preferences";
+import type { HealthOptions } from "./display";
 import { useHealthBounds } from "./use-health-bounds";
 import classes from "./health-monitoring.module.css";
 
@@ -27,6 +27,13 @@ export default function HealthMonitoringWidget(props: Props) {
   return (
     <Box ref={bounds.ref} h="100%" mih={0} miw={0} className={classes.root} style={{ overflow: "hidden" }}>
       <HealthMonitoringContent
+        key={JSON.stringify([
+          props.itemId,
+          props.isEditMode,
+          props.options.defaultTab,
+          props.options.healthFilter,
+          props.options.historyWindow,
+        ])}
         {...props}
         width={bounds.width || props.width * scale}
         height={bounds.height || props.height * scale}
@@ -37,20 +44,33 @@ export default function HealthMonitoringWidget(props: Props) {
 }
 
 function HealthMonitoringContent(props: Props) {
-  const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds);
+  const [overrides, setOverrides] = useState<Partial<HealthOptions>>({});
+  const options = { ...props.options, ...overrides };
+  function onPreferences(changes: Partial<HealthOptions>) {
+    if (!props.isEditMode) setOverrides((previous) => ({ ...previous, ...changes }));
+  }
+  const integrationsQuery = clientApi.integration.byIds.useQuery(props.integrationIds, { refetchInterval: false });
   const t = useI18n("widget.healthMonitoring");
-  const onPreferences = useHealthPreferences(props);
+  const accessible = getUsableWidgetQueryData(integrationsQuery);
+  const { integrations, clusterIntegrationIds, systemIntegrationIds } = useMemo(() => {
+    const byId = new Map(accessible?.map((integration) => [integration.id, integration]));
+    const selected = props.integrationIds.flatMap((id) => {
+      const integration = byId.get(id);
+      if (integration) return [integration];
+      return [];
+    });
+    return { integrations: selected, ...partitionHealthMonitoringIntegrations(selected) };
+  }, [accessible, props.integrationIds]);
   if (isInitialWidgetQueryPending(integrationsQuery)) return <WidgetQueryLoadingState />;
-  const byId = new Map(
-    (getUsableWidgetQueryData(integrationsQuery) ?? []).map((integration) => [integration.id, integration]),
+  const system = (
+    <BoundedSystems
+      {...props}
+      options={options}
+      integrations={integrations}
+      integrationIds={systemIntegrationIds}
+      onPreferences={onPreferences}
+    />
   );
-  const integrations = props.integrationIds.flatMap((id) => {
-    const integration = byId.get(id);
-    if (integration) return [integration];
-    return [];
-  });
-  const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
-  const system = <BoundedSystems {...props} integrations={integrations} integrationIds={systemIntegrationIds} />;
   const clusters = <ClusterPanels {...props} integrationIds={clusterIntegrationIds} />;
   if (clusterIntegrationIds.length === 0) return system;
   if (systemIntegrationIds.length === 0) return clusters;
@@ -58,7 +78,7 @@ function HealthMonitoringContent(props: Props) {
   if (props.options.tabOrder === "cluster-first") tabs.reverse();
   return (
     <Tabs
-      value={props.options.defaultTab}
+      value={options.defaultTab}
       onChange={(value) => {
         if (value === "system" || value === "cluster") onPreferences({ defaultTab: value });
       }}
@@ -82,7 +102,12 @@ function HealthMonitoringContent(props: Props) {
   );
 }
 
-function BoundedSystems(props: Props & { integrations: RouterOutputs["integration"]["byIds"] }) {
+function BoundedSystems(
+  props: Props & {
+    integrations: RouterOutputs["integration"]["byIds"];
+    onPreferences: (changes: Partial<HealthOptions>) => void;
+  },
+) {
   const bounds = useHealthBounds();
   return (
     <Box ref={bounds.ref} h="100%" mih={0} miw={0}>
@@ -100,9 +125,10 @@ function ClusterPanels(props: Props) {
   const [selected, setSelected] = useState("");
   const t = useI18n("widget.healthMonitoring.rework");
   const bounds = useHealthBounds();
-  const namesQuery = clientApi.widget.healthMonitoring.getClusterIntegrationNames.useQuery({
-    integrationIds: props.integrationIds,
-  });
+  const namesQuery = clientApi.widget.healthMonitoring.getClusterIntegrationNames.useQuery(
+    { integrationIds: props.integrationIds },
+    { refetchInterval: false },
+  );
   let names = namesQuery.data ?? [];
   if (isTrpcForbiddenError(namesQuery.error)) names = [];
   const namesById = new Map(names.map((integration) => [integration.integrationId, integration.integrationName]));

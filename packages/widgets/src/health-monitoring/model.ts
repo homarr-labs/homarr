@@ -1,10 +1,16 @@
 import type { IntegrationKind } from "@homarr/definitions";
 import type { SystemHealthMonitoring } from "@homarr/integrations/types";
 
-import { filterStorageVolumes, isSameStorageDevice, storageDeviceNamesMatch } from "../filter-storage-volumes";
+import {
+  canSelectStorageVolumes,
+  filterStorageVolumes,
+  isSameStorageDevice,
+  storageDeviceNamesMatch,
+} from "../filter-storage-volumes";
 
 export interface HealthSample {
   time: number;
+  unavailable: boolean;
   cpu: number | null;
   /** Used memory in bytes, independent of the installed memory capacity. */
   memory: number | null;
@@ -20,6 +26,8 @@ export interface HealthSystem {
   kind: IntegrationKind;
   health: SystemHealthMonitoring | null;
   updatedAt?: number;
+  /** Configured sampling interval in seconds. */
+  refreshInterval?: number;
   error?: string;
   history: HealthSample[];
 }
@@ -47,7 +55,7 @@ export interface HealthVolume {
 }
 
 export interface HealthAlert {
-  type: "reboot" | "updates" | "storage" | "cpu" | "memory";
+  type: "reboot" | "updates" | "storage" | "cpu" | "memory" | "capacity";
   count: number;
 }
 
@@ -130,8 +138,9 @@ function projectVolume(id: string, fileSystem: HealthVolume["fileSystem"], smart
   }
   const used = byteReading(fileSystem?.used);
   const free = byteReading(fileSystem?.available);
-  let total = null;
-  if (used !== null && free !== null && Number.isFinite(used + free) && used + free > 0) total = used + free;
+  let total = nonNegativeReading(fileSystem?.size);
+  if (total === null && used !== null && free !== null && Number.isFinite(used + free) && used + free > 0)
+    total = used + free;
   return {
     id,
     name,
@@ -147,11 +156,18 @@ function projectVolume(id: string, fileSystem: HealthVolume["fileSystem"], smart
 }
 
 /** A view of one observation; missing metrics and unsupported verdicts remain unknown. */
-export function projectHealthSystem(system: HealthSystem, visibleStorageVolumes?: string[]): HealthSystemSnapshot {
+export function projectHealthSystem(
+  system: HealthSystem,
+  visibleStorageVolumes?: string[],
+  cpuThreshold = 90,
+  memoryThreshold = 90,
+  storageThreshold = 90,
+): HealthSystemSnapshot {
   const health = system.health;
   const providerCapabilities = getSystemCapabilities(system.kind);
-  const fileSystems = filterStorageVolumes(health?.fileSystem ?? [], visibleStorageVolumes, system.id);
-  const smartDevices = filterStorageVolumes(health?.smart ?? [], visibleStorageVolumes, system.id);
+  const selection = canSelectStorageVolumes(system.kind) ? visibleStorageVolumes : undefined;
+  const fileSystems = filterStorageVolumes(health?.fileSystem ?? [], selection, system.id);
+  const smartDevices = filterStorageVolumes(health?.smart ?? [], selection, system.id);
   const matchedSmart = new Set<NonNullable<HealthVolume["smart"]>>();
   const volumes = fileSystems.map((fileSystem, index) => {
     const smart = smartDevices.find((device) => storageDeviceNamesMatch(device.deviceName, fileSystem.deviceName));
@@ -182,9 +198,13 @@ export function projectHealthSystem(system: HealthSystem, visibleStorageVolumes?
   const updates = nonNegativeReading(health?.availablePkgUpdates);
   if (providerCapabilities.updates && updates !== null && updates > 0) alerts.push({ type: "updates", count: updates });
   // Count reported devices, not namespace rows which may share one SMART controller.
+  const fullVolumes = volumes.filter(
+    (volume) => volume.health !== "attention" && isVolumeFull(volume, storageThreshold),
+  );
   if (unhealthyDevices > 0) alerts.push({ type: "storage", count: unhealthyDevices });
-  if (cpuPercent !== null && cpuPercent >= 90) alerts.push({ type: "cpu", count: 1 });
-  if (memory && memory.percent >= 90) alerts.push({ type: "memory", count: 1 });
+  if (fullVolumes.length > 0) alerts.push({ type: "capacity", count: fullVolumes.length });
+  if (cpuPercent !== null && cpuPercent >= cpuThreshold) alerts.push({ type: "cpu", count: 1 });
+  if (memory && memory.percent >= memoryThreshold) alerts.push({ type: "memory", count: 1 });
   return {
     system,
     capabilities: providerCapabilities,
@@ -200,6 +220,10 @@ export function projectHealthSystem(system: HealthSystem, visibleStorageVolumes?
   };
 }
 
+export function isVolumeFull(volume: HealthVolume, threshold: number) {
+  return volume.percent !== null && volume.percent >= threshold;
+}
+
 export function createHealthSample(time: number, health: SystemHealthMonitoring | null): HealthSample {
   const gpu: HealthSample["gpu"] = {};
   for (const device of health?.gpu ?? []) {
@@ -212,6 +236,7 @@ export function createHealthSample(time: number, health: SystemHealthMonitoring 
   const memory = memoryReading(health);
   return {
     time,
+    unavailable: health === null,
     cpu: percentageReading(health?.cpuUtilization),
     memory: memory?.used ?? null,
     networkUp: nonNegativeReading(health?.network?.up),
@@ -222,13 +247,27 @@ export function createHealthSample(time: number, health: SystemHealthMonitoring 
 }
 
 /** Keep real observations only; cached responses do not create extra chart points. */
-export function appendHealthSample(history: HealthSample[], sample: HealthSample): HealthSample[] {
+export function appendHealthSample(
+  history: HealthSample[],
+  sample: HealthSample,
+  refreshInterval = 10,
+): HealthSample[] {
   const previous = history.at(-1);
   if (previous && previous.time >= sample.time) return history;
   const cutoff = sample.time - 15 * 60_000;
-  const retained = history.filter((point) => point.time >= cutoff).slice(-179);
+  const retained = history.filter((point) => point.time >= cutoff);
+  // Retain the latest observation per five-second interval at fast refresh rates.
+  // Keep an interruption between two real readings even inside one interval.
+  if (
+    previous &&
+    Math.floor(previous.time / 5000) === Math.floor(sample.time / 5000) &&
+    previous.unavailable === sample.unavailable
+  ) {
+    retained.pop();
+  }
   // Long gaps remain visible instead of being drawn as a continuous line.
-  if (previous && sample.time - previous.time > 30_000) retained.push(createHealthSample(sample.time - 1, null));
+  if (previous && sample.time - previous.time > Math.max(30_000, refreshInterval * 3000))
+    retained.push(createHealthSample(sample.time - 1, null));
   retained.push(sample);
-  return retained;
+  return retained.slice(-360);
 }

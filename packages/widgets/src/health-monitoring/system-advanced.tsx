@@ -23,9 +23,10 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { makeTooltipProps, MonitoringChartPanel, monitoringChartColors } from "../common/monitoring-chart";
 import { MonitoringComparisonChart } from "../common/monitoring-comparison-chart";
 import { useWidgetNow } from "../common/use-widget-now";
-import { isStaleReading, percentage, pressureColor, temperature } from "./display";
+import { needsAttention, isStaleReading, percentage, pressureColor, temperature } from "./display";
 import type { HealthOptions } from "./display";
-import { finiteReading } from "./model";
+import { getHealthMetricOrder } from "./configuration";
+import { finiteReading, isVolumeFull } from "./model";
 import type { HealthSample, HealthSystemSnapshot, HealthVolume } from "./model";
 import classes from "./system-advanced.module.css";
 
@@ -105,7 +106,7 @@ export function SystemAdvanced(props: SystemAdvancedProps) {
           />
         )}
         {view === "history" && (
-          <History
+          <SystemHistoryComparison
             snapshots={snapshots}
             width={panelWidth}
             height={panelHeight}
@@ -141,7 +142,7 @@ function Compare({
 }: Omit<SystemAdvancedProps, "onPreferences"> & { now?: number }) {
   const t = useI18n("widget.healthMonitoring.rework");
   const [sort, setSort] = useState<Sort>("configured");
-  const [attentionOnly, setAttentionOnly] = useState(false);
+  const [attentionOnly, setAttentionOnly] = useState(options.healthFilter === "attention");
   const [page, setPage] = useState(0);
   const [inspectId, setInspectId] = useState("");
   let ordered = snapshots;
@@ -163,9 +164,9 @@ function Compare({
     memory: snapshot.memory?.percent ?? null,
   }));
   const series = [];
-  if (options.cpu || snapshots.some((snapshot) => snapshot.cpuPercent !== null))
+  if (snapshots.some((snapshot) => snapshot.cpuPercent !== null))
     series.push({ name: "cpu", label: t("cpu"), color: monitoringChartColors.cpu });
-  if (options.memory || snapshots.some((snapshot) => snapshot.memory !== null))
+  if (snapshots.some((snapshot) => snapshot.memory !== null))
     series.push({ name: "memory", label: t("memory"), color: monitoringChartColors.memory });
   const inspect = visible.find((snapshot) => snapshot.system.id === inspectId) ?? visible[0];
   let labelWidth = 140;
@@ -213,7 +214,7 @@ function Compare({
           {t("attention")}
         </Button>
       </Group>
-      {visible.length > 0 && (
+      {visible.length > 0 && series.length > 0 && (
         <MonitoringComparisonChart
           h={graphHeight}
           data={chartData}
@@ -227,6 +228,11 @@ function Compare({
             if (snapshot) onInspect(snapshot.system.id);
           }}
         />
+      )}
+      {visible.length > 0 && series.length === 0 && (
+        <Text size="sm" c="dimmed" py="md" flex={1}>
+          {t("noMetrics")}
+        </Text>
       )}
       {visible.length === 0 && (
         <Text size="sm" c="dimmed" py="md" flex={1}>
@@ -264,11 +270,25 @@ function Compare({
   );
 }
 
-function History({ snapshots, width, height, options, isEditMode, onPreferences, onInspect }: SystemAdvancedProps) {
+export function SystemHistoryComparison({
+  snapshots,
+  width,
+  height,
+  options,
+  isEditMode,
+  onPreferences,
+  onInspect,
+}: SystemAdvancedProps) {
   const t = useI18n("widget.healthMonitoring.rework");
   const locale = useCurrentIntlLocale();
   const { formatBytes, formatByteRate } = useByteFormatter();
-  const [metric, setMetric] = useState<HistoryMetric>("cpu");
+  const [metric, setMetric] = useState<HistoryMetric>(() => {
+    for (const key of getHealthMetricOrder(options)) {
+      if (key === "cpu" || key === "memory" || key === "temperature") return key;
+      if (key === "network") return "networkDown";
+    }
+    return "cpu";
+  });
   const [page, setPage] = useState(0);
   const metrics: { value: HistoryMetric; label: string }[] = [];
   if (
@@ -434,7 +454,7 @@ function Storage({
   const t = useI18n("widget.healthMonitoring.rework");
   const { formatBytes } = useByteFormatter();
   const [page, setPage] = useState(0);
-  const [attentionOnly, setAttentionOnly] = useState(false);
+  const [attentionOnly, setAttentionOnly] = useState(options.healthFilter === "attention");
   const all = snapshots
     .flatMap((snapshot) => snapshot.volumes.map((volume) => ({ snapshot, volume })))
     .toSorted((left, right) => {
@@ -443,7 +463,8 @@ function Storage({
       return (right.volume.percent ?? -1) - (left.volume.percent ?? -1);
     });
   let rows = all;
-  if (attentionOnly) rows = rows.filter(({ volume }) => volume.health === "attention" || (volume.percent ?? 0) >= 90);
+  if (attentionOnly)
+    rows = rows.filter(({ volume }) => volume.health === "attention" || isVolumeFull(volume, options.storageThreshold));
   let rowHeight = 62;
   if (width < 500) rowHeight = 76;
   const capacity = Math.max(1, Math.floor((height - 70) / rowHeight));
@@ -597,12 +618,8 @@ function Pager({
   );
 }
 
-function needsAttention(snapshot: HealthSystemSnapshot, now?: number) {
-  return !snapshot.available || snapshot.alerts.length > 0 || stale(snapshot, now);
-}
-
 function stale(snapshot: HealthSystemSnapshot, now?: number) {
-  return isStaleReading(snapshot.system.updatedAt, now);
+  return isStaleReading(snapshot.system.updatedAt, now, snapshot.system.refreshInterval);
 }
 
 function currentReading(snapshot: HealthSystemSnapshot, metric: HistoryMetric) {
@@ -642,7 +659,7 @@ function comparisonHistory(
     let previous: HealthSample | undefined;
     for (const sample of snapshot.system.history) {
       if (!Number.isFinite(sample.time) || sample.time < cutoff) continue;
-      if (previous && sample.time - previous.time > 30_000)
+      if (previous && sample.time - previous.time > Math.max(30_000, (snapshot.system.refreshInterval ?? 10) * 3000))
         pointAt(Math.floor(previous.time / 10_000) * 10_000 + 10_000);
       previous = sample;
       const time = Math.floor(sample.time / 10_000) * 10_000;

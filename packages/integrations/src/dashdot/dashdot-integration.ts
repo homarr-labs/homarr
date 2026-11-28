@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -34,14 +33,28 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     ]);
 
     // Read history after the CPU request has persisted its newest sample.
-    const channel = this.getChannel();
-    const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
-
+    let loadAverage: SystemHealthMonitoring["loadAverage"] = null;
+    if (cpuLoad.sumLoad !== null) {
+      const history = await this.getChannel().getSliceAsync(0, 99);
+      const now = Date.now();
+      const observed = history.flatMap(({ data, timestamp }) => {
+        if (!data.length) return [];
+        return [{ time: timestamp.getTime(), percent: this.getAverageOfCpu(data) }];
+      });
+      const averageSince = (minutes: number) => {
+        const samples = observed.filter(({ time }) => time >= now - minutes * 60_000 && time <= now);
+        if (samples.length === 0) return null;
+        return Math.round(samples.reduce((sum, { percent }) => sum + percent, 0) / samples.length);
+      };
+      loadAverage = { "1min": averageSince(1), "5min": averageSince(5), "15min": averageSince(15) };
+    }
+    let availableMemory = null;
+    if (memoryLoad !== null) availableMemory = info.maxAvailableMemoryBytes - memoryLoad;
     return {
       cpuUtilization: cpuLoad.sumLoad,
       cpuCores: cpuLoad.cores,
-      memUsedInBytes: memoryLoad.loadInBytes,
-      memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
+      memUsedInBytes: memoryLoad,
+      memAvailableInBytes: availableMemory,
       network: networkLoad,
       fileSystem: info.storage.flatMap((storage, index) => {
         const used = storageLoad[index];
@@ -58,24 +71,20 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       }),
       cpuModelName: info.cpuModel === "" ? `Unknown Model (${info.cpuBrand})` : `${info.cpuModel} (${info.cpuBrand})`,
       cpuTemp: cpuLoad.averageTemperature,
-      availablePkgUpdates: 0,
-      rebootRequired: false,
+      availablePkgUpdates: null,
+      rebootRequired: null,
       smart: [], // API endpoint does not provide S.M.A.R.T data.
       gpu: gpuLoad.map((gpu, index) => ({
         gpuId: `gpu-${index}`,
         name: info.gpuNames[index] ?? `GPU ${index}`,
-        memoryUtilization: gpu.memory ?? 0,
-        processorUtilization: gpu.load ?? 0,
+        memoryUtilization: gpu.memory ?? null,
+        processorUtilization: gpu.load ?? null,
         temperature: null,
         fanSpeed: null,
       })),
       uptime: info.uptime,
       version: `${info.operatingSystemVersion}`,
-      loadAverage: {
-        "1min": Math.round(this.getAverageOfCpu(history[0])),
-        "5min": Math.round(this.getAverageOfCpuFlat(history.slice(0, 4))),
-        "15min": Math.round(this.getAverageOfCpuFlat(history.slice(0, 14))),
-      },
+      loadAverage,
     };
   }
 
@@ -99,32 +108,23 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const result = await response.text();
 
     // we convert it to text as the response is either valid json or empty if cpu widget is disabled.
-    if (result.length === 0) {
-      return {
-        sumLoad: 0,
-        cores: [],
-        averageTemperature: 0,
-      };
-    }
+    let data: z.infer<typeof cpuLoadPerCoreApiList> = [];
+    if (result.trim()) data = await cpuLoadPerCoreApiList.parseAsync(JSON.parse(result));
+    if (data.length === 0) return { sumLoad: null, cores: [], averageTemperature: undefined };
 
-    const data = await cpuLoadPerCoreApiList.parseAsync(JSON.parse(result));
     await channel.pushAsync(data);
+    const temperatures = data.flatMap((core) => core.temp ?? []);
+    let averageTemperature;
+    if (temperatures.length)
+      averageTemperature = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
     return {
       sumLoad: this.getAverageOfCpu(data),
       cores: data.map((core, id) => ({ id, utilization: core.load })),
-      averageTemperature: data.reduce((acc, current) => acc + current.temp, 0) / data.length,
+      averageTemperature,
     };
   }
 
-  private getAverageOfCpuFlat(cpuLoad: z.infer<typeof cpuLoadPerCoreApiList>[]) {
-    const averages = cpuLoad.map((load) => this.getAverageOfCpu(load));
-    return averages.reduce((acc, current) => acc + current, 0) / averages.length;
-  }
-
-  private getAverageOfCpu(cpuLoad?: z.infer<typeof cpuLoadPerCoreApiList>) {
-    if (!cpuLoad) {
-      return 0;
-    }
+  private getAverageOfCpu(cpuLoad: z.infer<typeof cpuLoadPerCoreApiList>) {
     return cpuLoad.reduce((acc, current) => acc + current.load, 0) / cpuLoad.length;
   }
 
@@ -145,15 +145,11 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
     // somehow the response here is not empty and rather an empty json object if the ram widget is disabled.
     if (Object.keys(result).length === 0) {
-      return {
-        loadInBytes: 0,
-      };
+      return null;
     }
 
     const data = await memoryLoadApi.parseAsync(result);
-    return {
-      loadInBytes: data.load,
-    };
+    return data.load;
   }
 
   private async getCurrentNetworkLoadAsync() {
@@ -187,7 +183,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
 const cpuLoadPerCoreApi = z.object({
   load: z.number().min(0),
-  temp: z.number().min(0),
+  temp: z.number().min(0).nullish().catch(undefined),
 });
 
 const memoryLoadApi = z.object({

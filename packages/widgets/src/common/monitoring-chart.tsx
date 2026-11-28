@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, memo, useContext, useDeferredValue, useEffect, useState } from "react";
+import { createContext, memo, useContext, useDeferredValue, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import type { AreaChartProps } from "@mantine/charts";
@@ -51,6 +51,10 @@ export const MonitoringChartPanel = memo(
     const { ref, inViewport } = useInViewport<HTMLDivElement>();
     const [hasBeenVisible, setHasBeenVisible] = useState(false);
     const isVisible = inViewport || typeof IntersectionObserver === "undefined";
+    const namedChartProps = useMemo(
+      () => ({ ...chartProps, areaChartProps: { title, ...chartProps.areaChartProps } }),
+      [chartProps, title],
+    );
 
     useEffect(() => {
       if (isVisible) setHasBeenVisible(true);
@@ -84,7 +88,7 @@ export const MonitoringChartPanel = memo(
             </Box>
           )}
           {!emptyMessage && (inViewport || hasBeenVisible) && (
-            <DeferredMonitoringChart chartProps={chartProps} isVisible={isVisible} />
+            <DeferredMonitoringChart chartProps={namedChartProps} isVisible={isVisible} />
           )}
           {!emptyMessage && !inViewport && !hasBeenVisible && <MonitoringChartPlaceholder height={chartProps.h} />}
         </Box>

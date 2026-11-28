@@ -402,7 +402,8 @@ export function getHealthPreviewData(scenario: string): HealthPreviewData {
   if (scenario === "healthy") {
     return {
       systems: systems.map((system) => {
-        if (!system.health) return system;
+        if (!system.health || system.health.memUsedInBytes === null || system.health.memAvailableInBytes === null)
+          return system;
         const totalMemory = system.health.memUsedInBytes + system.health.memAvailableInBytes;
         return {
           ...system,
@@ -461,7 +462,7 @@ export function getHealthPreviewData(scenario: string): HealthPreviewData {
         cluster.vms.map((vm) => ({
           ...vm,
           id: `${vm.id}-${group}`,
-          vmId: vm.vmId + group * 10,
+          vmId: vm.vmId === null ? null : vm.vmId + group * 10,
           name: `${vm.name}-${group + 1}`,
         })),
       ).flat(),

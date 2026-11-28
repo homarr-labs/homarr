@@ -9,16 +9,16 @@ interface ResourceBase<TType extends string> {
 export interface ComputeResourceBase<TType extends string> extends ResourceBase<TType> {
   id: string;
   cpu: {
-    utilization: number; // previously cpu (0-1)
-    cores: number; // previously cpuCores
+    utilization: number | null; // previously cpu (0-1)
+    cores: number | null; // previously cpuCores
   };
   memory: {
-    used: number; // previously mem
-    total: number; // previously maxMem
+    used: number | null; // previously mem
+    total: number | null; // previously maxMem
   };
   storage: {
-    used: number; // previously disk
-    total: number; // previously maxDisk
+    used: number | null; // previously disk
+    total: number | null; // previously maxDisk
     read: number | null; // previously diskRead
     write: number | null; // previously diskWrite
   };
@@ -26,26 +26,26 @@ export interface ComputeResourceBase<TType extends string> extends ResourceBase<
     in: number | null; // previously netIn
     out: number | null; // previously netOut
   };
-  uptime: number; // expressed in seconds
+  uptime: number | null; // expressed in seconds
   haState: string | null; // HA service status (for HA managed VMs).
 }
 
 export type NodeResource = ComputeResourceBase<"node">;
 
 export interface LxcResource extends ComputeResourceBase<"lxc"> {
-  vmId: number;
+  vmId: number | null;
 }
 
 export interface QemuResource extends ComputeResourceBase<"qemu"> {
-  vmId: number;
+  vmId: number | null;
 }
 
 export interface StorageResource extends ResourceBase<"storage"> {
   id: string;
-  storagePlugin: string;
-  used: number; // previously disk
-  total: number; // previously maxDisk
-  isShared: boolean; // previously storageShared
+  storagePlugin: string | null;
+  used: number | null; // previously disk
+  total: number | null; // previously maxDisk
+  isShared: boolean | null; // previously storageShared
 }
 
 export type ComputeResource = NodeResource | LxcResource | QemuResource;

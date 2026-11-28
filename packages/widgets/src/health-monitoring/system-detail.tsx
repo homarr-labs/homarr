@@ -69,7 +69,7 @@ export function SystemDetail({
   if (!snapshot.available) {
     statusMessage = t("unavailable");
     if (hasHistory) statusMessage = t("unavailableHistory");
-  } else if (isStaleReading(snapshot.system.updatedAt, now)) {
+  } else if (isStaleReading(snapshot.system.updatedAt, now, snapshot.system.refreshInterval)) {
     statusMessage = t("stale", {
       time: new Date(snapshot.system.updatedAt).toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" }),
     });
@@ -249,7 +249,7 @@ function Overview({ snapshot, width, height, options, isEditMode, onPreferences 
         </SimpleGrid>
       )}
       <Group justify="space-between" gap={6} wrap="nowrap" mih={28}>
-        <Tooltip label={t("observedHistory")} withArrow>
+        <Tooltip label={t("observedHistory")} withArrow events={{ hover: true, focus: true, touch: true }}>
           <Text component="span" tabIndex={0} size="xs" c="dimmed" truncate>
             {t("thisSession")}
           </Text>
@@ -412,7 +412,7 @@ function InformationPage({ snapshot, height }: { snapshot: HealthSystemSnapshot;
   const rows: { label: string; value: string }[] = [];
   if (health?.cpuModelName.trim()) rows.push({ label: t("processor"), value: health.cpuModelName });
   if (health?.version.trim()) rows.push({ label: t("version"), value: health.version });
-  if (health && Number.isFinite(health.uptime) && health.uptime >= 0)
+  if (health && health.uptime !== null && Number.isFinite(health.uptime) && health.uptime >= 0)
     rows.push({
       label: t("uptime"),
       value: uptime(health.uptime, t),
@@ -425,7 +425,7 @@ function InformationPage({ snapshot, height }: { snapshot: HealthSystemSnapshot;
       label,
       value: Object.values(health.loadAverage)
         .map((value) => {
-          if (!Number.isFinite(value)) return "—";
+          if (value === null || !Number.isFinite(value)) return "—";
           if (snapshot.capabilities.loadUnit === "percent") return value.toFixed(1) + "%";
           return value.toFixed(2);
         })

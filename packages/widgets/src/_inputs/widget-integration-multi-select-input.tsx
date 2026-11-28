@@ -12,6 +12,7 @@ export const WidgetIntegrationMultiSelectInput = ({
   property,
   kind,
   options,
+  selectedIntegrations = [],
 }: CommonWidgetInputProps<"integrationMultiSelect">) => {
   const t = useI18n("widget.integrationSelect");
   const tSelect = useI18n("widget.common.select");
@@ -19,11 +20,10 @@ export const WidgetIntegrationMultiSelectInput = ({
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
-  const integrationIds = form.values.integrationIds as string[];
   const inputProps = form.getInputProps(`options.${property}`);
   const selectedValues = (inputProps.value as string[] | undefined) ?? [];
 
-  const { data: selectData = [], isPending, isError } = options.useOptions(integrationIds);
+  const { data: selectData = [], isPending, isError } = options.useOptions(selectedIntegrations);
   const data = [
     ...selectData,
     ...selectedValues
@@ -31,7 +31,7 @@ export const WidgetIntegrationMultiSelectInput = ({
       .map((selectedValue) => ({ value: selectedValue, label: selectedValue })),
   ];
 
-  if (integrationIds.length === 0) {
+  if (selectedIntegrations.length === 0) {
     return (
       <Text size="sm" c="dimmed">
         {t("configureIntegrationFirst")}

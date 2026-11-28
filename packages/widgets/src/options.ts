@@ -97,9 +97,11 @@ interface IntegrationSelectInput extends CommonInput<string> {
   };
 }
 
+export type WidgetInputIntegration = { id: string; kind: IntegrationKind };
+
 interface IntegrationMultiSelectInput extends CommonInput<string[]> {
   withDescription?: boolean;
-  useOptions: (integrationIds: string[]) => {
+  useOptions: (integrations: WidgetInputIntegration[]) => {
     data: { value: string; label: string }[];
     isPending: boolean;
     isError: boolean;

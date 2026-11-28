@@ -21,7 +21,7 @@ import { IconArrowDown, IconArrowUp, IconArrowsMaximize, IconSettings } from "@t
 import type { RouterOutputs } from "@homarr/api";
 import { useCurrentLocale } from "@homarr/translation/client";
 
-import { toScopedStorageVolumeValue } from "../../filter-storage-volumes";
+import { canSelectStorageVolumes, toScopedStorageVolumeValue } from "../../filter-storage-volumes";
 import { WidgetCardShell } from "../../widget-card-shell";
 import { useWidgetFixtureRuntime, WidgetFixturePreview } from "./widget-fixture-preview";
 import { fixtureKindLabels, getHealthPreviewData, healthPreviewScenarios } from "./fixtures";
@@ -65,6 +65,7 @@ export function HealthMonitoringPreview({
   const runtime = useWidgetFixtureRuntime(data);
   const [draftWidgetOptions, setDraftWidgetOptions] = useState(runtime.options);
   const storageOptions = allSystems.flatMap((system) => {
+    if (!canSelectStorageVolumes(system.kind) || !draftSources.includes(system.id)) return [];
     const devices = new Set(system.health?.fileSystem.map((device) => device.deviceName) ?? []);
     if (devices.size === 0) {
       for (const device of system.health?.smart ?? []) devices.add(device.deviceName);
@@ -320,7 +321,7 @@ export function HealthMonitoringPreview({
               </Group>
               <MultiSelect
                 label="Visible storage volumes"
-                description="Leave empty to show every reported volume. Saved values use the production volume format."
+                description="Choose OpenMediaVault and Synology volumes. Leave empty to show every reported volume."
                 value={draftWidgetOptions.visibleStorageVolumes}
                 onChange={(visibleStorageVolumes) =>
                   setDraftWidgetOptions((current) => ({ ...current, visibleStorageVolumes }))

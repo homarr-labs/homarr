@@ -38,7 +38,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
 
     const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
     const cpuCount = systemInfo.metrics.cpu.cpus.length;
-    let cpuUtilizationNormalized = 0;
+    let cpuUtilizationNormalized = systemInfo.metrics.cpu.percentTotal;
     if (cpuCount > 0) {
       cpuUtilizationNormalized = cpuUtilization / cpuCount;
     }
@@ -72,8 +72,8 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       uptime: dayjs().diff(uptime, "seconds"),
       network: null, // Not implemented, see https://github.com/unraid/api/issues/1602
       loadAverage: null,
-      rebootRequired: false,
-      availablePkgUpdates: 0,
+      rebootRequired: null,
+      availablePkgUpdates: null,
       cpuTemp: undefined, // Not implemented, see https://github.com/unraid/api/issues/1597
       fileSystem,
       smart: disks.map((disk) => ({
@@ -81,7 +81,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
         temperature: disk.temp ?? null,
         overallStatus: disk.status ?? "UNKNOWN",
         // See ArrayDiskStatus from https://studio.apollographql.com/public/Unraid-API/variant/current/explorer
-        healthy: disk.status === "DISK_OK",
+        healthy: disk.status && disk.status !== "DISK_NP" ? disk.status === "DISK_OK" : null,
       })),
       gpu: [],
     };

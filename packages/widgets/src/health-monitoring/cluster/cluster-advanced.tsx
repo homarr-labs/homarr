@@ -14,7 +14,7 @@ import { monitoringChartColors } from "../../common/monitoring-chart-colors";
 import type { WidgetComponentProps } from "../../definition";
 import { percentage } from "../display";
 import { useHealthBounds } from "../use-health-bounds";
-import { resourcePercentage } from "./resource-data";
+import { clusterCapacity, resourcePercentage } from "./resource-data";
 import { ResourceDialog, ResourceTable } from "./resource-table";
 
 type AdvancedView = "overview" | "workloads" | "storage";
@@ -133,31 +133,31 @@ function ClusterOverview({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const chart = useHealthBounds();
   const online = data.nodes.filter((node) => node.isRunning);
-  const offline = data.nodes.length - online.length;
+  const offline = data.nodes.filter((node) => node.status === "offline").length;
   const workloads = [...data.vms, ...data.lxcs];
   const running = workloads.filter((workload) => workload.isRunning).length;
-  const cores = online.reduce((sum, node) => sum + node.cpu.cores, 0);
-  const usedCores = online.reduce((sum, node) => sum + node.cpu.cores * node.cpu.utilization, 0);
-  const totalMemory = online.reduce((sum, node) => sum + node.memory.total, 0);
-  const usedMemory = online.reduce((sum, node) => sum + node.memory.used, 0);
+  const cpuCapacity = clusterCapacity(online, "cpu");
+  const memoryCapacity = clusterCapacity(online, "memory");
   let cpu: number | null = null;
+  let cpuContext = t("unknown");
   let memoryValue = "—";
   let memoryContext = t("unknown");
-  if (cores > 0 && Number.isFinite(cores) && Number.isFinite(usedCores)) cpu = (usedCores / cores) * 100;
-  if (totalMemory > 0 && Number.isFinite(totalMemory) && Number.isFinite(usedMemory)) {
-    const bytes = formatBytesPair(usedMemory, totalMemory);
+  if (cpuCapacity) {
+    cpu = (cpuCapacity.used / cpuCapacity.total) * 100;
+    cpuContext = t("clusterCores", { count: cpuCapacity.total });
+  }
+  if (memoryCapacity) {
+    const bytes = formatBytesPair(memoryCapacity.used, memoryCapacity.total);
     memoryValue = bytes.used;
     memoryContext = bytes.total;
   }
   let nodeContext = t("healthy");
   let nodeContextColor = "dimmed";
-  if (data.nodes.length === 0) nodeContext = t("unknown");
+  if (data.nodes.length === 0 || data.nodes.some((node) => node.status === "unknown")) nodeContext = t("unknown");
   if (offline > 0) {
     nodeContext = t("clusterOfflineNodes", { count: offline });
     nodeContextColor = "var(--health-warning)";
   }
-  let cpuContext = t("unknown");
-  if (cpu !== null) cpuContext = t("clusterCores", { count: cores });
   let columns = 4;
   if (width < 600 && height >= 400) columns = 2;
   const compact = height < 250;

@@ -3896,6 +3896,59 @@
         "cluster": "Cluster"
       },
       "option": {
+        "visibleStorageVolumes": {
+          "description": "Choose the OpenMediaVault and Synology volumes to monitor, or leave empty to show all. Other providers always show all reported volumes."
+        },
+        "presentation": {
+          "label": "System layout",
+          "description": "History charts start with readings received while the board is open. Small tiles show the readings as a list.",
+          "adaptive": "Automatic",
+          "list": "List",
+          "cards": "Cards",
+          "history": "History chart"
+        },
+        "healthFilter": {
+          "label": "Show systems"
+        },
+        "systemSort": {
+          "label": "System order",
+          "configured": "Integration order",
+          "name": "Name (A–Z)",
+          "attention": "Needs attention first",
+          "cpu": "Highest CPU usage",
+          "memory": "Highest memory usage",
+          "storage": "Fullest storage",
+          "provider": "Integration type"
+        },
+        "density": {
+          "label": "System density",
+          "auto": "Automatic",
+          "compact": "Compact",
+          "comfortable": "Comfortable"
+        },
+        "metricOrder": {
+          "label": "Dashboard metrics",
+          "add": "Add a metric",
+          "automatic": "Automatic · {metrics}",
+          "customize": "Customize automatic metrics",
+          "reset": "Use automatic metrics",
+          "reorder": "Reorder {name}",
+          "position": "Position of {name}",
+          "remove": "Remove metric",
+          "removeNamed": "Remove {name}"
+        },
+        "historyWindow": {
+          "label": "Default history window"
+        },
+        "cpuThreshold": {
+          "label": "CPU attention threshold (%)"
+        },
+        "memoryThreshold": {
+          "label": "Memory attention threshold (%)"
+        },
+        "storageThreshold": {
+          "label": "Storage attention threshold (%)"
+        },
         "fahrenheit": {
           "label": "CPU Temp in Fahrenheit"
         },
@@ -3926,7 +3979,9 @@
           "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
-          "label": "Section indicator requirement"
+          "label": "Section indicator requirement",
+          "all": "All active",
+          "any": "Any active"
         }
       },
       "popover": {
@@ -4093,6 +4148,7 @@
         "nextPage": "Next systems",
         "mostUsedVolume": "Most used volume",
         "details": "Details",
+        "highStorage": "{count, plural, one {High storage usage} other {High usage on # volumes}}",
         "highCpu": "High CPU usage",
         "highMemory": "High memory usage",
         "freeSpace": "{value} free",

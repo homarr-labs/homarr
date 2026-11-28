@@ -1,20 +1,31 @@
 import type { WidgetComponentProps } from "../definition";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import type { HealthAlert } from "./model";
+import type { HealthAlert, HealthSystemSnapshot } from "./model";
 
 export type HealthOptions = WidgetComponentProps<"healthMonitoring">["options"];
 
-const staleAfterMs = 60_000;
-
-export function isStaleReading(updatedAt: number | undefined, now: number | undefined): updatedAt is number {
+export function isStaleReading(
+  updatedAt: number | undefined,
+  now: number | undefined,
+  refreshInterval = 10,
+): updatedAt is number {
   if (now === undefined || updatedAt === undefined) return false;
-  return now - updatedAt > staleAfterMs;
+  return now - updatedAt > Math.max(60_000, refreshInterval * 3000);
+}
+
+export function needsAttention(snapshot: HealthSystemSnapshot, now: number | undefined) {
+  return (
+    !snapshot.available ||
+    snapshot.alerts.length > 0 ||
+    isStaleReading(snapshot.system.updatedAt, now, snapshot.system.refreshInterval)
+  );
 }
 
 export function healthAlertLabel(alert: HealthAlert, t: ScopedTranslationFunction<"widget.healthMonitoring.rework">) {
   if (alert.type === "reboot") return t("reboot");
   if (alert.type === "updates") return t("updates", { count: alert.count });
   if (alert.type === "storage") return t("diskIssues", { count: alert.count });
+  if (alert.type === "capacity") return t("highStorage", { count: alert.count });
   if (alert.type === "cpu") return t("highCpu");
   return t("highMemory");
 }

@@ -45,3 +45,25 @@
 .fleetRow[data-selected] {
   background: var(--mantine-color-default-hover);
 }
+
+.attentionFilter {
+  flex-shrink: 1;
+  color: var(--health-warning);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.attentionFilter:hover,
+.attentionFilter[data-active] {
+  background: var(--mantine-color-default-hover);
+}
+
+.attentionFilter[data-active] {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.tile:focus-visible,
+.fleetRow:focus-visible,
+.attentionFilter:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}

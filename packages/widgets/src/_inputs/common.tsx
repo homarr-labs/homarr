@@ -1,7 +1,7 @@
 import type { WidgetKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import type { WidgetOptionOfType, WidgetOptionType } from "../options";
+import type { WidgetInputIntegration, WidgetOptionOfType, WidgetOptionType } from "../options";
 import {
   getWidgetOptionDescriptionTranslationNamespace,
   getWidgetOptionTranslationNamespace,
@@ -12,6 +12,7 @@ export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   property: string;
   options: Omit<WidgetOptionOfType<TKey>, "type">;
   initialOptions: Record<string, unknown>;
+  selectedIntegrations?: WidgetInputIntegration[];
   itemId?: string;
   boardId?: string;
 }

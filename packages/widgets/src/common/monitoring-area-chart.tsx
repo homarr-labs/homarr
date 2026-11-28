@@ -15,7 +15,7 @@ const chartMargin = { top: 12, right: 5, bottom: 0, left: 0 } as const;
 
 export type MonitoringAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
-  yAxisDomain?: [number, string];
+  yAxisDomain?: [number, number | string];
 };
 
 const MonitoringAreaChart = memo(

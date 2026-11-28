@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Badge, Box, Group, Progress, SegmentedControl, Select, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -19,8 +20,10 @@ import { useDemoReadOnly } from "../../demo-read-only";
 import type { WidgetComponentProps } from "../../definition";
 import { uptime } from "../display";
 import { getClusterVisibleSections } from "./accordion-state";
+import { clusterCapacity } from "./resource-data";
 import { ResourceTable } from "./resource-table";
-import { ClusterAdvanced } from "./cluster-advanced";
+
+const ClusterAdvanced = dynamic(() => import("./cluster-advanced").then((module) => module.ClusterAdvanced));
 
 type Section = Resource["type"];
 
@@ -98,9 +101,11 @@ export function ClusterHealthMonitoring(
     lxc: data.lxcs,
     storage: data.storages,
   };
-  const uptimes = data.nodes
-    .filter((node) => node.isRunning && Number.isFinite(node.uptime) && node.uptime >= 0)
-    .map((node) => node.uptime);
+  const uptimes = data.nodes.flatMap((node) => {
+    if (node.isRunning && node.uptime !== null && Number.isFinite(node.uptime) && node.uptime >= 0)
+      return [node.uptime];
+    return [];
+  });
   let longestUptime;
   if (uptimes.length > 0 && props.options.showUptime) longestUptime = uptime(Math.max(...uptimes), tr);
   const choices = sections.map((section) => {
@@ -223,21 +228,19 @@ function ClusterCapacity({
 }) {
   const t = useI18n("widget.healthMonitoring.rework");
   const { formatBytesPair } = useByteFormatter();
-  const online = data.nodes.filter((node) => node.isRunning);
-  const cores = online.reduce((sum, node) => sum + node.cpu.cores, 0);
-  const usedCores = online.reduce((sum, node) => sum + node.cpu.cores * node.cpu.utilization, 0);
-  const totalMemory = online.reduce((sum, node) => sum + node.memory.total, 0);
-  const usedMemory = online.reduce((sum, node) => sum + node.memory.used, 0);
+  const cpuCapacity = clusterCapacity(data.nodes, "cpu");
+  const memoryCapacity = clusterCapacity(data.nodes, "memory");
   let cpu: number | null = null;
   let ram: number | null = null;
-  if (cores > 0 && Number.isFinite(cores) && Number.isFinite(usedCores)) cpu = (usedCores / cores) * 100;
-  if (totalMemory > 0 && Number.isFinite(totalMemory) && Number.isFinite(usedMemory))
-    ram = (usedMemory / totalMemory) * 100;
   let cpuContext = t("unknown");
   let memoryContext = t("unknown");
-  if (cpu !== null) cpuContext = t("clusterCores", { count: cores });
-  if (ram !== null) {
-    const memory = formatBytesPair(usedMemory, totalMemory);
+  if (cpuCapacity) {
+    cpu = (cpuCapacity.used / cpuCapacity.total) * 100;
+    cpuContext = t("clusterCores", { count: cpuCapacity.total });
+  }
+  if (memoryCapacity) {
+    ram = (memoryCapacity.used / memoryCapacity.total) * 100;
+    const memory = formatBytesPair(memoryCapacity.used, memoryCapacity.total);
     memoryContext = memory.used + " / " + memory.total;
   }
   return (

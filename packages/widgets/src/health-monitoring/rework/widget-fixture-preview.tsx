@@ -24,9 +24,10 @@ export function observedHealth(system: HealthSystemFixture, reading: number) {
   const health = system.health;
   if (!health || reading === 0) return health;
   const offset = Math.sin(reading * 1.4) * 12;
-  const next = { ...health, cpuUtilization: Math.max(0, Math.min(100, health.cpuUtilization + offset)) };
-  const totalMemory = health.memUsedInBytes + health.memAvailableInBytes;
-  if (totalMemory > 0) {
+  const next = { ...health };
+  if (health.cpuUtilization !== null) next.cpuUtilization = Math.max(0, Math.min(100, health.cpuUtilization + offset));
+  if (health.memUsedInBytes !== null && health.memAvailableInBytes !== null) {
+    const totalMemory = health.memUsedInBytes + health.memAvailableInBytes;
     next.memUsedInBytes = Math.max(0, Math.min(totalMemory, health.memUsedInBytes + totalMemory * offset * 0.001));
     next.memAvailableInBytes = totalMemory - next.memUsedInBytes;
   }
@@ -48,7 +49,11 @@ export function seedFixtureQueries(cache: QueryClient, data: HealthPreviewData, 
     if (system.kind === "mock") {
       clusters.push({ integrationId: system.id, integrationName: system.name });
       cache.setQueryData(
-        getQueryKey(clientApi.widget.healthMonitoring.getClusterHealthStatus, { integrationId: system.id, refreshInterval: 10 }, "query"),
+        getQueryKey(
+          clientApi.widget.healthMonitoring.getClusterHealthStatus,
+          { integrationId: system.id, refreshInterval: 10 },
+          "query",
+        ),
         { nodes: [], vms: [], lxcs: [], storages: [] },
       );
     }

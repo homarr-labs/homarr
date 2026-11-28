@@ -4,12 +4,13 @@ import { Box, Group, Progress, SimpleGrid, Stack, Text, UnstyledButton } from "@
 import { IconArrowUpRight } from "@tabler/icons-react";
 
 import { getIntegrationName } from "@homarr/definitions";
-import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { healthAlertLabel, percentage, pressureColor, temperature, uptime } from "./display";
+import { getHealthMetricOrder } from "./configuration";
 import type { HealthOptions } from "./display";
+import { uptime } from "./display";
+import { useGlanceReadings } from "./glance-readings";
 import type { HealthSystemSnapshot } from "./model";
 import classes from "./system-view.module.css";
 
@@ -32,68 +33,52 @@ export function SystemTile({
   isEditMode,
   onInspect,
   standalone,
-  stale,
+  stale = false,
 }: SystemTileProps) {
   const t = useI18n("widget.healthMonitoring.rework");
-  const { formatBytesPair, formatByteRate } = useByteFormatter();
-  const roomy = height >= 210;
-  const small = height < 135;
-  const tight = height < 175;
-  const micro = height < 110;
-  const { system, memory } = snapshot;
-  const metrics: { label: string; value: number; color: string; context?: string }[] = [];
-  if (options.cpu && snapshot.cpuPercent !== null)
-    metrics.push({ label: t("cpu"), value: snapshot.cpuPercent, color: "blue" });
-  if (options.memory && memory) {
-    const pair = formatBytesPair(memory.used, memory.total);
-    metrics.push({ label: t("memory"), value: memory.percent, color: "teal", context: pair.used + " / " + pair.total });
-  }
-  if (
-    options.fileSystem &&
-    snapshot.fullestVolume?.percent !== null &&
-    snapshot.fullestVolume?.percent !== undefined &&
-    (width >= 270 || metrics.length < 2)
-  ) {
-    metrics.push({
-      label: t("storage"),
-      value: snapshot.fullestVolume.percent,
-      color: "teal",
-      context: snapshot.fullestVolume.name,
-    });
-  }
-  let numberSize = "xl";
-  if (width < 280 || small) numberSize = "lg";
-  if (width >= 450 && roomy) numberSize = "28px";
-  const context: string[] = [getIntegrationName(system.kind)];
-  if (!snapshot.available) context.push(t("unavailable"));
-  else if (stale) context.push(t("staleShort"));
-  else if (snapshot.alerts[0]) context.push(healthAlertLabel(snapshot.alerts[0], t));
+  const glance = useGlanceReadings(options);
+  const status = glance.status(snapshot, stale);
+  const provider = getIntegrationName(snapshot.system.kind);
+  const readings = getHealthMetricOrder(options).flatMap((metric) => {
+    const reading = glance.read(snapshot, metric);
+    if (!reading) return [];
+    return [{ ...reading, label: glance.label(metric) }];
+  });
+  const compact = options.density === "compact" || height < 110;
+  const roomy = height >= 185 && options.density !== "compact";
+  let padding = 12;
+  if (height < 150 || width < 230) padding = 8;
+  if (compact) padding = 5;
+  const innerWidth = Math.max(0, width - padding * 2);
+  let columnWidth = 80;
+  if (compact) columnWidth = 67;
+  if (options.density === "comfortable") columnWidth = 100;
+  const columns = Math.max(1, Math.min(4, Math.floor(innerWidth / columnWidth)));
+  let capacity = columns;
+  if (roomy && height >= 250) capacity *= 2;
+  const primary = readings.slice(0, capacity);
+  const supporting = readings.slice(capacity);
+  const details: string[] = [provider];
   if (
     options.showUptime &&
-    roomy &&
-    system.health &&
-    Number.isFinite(system.health.uptime) &&
-    system.health.uptime >= 0
-  ) {
-    context.push(uptime(system.health.uptime, t));
-  }
-  const facts: string[] = [];
-  if (options.cpu && snapshot.temperature !== null) facts.push(temperature(snapshot.temperature, options.fahrenheit));
-  if (snapshot.network && (options.cpu || options.memory)) {
-    if (snapshot.network.down !== null) facts.push("↓ " + formatByteRate(snapshot.network.down));
-    if (snapshot.network.up !== null && width >= 350) facts.push("↑ " + formatByteRate(snapshot.network.up));
-  }
-  if (options.gpu && (system.health?.gpu.length ?? 0) > 0)
-    facts.push(t("gpuCount", { count: system.health?.gpu.length ?? 0 }));
-  if (facts.length === 0 && options.fileSystem && snapshot.volumes.length > 0)
-    facts.push(t("volumeCount", { count: snapshot.volumes.length }));
+    snapshot.system.health &&
+    snapshot.system.health.uptime !== null &&
+    Number.isFinite(snapshot.system.health.uptime) &&
+    snapshot.system.health.uptime >= 0
+  )
+    details.push(uptime(snapshot.system.health.uptime, t));
+  let subtitle = status;
+  if (roomy) subtitle = [status, ...details].filter(Boolean).join(" · ");
   let stateColor = "teal";
   if (snapshot.alerts.length > 0) stateColor = "orange";
   if (stale || !snapshot.available) stateColor = "gray";
-  let padding = 12;
-  if (tight) padding = 10;
-  if (small) padding = 9;
-  if (micro) padding = 6;
+  const description = [
+    status,
+    ...details,
+    ...readings.map((reading) => reading.label + " " + (reading.description ?? reading.value)),
+  ]
+    .filter(Boolean)
+    .join(", ");
 
   return (
     <UnstyledButton
@@ -107,79 +92,70 @@ export function SystemTile({
         event.stopPropagation();
         onInspect();
       }}
-      aria-label={t("inspectSystem", { name: system.name })}
+      aria-label={t("inspectSystem", { name: snapshot.system.name })}
+      aria-description={description}
     >
-      <Stack h="100%" gap={tight ? 6 : 9} justify="space-between" miw={0} mih={0}>
+      <Stack h="100%" gap={compact ? 2 : 6} justify="space-between" miw={0} mih={0}>
         <Box miw={0}>
-          <Group gap={7} wrap="nowrap">
+          <Group gap={6} wrap="nowrap">
             <Box
               bg={stateColor}
               style={{ ...zoomCompensatedSize(6), borderRadius: "50%", flexShrink: 0 }}
               aria-hidden
             />
-            <Text size="sm" fw={650} truncate flex={1}>
-              {system.name}
+            <Text size="sm" lh={1.2} fw={650} truncate flex={1}>
+              {snapshot.system.name}
             </Text>
             <IconArrowUpRight style={zoomCompensatedSize(14)} color="var(--mantine-color-dimmed)" aria-hidden />
           </Group>
-          {!small && (
-            <Text mt={3} size="xs" c="dimmed" truncate title={context.join(" · ")}>
-              {context.join(" · ")}
+          {subtitle && (
+            <Text mt={2} size="xs" lh={1.2} c="dimmed" truncate title={description}>
+              {subtitle}
             </Text>
           )}
         </Box>
-        {snapshot.available && metrics.length > 0 && micro && (
-          <SimpleGrid cols={metrics.length} spacing={6}>
-            {metrics.map((metric) => (
-              <Group key={metric.label} gap={4} wrap="nowrap" miw={0}>
-                <Text size="xs" c="dimmed" truncate>
-                  {metric.label}
+        {primary.length > 0 && (
+          <SimpleGrid cols={Math.min(primary.length, columns)} spacing={6} verticalSpacing={6} miw={0}>
+            {primary.map((reading) => (
+              <Stack
+                key={reading.label}
+                gap={2}
+                miw={0}
+                title={[reading.label, reading.description ?? reading.value, reading.context]
+                  .filter(Boolean)
+                  .join(" · ")}
+              >
+                <Text size="xs" c="dimmed" lh={1.1} truncate>
+                  {reading.label}
                 </Text>
-                <Text size="xs" fw={650} className={classes.numeric}>
-                  {percentage(metric.value)}
+                <Text size={compact ? "sm" : "lg"} fw={650} lh={1.1} className={classes.numeric} truncate>
+                  {reading.value}
                 </Text>
-              </Group>
-            ))}
-          </SimpleGrid>
-        )}
-        {snapshot.available && metrics.length > 0 && !micro && (
-          <SimpleGrid cols={metrics.length} spacing="sm">
-            {metrics.map((metric) => (
-              <Stack key={metric.label} gap={small ? 3 : 5} miw={0}>
-                <Text size="xs" c="dimmed" truncate>
-                  {metric.label}
-                </Text>
-                <Text size={numberSize} fw={650} lh={1.1} className={classes.numeric}>
-                  {percentage(metric.value)}
-                </Text>
-                <Progress
-                  value={metric.value}
-                  color={pressureColor(metric.value, metric.color)}
-                  size={3}
-                  aria-label={metric.label}
-                />
-                {roomy && metric.context && (
+                {!compact && reading.percent !== undefined && (
+                  <Progress value={reading.percent} size={3} color={reading.color} aria-label={reading.label} />
+                )}
+                {roomy && reading.context && (
                   <Text size="xs" c="dimmed" truncate>
-                    {metric.context}
+                    {reading.context}
                   </Text>
                 )}
               </Stack>
             ))}
           </SimpleGrid>
         )}
-        {!snapshot.available && (
-          <Text size="xs" c="dimmed" lineClamp={small ? 1 : 2}>
-            {t("unavailableDescription")}
-          </Text>
-        )}
-        {snapshot.available && metrics.length === 0 && (
+        {snapshot.available && readings.length === 0 && (
           <Text size="xs" c="dimmed">
             {t("noMetrics")}
           </Text>
         )}
-        {!small && facts.length > 0 && (
-          <Text size="xs" c="dimmed" truncate title={facts.join(" · ")}>
-            {facts.join(" · ")}
+        {!snapshot.available && height >= 115 && (
+          <Text size="xs" c="dimmed" lineClamp={2}>
+            {t("unavailableDescription")}
+          </Text>
+        )}
+        {roomy && supporting.length > 0 && (
+          <Text size="xs" c="dimmed" truncate>
+            {supporting.map((reading) => reading.label + " " + reading.value).join(" · ")}
           </Text>
         )}
       </Stack>

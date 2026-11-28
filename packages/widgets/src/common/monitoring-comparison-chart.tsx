@@ -78,6 +78,7 @@ export function MonitoringComparisonChart({
       orientation="vertical"
       withLegend
       maxBarWidth={12}
+      attributes={{ tooltip: { role: "status", "aria-atomic": true } }}
       fillOpacity={0.85}
       className={classes.comparisonChart}
       valueFormatter={formatPercent}
@@ -100,6 +101,7 @@ export function MonitoringComparisonChart({
       gridAxis="x"
       tickLine="none"
       barChartProps={{
+        title: props.series.map((series) => series.label ?? series.name).join(", "),
         margin: { left: 0, right: 32, top: 0, bottom: 0 },
         onClick: (state) => {
           if (disabled || state.activeTooltipIndex === undefined || state.activeTooltipIndex === null) return;
