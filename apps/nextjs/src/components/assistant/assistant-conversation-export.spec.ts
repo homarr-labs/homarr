@@ -85,10 +85,15 @@ describe("buildAssistantConversationMarkdown", () => {
               toolName: "icon_findIcons",
               toolCallId: "icon-call-1",
               args: { searchText: "homarr" },
-              argsText: '{"searchText":"homarr"',
+              argsText: '{"searchText":"homarr","password":"partial-value"',
               result: { error: "Error in input stream" },
               isError: true,
               providerMetadata: { openrouter: { traceId: "trace-1" } },
+            },
+            {
+              type: "tool-call",
+              toolName: "icon_findIcons",
+              argsText: '{"searchText":"dashboard","apiKey":"complete-value"}',
             },
           ],
           metadata: { custom: { telemetry: { requestId: "request-2", cost: 0.001 } } },
@@ -100,6 +105,11 @@ describe("buildAssistantConversationMarkdown", () => {
     expect(markdown).toContain("### Tool call: `icon_findIcons`");
     expect(markdown).toContain('"searchText": "homarr"');
     expect(markdown).toContain("Raw streamed input");
+    expect(markdown).toContain("Incomplete tool input omitted");
+    expect(markdown).toContain('"searchText": "dashboard"');
+    expect(markdown).toContain('"apiKey": "[redacted]"');
+    expect(markdown).not.toContain("partial-value");
+    expect(markdown).not.toContain("complete-value");
     expect(markdown).toContain("Error in input stream");
     expect(markdown).toContain("Tool diagnostics");
     expect(markdown).toContain('"traceId": "trace-1"');

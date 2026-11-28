@@ -27,6 +27,7 @@ interface Props {
 
 export const BackgroundSettingsContent = ({ form }: Props) => {
   const tBoard = useI18n("board");
+  const tMedia = useI18n("media");
   const { data: session } = useSession();
 
   const [debouncedSearch] = useDebouncedValue(form.values.backgroundImageUrl ?? "", 200);
@@ -119,7 +120,14 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
               }}
             >
               {({ onClick, loading }) => (
-                <ActionIcon onClick={onClick} loading={loading} mt={24} size={36} variant="default">
+                <ActionIcon
+                  onClick={onClick}
+                  loading={loading}
+                  mt={24}
+                  size={36}
+                  variant="default"
+                  aria-label={tMedia("action.upload.label")}
+                >
                   <IconUpload size={16} stroke={1.5} />
                 </ActionIcon>
               )}

@@ -826,14 +826,11 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      const client = requireRedisConnection(getSetClient);
-      const length = await client.llen(channelName);
+      const itemsInCollection = await requireRedisConnection(getSetClient).lrange(channelName, 0, -1);
       const items: TData[] = [];
-      const itemsInCollection = await client.lrange(channelName, 0, length - 1);
 
-      for (let i = 0; i < length - 1; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(itemsInCollection[i]!);
+      for (const item of itemsInCollection) {
+        const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(item);
         if (deserializedItem.timestamp < time) {
           continue;
         }

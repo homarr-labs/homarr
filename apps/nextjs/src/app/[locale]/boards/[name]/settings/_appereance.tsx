@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import {
   Anchor,
   Collapse,
@@ -28,6 +29,7 @@ const hexRegex = /^#[0-9a-fA-F]{6}$/;
 
 export const ColorSettingsContent = ({ form }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
+  const previewId = useId();
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
 
@@ -38,10 +40,18 @@ export const ColorSettingsContent = ({ form }: Props) => {
         palettePreview={
           (form.values.primaryColor || form.values.secondaryColor) && (
             <>
-              <Anchor onClick={toggle} size="sm" w="fit-content">
+              <Anchor
+                component="button"
+                type="button"
+                onClick={toggle}
+                aria-expanded={showPreview}
+                aria-controls={previewId}
+                size="sm"
+                w="fit-content"
+              >
                 {showPreview ? tCommon("preview.hide") : tCommon("preview.show")}
               </Anchor>
-              <Collapse expanded={showPreview}>
+              <Collapse id={previewId} expanded={showPreview}>
                 <Stack gap="xs">
                   {form.values.primaryColor && <ColorsPreview previewColor={form.values.primaryColor} />}
                   {form.values.secondaryColor && <ColorsPreview previewColor={form.values.secondaryColor} />}
