@@ -1,5 +1,14 @@
 .editor {
-  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
+  --mantine-color-dimmed: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+}
+
+.formActions button {
+  color: var(--mantine-color-text);
+}
+
+.formActions button[type="submit"] {
+  background-color: color-mix(in srgb, var(--mantine-primary-color-filled) 65%, black);
+  color: white;
 }
 
 .editorPanel {

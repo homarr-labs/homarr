@@ -9,6 +9,6 @@
 
 @media (max-width: 36em) {
   .preview {
-    max-height: 38dvh;
+    max-height: min(65dvh, 400px);
   }
 }

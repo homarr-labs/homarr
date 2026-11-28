@@ -22,7 +22,7 @@ import type { SmartContainerOptions } from "@homarr/validation/smart-container";
 import { WidgetActivityProvider } from "@homarr/widgets/activity";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { getLogicalGridSize } from "~/components/board/layout";
+import { CONTAINER_HEADER_HEIGHT, getLogicalGridSize } from "~/components/board/layout";
 import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import { getSmartContainerChromeHeight, getSmartContainerStateLabel } from "./constants";
 import { useSectionItems } from "../use-section-items";
@@ -121,9 +121,10 @@ const ReelSurface = ({
     !collapsed &&
     options.appearance === "reel" &&
     states.length > 2 &&
-    section.height >= 3 &&
-    getLogicalGridSize(section.height - 1) >
-      (getSmartContainerChromeHeight(true) + 24) * calculateBoardUiScale(canvasScale);
+    savedRows >= 3 &&
+    getLogicalGridSize(savedRows - 1) >
+      (getSmartContainerChromeHeight(true) + (hasHeader ? CONTAINER_HEADER_HEIGHT : 0) + 24) *
+        calculateBoardUiScale(canvasScale);
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);

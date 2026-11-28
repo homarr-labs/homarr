@@ -96,7 +96,7 @@
 }
 .countdown,
 .position {
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
   font-variant-numeric: tabular-nums;
 }
 .widgetBody,

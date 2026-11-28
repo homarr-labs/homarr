@@ -90,7 +90,7 @@ export const ContainerStateSettings = ({
             onClick={() => onSelectState(state.id)}
             fullWidth
             leftSection={
-              <Badge size="sm" variant="light">
+              <Badge size="sm" variant="light" c="var(--mantine-color-text)">
                 {index + 1}
               </Badge>
             }
@@ -177,6 +177,7 @@ export const ContainerStateSettings = ({
       </Group>
       <Button
         color="red"
+        c="light-dark(var(--mantine-color-red-9), var(--mantine-color-red-3))"
         variant="subtle"
         mih={44}
         leftSection={<IconTrash size={16} />}
@@ -234,7 +235,9 @@ export const ContainerStatePreview = ({
         <Text fw={600} truncate>
           {title || t("edit")}
         </Text>
-        <Badge variant="light">{t("preview")}</Badge>
+        <Badge variant="light" c="var(--mantine-color-text)">
+          {t("preview")}
+        </Badge>
       </Group>
       <Group grow gap="xs" wrap="nowrap">
         <Button

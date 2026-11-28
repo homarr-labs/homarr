@@ -83,9 +83,9 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
     if (document.activeElement !== document.body) return;
     const editor = editorRef.current;
     const target = editor?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"], [data-autofocus]');
-    target?.focus();
+    target?.focus({ preventScroll: true });
   }, []);
-  const isTabbed = useMediaQuery("(max-width: 68em)");
+  const isTabbed = useMediaQuery("(max-width: 68em)", undefined, { getInitialValueInEffect: false });
   const [newItems, setNewItems] = useState<Item[]>([]);
   const [editedItems, setEditedItems] = useState<Map<string, Item>>(() => new Map());
   const [deletedIds, setDeletedIds] = useState<Set<string>>(() => new Set());
@@ -377,7 +377,12 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       preview={
         <Stack gap="xs">
           {smart.enabled && smart.mode !== "manual" && (
-            <Button variant="light" mih={44} onClick={() => setPlayingPreview((current) => !current)}>
+            <Button
+              variant="light"
+              c="var(--mantine-color-text)"
+              mih={44}
+              onClick={() => setPlayingPreview((current) => !current)}
+            >
               {isPlayingPreview ? t("stopPreview") : t("playPreview")}
             </Button>
           )}
@@ -402,7 +407,11 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
   const settingsPanel = (
     <form id={formId} className={classes.settings} onSubmit={submit}>
       <Stack gap="md">
-        <TextInput label={translate("common.field.title")} data-autofocus {...form.getInputProps("title")} />
+        <TextInput
+          label={translate("common.field.title")}
+          data-autofocus={!isTabbed || !smart.enabled || undefined}
+          {...form.getInputProps("title")}
+        />
         <Switch
           styles={editorSwitchStyles}
           label={t("enabled")}
@@ -464,7 +473,7 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
         ) : isTabbed ? (
           <Tabs defaultValue="widgets" keepMounted keepMountedMode="display-none">
             <Tabs.List grow mb="sm" aria-label={t("edit")}>
-              <Tabs.Tab value="widgets" className={classes.tab}>
+              <Tabs.Tab value="widgets" className={classes.tab} data-autofocus>
                 {t("editorContent")}
               </Tabs.Tab>
               <Tabs.Tab value="settings" className={classes.tab}>
@@ -488,7 +497,9 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
             {t("stateFull")}
           </Text>
         )}
-        <ModalFormFooter onCancel={closeEditor} form={formId} />
+        <div className={classes.formActions}>
+          <ModalFormFooter onCancel={closeEditor} form={formId} />
+        </div>
       </WidgetEditFooter>
     </Stack>
   );

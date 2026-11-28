@@ -324,17 +324,6 @@ export const SectionGrid = ({
     !collapsedSectionIds.has(section.id) &&
     section.kind === "container" &&
     section.options.smart?.reclaimSpace;
-  useEffect(() => {
-    if (savedSmartRows === undefined) return;
-    return () => setSmartRows(section.id, null);
-  }, [savedSmartRows, section.id, setSmartRows]);
-  useEffect(() => {
-    if (savedSmartRows === undefined) return;
-    let displayRows: number | null = null;
-    if (reclaimSmartSpace)
-      displayRows = Math.max(Math.min(3, savedSmartRows), Math.min(savedSmartRows, contentRowCount));
-    setSmartRows(section.id, displayRows);
-  }, [savedSmartRows, section.id, setSmartRows, reclaimSmartSpace, contentRowCount]);
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   if (smartProjection && !isEditMode) rowCount = contentRowCount;
@@ -355,7 +344,9 @@ export const SectionGrid = ({
   let nestedHeaderInset = 0;
   let containerContentScale = 1;
   let rowScale = 1;
-  let viewportHeight = getLogicalGridSize(rowProjection.getDisplayRow(rowCount));
+  const fullGridHeight = getLogicalGridSize(rowProjection.getDisplayRow(rowCount));
+  let viewportHeight = fullGridHeight;
+  let reclaimedRows: number | null = null;
   if (section.kind === "container") {
     const metrics = getContainerGridMetrics({
       section,
@@ -377,7 +368,12 @@ export const SectionGrid = ({
       ? (getSmartContainerChromeHeight(smartProjection.showPeeks) * calculateBoardUiScale(canvasScale)) /
         parentContentScale
       : 0;
-    viewportHeight = Math.max(1, allocatedHeight - metrics.overhead - smartChrome);
+    const overhead = metrics.overhead + smartChrome;
+    if (reclaimSmartSpace && savedSmartRows !== undefined) {
+      const requiredHeight = fullGridHeight * containerContentScale + overhead;
+      reclaimedRows = Math.min(savedSmartRows, Math.max(3, requiredHeight / (LOGICAL_GRID_PITCH * parentRowScale)));
+    }
+    viewportHeight = Math.max(1, allocatedHeight - overhead);
     if (fittedViewportRowCount === undefined && parentRowScale === 1 && !isScrollableContainer) {
       viewportHeight = Math.max(
         viewportHeight,
@@ -390,7 +386,11 @@ export const SectionGrid = ({
       rowScale = viewportHeight / getLogicalGridSize(rowCount);
     }
   }
-  const fullGridHeight = getLogicalGridSize(rowProjection.getDisplayRow(rowCount));
+  useLayoutEffect(() => {
+    if (savedSmartRows === undefined) return;
+    setSmartRows(section.id, reclaimedRows);
+    return () => setSmartRows(section.id, null);
+  }, [savedSmartRows, section.id, setSmartRows, reclaimedRows]);
   const scrollHintHeight = (24 * calculateBoardUiScale(canvasScale)) / parentContentScale;
   const showScrollHint =
     smartProjection &&
@@ -572,7 +572,6 @@ export const SectionGrid = ({
           id={scrollHintId}
           component="div"
           size="xs"
-          c="dimmed"
           ta="center"
           style={{ height: scrollHintHeight }}
           className={classes.scrollHint}

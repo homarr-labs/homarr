@@ -1,8 +1,9 @@
-import { useId, useMemo } from "react";
+import { useId, useMemo, useState } from "react";
 import { Button, Text } from "@mantine/core";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { getWidgetActivity } from "@homarr/widgets/activity";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { getWidgetActivity, smartContainerActivityKinds } from "@homarr/widgets/activity";
 import { useSmartContainerProjection } from "./smart-container/smart-container-context";
 import smartClasses from "./smart-container/smart-container-surface.module.css";
 
@@ -17,7 +18,9 @@ import { useSectionContext } from "./section-context";
 import { useSectionItems } from "./use-section-items";
 
 export const SectionContent = () => {
-  const { innerSections, integrations, items } = useSectionContext();
+  const { section, innerSections, integrations, items } = useSectionContext();
+  const smart = useSmartContainerProjection();
+  const [isEditMode] = useEditMode();
 
   /** Keep portal content order deterministic across static and edit renderers. */
   const sortedItems = useMemo(() => {
@@ -30,9 +33,29 @@ export const SectionContent = () => {
     });
   }, [items, innerSections]);
 
+  // Keep visited widgets mounted across state changes. Hidden activity reporters still drive automatic selection.
+  const [visited, setVisited] = useState<ReadonlySet<string>>(() => new Set());
+  let visibleItems = sortedItems;
+  if (smart?.sectionId === section.id) {
+    const active = smart.projection.itemIds;
+    if (isEditMode && items.some((item) => !visited.has(item.id))) {
+      setVisited(new Set(items.map((item) => item.id)));
+    } else if (active.some((id) => !visited.has(id))) {
+      setVisited(new Set([...visited, ...active]));
+    }
+    if (!isEditMode) {
+      visibleItems = sortedItems.filter(
+        (item) =>
+          item.type === "section" ||
+          visited.has(item.id) ||
+          smart.projection.placements.has(item.id) ||
+          smartContainerActivityKinds.has(item.kind),
+      );
+    }
+  }
   return (
     <>
-      {sortedItems.map((item) => (
+      {visibleItems.map((item) => (
         <SectionContentItem key={item.id} item={item} integrations={integrations} />
       ))}
     </>
