@@ -29,12 +29,12 @@ const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 
 const secrets: IntegrationSecret[] = [{ kind: "apiKey", value: "plex-token" }];
 
-const createIntegration = () =>
+const createIntegration = (externalUrl: string | null = null) =>
   new PlexIntegration({
     id: "test-plex",
     name: "Test Plex",
     url: TEST_URL,
-    externalUrl: null,
+    externalUrl,
     decryptedSecrets: secrets,
   });
 
@@ -394,5 +394,36 @@ describe("PlexIntegration.getMediaReleasesAsync with recently added episodes", (
     mockFetch.mockImplementation(() => respond({ error: "unauthorized" }, 401));
 
     await expect(createIntegration().getMediaReleasesAsync()).rejects.toThrow();
+  });
+
+  test.each([
+    [null, `${TEST_URL}/web/index.html`],
+    [`${TEST_URL}/web`, `${TEST_URL}/web/index.html`],
+    [`${TEST_URL}/web/`, `${TEST_URL}/web/index.html`],
+    [`${TEST_URL}/web/index.html`, `${TEST_URL}/web/index.html`],
+    ["https://proxy.example.com/plex", "https://proxy.example.com/plex/web/index.html"],
+    ["https://proxy.example.com/plex/web", "https://proxy.example.com/plex/web/index.html"],
+    ["https://app.plex.tv/desktop", "https://app.plex.tv/desktop"],
+    ["https://app.plex.tv", "https://app.plex.tv/desktop"],
+  ])("builds a Plex Web link from external URL %s", async (externalUrl, expectedBase) => {
+    mockFetch.mockImplementation((url) => {
+      const urlString = String(url);
+      if (urlString.endsWith("/identity")) {
+        return respond({ MediaContainer: { machineIdentifier: "server-id" } });
+      }
+      if (urlString.endsWith("/library/recentlyAdded")) {
+        return respond({ MediaContainer: { Metadata: [createMetadataItem("movie-1", {})] } });
+      }
+      if (urlString.endsWith("/library/sections")) {
+        return respond({ MediaContainer: { Directory: [] } });
+      }
+      throw new Error(`Unexpected Plex request: ${urlString}`);
+    });
+
+    const releases = await createIntegration(externalUrl).getMediaReleasesAsync();
+
+    expect(releases[0]?.href).toBe(
+      `${expectedBase}#!/server/server-id/details?key=${encodeURIComponent("/library/metadata/movie-1")}`,
+    );
   });
 });
