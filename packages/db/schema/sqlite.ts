@@ -455,6 +455,7 @@ export const apps = sqliteTable("app", {
   iconUrl: text().notNull(),
   href: text(),
   pingUrl: text(),
+  dockerContainer: text(),
 });
 
 export const integrationItems = sqliteTable(

@@ -10,13 +10,19 @@ import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { fetchWebsiteMetadataAsync, getIconForName, getIconForWebsiteAsync } from "@homarr/icons";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
-import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
+import {
+  appCreateManySchema,
+  appEditSchema,
+  appManageSchema,
+  getAppWithVisibleDockerLink,
+} from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { iconsDetectFaviconSchema } from "@homarr/validation/icons";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { AppAccessControl } from "./app/app-access-control";
+import { validateAppDockerContainerAsync } from "./app/docker-container-link";
 
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
@@ -53,7 +59,7 @@ export const appRouter = createTRPCRouter({
       });
 
       return {
-        items: dbApps,
+        items: dbApps.map((app) => visibleApp(app, ctx.session.user)),
         totalCount,
       };
     }),
@@ -72,10 +78,9 @@ export const appRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "List all apps" },
     })
-    .query(({ ctx }) => {
-      return ctx.db.query.apps.findMany({
-        orderBy: asc(apps.name),
-      });
+    .query(async ({ ctx }) => {
+      const results = await ctx.db.query.apps.findMany({ orderBy: asc(apps.name) });
+      return results.map((app) => visibleApp(app, ctx.session.user));
     }),
   search: protectedProcedure
     .input(
@@ -100,7 +105,7 @@ export const appRouter = createTRPCRouter({
         description: "Search apps by name. REQUIRED: query (search string). OPTIONAL: limit (number, default 10)",
       },
     })
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       if (
         !ctx.session.user.permissions.includes("app-modify-all") &&
         !ctx.session.user.permissions.includes("board-modify-all")
@@ -111,11 +116,12 @@ export const appRouter = createTRPCRouter({
         });
       }
 
-      return ctx.db.query.apps.findMany({
+      const results = await ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),
         limit: input.limit,
       });
+      return results.map((app) => visibleApp(app, ctx.session.user));
     }),
   selectable: protectedProcedure
     .input(z.void())
@@ -199,19 +205,21 @@ export const appRouter = createTRPCRouter({
         protect: true,
         summary: "Create an app",
         description:
-          "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL.",
+          "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL. An optional dockerContainer link requires admin permission; use a name@endpointId pair from docker_getContainers.",
       },
       mcp: {
         enabled: true,
         effect: "additive",
         description:
-          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
+          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string), dockerContainer (name@endpointId from docker_getContainers; admin permission required)",
       },
     })
     .mutation(async ({ ctx, input }) => {
       const id = createId();
+      if (input.dockerContainer) await validateAppDockerContainerAsync(input.dockerContainer, ctx.session.user);
       const insertValues = {
         id,
+        dockerContainer: input.dockerContainer ?? null,
         name: input.name,
         description: input.description,
         iconUrl: input.iconUrl,
@@ -244,10 +252,17 @@ export const appRouter = createTRPCRouter({
     .input(appCreateManySchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
+      await Promise.all(
+        input.map(async (app) => {
+          if (app.dockerContainer) await validateAppDockerContainerAsync(app.dockerContainer, ctx.session.user);
+        }),
+      );
       await ctx.db.insert(apps).values(
         input.map((app) => ({
           id: createId(),
           name: app.name,
+          dockerContainer: app.dockerContainer ?? null,
+          pingUrl: app.pingUrl || null,
           description: app.description,
           iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
           href: app.href,
@@ -266,12 +281,12 @@ export const appRouter = createTRPCRouter({
         protect: true,
         summary: "Update an app",
         description:
-          "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches.",
+          "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches. Omit dockerContainer to preserve its link; an admin can pass null to unlink or name@endpointId from Docker inventory to link.",
       },
       mcp: {
         enabled: true,
         description:
-          "Update an existing app. REQUIRED: id (app ID), name, iconUrl, href. OPTIONAL: description (string or null), pingUrl (URL or empty string)",
+          "Update an existing app. REQUIRED: id (app ID), name, iconUrl, href. OPTIONAL: description (string or null), pingUrl (URL or empty string), dockerContainer (admin-only name@endpointId link, null to unlink; omitted preserves it)",
       },
     })
     .mutation(async ({ ctx, input }) => {
@@ -286,10 +301,15 @@ export const appRouter = createTRPCRouter({
         });
       }
 
+      if (input.dockerContainer !== undefined && input.dockerContainer !== app.dockerContainer) {
+        await validateAppDockerContainerAsync(input.dockerContainer, ctx.session.user);
+      }
+
       await ctx.db
         .update(apps)
         .set({
           name: input.name,
+          dockerContainer: input.dockerContainer,
           description: input.description,
           iconUrl: input.iconUrl,
           href: input.href,
@@ -337,7 +357,7 @@ export class AppRepository {
 
   constructor(
     private db: Database,
-    user: Session["user"] | null,
+    private user: Session["user"] | null,
   ) {
     this.accessControl = new AppAccessControl(db, user);
   }
@@ -353,6 +373,10 @@ export class AppRepository {
       where: inArray(apps.id, ids),
     });
 
-    return canUserSeeApps ? dbApps : [];
+    return canUserSeeApps ? dbApps.map((app) => visibleApp(app, this.user)) : [];
   }
 }
+
+const visibleApp = (app: App, user: Session["user"] | null): App => {
+  return getAppWithVisibleDockerLink(app, user?.permissions.includes("admin") ?? false);
+};

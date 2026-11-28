@@ -11,7 +11,12 @@ type PrefetchItem = {
 
 // Register pending queries before dehydrating the board. Their results can then
 // cross the RSC boundary without waiting for the database read to finish.
-export const prefetchForKind = (kind: WidgetKind, queryClient: QueryClient, items: PrefetchItem[]) => {
-  if (kind === "app") prefetchApps(queryClient, items);
-  if (kind === "bookmarks") prefetchBookmarks(queryClient, items);
+export const prefetchForKind = (
+  kind: WidgetKind,
+  queryClient: QueryClient,
+  items: PrefetchItem[],
+  canReadDockerLink: Promise<boolean> = Promise.resolve(false),
+) => {
+  if (kind === "app") prefetchApps(queryClient, items, canReadDockerLink);
+  if (kind === "bookmarks") prefetchBookmarks(queryClient, items, canReadDockerLink);
 };
