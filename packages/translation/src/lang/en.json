@@ -5663,8 +5663,16 @@
       "openService": "Open notification service",
       "deleteNotification": "Delete notification from Gotify",
       "dismissNotification": "Dismiss notification in Home Assistant",
+      "deleteAllNotifications": "Delete all notifications",
+      "deleteAllButton": "Delete all",
       "deleteFailed": "Could not delete notification",
-      "deleteFailedMessage": "The notification could not be deleted. Please try again."
+      "deleteFailedMessage": "The notification could not be deleted. Please try again.",
+      "deleteAllConfirmationPrompt": "Click again",
+      "deleteAllConfirmationMessage": "Click again to delete {count} notifications across {integrations}",
+      "deleteAllFailed": "Could not delete notifications",
+      "deleteAllFailedMessage": "Some notifications could not be deleted. Please try again.",
+      "refreshFailed": "Could not refresh notifications",
+      "refreshFailedMessage": "The notifications could not be refreshed. Please try again."
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",

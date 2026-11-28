@@ -26,12 +26,15 @@ export const notificationsRouter = createTRPCRouter({
     }),
   getNotifications: publicProcedure
     .unstable_concat(createManyWidgetIntegrationMiddleware("query", "notifications"))
-    .query(async ({ ctx }) => {
+    .input(z.object({ forceRefresh: z.boolean().optional() }))
+    .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
           const innerHandler = notificationsRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
+          const { data, timestamp } = await innerHandler.getDataAsync({
+            maxAgeMs: input.forceRefresh ? 1000 : undefined,
+          });
 
           return {
             integration: {

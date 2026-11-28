@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
-import { ActionIcon, Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconClock, IconExternalLink, IconTrash } from "@tabler/icons-react";
+import { useMemo, useState } from "react";
+import { ActionIcon, Avatar, Badge, Button, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconClock, IconExternalLink, IconRefresh, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -27,10 +27,8 @@ export default function NotificationsWidget({
   displayMode,
   displayScale = 1,
 }: WidgetComponentProps<"notifications">) {
-  const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery({
-    ...options,
-    integrationIds,
-  });
+  const notificationsQueryInput = { ...options, integrationIds, forceRefresh: true };
+  const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery(notificationsQueryInput);
   const notificationData = getUsableWidgetQueryData(notificationsQuery);
   const notificationIntegrations = useMemo(() => notificationData ?? [], [notificationData]);
   const { isPending } = notificationsQuery;
@@ -41,10 +39,21 @@ export default function NotificationsWidget({
   const board = useOptionalBoard();
   const interactIntegrations = useIntegrationsWithInteractAccess();
   const utils = clientApi.useUtils();
+  const [bulkDeleteState, setBulkDeleteState] = useState<
+    { status: "idle" } | { status: "confirming"; scope: string } | { status: "deleting" }
+  >({ status: "idle" });
   const deleteNotification = clientApi.widget.notifications.deleteNotification.useMutation({
     onSuccess: () => utils.widget.notifications.getNotifications.invalidate(),
     onError: () => showErrorNotification({ title: t("deleteFailed"), message: t("deleteFailedMessage") }),
   });
+  const refreshNotifications = async () => {
+    setBulkDeleteState({ status: "idle" });
+    try {
+      await notificationsQuery.refetch({ throwOnError: true });
+    } catch {
+      showErrorNotification({ title: t("refreshFailed"), message: t("refreshFailedMessage") });
+    }
+  };
 
   const sortedNotifications = useMemo(
     () =>
@@ -61,6 +70,53 @@ export default function NotificationsWidget({
         .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
     [notificationIntegrations],
   );
+  const canDeleteNotification = (notification: (typeof sortedNotifications)[number]) =>
+    (notification.integrationKind === "gotify" || notification.integrationKind === "homeAssistant") &&
+    interactIntegrations.some((integration) => integration.id === notification.integrationId);
+  const deletableNotifications = sortedNotifications.filter(canDeleteNotification);
+  const bulkDeleteScope = JSON.stringify(
+    deletableNotifications.map(({ integrationId, id }) => [integrationId, id]),
+  );
+  const isConfirmingBulkDelete =
+    bulkDeleteState.status === "confirming" && bulkDeleteState.scope === bulkDeleteScope;
+  const isDeletingAll = bulkDeleteState.status === "deleting";
+  // ponytail: Second clicks stay armed for unchanged IDs; add expiry if delayed confirmations should be revoked.
+  const bulkDeleteConfirmationMessage = t("deleteAllConfirmationMessage", {
+    count: String(deletableNotifications.length),
+    integrations: [...new Set(deletableNotifications.map(({ integrationName }) => integrationName))].join(", "),
+  });
+  const deleteAllNotifications = async () => {
+    setBulkDeleteState({ status: "deleting" });
+    try {
+      const results = await Promise.allSettled(
+        deletableNotifications.map(({ integrationId, id: notificationId }) =>
+          utils.client.widget.notifications.deleteNotification.mutate({ integrationId, notificationId }),
+        ),
+      );
+      if (results.some((result) => result.status === "rejected")) {
+        showErrorNotification({
+          title: t("deleteAllFailed"),
+          message: t("deleteAllFailedMessage"),
+        });
+      }
+      await utils.widget.notifications.getNotifications.invalidate();
+    } catch {
+      showErrorNotification({ title: t("refreshFailed"), message: t("refreshFailedMessage") });
+    } finally {
+      setBulkDeleteState({ status: "idle" });
+    }
+  };
+  const handleDeleteAllNotifications = () => {
+    if (isConfirmingBulkDelete) {
+      void deleteAllNotifications();
+    } else {
+      setBulkDeleteState({ status: "confirming", scope: bulkDeleteScope });
+    }
+  };
+  const deleteOneNotification = (integrationId: string, notificationId: string) => {
+    setBulkDeleteState({ status: "idle" });
+    deleteNotification.mutate({ integrationId, notificationId });
+  };
   const failedIntegrations = notificationIntegrations.filter(
     (integration): integration is typeof integration & { error: string } => Boolean(integration.error),
   );
@@ -85,7 +141,38 @@ export default function NotificationsWidget({
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isDense ? 4 : "xs"}>
-      <Stack w="100%" gap={isAdvanced ? "xs" : "sm"}>
+      <Stack w="100%" gap="xs">
+        <Group justify="flex-end" gap="xs" h={24} wrap="nowrap" preventGrowOverflow={false}>
+          {deletableNotifications.length > 0 && (
+            <Button
+              size="compact-xs"
+              variant={isConfirmingBulkDelete ? "filled" : "subtle"}
+              color="red"
+              leftSection={<IconTrash style={iconSizes.md} />}
+              aria-label={
+                isConfirmingBulkDelete ? bulkDeleteConfirmationMessage : t("deleteAllNotifications")
+              }
+              title={isConfirmingBulkDelete ? bulkDeleteConfirmationMessage : t("deleteAllNotifications")}
+              loading={isDeletingAll}
+              disabled={deleteNotification.isPending || notificationsQuery.isFetching}
+              onClick={handleDeleteAllNotifications}
+            >
+              {isConfirmingBulkDelete ? t("deleteAllConfirmationPrompt") : t("deleteAllButton")}
+            </Button>
+          )}
+          <ActionIcon
+            size="sm"
+            variant="subtle"
+            color="gray"
+            aria-label={tCommon("action.refresh")}
+            title={tCommon("action.refresh")}
+            loading={notificationsQuery.isFetching}
+            disabled={isDeletingAll || deleteNotification.isPending}
+            onClick={() => void refreshNotifications()}
+          >
+            <IconRefresh style={iconSizes.md} />
+          </ActionIcon>
+        </Group>
         {failedIntegrations.length > 0 && (
           <Group gap={4} wrap="wrap">
             {failedIntegrations.map((integration) => (
@@ -174,25 +261,20 @@ export default function NotificationsWidget({
                           <IconExternalLink style={iconSizes.md} />
                         </ActionIcon>
                       )}
-                      {(notification.integrationKind === "gotify" ||
-                        notification.integrationKind === "homeAssistant") &&
-                        interactIntegrations.some(({ id }) => id === notification.integrationId) && (
-                          <ActionIcon
-                            variant="subtle"
-                            color="red"
-                            aria-label={actionLabel}
-                            title={actionLabel}
-                            disabled={deleteNotification.isPending}
-                            onClick={() =>
-                              deleteNotification.mutate({
-                                integrationId: notification.integrationId,
-                                notificationId: notification.id,
-                              })
-                            }
-                          >
-                            <IconTrash style={iconSizes.md} />
-                          </ActionIcon>
-                        )}
+                      {canDeleteNotification(notification) && (
+                        <ActionIcon
+                          variant="subtle"
+                          color="red"
+                          aria-label={actionLabel}
+                          title={actionLabel}
+                          disabled={deleteNotification.isPending || isDeletingAll || notificationsQuery.isFetching}
+                          onClick={() =>
+                            deleteOneNotification(notification.integrationId, notification.id)
+                          }
+                        >
+                          <IconTrash style={iconSizes.md} />
+                        </ActionIcon>
+                      )}
                     </Stack>
                   </Flex>
                 </Card>
