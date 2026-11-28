@@ -21,7 +21,8 @@
     "./scale": "./src/scale.ts",
     "./layout-data": "./src/layout-data.ts",
     "./tab-selection": "./src/tab-selection.ts",
-    "./tabs": "./src/tabs.tsx"
+    "./tabs": "./src/tabs.tsx",
+    "./grid": "./src/grid/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
