@@ -1471,6 +1471,8 @@ button.tile:not(:disabled):active {
 
 .sensorBody {
   position: relative;
+  /* The text sits over the graph; the pointer reaches the graph through it. */
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 2px;

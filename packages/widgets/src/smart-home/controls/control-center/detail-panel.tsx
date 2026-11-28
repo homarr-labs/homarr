@@ -18,7 +18,8 @@ import {
 import { useSmartHomeAreas, useSmartHomeEntities, useSmartHomeEntityError } from "../store";
 import type { HaAction, HaEntity } from "../types";
 import { entityNeedsCode, formatTargetRange, getTargetRange, needsCode } from "./capabilities";
-import { RoundButton, Sparkline } from "./controls";
+import { RoundButton } from "./controls";
+import { EntityHistoryGraph } from "./history-graph";
 import { LightColorControls } from "./color-controls";
 import { useDeviceControlDisabled, useRunner } from "./hooks";
 import { getHistoryValues } from "./history";
@@ -175,7 +176,7 @@ function HistorySummary({ entity }: { entity: HaEntity }) {
   return (
     <DetailSection title="History">
       <div className={classes.detailChart}>
-        <Sparkline values={history} color={theme.accent} />
+        <EntityHistoryGraph entity={entity} color={theme.accent} />
       </div>
       <FactList
         facts={[

@@ -1,4 +1,5 @@
-import { getHistorySegments, getHistoryValues } from "../control-center/history";
+import { getSparklineY, Sparkline } from "../../../common/sparkline";
+import { getHistoryValues } from "../control-center/history";
 
 interface SparkProps {
   data: (number | null)[];
@@ -8,49 +9,44 @@ interface SparkProps {
   fill?: boolean;
 }
 
+// Room above and below the line, as a share of its range, so the stroke and the end dot are not clipped.
+const PADDING = 0.15;
+
+/** A small trend in the row's color (`--c`), with a dot on the latest value. Gaps stay gaps. */
 export function Spark({ data, width, height, strokeWidth = 1.5, fill = true }: SparkProps) {
-  if (data.length < 2) return null;
   const values = getHistoryValues(data);
-  if (values.length === 0) return null;
+  if (data.length < 2 || values.length === 0) return null;
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const range = max - min || 1;
-  const pad = strokeWidth + 1;
-  const segments = getHistorySegments(data).map((segment) =>
-    segment.map(({ value, index }) => {
-      const x = (index / (data.length - 1)) * width;
-      const y = pad + (1 - (value - min) / range) * (height - pad * 2);
-      return [x, y] as const;
-    }),
-  );
-  const last = segments.at(-1)?.at(-1);
+  const span = max - min || 1;
+  const domain = [min - span * PADDING, max + span * PADDING] as const;
+  const lastIndex = data.findLastIndex((value) => value !== null && Number.isFinite(value));
+  const last = data[lastIndex];
 
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      aria-hidden
-      style={{ display: "block", flex: "none" }}
-    >
-      {segments.map((points, index) => {
-        const line = points.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
-        const area = `${points[0]?.[0]},${height} ${line} ${points.at(-1)?.[0]},${height}`;
-        return (
-          <g key={index}>
-            {fill && <polygon points={area} fill="var(--c)" opacity={0.14} />}
-            <polyline
-              points={line}
-              fill="none"
-              stroke="var(--c)"
-              strokeWidth={strokeWidth}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-          </g>
-        );
-      })}
-      {last && <circle cx={last[0]} cy={last[1]} r={2} fill="var(--c)" />}
-    </svg>
+    <span style={{ position: "relative", display: "block", flex: "none", width, height }} aria-hidden>
+      <Sparkline
+        series={[{ values: data, color: "var(--c)" }]}
+        yDomain={domain}
+        variant={fill ? "area" : "line"}
+        fillOpacity={0.14}
+        strokeWidth={strokeWidth}
+        connectNulls={false}
+      />
+      {typeof last === "number" ? (
+        <span
+          style={{
+            position: "absolute",
+            left: `${(lastIndex / (data.length - 1)) * 100}%`,
+            top: `${getSparklineY(last, domain) * 100}%`,
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            background: "var(--c)",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+      ) : null}
+    </span>
   );
 }
