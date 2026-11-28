@@ -6,5 +6,5 @@ import { createHealthDashboardFixture } from "@homarr/widgets/health-monitoring/
 
 export const getHealthDashboardFixtureAsync = cache(async () => {
   if (process.env.NODE_ENV !== "development") notFound();
-  return createHealthDashboardFixture(await getBoardByNameAsync("default"));
+  return createHealthDashboardFixture(await getBoardByNameAsync("dashboard"));
 });

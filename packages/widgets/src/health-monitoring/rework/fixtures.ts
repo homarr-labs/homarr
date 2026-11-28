@@ -1,5 +1,6 @@
 import type { ClusterHealthMonitoring, SystemHealthMonitoring } from "@homarr/integrations/types";
 
+import { canSelectStorageVolumes, toScopedStorageVolumeValue } from "../../filter-storage-volumes";
 import type { HealthPreviewData, HealthSystemFixture, HealthSystemKind } from "./types";
 
 export const HEALTH_FIXTURE_UPDATED_AT = 1762506000000;
@@ -68,7 +69,9 @@ function fixture(kind: HealthSystemKind, name: string, data: SystemHealthMonitor
   };
 }
 
-export function createHealthSystemFixtures(): HealthSystemFixture[] {
+export function createHealthSystemFixtures(scenario = "normal"): HealthSystemFixture[] {
+  let archiveDataUsed = 7.36 * TIB;
+  if (scenario === "healthy") archiveDataUsed = 4 * TIB;
   return [
     fixture(
       "openmediavault",
@@ -80,7 +83,7 @@ export function createHealthSystemFixtures(): HealthSystemFixture[] {
         loadAverage: { "1min": 0.68, "5min": 0.54, "15min": 0.42 },
         availablePkgUpdates: 12,
         rebootRequired: true,
-        fileSystem: [volume("/dev/sda1", 28 * GIB, 120 * GIB), volume("/dev/sdb1", 7.36 * TIB, 8 * TIB)],
+        fileSystem: [volume("/dev/sda1", 28 * GIB, 120 * GIB), volume("/dev/sdb1", archiveDataUsed, 8 * TIB)],
         smart: [
           { deviceName: "sda", temperature: 34, overallStatus: "GOOD", healthy: true },
           { deviceName: "sdb", temperature: 43, overallStatus: "GOOD", healthy: true },
@@ -391,8 +394,26 @@ export function createHealthClusterFixture(): ClusterHealthMonitoring {
   };
 }
 
+export function selectPreviewSystems(systems: HealthSystemFixture[], sourceIds: string[]) {
+  return sourceIds.flatMap((id) => systems.filter((system) => system.id === id || system.id.startsWith(`${id}-`)));
+}
+
+export function getPreviewStorageOptions(systems: HealthSystemFixture[], sourceIds: string[]) {
+  return selectPreviewSystems(systems, sourceIds).flatMap((system) => {
+    if (!canSelectStorageVolumes(system.kind)) return [];
+    const devices = new Set(system.health?.fileSystem.map((device) => device.deviceName) ?? []);
+    if (devices.size === 0) {
+      for (const device of system.health?.smart ?? []) devices.add(device.deviceName);
+    }
+    return [...devices].map((device) => ({
+      value: toScopedStorageVolumeValue(system.id, device),
+      label: `${system.name} · ${device}`,
+    }));
+  });
+}
+
 export function getHealthPreviewData(scenario: string): HealthPreviewData {
-  const systems = createHealthSystemFixtures();
+  const systems = createHealthSystemFixtures(scenario);
   const cluster = createHealthClusterFixture();
 
   if (scenario === "empty") return { systems: [], cluster: null };

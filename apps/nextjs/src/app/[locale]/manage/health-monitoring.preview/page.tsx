@@ -10,6 +10,6 @@ export default async function HealthMonitoringPreviewPage({
 }) {
   if (process.env.NODE_ENV !== "development") notFound();
   const params = await searchParams;
-  const board = await api.board.getBoardByName({ name: "default" });
+  const board = await api.board.getBoardByName({ name: "dashboard" });
   return <HealthMonitoringPreview initialScenario={params.fixture} baselineBoard={board} />;
 }

@@ -14,7 +14,7 @@ interface SystemHealthQueryResult {
   integrationId: string;
   integrationName: string;
   healthInfo: SystemHealthMonitoring | null;
-  updatedAt?: Date;
+  updatedAt: Date;
   error?: string;
 }
 
@@ -60,6 +60,7 @@ export const healthMonitoringRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             healthInfo: null,
+            updatedAt: new Date(),
             error: PUBLIC_INTEGRATION_ERROR,
           }),
           throwOnAllFailures: false,

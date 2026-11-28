@@ -4178,7 +4178,7 @@
         "advancedViews": "Analysis views",
         "advancedReporting": "{available} / {total} reporting",
         "advancedSort": "Order systems",
-        "advancedConfigured": "Configured order",
+        "advancedWidgetOrder": "Widget order",
         "advancedInspect": "Inspect a system",
         "advancedNoHistory": "No observed readings for this metric.",
         "advancedNoStorage": "No storage information is available.",

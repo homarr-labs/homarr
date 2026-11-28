@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import type { DotItemDotProps } from "recharts";
 
 import { useByteFormatter } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -33,7 +34,7 @@ import {
 } from "./display";
 import type { HealthOptions } from "./display";
 import { getHealthMetricOrder } from "./configuration";
-import { comparisonHistory } from "./comparison-history";
+import { comparisonHistory, comparisonTimeDomain } from "./comparison-history";
 import type { HistoryMetric } from "./comparison-history";
 import { isVolumeFull } from "./model";
 import type { HealthSystemSnapshot, HealthVolume } from "./model";
@@ -172,9 +173,9 @@ function Compare({
     memory: snapshot.memory?.percent ?? null,
   }));
   const series = [];
-  if (snapshots.some((snapshot) => snapshot.cpuPercent !== null))
+  if (visible.some((snapshot) => snapshot.cpuPercent !== null))
     series.push({ name: "cpu", label: t("cpu"), color: monitoringChartColors.cpu });
-  if (snapshots.some((snapshot) => snapshot.memory !== null))
+  if (visible.some((snapshot) => snapshot.memory !== null))
     series.push({ name: "memory", label: t("memory"), color: monitoringChartColors.memory });
   const inspect = visible.find((snapshot) => snapshot.system.id === inspectId) ?? visible[0];
   let labelWidth = 140;
@@ -201,7 +202,7 @@ function Compare({
           allowDeselect={false}
           aria-label={t("advancedSort")}
           data={[
-            { value: "configured", label: t("advancedConfigured") },
+            { value: "configured", label: t("advancedWidgetOrder") },
             { value: "cpu", label: t("cpu") },
             { value: "memory", label: t("memory") },
             { value: "attention", label: t("attention") },
@@ -278,6 +279,11 @@ function Compare({
   );
 }
 
+function isolatedHistoryDot({ points, index, cx, cy, stroke }: DotItemDotProps) {
+  if (cx === undefined || cy === undefined || points[index - 1]?.y != null || points[index + 1]?.y != null) return null;
+  return <circle cx={cx} cy={cy} r={3} fill={stroke} />;
+}
+
 export function SystemHistoryComparison({
   snapshots,
   width,
@@ -336,19 +342,32 @@ export function SystemHistoryComparison({
     metrics.push({ value: "temperature", label: t("temperature") });
   let selectedMetric = metric;
   if (!metrics.some((entry) => entry.value === metric)) selectedMetric = metrics[0]?.value ?? "cpu";
-  const eligible = snapshots.filter(
-    (snapshot) =>
-      snapshot.system.history.some((sample) => sample[selectedMetric] !== null) ||
-      currentReading(snapshot, selectedMetric) !== null,
+  const eligible = useMemo(
+    () =>
+      snapshots.filter(
+        (snapshot) =>
+          currentReading(snapshot, selectedMetric) !== null ||
+          snapshot.system.history.some((sample) => sample[selectedMetric] !== null),
+      ),
+    [snapshots, selectedMetric],
   );
+  const domain = comparisonTimeDomain(eligible, options.historyWindow);
   let capacity = 6;
   if (width < 500) capacity = 4;
   const pages = Math.max(1, Math.ceil(eligible.length / capacity));
   const currentPage = Math.min(page, pages - 1);
-  const visible = eligible.slice(currentPage * capacity, (currentPage + 1) * capacity);
-  const chartData = useMemo(
-    () => comparisonHistory(visible, selectedMetric, options.historyWindow, options.fahrenheit, locale),
-    [visible, selectedMetric, options.historyWindow, options.fahrenheit, locale],
+  const visible = useMemo(
+    () => eligible.slice(currentPage * capacity, (currentPage + 1) * capacity),
+    [eligible, currentPage, capacity],
+  );
+  const [cutoff] = domain;
+  const chart = useMemo(
+    () => comparisonHistory(visible, selectedMetric, cutoff, options.fahrenheit),
+    [visible, selectedMetric, cutoff, options.fahrenheit],
+  );
+  const timeFormat = useMemo(
+    () => new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit", second: "2-digit" }),
+    [locale],
   );
   let formatter = percent;
   if (selectedMetric === "memory") formatter = formatBytes;
@@ -365,11 +384,14 @@ export function SystemHistoryComparison({
     label: snapshot.system.name,
     color: palette[Math.max(0, snapshots.indexOf(snapshot)) % palette.length] ?? monitoringChartColors.cpu,
   }));
+  let guidance;
+  if (chart.mostReadings < 2)
+    guidance = historyWaitingMessage(options.historyWindow, visible[0]?.system.refreshInterval, t);
   let emptyMessage;
   if (visible.length === 0) emptyMessage = t("advancedNoHistory");
-  else if (!series.some((entry) => chartData.filter((point) => typeof point[entry.name] === "number").length >= 2))
-    emptyMessage = historyWaitingMessage(options.historyWindow, visible[0]?.system.refreshInterval, t);
-  const plotHeight = Math.max(48, Math.floor(height - 132));
+  else if (chart.mostReadings === 0) emptyMessage = guidance;
+  let plotHeight = height - 132;
+  if (guidance && !emptyMessage) plotHeight -= 32;
   return (
     <Stack h="100%" gap={8} miw={0} mih={0}>
       <Group justify="space-between" gap={8} wrap="nowrap">
@@ -415,9 +437,15 @@ export function SystemHistoryComparison({
         title={metrics.find((entry) => entry.value === selectedMetric)?.label ?? t("advancedHistory")}
         emptyMessage={emptyMessage}
         chartProps={{
-          data: chartData,
-          h: plotHeight,
+          data: chart.data,
+          h: Math.max(48, Math.floor(plotHeight)),
           series,
+          xAxisProps: { type: "number", domain, tickFormatter: timeFormat.format, allowDataOverflow: true },
+          areaProps: ({ name }) => {
+            const host = chart.byHost.get(name);
+            if (host?.hasIsolated) return { data: host.data, dot: isolatedHistoryDot };
+            return { data: host?.data };
+          },
           withXAxis: plotHeight >= 100,
           withLegend: false,
           yAxisFormatter: formatter,
@@ -429,6 +457,11 @@ export function SystemHistoryComparison({
           areaChartProps: { margin: { left: 0, right: 4, top: 8, bottom: 0 } },
         }}
       />
+      {guidance && !emptyMessage && (
+        <Text size="xs" c="dimmed">
+          {guidance}
+        </Text>
+      )}
       <Group gap={6} wrap="nowrap" justify="space-between">
         <Group gap={6} wrap="wrap" miw={0}>
           {visible.map((snapshot, index) => (

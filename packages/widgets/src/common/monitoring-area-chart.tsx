@@ -25,6 +25,7 @@ const MonitoringAreaChart = memo(
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
     xAxisProps: xAxisPropsOverride,
+    areaProps: areaPropsOverride,
     areaChartProps: areaChartPropsOverride,
     tooltipProps: originalTooltipProps,
     type = "default",
@@ -72,10 +73,12 @@ const MonitoringAreaChart = memo(
           withGradient={false}
           connectNulls={false}
           withDots={false}
-          areaProps={({ color }) => ({
-            fill: color,
+          areaProps={(series) => ({
+            name: series.label ?? series.name,
+            fill: series.color,
             fillOpacity,
-            activeDot: { r: 4, fill: color, stroke: "transparent", strokeWidth: 2 },
+            activeDot: { r: 4, fill: series.color, stroke: "transparent", strokeWidth: 2 },
+            ...(typeof areaPropsOverride === "function" ? areaPropsOverride(series) : areaPropsOverride),
           })}
           type={type}
           strokeWidth={1}

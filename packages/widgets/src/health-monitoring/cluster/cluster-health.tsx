@@ -9,16 +9,17 @@ import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useSession } from "@homarr/auth/client";
 import type { ClusterHealthMonitoring as ClusterData, Resource } from "@homarr/integrations/types";
 import { useByteFormatter } from "@homarr/settings";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { thresholdColor } from "../../beszel/_shared/colors";
 import { formatPercent } from "../../beszel/_shared/format";
 import { isInitialWidgetQueryPending } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
+import { useWidgetNow } from "../../common/use-widget-now";
 import { getWidgetRefreshInterval } from "../../refresh-interval";
 import { useDemoReadOnly } from "../../demo-read-only";
 import type { WidgetComponentProps } from "../../definition";
-import { uptime } from "../display";
+import { isStaleReading, uptime } from "../display";
 import { getClusterVisibleSections } from "./accordion-state";
 import { clusterCapacity } from "./resource-data";
 import { ResourceTable } from "./resource-table";
@@ -34,6 +35,8 @@ export function ClusterHealthMonitoring(
 ) {
   const t = useI18n("widget.healthMonitoring");
   const tr = useI18n("widget.healthMonitoring.rework");
+  const locale = useCurrentIntlLocale();
+  const now = useWidgetNow()?.getTime();
   const { data: session } = useSession();
   const refreshInterval = getWidgetRefreshInterval(props.options, 10);
   const demoReadOnly = useDemoReadOnly();
@@ -43,6 +46,13 @@ export function ClusterHealthMonitoring(
     { integrationId: props.integrationId, refreshInterval },
     { refetchInterval: pollInterval },
   );
+  let refreshMessage: string | undefined;
+  if (query.isError || query.fetchStatus === "paused") refreshMessage = tr("refreshFailed");
+  if (!demoReadOnly && query.dataUpdatedAt > 0 && isStaleReading(query.dataUpdatedAt, now, refreshInterval)) {
+    refreshMessage = tr("stale", {
+      time: new Date(query.dataUpdatedAt).toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" }),
+    });
+  }
   const sections = getClusterVisibleSections(props.displayMode, props.options.visibleClusterSections);
   const [savedSection, setSection] = useLocalStorage<string>({
     key:
@@ -77,9 +87,9 @@ export function ClusterHealthMonitoring(
   let reservedHeight = padding * 2 + headerHeight + categoryHeight + gap;
   if (!short) reservedHeight += gap;
   if (showCapacity) reservedHeight += 54;
-  if (query.isError) reservedHeight += 22;
+  if (refreshMessage) reservedHeight += 22;
   const bodyHeight = Math.max(20, height - reservedHeight);
-  if (isInitialWidgetQueryPending(query)) return <WidgetQueryLoadingState />;
+  if (isInitialWidgetQueryPending(query) && query.fetchStatus !== "paused") return <WidgetQueryLoadingState />;
   let data = query.data;
   if (isTrpcForbiddenError(query.error)) data = undefined;
   if (!data)
@@ -95,7 +105,7 @@ export function ClusterHealthMonitoring(
     );
   if (props.displayMode === "advanced")
     return (
-      <ClusterAdvanced data={data} width={width} height={height} refreshFailed={query.isError} widgetProps={props} />
+      <ClusterAdvanced data={data} width={width} height={height} refreshMessage={refreshMessage} widgetProps={props} />
     );
   const records: Record<Section, Resource[]> = {
     node: data.nodes,
@@ -141,9 +151,9 @@ export function ClusterHealthMonitoring(
           </Group>
         </Group>
       )}
-      {query.isError && (
-        <Text component="output" size="xs" aria-live="polite">
-          {tr("refreshFailed")}
+      {refreshMessage && (
+        <Text component="output" size="xs" c="var(--health-warning)" aria-live="polite" title={refreshMessage}>
+          {refreshMessage}
         </Text>
       )}
       {showCapacity && <ClusterCapacity data={data} options={props.options} advanced={false} />}
@@ -256,7 +266,7 @@ function ClusterCapacity({
 function Capacity({ label, value, context }: { label: string; value: number | null; context: string }) {
   let formatted = "—";
   let color = "gray";
-  let percentage = 0;
+  let percentage: number | null = null;
   if (value !== null && Number.isFinite(value)) {
     formatted = formatPercent(value);
     color = thresholdColor(value);
@@ -272,7 +282,9 @@ function Capacity({ label, value, context }: { label: string; value: number | nu
           {formatted}
         </Text>
       </Group>
-      <Progress value={percentage} size={4} color={color} aria-label={label + ": " + formatted} />
+      {percentage !== null && (
+        <Progress value={percentage} size={4} color={color} aria-label={label + ": " + formatted} />
+      )}
       <Text size="xs" c="dimmed" truncate>
         {context}
       </Text>

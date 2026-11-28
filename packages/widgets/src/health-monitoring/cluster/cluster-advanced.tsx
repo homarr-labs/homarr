@@ -22,11 +22,11 @@ interface ClusterAdvancedProps {
   data: ClusterHealthMonitoring;
   width: number;
   height: number;
-  refreshFailed?: boolean;
+  refreshMessage?: string;
   widgetProps: WidgetComponentProps<"healthMonitoring"> & { integrationId: string; integrationName?: string };
 }
 
-export function ClusterAdvanced({ data, width, height, widgetProps, refreshFailed }: ClusterAdvancedProps) {
+export function ClusterAdvanced({ data, width, height, widgetProps, refreshMessage }: ClusterAdvancedProps) {
   const t = useI18n("widget.healthMonitoring.rework");
   const [view, setView] = useState<AdvancedView>("overview");
   const body = useHealthBounds();
@@ -47,17 +47,17 @@ export function ClusterAdvanced({ data, width, height, widgetProps, refreshFaile
           {t("clusterActive", { active: data.nodes.filter((node) => node.isRunning).length, total: data.nodes.length })}
         </Badge>
       </Group>
-      {refreshFailed && (
+      {refreshMessage && (
         <Text
           component="output"
           size="xs"
           c="var(--health-warning)"
           lineClamp={1}
           aria-live="polite"
-          title={t("refreshFailed")}
+          title={refreshMessage}
           style={{ flexShrink: 0 }}
         >
-          {t("refreshFailed")}
+          {refreshMessage}
         </Text>
       )}
       <SegmentedControl

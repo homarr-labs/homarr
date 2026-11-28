@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { Box, Group, Modal, Text } from "@mantine/core";
+import { Box, Group, Modal, Stack, Text } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -14,7 +15,7 @@ import type { HealthOptions } from "./display";
 import { isStaleReading, needsAttention } from "./display";
 import { projectHealthSystem } from "./model";
 import type { HealthSystem } from "./model";
-import { SystemFleet } from "./system-fleet";
+import { HealthAttentionFilter, SystemFleet } from "./system-fleet";
 import { SystemTile } from "./system-tile";
 import { useHealthBounds } from "./use-health-bounds";
 import classes from "./system-view.module.css";
@@ -56,6 +57,7 @@ export function SystemHealthView({
 }: SystemHealthViewProps) {
   const t = useI18n("widget.healthMonitoring.rework");
   const now = useWidgetNow()?.getTime();
+  const coarsePointer = useMediaQuery("(any-pointer: coarse)");
   const [dialogId, setDialogId] = useState<string | null>(null);
   const [dialogHeight, setDialogHeight] = useState(760);
   const modalBounds = useHealthBounds();
@@ -127,24 +129,41 @@ export function SystemHealthView({
       />
     );
   if (!advanced && options.presentation === "history" && width >= 290 && height >= 210) {
+    const attention = snapshots.filter((snapshot) => needsAttention(snapshot, now));
+    const attentionOnly = options.healthFilter === "attention";
     let chartSystems = snapshots;
-    if (options.healthFilter === "attention")
-      chartSystems = snapshots.filter((snapshot) => needsAttention(snapshot, now));
-    if (chartSystems.length > 0) {
+    if (attentionOnly) chartSystems = attention;
+    let filterHeight = 0;
+    if (attentionOnly || attention.length > 0) filterHeight = coarsePointer ? 44 : 28;
+    // When every matching host is unreachable, keep its name and inspect action visible.
+    const hasObservations = chartSystems.some(
+      ({ available, system }) => available || system.history.some((sample) => !sample.unavailable),
+    );
+    if (hasObservations)
       content = (
-        <Box p={8} h="100%" miw={0} style={{ overflowY: "auto" }}>
-          <SystemHistoryComparison
-            snapshots={chartSystems}
-            width={width - 16}
-            height={height - 16}
-            options={options}
-            isEditMode={isEditMode}
-            onInspect={inspect}
-            onPreferences={onPreferences}
-          />
-        </Box>
+        <Stack p={8} gap={4} h="100%" miw={0} style={{ overflowY: "auto" }}>
+          {filterHeight > 0 && (
+            <HealthAttentionFilter
+              count={attention.length}
+              active={attentionOnly}
+              height={filterHeight}
+              disabled={isEditMode}
+              onChange={(healthFilter) => onPreferences({ healthFilter })}
+            />
+          )}
+          <Box flex={1} mih={0}>
+            <SystemHistoryComparison
+              snapshots={chartSystems}
+              width={width - 16}
+              height={height - 16 - filterHeight - 4}
+              options={options}
+              isEditMode={isEditMode}
+              onInspect={inspect}
+              onPreferences={onPreferences}
+            />
+          </Box>
+        </Stack>
       );
-    }
   }
   if (advanced)
     content = (

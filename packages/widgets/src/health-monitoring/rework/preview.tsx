@@ -21,10 +21,15 @@ import { IconArrowDown, IconArrowUp, IconArrowsMaximize, IconSettings } from "@t
 import type { RouterOutputs } from "@homarr/api";
 import { useCurrentLocale } from "@homarr/translation/client";
 
-import { canSelectStorageVolumes, toScopedStorageVolumeValue } from "../../filter-storage-volumes";
 import { WidgetCardShell } from "../../widget-card-shell";
 import { useWidgetFixtureRuntime, WidgetFixturePreview } from "./widget-fixture-preview";
-import { fixtureKindLabels, getHealthPreviewData, healthPreviewScenarios } from "./fixtures";
+import {
+  fixtureKindLabels,
+  getHealthPreviewData,
+  getPreviewStorageOptions,
+  healthPreviewScenarios,
+  selectPreviewSystems,
+} from "./fixtures";
 import classes from "./preview.module.css";
 
 export function HealthMonitoringPreview({
@@ -55,26 +60,12 @@ export function HealthMonitoringPreview({
   const allSystems = useMemo(() => getHealthPreviewData("normal").systems, []);
   const data = useMemo(() => {
     let systems = fixtures.systems;
-    if (sourceIds !== null) {
-      systems = sourceIds.flatMap((id) =>
-        fixtures.systems.filter((system) => system.id === id || system.id.startsWith(`${id}-`)),
-      );
-    }
+    if (sourceIds !== null) systems = selectPreviewSystems(systems, sourceIds);
     return { ...fixtures, systems, cluster: showCluster ? fixtures.cluster : null };
   }, [fixtures, showCluster, sourceIds]);
   const runtime = useWidgetFixtureRuntime(data);
   const [draftWidgetOptions, setDraftWidgetOptions] = useState(runtime.options);
-  const storageOptions = allSystems.flatMap((system) => {
-    if (!canSelectStorageVolumes(system.kind) || !draftSources.includes(system.id)) return [];
-    const devices = new Set(system.health?.fileSystem.map((device) => device.deviceName) ?? []);
-    if (devices.size === 0) {
-      for (const device of system.health?.smart ?? []) devices.add(device.deviceName);
-    }
-    return [...devices].map((device) => ({
-      value: toScopedStorageVolumeValue(system.id, device),
-      label: `${system.name} · ${device}`,
-    }));
-  });
+  const storageOptions = getPreviewStorageOptions(fixtures.systems, draftSources);
   const options = allSystems.map((system) => ({
     value: system.id,
     label: `${system.name} · ${fixtureKindLabels[system.kind]}`,

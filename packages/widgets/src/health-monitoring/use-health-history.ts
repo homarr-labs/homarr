@@ -14,7 +14,7 @@ type Histories = Record<string, HealthSample[]>;
 
 export function useHealthHistory(
   results: Results,
-  observedAt: number,
+  queryUpdatedAt: number,
   widgetStateRef: WidgetComponentProps<"healthMonitoring">["widgetStateRef"],
   refreshInterval: number,
 ) {
@@ -26,17 +26,15 @@ export function useHealthHistory(
 
   useEffect(() => {
     // Pending source queries must not clear observations that still belong to the widget.
-    if (observedAt <= 0) return;
+    if (queryUpdatedAt <= 0) return;
     const previous = widgetStateRef?.current?.healthMonitoringHistory;
     let stored = histories;
     if (isRecord(previous)) stored = previous as Histories;
     const next: Histories = {};
     for (const result of results) {
-      let timestamp = observedAt;
-      if (result.updatedAt) timestamp = new Date(result.updatedAt).getTime();
-      if (!Number.isFinite(timestamp) || timestamp <= 0) continue;
+      const timestamp = new Date(result.updatedAt).getTime();
       const history = stored[result.integrationId] ?? [];
-      if ((history.at(-1)?.time ?? 0) >= timestamp) {
+      if (!Number.isFinite(timestamp) || timestamp <= 0 || (history.at(-1)?.time ?? 0) >= timestamp) {
         next[result.integrationId] = history;
         continue;
       }
@@ -55,7 +53,7 @@ export function useHealthHistory(
       widgetStateRef.current.healthMonitoringHistory = next;
     }
     setHistories(next);
-  }, [results, observedAt, widgetStateRef, histories, refreshInterval]);
+  }, [results, queryUpdatedAt, widgetStateRef, histories, refreshInterval]);
 
   return histories;
 }

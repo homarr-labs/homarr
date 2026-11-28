@@ -37,15 +37,18 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
   const selected = data.find((resource) => resource.id === selectedId);
   const advanced = displayMode === "advanced";
   const narrow = width < 520;
-  const micro = height < 74;
   const dense = narrow && height < 120;
   let rowHeight = 43;
   if (narrow) rowHeight = 61;
   if (height < 120) rowHeight = 43;
   let headerHeight = 22;
-  if (narrow || micro) headerHeight = 0;
-  let capacity = Math.max(1, Math.floor((height - headerHeight - 28) / rowHeight));
-  if (micro) capacity = 1;
+  if (narrow) headerHeight = 0;
+  const rowsWithoutPager = Math.floor((height - headerHeight) / rowHeight);
+  let pagerHeight = 0;
+  if (data.length > Math.max(1, rowsWithoutPager)) pagerHeight = 28;
+  const availableHeight = height - headerHeight - pagerHeight;
+  const micro = availableHeight < rowHeight;
+  const capacity = Math.max(1, Math.floor(availableHeight / rowHeight));
   const records = useMemo(
     () =>
       data.toSorted((left, right) => {
@@ -95,7 +98,12 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
   }
   return (
     <Stack gap={0} h="100%" miw={0} mih={0} style={{ overflow: "hidden" }}>
-      {!narrow && !micro && (
+      {visible.length === 0 && (
+        <Text size="xs" c="dimmed" py={2} style={{ overflowY: "auto" }}>
+          {t("noClusterResources")}
+        </Text>
+      )}
+      {visible.length > 0 && !narrow && !micro && (
         <Box className={classes.rowGrid} style={{ gridTemplateColumns: template }} h={headerHeight}>
           <Text size="xs" c="dimmed">
             {t("name")}
@@ -175,7 +183,7 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
           )}
         </Group>
       )}
-      {!micro && (
+      {visible.length > 0 && !micro && (
         <Box flex={1} mih={0} style={{ overflow: "hidden" }}>
           {visible.map((resource) => {
             let stateColor = "var(--mantine-color-gray-6)";
@@ -258,15 +266,10 @@ export function ResourceTable({ type, data, widgetProps, order = "name" }: Resou
               </UnstyledButton>
             );
           })}
-          {visible.length === 0 && (
-            <Text size="xs" c="dimmed" py="sm">
-              {t("noClusterResources")}
-            </Text>
-          )}
         </Box>
       )}
       {!micro && pages > 1 && (
-        <Group justify="space-between" wrap="nowrap" h={28} style={{ flexShrink: 0 }}>
+        <Group justify="space-between" wrap="nowrap" h={pagerHeight} style={{ flexShrink: 0 }}>
           <Text size="xs" c="dimmed">
             {t("resourcePage", {
               first: start + 1,

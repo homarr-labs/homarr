@@ -1,65 +1,56 @@
 import { historyWindowSeconds } from "./display";
 import type { HealthOptions } from "./display";
 import { finiteReading } from "./model";
-import type { HealthSample, HealthSystemSnapshot } from "./model";
+import type { HealthSystemSnapshot } from "./model";
 
 export type HistoryMetric = "cpu" | "memory" | "networkDown" | "networkUp" | "temperature";
 
-const bucketMs = 10_000;
+type HistoryPoint = { time: number; rawTime: string } & Record<string, number | string | null>;
+
+export function comparisonTimeDomain(
+  snapshots: HealthSystemSnapshot[],
+  window: HealthOptions["historyWindow"],
+): [number, number] {
+  let latest = 0;
+  for (const snapshot of snapshots) latest = Math.max(latest, snapshot.system.history.at(-1)?.time ?? 0);
+  return [latest - historyWindowSeconds(window) * 1000, latest];
+}
 
 export function comparisonHistory(
   snapshots: HealthSystemSnapshot[],
   metric: HistoryMetric,
-  historyWindow: HealthOptions["historyWindow"],
+  cutoff: number,
   fahrenheit: boolean,
-  locale: string,
 ) {
-  const lastTime = Math.max(
-    0,
-    ...snapshots.flatMap((snapshot) => snapshot.system.history.map((sample) => sample.time)),
-  );
-  const cutoff = lastTime - historyWindowSeconds(historyWindow) * 1000;
-  const points = new Map<number, Record<string, number | string | null>>();
-  const formatter = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit", second: "2-digit" });
-  const pointAt = (time: number) => {
-    let point = points.get(time);
-    if (!point) {
-      point = { time: formatter.format(time), rawTime: new Date(time).toISOString() };
-      for (const snapshot of snapshots) point[snapshot.system.id] = null;
-      points.set(time, point);
-    }
-    return point;
-  };
-  for (const snapshot of snapshots) {
-    let previous: HealthSample | undefined;
-    let missingBucket: number | undefined;
-    let recovery: { time: number; value: number } | undefined;
-    for (const sample of snapshot.system.history) {
-      if (!Number.isFinite(sample.time) || sample.time < cutoff) continue;
-      if (previous && sample.time - previous.time > Math.max(30_000, (snapshot.system.refreshInterval ?? 10) * 3000))
-        pointAt(Math.floor(previous.time / bucketMs) * bucketMs + bucketMs);
-      previous = sample;
-      let time = sample.time;
-      if (snapshots.length > 1) time = Math.floor(sample.time / bucketMs) * bucketMs;
-      let value = finiteReading(sample[metric]);
-      if (metric === "temperature" && value !== null && fahrenheit) value = value * 1.8 + 32;
-      const point = pointAt(time);
-      if (value === null) {
-        missingBucket = time;
-        point[snapshot.system.id] = null;
-        recovery = undefined;
-      } else if (time === missingBucket) {
-        // A later value in the same fleet bucket must not draw through an outage.
-        recovery = { time: sample.time, value };
-      } else {
-        point[snapshot.system.id] = value;
-        recovery = undefined;
+  const byTime = new Map<number, HistoryPoint>();
+  const byHost = new Map<string, { data: HistoryPoint[]; hasIsolated: boolean }>();
+  let mostReadings = 0;
+  for (const { system } of snapshots) {
+    const data: HistoryPoint[] = [];
+    let readingCount = 0;
+    for (const sample of system.history) {
+      if (sample.time < cutoff || !Number.isFinite(sample.time)) continue;
+      let point = byTime.get(sample.time);
+      if (!point) {
+        point = { time: sample.time, rawTime: new Date(sample.time).toISOString() };
+        byTime.set(sample.time, point);
       }
+      let reading = finiteReading(sample[metric]);
+      if (reading !== null) {
+        readingCount++;
+        if (metric === "temperature" && fahrenheit) reading = reading * 1.8 + 32;
+      }
+      point[system.id] = reading;
+      // The shared axis includes every timestamp. Only this host's own observations
+      // belong to its line, including explicit nulls that mark interruptions.
+      data.push(point);
     }
-    // Keep the newest recovery at its observed time. Interior buckets remain
-    // aligned across hosts, so a gap in one series never interrupts its peers.
-    if (recovery && missingBucket === Math.floor(lastTime / bucketMs) * bucketMs)
-      pointAt(recovery.time)[snapshot.system.id] = recovery.value;
+    const hasIsolated = data.some(
+      (point, index) =>
+        point[system.id] !== null && data[index - 1]?.[system.id] == null && data[index + 1]?.[system.id] == null,
+    );
+    byHost.set(system.id, { data, hasIsolated });
+    mostReadings = Math.max(mostReadings, readingCount);
   }
-  return [...points.entries()].toSorted(([leftTime], [rightTime]) => leftTime - rightTime).map(([, point]) => point);
+  return { data: [...byTime.values()].toSorted((left, right) => left.time - right.time), byHost, mostReadings };
 }

@@ -146,7 +146,7 @@ export const CommonChart = ({
                   {title}
                 </Text>
               )}
-              {advanced && lastValue && (
+              {lastValue && (
                 <Text size={height > 100 ? "md" : "xs"} fw={600} ta="center">
                   {lastValue}
                 </Text>
@@ -163,6 +163,7 @@ export const CommonChart = ({
               }))}
               yDomain={yDomain}
               variant={chartType}
+              connectNulls={false}
             />
           </Box>
         )}

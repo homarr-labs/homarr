@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
-import type { SystemHealthMonitoring } from "@homarr/integrations";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -14,10 +13,11 @@ import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { useDemoReadOnly } from "../demo-read-only";
 import { getWidgetRefreshInterval } from "../refresh-interval";
+import { getNetworkHistory, toChartItem, updateResourceHistories } from "./history";
+import type { ChartItem, ResourceHistories } from "./history";
 import { ChartLayout } from "./chart-layout";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceDiskChart } from "./chart/disk-chart";
-import type { DiskSample } from "./chart/disk-chart";
 import { SystemResourceGPUChart } from "./chart/gpu-chart";
 import { SystemResourceMemoryChart } from "./chart/memory-chart";
 import { NetworkTrafficChart } from "./chart/network-traffic";
@@ -36,52 +36,6 @@ const getAdvancedChartColumns = (width: number): number =>
   ADVANCED_CHART_COLUMN_BREAKPOINTS.find(({ minWidth }) => width >= minWidth)?.columns ?? 1;
 
 type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCharts"][number];
-
-type ChartItem = {
-  cpu: number | null;
-  cpuCores: NonNullable<SystemHealthMonitoring["cpuCores"]>;
-  memory: number | null;
-  gpu: number | null;
-  network: { up: number; down: number } | null;
-  disks: DiskSample[];
-};
-
-export const toChartItem = (healthInfo: {
-  cpuUtilization: number | null;
-  cpuCores?: SystemHealthMonitoring["cpuCores"];
-  memUsedInBytes: number | null;
-  gpu: { processorUtilization: number | null }[];
-  network: { up: number; down: number } | null;
-  fileSystem?: DiskSample[];
-}): ChartItem => {
-  const gpuSamples = healthInfo.gpu
-    .map(({ processorUtilization }) => processorUtilization)
-    .filter((value) => value !== null);
-  let gpu = null;
-  if (gpuSamples.length > 0) gpu = gpuSamples.reduce((sum, usage) => sum + usage, 0) / gpuSamples.length;
-  return {
-    cpu: healthInfo.cpuUtilization,
-    cpuCores: (healthInfo.cpuCores ?? [])
-      .filter((core) => Number.isFinite(core.utilization))
-      .map((core) => ({ ...core, utilization: Math.min(100, Math.max(0, core.utilization)) })),
-    memory: healthInfo.memUsedInBytes,
-    gpu,
-    network: healthInfo.network,
-    disks: [
-      ...new Map(
-        (healthInfo.fileSystem ?? [])
-          .filter((disk) => Number.isFinite(disk.percentage))
-          .map((disk) => [disk.deviceName, disk] as const),
-      ).values(),
-    ],
-  };
-};
-
-export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limit: number): ChartItem[] =>
-  [...history, item].slice(-limit);
-
-export const getNetworkHistory = (items: readonly ChartItem[]) =>
-  items.flatMap((item) => (item.network === null ? [] : [item.network]));
 
 export const getCompactChartBudget = (height: number): number => {
   if (height < 140) return 1;
@@ -137,11 +91,11 @@ export default function SystemResources({
   const data = results.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
   );
-  const { dataUpdatedAt, isPending } = healthQuery;
+  const { data: observations, isPending } = healthQuery;
   const isAdvanced = displayMode === "advanced";
-  const integrationKey = useMemo(() => integrationIds.join("\u0000"), [integrationIds]);
-  const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>({});
-  const previousIntegrationKey = useRef(integrationKey);
+  const selectionKey = integrationIds.join("\u0000");
+  const [histories, setHistories] = useState<ResourceHistories>({ selectionKey, sources: {} });
+  const historyByIntegration = histories.selectionKey === selectionKey ? histories.sources : {};
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={results} />
@@ -149,35 +103,13 @@ export default function SystemResources({
   );
 
   useEffect(() => {
-    if (previousIntegrationKey.current === integrationKey) return;
-    previousIntegrationKey.current = integrationKey;
-    setHistoryByIntegration({});
-  }, [integrationKey]);
-
-  const lastUpdatedAt = useRef(dataUpdatedAt);
-  useEffect(() => {
-    if (dataUpdatedAt === lastUpdatedAt.current) return;
-    lastUpdatedAt.current = dataUpdatedAt;
-    setHistoryByIntegration((previous) =>
-      Object.fromEntries(
-        data.map((entry) => {
-          const currentItem = toChartItem(entry.healthInfo);
-          // Seed with the current item when there's no history yet, so the first real
-          // update lands at 2 points instead of dropping back to the single-value fallback.
-          const seed = previous[entry.integrationId] ?? [currentItem];
-          return [entry.integrationId, appendBoundedHistory(seed, currentItem, ADVANCED_HISTORY_SIZE)];
-        }),
-      ),
-    );
-  }, [dataUpdatedAt, data]);
+    setHistories((previous) => updateResourceHistories(previous, selectionKey, observations, ADVANCED_HISTORY_SIZE));
+  }, [selectionKey, observations]);
 
   const panelColumns = isAdvanced && width >= 960 && data.length > 1 ? 2 : 1;
   const panelWidth = width / panelColumns;
   const renderCharts = (entry: (typeof data)[number], availableWidth: number, availableHeight: number) => {
-    const currentItem = toChartItem(entry.healthInfo);
-    // Duplicate the first point so the chart has two points to draw a line from
-    // immediately, instead of showing the single-value fallback until the next poll.
-    const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem, currentItem];
+    const fullHistory = historyByIntegration[entry.integrationId]?.items ?? [toChartItem(entry.healthInfo)];
     const history = isAdvanced ? fullHistory : fullHistory.slice(-COMPACT_HISTORY_SIZE);
 
     const { memAvailableInBytes, memUsedInBytes } = entry.healthInfo;
@@ -271,7 +203,7 @@ const SystemCharts = ({
   const visibleCharts = getVisibleSystemCharts({
     configuredCharts: options.visibleCharts,
     hasGpu,
-    hasNetwork: networkItems.length > 0,
+    hasNetwork: networkItems.some((network) => network !== null),
     hasDisks: disks.length > 0,
     hasCpuCores: cpuCores.length > 0,
     height,
@@ -380,7 +312,7 @@ const SystemCharts = ({
             <ChartLayout layout={options.subresourceLayout} minimumColumnWidth={150} gap={chartGap}>
               <Box h="100%" miw={0}>
                 <NetworkTrafficChart
-                  usageOverTime={networkItems.map((network) => network.down)}
+                  usageOverTime={networkItems.map((network) => network?.down ?? null)}
                   isUp={false}
                   hasShadow={options.hasShadow}
                   labelDisplayMode={labelDisplayMode}
@@ -389,7 +321,7 @@ const SystemCharts = ({
               </Box>
               <Box h="100%" miw={0}>
                 <NetworkTrafficChart
-                  usageOverTime={networkItems.map((network) => network.up)}
+                  usageOverTime={networkItems.map((network) => network?.up ?? null)}
                   isUp
                   hasShadow={options.hasShadow}
                   labelDisplayMode={labelDisplayMode}

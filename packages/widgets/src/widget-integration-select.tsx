@@ -223,8 +223,10 @@ export const WidgetIntegrationSelect = ({
                 variant="light"
                 type="button"
                 aria-expanded={expanded}
+                onMouseDown={(event) => event.stopPropagation()}
                 onClick={(event) => {
                   event.stopPropagation();
+                  combobox.closeDropdown();
                   setExpanded(!expanded);
                 }}
               >
@@ -234,7 +236,7 @@ export const WidgetIntegrationSelect = ({
               </Button>
             )}
 
-            <Combobox.EventsTarget>
+            <Combobox.EventsTarget withExpandedAttribute={fleetSelection}>
               <PillsInput.Field
                 readOnly={!fleetSelection}
                 value={search}

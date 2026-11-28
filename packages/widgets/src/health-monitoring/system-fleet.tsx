@@ -91,13 +91,12 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
   const metricLimit = Math.max(1, Math.floor(metricSpace / metricWidth));
   const orderedMetrics = getHealthMetricOrder(options);
   const columns = orderedMetrics
-    .filter((metric) => snapshots.some((snapshot) => hasGlanceReading(snapshot, metric)))
+    .filter((metric) => filtered.some((snapshot) => hasGlanceReading(snapshot, metric)))
     .slice(0, metricLimit);
   const template = "minmax(0, 1.5fr)" + " minmax(0, 1fr)".repeat(columns.length);
   const compactToolbar = showFilter && (innerWidth < 230 || (pages > 1 && innerWidth < 380));
   const showPageNumber = innerWidth >= 240;
   const singlePager = innerWidth < 230;
-  const filterLabel = t("attentionCount", { count: alerting.length });
 
   return (
     <Stack
@@ -117,30 +116,16 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
           </Text>
         )}
         {showFilter && (
-          <UnstyledButton
-            className={classes.attentionFilter}
-            data-active={attentionOnly || undefined}
-            mih={targetSize}
-            miw={0}
-            px={5}
+          <HealthAttentionFilter
+            count={alerting.length}
+            active={attentionOnly}
+            height={targetSize}
             disabled={isEditMode}
-            aria-label={filterLabel}
-            aria-description={t("filterSystems")}
-            aria-pressed={attentionOnly}
-            onClick={() => {
-              let healthFilter: HealthOptions["healthFilter"] = "attention";
-              if (attentionOnly) healthFilter = "all";
+            onChange={(healthFilter) => {
               onPreferences({ healthFilter });
               setPage(0);
             }}
-          >
-            <Group gap={4} wrap="nowrap" miw={0}>
-              <IconFilter style={{ ...zoomCompensatedSize(14), flexShrink: 0 }} aria-hidden />
-              <Text size="xs" fw={600} truncate>
-                {filterLabel}
-              </Text>
-            </Group>
-          </UnstyledButton>
+          />
         )}
         {pages > 1 && (
           <Group ml="auto" gap={2} wrap="nowrap" style={{ flexShrink: 0 }}>
@@ -336,5 +321,45 @@ export function SystemFleet({ snapshots, width, height, options, isEditMode, onI
           );
         })}
     </Stack>
+  );
+}
+
+export function HealthAttentionFilter({
+  count,
+  active,
+  height,
+  disabled,
+  onChange,
+}: {
+  count: number;
+  active: boolean;
+  height: number;
+  disabled: boolean;
+  onChange: (filter: HealthOptions["healthFilter"]) => void;
+}) {
+  const t = useI18n("widget.healthMonitoring.rework");
+  const label = t("attentionCount", { count });
+  return (
+    <UnstyledButton
+      className={classes.attentionFilter}
+      data-active={active || undefined}
+      mih={height}
+      miw={0}
+      w="fit-content"
+      maw="100%"
+      px={5}
+      disabled={disabled}
+      aria-label={label}
+      aria-description={t("filterSystems")}
+      aria-pressed={active}
+      onClick={() => onChange(active ? "all" : "attention")}
+    >
+      <Group gap={4} wrap="nowrap" miw={0}>
+        <IconFilter style={{ ...zoomCompensatedSize(14), flexShrink: 0 }} aria-hidden />
+        <Text size="xs" fw={600} truncate>
+          {label}
+        </Text>
+      </Group>
+    </UnstyledButton>
   );
 }

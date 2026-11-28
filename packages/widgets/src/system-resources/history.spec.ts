@@ -1,12 +1,7 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  appendBoundedHistory,
-  getCompactChartBudget,
-  getNetworkHistory,
-  getVisibleSystemCharts,
-  toChartItem,
-} from "./component";
+import { getCompactChartBudget, getVisibleSystemCharts } from "./component";
+import { appendBoundedHistory, getNetworkHistory, toChartItem } from "./history";
 
 describe("system resource history", () => {
   test("averages all GPU values", () => {
@@ -25,7 +20,7 @@ describe("system resource history", () => {
     expect(appendBoundedHistory([item, item], item, 2)).toHaveLength(2);
   });
 
-  test("omits unavailable network samples instead of inventing zero traffic", () => {
+  test("preserves gaps for unavailable network samples", () => {
     const missing = toChartItem({ cpuUtilization: 1, memUsedInBytes: 2, gpu: [], network: null });
     const available = toChartItem({
       cpuUtilization: 1,
@@ -34,7 +29,7 @@ describe("system resource history", () => {
       network: { up: 12, down: 34 },
     });
 
-    expect(getNetworkHistory([missing, available, missing])).toEqual([{ up: 12, down: 34 }]);
+    expect(getNetworkHistory([missing, available, missing])).toEqual([null, { up: 12, down: 34 }, null]);
   });
 
   test("limits compact charts to the available height", () => {
