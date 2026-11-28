@@ -1,11 +1,12 @@
 import { cookies } from "next/headers";
+import type { AdapterAccount } from "@auth/core/adapters";
 import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema";
+import { accounts, groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { env } from "./env";
@@ -14,7 +15,7 @@ import { extractProfileName, getProfileValueByPath } from "./providers/oidc/prof
 const logger = createLogger({ module: "authEvents" });
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
-  return async ({ user, profile }) => {
+  return async ({ user, account, profile }) => {
     logger.debug(`SignIn EventHandler for user: ${JSON.stringify(user)} . profile: ${JSON.stringify(profile)}`);
     if (!user.id) throw new Error("User ID is missing");
 
@@ -31,18 +32,27 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     if (!dbUser) throw new Error("User not found");
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
-    const profileGroupsClaim = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
-    const profileGroups = typeof profileGroupsClaim === "string" ? [profileGroupsClaim] : profileGroupsClaim;
+    const profileGroups = asStringGroups(profile ? getProfileValueByPath(profile, groupsKey) : undefined);
     // Groups from oidc provider are provided from the profile, it's not typed.
-    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && Array.isArray(profileGroups)) {
-      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups as string[]);
+    if (profileGroups) {
+      if (account?.provider && account.providerAccountId) {
+        await storeLastGroupsClaimAsync(db, account, profileGroups);
+      }
+      if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc") {
+        logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
+        await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups);
+      }
     }
 
     // In ldap-authroization we return the groups from ldap, it's not typed.
-    if ("groups" in user && Array.isArray(user.groups)) {
-      logger.debug(`Using profile groups: ${JSON.stringify(user.groups)}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, user.groups as string[]);
+    if ("groups" in user) {
+      const ldapGroups = asStringGroups(user.groups);
+      if (ldapGroups) {
+        logger.debug(`Using profile groups: ${JSON.stringify(ldapGroups)}`);
+        const ldapAccount = await ensureLdapAccountAsync(db, user.id);
+        await storeLastGroupsClaimAsync(db, ldapAccount, ldapGroups);
+        await synchronizeGroupsWithExternalForUserAsync(db, user.id, ldapGroups);
+      }
     }
     await addUserToEveryoneGroupIfNotMemberAsync(db, user.id);
 
@@ -90,6 +100,58 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       expires: dayjs().add(1, "year").toDate(),
     });
   };
+};
+
+const asStringGroups = (value: unknown): string[] | null => {
+  if (typeof value === "string") {
+    return [value];
+  }
+
+  if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+    return value;
+  }
+
+  return null;
+};
+
+const LAST_GROUPS_CLAIM_MAX_BYTES = 16_384;
+
+const storeLastGroupsClaimAsync = async (
+  db: Database,
+  account: { provider: string; providerAccountId: string },
+  groupsClaim: string[],
+) => {
+  const serialized = JSON.stringify(groupsClaim);
+  const byteLength = new TextEncoder().encode(serialized).length;
+  if (byteLength > LAST_GROUPS_CLAIM_MAX_BYTES) {
+    logger.warn("Skipping last groups claim store because it exceeds the size limit", {
+      provider: account.provider,
+      byteLength,
+      limit: LAST_GROUPS_CLAIM_MAX_BYTES,
+    });
+    return;
+  }
+
+  await db
+    .update(accounts)
+    .set({
+      lastGroupsClaim: serialized,
+      lastGroupsClaimSeenAt: new Date(),
+    })
+    .where(and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId)));
+};
+
+const ensureLdapAccountAsync = async (db: Database, userId: string) => {
+  const ldapAccount = { provider: "ldap", providerAccountId: userId };
+  await db
+    .insert(accounts)
+    .values({
+      userId,
+      type: "oauth" satisfies AdapterAccount["type"],
+      ...ldapAccount,
+    })
+    .onConflictDoNothing();
+  return ldapAccount;
 };
 
 const addUserToEveryoneGroupIfNotMemberAsync = async (db: Database, userId: string) => {

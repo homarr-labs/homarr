@@ -517,6 +517,15 @@ export const userRouter = createTRPCRouter({
             name: z.string(),
           }),
         ),
+        groupsClaim: z
+          .array(
+            z.object({
+              value: z.string(),
+              exists: z.boolean(),
+            }),
+          )
+          .nullable(),
+        groupsClaimSeenAt: z.date().nullable(),
       }),
     )
     .meta({
@@ -527,7 +536,7 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Get sign-in information",
         description:
-          "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
+          "Return a user's sign-in provider, subject, email, Homarr groups, and the last groups claim (group names and when they were seen). Provider, subject, and claim come from the same account row. Users can read themselves. Reading another user requires admin permission.",
       },
     })
     .query(async ({ input, ctx }) => {
@@ -548,6 +557,8 @@ export const userRouter = createTRPCRouter({
             columns: {
               provider: true,
               providerAccountId: true,
+              lastGroupsClaim: true,
+              lastGroupsClaimSeenAt: true,
             },
           },
           groups: {
@@ -571,14 +582,15 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      const oidcAccount = user.accounts.find((entry) => entry.provider === "oidc");
-      const account = oidcAccount ?? user.accounts.find((entry) => entry.provider === user.provider);
+      const account = selectSignInAccount(user.accounts, user.provider);
 
       return {
-        provider: oidcAccount ? "oidc" : user.provider,
+        provider: resolveSignInProvider(account?.provider, user.provider),
         email: user.email,
         subject: account?.providerAccountId ?? null,
         homarrGroups: user.groups.map(({ group }) => group).sort((left, right) => left.name.localeCompare(right.name)),
+        groupsClaim: await withGroupExistenceAsync(ctx.db, parseLastGroupsClaim(account?.lastGroupsClaim ?? null)),
+        groupsClaimSeenAt: account?.lastGroupsClaimSeenAt ?? null,
       };
     }),
   editProfile: protectedProcedure
@@ -1060,4 +1072,66 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
     code: "CONFLICT",
     message: "Username already taken",
   });
+};
+
+const isSupportedAuthProvider = (provider: string): provider is SupportedAuthProvider =>
+  (supportedAuthProviders as readonly string[]).includes(provider);
+
+const resolveSignInProvider = (
+  accountProvider: string | undefined,
+  userProvider: SupportedAuthProvider,
+): SupportedAuthProvider =>
+  accountProvider !== undefined && isSupportedAuthProvider(accountProvider) ? accountProvider : userProvider;
+
+const selectSignInAccount = <T extends { provider: string; lastGroupsClaimSeenAt: Date | null }>(
+  accountRows: T[],
+  userProvider: string,
+): T | null => {
+  const withSeenAt = accountRows.filter((entry) => entry.lastGroupsClaimSeenAt !== null);
+  if (withSeenAt.length > 0) {
+    return withSeenAt.reduce((latest, entry) =>
+      Number(entry.lastGroupsClaimSeenAt) > Number(latest.lastGroupsClaimSeenAt) ? entry : latest,
+    );
+  }
+
+  return (
+    accountRows.find((entry) => entry.provider === "oidc") ??
+    accountRows.find((entry) => entry.provider === userProvider) ??
+    null
+  );
+};
+
+const parseLastGroupsClaim = (value: string | null): string[] | null => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed) || parsed.some((item) => typeof item !== "string")) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const withGroupExistenceAsync = async (db: Database, claims: string[] | null) => {
+  if (claims === null) {
+    return null;
+  }
+
+  if (claims.length === 0) {
+    return [];
+  }
+
+  const existingGroups = await db.query.groups.findMany({
+    columns: { name: true },
+    where: inArray(groups.name, claims),
+  });
+  const existingNames = new Set(existingGroups.map((group) => group.name));
+
+  return claims.map((value) => ({ value, exists: existingNames.has(value) }));
 };

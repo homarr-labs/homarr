@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema";
+import { accounts, groupMembers, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
@@ -230,6 +230,31 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       });
       expect(dbGroupMembers?.groupId).toBe("1");
     });
+    test("should store the last groups claim even when local management is enabled", async () => {
+      mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: ["admins", "00000000-0000-0000-0000-000000000001"],
+        },
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
+      });
+
+      const account = await db.query.accounts.findFirst({ where: eq(accounts.userId, "1") });
+      expect(account?.lastGroupsClaim).toBe(JSON.stringify(["admins", "00000000-0000-0000-0000-000000000001"]));
+      expect(account?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+      expect(account?.id_token).toBe("secret-id-token");
+    });
     test("should not synchronize groups when AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT is enabled", async () => {
       // Arrange
       mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
@@ -253,6 +278,107 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
 
       // Cleanup
       mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = false;
+    });
+    test("should store the last groups claim only on the signing-in account", async () => {
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      await db.insert(accounts).values({
+        userId: "1",
+        type: "oidc",
+        provider: "oidc",
+        providerAccountId: "linked-subject",
+        id_token: "other-id-token",
+      });
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: ["admins"],
+        },
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
+      });
+
+      const signedInAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.providerAccountId, "oidc-subject"),
+      });
+      const otherAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.providerAccountId, "linked-subject"),
+      });
+      expect(signedInAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+      expect(signedInAccount?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+      expect(otherAccount?.lastGroupsClaim).toBeNull();
+      expect(otherAccount?.lastGroupsClaimSeenAt).toBeNull();
+    });
+  });
+  describe("signInEventHandler should store ldap groups claims without a pre-existing account", () => {
+    test("should persist the claim on a new ldap account row", async () => {
+      const db = createDb();
+      await createUserAsync(db, "ldap");
+      const eventHandler = createSignInEventHandler(db);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test", groups: ["admins"] } as never,
+        profile: undefined,
+        account: null,
+      });
+
+      const ldapAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.provider, "ldap"),
+      });
+      expect(ldapAccount?.providerAccountId).toBe("1");
+      expect(ldapAccount?.type).toBe("oauth");
+      expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+      expect(ldapAccount?.lastGroupsClaimSeenAt).toBeInstanceOf(Date);
+    });
+    test("overlapping first ldap sign-ins both persist the claim", async () => {
+      const db = createDb();
+      await createUserAsync(db, "ldap");
+      const eventHandler = createSignInEventHandler(db);
+      const signIn = () =>
+        eventHandler?.({
+          user: { id: "1", name: "test", groups: ["admins"] } as never,
+          profile: undefined,
+          account: null,
+        });
+
+      const settled = await Promise.allSettled([signIn(), signIn()]);
+      const ldapAccount = await db.query.accounts.findFirst({
+        where: eq(accounts.provider, "ldap"),
+      });
+
+      expect(settled.every((entry) => entry.status === "fulfilled")).toBe(true);
+      expect(ldapAccount?.lastGroupsClaim).toBe(JSON.stringify(["admins"]));
+    });
+    test("should not store a groups claim that exceeds the size limit", async () => {
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createAccountAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+      const oversized = Array.from({ length: 2000 }, (_, index) => `group-${index}-${"x".repeat(20)}`);
+
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: {
+          preferred_username: "test",
+          someRandomGroupsKey: oversized,
+        },
+        account: {
+          type: "oidc",
+          provider: "oidc",
+          providerAccountId: "oidc-subject",
+        },
+      });
+
+      const account = await db.query.accounts.findFirst({ where: eq(accounts.userId, "1") });
+      expect(account?.lastGroupsClaim).toBeNull();
+      expect(account?.lastGroupsClaimSeenAt).toBeNull();
     });
   });
   test.each([
@@ -342,6 +468,15 @@ const createUserAsync = async (
     colorScheme: "dark",
     image,
     provider,
+  });
+
+const createAccountAsync = async (db: Database) =>
+  await db.insert(accounts).values({
+    userId: "1",
+    type: "oidc",
+    provider: "oidc",
+    providerAccountId: "oidc-subject",
+    id_token: "secret-id-token",
   });
 
 const createGroupAsync = async (db: Database, name = "test") =>

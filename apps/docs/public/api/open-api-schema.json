@@ -6052,7 +6052,7 @@
       "get": {
         "operationId": "userRouter-getSignInInformation",
         "summary": "Get sign-in information",
-        "description": "Return a user's sign-in provider, subject, email, and Homarr groups. When an OIDC account is linked, the provider and subject come from that account. Users can read themselves. Reading another user requires admin permission.",
+        "description": "Return a user's sign-in provider, subject, email, Homarr groups, and the last groups claim (group names and when they were seen). Provider, subject, and claim come from the same account row. Users can read themselves. Reading another user requires admin permission.",
         "tags": [
           "users"
         ],
@@ -6117,13 +6117,47 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "groupsClaim": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "exists": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "exists"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "groupsClaimSeenAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
                     "provider",
                     "email",
                     "subject",
-                    "homarrGroups"
+                    "homarrGroups",
+                    "groupsClaim",
+                    "groupsClaimSeenAt"
                   ],
                   "additionalProperties": false
                 }
