@@ -732,7 +732,7 @@ function ClimateControl({ entity, width, height }: ControlProps) {
       min={min}
       max={max}
       step={step}
-      current={attributes.currentTemperature}
+      current={showsCurrent ? attributes.currentTemperature : undefined}
       size={size}
       label={`${entity.name} target temperature`}
       pending={pending}
@@ -1064,6 +1064,14 @@ function MediaControl({ entity, width, height }: ControlProps) {
     if (titleRoom() < WIDE_TITLE_MIN) {
       withArt = false;
       if (volumePlace === "cover") volumePlace = null;
+      // Without the cover there may be room again for the skip buttons that were dropped for it.
+      withPrevious = canPrevious;
+      withNext = canNext;
+      if (titleRoom() < WIDE_TITLE_MIN && withPrevious && withNext) withPrevious = false;
+      if (titleRoom() < WIDE_TITLE_MIN) {
+        withPrevious = false;
+        withNext = false;
+      }
     }
     return (
       <Tile theme={theme} media className={classes.mediaTile}>
@@ -1252,20 +1260,26 @@ function VolumeButton({
   const [draft, setDraft] = useState<number | null>(null);
   // The slider's latest position, also between renders, for the commit at the end of a drag.
   const latest = useRef<number | null>(null);
-  // Closing drops a drag that never ended (Escape mid-drag), so reopening shows the device's volume again.
-  const setOpened = (next: boolean | ((open: boolean) => boolean)) =>
-    setOpenedState((open) => {
-      const value = typeof next === "function" ? next(open) : next;
-      if (!value) {
-        latest.current = null;
-        setDraft(null);
-      }
-      return value;
-    });
+  // A drag that never ended (Escape, a cancelled touch, the player going away) is dropped: the slider shows the
+  // device's volume again, and nothing is sent.
+  const discardDraft = () => {
+    latest.current = null;
+    setDraft(null);
+  };
+  const setOpened = (next: boolean) => {
+    if (!next) discardDraft();
+    setOpenedState(next);
+  };
   // Inside a dialog (the entity's details) the slider opens within it, so it stays in the dialog's focus scope.
   const [dialog, setDialog] = useState<HTMLElement | null>(null);
   // A read-only view shows the volume but offers no slider that could not apply.
   const blocked = useDeviceControlDisabled(disabled || entity.readOnly === true);
+  useEffect(() => {
+    if (!blocked) return;
+    latest.current = null;
+    setDraft(null);
+    setOpenedState(false);
+  }, [blocked]);
   const shown = draft ?? volume;
   return (
     <Popover
@@ -1295,7 +1309,7 @@ function VolumeButton({
           onClick={(event) => {
             event.stopPropagation();
             setDialog(event.currentTarget.closest<HTMLElement>('[role="dialog"]'));
-            setOpened((open) => !open);
+            setOpened(!opened);
           }}
         >
           {volume === 0 ? <IconVolumeOff size={onCover ? 15 : 18} /> : <IconVolume size={onCover ? 15 : 18} />}
@@ -1303,6 +1317,8 @@ function VolumeButton({
       </Popover.Target>
       <Popover.Dropdown onClick={stopEvent} onPointerDown={stopEvent}>
         <Group
+          onPointerCancel={discardDraft}
+          onTouchCancel={discardDraft}
           gap="sm"
           wrap="nowrap"
           w={210}
