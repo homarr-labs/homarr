@@ -3613,6 +3613,7 @@
         "showDetails": "{name}, {state}, show details",
         "run": "Run {name}",
         "step": "{name}: level {level} of {steps}",
+        "turnOff": "Turn {name} off",
         "online": "Online",
         "offline": "Offline since {time}",
         "battery": "Battery {level}%",
@@ -3624,6 +3625,13 @@
           "position": "Position"
         },
         "toggle": "Toggle {name}",
+        "media": {
+          "previous": "Previous track on {name}",
+          "next": "Next track on {name}",
+          "play": "Play {name}",
+          "pause": "Pause {name}",
+          "volume": "{name} volume"
+        },
         "decrease": "Decrease {name}",
         "increase": "Increase {name}",
         "more": "{count} more",

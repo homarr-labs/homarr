@@ -4,7 +4,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import type { ReactNode } from "react";
 import { Menu } from "@mantine/core";
 import {
+  IconAlertTriangle,
   IconBattery1,
+  IconCheck,
   IconChevronDown,
   IconMinus,
   IconPlayerPlay,
@@ -66,7 +68,7 @@ interface DeviceDensity {
   icon: number;
 }
 
-const densities: Record<"comfortable" | "compact", DeviceDensity> = {
+export const densities: Record<"comfortable" | "compact", DeviceDensity> = {
   comfortable: { header: 64, sliderRow: 48, sliderTrack: 36, listRow: 34, chipRow: 28, button: "md", icon: 20 },
   compact: { header: 48, sliderRow: 32, sliderTrack: 24, listRow: 26, chipRow: 24, button: "xs", icon: 16 },
 };
@@ -86,7 +88,7 @@ interface DeviceLayout {
   lines: number;
 }
 
-export const getDeviceLayout = (
+const getDeviceLayout = (
   width: number,
   height: number,
   readings: number,
@@ -105,7 +107,7 @@ export const getDeviceLayout = (
   return { mode: "chips", primaryHeight, readingsHeight: lines * chipRow + (lines - 1) * CHIP_GAP, lines };
 };
 
-interface SliderSpec {
+export interface SliderSpec {
   value: number;
   /** Fans with a few fixed speeds get one segment per speed instead of a free slider. */
   steps?: number;
@@ -114,7 +116,7 @@ interface SliderSpec {
 }
 
 /** The one slider a device card offers for its main entity: brightness, fan speed or position. */
-const getSliderSpec = (entity: HaEntity): SliderSpec | null => {
+export const getSliderSpec = (entity: HaEntity): SliderSpec | null => {
   const { attributes } = entity;
   switch (entity.domain) {
     case "light":
@@ -161,14 +163,29 @@ interface StepSliderProps {
   disabled: boolean;
   pending: boolean;
   onSelect: (percentage: number) => void;
+  /** Adds an "off" segment before the speeds, for places without a separate power button. */
+  onTurnOff?: () => void;
 }
 
 /** One segment per fan speed; tapping a segment sets exactly that speed. */
-function StepSlider({ steps, value, label, disabled, pending, onSelect }: StepSliderProps) {
+export function StepSlider({ steps, value, label, disabled, pending, onSelect, onTurnOff }: StepSliderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const level = Math.round((value / 100) * steps);
   return (
     <div className={classes.deviceSteps} data-pending={pending}>
+      {onTurnOff ? (
+        <button
+          type="button"
+          aria-pressed={level === 0}
+          aria-label={t("turnOff", { name: label })}
+          className={`${classes.deviceStep} ${classes.deviceStepOff}`}
+          data-off={level === 0}
+          disabled={disabled || level === 0}
+          onClick={onTurnOff}
+        >
+          <IconPower size="60%" stroke={2} aria-hidden />
+        </button>
+      ) : null}
       {Array.from({ length: steps }, (_, index) => index + 1).map((step) => (
         <button
           key={step}
@@ -214,13 +231,13 @@ function DeviceStatus({ device }: { device: DevicePanelItem }) {
 }
 
 /** A one-tap action that is safe to run straight from the header. */
-const getHeaderAction = (entity: HaEntity) => {
+export const getHeaderAction = (entity: HaEntity) => {
   const action = getPrimaryAction(entity);
   if (!action || needsCode(entity, action) || requiresConfirmation(entity, action)) return null;
   return action;
 };
 
-type SliderStyle = "pill" | "bar";
+export type SliderStyle = "pill" | "bar";
 
 interface DeviceHeaderProps {
   device: DevicePanelItem;
@@ -228,10 +245,12 @@ interface DeviceHeaderProps {
   sliderStyle: SliderStyle;
   density: DeviceDensity;
   onOpen: (() => void) | null;
+  /** Without its own padding, for use inside another card such as a custom layout card. */
+  bare?: boolean;
 }
 
 /** The same header on every device card: action button, device name, which part it controls and its state. */
-function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open }: DeviceHeaderProps) {
+export function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open, bare }: DeviceHeaderProps) {
   const t = useI18n("widget.smartHome-controls.device");
   const { primary } = device;
   const theme = useEntityTheme(primary);
@@ -271,7 +290,7 @@ function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open }: De
 
   if (slider && !slider.steps && sliderStyle === "pill") {
     return (
-      <div className={classes.deviceHero}>
+      <div className={classes.deviceHero} data-bare={bare}>
         <div className={classes.bigPill}>
           <PillSlider
             axis="vertical"
@@ -318,7 +337,7 @@ function DeviceHeader({ device, slider, sliderStyle, density, onOpen: open }: De
   }
 
   return (
-    <div className={classes.deviceHeader}>
+    <div className={classes.deviceHeader} data-bare={bare}>
       <div className={classes.head}>
         <RoundButton
           size={density.button}
@@ -386,7 +405,8 @@ function OptionMenu({ entity, disabled, children }: { entity: HaEntity; disabled
 function ReadingAction({ entity, control, label }: { entity: HaEntity; control: ReadingControl; label: string }) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
-  const { run, pending } = useRunner(entity);
+  const { run, pending, done } = useRunner(entity);
+  const error = useSmartHomeEntityError(entity.id);
   const disabled = useDeviceControlDisabled(theme.unavailable || entity.readOnly === true);
 
   if (control.kind === "toggle") {
@@ -413,10 +433,20 @@ function ReadingAction({ entity, control, label }: { entity: HaEntity; control: 
         aria-label={t("run", { name: label })}
         className={classes.deviceRunButton}
         data-pending={pending}
+        data-done={done}
+        data-failed={error?.kind === "failed"}
+        title={error?.kind === "failed" ? error.message : undefined}
         disabled={disabled}
         onClick={() => void run(control.action)}
       >
-        <IconPlayerPlay size={14} stroke={2} />
+        {/* A run has no lasting state, so the button itself says it worked (or did not). */}
+        {done ? (
+          <IconCheck size={14} stroke={2.4} />
+        ) : error?.kind === "failed" ? (
+          <IconAlertTriangle size={14} stroke={2} />
+        ) : (
+          <IconPlayerPlay size={14} stroke={2} />
+        )}
       </button>
     );
   }
@@ -464,11 +494,11 @@ function ReadingAction({ entity, control, label }: { entity: HaEntity; control: 
   );
 }
 
-function ReadingRow({ entity }: { entity: HaEntity }) {
+export function ReadingRow({ entity, label: labelOverride }: { entity: HaEntity; label?: string }) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
-  const label = getDeviceEntityLabel(entity);
+  const label = labelOverride ?? getDeviceEntityLabel(entity);
   const state = formatEntityState(entity);
   const control = getReadingControl(entity);
   const Icon = theme.Icon;
@@ -519,7 +549,7 @@ function ChipFace({ entity, control }: { entity: HaEntity; control: ReadingContr
   );
 }
 
-function ReadingChip({ entity }: { entity: HaEntity }) {
+export function ReadingChip({ entity }: { entity: HaEntity }) {
   const t = useI18n("widget.smartHome-controls.device");
   const theme = useEntityTheme(entity);
   const open = useEntityDetailOpener(entity.id);
@@ -604,12 +634,7 @@ interface PackedItem {
  */
 type ReadingRank = (entity: HaEntity) => number;
 
-export const packChips = (
-  readings: readonly HaEntity[],
-  metrics: ChipMetrics,
-  lineCount: number,
-  rank: ReadingRank,
-) => {
+const packChips = (readings: readonly HaEntity[], metrics: ChipMetrics, lineCount: number, rank: ReadingRank) => {
   const order = readings
     .map((entity, index): PackedItem => ({ entity, index, width: metrics.widths[index] ?? 0 }))
     .toSorted((left, right) => rank(left.entity) - rank(right.entity));

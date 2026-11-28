@@ -28,6 +28,7 @@ import {
   IconDoor,
   IconDroplet,
   IconFlame,
+  IconCircleDot,
   IconGauge,
   IconHome,
   IconLamp,
@@ -184,8 +185,25 @@ export const getEntityIcon = (entity: HaEntity): TablerIcon => {
       return IconHome;
     case "number":
       return IconAdjustmentsHorizontal;
+    // Catalog entities can come from domains this widget does not know yet.
+    default:
+      return IconCircleDot;
   }
 };
+
+/** The icon of an entity known only from the catalog, before its state is loaded. */
+export const getCatalogEntityIcon = (entity: Pick<HaEntity, "id" | "icon" | "deviceClass"> & { domain: string }) =>
+  getEntityIcon({
+    ...entity,
+    domain: entity.domain as HaEntity["domain"],
+    name: "",
+    areaId: null,
+    state: "",
+    unit: null,
+    lastChanged: 0,
+    attributes: {},
+    history: null,
+  });
 
 export const isUnavailable = (entity: HaEntity) =>
   entity.state === "unavailable" || (entity.state === "unknown" && !entity.attributes.coverPositionUnknown);
