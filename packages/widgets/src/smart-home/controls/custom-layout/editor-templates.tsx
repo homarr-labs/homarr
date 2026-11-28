@@ -15,6 +15,8 @@ interface TemplateMenuProps {
   device: string | null;
   onDeviceChange: (device: string | null) => void;
   disabled: boolean;
+  /** No new card fits: nothing can be added, but saved templates can still be deleted. */
+  full: boolean;
   devicesDisabled: boolean;
   templates: readonly SmartHomeLayoutTemplate[];
   onAddPreset: (preset: SmartHomeLayoutPreset) => void;
@@ -28,6 +30,7 @@ export function TemplateMenu({
   device,
   onDeviceChange,
   disabled,
+  full,
   devicesDisabled,
   templates,
   onAddPreset,
@@ -79,7 +82,7 @@ export function TemplateMenu({
               size="sm"
               variant="light"
               justify="flex-start"
-              disabled={!device}
+              disabled={!device || full}
               onClick={() => {
                 onAddPreset(preset);
                 setTemplateOpened(false);
@@ -100,7 +103,7 @@ export function TemplateMenu({
                     size="sm"
                     variant="light"
                     justify="flex-start"
-                    disabled={!device}
+                    disabled={!device || full}
                     onClick={() => {
                       onAddTemplate(template);
                       setTemplateOpened(false);

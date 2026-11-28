@@ -86,11 +86,15 @@
 }
 
 /* An embedded tile fits itself to the cell; its buttons' hover growth and shadow may show past the cell's edge. */
-/* (Not only a direct child: an element with its own color wraps its content once more.) The card body lets it
-   through too, into the card's padding; a stacked body scrolls and so keeps clipping. */
-.elementCell:has([data-embedded]),
-.cardBody:not([data-stacked="true"]):has([data-embedded]) {
+/* (Not only a direct child: an element with its own color wraps its content once more.) */
+.elementCell:has([data-embedded]) {
   overflow: visible;
+}
+
+/* The card body still clips its elements, so the tile keeps a little room inside its cell for that growth. Its
+   measured size excludes this padding, so its controls fit what is left. */
+.tileElement[data-embedded] {
+  padding: 6px;
 }
 
 .elementHead {

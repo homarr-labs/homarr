@@ -168,9 +168,11 @@ function CustomColorPicker({ value, onChange }: { value: string; onChange: (colo
   const [format, setFormat] = useState<ColorTextFormat>("hexa");
   // The text field keeps what is typed until it is a color; the picker and the eyedropper write to it.
   const [text, setText] = useState(() => colorText(value, format));
+  // A color chosen elsewhere (a swatch, undo) shows in the picker and in the text field.
   useEffect(() => {
     setColor(value);
-  }, [value]);
+    setText(colorText(value, format));
+  }, [value, format]);
   const show = (next: string, nextFormat = format) => {
     setColor(next);
     setText(colorText(next, nextFormat));
@@ -219,7 +221,10 @@ function CustomColorPicker({ value, onChange }: { value: string; onChange: (colo
           }}
           // The eyedropper and Enter end here; typing ends when the field is left.
           onChangeEnd={commit}
-          onBlur={() => commit(text)}
+          // Leaving the field applies only what was typed: an unchanged field keeps a theme color as it is.
+          onBlur={() => {
+            if (text !== colorText(value, format)) commit(text);
+          }}
         />
       </Group>
     </Stack>

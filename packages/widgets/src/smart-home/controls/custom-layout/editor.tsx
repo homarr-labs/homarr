@@ -724,7 +724,8 @@ export default function SmartHomeLayoutEditor({ integrationId, layout, onSave, o
               devices={deviceOptions}
               device={templateDevice}
               onDeviceChange={setTemplateDevice}
-              disabled={isFull || (!index && templates.length === 0)}
+              disabled={!index && templates.length === 0}
+              full={isFull}
               devicesDisabled={!index}
               templates={templates}
               onAddPreset={addPreset}

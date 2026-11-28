@@ -206,9 +206,11 @@ function TileElement({ entity, element, label }: ElementProps) {
   );
   const slider = getSliderSpec(entity);
   if (!slider && isPercentReading(entity)) {
-    // A progress the device does not report (an idle printer says "unknown") reads as 0 %.
+    // A progress the device does not report (an idle printer says "unknown") reads as 0 %; an unavailable device
+    // stays unavailable.
+    const unknown = entity.state === "unknown";
     const value = getNumericState(entity) ?? 0;
-    const shown = getNumericState(entity) === null ? asZeroPercent(entity) : entity;
+    const shown = unknown ? asZeroPercent(entity) : entity;
     const ruleColor = getRuleColor(entity.state, element.rules);
     // Beside the label when the element is flat, above it otherwise.
     const wide = width >= height * 1.5;
@@ -231,7 +233,8 @@ function TileElement({ entity, element, label }: ElementProps) {
             sections={[{ value: Math.min(100, Math.max(0, value)), color: ruleColor ?? "var(--accent)" }]}
             label={
               <span className={classes.ringValue} style={{ fontSize: Math.round(ring * 0.22), color: ruleColor }}>
-                {formatElementState(shown, element)}
+                {/* An unavailable device keeps the ring empty with a dash, as other readings show it. */}
+                {getNumericState(shown) === null ? "—" : formatElementState(shown, element)}
               </span>
             }
             aria-label={label}
@@ -814,9 +817,10 @@ function BatteryElement({ entity, element, label }: ElementProps) {
 /** A percentage as a bar under its label and value, e.g. a 3D print or a washing program; rules color the bar. */
 function ProgressElement({ entity, element, label }: ElementProps) {
   const theme = useEntityTheme(entity);
-  // Not reported (an idle printer says "unknown"): 0 %, like a progress that has not started.
+  // Not reported (an idle printer says "unknown"): 0 %, like a progress that has not started. An unavailable device
+  // stays unavailable.
   const value = getNumericState(entity) ?? 0;
-  const shown = getNumericState(entity) === null ? asZeroPercent(entity) : entity;
+  const shown = entity.state === "unknown" ? asZeroPercent(entity) : entity;
   const ruleColor = getRuleColor(entity.state, element.rules);
   return (
     <Stack gap="var(--el-gap-tight)" style={accentVars(theme.accent, theme.onAccent)}>
