@@ -160,6 +160,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/paperless-ngx"
   | "/docs/integrations/patchmon"
   | "/docs/integrations/peanut"
+  | "/docs/integrations/pfsense"
   | "/docs/integrations/pi-hole"
   | "/docs/integrations/plantit"
   | "/docs/integrations/plex"

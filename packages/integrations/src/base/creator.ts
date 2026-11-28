@@ -322,6 +322,8 @@ const integrationCreators = {
     new (await import("../unifi-controller/unifi-controller-integration")).UnifiControllerIntegration(input),
   opnsense: async (input: IntegrationInput) =>
     new (await import("../opnsense/opnsense-integration")).OPNsenseIntegration(input),
+  pfsense: async (input: IntegrationInput) =>
+    new (await import("../pfsense/pfsense-integration")).PfSenseIntegration(input),
   ical: async (input: IntegrationInput) => new (await import("../ical/ical-integration")).ICalIntegration(input),
   ntfy: async (input: IntegrationInput) => new (await import("../ntfy/ntfy-integration")).NTFYIntegration(input),
   gotify: async (input: IntegrationInput) =>

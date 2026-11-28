@@ -38,6 +38,7 @@ export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { SynologyIntegration } from "./synology/synology-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export { PfSenseIntegration } from "./pfsense/pfsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
