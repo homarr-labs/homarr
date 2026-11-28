@@ -22,9 +22,8 @@ import type { SmartContainerOptions } from "@homarr/validation/smart-container";
 import { WidgetActivityProvider } from "@homarr/widgets/activity";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { CONTAINER_HEADER_HEIGHT, getLogicalGridSize } from "~/components/board/layout";
-import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
-import { getSmartContainerChromeHeight, getSmartContainerStateLabel } from "./constants";
+import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { canShowSmartContainerPeeks, getSmartContainerStateLabel } from "./constants";
 import { useSectionItems } from "../use-section-items";
 import { useOpenContainerEditor } from "../container/lazy-container-edit-modal";
 import { projectSmartContainerState } from "./smart-container-layout";
@@ -117,14 +116,7 @@ const ReelSurface = ({
   const projection = (!isEditMode && focusedProjection) || liveProjection;
   const selectedIndex = states.findIndex((state) => state.id === selectedStateId);
   const canvasScale = useBoardCanvasScale();
-  const showPeeks =
-    !collapsed &&
-    options.appearance === "reel" &&
-    states.length > 2 &&
-    savedRows >= 3 &&
-    getLogicalGridSize(savedRows - 1) >
-      (getSmartContainerChromeHeight(true) + (hasHeader ? CONTAINER_HEADER_HEIGHT : 0) + 24) *
-        calculateBoardUiScale(canvasScale);
+  const showPeeks = !collapsed && canShowSmartContainerPeeks(options, savedRows, hasHeader, canvasScale);
   const previous = states[(selectedIndex - 1 + states.length) % states.length];
   const next = states[(selectedIndex + 1) % states.length];
   const openEditor = useOpenContainerEditor(section);
@@ -137,6 +129,23 @@ const ReelSurface = ({
   );
   const nextLabel = getSmartContainerStateLabel(next?.title, stateLabel, (selectedIndex + 1) % states.length);
   const surfaceRef = useRef<HTMLElement>(null);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(isEditMode || Boolean(preview));
+  useEffect(() => {
+    const surface = surfaceRef.current;
+    if (!surface || hasEnteredViewport) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setHasEnteredViewport(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) setHasEnteredViewport(true);
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(surface);
+    return () => observer.disconnect();
+  }, [hasEnteredViewport]);
   const priorStateId = useRef(selectedStateId);
   const { setHovered } = runtime;
   useEffect(() => {
@@ -175,6 +184,7 @@ const ReelSurface = ({
     now: runtime.now,
     savedRows,
     showPeeks,
+    deferPassiveWidgets: !hasEnteredViewport && !isEditMode && !preview,
     compactQuiet: options.compactQuiet && !isEditMode,
     expandedItemId,
     toggleCompactWidget: (itemId: string) => {
@@ -220,6 +230,7 @@ const ReelSurface = ({
           runtime.holdForFocus();
         }}
         onFocusCapture={(event) => {
+          setHasEnteredViewport(true);
           if (
             collapsed ||
             isEditMode ||

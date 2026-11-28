@@ -141,3 +141,19 @@ export const projectSmartContainerState = ({
 
   return { placements, itemIds, rowCount: Math.max(rowOffset, 1) };
 };
+
+/** Keep nested containers beneath the selected widgets in both the initial and live grid. */
+export const getSmartContainerGridPlacements = <T extends { type: "section" | "item"; id: string; y: number }>(
+  placements: T[],
+  projection: ReturnType<typeof projectSmartContainerState>,
+): T[] => {
+  const firstNestedRow = Math.min(...placements.filter((entry) => entry.type === "section").map((entry) => entry.y));
+  const nestedOffset = Math.max(0, projection.rowCount - firstNestedRow);
+  return placements
+    .filter((entry) => entry.type === "section" || projection.placements.has(entry.id))
+    .map((entry) => {
+      const statePlacement = projection.placements.get(entry.id);
+      if (statePlacement) return { ...entry, ...statePlacement };
+      return { ...entry, y: entry.y + nestedOffset };
+    });
+};

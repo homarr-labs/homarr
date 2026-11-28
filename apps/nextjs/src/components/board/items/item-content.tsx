@@ -44,6 +44,7 @@ import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
 
 interface BoardItemContentProps {
+  deferRuntime?: boolean;
   item: SectionItem;
 }
 
@@ -101,7 +102,7 @@ const subscribeToHydration = () => () => undefined;
 const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
 
-export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+export const BoardItemContent = ({ item, deferRuntime = false }: BoardItemContentProps) => {
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const { ref, width: measuredWidth, height: measuredHeight } = useDeferredElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -111,7 +112,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 
   // App and bookmark HTML is already in the initial document. Other widget
   // modules render after hydration while their server queries already run.
-  if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
+  if ((!hydrated || deferRuntime) && item.kind !== "app" && item.kind !== "bookmarks") {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
@@ -384,7 +385,7 @@ const ResolvedBoardItemContent = ({
           )}
         >
           <InnerContent
-            item={item}
+            item={menuItem}
             width={advancedSize?.width ?? width}
             height={advancedSize?.height ?? height}
             displayScale={boardCanvasScale}
@@ -497,11 +498,10 @@ interface InnerContentProps {
 }
 
 const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
-  const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const isContainerPreview = Boolean(useSmartContainerPreviewState());
-  const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
+  const options = item.options;
   const { removeItem, updateItemOptions } = useItemActions();
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;

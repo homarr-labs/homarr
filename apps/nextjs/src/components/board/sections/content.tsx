@@ -114,7 +114,14 @@ export const SectionContentItem = ({ item, integrations }: ItemProps) => {
           </div>
         )}
         <div id={bodyId} className={smartClasses.nativeBody} hidden={compact} inert={compact}>
-          <BoardItemContent item={item} />
+          <BoardItemContent
+            item={item}
+            deferRuntime={
+              smart?.sectionId === section.id &&
+              smart.deferPassiveWidgets &&
+              !smartContainerActivityKinds.has(item.kind)
+            }
+          />
         </div>
       </div>
     </FixedGridItem>

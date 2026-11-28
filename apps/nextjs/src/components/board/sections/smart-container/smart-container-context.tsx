@@ -13,6 +13,7 @@ interface SmartContainerContextValue {
   now: number;
   savedRows: number;
   showPeeks: boolean;
+  deferPassiveWidgets: boolean;
   runtime: ReturnType<typeof useSmartContainerRuntime>;
   focusedItemId: string | null;
   compactQuiet: boolean;

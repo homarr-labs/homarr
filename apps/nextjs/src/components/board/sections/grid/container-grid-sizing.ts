@@ -10,6 +10,13 @@ import {
   getLogicalGridSize,
   LOGICAL_GRID_PITCH,
 } from "~/components/board/layout";
+import { resolveSmartContainerMembership } from "@homarr/validation/smart-container";
+import { projectSmartContainerState, getSmartContainerGridPlacements } from "../smart-container/smart-container-layout";
+import {
+  canShowSmartContainerPeeks,
+  getSmartContainerDisplayRows,
+  getSmartContainerChromeHeight,
+} from "../smart-container/constants";
 import { createGridRowProjection } from "./grid-row-projection";
 
 export const CONTAINER_CARD_INSET = 5;
@@ -68,9 +75,11 @@ export const getContainerGridMinimumHeights = (
   layoutId: string,
   canvasScale: number,
   collapsedSectionIds: ReadonlySet<string>,
+  reclaimSmartSpace = false,
 ) => {
+  const cacheKey = JSON.stringify([layoutId, reclaimSmartSpace]);
   const cachedByLayout = minimumHeightsCache.get(board);
-  const cached = cachedByLayout?.get(layoutId);
+  const cached = cachedByLayout?.get(cacheKey);
   if (cached?.canvasScale === canvasScale && cached.collapsedSectionIds === collapsedSectionIds) return cached.heights;
   const data = getBoardLayoutData(board, layoutId);
   const logicalMinimums = getContainerMinimumSizes(board, layoutId);
@@ -104,10 +113,43 @@ export const getContainerGridMinimumHeights = (
         return resolved;
       }),
     ];
-    const logicalPlacements = getCollapsedDisplayLayout(
-      children.map((child) => ({ id: child.id, x: child.xOffset, y: child.yOffset, w: child.width, h: child.height })),
+    let logicalPlacements = getCollapsedDisplayLayout(
+      children.map((child) => ({
+        type: child.type,
+        id: child.id,
+        x: child.xOffset,
+        y: child.yOffset,
+        w: child.width,
+        h: child.height,
+      })),
       { columnCount: section.width, collapsedItemIds: new Set() },
     );
+    const smart = section.options.smart;
+    let smartChrome = 0;
+    const reclaim = reclaimSmartSpace && smart?.enabled && smart.reclaimSpace && smart.states.length > 0;
+    if (reclaim) {
+      const states = resolveSmartContainerMembership(smart.states, new Set(items.map((item) => item.id)));
+      const state =
+        states.find((entry) => entry.id === smart.fallbackStateId) ??
+        states.find((entry) => entry.enabled) ??
+        states[0];
+      const initial = projectSmartContainerState({
+        state,
+        items,
+        columnCount: section.width,
+        rowBudget: section.height,
+        options: smart,
+        authored: false,
+        expandedItemId: null,
+        activities: {},
+        now: 0,
+      });
+      logicalPlacements = getSmartContainerGridPlacements(logicalPlacements, initial);
+      const hasHeader = section.options.collapsible && section.options.showLabel;
+      const showPeeks = canShowSmartContainerPeeks(smart, section.height, hasHeader, canvasScale);
+      smartChrome =
+        (getSmartContainerChromeHeight(showPeeks) * calculateBoardUiScale(canvasScale)) / parentContentScale;
+    }
     const collapsedIds = new Set(
       innerSections
         .filter((child) => child.options.collapsible && collapsedSectionIds.has(child.id))
@@ -122,6 +164,15 @@ export const getContainerGridMinimumHeights = (
             (canvasScale * parentContentScale * metrics.contentScale * LOGICAL_GRID_PITCH),
         ]),
     );
+    if (reclaimSmartSpace) {
+      for (const child of innerSections) {
+        const rows = heights.get(child.id);
+        if (!child.options.smart?.enabled || rows === undefined || rows >= child.height || collapsedIds.has(child.id))
+          continue;
+        collapsedIds.add(child.id);
+        collapsedRowCountById.set(child.id, rows);
+      }
+    }
     const collapsedPlacements = getCollapsedDisplayLayout(logicalPlacements, {
       columnCount: section.width,
       collapsedItemIds: collapsedIds,
@@ -132,7 +183,11 @@ export const getContainerGridMinimumHeights = (
       new Map([...heights].filter(([id]) => !collapsedIds.has(id))),
     );
     let height = 1;
-    if (section.options.smart?.enabled) {
+    if (reclaim) {
+      const rows = Math.max(1, getLayoutRowCount(collapsedPlacements));
+      const contentHeight = getLogicalGridSize(projection.getDisplayRow(rows)) * metrics.contentScale;
+      height = getSmartContainerDisplayRows(section.height, contentHeight, metrics.overhead + smartChrome);
+    } else if (smart?.enabled) {
       height = Math.max(1, section.height);
     } else if (!section.options.scrollable) {
       const rowCount = Math.max(1, section.height, getLayoutRowCount(collapsedPlacements));
@@ -161,7 +216,7 @@ export const getContainerGridMinimumHeights = (
     }
   }
   const nextByLayout = cachedByLayout ?? new Map();
-  nextByLayout.set(layoutId, { canvasScale, collapsedSectionIds, heights: minimumHeights });
+  nextByLayout.set(cacheKey, { canvasScale, collapsedSectionIds, heights: minimumHeights });
   minimumHeightsCache.set(board, nextByLayout);
   return minimumHeights;
 };
