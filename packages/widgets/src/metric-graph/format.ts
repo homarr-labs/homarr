@@ -101,8 +101,8 @@ export const alignToGrid = (points: readonly MetricPoint[], grid: readonly numbe
   });
 };
 
-// Units that mean the same: a stats source reports "watts", a smart home sensor "W".
-const equivalentUnits: Record<string, string> = { watts: "W", celsius: "°C", percent: "%" };
+// Units that mean the same: a stats source reports "watts" or "kilowattHours", a smart home sensor "W" or "kWh".
+const equivalentUnits: Record<string, string> = { watts: "W", kilowattHours: "kWh", celsius: "°C", percent: "%" };
 
 /** The scale a unit belongs to: equivalent units share one, so 260 watts and 60 W keep their proportions. */
 export const getScaleKey = (unit: string | null) => (unit === null ? "" : (equivalentUnits[unit] ?? unit));

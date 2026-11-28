@@ -25,8 +25,9 @@ export const useShowsPart = (part: string) => useContext(HiddenPartsContext)?.ha
  */
 export function useLoadableImage(src: string | undefined) {
   const [failed, setFailed] = useState<string | null>(null);
-  // Once the picture is gone (an unavailable camera), a failure is forgotten: the same address may load when it is back.
-  if (!src && failed !== null) setFailed(null);
+  // A failure counts only while its address is current: once the picture changes or is gone (an unavailable camera),
+  // it is forgotten, so the same address is tried again when it comes back.
+  if (failed !== null && src !== failed) setFailed(null);
   return {
     src: src && src !== failed ? src : undefined,
     onError: () => setFailed(src ?? null),

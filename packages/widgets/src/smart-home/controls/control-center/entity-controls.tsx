@@ -1058,7 +1058,8 @@ function MediaControl({ entity, width, height }: ControlProps) {
     }
     if (titleRoom() < WIDE_TITLE_MIN) {
       withArt = false;
-      if (volumePlace === "cover") volumePlace = null;
+      const volumeOnCover = volumePlace === "cover";
+      volumePlace = null;
       // Without the cover there may be room again for the skip buttons that were dropped for it.
       withPrevious = canPrevious;
       withNext = canNext;
@@ -1066,6 +1067,11 @@ function MediaControl({ entity, width, height }: ControlProps) {
       if (titleRoom() < WIDE_TITLE_MIN) {
         withPrevious = false;
         withNext = false;
+      }
+      // The volume that was moved onto the cover goes back in the row if it still fits next to those buttons.
+      if (volumeOnCover) {
+        volumePlace = "row";
+        if (titleRoom() < WIDE_TITLE_MIN) volumePlace = null;
       }
     }
     return (
@@ -1259,6 +1265,13 @@ function VolumeButton({
     latest.current = null;
     setDraft(null);
   };
+  // The slider keeps following a touch the browser cancelled (it only ends a drag on touchend), so a cancel also
+  // mounts a fresh slider: the old one stops listening and cannot commit that gesture later.
+  const [gesture, setGesture] = useState(0);
+  const cancelGesture = () => {
+    discardDraft();
+    setGesture((current) => current + 1);
+  };
   const setOpened = (next: boolean) => {
     if (!next) discardDraft();
     setOpenedState(next);
@@ -1310,8 +1323,8 @@ function VolumeButton({
       </Popover.Target>
       <Popover.Dropdown onClick={stopEvent} onPointerDown={stopEvent}>
         <Group
-          onPointerCancel={discardDraft}
-          onTouchCancel={discardDraft}
+          onPointerCancel={cancelGesture}
+          onTouchCancel={cancelGesture}
           gap="sm"
           wrap="nowrap"
           w={210}
@@ -1320,6 +1333,7 @@ function VolumeButton({
           ref={(node) => node?.querySelector('[role="slider"]')?.setAttribute("data-mantine-stop-propagation", "true")}
         >
           <Slider
+            key={gesture}
             flex={1}
             min={0}
             max={100}
