@@ -158,9 +158,6 @@ export const createBoundedListChannel = <TItem>(
       const items = await (await requireReadyRedisConnectionAsync(client)).lrange(name, 0, -1);
       return items.map((item) => superjson.parse<TItem>(item));
     },
-    clearAsync: async () => {
-      await (await requireReadyRedisConnectionAsync(client)).del(name);
-    },
   };
 };
 
