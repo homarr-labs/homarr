@@ -22,8 +22,15 @@ export const CommonChart = ({
   lastValue,
   chartType = "line",
   advanced = false,
+  plain = false,
+  positions,
+  showValueWithoutHistory = false,
 }: {
   data: Record<string, any>[];
+  /** Where each row sits across the chart, 0 to 1 (by its time). Without them the rows are evenly spaced. */
+  positions?: readonly number[];
+  /** Shows the last value also in compact mode while there is no history to draw. */
+  showValueWithoutHistory?: boolean;
   series: { name: string; color: string }[];
   title: ReactNode;
   icon: TablerIcon;
@@ -36,6 +43,8 @@ export const CommonChart = ({
   lastValue?: string;
   chartType?: "line" | "area";
   advanced?: boolean;
+  /** Draw directly on the widget without the inner card background, for a chart that fills its widget. */
+  plain?: boolean;
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
@@ -46,11 +55,14 @@ export const CommonChart = ({
 
   const opacity = board.opacity / 100;
   let backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  if (plain) backgroundColor = "transparent";
   const cardStyle: CSSProperties = { overflow: "hidden" };
   // Matches the previous Recharts layout: 5px root padding plus Recharts' default 5px plot margin.
   const chartRootStyle: CSSProperties = {
-    padding: 10,
-    borderRadius: theme.radius[board.itemRadius ?? "default"],
+    // A plain chart runs edge to edge; the widget card's rounded corners clip it.
+    padding: plain ? 0 : 10,
+    // A plain chart follows the widget card's own rounded clip instead of rounding a second time.
+    borderRadius: plain ? 0 : theme.radius[board.itemRadius ?? "default"],
   };
   if (advanced) {
     backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
@@ -70,7 +82,13 @@ export const CommonChart = ({
     const rect = event.currentTarget.getBoundingClientRect();
     if (rect.width === 0) return;
     const ratio = (event.clientX - rect.left) / rect.width;
-    const index = Math.round(ratio * (data.length - 1));
+    const index = positions
+      ? positions.reduce(
+          (best, position, candidate) =>
+            Math.abs(position - ratio) < Math.abs((positions[best] ?? 0) - ratio) ? candidate : best,
+          0,
+        )
+      : Math.round(ratio * (data.length - 1));
     setHoveredIndex(Math.min(data.length - 1, Math.max(0, index)));
   };
 
@@ -90,7 +108,9 @@ export const CommonChart = ({
         style={cardStyle}
         p={0}
         bg={backgroundColor}
-        radius={board.itemRadius ?? undefined}
+        radius={plain ? 0 : (board.itemRadius ?? undefined)}
+        // The widget card already draws the border; a second one would show a card inside the card.
+        withBorder={!plain}
         onPointerMove={handlePointerMove}
       >
         {data.length > 1 && height > 40 && !hovered && (
@@ -146,7 +166,7 @@ export const CommonChart = ({
                   {title}
                 </Text>
               )}
-              {advanced && lastValue && (
+              {(advanced || showValueWithoutHistory) && lastValue && (
                 <Text size={height > 100 ? "md" : "xs"} fw={600} ta="center">
                   {lastValue}
                 </Text>
@@ -160,6 +180,7 @@ export const CommonChart = ({
               series={series.map(({ name, color }) => ({
                 color,
                 values: data.map((row) => row[name] as number | null | undefined),
+                positions,
               }))}
               yDomain={yDomain}
               variant={chartType}

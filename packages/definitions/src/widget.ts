@@ -1,5 +1,6 @@
 export const widgetKinds = [
   "stats",
+  "metricGraph",
   "clock",
   "weather",
   "airQuality",
@@ -97,4 +98,5 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   bazarr: { width: 2, height: 2 },
   assistant: { width: 10, height: 4 },
   wazuh: { width: 4, height: 3 },
+  metricGraph: { width: 2, height: 2 },
 };

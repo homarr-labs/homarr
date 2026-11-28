@@ -128,6 +128,7 @@ export const statsIntegrationKinds = [
 
 export const widgetIntegrationConfigs = {
   stats: { supportedIntegrations: [...statsIntegrationKinds] },
+  metricGraph: { supportedIntegrations: [...statsIntegrationKinds] },
   dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   "smartHome-entityState": {

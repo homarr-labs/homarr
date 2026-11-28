@@ -4,6 +4,7 @@ import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
   stats: lazy(() => import("./stats").then((mod) => mod.statsRouter)),
+  metricGraph: lazy(() => import("./metric-graph").then((mod) => mod.metricGraphRouter)),
   archiveTeamWarrior: lazy(() => import("./archive-team-warrior").then((mod) => mod.archiveTeamWarriorRouter)),
   beszel: lazy(() => import("./beszel").then((mod) => mod.beszelRouter)),
   anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),

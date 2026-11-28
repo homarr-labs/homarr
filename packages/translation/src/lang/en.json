@@ -6514,6 +6514,61 @@
       "resetView": "Reset view",
       "allHidden": "All metrics are hidden in this view. Use Customize this view to restore them."
     },
+    "metricGraph": {
+      "name": "Metric graph",
+      "description": "Graph up to four values from your integrations, such as sensors or statistics, over time.",
+      "empty": "Open widget settings, select integrations, then add up to four values.",
+      "editorHelp": "Add up to four values from the integrations selected for this widget.",
+      "source": "Integration",
+      "type": {
+        "label": "Value type",
+        "stats": "Statistic",
+        "smartHome": "Sensor"
+      },
+      "metric": "Value",
+      "noMetrics": "No numeric values available for this integration",
+      "add": "Add value",
+      "label": "Custom label",
+      "color": "Color",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "remove": "Remove value",
+      "unavailable": "Unavailable",
+      "median": "Ø {value}",
+      "fetchFailed": "Unable to retrieve values",
+      "collecting": "Collecting history…",
+      "option": {
+        "entries": {
+          "label": "Values"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "cards": "One card per value",
+            "combined": "One shared graph"
+          }
+        },
+        "cardLayout": {
+          "label": "Card layout",
+          "description": "Arrange the cards when each value has its own graph."
+        },
+        "timeRange": {
+          "label": "Time range",
+          "option": {
+            "15m": "15 minutes",
+            "1h": "1 hour",
+            "6h": "6 hours",
+            "24h": "24 hours"
+          }
+        },
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode"
+        }
+      }
+    },
     "wazuh": {
       "name": "Wazuh",
       "description": "Wazuh security overview with tabs for alert severity, alerts, timeline, top lists, agents, vulnerabilities, file integrity and authentication failures",

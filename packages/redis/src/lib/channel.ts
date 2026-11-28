@@ -122,6 +122,49 @@ export const createListChannel = <TItem>(name: string) => {
 };
 
 /**
+ * Creates a list that keeps only its newest items.
+ * @param name name of the list
+ * @param options maximum number of items and redis client selection
+ */
+export const createBoundedListChannel = <TItem>(
+  name: string,
+  { maxItems, ...clientOptions }: RedisChannelOptions & { maxItems: number },
+) => {
+  const client = selectRedisClient(clientOptions);
+  return {
+    /**
+     * Add an item and drop the oldest items above the limit
+     */
+    pushAsync: async (item: TItem) => {
+      await (
+        await requireReadyRedisConnectionAsync(client)
+      )
+        .multi()
+        .lpush(name, superjson.stringify(item))
+        .ltrim(name, 0, maxItems - 1)
+        .exec();
+    },
+    /**
+     * Get the newest item, or null when the list is empty
+     */
+    getLatestAsync: async () => {
+      const item = await (await requireReadyRedisConnectionAsync(client)).lindex(name, 0);
+      return item === null ? null : superjson.parse<TItem>(item);
+    },
+    /**
+     * Get all items, newest first
+     */
+    getAllAsync: async () => {
+      const items = await (await requireReadyRedisConnectionAsync(client)).lrange(name, 0, -1);
+      return items.map((item) => superjson.parse<TItem>(item));
+    },
+    clearAsync: async () => {
+      await (await requireReadyRedisConnectionAsync(client)).del(name);
+    },
+  };
+};
+
+/**
  * Creates a new redis channel for getting and setting data
  * @param name name of channel
  */

@@ -17,6 +17,8 @@ export interface HistoryGraphLine {
   color: string;
   /** Lines with the same unit share one scale, so their proportions hold; different units each get their own. */
   unit?: string | null;
+  /** A fixed scale for this line (for example 0 to 100 for percentages) instead of the one shared by its unit. */
+  domain?: readonly [number, number];
 }
 
 interface HistoryGraphProps {
@@ -28,6 +30,8 @@ interface HistoryGraphProps {
   scrub?: boolean;
   /** Whether a gap in the data stays a gap (the default) or is bridged. */
   connectNulls?: boolean;
+  /** Filled areas below the lines (the default) or lines only. */
+  variant?: "line" | "area";
   /** Names the graph for assistive technology; with scrubbing, the arrow keys step through its points. */
   label?: string;
   className?: string;
@@ -111,6 +115,7 @@ export function HistoryGraph({
   formatTime,
   scrub = true,
   connectNulls = false,
+  variant = "area",
   label,
   className,
 }: HistoryGraphProps) {
@@ -136,7 +141,27 @@ export function HistoryGraph({
   }, [shownAt]);
   const domains = useMemo(() => getHistoryDomains(lines), [lines]);
   const positions = useMemo(() => getHistoryPositions(lines), [lines]);
-  const domainOf = (line: HistoryGraphLine) => domains.get(line.unit ?? "") ?? ([0, 1] as const);
+  // A fixed scale grows to values outside it, as the line itself is drawn, and lines in the same unit share it, so a
+  // line and its hover dot always sit on one scale.
+  const fixedDomains = useMemo(() => {
+    const byUnit = new Map<string, [number, number]>();
+    for (const line of lines) {
+      if (!line.domain) continue;
+      const key = line.unit ?? "";
+      const range = byUnit.get(key) ?? [line.domain[0], line.domain[1]];
+      range[0] = Math.min(range[0], line.domain[0]);
+      range[1] = Math.max(range[1], line.domain[1]);
+      for (const value of line.values) {
+        if (!isNumber(value)) continue;
+        range[0] = Math.min(range[0], value);
+        range[1] = Math.max(range[1], value);
+      }
+      byUnit.set(key, range);
+    }
+    return byUnit;
+  }, [lines]);
+  const domainOf = (line: HistoryGraphLine) =>
+    (line.domain ? fixedDomains.get(line.unit ?? "") : undefined) ?? domains.get(line.unit ?? "") ?? ([0, 1] as const);
   const positionsOf = (line: HistoryGraphLine) => positions.get(line.id) ?? [];
   const drawn = lines.filter((line) => line.values.length > 1);
   const primary = drawn[0];
@@ -280,7 +305,7 @@ export function HistoryGraph({
           <Sparkline
             series={[{ values: line.values, positions: positionsOf(line), color: line.color }]}
             yDomain={domainOf(line)}
-            variant="area"
+            variant={variant}
             fillOpacity={0.4}
             connectNulls={connectNulls}
           />

@@ -3052,6 +3052,7 @@
                           "type": "string",
                           "enum": [
                             "stats",
+                            "metricGraph",
                             "clock",
                             "weather",
                             "airQuality",
@@ -3316,6 +3317,7 @@
                     "type": "string",
                     "enum": [
                       "stats",
+                      "metricGraph",
                       "clock",
                       "weather",
                       "airQuality",
@@ -5092,6 +5094,7 @@
                                       "type": "string",
                                       "enum": [
                                         "stats",
+                                        "metricGraph",
                                         "clock",
                                         "weather",
                                         "airQuality",
@@ -5313,6 +5316,7 @@
                                       "type": "string",
                                       "enum": [
                                         "stats",
+                                        "metricGraph",
                                         "clock",
                                         "weather",
                                         "airQuality",
@@ -5534,6 +5538,7 @@
                                       "type": "string",
                                       "enum": [
                                         "stats",
+                                        "metricGraph",
                                         "clock",
                                         "weather",
                                         "airQuality",
@@ -7081,6 +7086,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -7303,6 +7309,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -7525,6 +7532,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -7900,6 +7908,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -8122,6 +8131,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -8344,6 +8354,7 @@
                                           "type": "string",
                                           "enum": [
                                             "stats",
+                                            "metricGraph",
                                             "clock",
                                             "weather",
                                             "airQuality",
@@ -10005,6 +10016,7 @@
                               "type": "string",
                               "enum": [
                                 "stats",
+                                "metricGraph",
                                 "clock",
                                 "weather",
                                 "airQuality",
@@ -10234,6 +10246,7 @@
                               "type": "string",
                               "enum": [
                                 "stats",
+                                "metricGraph",
                                 "clock",
                                 "weather",
                                 "airQuality",
@@ -10463,6 +10476,7 @@
                               "type": "string",
                               "enum": [
                                 "stats",
+                                "metricGraph",
                                 "clock",
                                 "weather",
                                 "airQuality",
