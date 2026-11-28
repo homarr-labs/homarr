@@ -3,6 +3,8 @@
 linker = "hoisted"
 # Ignore versions published less than 3 days ago when resolving new dependencies.
 minimumReleaseAge = 259200
+# First-party testkit releases are pinned exactly and checksum-verified by the self-host release.
+minimumReleaseAgeExcludes = ["@ajnart/self-host-testkit"]
 
 [run]
 # Preserve Node runtimes for tools with a Node shebang.
