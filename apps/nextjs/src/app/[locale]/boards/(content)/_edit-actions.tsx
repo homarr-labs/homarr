@@ -16,7 +16,7 @@ import {
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
-import { AppSelectModal } from "@homarr/modals-collection";
+import { AppSelectModal } from "@homarr/modals-collection/apps";
 import { useI18n } from "@homarr/translation/client";
 
 import { useItemActions } from "~/components/board/items/item-actions";

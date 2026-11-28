@@ -32,7 +32,7 @@ import {
 } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { useSession } from "@homarr/auth/client";
-import { env } from "@homarr/common/env";
+import { env } from "@homarr/common/env-client";
 import { showWarningNotification } from "@homarr/notifications";
 import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";

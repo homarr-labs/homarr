@@ -1962,6 +1962,7 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "loadError": "This content couldn’t load. If the problem persists, reload the page.",
     "action": {
       "add": "Add",
       "apply": "Apply",

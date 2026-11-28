@@ -1,13 +1,15 @@
-import { useMemo } from "react";
-import { Badge, Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
-import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
-import { MRT_Table } from "mantine-react-table";
+import { useCallback, useMemo, useState } from "react";
+import { Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { createRetryableLazyContent } from "@homarr/ui/lazy-content";
+
+const RequestMediaSeasonsTable = createRetryableLazyContent(() =>
+  import("./request-media-seasons-table").then((module) => module.RequestMediaSeasonsTable),
+);
 
 interface RequestMediaModalProps {
   integrationId: string;
@@ -41,64 +43,16 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
   const isPending = isPendingQuery || isPendingMutation;
   const t = useI18n();
-  const requestedSeasons = new Set(data?.requestedSeasons ?? []);
-
-  const columns = useMemo<MRT_ColumnDef<Season>[]>(
-    () => [
-      {
-        accessorKey: "name",
-        header: t("search.engine.media.request.modal.table.header.season"),
-      },
-      {
-        accessorKey: "episodeCount",
-        header: t("search.engine.media.request.modal.table.header.episodes"),
-      },
-      {
-        id: "status",
-        header: t("common.field.status"),
-        Cell: ({ row }) =>
-          requestedSeasons.has(row.original.seasonNumber) ? (
-            <Badge size="xs" color="violet" variant="light">
-              {t("search.engine.media.request.modal.table.status.requested")}
-            </Badge>
-          ) : null,
-      },
-    ],
-    [data?.requestedSeasons],
-  );
-
-  const table = useTranslatedMantineReactTable({
-    columns,
-    data: data && "seasons" in data ? data.seasons : [],
-    enableColumnActions: false,
-    enableColumnFilters: false,
-    enablePagination: false,
-    enableSorting: false,
-    enableSelectAll: true,
-    enableRowSelection: (row: MRT_Row<Season>) => !requestedSeasons.has(row.original.seasonNumber),
-    mantineTableProps: {
-      highlightOnHover: false,
-      striped: "odd",
-      withColumnBorders: true,
-      withRowBorders: true,
-      withTableBorder: true,
-    },
-    initialState: {
-      density: "xs",
-    },
-  });
-
-  const anySelected = Object.keys(table.getState().rowSelection).length > 0;
-
-  const handleMutate = () => {
-    const selectedSeasons = table.getSelectedRowModel().rows.flatMap((row) => row.original.seasonNumber);
+  const requestedSeasons = useMemo(() => new Set(data?.requestedSeasons ?? []), [data?.requestedSeasons]);
+  const [selectedSeasons, setSelectedSeasons] = useState<number[]>([]);
+  const handleMutate = useCallback(() => {
     mutate({
       integrationId: innerProps.integrationId,
       mediaId: innerProps.mediaId,
       mediaType: innerProps.mediaType,
       seasons: selectedSeasons,
     });
-  };
+  }, [innerProps.integrationId, innerProps.mediaId, innerProps.mediaType, mutate, selectedSeasons]);
 
   return (
     <Stack>
@@ -111,12 +65,18 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
           </Text>
         </Group>
       )}
-      {innerProps.mediaType === "tv" && <MRT_Table table={table} />}
+      {innerProps.mediaType === "tv" && data && "seasons" in data && (
+        <RequestMediaSeasonsTable
+          seasons={data.seasons}
+          requestedSeasons={requestedSeasons}
+          onSelectionChange={setSelectedSeasons}
+        />
+      )}
       <Group justify="end">
         <Button onClick={actions.closeModal} variant="light">
           {t("common.action.cancel")}
         </Button>
-        <Button onClick={handleMutate} disabled={!anySelected && innerProps.mediaType === "tv"}>
+        <Button onClick={handleMutate} disabled={selectedSeasons.length === 0 && innerProps.mediaType === "tv"}>
           {t("search.engine.media.request.modal.button.send")}
         </Button>
       </Group>
@@ -125,10 +85,3 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 }).withOptions({
   size: "xl",
 });
-
-interface Season {
-  id: number;
-  seasonNumber: number;
-  name: string;
-  episodeCount: number;
-}

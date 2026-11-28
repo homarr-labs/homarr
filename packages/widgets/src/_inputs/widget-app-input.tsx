@@ -9,7 +9,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
-import { QuickAddAppModal } from "@homarr/modals-collection";
+import { QuickAddAppModal } from "@homarr/modals-collection/apps";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 

@@ -943,6 +943,7 @@
         "next": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
+        "react-error-boundary": "catalog:",
         "react-markdown": "catalog:",
         "rehype-raw": "catalog:",
         "rehype-sanitize": "catalog:",

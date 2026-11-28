@@ -12,7 +12,7 @@ import { createId } from "@homarr/common";
 import type { KubernetesService } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 
 import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 

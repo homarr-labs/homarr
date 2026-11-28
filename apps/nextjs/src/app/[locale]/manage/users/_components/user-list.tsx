@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 
 interface UserListComponentProps {
   initialUserList: RouterOutputs["user"]["getAll"];

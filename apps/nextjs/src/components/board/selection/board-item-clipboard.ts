@@ -1,32 +1,20 @@
-import { z } from "zod/v4";
-
 import { widgetKinds } from "@homarr/definitions";
-import { itemAdvancedOptionsSchema } from "@homarr/validation/shared";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 
 const clipboardPrefix = "homarr-board-items:v1\n";
 
-const clipboardPayloadSchema = z.object({
-  version: z.literal(1),
-  items: z
-    .array(
-      z.object({
-        kind: z.enum(widgetKinds),
-        options: z.record(z.string(), z.unknown()),
-        integrationIds: z.array(z.string()),
-        advancedOptions: itemAdvancedOptionsSchema,
-        size: z.object({
-          width: z.number().int().min(1).max(64),
-          height: z.number().int().min(1).max(64),
-        }),
-      }),
-    )
-    .min(1)
-    .max(100),
-});
-
-export type BoardItemClipboardPayload = z.infer<typeof clipboardPayloadSchema>;
+export interface BoardItemClipboardPayload {
+  version: 1;
+  items: {
+    kind: (typeof widgetKinds)[number];
+    options: Record<string, unknown>;
+    integrationIds: string[];
+    advancedOptions: BoardItemAdvancedOptions;
+    size: { width: number; height: number };
+  }[];
+}
 
 export const serializeBoardItemsForClipboard = (items: readonly Item[], layoutId: string): string => {
   const clipboardItems = items.flatMap((item) => {
@@ -51,12 +39,12 @@ export const serializeBoardItemsForClipboard = (items: readonly Item[], layoutId
 
 export const isBoardItemClipboardText = (value: string): boolean => value.startsWith(clipboardPrefix);
 
-export const parseBoardItemClipboard = (value: string): BoardItemClipboardPayload | null => {
+export const parseBoardItemClipboard = async (value: string): Promise<BoardItemClipboardPayload | null> => {
   if (!isBoardItemClipboardText(value)) return null;
 
+  const { parseBoardItemClipboardPayload } = await import("./board-item-clipboard-validation");
   try {
-    const result = clipboardPayloadSchema.safeParse(JSON.parse(value.slice(clipboardPrefix.length)));
-    return result.success ? result.data : null;
+    return parseBoardItemClipboardPayload(JSON.parse(value.slice(clipboardPrefix.length)));
   } catch {
     return null;
   }

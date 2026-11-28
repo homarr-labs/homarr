@@ -31,7 +31,7 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { useTranslatedMantineReactTable } from "@homarr/ui/hooks/use-translated-mantine-react-table";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
 type DockerEndpoint = RouterOutputs["docker"]["getContainers"]["endpoints"][number];

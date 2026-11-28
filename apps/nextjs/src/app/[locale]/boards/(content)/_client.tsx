@@ -10,12 +10,11 @@ import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useBoardTabs, useSyncBoardTabSearchParam } from "@homarr/boards/tabs";
 import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
+import { createRetryableLazyContent } from "@homarr/ui/lazy-content";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardAppUrlDrop } from "~/components/board/board-app-url-drop";
 import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
-import { BoardEmptyState } from "~/components/board/board-empty-state";
-import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import { BoardEditorToolsProvider, BoardInPlaceEditorHost } from "~/components/board/editor-tools";
 import {
   getBoardLaneColumnCount,
@@ -37,6 +36,9 @@ import { useBoardTabHotkeys } from "~/components/board/tabs/board-tabs";
 import { useVisitedBoardTabs } from "~/components/board/tabs/use-visited-board-tabs";
 import { useBoardTabLabel } from "~/components/board/tabs/use-board-tab-label";
 import classes from "./_client.module.css";
+import { loadBoardSetupPanelsAsync } from "./board-setup-panels-loader";
+
+const BoardSetupPanels = createRetryableLazyContent(loadBoardSetupPanelsAsync);
 
 const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   <GridEditorRegistryProvider>
@@ -117,8 +119,7 @@ export const ClientBoard = () => {
         >
           <BoardAppsSpotlightRegistrar />
           <BoardBackgroundVideo />
-          <BoardEmptyState />
-          <BoardSetupChecklist />
+          {isEditMode && <BoardSetupPanels />}
           <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
             <BoardGridPortalHost>
