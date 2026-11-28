@@ -1,5 +1,6 @@
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
+import { getAppWithVisibleDockerLink } from "@homarr/validation/app";
 
 import type { QueryClient } from "@tanstack/react-query";
 
@@ -15,17 +16,24 @@ const getAppIds = (options: Record<string, unknown>) => {
   return options.items.filter((value): value is string => typeof value === "string" && !getDirectBookmarkUrl(value));
 };
 
-const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, unknown> }[]) => {
+const prefetchAll = (
+  queryClient: QueryClient,
+  items: { options: Record<string, unknown> }[],
+  canReadDockerLink: Promise<boolean> = Promise.resolve(false),
+) => {
   const appIds = items.flatMap((item) => getAppIds(item.options));
   const distinctAppIds = [...new Set(appIds)];
   if (distinctAppIds.length === 0) return;
 
-  const dbAppsPromise = Promise.resolve(db.query.apps.findMany({ where: inArray(apps.id, distinctAppIds) })).catch(
-    (error: unknown) => {
+  const dbAppsPromise = Promise.all([
+    db.query.apps.findMany({ where: inArray(apps.id, distinctAppIds) }),
+    canReadDockerLink,
+  ])
+    .then(([rows, canRead]) => rows.map((app) => getAppWithVisibleDockerLink(app, canRead)))
+    .catch((error: unknown) => {
       logger.error(new Error("Failed to prefetch apps for bookmarks", { cause: error }));
       throw error;
-    },
-  );
+    });
 
   for (const item of items) {
     const itemAppIds = getAppIds(item.options);

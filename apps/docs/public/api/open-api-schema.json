@@ -128,6 +128,12 @@
                               "string",
                               "null"
                             ]
+                          },
+                          "dockerContainer": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           }
                         },
                         "required": [
@@ -136,7 +142,8 @@
                           "description",
                           "iconUrl",
                           "href",
-                          "pingUrl"
+                          "pingUrl",
+                          "dockerContainer"
                         ],
                         "additionalProperties": false
                       }
@@ -256,6 +263,12 @@
                           "string",
                           "null"
                         ]
+                      },
+                      "dockerContainer": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       }
                     },
                     "required": [
@@ -264,7 +277,8 @@
                       "description",
                       "iconUrl",
                       "href",
-                      "pingUrl"
+                      "pingUrl",
+                      "dockerContainer"
                     ],
                     "additionalProperties": false
                   }
@@ -307,7 +321,7 @@
       "post": {
         "operationId": "appRouter-create",
         "summary": "Create an app",
-        "description": "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL.",
+        "description": "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL. An optional dockerContainer link requires admin permission; use a name@endpointId pair from docker_getContainers.",
         "tags": [
           "apps"
         ],
@@ -328,6 +342,17 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 64
+                  },
+                  "dockerContainer": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1280
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "description": {
                     "anyOf": [
@@ -418,6 +443,12 @@
                         "string",
                         "null"
                       ]
+                    },
+                    "dockerContainer": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
@@ -427,7 +458,8 @@
                     "description",
                     "iconUrl",
                     "href",
-                    "pingUrl"
+                    "pingUrl",
+                    "dockerContainer"
                   ],
                   "additionalProperties": false
                 }
@@ -546,6 +578,12 @@
                           "string",
                           "null"
                         ]
+                      },
+                      "dockerContainer": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       }
                     },
                     "required": [
@@ -554,7 +592,8 @@
                       "description",
                       "iconUrl",
                       "href",
-                      "pingUrl"
+                      "pingUrl",
+                      "dockerContainer"
                     ],
                     "additionalProperties": false
                   }
@@ -771,6 +810,12 @@
                         "string",
                         "null"
                       ]
+                    },
+                    "dockerContainer": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
@@ -779,7 +824,8 @@
                     "description",
                     "iconUrl",
                     "href",
-                    "pingUrl"
+                    "pingUrl",
+                    "dockerContainer"
                   ],
                   "additionalProperties": false
                 }
@@ -841,7 +887,7 @@
       "patch": {
         "operationId": "appRouter-update",
         "summary": "Update an app",
-        "description": "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches.",
+        "description": "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches. Omit dockerContainer to preserve its link; an admin can pass null to unlink or name@endpointId from Docker inventory to link.",
         "tags": [
           "apps"
         ],
@@ -871,6 +917,17 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 64
+                  },
+                  "dockerContainer": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1280
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "description": {
                     "anyOf": [
@@ -9405,6 +9462,7 @@
                       "nextcloud",
                       "unifiController",
                       "opnsense",
+                      "pfsense",
                       "ntfy",
                       "gotify",
                       "ical",
@@ -9585,6 +9643,7 @@
                             "nextcloud",
                             "unifiController",
                             "opnsense",
+                            "pfsense",
                             "ntfy",
                             "gotify",
                             "ical",

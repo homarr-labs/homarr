@@ -8,11 +8,11 @@
   overscroll-behavior: contain;
 }
 
-.iconGrid {
+.iconGrid.iconGrid {
   grid-template-columns: repeat(auto-fill, minmax(3.25rem, 1fr));
 }
 
-.iconOption {
+.iconOption.iconOption {
   position: relative;
   display: flex;
   align-items: center;
@@ -29,8 +29,8 @@
     transform 160ms ease;
 }
 
-.iconOption:hover,
-.iconOption[data-combobox-selected="true"] {
+.iconOption.iconOption:hover,
+.iconOption.iconOption[data-combobox-selected="true"] {
   border-color: var(--mantine-primary-color-6);
   background: var(--mantine-primary-color-light);
 }
@@ -63,7 +63,7 @@
   padding: 0.2rem 0.3rem;
 }
 
-.urlPreview {
+.urlPreview.urlPreview {
   background: var(--mantine-color-default-hover);
 }
 
@@ -83,7 +83,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .iconOption {
+  .iconOption.iconOption {
     transition: none;
   }
 }

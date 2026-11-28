@@ -3,6 +3,11 @@ import { z } from "zod/v4";
 import { widgetKinds } from "@homarr/definitions";
 
 import { itemAdvancedOptionsSchema } from "./shared";
+import { getHeaderItemKey, getHeaderItems, headerZoneIds } from "./header-preferences-model";
+import type { HeaderZoneId } from "./header-preferences-model";
+
+export { getHeaderItemKey, getHeaderItems, headerZoneIds } from "./header-preferences-model";
+export type { HeaderZoneId } from "./header-preferences-model";
 
 export const headerPreferencesVersion = 4 as const;
 
@@ -29,12 +34,10 @@ export const headerItemIds = headerBuiltinItemIds;
 export type HeaderBuiltinItemId = (typeof headerBuiltinItemIds)[number];
 export type HeaderPreferenceItemId = HeaderBuiltinItemId;
 
-export const headerZoneIds = ["left", "center", "right"] as const;
 export const headerSearchDisplayValues = ["input", "icon"] as const;
 export const headerLogoDisplayValues = ["logo", "logoAndText"] as const;
 export const headerTabsDisplayValues = ["wide", "compact", "indicator"] as const;
 
-export type HeaderZoneId = (typeof headerZoneIds)[number];
 export type HeaderSearchDisplay = (typeof headerSearchDisplayValues)[number];
 export type HeaderLogoDisplay = (typeof headerLogoDisplayValues)[number];
 export type HeaderTabsDisplay = (typeof headerTabsDisplayValues)[number];
@@ -90,14 +93,6 @@ export const createBoardHeaderItem = (boardId: string): HeaderBoardItem => ({ ty
 
 export const isRequiredHeaderItem = (item: HeaderItem) =>
   item.type === "builtin" && requiredHeaderBuiltinItemIds.some((itemId) => itemId === item.id);
-
-export const getHeaderItemKey = (item: HeaderItem): string => {
-  if (item.type === "board") return `board:${item.boardId}`;
-  if (item.type === "widget") return `widget:${item.id}`;
-  return `builtin:${item.id}`;
-};
-
-export const getHeaderItems = (zones: HeaderZones): HeaderItem[] => headerZoneIds.flatMap((zone) => zones[zone]);
 
 export const getHeaderItemZone = (zones: HeaderZones, item: HeaderItem): HeaderZoneId | undefined => {
   const itemKey = getHeaderItemKey(item);

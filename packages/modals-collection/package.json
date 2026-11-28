@@ -12,7 +12,10 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./apps": "./src/apps/index.ts",
+    "./docker": "./src/docker/index.ts",
+    "./search-engines": "./src/search-engines/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

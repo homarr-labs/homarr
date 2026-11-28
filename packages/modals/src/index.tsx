@@ -176,6 +176,21 @@ export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) =>
   };
 };
 
+export const useLazyModalAction = <TModal extends ModalDefinition>(loadModal: () => Promise<TModal>) => {
+  const context = useContext(ModalContext);
+
+  if (!context) throw new Error("ModalContext is not provided");
+
+  return {
+    openModal: async (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void, signal: AbortSignal) => {
+      const modal = await loadModal();
+      if (signal.aborted) return false;
+      context.openModalInner({ modal, innerProps, options: options ?? {} });
+      return true;
+    },
+  };
+};
+
 export const useConfirmModal = () => {
   const { openModal } = useModalAction(ConfirmModal);
 

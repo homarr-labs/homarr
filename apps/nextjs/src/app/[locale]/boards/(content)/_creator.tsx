@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import type { JSX } from "react";
 import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
@@ -36,6 +37,7 @@ const firstParam = (value: SearchParams[string]) => (Array.isArray(value) ? valu
 
 interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
+  notFoundComponent?: () => Promise<JSX.Element>;
 }
 
 const BoardWithIntegrations = async ({
@@ -50,12 +52,14 @@ const BoardWithIntegrations = async ({
 
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
+  notFoundComponent: NotFoundComponent,
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
       headerBoardEditAction: <BoardContentEditAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       headerBoardSettingsAction: <BoardContentSettingsAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
+      notFoundComponent: NotFoundComponent,
       withTour: true,
       withBoardTabs: true,
     }),
@@ -71,7 +75,10 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       // The board can fail independently of the permissions read (e.g. a missing board).
       void integrationsPromise.catch(() => undefined);
 
-      const board = await boardPromise.catch(async (error: unknown) => {
+      let board: Board;
+      try {
+        board = await boardPromise;
+      } catch (error: unknown) {
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
           const session = await sessionPromise;
           if (!session) {
@@ -82,6 +89,8 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
             );
           }
 
+          if (NotFoundComponent) return <NotFoundComponent />;
+
           notFound();
         }
 
@@ -90,7 +99,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
 
         throw error;
-      });
+      }
 
       const [routeSearch, viewportWidth] = await Promise.all([searchParams, viewportWidthPromise]);
       const requestedLayoutId = getRequestedLayoutId(
@@ -114,7 +123,8 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, SectionItem[]>());
-      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
+      const canReadDockerLink = sessionPromise.then((session) => session?.user.permissions.includes("admin") ?? false);
+      for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items, canReadDockerLink);
 
       const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
       const snapshot = createBoardQuerySnapshot(board, integrations);

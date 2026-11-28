@@ -19,8 +19,10 @@
     "./theme-select": "./src/themes/theme-select.tsx",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
+    "./hooks/use-translated-mantine-react-table": "./src/hooks/use-translated-mantine-react-table.ts",
     "./icons": "./src/icons/index.ts",
-    "./markdown": "./src/markdown/index.ts"
+    "./markdown": "./src/markdown/index.ts",
+    "./lazy-content": "./src/lazy-content.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -44,6 +46,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-error-boundary": "catalog:",
     "react-markdown": "catalog:",
     "rehype-raw": "catalog:",
     "rehype-sanitize": "catalog:",

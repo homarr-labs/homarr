@@ -84,6 +84,10 @@ Drizzle schemas live in `packages/db/schema/`. `DB_DRIVER` selects `better-sqlit
 
 `packages/widgets/src/registry.ts` owns the explicit widget-module and component-loader registries. `packages/widgets/src/manifest.ts` caches those loaders and exposes definitions, components, and combined resources. Widget modules use `createWidgetDefinition` and typed option builders. Data commonly comes from tRPC queries or Redis-backed cron results. Use existing shared widget components before creating local variants.
 
+Board bundle size: Next's webpack build ships every client module a board segment imports statically, rendered or not. Keep editor-only modals and Workshop, Custom JSX (Acorn) or PocketBase code behind `next/dynamic` or `useLazyModalAction` from `@homarr/modals`. Server components must not import `@homarr/widgets/manifest`, `registry.ts` or widget definition modules: their `import("./component")` calls add every `"use client"` widget component to the route's initial chunks.
+
+CSS module order: Next's CSS chunk merging does not keep CSS modules after `@mantine/core/styles.css`, and moving imports reshuffles it. A module rule that overrides a property Mantine sets on the same component element must out-rank Mantine's selector (for example `.list.list`), not rely on load order.
+
 ### Integrations
 
 `packages/definitions/src/integration.ts` owns `integrationDefs` and `IntegrationKind`. `packages/integrations/src/base/creator.ts` owns `createIntegrationAsync`; concrete integrations implement the shared base contract. Keep credentials and permission checks on server-owned paths.

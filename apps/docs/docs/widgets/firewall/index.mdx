@@ -13,6 +13,7 @@ import Tabs from "@/components/mdx/legacy-tabs";
 import { TabItem } from "@/components/mdx/legacy-tabs";
 import { firewallWidget } from ".";
 import { opnsenseIntegration } from "../../integrations/opnsense";
+import { pfsenseIntegration } from "../../integrations/pfsense";
 
 <WidgetHeader widget={firewallWidget} categories={["Firewall"]} />
 
@@ -28,6 +29,9 @@ Compact mode keeps the configured firewall summary and interface section visible
   items={[
     {
       integration: opnsenseIntegration,
+    },
+    {
+      integration: pfsenseIntegration,
     },
   ]}
 />

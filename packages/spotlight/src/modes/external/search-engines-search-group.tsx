@@ -6,7 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory, getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { RequestMediaModal } from "@homarr/modals-collection";
+import { RequestMediaModal } from "@homarr/modals-collection/search-engines";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
