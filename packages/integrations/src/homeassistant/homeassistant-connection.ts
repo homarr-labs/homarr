@@ -109,6 +109,8 @@ export class HomeAssistantConnection {
   private registryPollTimer: NodeJS.Timeout | undefined;
   private registryChangeTimer: NodeJS.Timeout | undefined;
   private idleTimer: NodeJS.Timeout | undefined;
+  // Camera sessions in progress; like entity listeners, they keep the connection from closing while idle.
+  private openSessions = 0;
   private configurationTimer: NodeJS.Timeout | undefined;
   private configurationGeneration: string | undefined;
   private configurationCheck: Promise<void> | undefined;
@@ -345,6 +347,33 @@ export class HomeAssistantConnection {
     return ready;
   }
 
+  /**
+   * Opens a subscription and keeps it until the returned stop is called. Home Assistant ends some sessions (camera
+   * WebRTC) together with their subscription, so the subscription must live as long as the session.
+   */
+  public async openSubscriptionAsync(
+    message: { type: string } & Record<string, unknown>,
+    onEvent: (event: unknown) => void,
+  ): Promise<() => void> {
+    this.touch();
+    this.openSessions += 1;
+    let id: number;
+    try {
+      id = await this.subscribeAsync(message, onEvent);
+    } catch (error) {
+      this.openSessions -= 1;
+      throw error;
+    }
+    let stopped = false;
+    return () => {
+      if (stopped) return;
+      stopped = true;
+      this.openSessions -= 1;
+      this.dropSubscription(id);
+      this.touch();
+    };
+  }
+
   private dropSubscription(id: number) {
     const socket = this.subscriptionSockets.get(id);
     this.subscriptionSockets.delete(id);
@@ -576,7 +605,7 @@ export class HomeAssistantConnection {
     if (this.closed) return;
     clearTimeout(this.idleTimer);
     this.idleTimer = setTimeout(() => {
-      if (this.stateListeners.size > 0) {
+      if (this.stateListeners.size > 0 || this.openSessions > 0) {
         this.touch();
         return;
       }

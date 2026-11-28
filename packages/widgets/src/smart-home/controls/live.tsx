@@ -853,6 +853,10 @@ export interface SmartHomeLiveStatus {
 }
 
 const LiveStatusContext = createContext<SmartHomeLiveStatus | null>(null);
+// The integration the shown entities come from, for controls that talk to it directly (camera live views).
+const IntegrationIdContext = createContext<string | null>(null);
+
+export const useSmartHomeIntegrationId = () => useContext(IntegrationIdContext);
 
 export const useSmartHomeLiveStatus = () => useContext(LiveStatusContext);
 
@@ -1089,13 +1093,15 @@ export function SmartHomeLiveProvider({
   }, [source, hasSelection]);
 
   return (
-    <SmartHomeSourceProvider source={source}>
-      {hasSelection && selection && (
-        <LiveSnapshot integrationId={integrationId} selection={selection} source={source}>
-          {children}
-        </LiveSnapshot>
-      )}
-      {!hasSelection && <LiveStatusContext.Provider value={inactiveStatus}>{children}</LiveStatusContext.Provider>}
-    </SmartHomeSourceProvider>
+    <IntegrationIdContext.Provider value={integrationId}>
+      <SmartHomeSourceProvider source={source}>
+        {hasSelection && selection && (
+          <LiveSnapshot integrationId={integrationId} selection={selection} source={source}>
+            {children}
+          </LiveSnapshot>
+        )}
+        {!hasSelection && <LiveStatusContext.Provider value={inactiveStatus}>{children}</LiveStatusContext.Provider>}
+      </SmartHomeSourceProvider>
+    </IntegrationIdContext.Provider>
   );
 }

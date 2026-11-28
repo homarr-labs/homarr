@@ -14,13 +14,21 @@ import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
-import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type {
+  ISmartHomeCameraStreamIntegration,
+  ISmartHomeCameraWebRtcIntegration,
+  ISmartHomeIntegration,
+} from "../interfaces/smart-home/smart-home-integration";
+import { untilAborted } from "../interfaces/smart-home/smart-home-integration";
 import { supportsSmartHomeAction } from "../interfaces/smart-home/smart-home-capabilities";
 import type {
   SmartHomeAction,
   SmartHomeActionReceipt,
   SmartHomeArea,
+  SmartHomeCameraStream,
   SmartHomeCatalog,
+  SmartHomeIceServer,
+  SmartHomeWebRtcMessage,
   SmartHomeEntity,
   SmartHomeEntityPatch,
   SmartHomeEntitySelection,
@@ -52,6 +60,49 @@ import {
 
 const CAMERA_REFRESH_MS = 10_000;
 
+/** The ICE servers Home Assistant recommends, kept only when well formed. */
+const toIceServers = (value: unknown): SmartHomeIceServer[] | undefined => {
+  if (!Array.isArray(value)) return undefined;
+  const servers = value.flatMap((server: unknown): SmartHomeIceServer[] => {
+    if (typeof server !== "object" || server === null) return [];
+    const { urls, username, credential } = server as Record<string, unknown>;
+    const validUrls = typeof urls === "string" || (Array.isArray(urls) && urls.every((url) => typeof url === "string"));
+    if (!validUrls) return [];
+    return [
+      {
+        urls: urls as string | string[],
+        ...(typeof username === "string" ? { username } : {}),
+        ...(typeof credential === "string" ? { credential } : {}),
+      },
+    ];
+  });
+  return servers.length > 0 ? servers : undefined;
+};
+
+/** One event of a Home Assistant camera WebRTC session, in Homarr's shape; null for the ones it does not need. */
+const toWebRtcMessage = (event: unknown): SmartHomeWebRtcMessage | null => {
+  if (typeof event !== "object" || event === null) return null;
+  const record = event as Record<string, unknown>;
+  if (record.type === "answer" && typeof record.answer === "string") return { type: "answer", sdp: record.answer };
+  if (record.type === "error") {
+    return { type: "error", message: typeof record.message === "string" ? record.message : "WebRTC session failed" };
+  }
+  if (record.type !== "candidate") return null;
+  const candidate = record.candidate;
+  if (typeof candidate === "string") return { type: "candidate", candidate };
+  if (typeof candidate !== "object" || candidate === null) return null;
+  const init = candidate as Record<string, unknown>;
+  if (typeof init.candidate !== "string") return null;
+  const sdpMid = init.sdpMid ?? init.sdp_mid;
+  const sdpMLineIndex = init.sdpMLineIndex ?? init.sdp_m_line_index;
+  return {
+    type: "candidate",
+    candidate: init.candidate,
+    sdpMid: typeof sdpMid === "string" ? sdpMid : null,
+    sdpMLineIndex: typeof sdpMLineIndex === "number" ? sdpMLineIndex : null,
+  };
+};
+
 const actionResultSchema = z.object({ context: z.object({ id: z.string().min(1) }) });
 
 const forecastResultSchema = z.object({
@@ -75,7 +126,12 @@ export { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "
 
 export class HomeAssistantIntegration
   extends Integration
-  implements ISmartHomeIntegration, ICalendarIntegration, INotificationsIntegration
+  implements
+    ISmartHomeIntegration,
+    ISmartHomeCameraStreamIntegration,
+    ISmartHomeCameraWebRtcIntegration,
+    ICalendarIntegration,
+    INotificationsIntegration
 {
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return { headers: this.getAuthHeaders() };
@@ -395,6 +451,64 @@ export class HomeAssistantIntegration
         }),
       ),
     );
+  }
+
+  /**
+   * The best live stream a camera offers. WebRTC first (Home Assistant 2024.11+ with go2rtc): sub-second delay and,
+   * unlike HLS, no mixed-content block when Homarr runs on HTTPS and Home Assistant on HTTP. Otherwise HLS, whose URL
+   * carries a short-lived token for exactly this stream, so the API key never reaches the browser. Snapshot-only
+   * cameras get null.
+   */
+  public async getCameraStreamAsync(entityId: string, prefer?: "hls"): Promise<SmartHomeCameraStream | null> {
+    if (getEntityDomain(entityId) !== "camera") return null;
+    const connection = this.getConnection();
+    const capabilities = await connection
+      .sendAsync<{ frontend_stream_types?: unknown }>({ type: "camera/capabilities", entity_id: entityId })
+      .catch(() => null);
+    const types = Array.isArray(capabilities?.frontend_stream_types) ? capabilities.frontend_stream_types : null;
+
+    if (prefer !== "hls" && types?.includes("web_rtc")) {
+      const config = await connection
+        .sendAsync<{ configuration?: { iceServers?: unknown } }>({
+          type: "camera/webrtc/get_client_config",
+          entity_id: entityId,
+        })
+        .catch(() => null);
+      return { kind: "webrtc", iceServers: toIceServers(config?.configuration?.iceServers) };
+    }
+
+    // Older versions have no capabilities command: they may still stream HLS.
+    if (types && !types.includes("hls")) return null;
+    const result = await connection
+      .sendAsync<{ url?: unknown }>({ type: "camera/stream", entity_id: entityId, format: "hls" })
+      .catch(() => null);
+    if (typeof result?.url !== "string" || result.url.length === 0) return null;
+    return { kind: "hls", url: new URL(result.url, this.integration.url).toString() };
+  }
+
+  /**
+   * A WebRTC session with a camera. Home Assistant answers the offer, sends extra ICE candidates as it finds them,
+   * and ends the stream when the subscription ends, so the subscription stays open until the signal aborts.
+   */
+  public async openCameraWebRtcSessionAsync(
+    entityId: string,
+    offerSdp: string,
+    onMessage: (message: SmartHomeWebRtcMessage) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    if (getEntityDomain(entityId) !== "camera") throw new SmartHomeEntityNotFoundError(entityId);
+    const stop = await this.getConnection().openSubscriptionAsync(
+      { type: "camera/webrtc/offer", entity_id: entityId, offer: offerSdp },
+      (event) => {
+        const message = toWebRtcMessage(event);
+        if (message) onMessage(message);
+      },
+    );
+    try {
+      await untilAborted(signal);
+    } finally {
+      stop();
+    }
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

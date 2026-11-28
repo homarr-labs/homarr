@@ -3602,6 +3602,11 @@
         "decrease": "Decrease {name}",
         "increase": "Increase {name}"
       },
+      "camera": {
+        "live": "Live",
+        "connecting": "Connecting…",
+        "reconnecting": "Reconnecting…"
+      },
       "device": {
         "device": "Device",
         "onThisDevice": "On this device",

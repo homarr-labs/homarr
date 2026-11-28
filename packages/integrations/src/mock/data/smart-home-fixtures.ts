@@ -32,6 +32,22 @@ interface EntityInput {
   history?: number[];
 }
 
+// A drawn front door in the evening, as the mock camera's snapshot.
+const mockCameraPicture = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+    <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f2a44"/><stop offset="1" stop-color="#46527a"/></linearGradient></defs>
+    <rect width="320" height="180" fill="url(#sky)"/>
+    <rect y="132" width="320" height="48" fill="#2b2f36"/>
+    <rect x="96" y="44" width="128" height="96" fill="#6b5a4a"/>
+    <rect x="140" y="78" width="40" height="62" rx="3" fill="#3a2c22"/>
+    <circle cx="172" cy="112" r="2.5" fill="#e3c46b"/>
+    <rect x="108" y="62" width="22" height="20" fill="#f2d27a" opacity="0.85"/>
+    <rect x="190" y="62" width="22" height="20" fill="#f2d27a" opacity="0.6"/>
+    <polygon points="88,48 160,10 232,48" fill="#4a3a30"/>
+    <text x="10" y="20" font-family="monospace" font-size="11" fill="#fff" opacity="0.8">FRONT DOOR · REC</text>
+  </svg>`,
+)}`;
+
 export const mockSmartHomeHistory = new Map<string, number[]>();
 export const mockSmartHomeForecasts = new Map<string, SmartHomeForecastDay[]>();
 
@@ -159,6 +175,15 @@ export const mockSmartHomeEntities: SmartHomeEntity[] = [
       mediaPosition: 120,
       mediaPositionUpdatedAt: Date.now(),
     },
+  }),
+  entity({
+    // A camera with a built-in picture, so demo boards can show camera elements without a real camera or network.
+    id: "camera.front_door",
+    name: "Front Door",
+    areaId: "living_room",
+    state: "idle",
+    changedMinutesAgo: 1,
+    attributes: { pictureUrl: mockCameraPicture },
   }),
   entity({
     id: "climate.living_room",

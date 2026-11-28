@@ -1,6 +1,7 @@
 import type { z } from "zod/v4";
 import { ParseError, ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync, getHttpRequestSignal } from "@homarr/core/infrastructure/http";
+import { ImageProxy } from "@homarr/image-proxy";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -10,11 +11,18 @@ import { SmartHomeActionNotSupportedError, SmartHomeEntityNotFoundError } from "
 import type { IntegrationHttpAuthentication } from "../http-auth";
 import { supportsSmartHomeAction } from "../interfaces/smart-home/smart-home-capabilities";
 import { bucketHistory } from "../interfaces/smart-home/smart-home-history";
-import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type {
+  ISmartHomeCameraStreamIntegration,
+  ISmartHomeCameraWebRtcIntegration,
+  ISmartHomeIntegration,
+} from "../interfaces/smart-home/smart-home-integration";
+import { untilAborted } from "../interfaces/smart-home/smart-home-integration";
 import type {
   SmartHomeAction,
   SmartHomeArea,
+  SmartHomeCameraStream,
   SmartHomeCatalog,
+  SmartHomeWebRtcMessage,
   SmartHomeCatalogDevice,
   SmartHomeEntity,
   SmartHomeEntityPatch,
@@ -69,7 +77,10 @@ interface CapabilityWrite {
   value: string | number | boolean;
 }
 
-export class HomeyIntegration extends Integration implements ISmartHomeIntegration {
+export class HomeyIntegration
+  extends Integration
+  implements ISmartHomeIntegration, ISmartHomeCameraStreamIntegration, ISmartHomeCameraWebRtcIntegration
+{
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return { headers: this.getAuthHeaders() };
   }
@@ -104,7 +115,9 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
 
   public async getSnapshotAsync(selection: SmartHomeEntitySelection): Promise<SmartHomeSnapshot> {
     const [records, areas] = await Promise.all([this.getRecordsAsync(), this.getAreasAsync()]);
-    const entities = selectRecords(records, selection).map((record) => record.entity);
+    const entities = await Promise.all(
+      selectRecords(records, selection).map((record) => this.withPictureAsync(record)),
+    );
     const usedAreas = new Set([...entities.map((entity) => entity.areaId), ...(selection.areaIds ?? [])]);
     return { entities, areas: areas.filter((area) => usedAreas.has(area.id)), updatedAt: Date.now() };
   }
@@ -176,6 +189,72 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
         };
       }),
     );
+  }
+
+  /**
+   * A camera's snapshot or a speaker's album art goes through Homarr's image proxy, which adds the token; the browser
+   * never sees it.
+   */
+  private async withPictureAsync(record: HomeyEntityRecord): Promise<SmartHomeEntity> {
+    const { entity } = record;
+    const picture = entity.state === "unavailable" ? null : getRecordPicture(record);
+    if (!picture) return entity;
+    // A picture that cannot be read (a malformed address included) drops only itself, never the snapshot.
+    const pictureUrl = await Promise.resolve()
+      .then(() => {
+        const source = new URL(picture.url, this.integration.url);
+        // A new picture gets a new address, so the proxy's cache never serves an old snapshot.
+        source.searchParams.set("homarr", picture.version);
+        // The Homey token only goes to Homey: a picture hosted elsewhere is fetched without it.
+        const ownOrigin = source.origin === new URL(this.integration.url).origin;
+        return new ImageProxy().createImageAsync(source.toString(), ownOrigin ? this.getAuthHeaders() : undefined);
+      })
+      .catch(() => undefined);
+    return pictureUrl ? { ...entity, attributes: { ...entity.attributes, pictureUrl } } : entity;
+  }
+
+  /** Homey's cameras stream over WebRTC only; there is no HLS to fall back to. */
+  public async getCameraStreamAsync(entityId: string, prefer?: "hls"): Promise<SmartHomeCameraStream | null> {
+    if (prefer === "hls") return null;
+    const record = (await this.getRecordsAsync()).find((candidate) => candidate.entity.id === entityId);
+    if (record?.target.kind !== "camera" || !record.target.videoId) return null;
+    return { kind: "webrtc" };
+  }
+
+  /**
+   * Homey answers the offer in one go, with its candidates in the answer. The media then flows between the browser
+   * and Homey directly; the session only ends from the browser's side.
+   */
+  public async openCameraWebRtcSessionAsync(
+    entityId: string,
+    offerSdp: string,
+    onMessage: (message: SmartHomeWebRtcMessage) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const answer = await this.exchangeCameraOfferAsync(entityId, offerSdp, signal);
+    onMessage({ type: "answer", sdp: answer });
+    await untilAborted(signal);
+  }
+
+  /** Passes the browser's WebRTC offer to Homey's video manager and returns the camera's answer. */
+  private async exchangeCameraOfferAsync(entityId: string, offerSdp: string, signal: AbortSignal): Promise<string> {
+    const record = (await this.getRecordsAsync(signal)).find((candidate) => candidate.entity.id === entityId);
+    // A browser that left during the lookup opens no video session on Homey.
+    signal.throwIfAborted();
+    if (record?.target.kind !== "camera" || !record.target.videoId) throw new SmartHomeEntityNotFoundError(entityId);
+    const response = await fetchWithTrustedCertificatesAsync(
+      this.url(`/api/manager/videos/video/${encodeURIComponent(record.target.videoId)}/offer`),
+      {
+        method: "POST",
+        headers: { ...this.getAuthHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ offer: offerSdp }),
+        signal,
+      },
+    );
+    if (!response.ok) throw new ResponseError(response);
+    const answer = readAnswerSdp(await response.json());
+    if (!answer) throw new ParseError("Homey answered the video offer without an answer SDP");
+    return answer;
   }
 
   public getForecastAsync(): Promise<SmartHomeForecastDay[]> {
@@ -284,13 +363,13 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     };
   }
 
-  private async getRecordsAsync(): Promise<HomeyEntityRecord[]> {
-    const [devices, flows] = await Promise.all([this.getDevicesAsync(), this.getFlowsAsync()]);
+  private async getRecordsAsync(signal?: AbortSignal): Promise<HomeyEntityRecord[]> {
+    const [devices, flows] = await Promise.all([this.getDevicesAsync(signal), this.getFlowsAsync(signal)]);
     return [...normalizeHomeyDevices(devices), ...normalizeHomeyFlows(flows)];
   }
 
-  private async getDevicesAsync(): Promise<HomeyDevice[]> {
-    return Object.values(homeyDevicesSchema.parse(await this.getJsonAsync("/api/manager/devices/device/")));
+  private async getDevicesAsync(signal?: AbortSignal): Promise<HomeyDevice[]> {
+    return Object.values(homeyDevicesSchema.parse(await this.getJsonAsync("/api/manager/devices/device/", signal)));
   }
 
   private async getAreasAsync(): Promise<SmartHomeArea[]> {
@@ -299,9 +378,9 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
   }
 
   /** Flows are optional: API keys without the flow scope still expose devices. */
-  private async getFlowsAsync(): Promise<HomeyFlow[]> {
+  private async getFlowsAsync(signal?: AbortSignal): Promise<HomeyFlow[]> {
     const load = async (path: "/api/manager/flow/flow/" | "/api/manager/flow/advancedflow/", advanced: boolean) => {
-      const flows = homeyFlowsSchema.safeParse(await this.getOptionalJsonAsync(path));
+      const flows = homeyFlowsSchema.safeParse(await this.getOptionalJsonAsync(path, undefined, signal));
       if (!flows.success) return [];
       return Object.values(flows.data).map((flow) => ({ ...flow, advanced }));
     };
@@ -335,25 +414,33 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     );
   }
 
-  private async getOptionalJsonAsync(path: `/api/${string}`, queryParams?: Record<string, string>): Promise<unknown> {
+  private async getOptionalJsonAsync(
+    path: `/api/${string}`,
+    queryParams?: Record<string, string>,
+    signal?: AbortSignal,
+  ): Promise<unknown> {
     try {
-      const response = await this.getAsync(path, queryParams);
+      const response = await this.getAsync(path, queryParams, signal);
       return response.ok ? await response.json() : null;
     } catch (error) {
       getHttpRequestSignal()?.throwIfAborted();
+      signal?.throwIfAborted();
       if (error instanceof Error && error.name === "AbortError") throw error;
       return null;
     }
   }
 
-  private async getJsonAsync(path: `/api/${string}`): Promise<unknown> {
-    const response = await this.getAsync(path);
+  private async getJsonAsync(path: `/api/${string}`, signal?: AbortSignal): Promise<unknown> {
+    const response = await this.getAsync(path, undefined, signal);
     if (!response.ok) throw new ResponseError(response);
     return await response.json();
   }
 
-  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string>) {
-    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), { headers: this.getAuthHeaders() });
+  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string>, signal?: AbortSignal) {
+    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
+      headers: this.getAuthHeaders(),
+      ...(signal ? { signal } : {}),
+    });
   }
 
   private async sendAsync(method: "POST" | "PUT", path: `/api/${string}`, body: unknown) {
@@ -369,6 +456,39 @@ export class HomeyIntegration extends Integration implements ISmartHomeIntegrati
     return { Authorization: `Bearer ${this.getSecretValue("apiKey")}` };
   }
 }
+
+/**
+ * The picture an entity shows: a camera's snapshot, or the album art of what a speaker plays. Album art keeps its
+ * address while the track changes, so the track is part of its version.
+ */
+const getRecordPicture = ({ target, entity }: HomeyEntityRecord): { url: string; version: string } | null => {
+  if (target.kind === "camera") {
+    return target.imageUrl ? { url: target.imageUrl, version: String(target.imageUpdated) } : null;
+  }
+  if (target.kind !== "device" || entity.domain !== "media_player") return null;
+  const art = target.device.images?.find((image) => image.type === "media" && image.imageObj?.url)?.imageObj;
+  if (!art?.url) return null;
+  const capabilities = target.device.capabilitiesObj ?? {};
+  // A speaker without a track has no art; Homey answers its image with an error.
+  const track = capabilities.speaker_track?.value;
+  if (typeof track !== "string" || track === "") return null;
+  return { url: art.url, version: `${art.lastUpdated ?? 0}-${track}-${String(capabilities.speaker_album?.value)}` };
+};
+
+/** The answer SDP from Homey's offer response, whichever of the usual shapes it comes in. */
+const readAnswerSdp = (body: unknown): string | null => {
+  if (typeof body === "string") return body;
+  if (typeof body !== "object" || body === null) return null;
+  const record = body as Record<string, unknown>;
+  for (const key of ["answerSdp", "answer", "sdp"]) {
+    const value = record[key];
+    if (typeof value === "string" && value.includes("v=0")) return value;
+    if (typeof value === "object" && value !== null && typeof (value as { sdp?: unknown }).sdp === "string") {
+      return (value as { sdp: string }).sdp;
+    }
+  }
+  return null;
+};
 
 const LOW_BATTERY_PERCENT = 20;
 
