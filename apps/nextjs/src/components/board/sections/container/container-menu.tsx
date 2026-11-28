@@ -60,6 +60,7 @@ export const BoardContainerEditBar = ({ section, placement, depth }: ContainerEd
               color="blue"
               leftSection={<IconPencil size="var(--mantine-font-size-xs)" />}
               className={classes.editButton}
+              classNames={{ label: classes.editLabel, section: classes.editSection }}
               aria-label={`${tContainer("editBar.edit")}: ${label}`}
             >
               {tContainer("editBar.edit")}
