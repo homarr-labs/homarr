@@ -64,6 +64,10 @@ const installBoardCanvasFitting = (
     const logicalWidth = Number(canvas.dataset.logicalWidth);
     const renderedScale = Number(viewport.dataset.canvasScale);
     if (!(width > 0 && logicalWidth > 0 && renderedScale > 0)) return;
+    const scale = calculateScale(width, logicalWidth);
+    // Smart states and collapsed sections can already be shorter than their saved rows in the first render.
+    const logicalHeight = canvas.offsetHeight || Number(viewport.dataset.canvasInitialHeight);
+    setStyle(sizer, "height", logicalHeight * scale, "px");
     const measuredWidth = Number(viewport.dataset.canvasMeasuredWidth);
     if (
       measuredWidth > 0 &&
@@ -75,10 +79,8 @@ const installBoardCanvasFitting = (
       return;
     }
 
-    const scale = calculateScale(width, logicalWidth);
     const uiScale = calculateUiScale(scale);
     setStyle(sizer, "width", logicalWidth * scale, "px");
-    setStyle(sizer, "height", Number(viewport.dataset.canvasInitialHeight) * scale, "px");
     setStyle(canvas, "zoom", scale);
     setStyle(canvas, "--board-canvas-inverse-scale", 1 / scale);
     setStyle(canvas, "--board-canvas-ui-scale", uiScale);
@@ -114,6 +116,7 @@ const installBoardCanvasFitting = (
     subtree: true,
   });
   measurements.observe(viewport);
+  measurements.observe(canvas);
   check();
   return stop;
 };

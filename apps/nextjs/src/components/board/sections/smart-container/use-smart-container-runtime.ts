@@ -5,11 +5,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SmartContainerOptions } from "@homarr/validation/smart-container";
 import { useWidgetActivities } from "@homarr/widgets/activity";
 
+import { useBoardGridPortalHost } from "../grid/grid-portal-host";
 import { resolveSmartContainerStates, selectSmartContainerPolicy } from "./smart-container-selection";
 
 export type { ResolvedSmartContainerState } from "./smart-container-selection";
 
+type RotationHold = "manual" | "focus" | "paused" | null;
+
 interface RuntimeInput {
+  sectionId: string;
   options: SmartContainerOptions;
   items: readonly { id: string }[];
   isEditMode: boolean;
@@ -19,6 +23,7 @@ interface RuntimeInput {
 }
 
 export const useSmartContainerRuntime = ({
+  sectionId,
   options,
   items,
   isEditMode,
@@ -28,10 +33,20 @@ export const useSmartContainerRuntime = ({
 }: RuntimeInput) => {
   const activities = useWidgetActivities();
   const [now, setNow] = useState(() => Date.now());
-  const [selectedId, setSelectedId] = useState(
-    () => options.fallbackStateId ?? options.states.find((state) => state.enabled)?.id,
-  );
-  const [hold, setHold] = useState<"manual" | "focus" | "paused" | null>(null);
+  const { getEntryRuntime } = useBoardGridPortalHost();
+  const view = getEntryRuntime(`container:${sectionId}`, (): { selectedId?: string; hold: RotationHold } => ({
+    hold: null,
+  }));
+  const [selectedId, setSelectedId] = useState(() => {
+    if (view.hold && options.states.some((state) => state.id === view.selectedId)) return view.selectedId;
+    return options.fallbackStateId ?? options.states.find((state) => state.enabled)?.id;
+  });
+  const [hold, setHold] = useState(view.hold);
+  // Responsive layouts remount the grid, but a manual selection or pause belongs to the open board.
+  useEffect(() => {
+    view.selectedId = selectedId;
+    view.hold = hold;
+  }, [view, selectedId, hold]);
   const [isHovered, setHovered] = useState(false);
   const [isDocumentHidden, setDocumentHidden] = useState(false);
   const [clockCycle, setClockCycle] = useState(0);

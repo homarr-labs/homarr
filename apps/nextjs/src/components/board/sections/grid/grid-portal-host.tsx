@@ -39,12 +39,18 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
     entryRuntimesRef.current.set(entryId, runtime);
     return runtime;
   }, []);
-  const liveItemIds = useMemo(() => new Set(board.items.map((item) => item.id)), [board.items]);
+  const liveEntryIds = useMemo(() => {
+    const ids = new Set(board.items.map((item) => item.id));
+    for (const section of board.sections) {
+      if (section.kind === "container") ids.add(`container:${section.id}`);
+    }
+    return ids;
+  }, [board.items, board.sections]);
   useEffect(() => {
     for (const entryId of entryRuntimesRef.current.keys()) {
-      if (!liveItemIds.has(entryId)) entryRuntimesRef.current.delete(entryId);
+      if (!liveEntryIds.has(entryId)) entryRuntimesRef.current.delete(entryId);
     }
-  }, [liveItemIds]);
+  }, [liveEntryIds]);
   const value = useMemo<GridPortalHostContextValue>(
     () => ({ announce, integrations, getEntryRuntime }),
     [announce, getEntryRuntime, integrations],

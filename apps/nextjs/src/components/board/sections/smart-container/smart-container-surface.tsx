@@ -14,6 +14,8 @@ import {
   IconPlayerPlay,
 } from "@tabler/icons-react";
 
+import { useMounted } from "@mantine/hooks";
+
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
@@ -72,7 +74,9 @@ const ReelSurface = ({
   const inheritedPreview = useSmartContainerPreviewState();
   const preview = inheritedPreview?.containerId === section.id ? inheritedPreview : undefined;
   const previewStateId = preview?.stateId;
+  const interactive = useMounted();
   const runtime = useSmartContainerRuntime({
+    sectionId: section.id,
     options,
     items,
     isEditMode,
@@ -183,6 +187,7 @@ const ReelSurface = ({
     projection,
     now: runtime.now,
     savedRows,
+    interactive,
     showPeeks,
     deferPassiveWidgets: !hasEnteredViewport && !isEditMode && !preview,
     compactQuiet: options.compactQuiet && !isEditMode,
@@ -269,6 +274,7 @@ const ReelSurface = ({
           <UnstyledButton
             type="button"
             className={classes.peek}
+            disabled={!interactive}
             data-direction="previous"
             aria-label={t("previousState") + ": " + previousLabel}
             onClick={previousState}
@@ -308,6 +314,7 @@ const ReelSurface = ({
           <UnstyledButton
             type="button"
             className={classes.peek}
+            disabled={!interactive}
             data-direction="next"
             aria-label={t("nextState") + ": " + nextLabel}
             onClick={nextState}
@@ -376,7 +383,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           style={zoomCompensatedSize(44)}
           aria-label={t("previousState")}
           onClick={runtime.previousState}
-          disabled={runtime.states.length < 2}
+          disabled={!context.interactive || runtime.states.length < 2}
         >
           <IconChevronLeft style={iconSizes.md} />
         </ActionIcon>
@@ -388,6 +395,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           <Menu position="bottom-start" shadow="md" returnFocus withInitialFocusPlaceholder={false}>
             <Menu.Target>
               <UnstyledButton
+                disabled={!context.interactive}
                 className={classes.statePicker}
                 aria-label={`${t("chooseState", { stateName, position })} · ${activityLabel}`}
               >
@@ -430,7 +438,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
           style={zoomCompensatedSize(44)}
           aria-label={t("nextState")}
           onClick={runtime.nextState}
-          disabled={runtime.states.length < 2}
+          disabled={!context.interactive || runtime.states.length < 2}
         >
           <IconChevronRight style={iconSizes.md} />
         </ActionIcon>
@@ -438,6 +446,7 @@ export const SmartContainerToolbar = ({ section }: { section: ContainerSectionIt
       {hasMultipleStates && !isEditMode && !preview && section.options.smart?.mode !== "manual" && (
         <ActionIcon
           data-smart-resume
+          disabled={!context.interactive}
           variant="subtle"
           style={zoomCompensatedSize(44)}
           aria-label={pauseLabel}

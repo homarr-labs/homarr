@@ -9,6 +9,7 @@ import type { useSmartContainerRuntime } from "./use-smart-container-runtime";
 type Projection = ReturnType<typeof projectSmartContainerState>;
 interface SmartContainerContextValue {
   sectionId: string;
+  interactive: boolean;
   projection: Projection;
   now: number;
   savedRows: number;
